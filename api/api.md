@@ -1,0 +1,32 @@
+# API
+
+This section documents the web API used between the GUI and the "frontend" webserver.
+
+The bulk of the API is RESTful. The exception to this rule is the searching API which uses websockets due to the nature of data exchange and transfer involved in launching and observing data from a search.
+
+## Primary APIs
+
+* [Login](login.md)
+* [User Preferences](userprefs.md)
+* [Account controls](account.md)
+* [Dashboards](dashboards.md)
+* [Notifications](notifications.md)
+* [Search Controls](searchctrl.md)
+* [Search History](searchhistory.md)
+* [Log Level](loglevel.md)
+* [Resources](resources.md)
+* [Scheduled Searches](scheduledsearches.md)
+
+## Searching and Search Stats
+
+[Search Websocket](websocket-search.md)
+
+[Reattaching to Searches](websocket-search-attach.md)
+
+[Interacting with Renderers](websocket-render.md)
+
+## System Stats
+
+The system stats also use a websocket for communication. This contains all information necessary for monitoring general cluster health.
+
+[System Stats Websocket](websocket-stats.md)

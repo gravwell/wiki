@@ -1,0 +1,41 @@
+## Stackgraph
+
+The stackgraph renderer is used to display horizontal bar graphs with stacked data points.  A stackgraph is useful in displaying the magnitude of results that are accumulated from multiple components across a set of tags.  The stackgraph renderer is an accumulator, meaning that it can interpret the operation of some upstream search modules and recalculate the results based on sub selections.  In Gravwell terms, stackgraph supports second order searching and selection.
+
+Stackgraph invocation requires three arguments which must be the names of enumerated values extracted by upstream search components.  Argument one is the stacked value tag which makes up the components of a horizontal bar.  Argument two is the main argument value which groups aggregate values into horizontal bars.  Argument three is the magnitude value which represents the magnitude component of each stack value within a horizontal bar.  Example magnitude components are count, sum, stddev, sum, max, and min.
+
+### Examples
+
+The best way to describe a stackgraph is to show a couple.
+
+#### Traffic Volumes by IP and Port
+
+```
+tag=netflow netflow IP ~ 10.0.0.0/8 Port < 1024 Bytes as traffic |  sum traffic by IP,Port | stackgraph Port IP sum
+```
+
+![IP Port Traffic Volumes](IPPortTraffic.png)
+
+#### Traffic Volumes by Port and Country
+
+```
+tag=netflow netflow Src ~ 10.0.0.0/8 Dst  Bytes as traffic Port |  geoip Dst.CountryName | sum traffic by Port, CountryName | stackgraph Port CountryName sum
+```
+
+![Country Traffic by Port](CountryPortTraffic.png)
+
+#### Failed SSH Logins by Country and Attempted User
+
+```
+tag=syslog grep sshd | regex "Failed password for (?P<user>\S+) from (?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) " | geoip ip.Country | count by user,Country | stackgraph user Country count
+```
+
+![Failed SSH Logins by Country](SSHUserCountry.png)
+
+#### Failed SSH Logins by Country and Attempted User (China removed)
+
+```
+tag=syslog grep sshd | regex "Failed password for (?P<user>\S+) from (?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) " | geoip ip.Country != CN | count by user,Country | stackgraph user Country count
+```
+
+![Failed SSH Logins by Country Without China](SSHUserCountryNoChina.png)
