@@ -37,3 +37,15 @@ Users can disable the animations while the FDGs are iterating over the gravity c
 ```json
 {"fdg":{"tick":false}}
 ```
+
+### Maps
+
+Customizable Maps options are outlined here.
+
+#### Center and Zoom
+
+Users can set the default zoom and lat/lng for map center:
+
+```json
+{"maps":{"center":{"lat":41,"lng":-99,"zoom":2}}}
+```
