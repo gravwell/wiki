@@ -3,7 +3,7 @@
 The core suite of ingesters are available for download as an installable packages.  Ingesters designed to operate on Linux machines are typically self contained, statically linked executables that are agnostic to the hosts package management system (with the exception of the NetworkCapture ingester).  Windows based ingesters are distributed as executable MSI packages.  Source code for many ingesters can be found at [Github](https://github.com/gravwell/ingesters).
 
 
-## Version 2.0.5 Ingester Releases
+## Version 2.0.6 Ingester Releases
 | Ingester | Description | MD5 | More Info |
 |:--------:|-------------|:---:|----------:|
 | [Simple Relay](#!ingesters/ingesters.md#Simple_Relay) | An ingester capable of accepting syslog or line brokend data sent over the network. | 671feb6d123e37ab606ca6b4baeafb00 | [Download](https://update.gravwell.io/files/gravwell_simple_relay_installer_2.0.6.tar.bz2)|
