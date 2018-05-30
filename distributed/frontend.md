@@ -6,7 +6,7 @@ Once configured, distributed frontends will synchronize resources, users, dashbo
 
 ## The datastore server
 
-Gravwell uses a separate server process called the datastore to keep frontends in sync. It can run on its own machine or it can share a server with a frontend. If you already have a recent Gravwell installation on a machine, it should have the datastore installed but not enabled.
+Gravwell uses a separate server process called the datastore to keep frontends in sync. It can run on its own machine or it can share a server with a frontend. Fetch the datastore installer from [the downloads page](#!quickstart/downloads.md), then run it on the machine which will contain the datastore.
 
 ### Configuring the datastore server
 
@@ -28,7 +28,7 @@ Datastore-Port=9555					# listen on port 9555 instead of 9405
 
 ## Configuring frontends for distributed operation
 
-To tell a frontend to start communicating with a datastore, set the `Datastore` field in the "global" section of `/opt/gravwell/etc/gravwell.conf`. For example, if the datastore server was was running on the machine with IP 10.0.0.5 and the default datastore port, the entry would look like this:
+To tell a frontend to start communicating with a datastore, set the `Datastore` field in the "global" section of the webserver's `/opt/gravwell/etc/gravwell.conf`. For example, if the datastore server was was running on the machine with IP 10.0.0.5 and the default datastore port, the entry would look like this:
 
 ```
 Datastore=10.0.0.5:9405
