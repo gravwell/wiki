@@ -27,5 +27,5 @@ Some Gravwell components are distributed as optional additional installers, such
 
 | Component | Description | MD5 | More Info |
 |:---------:|-------------|:---:|----------:|
-| [Datastore](#!distributed/frontend.md) | The datastore keeps multiple Gravwell webservers in sync, enabling load balancing | | [Download](https://update.gravwell.io/files/gravwell_datastore_installer_2.0.6.tar.bz2) |
-| [Search Agent](#!scripting/scheduledsearch.md) | The search agent runs user-defined searches and scripts on a specified schedule. | | [Download](https://update.gravwell.io/files/gravwell_searchagent_installer_2.0.6.tar.bz2) |
+| [Datastore](#!distributed/frontend.md) | The datastore keeps multiple Gravwell webservers in sync, enabling load balancing | 98dfc97a1b882f93b03ee193052c44e8 | [Download](https://update.gravwell.io/files/gravwell_datastore_installer_2.0.6.tar.bz2) |
+| [Search Agent](#!scripting/scheduledsearch.md) | The search agent runs user-defined searches and scripts on a specified schedule. | 792903f0825014612e85a04815190cf0 | [Download](https://update.gravwell.io/files/gravwell_searchagent_installer_2.0.6.tar.bz2) |
