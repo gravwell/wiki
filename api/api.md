@@ -30,3 +30,7 @@ The bulk of the API is RESTful. The exception to this rule is the searching API 
 The system stats also use a websocket for communication. This contains all information necessary for monitoring general cluster health.
 
 [System Stats Websocket](websocket-stats.md)
+
+## Test API
+
+The System contains a test API located at _/api/test_ which can be used to test if the webserver is alive and functioning.  The test API is entirely unauthenticated and always responds with a StatusOK 200 and an empty body.
