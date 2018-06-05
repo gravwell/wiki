@@ -68,6 +68,8 @@ Configuration of a Gravwell cluster is designed to be simple and efficient right
 
 For a detailed listing of configuration options see [this page](parameters.md)
 
+For a complete example indexer configuration see our [example default config](indexer-default-config.md)
+
 A default configuration file installed by the installer might look like the following:
 
 ```
