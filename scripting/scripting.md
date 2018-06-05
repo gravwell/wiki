@@ -1,5 +1,9 @@
 # Scripting in Gravwell
 
+Scripting is used in two ways within Gravwell: as part of a search pipeline, and as a method to automate search launching. The scripting language ([Anko](https://github.com/mattn/anko)) is the same in both cases, with some slight differences to account for the differing use cases. This article introduces both use cases and provides a high-level overview of the Anko language.
+
+## Scripting modules
+
 Gravwell includes two modules, `anko` and `eval`, which use the [Anko scripting language](https://github.com/mattn/anko) to provide Turing-complete scriptability in the search pipeline.  The anko module enables the full feature set of anko to provide a full [Turing-Complete](https://en.wikipedia.org/wiki/Turing_completeness) language and runtime.  Eval uses the anko runtime to execute a single statement entered directly in the search query.
 
 While anko can do anything, eval has several important restrictions:
@@ -13,6 +17,14 @@ This document describes the Anko programming language itself. Documentation for 
 
 * [`anko` documentation](anko.md) (anko is also briefly described in [the search modules documentation](#!search/searchmodules.md#Anko))
 * [`eval` documentation](eval.md) (eval is also briefly described in [the search modules documentation](#!search/searchmodules.md#Eval))
+
+## Search Scripts
+
+Where the `anko` and `eval` modules run scripts *inside* search pipelines, Gravwell also supports scripts which *launch* searches of their own and operate on the results. This is useful for automated queries, e.g. a script which runs every morning at 6 a.m. to look for particular suspicious network behavior.
+
+These scripts can be either run on a schedule (see [scheduled searches](#!scripting/scheduledsearch.md)) or run by hand using the [command line client](#!cli/cli.md). The scripting language is the same in both cases, although scripts run as scheduled searches cannot use `print` functions to display output.
+
+The [scripting searches](scriptingsearch.md) documentation provides more information on how to write this type of script, including examples.
 
 ## Anko overview
 
@@ -222,31 +234,33 @@ b = <- c	# variable 'b' contains "bar"
 
 ### Variable creation, assignment and scoping
 
-Variables are assigned using the `=` operator. If the variable does not exist, it will be created in the current scope. If the named variable already exists in the current scope or any scope above it, the value of the variable will be set to the new variable.
+Anko uses dynamic scoping, which may be unfamiliar to programmers used to lexical scoping as implemented in C and many other languages. Variables are assigned using the `=` operator. If the variable does not exist, it will be created in the current scope. If the named variable already exists in the current scope or any scope above it, the value of the variable will be set to the new variable.
 
 The following example demonstrates how the second assignment (`a = 2`) modifies the outer scope's 'a' variable rather than creating a new one:
 
 ```
-a = 1		# Creates a new variable named 'a' and sets it to 1
-if true {
+func foo() {
 	a = 2
-	println(a)	# prints "2"
 }
+a = 1
+println(a)		# prints "1"
+foo()
 println(a)		# prints "2"
 ```
 
 In order to explicitly create a new variable in an inner scope, use the `var` keyword:
 
 ```
-a = 1
-if true {
+func foo() {
 	var a = 2
-	println(a)	# prints "2"
 }
+a = 1
+println(a)		# prints "1"
+foo()
 println(a)		# prints "1"
 ```
 
-The above code creates a variable named 'a' in the outer scope, then creates another variable named 'a' in the inner scope of the `if` statement.
+The above code creates another variable named 'a' in the inner scope of the function definition.
 
 ### Math and logic operations
 

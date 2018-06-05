@@ -12,8 +12,8 @@ Multiple lookup operations can be specified in a single invocation of the lookup
 
 ### Supported Options
 * `-r <arg>`: The "-r" option informs the lookup module which lookup resource should be used to enrich data.
-* `-strict`: The "-strict" option specifies that the lookup modules should require that all specified operations succeeed.
-* `-v`: The "-v" flag inverts the flow logic in the lookup module, meaning that successful matches are suppressed and missed matches are passed on.  The "-v" and "-strict" flags can be combined to provide basic whiltelisting, passing only values which do not exist in the specified lookup table.
+* `-s`: The "-s" option specifies that the lookup modules should require that all specified operations succeeed.
+* `-v`: The "-v" flag inverts the flow logic in the lookup module, meaning that successful matches are suppressed and missed matches are passed on.  The "-v" and "-s" flags can be combined to provide basic whiltelisting, passing only values which do not exist in the specified lookup table.
 
 ### Setting up a lookupdata resource
 
@@ -62,10 +62,10 @@ This results in a table containing the enriched data of
 
 #### Example whitelist operation using the lookup table
 ```
-tag=pcap packet eth.SrcMAC | count by SrcMAC | lookup -v -strict -r macresolution SrcMAC mac hostname |  table SrcMAC count
+tag=pcap packet eth.SrcMAC | count by SrcMAC | lookup -v -s -r macresolution SrcMAC mac hostname |  table SrcMAC count
 ```
 
-This results in a table containing any mac addresses which were NOT in the look up list.  System administrators can use the "-v" and "-strict" flag to provide basic white listing and identification of new devices on a network or new logs in an event stream.
+This results in a table containing any mac addresses which were NOT in the look up list.  System administrators can use the "-v" and "-s" flag to provide basic white listing and identification of new devices on a network or new logs in an event stream.
 ```
 64:bc:0c:87:bc:60	|	24382
 40:b0:fa:d7:ae:13	|	93485
