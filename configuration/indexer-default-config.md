@@ -33,7 +33,7 @@ Web-Store-Path=/opt/gravwell/etc/webstore.db
 
 [Default-Well]
         Location=/opt/gravwell/storage/default/
-	#Tags= should not appear in the Default-Well. Any tag not defined elsewhere will go into the default well
+        #Tags= should not appear in the Default-Well. Any tag not defined elsewhere will go into the default well
 
 [Storage-Well "syslog"]
         Location=/opt/gravwell/storage/syslog

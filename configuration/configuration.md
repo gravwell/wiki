@@ -70,42 +70,6 @@ For a detailed listing of configuration options see [this page](parameters.md)
 
 For a complete example indexer configuration see our [example default config](indexer-default-config.md)
 
-A default configuration file installed by the installer might look like the following:
-
-```
-[global]
-	Web-Port=443
-	Control-Port=9404
-	Ingest-Port=4023
-	TLS-Ingest-Port=4024
-	Log-Level=INFO
-	Ingest-Auth=IngestSecrets
-	Control-Auth=ControlSecrets
-	Remote-Indexers=net:10.0.0.2:9404
-	Remote-Indexers=net:10.0.0.3:9404
-	Persist-Web-Logins=True
-	Session-Timeout-Minutes=1440
-	Login-Fail-Lock-Count=4
-	Login-Fail-Lock-Duration=5
-	Search-Pipeline-Buffer-Size=1024
-	Web-Port=443
-	Pipe-Ingest-Path=/opt/gravwell/comms/pipe
-	Log-Location=/opt/gravwell/log
-	Web-Log-Location=/opt/gravwell/log/web
-	Certificate-File=/opt/gravwell/etc/cert.pem
-	Key-File=/opt/gravwell/etc/privkey.pem
-	Render-Store=/opt/gravwell/render
-	Saved-Store=/opt/gravwell/saved
-	Search-Scratch=/opt/gravwell/scratch
-	Web-Files-Path=/opt/gravwell/www
-	License-Location=/opt/gravwell/etc/license
-	User-DB-Path=/opt/gravwell/etc/users.db
-	Web-Store-Path=/opt/gravwell/etc/webstore.db
-
-[Default-Well]
-	Location=/opt/gravwell/storage/default/
-```
-
 The two most important items in the configuration file are the `Ingest-Auth` and `Control-Auth` configuration parameters.  The `Control-Auth` parameter is the shared secret that the webserver and indexers use to authenticate each other. If an attacker can communicate with your indexers and has the `Control-Auth` token, he has total access to the data they store.  The `Ingest-Auth` token is used to validate ingesters, and restricts the ability to create tags and push data into Gravwell.  Gravwell prides itself on speed, which means an attacker with access to your `Ingest-Auth` token can push a tremendous amount of data into Gravwell in a very short amount of time.  These tokens are important and you should protect them carefully.
 
 ## Frontend Configuration
