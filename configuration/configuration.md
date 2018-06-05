@@ -149,6 +149,14 @@ Tag-to-well mappings are defined in the `/opt/gravwell/etc/gravwell.conf` config
 	tags=apache
 ```
 
+### Tag Restrictions and Gotchas
+
+Tag names can only contain alpha numeric values; dashes, underscores, special characters, etc are not allowed in tag names.  Tags should be simple names like "syslog" or "apache" that are easy to type and reflect the type of data in use.
+
+Tags are also not assigned to the Default well.   The Default well gets all entries with tags that have not been explicitely assigned to other wells.  For example, if you have one well named Syslog which has been assigned the tags "syslog" and "apache" then all other tags will go to the Default well.  Ingesters can still produce entries with tag names that are not explicitely defined in the gravwell.conf file, the entries will just be co-mingled with all other unassigned tags.  At its core, the interaction between Wells and tags is a management function that allow optimizing search, storage, and management of like data.
+
+When reassigning tags between wells, the system will NOT move the data.  If you ingest data under the tag "syslog" without pinning the tag to a non-default well, then change the config file to define a new well or assign the syslog tag to an existing well, all data that exists in the default well under the syslog tag is no longer searchable.  Contact support@gravwell.io for access to a standalone tool for well and tag migration that can allow for recovering the entries, or for reingesting old wells into an optimized/alternate configuration.
+
 ### Well Ageout
 
 Gravwell supports an ageout system whereby data management policies can be applied to individual wells.  The ageout policies allow controlling data retention, storage well utilization, and compression.  Each well supports a hot and cold storage location with a set of parameters which determine how data is moved from one storage system to the other.  An ideal Gravwell storage architecture is comprised of relatively small pools of high speed storage that is tolerant to random acceses and a high volume and low cost storage pool to be used for longer term storage.  NVME based flash and/or XPoint drives make a great hot well while magnetic RAID arrays, NAS, or SAN pools work well for cold pools.  Searching is not impeeded during ageout, nor is ingestion.  However, if data is actively coming into a storage shard that is marked for ageout or is actively being queried, the ageout system will defer aging out the shard to a later time.
