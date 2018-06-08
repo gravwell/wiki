@@ -10,6 +10,8 @@ The Gravwell GUI has a Remote Ingesters tag on the System Stats page which can b
 
 ![](remote-ingesters.png)
 
+Attention: The [replication system](#!configuration/replication.md) does not replicate entries larger than 999MB. Larger entries can still be ingested and searched as usual, but they are omitted from replication. This is not a concern for 99.9% of use cases, as all the ingesters detailed in this page tend to create entries no larger than a few kilobytes.
+
 ## Global Configuration Parameters
 
 Most of the core ingesters support a set of global configuration parameters which are shared across all the core ingesters.  The shared Global configuration parameters are implemented using the [ingest config](https://godoc.org/github.com/gravwell/ingest/config#IngestConfig) package.  Global configuration parameters should be specified in the Glboal section of each Gravwell ingester INI file.  The following Global ingester paramters are available:

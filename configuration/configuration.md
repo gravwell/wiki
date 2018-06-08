@@ -312,5 +312,7 @@ Example well configuration which keeps 7 days or 100GB in the hot pool and keeps
 
 ### Well Replication
 
+A Gravwell cluster with multiple indexer nodes can be configured so that nodes replicate their data to one another in case of disk failure or accidental deletion. See the [replication documentation](replication.md) for information on configuring replication.
+
 ### Environment Variables
 
