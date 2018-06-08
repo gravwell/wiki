@@ -16,3 +16,4 @@ Every search module has universal enumerated values for records.
 * [stackgraph](stackgraph/stackgraph.md)
 * [text](text/text.md)
 * [table](table/table.md)
+* [pointmap / heatmap](map/map.md)
