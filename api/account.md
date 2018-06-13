@@ -16,11 +16,11 @@ Perform a GET and you get version info.  Any, no authentication required.
 [documented here](login.md)
 
 # List accounts and activity
-The /api/account/ subdirectory is for admins to be able to get account info and also see account activity
+The /api/user/ subdirectory is for admins to be able to get account info and also see account activity
 
 ## List all accounts
 
-An admin can perform a GET request against /api/account and the backend will return a JSON packet containing a summery for every account.  The JSON returned is as follows:
+An admin can perform a GET request against /api/user and the backend will return a JSON packet containing a summery for every account.  The JSON returned is as follows:
 
 ```
 {[
@@ -46,12 +46,12 @@ An admin can perform a GET request against /api/account and the backend will ret
 ```
 
 # account control
-An admin can operate on /api/account/ in order to modify accounts.  The backend will always respond with a JSON packet which indicates whether the command succeeded or not and a possible informational error message.  On failure the frontend should display the error message to the user (it is formatted for a human).  The appropriate error message will be dumped in the body of the response.  StatusOK (200) will be sent on a good request and a 400-500 status will be sent on error (depending on what error and why).
+An admin can operate on /api/user/ in order to modify accounts.  The backend will always respond with a JSON packet which indicates whether the command succeeded or not and a possible informational error message.  On failure the frontend should display the error message to the user (it is formatted for a human).  The appropriate error message will be dumped in the body of the response.  StatusOK (200) will be sent on a good request and a 400-500 status will be sent on error (depending on what error and why).
 
 The Admin account username cannot be changed or deleted, nor can the Admin account be demoted out of admin status.
 
 ## Adding a new user
-To add a new user the front end should POST the following struct/JSON to /api/account/
+To add a new user the front end should POST the following struct/JSON to /api/user/
 
 ```
 {
@@ -66,13 +66,13 @@ To add a new user the front end should POST the following struct/JSON to /api/ac
 All fields must be populated.  The back end will respond with the standard response JSON as mentioned above.
 
 ## Locking a user account
-To Lock an account the front end should send an empty POST to /api/account/{id}/lock with the {id} of the UID for the user that will be locked.  Locking a user account will immediately stop any new connections to the backend, even if a session is active.
+To Lock an account the front end should send an empty POST to /api/user/{id}/lock with the {id} of the UID for the user that will be locked.  Locking a user account will immediately stop any new connections to the backend, even if a session is active.
 
 ## UnLocking a user account
-To UnLock an account the front end should send an empty DELETE to /api/account/{id}/lock with the {id} for the UID of the user that will be unlocked.  The backend will respond with success regardless of whether the account was actually unlocked if the action is allowed.  We do this because locking a locked account ends in the state that the account is locked.  So its all good.  Same with unlocking.
+To UnLock an account the front end should send an empty DELETE to /api/user/{id}/lock with the {id} for the UID of the user that will be unlocked.  The backend will respond with success regardless of whether the account was actually unlocked if the action is allowed.  We do this because locking a locked account ends in the state that the account is locked.  So its all good.  Same with unlocking.
 
 ## Changing user info
-To change user info the front end should send a PUT /api/account/{id}/ with replaced account JSON:
+To change user info the front end should send a PUT /api/user/{id}/ with replaced account JSON:
 
 ```
 {
@@ -85,7 +85,7 @@ To change user info the front end should send a PUT /api/account/{id}/ with repl
 Any field that is NOT populated will be ignored.  The backend will respond with the standard response JSON as mentioned above.  If the current user is NOT an admin and not changing their own account, the request will be rejected.  Admins can change information for any account.  The primary admin account (UID zero) cannot change its admin status.  The backend responds with a 200 on success and 400-500 on error depending on who caused the error and why.  Error messages will be returned in the body of the response and are human displayable.
 
 ## Changing a users password
-To change a password the frontend should POST JSON to the url /api/account/{id}/pwd
+To change a password the frontend should POST JSON to the url /api/user/{id}/pwd
 If the User is an admin and changing the password for an account they DO NOT OWN, the OrigPass field is NOT required.
 ```
 {
@@ -95,10 +95,10 @@ If the User is an admin and changing the password for an account they DO NOT OWN
 ```
 
 ## Deleting a user
-To Delete a user the front end should send a DELETE to /api/account/{id}/ with the id of the UID to delete.  Only Admins can use this facility, and a user cannot delete their own account.  The Primary admin (UID zero) cannot be deleted.
+To Delete a user the front end should send a DELETE to /api/user/{id}/ with the id of the UID to delete.  Only Admins can use this facility, and a user cannot delete their own account.  The Primary admin (UID zero) cannot be deleted.
 
 ## Changing admin status
-To change the admin status of a user or query the admin status the frontend should hit /api/account/{id}/admin
+To change the admin status of a user or query the admin status the frontend should hit /api/user/{id}/admin
 with an empty body where the method specifies the action.  The backend will respond with 200 on success and 400-500 on error depending on who munged the request and why.
 ```
 GET - returns current admin status
@@ -114,7 +114,7 @@ DELETE - removes admin status for the user
 ```
 
 ## Getting a single users account information
-To get a single users account information the front end should send a GET to /api/account/{id}/.  Admins can retrieve any account, non-admins can ONLY retrieve their own account information.  Response of 200 will contain valid JSON in the body, 400-500 means someone boned the request and the body will contain an error message.  The backend will respond with a JSON packet containing the account info as follows:
+To get a single users account information the front end should send a GET to /api/user/{id}/.  Admins can retrieve any account, non-admins can ONLY retrieve their own account information.  Response of 200 will contain valid JSON in the body, 400-500 means someone boned the request and the body will contain an error message.  The backend will respond with a JSON packet containing the account info as follows:
 ```
 
 //the JSON returned on success
