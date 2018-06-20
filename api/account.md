@@ -85,11 +85,11 @@ To change user info the front end should send a PUT /api/user/{id}/ with replace
 Any field that is NOT populated will be ignored.  The backend will respond with the standard response JSON as mentioned above.  If the current user is NOT an admin and not changing their own account, the request will be rejected.  Admins can change information for any account.  The primary admin account (UID zero) cannot change its admin status.  The backend responds with a 200 on success and 400-500 on error depending on who caused the error and why.  Error messages will be returned in the body of the response and are human displayable.
 
 ## Changing a users password
-To change a password the frontend should POST JSON to the url /api/user/{id}/pwd
+To change a password the frontend should PUT JSON to the url /api/user/{id}/pwd
 If the User is an admin and changing the password for an account they DO NOT OWN, the OrigPass field is NOT required.
 ```
 {
-     OldPass: "my old password was bad",
+     OrigPass: "my old password was bad",
      NewPass: "thisis mynewpassword",
 }
 ```
