@@ -12,6 +12,7 @@ The bulk of the API is RESTful. The exception to this rule is the searching API 
 * [Dashboards](dashboards.md)
 * [Notifications](notifications.md)
 * [Search Controls](searchctrl.md)
+* [Downloading Search Results](download.md)
 * [Search History](searchhistory.md)
 * [Log Level](loglevel.md)
 * [Resources](resources.md)
