@@ -89,7 +89,7 @@ To change a password the frontend should PUT JSON to the url /api/user/{id}/pwd
 If the User is an admin and changing the password for an account they DO NOT OWN, the OrigPass field is NOT required.
 ```
 {
-     OldPass: "my old password was bad",
+     OrigPass: "my old password was bad",
      NewPass: "thisis mynewpassword",
 }
 ```
