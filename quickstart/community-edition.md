@@ -36,15 +36,14 @@ The installation process will prompt to set some shared secret values used by co
 For non-Debian systems, download the self-extracting installer and extract it:
 
 ```
-TODO
-curl -O https://gravwell.io/files/gravwell_community_2.0.8.sh
-tar xjvf gravwell_community_edition.tar.bz2
+curl -O https://gravwell.io/files/gravwell_community_2.0.8.tar.bz2
+tar xjvf gravwell_community_2.0.8.tar.bz2
 ```
 
 Then run the installer:
 
 ```
-sudo bash gravwell_community_edition.sh
+sudo bash gravwell_community_2.0.8.sh
 ```
 
 Follow the prompts and, after completion, you should have a running Gravwell instance.
