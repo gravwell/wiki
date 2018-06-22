@@ -33,7 +33,7 @@ The installation process will prompt to set some shared secret values used by co
 
 ### Self-extracting Installer
 
-For non-Debian systems, download the self-extracting installer and extract it:
+For non-Debian systems, download the [self-extracting installer](https://update.gravwell.io/files/gravwell_community_2.0.8.tar.bz2) and extract it:
 
 ```
 curl -O https://update.gravwell.io/files/gravwell_community_2.0.8.tar.bz2
