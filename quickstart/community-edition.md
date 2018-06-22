@@ -54,7 +54,7 @@ Once Gravwell is installed, open a web browser and navigate to the server (e.g. 
 
 ![Upload license](upload-license.png)
 
-Then sign up for a license [on our Community Edition licensing page](TODO). We'll email you a license file; save this file and upload it to your Gravwell instance.
+We'll be setting up automated license generation soon, but for now email [info@gravwell.io](mailto:info@gravwell.io) to get a license. We'll email you a license file; save this file and upload it to your Gravwell instance.
 
 Attention: The default username/password for Gravwell is admin/changeme. We highly recommend changing the admin password as soon as possible!
 

@@ -8,7 +8,11 @@ This site contains documentation for Gravwell, plus other resources such as Chan
 
 If you're just starting out with Gravwell, we recommend reading the [Quickstart](quickstart/quickstart.md) first, then moving on to the [Search pipeline](search/search.md) documentation to learn more.
 
+Gravwell is pleased to announce our free [Community Edition](quickstart/community-edition.md)!
+
 [Quickstart](quickstart/quickstart.md)
+
+  * [Community Edition quickstart](quickstart/community-edition.md)
 
   * [Downloads](quickstart/downloads.md)
 
