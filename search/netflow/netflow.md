@@ -8,7 +8,7 @@ The netflow processor is designed to extract and filter raw netflow data frames,
 
 ### Processing Operators
 
-Each netflow field supports a set of operators that can act as fast filters.  The filters supported by each operator are determined by the data type of the filed. Numeric values support everything but the subset operators and IP addresses support just the subset operators.
+Each netflow field supports a set of operators that can act as fast filters.  The filters supported by each operator are determined by the data type of the field. Numeric values support everything but the subset operators and IP addresses support just the subset operators.
 
 | Operator | Name | Description |
 |----------|------|-------------|

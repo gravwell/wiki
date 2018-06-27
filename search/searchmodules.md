@@ -45,6 +45,7 @@ These can be used just like user-defined enumerated values.
 * [strings](strings/strings.md)
 * [subnet](subnet/subnet.md)
 * [sum](math/math.md)
+* [syslog](syslog/syslog.md)
 * [taint](taint/taint.md)
 * [unique](math/math.md)
 * [upper](upperlower/upperlower.md)
