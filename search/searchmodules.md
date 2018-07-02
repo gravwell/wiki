@@ -24,6 +24,7 @@ These can be used just like user-defined enumerated values.
 * [grep](grep/grep.md)
 * [hexlify](hexlify/hexlify.md)
 * [j1939](j1939/j1939.md)
+* [join](join/join.md)
 * [json](json/json.md)
 * [langfind](langfind/langfind.md)
 * [limit](limit/limit.md)
