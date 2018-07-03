@@ -1,6 +1,23 @@
 ## JSON
 
-The json module will extract data from search entries into enumerated values for later use. For example, to find the most prolific reddit posters, the following search extracts the "Author" field from each reddit post into a new enumerated value, then counts the occurrence of each author and puts it into a table:
+The json module is used to extract and filter data from search entries into enumerated values for later use.  JSON is an excellent data format for daynmic exploration as the data is self-describing.  The JSON module can extract items and rename them, or filter based on the extracted value.  Filtering directly within the JSON module provides a very high speed and intuitive way to select data of a specific format 
+
+### Supported Options
+
+* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
+* `-s`: The “-s” option informs the json module that we are in strict mode, meaning that if any item isn't found, drop the entire entry.
+
+### Filtering Operators
+
+The JSON module allows for a filtering based on equality.  If a filter is enabled that specifies equality ("equal" or "not equal") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
+
+| Operator | Name | Description |
+|----------|------|-------------|
+| == | Equal | Field must be equal
+| != | Not equal | Field must not be equal
+
+### Examples
+To find the most prolific reddit posters, the following search extracts the "Author" field from each reddit post into a new enumerated value, then counts the occurrence of each author and puts it into a table:
 
 ```
 tag=reddit json Author | count by Author | table Author count
@@ -28,6 +45,11 @@ Enumerated value names are derived by the last name in a JSON specification, in 
 ```
 json -e Data domain as dd
 ```
+Using the filter operator we can extract the Data field, but only when the domain is not the value "google.com." Filters can be combined with renaming.
+
+```
+json -e Data domain != "google.com" as dd
+```
 
 The JSON format is extremely liberal and allows names of all types, in cases where the json name may contain dot "." character it may be desirable to treat the dot as part of the name rather than as a specification for submembers.  For example, this JSON string contains a dot character in a field name:
 
@@ -41,6 +63,4 @@ An example json module argument to extract the subfield.op member would be:
 json "subfield.op"
 ```
 
-### Supported Options
 
-* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
