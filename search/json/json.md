@@ -15,6 +15,8 @@ The JSON module allows for a filtering based on equality.  If a filter is enable
 |----------|------|-------------|
 | == | Equal | Field must be equal
 | != | Not equal | Field must not be equal
+| ~ | Subset | Field contains the value
+| !~ | Not Subset | Field does NOT contain the value
 
 ### Examples
 To find the most prolific reddit posters, the following search extracts the "Author" field from each reddit post into a new enumerated value, then counts the occurrence of each author and puts it into a table:
