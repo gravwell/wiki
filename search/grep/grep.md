@@ -1,8 +1,10 @@
 ## Grep
 
-Grep is a very basic pipeline module that searches for a text string (not unicode). Any record containing such text will match and be passed through the pipeline. Any record not containing the text is dropped from the pipeline. For example, `grep foo` will pass on any records containing the text “foo” and drop any records that do not have “foo” anywhere within. Grep is case sensitive so `grep foo` would match “foo” but drop “Foo”.  Grep also supports a standard set of escape codes similar to printf, allowing for binary filters as well.
+Grep is a very basic pipeline module that searches for a text string (not Unicode). Any record containing such text will match and be passed through the pipeline. Any record not containing the text is dropped from the pipeline. For example, `grep foo` will pass on any records containing the text “foo” and drop any records that do not have “foo” anywhere within. Grep is case sensitive so `grep foo` would match “foo” but drop “Foo”.  Grep also supports a standard set of escape codes similar to printf, allowing for binary filters as well.
 
 Grep supports the standard GNU wildcards as well as fast string and binary matching.  To look for all entries that start that contain “foo” and “bar” separated by 0 or N bytes you can use `grep foo*bar`.  For more information on available wildcards see the TLDP miniguide[1].
+
+Grep allows multiple patterns to be specified. If any pattern is matched, the entry is passed down the pipeline. If the `-v` flag is used to invert the search, the entry will be dropped if *any* pattern matches.
 
 ### Supported options
 
@@ -18,7 +20,27 @@ Attention: Case-insensitive search is significantly slower. If you must do case-
 grep <argument list> <search parameter>
 ```
 ### Example Search
+
+To find any Apache logs containing the exact string "Mozilla\*Firefox" (no wildcards):
+
 ```
 tag=apache grep "Mozilla\*Firefox"
+```
+
+To find packets over port 80 whose payloads begin with the bytes 0, 1, 2, 3:
+
+```
 tag=pcap packet tcp.Port==80 tcp.Payload | grep -e Payload "\x01\x02\x03\x04"
+```
+
+Match any Reddit post which contains words ending in "ing" or "ed":
+
+```
+tag=reddit json Body | grep -e Body "*ing" "*ed"
+```
+
+Drop any Reddit posts on subreddits beginning with "Ask" or containing "foo":
+
+```
+tag=reddit json Subreddit | grep -v -e Subreddit "Ask*" "foo"
 ```
