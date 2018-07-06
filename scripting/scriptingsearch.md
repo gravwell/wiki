@@ -56,6 +56,7 @@ Search structs are used to actively read entries from a search, while search IDs
 * `httpGet(url) (string, error)` performs an HTTP GET request on the given URL, returning the response body as a string.
 * `httpPost(url, contentType, data)` performs an HTTP POST request to the given URL with the specified content type (e.g. "application/json") and the given data as the POST body.
 * `sendMail(hostname, port, username, password, from, to, subject, message) error` sends an email via SMTP. `hostname` and `port` specify the SMTP server to use; `username` and `password` are for authentication to the server. The `from` field is simply a string, while the `to` field should be a slice of strings containing email addresses. The `subject` and `message` fields are also strings which should contain the subject line and body of the email.
+* `sendMailTLS(hostname, port, username, password, from, to, subject, message, disableValidation) error` sends an email via SMTP using TLS. `hostname` and `port` specify the SMTP server to use; `username` and `password` are for authentication to the server. The `from` field is simply a string, while the `to` field should be a slice of strings containing email addresses. The `subject` and `message` fields are also strings which should contain the subject line and body of the email.  The disableValidation argument is a boolean which disables TLS certificate validation.  Setting disableValidation to true is insecure and may expose the email client to man-in-the-middle attacks.
 
 
 ## An example script
