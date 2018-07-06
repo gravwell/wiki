@@ -40,7 +40,9 @@ Gravwell is pleased to announce our free [Community Edition](quickstart/communit
 
 [The Resource System](resources/resources.md)
 
-[Scripting](scripting/scripting.md)
+[Orchestration](scripting/scriptingsearch.md)
+
+  * [Scripting](scripting/scripting.md)
 
 [GUI User Preferences](configuration/gui.md)
 
