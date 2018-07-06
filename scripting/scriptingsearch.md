@@ -1,6 +1,8 @@
-# Scripting Searches
+# Orchestration and Scripting Searches
 
-Gravwell provides a scripting environment in which you can run searches, even launching new searches based on the results of the previous ones, automatically. These scripts can either be run [on a schedule](scheduledsearch.md) or by hand from the [command line client](#!cli/cli.md). Because the CLI allows the script to be re-executed interactively, we recommend developing and testing scripts in the CLI first before creating a scheduled search.
+Gravwell provides a robust scripting engine in which you can run searches, update resources, send alerts, or take action.  The orchestration engine allows for automating the tedious steps in an investigation and taking action based on search results without the need to involve a human.  
+
+Orchestration scripts can be run [on a schedule](scheduledsearch.md) or by hand from the [command line client](#!cli/cli.md). Because the CLI allows the script to be re-executed interactively, we recommend developing and testing scripts in the CLI before creating a scheduled search.
 
 ## An example script
 
