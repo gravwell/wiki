@@ -6,25 +6,19 @@ The scheduling feature allows the user to schedule both regular searches and [se
 
 ## Setting up the Search Agent
 
-The Gravwell Search Agent is distributed as a separate installer from the main image, allowing administrators to omit it if desired. We recommend installing it on the same node as the webserver for ease of use.
+The Gravwell Search Agent is now included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the Search Agent. The Search Agent is installed automatically by the Gravwell Debian package.
 
-The Search Agent authenticates with the webserver with a special key set in `gravwell.conf`. Before installing, ensure that `gravwell.conf` contains a `Search-Agent-Auth` line:
-
-```
-Search-Agent-Auth=SearchAgentSecret
-```
-
-Installing the Search Agent is a simple matter of [downloading the installer](#!quickstart/downloads.md) and running it:
-
-```
-$ bash gravwell_searchagent_installer_2.0.6.sh
-```
-
-If the webserver is not on the local machine, the installer will prompt for a webserver IP address and a Search-Agent-Auth key.
-
-Once the installer has run, verify that the `gravwell_searchagent` process is running:
+Verify the Search Agent is running with the following command:
 
 ```
 $ ps aux | grep gravwell_searchagent
 ```
 
+## Disabling the Search Agent
+
+The Search Agent is installed by default but can be disabled if desired by running the following:
+
+```
+systemctl stop gravwell_searchagent.service
+systemctl disable gravwell_searchagent.service
+```
