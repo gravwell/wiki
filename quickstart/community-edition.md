@@ -50,11 +50,11 @@ Follow the prompts and, after completion, you should have a running Gravwell ins
 
 ## Getting a License
 
+To get your license file, head on over to [https://www.gravwell.io/gravwell-community-edition](https://www.gravwell.io/gravwell-community-edition) and fill out the form. Logbot will email one to you shortly therafter.
+
 Once Gravwell is installed, open a web browser and navigate to the server (e.g. [https://localhost/](https://localhost/)). It should prompt you to upload a license file.
 
 ![Upload license](upload-license.png)
-
-To get your license file, head on over to [https://www.gravwell.io/gravwell-community-edition](https://www.gravwell.io/gravwell-community-edition) and fill out the form. Logbot will email one to you shortly therafter.
 
 Attention: The default username/password for Gravwell is admin/changeme. We highly recommend changing the admin password as soon as possible!
 
