@@ -664,6 +664,116 @@ Common configuration errors for the Federator include:
 * Enforcing certification validation when upstream indexer or federators do not have certificates signed by a trusted certificate authority
 * Mismatched Ingest-Secret for downstream ingesters
 
+
+## CollectD Ingester
+
+The CollectD ingester is a fully standalone collectd collection agent which can directly ship collectd samples to Gravwell.  The ingester is easily configurable and supports multiple collectors which can be configured with different tags, security controls, and plugin-to-tag overrides.
+
+### Configuration
+
+The collectd ingester relies on the same Global configuration system as all other ingesters.  The Global section is used for defining indexer connections, authentication, and local cache controls.
+
+Collector configuration blocks are used to define listening collectors which can accept collectd samples.  Each collector configuration can have a unique Security-Level, authentication, tag, source override, network bind, and tag overrides.  Using multiple collector configurations a single collectd ingester can listen on multiple interfaces and apply unique tags to collectd samples coming in from mutiple network enclaves.
+
+By default the collectd ingester reads a configuration file located at _/opt/gravwell/etc/collectd.conf_ but can be overriden using the _-config-file-override_ command line parameter.
+
+#### Example Configuration
+
+```
+[Global]
+	Ingest-Secret = SuperSecretKey
+	Connection-Timeout = 0
+	Cleartext-Backend-target=192.168.122.100:4023
+	Log-Level=INFO
+
+[Collector "default"]
+	Bind-String=0.0.0.0:25826
+	Tag-Name=collectd
+	User=user
+	Password=secret
+
+[Collector "localhost"]
+	Bind-String=[fe80::1]:25827
+	Tag-Name=collectdlocal
+	Security-Level=none
+	Source-Override=[fe80::beef:1000]
+	Tag-Plugin-Override=cpu:collectdcpu
+```
+
+#### Collector Configuration Options
+
+Each Collector block must contain a unique name and non-overlapping Bind-Strings.  You cannot have multiple Collectors that are bound to the same interface on the same port.
+
+##### Bind-String
+
+The Bind-String controls the address and port which the Collector uses to listen for incoming collectd samples.  A valid Bind-String must contain either an IPv4 or IPv6 address and a port.  To listen on all interfaces use the "0.0.0.0" wildcard address.
+
+###### Example Bind-String
+
+Bind-String=0.0.0.0:25826
+Bind-String=127.0.0.1:25826
+Bind-String=127.0.0.1:12345
+Bind-String=[fe80::1]:25826
+
+##### Tag-Name
+
+The Tag-Name defines the tag that collectd samples will be assigned unless a Tag-Plugin-Override applies.
+
+##### Source-Override
+
+The Source-Override directive is used to override the source value applied to entries when they are sent to Gravwell.  By default the ingester applies the Source of the ingester, but it may be desirable to apply a specific source value to a Collector block in order to apply segmentation or filtering at search time.  A Source-Override is any valid IPv4 or IPv6 address.
+
+##### Example Source-Override
+
+Source-Override=192.168.1.1
+Source-Override=[DEAD::BEEF]
+Source-Override=[fe80::1:1]
+
+##### Security-Level
+
+The Security-Level directive controls how the Collector authenticates collectd packets.  Available options are: encrypt, sign, none.  By default a Collector uses the "encrypt" Security-Level and requires that both a User and Password are specified.  If "none" is used, no User or Password is required.
+
+##### Example Security-Level
+
+Security-Level=none
+Security-Level=encrypt
+Security-Level = sign
+Security-Level = SIGN
+
+##### User and Password
+
+When the Security-Level is set as "sign" or "encrypt" a username and password must be provided that match the values set in endpoints.  The default values are "user" and "secret" to match the default values shipped with collectd.  These values should be changed when collectd data might contain sensative information.
+
+###### User and Password Examples
+User=username
+Password=password
+
+User = "username with spaces in it"
+Password = "Password with spaces and other characters @$@#@()*$#W)("
+
+##### Encoder
+
+The default collectd encoder is JSON, but a simple text encoder is also available.  Options are "JSON" or "text"
+
+An example entry using the JSON encoder:
+
+```
+{"host":"build","plugin":"memory","type":"memory","type_instance":"used","value":727789568,"dsname":"value","time":"2018-07-10T16:37:47.034562831-06:00","interval":10000000000}
+```
+
+### Tag Plugin Overrides
+
+Each Collector block supports N number of Tag-Plugin-Override declarations which are used to apply a unique tag to a collectd sample based on the plugin that generated it.  Tag-Plugin-Overrides can be useful when you want to store data coming from different plugins in different wells and apply different ageout rules.  For example, it may be valuable to store collectd records about disk usage for 9 months, but CPU usage records can expire out at 14 days.  The Tag-Plugin-Override system makes this easy.
+
+Specifying the Tag-Plugin-Override format is comprised of two strings seperated by the ":" character.  The string on the left represents the name of the plugin and the string on the right represents the name of the desired tag.  All the usual rules about tags apply.  A single plugin cannot be mapped to mutiple tags, but multiple plugins CAN be mapped to the same tag.
+
+#### Example Tag Plugin Overrides
+
+Tag-Plugin-Override=cpu:collectdcpu # Map CPU plugin data to the "collectdcpu" tag.
+Tag-Plugin-Override=memory:memstats # Map the memory plugin data to the "memstats" tag.
+Tag-Plugin-Override= df : diskdata  # Map the df plugin data to the "diskdata" tag.
+Tag-Plugin-Override = disk : diskdata  # Map the disk plugin data to the "diskdata" tag.
+
 ## Kinesis Ingester
 
 Gravwell provides an ingester capable of fetching entries from Amazon's [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) service. The ingester can process multiple Kinesis streams at a time, with each stream composed of many individual shards. The process of setting up a Kinesis stream is outside the scope of this document, but in order to configure the Kinesis ingester for an existing stream you will need:
