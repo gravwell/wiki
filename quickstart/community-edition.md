@@ -90,4 +90,4 @@ The [search documentation](#!search/search.md) is the ultimate resource for buil
 
 Finally, the [Gravwell blog](https://www.gravwell.io/blog) has case studies and examples showing real-world applications of Gravwell that may serve as inspiration.
 
-Don't hesitate to email info@gravwell.io for help; we're excited to help others explore Gravwell!
+For help, you can join our [open community on Keybase](https://keybase.io/team/gravwell.community) or email support@gravwell.io. We're excited to help others get value from their data with Gravwell!
