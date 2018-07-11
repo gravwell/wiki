@@ -3,15 +3,15 @@
 This section contains basic “quick start” instructions for getting Gravwell up and running. 
 These instructions support the most common use case and act as an introduction to Gravwell.  Please note, the “Quick Start” instructions do not take advantage of the more advanced Gravwell features regarding distributed search and storage that are available in the Cluster Edition. If you require a more advanced setup, please review the Advanced topics section of this guide.
 
-## Community Edition Users
-
-If you are a Community Edition user, jump over the [Community Edition Quickstart](community-edition.md) to get a license and install the Community Edition core.
-
 ## Installation
 Installing Gravwell on a single machine is quite simple. Just follow the instructions in this section. For more advanced environments involving multiple systems, review the Advanced Topics section.
 
-### Gravwell Backend
-The Gravwell backend package comes as an installer file. You should have received an installer file or a link to download one (probably named something like “gravwell_8675309_0.2.sh”). Gravwell has been tested on all of the major Linux distributions and runs well, but Ubuntu Server LTS is preferred. Help installing Ubuntu can be found at https://tutorials.ubuntu.com/tutorial/tutorial-install-ubuntu-server.
+### Community Edition Users
+
+If you are a Community Edition user, jump over the [Community Edition Quickstart](community-edition.md) to read about installing Community Edition from our Debian repo or the standalone installer. If you want to follow along with the later sections of this document, take a look at the subsections about installing ingesters below, then jump ahead to "Feeding Data".
+
+### Install the Gravwell Indexer & Frontend
+The Gravwell core package comes as an installer file. You should have received an installer file or a link to download one (probably named something like “gravwell_8675309_0.2.sh”). Gravwell has been tested on all of the major Linux distributions and runs well, but Ubuntu Server LTS is preferred. Help installing Ubuntu can be found at https://tutorials.ubuntu.com/tutorial/tutorial-install-ubuntu-server.
 
 Using a terminal on the server that is to host Gravwell issue the following command as a superuser (e.g. via the `sudo` command):
 
