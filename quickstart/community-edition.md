@@ -2,7 +2,7 @@
 
 Gravwell's Community Edition is a free licensing program intended for personal use. Unlike regular Gravwell licenses, Community Edition licenses are restricted to 2GB of ingested data per day. In our experience, we've found this to be more than enough for any home network applications (unless you decide to capture all packets and then start streaming Netflix!)
 
-Getting Gravwell Community Edition is straightforward. First, you'll install the software from either our Debian package repository or a distribution-agnostic self-extracting installer. Next, you'll sign up for a free license, which will be emailed to you. Finally, the newly-installed Gravwell instance will prompt you to upload the license file; once it's uploaded, you'll be ready to start using Gravwell!
+Getting Gravwell Community Edition is straightforward. First, you'll install the software from either our Debian package repository or a distribution-agnostic self-contained installer. Next, you'll sign up for a free license, which will be emailed to you. Finally, the newly-installed Gravwell instance will prompt you to upload the license file; once it's uploaded, you'll be ready to start using Gravwell!
 
 ## Installing the software
 
@@ -31,9 +31,9 @@ The installation process will prompt to set some shared secret values used by co
 
 ![Generate secrets](secret-prompt.png)
 
-### Self-extracting Installer
+### Self-contained Installer
 
-For non-Debian systems, download the [self-extracting installer](https://update.gravwell.io/files/gravwell_community_2.0.9.tar.bz2) and extract it:
+For non-Debian systems, download the [self-contained installer](https://update.gravwell.io/files/gravwell_community_2.0.9.tar.bz2) and extract it:
 
 ```
 curl -O https://update.gravwell.io/files/gravwell_community_2.0.9.tar.bz2
@@ -79,6 +79,12 @@ If you install them on the same node as the main Gravwell instance, they should 
 We highly recommend installing the File Follow ingester (gravwell-file-follow) as a first experiment; it comes pre-configured to ingest Linux log files, so you should be able to see some entries immediately by issuing a search such as `tag=auth`:
 
 ![Auth entries](auth.png)
+
+If you are not using a debian based repository go to the [downloads section](downloads.md) for self-contained installers.
+
+### Ingester Configuration
+
+Additional information about installing and configuring each ingester can be found in the [Setting Up Ingesters](/ingesters/ingesters.md) section.
 
 ## Next Steps
 

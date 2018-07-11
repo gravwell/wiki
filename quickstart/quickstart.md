@@ -1,7 +1,11 @@
 # Quick Start Instructions
 
 This section contains basic “quick start” instructions for getting Gravwell up and running. 
-These instructions support the most common use case and act as an introduction to Gravwell.  Please note, the “Quick Start” instructions do not take advantage of the more advanced Gravwell features regarding distributed computing and storage mechanisms. If you require a more advanced setup, please review the Advanced topics section of this guide.
+These instructions support the most common use case and act as an introduction to Gravwell.  Please note, the “Quick Start” instructions do not take advantage of the more advanced Gravwell features regarding distributed search and storage that are available in the Cluster Edition. If you require a more advanced setup, please review the Advanced topics section of this guide.
+
+## Community Edition Users
+
+If you are a Community Edition user, jump over the [Community Edition Quickstart](community-edition.md) to get a license and install the Community Edition core.
 
 ## Installation
 Installing Gravwell on a single machine is quite simple. Just follow the instructions in this section. For more advanced environments involving multiple systems, review the Advanced Topics section.
