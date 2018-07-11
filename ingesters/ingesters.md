@@ -44,7 +44,7 @@ Connection-Timeout=1h
 
 ### Insecure-Skip-TLS-Verify
 
-The Insecure-Skip-TLS-Verify token tells the ingester to ignore bad certificates when connecting over encrypted TLS tunnels.  As the name suggests, any and all authentication provided by TLS is thrown out the window and attackers can easily Man-in-the-Middle TLS connections.  The ingest connections will still be encrypted, but the connection is by no means secure.  By default TLS certificates are validated and the connections will fail if the certificate validation fails.
+The Insecure-Skip-TLS-Verify token tells the ingester to ignore bad certificates when connecting over encrypted TLS tunnels. As the name suggests, any and all authentication provided by TLS is thrown out the window and attackers can easily Man-in-the-Middle TLS connections.  The ingest connections will still be encrypted, but the connection is by no means secure.  By default TLS certificates are validated and the connections will fail if the certificate validation fails.
 
 #### Examples
 
@@ -151,50 +151,43 @@ An example configuration for the Simple Relay ingester, configured to listen on 
 
 ```
 [Global]
-Ingest-Secret = IngestSecrets # the secret used to authenticate with indexers
+Ingest-Secret = IngestSecrets
 Connection-Timeout = 0
-Insecure-Skip-TLS-Verify = false #Validate the public keys of TLS connections
+Insecure-Skip-TLS-Verify=false
 #Cleartext-Backend-target=127.0.0.1:4023 #example of adding a cleartext connection
 #Cleartext-Backend-target=127.1.0.1:4023 #example of adding another cleartext connection
-#Encrypted-Backend-target=127.1.1.1:4023 #example of adding an encrypted connection
-#Assume-Local-Timezone=true #assume local timezone if none is found in the timestamp
-#a named pipe connection, this can be used to avoid network overhead
-Pipe-Backend-target=/opt/gravwell/comms/pipe
+#Encrypted-Backend-target=127.1.1.1:4024 #example of adding an encrypted connection
+Pipe-Backend-Target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
+#Ingest-Cache-Path=/opt/gravwell/cache/simple_relay.cache #adding an ingest cache for local storage when uplinks fail
+#Max-Ingest-Cache=1024 #Number of MB to store, localcache will only store 1GB before stopping.  This is a safety net
+Log-Level=INFO
+Log-File=/opt/gravwell/log/simple_relay.log
+
 #basic default logger, all entries will go to the default tag
 #no Tag-Name means use the default tag
-#no Reader-Type default to newline delimited entries
 [Listener "default"]
-        Bind-String="0.0.0.0:7777" #we are binding to all interfaces
-#syslog logger, all entries are tagged with the syslog tag
-[Listener "new hotness syslog "]
-       #use reliable syslog, which is syslog over TCP on port 601
-       #bind ONLY to localhost with no proto specifier we default to tcp
-       Bind-String = 127.0.0.1:601
-       Tag-Name = syslog
-[Listener "crappy old syslog"]
-       #use regular old UDP syslog using the RFC5424 format
-       #RFC5424 lexer also eats RFC3164 logs from legacy syslog and BSD-syslog
-       Bind-String = udp://127.0.0.1:514 #bind ONLY to localhost on UDP
-       Tag-Name = syslog2
-       Reader-Type=rfc5424 # parse out syslog entries irrespective of newlines
-       Source-Override=DEAD:BEEF::FEED:FEBE
-[Listener "strange UDP line reader"]
-       #NOTICE! Lines CANNOT span multiple UDP packets, if they do, they will be treated
-       #as seperate entries
-       Bind-String = udp://127.0.0.1:9999 #bind ONLY to localhost on UDP
-       Tag-Name = udpliner
-       Reader-Type=line #look for newlines to delimit entries
-       Source-Override=192.168.1.1
-# generic event handler, entries will be tagged with the "generic" tag
-# Notice the Ignore-Timestamps directive, this tells gravwell to not attempt
-# To extract a timestamp from the entry, but apply the current time to it
-# This can be useful if the source timestamps are not accurate, or non-existent
-[Listener "GenericEvents"]
-       #example generic event handler, it takes lines, and attaches current timestamp
-       Bind-String = 127.0.0.1:8888 #bind only to localhost TCP port 8888
-       Tag-Name = generic
-       Ignore-Timestamps = true # do not look for a timestamp, use the current time
+	Bind-String="0.0.0.0:7777" #we are binding to all interfaces, with TCP implied
+	#Lack of "Reader-Type" implines line break delimited logs
+	#Lack of "Tag-Name" implies the "default" tag
+	#Assume-Local-Timezone=false #Default for assume localtime is false
+	#Source-Override="DEAD::BEEF" #override the source for just this listener
+
+[Listener "syslogtcp"]
+	Bind-String="tcp://0.0.0.0:601" #standard RFC5424 reliable syslog
+	Reader-Type=rfc5424
+	Tag-Name=syslog
+	Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
+	Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
+
+[Listener "syslogudp"]
+	Bind-String="udp://0.0.0.0:514" #standard UDP based RFC5424 syslog
+	Reader-Type=rfc5424
+	Tag-Name=syslog
+	Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
+	Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
 ```
+
+Note: The `Keep-Priority` field is necessary if you plan to analyze syslog entries with the [syslog search module](#!search/syslog/syslog.md).
 
 ## File Follower
 
