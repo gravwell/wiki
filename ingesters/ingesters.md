@@ -44,7 +44,7 @@ Connection-Timeout=1h
 
 ### Insecure-Skip-TLS-Verify
 
-The Insecure-Skip-TLS-Verify token tells the ingester to ignore bad certificates when connecting over encrypted TLS tunnels.  As the name suggests, any and all authentication provided by TLS is thrown out the window and attackers can easily Man-in-the-Middle TLS connections.  The ingest connections will still be encrypted, but the connection is by no means secure.  By default TLS certificates are validated and the connections will fail if the certificate validation fails.
+The Insecure-Skip-TLS-Verify token tells the ingester to ignore bad certificates when connecting over encrypted TLS tunnels. As the name suggests, any and all authentication provided by TLS is thrown out the window and attackers can easily Man-in-the-Middle TLS connections.  The ingest connections will still be encrypted, but the connection is by no means secure.  By default TLS certificates are validated and the connections will fail if the certificate validation fails.
 
 #### Examples
 
@@ -139,7 +139,13 @@ Source-Override=DEAD:BEEF::FEED:FEBE
 
 Simple Relay is a text ingester which is capable of listening on multiple TCP or UDP ports.  Each port can be assigned a tag as well as an ingest standard (e.g. parse RFC5424 or simple newline delimited entries).  Simple Relay is the go-to ingester for ingesting remote syslog entries or consuming from any data source that can throw text logs over a network connection.
 
-Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+
+```
+apt-get install gravwell-simple-relay
+```
+
+Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
 
 ```
 root@gravserver ~ # bash gravwell_simple_relay_installer.sh
@@ -151,54 +157,62 @@ An example configuration for the Simple Relay ingester, configured to listen on 
 
 ```
 [Global]
-Ingest-Secret = IngestSecrets # the secret used to authenticate with indexers
+Ingest-Secret = IngestSecrets
 Connection-Timeout = 0
-Insecure-Skip-TLS-Verify = false #Validate the public keys of TLS connections
+Insecure-Skip-TLS-Verify=false
 #Cleartext-Backend-target=127.0.0.1:4023 #example of adding a cleartext connection
 #Cleartext-Backend-target=127.1.0.1:4023 #example of adding another cleartext connection
-#Encrypted-Backend-target=127.1.1.1:4023 #example of adding an encrypted connection
-#Assume-Local-Timezone=true #assume local timezone if none is found in the timestamp
-#a named pipe connection, this can be used to avoid network overhead
-Pipe-Backend-target=/opt/gravwell/comms/pipe
+#Encrypted-Backend-target=127.1.1.1:4024 #example of adding an encrypted connection
+Pipe-Backend-Target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
+#Ingest-Cache-Path=/opt/gravwell/cache/simple_relay.cache #adding an ingest cache for local storage when uplinks fail
+#Max-Ingest-Cache=1024 #Number of MB to store, localcache will only store 1GB before stopping.  This is a safety net
+Log-Level=INFO
+Log-File=/opt/gravwell/log/simple_relay.log
+
 #basic default logger, all entries will go to the default tag
 #no Tag-Name means use the default tag
-#no Reader-Type default to newline delimited entries
 [Listener "default"]
-        Bind-String="0.0.0.0:7777" #we are binding to all interfaces
-#syslog logger, all entries are tagged with the syslog tag
-[Listener "new hotness syslog "]
-       #use reliable syslog, which is syslog over TCP on port 601
-       #bind ONLY to localhost with no proto specifier we default to tcp
-       Bind-String = 127.0.0.1:601
-       Tag-Name = syslog
-[Listener "crappy old syslog"]
-       #use regular old UDP syslog using the RFC5424 format
-       #RFC5424 lexer also eats RFC3164 logs from legacy syslog and BSD-syslog
-       Bind-String = udp://127.0.0.1:514 #bind ONLY to localhost on UDP
-       Tag-Name = syslog2
-       Reader-Type=rfc5424 # parse out syslog entries irrespective of newlines
-       Source-Override=DEAD:BEEF::FEED:FEBE
-[Listener "strange UDP line reader"]
-       #NOTICE! Lines CANNOT span multiple UDP packets, if they do, they will be treated
-       #as seperate entries
-       Bind-String = udp://127.0.0.1:9999 #bind ONLY to localhost on UDP
-       Tag-Name = udpliner
-       Reader-Type=line #look for newlines to delimit entries
-       Source-Override=192.168.1.1
-# generic event handler, entries will be tagged with the "generic" tag
-# Notice the Ignore-Timestamps directive, this tells gravwell to not attempt
-# To extract a timestamp from the entry, but apply the current time to it
-# This can be useful if the source timestamps are not accurate, or non-existent
-[Listener "GenericEvents"]
-       #example generic event handler, it takes lines, and attaches current timestamp
-       Bind-String = 127.0.0.1:8888 #bind only to localhost TCP port 8888
-       Tag-Name = generic
-       Ignore-Timestamps = true # do not look for a timestamp, use the current time
+	Bind-String="0.0.0.0:7777" #we are binding to all interfaces, with TCP implied
+	#Lack of "Reader-Type" implines line break delimited logs
+	#Lack of "Tag-Name" implies the "default" tag
+	#Assume-Local-Timezone=false #Default for assume localtime is false
+	#Source-Override="DEAD::BEEF" #override the source for just this listener
+
+[Listener "syslogtcp"]
+	Bind-String="tcp://0.0.0.0:601" #standard RFC5424 reliable syslog
+	Reader-Type=rfc5424
+	Tag-Name=syslog
+	Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
+	Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
+
+[Listener "syslogudp"]
+	Bind-String="udp://0.0.0.0:514" #standard UDP based RFC5424 syslog
+	Reader-Type=rfc5424
+	Tag-Name=syslog
+	Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
+	Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
 ```
+
+Note: The `Keep-Priority` field is necessary if you plan to analyze syslog entries with the [syslog search module](#!search/syslog/syslog.md).
 
 ## File Follower
 
 The File Follower ingester is designed to follow files and to capture logs from sources that cannot natively integrate with Gravwell or are incapable of sending logs via a network connection.  The file follower comes in both Linux and Windows flavors and can follow any logging file that is line delimited.  It is compatible with file rotation and employs a powerful pattern matching system so that the file follower can deal with applications that are not consistent with log file names.
+
+If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+
+```
+apt-get install gravwell-file-follow
+```
+
+Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+
+```
+root@gravserver ~ # bash gravwell_file_follow_installer.sh
+```
+
+If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately.  However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, it will be necessary to modify the configuration file in `/opt/gravwell/etc/file_follow.conf` to match the `Ingest-Auth` value set on the Indexers.
+
 
 ### Example Configurations
 
@@ -318,7 +332,7 @@ The Gravwell windows events ingester runs as a service on a windows machine and 
 
 ### Installation
 
-Download the Gravwell windows ingester installer. If you do not have a link, contact a Gravwell rep at support@gravwell.io.
+Download and unpack the Gravwell windows ingester installer from the [Downloads page](#!quickstart/downloads.md).
 
 Run the .msi installation wizard to install the Gravwell events service.
 
@@ -449,7 +463,13 @@ tag=sysmon regex ".*EventID>11.*Image'>(?P<process>.*)<\/Data>.*TargetFilename'>
 
 The Netflow ingester acts as a Netflow collector (see [the wikipedia article](https://en.wikipedia.org/wiki/NetFlow) for a full description of Netflow roles), gathering records created by Netflow exporters and capturing them as Gravwell entries for later analysis. These entries can then be analyzed using the [netflow](#!/search/netflow/netflow.md) search module.
 
-To install the Netflow ingester, simply run the installer as root (the actual file name will typically include a version number):
+If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+
+```
+apt-get install gravwell-netflow-capture
+```
+
+Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). To install the Netflow ingester, simply run the installer as root (the actual file name will typically include a version number):
 
 ```
 root@gravserver ~ # bash gravwell_netflow_capture_installer.sh
@@ -480,7 +500,13 @@ Note: At this time, the ingester only supports Netflow v5; keep this in mind whe
 
 A primary strength of Gravwell is the ability to ingest binary data. The network ingester allows you to capture full packets from the network for later analysis; this provides much better flexibility than simply storing netflow or other condensed traffic information.
 
-To install the network ingester, simply run the installer as root (the file name may differ slightly):
+If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+
+```
+apt-get install gravwell-network-capture
+```
+
+Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). To install the network ingester, simply run the installer as root (the file name may differ slightly):
 
 ```
 root@gravserver ~ # bash gravwell_network_capture_installer.sh
@@ -624,6 +650,22 @@ Much like the Simple Relay ingester, the Federator is designed to build a series
  * Reducing the number of connections to an indexer
  * Controlling the tags an data source group can provide
 
+### Installation
+
+If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+
+```
+apt-get install gravwell-federator
+```
+
+Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the federator:
+
+```
+root@gravserver ~ # bash gravwell_federator_installer.sh
+```
+
+The Federator will almost certainly require configuration for your specific setup; please refer to the following section for more information.
+
 ### Example Configuration
 
 The following example configuration connects to two upstream indexers in a protected network segment and provides ingest servers on two untrusted network segments.  Each untrusted ingest point has a unique Ingest-Secret, with one providing a TLS connect with a specific certificate and key pair.  The configuration file also enables a local cache, enabling the Federator to act as a fault tolerate buffer between the Gravwell indexers and the untrusted network segments.   By default the Federator ingester expects the configuration file to be located at /opt/gravwell/etc/federator.conf, but the location can be overriden using the -config flag.
@@ -668,6 +710,20 @@ Common configuration errors for the Federator include:
 ## CollectD Ingester
 
 The CollectD ingester is a fully standalone collectd collection agent which can directly ship collectd samples to Gravwell.  The ingester is easily configurable and supports multiple collectors which can be configured with different tags, security controls, and plugin-to-tag overrides.
+
+If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+
+```
+apt-get install gravwell-collectd
+```
+
+Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+
+```
+root@gravserver ~ # bash gravwell_collectd_installer.sh
+```
+
+If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately.  However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, it will be necessary to modify the configuration file in `/opt/gravwell/etc/collectd.conf` to match the `Ingest-Auth` value set on the Indexers.
 
 ### Configuration
 
@@ -786,7 +842,7 @@ Once the stream is configured, each record in the Kinesis stream will be stored 
 
 ### Installation and configuration
 
-First, install the ingester:
+First, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md), then install the ingester:
 
 ```
 root@gravserver ~# bash gravwell_kinesis_ingest_installer.sh
@@ -843,7 +899,7 @@ Once the stream is configured, each record in the PubSub stream topic will be st
 
 ### Installation and configuration
 
-First, install the ingester:
+First, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md), then install the ingester:
 
 ```
 root@gravserver ~# bash gravwell_pubsub_ingest_installer.sh

@@ -35,7 +35,7 @@ root@gravserver ~ # bash gravwell_simple_relay_installer.sh
 ### Single Machine Gravwell Instance
 If your installation is entirely contained on one machine, as it is in these quick start instructions, the Text Ingester installer will extract the configuration options and configure itself appropriately. If you are using an advanced setup where not all Gravwell components are running on a single system, review the advanced topics section of the documentation.
 
-You now have a running Simple Relay service on the Gravwell server which will ingest any text data sent to it (by default it listens on port 7777). The configuration file for this service is located at `/opt/gravwell/etc/simple_relay.conf`. See the Advanced Topics -> Ingesters -> Simple Relay section for advanced configuration.
+You now have a running Simple Relay service on the Gravwell server which will ingest syslog entries sent to it on TCP port 601 or UDP port 514; these will be tagged with the "syslog" tag. The config file also contains a (commented out) entry to listen for any line-delimited data on port 7777; enable this if you want to send arbitrary line-delimited entries over the network. The configuration file for this service is located at `/opt/gravwell/etc/simple_relay.conf`. See the Simple Relay section of the [Ingesters documentation](#!ingesters/ingesters.md) for advanced configuration options.
 
 ## Feeding Data
 This section provides basic instructions for sending data into Gravwell. Review the Advanced topics -> Ingesters section for advanced instructions for setting up other data ingesters.
