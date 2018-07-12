@@ -110,7 +110,7 @@ A primary strength of Gravwell is the ability to ingest binary data. The network
 If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
 
 ```
-apt-get install gravwell-network-capture
+apt-get install libpcap0.8 gravwell-network-capture
 ```
 
 Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). To install the network ingester, simply run the installer as root (the file name may differ slightly):
