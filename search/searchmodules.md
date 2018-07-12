@@ -23,6 +23,7 @@ These can be used just like user-defined enumerated values.
 * [geoip](geoip/geoip.md)
 * [grep](grep/grep.md)
 * [hexlify](hexlify/hexlify.md)
+* [ipfix](ipfix/ipfix.md)
 * [j1939](j1939/j1939.md)
 * [join](join/join.md)
 * [json](json/json.md)
