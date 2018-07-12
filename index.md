@@ -26,6 +26,8 @@ Gravwell is pleased to announce our free [Community Edition](quickstart/communit
 
 [Setting Up Ingesters](ingesters/ingesters.md)
 
+  * [Service Integrations](ingesters/integrations.md)
+
 [Installing and Configuring Gravwell](configuration/configuration.md)
 
   * [Detailed configuration parameters](configuration/parameters.md)
