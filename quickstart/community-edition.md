@@ -16,7 +16,7 @@ Installing from the Debian repository is quite simple:
 # Get our signing key
 curl https://update.gravwell.io/debian/update.gravwell.io.gpg.key | apt-key add -
 # Add the repository
-echo 'deb http://update.gravwell.io/debian/ community main' > /etc/apt/sources.list.d/gravwell.list
+echo 'deb [ arch=amd64 ] https://update.gravwell.io/debian/ community main' > /etc/apt/sources.list.d/gravwell.list
 apt-get install apt-transport-https
 apt-get update
 # Install the package
