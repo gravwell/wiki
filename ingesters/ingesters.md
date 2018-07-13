@@ -733,7 +733,7 @@ The collectd ingester relies on the same Global configuration system as all othe
 
 Collector configuration blocks are used to define listening collectors which can accept collectd samples.  Each collector configuration can have a unique Security-Level, authentication, tag, source override, network bind, and tag overrides.  Using multiple collector configurations a single collectd ingester can listen on multiple interfaces and apply unique tags to collectd samples coming in from mutiple network enclaves.
 
-By default the collectd ingester reads a configuration file located at _/opt/gravwell/etc/collectd.conf_ but can be overriden using the _-config-file-override_ command line parameter.
+By default the collectd ingester reads a configuration file located at _/opt/gravwell/etc/collectd.conf_ but can be overriden using the _-config-file_ command line parameter.
 
 #### Example Configuration
 
