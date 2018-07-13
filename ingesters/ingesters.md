@@ -670,7 +670,7 @@ The Federator will almost certainly require configuration for your specific setu
 
 ### Example Configuration
 
-The following example configuration connects to two upstream indexers in a protected network segment and provides ingest servers on two untrusted network segments.  Each untrusted ingest point has a unique Ingest-Secret, with one providing a TLS connect with a specific certificate and key pair.  The configuration file also enables a local cache, enabling the Federator to act as a fault tolerate buffer between the Gravwell indexers and the untrusted network segments.   By default the Federator ingester expects the configuration file to be located at /opt/gravwell/etc/federator.conf, but the location can be overriden using the -config flag.
+The following example configuration connects to two upstream indexers in a protected network segment and provides ingest servers on two untrusted network segments.  Each untrusted ingest point has a unique Ingest-Secret, with one providing a TLS connect with a specific certificate and key pair.  The configuration file also enables a local cache, enabling the Federator to act as a fault tolerate buffer between the Gravwell indexers and the untrusted network segments.   By default the Federator ingester expects the configuration file to be located at _/opt/gravwell/etc/federator.conf_, but the location can be overriden using the _-config-file_ flag.
 
 ```
 [Global]
