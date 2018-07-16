@@ -93,7 +93,7 @@ Ingest-Cache-Path=/mnt/storage/networklog.cache
 
 ### Max-Ingest-Cache
 
-Max-Ingest-Cache provides for limiting the amount of storage the an ingester will consume when the cache is engaged.  The maximum cache value is specified in megabytes.  So a value of 1024 means that the ingester can consume 1TB of storage before it will stop accepting new entries.  The Cache system will NOT overwrite old entries when the cache fills up, this is by design so that an attacker can't disrupt a network connection and cause an ingester to overwrite potentially critical data at the point the disruption happened.
+Max-Ingest-Cache provides for limiting the amount of storage the an ingester will consume when the cache is engaged.  The maximum cache value is specified in megabytes.  So a value of 1024 means that the ingester can consume 1GB of storage before it will stop accepting new entries.  The Cache system will NOT overwrite old entries when the cache fills up, this is by design so that an attacker can't disrupt a network connection and cause an ingester to overwrite potentially critical data at the point the disruption happened.
 
 #### Examples
 
