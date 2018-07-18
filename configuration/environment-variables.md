@@ -32,7 +32,7 @@ The table below shows which `gravwell.conf` parameters can be set via environmen
 
 Ingesters can also accept some parameters as environment variables rather than setting them explicitly in the configuration file.
 
-| config file variable | Environment Variable | Example |
+| Config file variable | Environment Variable | Example |
 |:------|:----|:---|
 | Ingest-Secret | GRAVWELL_INGEST_SECRET | GRAVWELL_INGEST_SECRET=CE58DD3F22422C2E348FCE56FABA131A |
 | Log-Level | GRAVWELL_LOG_LEVEL | GRAVWELL_LOG_LEVEL=DEBUG |
@@ -64,3 +64,12 @@ Or we can specify a file as with other environment variables:
 ```
 FEDERATOR_base_INGEST_SECRET_FILE=/run/secrets/federator_base_secret /opt/gravwell/bin/gravwell_federator
 ```
+
+### Datastore-specific variables
+
+The [Datastore](#!distributed/frontend.md) can be configured at run-time by environment variables:
+
+| gravwell.conf variable | Environment variable | Example |
+|------------------------|----------------------|---------|
+| Datastore-Listen-Address | GRAVWELL_DATASTORE_LISTEN_ADDRESS | GRAVWELL_DATASTORE_LISTEN_ADDRESS=192.168.1.100 |
+| Datastore-Port | GRAVWELL_DATASTORE_LISTEN_PORT | GRAVWELL_DATASTORE_LISTEN_PORT=9995 |
