@@ -47,6 +47,7 @@ Search structs are used to actively read entries from a search, while search IDs
 * `getAvailableEntryCount(search) (uint64, bool, error)` returns the number of entries that can be read from the given search, a boolean specifying if the search is complete, and an error if anything went wrong.
 * `getEntries(search, start, end) ([]SearchEntry, error)` pulls the specified entries from the given search. The bounds for `start` and `end` can be found with the `getAvailableEntryCount` function.
 * `isSearchFinished(search) (bool, error)` returns true if the given search is complete
+* `executeSearch(query, start, end) ([]SearchEntry, error)` starts a search, waits for it to complete, retrieves up to ten thousand entries, detatches from search and returns the entries.
 * `deleteSearch(searchID) error` deletes the search with the specified ID
 * `backgroundSearch(searchID) error` sends the specified search to the background; this is useful for "keeping" a search for later manual inspection.
 * `downloadSearch(searchID, format, start, end) ([]byte, error)` downloads the given search as if a user had clicked the 'Download' button in the web UI. `format` should be a string containing either "json", "csv", "text", "pcap", or "lookupdata" as appropriate. `start` and `end` are time values.
