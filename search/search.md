@@ -18,6 +18,26 @@ First, the json module parses the JSON in the raw entries and pulls out the "Bod
 
 Further examples throughout the documentation should help clarify the use of enumerated values.
 
+## Quoting and tokenizing
+
+When specifying arguments to Gravwell modules, be mindful of special characters. Most modules treat spaces, tabs, newlines, and the following characters as separators: !#$%&'()*+,-./:;<=>?@
+
+When specifying an argument to a module which contains one of these characters, wrap the argument in double-quotes:
+
+```
+json "search-id"
+```
+
+```
+grep "dank memes"
+```
+
+You can escape double quote characters if you need to use them, for instance to identify mis-used dialog tags in text you could search for the sequence `",`:
+
+```
+grep "\","
+```
+
 ## Search Modules
 
 Search modules are used to analyze data entries, filtering out undesired data or extracting interesting portions of the data. A search pipeline may include many search modules, one after another, each operating on the results of the previous module.

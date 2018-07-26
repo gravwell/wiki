@@ -53,7 +53,7 @@ Using the filter operator we can extract the Data field, but only when the domai
 json -e Data domain != "google.com" as dd
 ```
 
-The JSON format is extremely liberal and allows names of all types, in cases where the json name may contain dot "." character it may be desirable to treat the dot as part of the name rather than as a specification for submembers.  For example, this JSON string contains a dot character in a field name:
+The JSON format is extremely liberal and allows names of all types, including characters Gravwell usually treats as separators such as '.' and "-". In cases where the JSON name contains such characters, wrap the individual field in double-quotes to parse it as a single token. For example, this JSON string contains a dot character in a field name:
 
 ```
 { "subfield.op": "stuff", "subfield.type": "int", "subfield.value": 99}
@@ -62,7 +62,17 @@ The JSON format is extremely liberal and allows names of all types, in cases whe
 An example json module argument to extract the subfield.op member would be:
 
 ```
-json "subfield.op"
+json "subfield.op" as sop
 ```
 
+Similarly, consider the following nested structure:
 
+```
+{ "fields": { "search-id": 1234, "search-type": "background" } }
+```
+
+Because search-id and search-type contain a dash character, they should be wrapped in quotes when used:
+
+```
+json fields."search-id" fields."search-type" as type | count by "search-id",type | table "search-id" type count
+```
