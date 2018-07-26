@@ -1,11 +1,12 @@
 ## Base64
 
-The base64 module is useful for encoding and decoding base64 values.  Most web transport systems use base64 in order to ship binary data via HTTP (a text based protocol).  By default base64 encodes values, but the base64 `-d` flag allows for decoding as well.  An example would be extracting encoded values in a HTTP PUT request.
+The base64 module is useful for encoding and decoding base64 values.  Most web transport systems use base64 in order to ship binary data via HTTP (a text based protocol).  By default base64 encodes values, but the base64 `-d` flag allows for decoding as well.  An example would be extracting encoded values in a HTTP PUT request.  The base64 module makes a best effort when decoding and will decode as much data as it can.  The strict flag allows for enforcing a clean decode on all values, dropping any entries that cannot be entirely decoded.
 
 ### Supported Options
 
 * `-d`: Decode rather than encode
 * `-raw`: Assume RAW base64 encoding/decoding, excluding any padding = characters
+* `-s`: Enforce strict mode, drop entry if entire field cannot be decoded.
 * `-t <arg>`: Assign encoded or decoded values to an enumerated value
 
 ### Example
