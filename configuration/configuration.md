@@ -126,6 +126,7 @@ When reassigning tags between wells, the system will NOT move the data.  If you 
 Gravwell supports an ageout system whereby data management policies can be applied to individual wells.  The ageout policies allow controlling data retention, storage well utilization, and compression.  Each well supports a hot and cold storage location with a set of parameters which determine how data is moved from one storage system to the other.  An ideal Gravwell storage architecture is comprised of relatively small pools of high speed storage that is tolerant to random acceses and a high volume and low cost storage pool to be used for longer term storage.  NVME based flash and/or XPoint drives make a great hot well while magnetic RAID arrays, NAS, or SAN pools work well for cold pools.  Searching is not impeeded during ageout, nor is ingestion.  However, if data is actively coming into a storage shard that is marked for ageout or is actively being queried, the ageout system will defer aging out the shard to a later time.
 
 Ageout policies can be defined via three parameters:
+
 * Time
 * Total Storage
 * Storage Available
