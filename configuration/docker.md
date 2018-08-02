@@ -87,6 +87,18 @@ We can verify that the ingester is active by clicking on the System Stats item i
 
 Now we can configure our Netflow generators to send records to port 2055 of the host; they'll be passed in to the container and ingester into Gravwell.
 
+### Customizing ingester containers
+
+Once you've launched an ingester container, you may want to modify the default configuration somewhat. For instance, you may decide to run the Netflow ingester on a different port.
+
+To make changes to the Netflow ingester container we launched above, we can launch a shell in the container:
+
+	docker exec -it netflow sh
+
+Then we can use vi to edit `/opt/gravwell/etc/netflow_capture.conf` as described in [the ingesters documentation](#!ingesters/ingesters.md). Once our modifications are made, we simply restart the whole container:
+
+	docker restart netflow
+
 ## Configuring external (non-Docker) ingesters
 
 If you refer back to the original command we used to launch the `gravwell/community` image, you'll note that we forwarded ports 4023 and 4024 to the host. These are respectively the cleartext and TLS-encrypted ingest ports for the indexer. If you have an ingester running on another system (perhaps gathering log files on a Linux server somewhere), you can set the `Cleartext-Backend-target` or `Encrypted-Backend-target` fields in the ingester config file to point at your Docker host and ingest data into the Gravwell instance there.
