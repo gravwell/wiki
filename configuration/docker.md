@@ -1,72 +1,107 @@
-# Deploying Gravwell in Docker
+# Deploying Gravwell Community Edition in Docker
 
-Most Gravwell components are deployed as statically compiled executables which are suitable for execution on most modern Linux hosts, which also enables easy Docker deployment.  Gravwell engineers use docker extensively for developement, testing, and internal deployment.  Docker also enables customers to rapidly standup, teardown, and otherwise manage a large Gravwell deployment.  To enable customers to get running quickly in a Docker deployment, we have provided sample Dockerfiles for both cluster and single edition SKUs.
+With pre-built Docker images available in the Docker Hub, it is very easy to deploy Gravwell Community Edition in Docker for experimentation or long-term use. In this document, we show how to set up a Gravwell Community Edition environment within Docker.
 
-The complete set of Dockerfiles can be found [here](https://update.gravwell.io/files/docker_buildfiles_ad05723a547d31ee57ed8880bb5ef4e9.tar.bz2) with an MD5 checksum of ad05723a547d31ee57ed8880bb5ef4e9.
+If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, contact support@gravwell.io for help. We also have some information about deploying a custom Docker instance [on this wiki](#!configuration/custom-docker.md) and [on our blog](https://www.gravwell.io/blog/gravwell-docker-deployment)
 
-## Building Docker Containers
+Once you have set up Gravwell, check out the [quickstart](#!quickstart/quickstart.md) and [Community Edition guide](#!quickstart/community-edition.md) for some starting points on *using* Gravwell.
 
-Building Docker containers using the provided Dockerfiles is extremely easy.  Gravwell docker deployments utilize the extremely small busybox base container, enabling very small continers.
+## Create Docker network
 
-### Dockerfile
+To keep our Gravwell containers separated from any other containers you may be running, we'll create a Docker network called `gravnet`:
 
-Modifying the docker file to suite specific deployment requirements requires very little work.  The standard gravwell docker file uses a small startup script to check whether or not we need to regenerate X509 certificates at startup.  If your deployment has valid certificates, you can start Gravwell binaries directly and remove some of the utilities in /opt/gravwell/bin that are deployed by the installer (namely gencert and crashreport).
+	docker network create gravnet
 
-The base Dockerfile for a single instance:
-```
-FROM busybox
-MAINTAINER support@gravwell.io
-ARG INSTALLER=gravwell_installer.sh
-COPY $INSTALLER /tmp/installer.sh
-COPY start.sh /tmp/start.sh
-RUN /bin/sh /tmp/installer.sh --no-questions
-RUN rm -f /tmp/installer.sh
-RUN mv /tmp/start.sh /opt/gravwell/bin/
-CMD ["/bin/sh", "/opt/gravwell/bin/start.sh"]
-```
+## Deploy the indexer and webserver
 
-The basic startup script:
-```
-#!/bin/sh
+The Gravwell indexer and webserver frontend, plus the Simple Relay ingester, are shipped in a single Docker image ([gravwell/community](https://hub.docker.com/r/gravwell/community/)for convenience. We will launch it with port 443 forwarded to port 4443 on the host for access to the webserver:
 
-# unless environment variable says no, generate new SSL certs
-if [ "$NO_SSL_GEN" == "true" ]; then
-	echo "Skipping SSL certificate generation"
-else
-	/opt/gravwell/bin/gencert -key-file /opt/gravwell/etc/key.pem -cert-file /opt/gravwell/etc/cert.pem -host 127.0.0.1
-	if [ "$?" != "0" ]; then
-		echo "Failed to generate certificates"
-		exit -1
-	fi
-fi
+	docker run --net gravnet -p 4443:443 -p 4023:4023 -p 4024:4024 -d -e GRAVWELL_INGEST_SECRET=MyIngestSecret -e GRAVWELL_INGEST_AUTH=MyIngestSecret -e GRAVWELL_CONTROL_AUTH=MyControlSecret -e GRAVWELL_SEARCHAGENT_AUTH=MySearchAgentAuth --name gravwell gravwell/community:latest
 
-#fire up the indexer and webserver processes and wait
-/opt/gravwell/bin/gravwell_indexer -config-override /opt/gravwell/etc/ &
-/opt/gravwell/bin/gravwell_webserver -config-override /opt/gravwell/etc/ &
-wait
-```
+Note that the new container is named `gravwell`; we will use this when pointing ingesters to the indexer.
 
-## Using Environment Variables
+We have set several environment variables which bear examination. They set shared secrets used to communicate between components of Gravwell. Normally these are set in [configuration files](#!configuration/parameters.md), but we can also set them via [environment variables](#!configuration/environment-variables.md) for a more dynamic, Docker-friendly config. We'll use the `GRAVWELL_INGEST_SECRET=MyIngestSecret` value later for ingesters too. The variables we set are:
 
-The standard docker startup script looks for the environment variable `NO_SSL_GEN` and will skip X509 certificate generation if set to "true".  If your deployment is injecting valid certificates be sure to include the arugment `-e NO_SSL_GEN=true` when starting the container.
+* `GRAVWELL_INGEST_AUTH=MyIngestSecret` tells the *indexer* to use MyIngestSecret to authenticate ingesters.
+* `GRAVWELL_INGEST_SECRET=MyIngestSecret` tells the *Simple Relay ingester* to use MyIngestSecret to authenticate to the indexer. This **must** match the value of GRAVWELL_INGEST_AUTH!
+* `GRAVWELL_CONTROL_AUTH=MyControlSecret` tells the *frontend* and *indexer* that they should authenticate with each other using MyControlSecret
+* `GRAVWELL_SEARCHAGENT_AUTH=MySearchAgentAuth` tells the *frontend* to use MySearchAgentAuth when authenticating the search agent
 
-The indexer, webserver, and ingesters can also have some configuration parameters set via environment variables rather than config file if desired. See the [Environment Variables](environment-variables.md) documentation for more details.
+Attention: We **highly** recommend setting these values to secrets of your own choosing if you intend to run this long-term, ESPECIALLY if you expose it to the Internet in any way.
 
-## Sample Dockerfile For Ingesters
+## Upload license and log in
 
-Gravwell is continually releasing new ingesters and components, but may not always have a Dockerfile for every ingester.  However, Dockerfiles are pretty straight forward and easy to modify.  Below is an example Dockerfile which builds a Docker container via the SimpleRelay ingester.
+Now that Gravwell is running, point a web browser at port 4443 on the host. It should prompt for a license upload:
 
-```
-FROM busybox
-MAINTAINER support@gravwell.io
-ARG INSTALLER=gravwell_installer.sh
-COPY $INSTALLER /tmp/installer.sh
-RUN /bin/sh /tmp/installer.sh --no-questions
-RUN rm -f /tmp/installer.sh
-CMD ["/opt/gravwell/bin/gravwell_simple_relay"]
-```
+![](license-upload-docker.png)
 
-To build the container, copy the simple relay installer to the same working directory as the Docker file and execute the following command:
-```
-docker build --ulimit nofile=32000:32000 --compress --build-arg INSTALLER=gravwell_simple_relay_installer_2.0.sh --no-cache --tag gravwell:simple_relay_2.0.0 .
-```
+You should have been emailed a license file when you signed up for Community Edition. If you haven't signed up for Community Edition yet, head over to [https://www.gravwell.io/community-edition](https://www.gravwell.io/community-edition) and get a license.
+
+Once you upload the license and it is verified, you'll get a login prompt:
+
+![](docker-login.png)
+
+Log in with the default credentials **admin** / **changeme**. You're now in Gravwell! If you're going to run Gravwell for a while, you should probably change the password (click the user icon in the upper right to change the password).
+
+## Add some data to test
+
+The gravwell/community Docker image ships with the Simple Relay [ingester](#!ingesters/ingesters.md) pre-installed. It listens on the following ports:
+
+* TCP 7777 for line-delimited logs (tagged 'default')
+* TCP 601 for syslog messages (tagged 'syslog')
+* UDP 514 for syslog messages (tagged 'syslog')
+
+To make sure we can get data into Gravwell, we can use netcat to write lines to port 7777. However, when we launched the VM, we didn't forward any of those ports to the host. Luckily, we can use `docker inspect` to get the IP address assigned to the Gravwell container:
+
+	docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' gravwell
+
+In our case, it was **172.19.0.2**. We can then use netcat to send in some lines, hitting Ctrl-C when done:
+
+	$ netcat 172.19.0.2 7777
+	this is a test
+	this is another test
+
+We can then run a quick search over the last hour to verify that the data made it in and Gravwell is working properly:
+
+![](docker-search.png)
+
+## Set up ingesters
+
+Besides the Simple Relay ingester that ships with the gravwell/community image, we currently provide three pre-built standalone ingester images:
+
+* [gravwell/netflow_capture](https://hub.docker.com/r/gravwell/netflow_capture/) is a Netflow collector, configured to receive Netflow v5 records on port 2055 and and IPFIX records on port 6343
+* [gravwell/collectd](https://hub.docker.com/r/gravwell/collectd/) receives hardware stats from collectd acquisition points on port 25826
+* [gravwell/simple_relay](https://hub.docker.com/r/gravwell/simple_relay/) is the Simple Relay ingester as pre-installed on the core image, in case you want to deploy it separately too.
+
+We'll launch the Netflow ingester here, but the same command (with names and ports changed) can be used for the other ingesters too:
+
+	docker run -d --net gravnet -p 2055:2055 --name netflow -e GRAVWELL_CLEARTEXT_TARGETS=gravwell -e GRAVWELL_INGEST_SECRET=MyIngestSecret gravwell/netflow_capture
+
+Note the use of the `-e` flag to set environment variables. This allows us to dynamically configure the ingester by directing it to connect to the container named 'gravwell' for ingest (GRAVWELL_CLEARTEXT_TARGETS=gravwell) and setting the shared ingest secret to 'IngestSecrets' (GRAVWELL_INGEST_SECRET=IngestSecrets).
+
+Note also the `-p 2055:2055` option, which forwards port 2055 (Netflow v5 ingest port) from the container to the host. This should make it easier to send Netflow records into the ingest container.
+
+We can verify that the ingester is active by clicking on the System Stats item in the menu, then selecting the Remote Ingesters card at the top of the screen:
+
+![](netflow_ingest.png)
+
+Now we can configure our Netflow generators to send records to port 2055 of the host; they'll be passed in to the container and ingester into Gravwell.
+
+## Configuring external (non-Docker) ingesters
+
+If you refer back to the original command we used to launch the `gravwell/community` image, you'll note that we forwarded ports 4023 and 4024 to the host. These are respectively the cleartext and TLS-encrypted ingest ports for the indexer. If you have an ingester running on another system (perhaps gathering log files on a Linux server somewhere), you can set the `Cleartext-Backend-target` or `Encrypted-Backend-target` fields in the ingester config file to point at your Docker host and ingest data into the Gravwell instance there.
+
+Refer to [the ingesters documentation](#!ingesters/ingesters.md) for more information on configuring ingesters.
+
+## Security considerations
+
+If you intend to expose the forwarded container ports to the Internet, it is **critical** that you set the following to secure values:
+
+* The 'admin' password must be changed from default 'changeme'.
+* The GRAVWELL_INGEST_SECRET, GRAVWELL_INGEST_AUTH, GRAVWELL_CONTROL_AUTH, and GRAVWELL_SEARCHAGENT_AUTH environment variables set when launching the indexer & webserver (see above) must be set to complex strings.
+
+## More Info
+
+With Gravwell running, refer to [the rest of the documentation](#!index.md) for more information on how to use the system.
+
+If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, contact support@gravwell.io for help. We also have some information about deploying a custom Docker instance [on this wiki](#!configuration/custom-docker.md) and [on our blog](https://www.gravwell.io/blog/gravwell-docker-deployment)
