@@ -2,11 +2,11 @@
 
 Gravwell's Community Edition is a free licensing program intended for personal use. Unlike regular Gravwell licenses, Community Edition licenses are restricted to 2GB of ingested data per day. In our experience, we've found this to be more than enough for any home network applications (unless you decide to capture all packets and then start streaming Netflix!)
 
-Getting Gravwell Community Edition is straightforward. First, you'll install the software from either our Debian package repository or a distribution-agnostic self-contained installer. Next, you'll sign up for a free license, which will be emailed to you. Finally, the newly-installed Gravwell instance will prompt you to upload the license file; once it's uploaded, you'll be ready to start using Gravwell!
+Getting Gravwell Community Edition is straightforward. First, you'll install the software from either our Debian package repository, run the Docker container, or use the distribution-agnostic self-contained installer. Next, you'll sign up for a free license, which will be emailed to you. Finally, the newly-installed Gravwell instance will prompt you to upload the license file; once it's uploaded, you'll be ready to start using Gravwell!
 
 ## Installing the software
 
-Gravwell Community Edition is distributed in two ways: via a distribution-agnostic self-extracting installer, and via a Debian package repository. We recommend using the Debian repository if your system runs Debian or Ubuntu, and the self-extracting installer otherwise.
+Gravwell Community Edition is distributed in three ways: via a Docker container, via a distribution-agnostic self-extracting installer, and via a Debian package repository. We recommend using the Debian repository if your system runs Debian or Ubuntu, the Docker container if you have Docker setup, and the self-extracting installer otherwise.
 
 ### Debian repository
 
@@ -31,20 +31,28 @@ The installation process will prompt to set some shared secret values used by co
 
 ![Generate secrets](secret-prompt.png)
 
-### Self-contained Installer
+### Docker Container
 
-For non-Debian systems, download the [self-contained installer](https://update.gravwell.io/files/gravwell_community_2.2.0.tar.bz2) and extract it:
+Gravwell is available on Dockerhub as a single container including both the webserver and indexer.
 
 ```
-curl -O https://update.gravwell.io/files/gravwell_community_2.2.0.tar.bz2
-md5sum gravwell_community_2.2.0.tar.bz2 #should be 4fb87bccf7cf5db180fbfb509d340384
-tar xjvf gravwell_community_2.2.0.tar.bz2
+docker run -it --rm --name gravwell gravwell/community:latest
+```
+
+### Self-contained Installer
+
+For non-Debian systems, download the [self-contained installer](https://update.gravwell.io/files/gravwell_community_2.2.1.tar.bz2) and extract it:
+
+```
+curl -O https://update.gravwell.io/files/gravwell_community_2.2.1.tar.bz2
+md5sum gravwell_community_2.2.1.tar.bz2 #should be 211a5a9a0555482fb4585a6f75829927
+tar xjvf gravwell_community_2.2.1.tar.bz2
 ```
 
 Then run the installer:
 
 ```
-sudo bash gravwell_community_2.2.0.sh
+sudo bash gravwell_community_2.2.1.sh
 ```
 
 Follow the prompts and, after completion, you should have a running Gravwell instance.
