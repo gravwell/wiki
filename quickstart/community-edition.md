@@ -41,18 +41,18 @@ docker run -it --rm --name gravwell gravwell/community:latest
 
 ### Self-contained Installer
 
-For non-Debian systems, download the [self-contained installer](https://update.gravwell.io/files/gravwell_community_2.2.1.tar.bz2) and extract it:
+For non-Debian systems, download the [self-contained installer](https://update.gravwell.io/files/gravwell_community_2.2.2.tar.bz2) and extract it:
 
 ```
-curl -O https://update.gravwell.io/files/gravwell_community_2.2.1.tar.bz2
-md5sum gravwell_community_2.2.1.tar.bz2 #should be 211a5a9a0555482fb4585a6f75829927
-tar xjvf gravwell_community_2.2.1.tar.bz2
+curl -O https://update.gravwell.io/files/gravwell_community_2.2.2.tar.bz2
+md5sum gravwell_community_2.2.2.tar.bz2 #should be 992bb3590697733d9feadeb363e062cc
+tar xjvf gravwell_community_2.2.2.tar.bz2
 ```
 
 Then run the installer:
 
 ```
-sudo bash gravwell_community_2.2.1.sh
+sudo bash gravwell_community_2.2.2.sh
 ```
 
 Follow the prompts and, after completion, you should have a running Gravwell instance.
