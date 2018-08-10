@@ -36,6 +36,7 @@ These can be used just like user-defined enumerated values.
 * [max](math/math.md)
 * [mean](math/math.md)
 * [min](math/math.md)
+* [namedfields](namedfields/namedfields.md)
 * [netflow](netflow/netflow.md)
 * [packet](packet/packet.md)
 * [packetlayer](packetlayer/packetlayer.md)
