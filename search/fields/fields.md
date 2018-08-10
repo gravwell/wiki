@@ -4,11 +4,11 @@ The fields module is used to extract and filter data from search entries into en
 
 ### Specifying Extraction Fields
 
-Fields are extracted by specifying an index into data with a base of zero.  An index is specified using a positive integer surrounded by square brackets.  Multiple fields can be extracted by providing multiple directives.  Field extraction indexes do not need be be specified in order.
+Fields are extracted by specifying an index into data from a base of zero.  An index is specified using a positive integer surrounded by square brackets.  Multiple fields can be extracted by providing multiple directives.  Field extraction indexes do not need be be specified in order.
 
-Extracted index fields can be renamed by appending the directive `as <name>` immediately after a field index value.  For example, to extract the 5th field from a piece of data into an enumerated value with the name "uri" the extraction directive would be `[5] as uri`.  If no rename directive is provided the extracted values are given the name that matches the index.  Extracted fields also support filters which allows for quickly filtering entries based on equality or contained values.  Filters must be specified before the renaming statement.  An example fields directive which only allows entries to pass by where the 4th field is the value "stuff" would be `[4]=="stuff"`.  To only allow entries where the 4th field does not equal the value "stuff" and rename the 4th field to "things" the directive would be `[4] != "stuff" as things`.
+Extracted index fields can be renamed by appending the directive `as <name>` immediately after a field index value.  For example, to extract the 6th field from a piece of data into an enumerated value with the name "uri" the extraction directive would be `[5] as uri`.  If no rename directive is provided the extracted values are given the name that matches the index.  Extracted fields also support filters which allows for quickly filtering entries based on equality or contained values.  Filters must be specified before the renaming statement.  An example fields directive which only allows entries to pass by where the 1st field is the value "stuff" would be `[0]=="stuff"`.  To only allow entries where the 1st field does not equal the value "stuff" and rename the 1st field to "things" the directive would be `[0] != "stuff" as things`.
 
-Attention: Field extraction indexes can be specified as base 10, base 8, or base 16.  The default name applied is the original text value of the index.  An extraction directive of [0xA] will extract the 10th field with the name "0xA" while [010] will extract the 8th field and apply the name "010".
+Attention: Field extraction indexes can be specified as base 10, base 8, or base 16.  The default name applied is the original text value of the index.  An extraction directive of [0xA] will extract the 11th field with the name "0xA", while [010] will extract the 9th field and apply the name "010".
 
 Attention: To specify filter values and or extraction names which contain special characters like "-", ".", or spaces surround the value in double quotes.
 
@@ -44,7 +44,7 @@ Extract the URL and requester field from a tab delimited bro http.log feed and f
 tag=brohttp fields -d "\t" [9] ~ " " as url [2] as requester | table url requester
 ```
 
-Extract the 3rd, 4th, and 5th fields using a delimiter of "|" and clean white space from extracted fields.
+Extract the 4th, 5th, and 6th fields using a delimiter of "|" and clean white space from extracted fields.
 
 ```
 tag=default fields -clean -d "|" [3] [4] [5] | table 3 4 5
