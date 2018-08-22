@@ -75,13 +75,13 @@ Besides the Simple Relay ingester that ships with the gravwell/community image, 
 
 We'll launch the Netflow ingester here, but the same command (with names and ports changed) can be used for the other ingesters too:
 
-	docker run -d --net gravnet -p 2055:2055 --name netflow -e GRAVWELL_CLEARTEXT_TARGETS=gravwell -e GRAVWELL_INGEST_SECRET=MyIngestSecret gravwell/netflow_capture
+	docker run -d --net gravnet -p 2055:2055/udp --name netflow -e GRAVWELL_CLEARTEXT_TARGETS=gravwell -e GRAVWELL_INGEST_SECRET=MyIngestSecret gravwell/netflow_capture
 
 Note the use of the `-e` flag to set environment variables. This allows us to dynamically configure the ingester by directing it to connect to the container named 'gravwell' for ingest (GRAVWELL_CLEARTEXT_TARGETS=gravwell) and setting the shared ingest secret to 'IngestSecrets' (GRAVWELL_INGEST_SECRET=IngestSecrets).
 
-The `-p 2055:2055` option forwards port 2055 (Netflow v5 ingest port) from the container to the host. This should make it easier to send Netflow records into the ingest container.
+The `-p 2055:2055/udp` option forwards UDP port 2055 (Netflow v5 ingest port) from the container to the host. This should make it easier to send Netflow records into the ingest container.
 
-Note: The netflow ingester is also configured by default to accept IPFIX records over UDP on port 6343. If you wish to ingest IPFIX records too, add `-p 6343:6343` to the command line above.
+Note: The netflow ingester is also configured by default to accept IPFIX records over UDP on port 6343. If you wish to ingest IPFIX records too, add `-p 6343:6343/udp` to the command line above.
 
 We can verify that the ingester is active by clicking on the System Stats item in the menu, then selecting the Remote Ingesters card at the top of the screen:
 
