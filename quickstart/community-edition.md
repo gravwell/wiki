@@ -33,11 +33,7 @@ The installation process will prompt to set some shared secret values used by co
 
 ### Docker Container
 
-Gravwell is available on Dockerhub as a single container including both the webserver and indexer.
-
-```
-docker run -it --rm --name gravwell gravwell/community:latest
-```
+Gravwell is available on Dockerhub as a single container including both the webserver and indexer. Refer to [the Docker installation instructions](#!configuration/docker.md) for detailed instructions on installing Gravwell in Docker.
 
 ### Self-contained Installer
 

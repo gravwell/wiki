@@ -14,7 +14,7 @@ To keep our Gravwell containers separated from any other containers you may be r
 
 ## Deploy the indexer and webserver
 
-The Gravwell indexer and webserver frontend, plus the Simple Relay ingester, are shipped in a single Docker image ([gravwell/community](https://hub.docker.com/r/gravwell/community/)for convenience. We will launch it with port 443 forwarded to port 4443 on the host for access to the webserver:
+The Gravwell indexer and webserver frontend, plus the Simple Relay ingester, are shipped in a single Docker image ([gravwell/community](https://hub.docker.com/r/gravwell/community/)) for convenience. We will launch it with port 443 forwarded to port 4443 on the host for access to the webserver:
 
 	docker run --net gravnet -p 4443:443 -p 4023:4023 -p 4024:4024 -d -e GRAVWELL_INGEST_SECRET=MyIngestSecret -e GRAVWELL_INGEST_AUTH=MyIngestSecret -e GRAVWELL_CONTROL_AUTH=MyControlSecret -e GRAVWELL_SEARCHAGENT_AUTH=MySearchAgentAuth --name gravwell gravwell/community:latest
 
