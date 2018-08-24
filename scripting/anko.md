@@ -190,6 +190,7 @@ The following functions are only available in scripts implementing the `Main` fu
 * `setEntryEnum(ent, key, value)` sets an enumerated value on the specified entry.
 * `getEntryEnum(ent, key) value, error` reads an enumerated value from the specified entry.
 * `delEntryEnum(ent, key)` deletes the specified enumerated value from the given entry.
+* `setEntryData(ent, value)` sets the data portion of an entry.
 
 Note: The `setEnum` and `delEnum` functions differ for scripts using `Process` functions vs. `Main` functions, because the `Process` function is implicitly operating on a particular entry.
 
