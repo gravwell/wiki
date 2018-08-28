@@ -95,7 +95,7 @@ Additional information about installing and configuring each ingester can be fou
 
 Gravwell is a powerful and complex product. It will take time to build expertise, but by starting with simple queries and looking up more complex concepts as needed, you can start answering useful questions immediately!
 
-We recommend starting out with the [Quickstart document](quickstart.md), particularly the [Searching section](quickstart.md#Searching), for some ideas on how to get started. You may need to refer to the [ingester configuration documents](#!ingesters/ingesters.md) to get the data you want into the system.
+We recommend starting out with the continued section of the [Standard version Quickstart document](quickstart.md#Feeding_Data), particularly the [Searching section](quickstart.md#Searching), for some ideas on how to get started. You may need to refer to the [ingester configuration documents](#!ingesters/ingesters.md) to get the data you want into the system.
 
 The [search documentation](#!search/search.md) is the ultimate resource for building search queries; the [Search Modules](#!search/searchmodules.md) and [Render Modules](#!search/rendermodules.md) sections have lots of examples and exhaustive descriptions of the options for each module.
 
