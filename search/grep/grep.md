@@ -11,7 +11,8 @@ Grep allows multiple patterns to be specified. If any pattern is matched, the en
 * `-v`: “Inverse” grep. For instance, `grep -v bar` would drop any records containing the text “bar” and pass on any records that do not contain “bar”.
 * `-i`: Match case insensitive values. Thus, `grep -i foo` would match “Foo” and “foo”. Case insensitive search tends to be one of the slowest operations; put it later in your pipeline if possible to keep things fast.
 * `-e <arg>`: Operate on an enumerated value instead of on the entire record. For example, a pipeline that showed packets that contain HTTP text but aren’t destined for port 80 would be `tag=pcap packet ipv4.DstPort!=80 tcp.Payload | grep -e Payload "GET / HTTP/1.1"`
-* `-s`: Simple match. With this flag, `grep` will match exactly the characters you specify, with no wildcard matching. This allows you to find asterisks and other normally-reserved characters: `grep -s *`
+* `-s`: Strict match.  All patterns must match, or in the case of a negated strict match, no pattern may match.`
+* `-simple`: Simple match. With this flag, `grep` will match exactly the characters you specify, with no wildcard matching. This allows you to find asterisks and other normally-reserved characters: `grep -s *`
 
 Attention: Case-insensitive search is significantly slower. If you must do case-insensitive grep, try to put it later in your search pipeline to improve speed.
 
@@ -43,4 +44,10 @@ Drop any Reddit posts on subreddits beginning with "Ask" or containing "foo":
 
 ```
 tag=reddit json Subreddit | grep -v -e Subreddit "Ask*" "foo"
+```
+
+Grab only user agents that contain Mozilla and Windows
+
+```
+tag=apache grep -s Mozilla Apache
 ```
