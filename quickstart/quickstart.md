@@ -35,7 +35,7 @@ If you're using the Gravwell Debian repository (see [the Community Edition quick
 apt-get install gravwell-file-follow
 ```
 
-Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
 
 ```
 root@gravserver ~ # bash gravwell_file_follow_installer.sh
@@ -53,7 +53,7 @@ If you're using the Gravwell Debian repository (see [the Community Edition quick
 apt-get install gravwell-simple-relay
 ```
 
-Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
 
 ```
 root@gravserver ~ # bash gravwell_simple_relay_installer.sh
@@ -113,7 +113,7 @@ If you're using the Gravwell Debian repository (see [the Community Edition quick
 apt-get install libpcap0.8 gravwell-network-capture
 ```
 
-Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). To install the network ingester, simply run the installer as root (the file name may differ slightly):
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). To install the network ingester, simply run the installer as root (the file name may differ slightly):
 
 ```
 root@gravserver ~ # bash gravwell_network_capture_installer.sh

@@ -145,7 +145,7 @@ If you're using the Gravwell Debian repository (see [the Community Edition quick
 apt-get install gravwell-simple-relay
 ```
 
-Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
 
 ```
 root@gravserver ~ # bash gravwell_simple_relay_installer.sh
@@ -205,7 +205,7 @@ If you're using the Gravwell Debian repository (see [the Community Edition quick
 apt-get install gravwell-file-follow
 ```
 
-Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
 
 ```
 root@gravserver ~ # bash gravwell_file_follow_installer.sh
@@ -332,7 +332,7 @@ The Gravwell windows events ingester runs as a service on a windows machine and 
 
 ### Installation
 
-Download and unpack the Gravwell windows ingester installer from the [Downloads page](#!quickstart/downloads.md).
+Download the Gravwell windows ingester installer from the [Downloads page](#!quickstart/downloads.md).
 
 Run the .msi installation wizard to install the Gravwell events service.
 
@@ -469,7 +469,7 @@ If you're using the Gravwell Debian repository (see [the Community Edition quick
 apt-get install gravwell-netflow-capture
 ```
 
-Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). To install the Netflow ingester, simply run the installer as root (the actual file name will typically include a version number):
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). To install the Netflow ingester, simply run the installer as root (the actual file name will typically include a version number):
 
 ```
 root@gravserver ~ # bash gravwell_netflow_capture_installer.sh
@@ -506,7 +506,7 @@ If you're using the Gravwell Debian repository (see [the Community Edition quick
 apt-get install libpcap0.8 gravwell-network-capture
 ```
 
-Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). To install the network ingester, simply run the installer as root (the file name may differ slightly):
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). To install the network ingester, simply run the installer as root (the file name may differ slightly):
 
 ```
 root@gravserver ~ # bash gravwell_network_capture_installer.sh
@@ -660,7 +660,7 @@ If you're using the Gravwell Debian repository (see [the Community Edition quick
 apt-get install gravwell-federator
 ```
 
-Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the federator:
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the federator:
 
 ```
 root@gravserver ~ # bash gravwell_federator_installer.sh
@@ -719,7 +719,7 @@ If you're using the Gravwell Debian repository (see [the Community Edition quick
 apt-get install gravwell-collectd
 ```
 
-Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
 
 ```
 root@gravserver ~ # bash gravwell_collectd_installer.sh
@@ -844,7 +844,7 @@ Once the stream is configured, each record in the Kinesis stream will be stored 
 
 ### Installation and configuration
 
-First, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md), then install the ingester:
+First, download the installer from the [Downloads page](#!quickstart/downloads.md), then install the ingester:
 
 ```
 root@gravserver ~# bash gravwell_kinesis_ingest_installer.sh
@@ -901,7 +901,7 @@ Once the stream is configured, each record in the PubSub stream topic will be st
 
 ### Installation and configuration
 
-First, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md), then install the ingester:
+First, download the installer from the [Downloads page](#!quickstart/downloads.md), then install the ingester:
 
 ```
 root@gravserver ~# bash gravwell_pubsub_ingest_installer.sh
