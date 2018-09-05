@@ -139,7 +139,7 @@ Source-Override=DEAD:BEEF::FEED:FEBE
 
 Simple Relay is a text ingester which is capable of listening on multiple TCP or UDP ports.  Each port can be assigned a tag as well as an ingest standard (e.g. parse RFC5424 or simple newline delimited entries).  Simple Relay is the go-to ingester for ingesting remote syslog entries or consuming from any data source that can throw text logs over a network connection.
 
-If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
 apt-get install gravwell-simple-relay
@@ -199,7 +199,7 @@ Note: The `Keep-Priority` field is necessary if you plan to analyze syslog entri
 
 The File Follower ingester is designed to follow files and to capture logs from sources that cannot natively integrate with Gravwell or are incapable of sending logs via a network connection.  The file follower comes in both Linux and Windows flavors and can follow any logging file that is line delimited.  It is compatible with file rotation and employs a powerful pattern matching system so that the file follower can deal with applications that are not consistent with log file names.
 
-If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
 apt-get install gravwell-file-follow
@@ -463,7 +463,7 @@ tag=sysmon regex ".*EventID>11.*Image'>(?P<process>.*)<\/Data>.*TargetFilename'>
 
 The Netflow ingester acts as a Netflow collector (see [the wikipedia article](https://en.wikipedia.org/wiki/NetFlow) for a full description of Netflow roles), gathering records created by Netflow exporters and capturing them as Gravwell entries for later analysis. These entries can then be analyzed using the [netflow](#!/search/netflow/netflow.md) search module.
 
-If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
 apt-get install gravwell-netflow-capture
@@ -500,7 +500,7 @@ Note: At this time, the ingester only supports Netflow v5; keep this in mind whe
 
 A primary strength of Gravwell is the ability to ingest binary data. The network ingester allows you to capture full packets from the network for later analysis; this provides much better flexibility than simply storing netflow or other condensed traffic information.
 
-If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
 apt-get install libpcap0.8 gravwell-network-capture
@@ -654,7 +654,7 @@ Much like the Simple Relay ingester, the Federator is designed to build a series
 
 ### Installation
 
-If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
 apt-get install gravwell-federator
@@ -713,7 +713,7 @@ Common configuration errors for the Federator include:
 
 The CollectD ingester is a fully standalone collectd collection agent which can directly ship collectd samples to Gravwell.  The ingester is easily configurable and supports multiple collectors which can be configured with different tags, security controls, and plugin-to-tag overrides.
 
-If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
 apt-get install gravwell-collectd

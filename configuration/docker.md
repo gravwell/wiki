@@ -1,10 +1,10 @@
-# Deploying Gravwell Community Edition in Docker
+# Deploying Gravwell in Docker
 
-With pre-built Docker images available in the Docker Hub, it is very easy to deploy Gravwell Community Edition in Docker for experimentation or long-term use. In this document, we show how to set up a Gravwell Community Edition environment within Docker.
+With pre-built Docker images available in the Docker Hub, it is very easy to deploy Gravwell in Docker for experimentation or long-term use. In this document, we show how to set up a Gravwell environment within Docker.
 
 If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, contact support@gravwell.io for help. We also have some information about deploying a custom Docker instance [on this wiki](#!configuration/custom-docker.md) and [on our blog](https://www.gravwell.io/blog/gravwell-docker-deployment)
 
-Once you have set up Gravwell, check out the [quickstart](#!quickstart/quickstart.md) and [Community Edition guide](#!quickstart/community-edition.md) for some starting points on *using* Gravwell.
+Once you have set up Gravwell, check out the [quickstart](#!quickstart/quickstart.md) for some starting points on *using* Gravwell.
 
 ## Create Docker network
 
@@ -14,9 +14,9 @@ To keep our Gravwell containers separated from any other containers you may be r
 
 ## Deploy the indexer and webserver
 
-The Gravwell indexer and webserver frontend, plus the Simple Relay ingester, are shipped in a single Docker image ([gravwell/community](https://hub.docker.com/r/gravwell/community/)) for convenience. We will launch it with port 443 forwarded to port 4443 on the host for access to the webserver:
+The Gravwell indexer and webserver frontend, plus the Simple Relay ingester, are shipped in a single Docker image ([gravwell/gravwell](https://hub.docker.com/r/gravwell/gravwell/)) for convenience. We will launch it with port 443 forwarded to port 4443 on the host for access to the webserver:
 
-	docker run --net gravnet -p 4443:443 -p 4023:4023 -p 4024:4024 -d -e GRAVWELL_INGEST_SECRET=MyIngestSecret -e GRAVWELL_INGEST_AUTH=MyIngestSecret -e GRAVWELL_CONTROL_AUTH=MyControlSecret -e GRAVWELL_SEARCHAGENT_AUTH=MySearchAgentAuth --name gravwell gravwell/community:latest
+	docker run --net gravnet -p 4443:443 -p 4023:4023 -p 4024:4024 -d -e GRAVWELL_INGEST_SECRET=MyIngestSecret -e GRAVWELL_INGEST_AUTH=MyIngestSecret -e GRAVWELL_CONTROL_AUTH=MyControlSecret -e GRAVWELL_SEARCHAGENT_AUTH=MySearchAgentAuth --name gravwell gravwell/gravwell:latest
 
 Note that the new container is named `gravwell`; we will use this when pointing ingesters to the indexer.
 
@@ -35,7 +35,7 @@ Now that Gravwell is running, point a web browser at port 4443 on the host. It s
 
 ![](license-upload-docker.png)
 
-You should have been emailed a license file when you signed up for Community Edition. If you haven't signed up for Community Edition yet, head over to [https://www.gravwell.io/community-edition](https://www.gravwell.io/community-edition) and get a license.
+Note: Paid users and existing Community Edition users should have received a license via email. If you haven't signed up for Community Edition yet, head over to [https://www.gravwell.io/community-edition](https://www.gravwell.io/community-edition) and get a license.
 
 Once you upload the license and it is verified, you'll get a login prompt:
 
@@ -45,7 +45,7 @@ Log in with the default credentials **admin** / **changeme**. You're now in Grav
 
 ## Add some data to test
 
-The gravwell/community Docker image ships with the Simple Relay [ingester](#!ingesters/ingesters.md) pre-installed. It listens on the following ports:
+The gravwell/gravwell Docker image ships with the Simple Relay [ingester](#!ingesters/ingesters.md) pre-installed. It listens on the following ports:
 
 * TCP 7777 for line-delimited logs (tagged 'default')
 * TCP 601 for syslog messages (tagged 'syslog')
@@ -67,7 +67,7 @@ We can then run a quick search over the last hour to verify that the data made i
 
 ## Set up ingesters
 
-Besides the Simple Relay ingester that ships with the gravwell/community image, we currently provide three pre-built standalone ingester images:
+Besides the Simple Relay ingester that ships with the gravwell/gravwell image, we currently provide three pre-built standalone ingester images:
 
 * [gravwell/netflow_capture](https://hub.docker.com/r/gravwell/netflow_capture/) is a Netflow collector, configured to receive Netflow v5 records on port 2055 and and IPFIX records on port 6343
 * [gravwell/collectd](https://hub.docker.com/r/gravwell/collectd/) receives hardware stats from collectd acquisition points on port 25826
@@ -103,7 +103,7 @@ Then we can use vi to edit `/opt/gravwell/etc/netflow_capture.conf` as described
 
 ## Configuring external (non-Docker) ingesters
 
-If you refer back to the original command we used to launch the `gravwell/community` image, you'll note that we forwarded ports 4023 and 4024 to the host. These are respectively the cleartext and TLS-encrypted ingest ports for the indexer. If you have an ingester running on another system (perhaps gathering log files on a Linux server somewhere), you can set the `Cleartext-Backend-target` or `Encrypted-Backend-target` fields in the ingester config file to point at your Docker host and ingest data into the Gravwell instance there.
+If you refer back to the original command we used to launch the `gravwell/gravwell` image, you'll note that we forwarded ports 4023 and 4024 to the host. These are respectively the cleartext and TLS-encrypted ingest ports for the indexer. If you have an ingester running on another system (perhaps gathering log files on a Linux server somewhere), you can set the `Cleartext-Backend-target` or `Encrypted-Backend-target` fields in the ingester config file to point at your Docker host and ingest data into the Gravwell instance there.
 
 Refer to [the ingesters documentation](#!ingesters/ingesters.md) for more information on configuring ingesters.
 
