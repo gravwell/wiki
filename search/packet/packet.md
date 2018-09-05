@@ -56,8 +56,8 @@ The packet processor supports a growing list of submodules which allow for break
 |-----|-------|-----------|---------
 | dot1q | VLANID | > < <= >= == != | dot1q.VLANID > 1024
 | dot1q | Priority | > < <= >= == != | dot1q.Priority < 2
-| dot1q | VType | > < <= >= == != | dot1q.VType == 2
-| dot1q | Drop |  == != | dot1q.Priority == true
+| dot1q | Type | > < <= >= == != | dot1q.Type == 2
+| dot1q | DropEligible |  == != | dot1q.DropEligible == true
 
 The dot1q packet submodule is designed to enable parsing of VLAN tagged packets.  Packets with the VLAN header will not automatically invoke the VLAN parsing functionality and may be dropped by the packet engine without the dot1q module.  Even if no VLAN tagged values are needed, the module must be added to the query to support VLAN tagged packets.
 
