@@ -4,7 +4,7 @@
 
 The Gravwell core installer contains the indexer and webserver frontend. You'll need a license; either get a Community Edition free license, or contact info@gravwell.io for commercial options.
 
-[Download Gravwell Core Installer](https://update.gravwell.io/files/gravwell_2.2.4.sh) (MD5: f549d11ed30b1ca1f71a511e2454b07b)
+[Download Gravwell Core Installer](https://update.gravwell.io/files/gravwell_2.2.4.sh) (MD5: 0e0ce9a6e41a4d523da4e435e0f3191b)
 
 ## Ingesters
 
