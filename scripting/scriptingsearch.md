@@ -59,6 +59,31 @@ Search structs are used to actively read entries from a search, while search IDs
 * `sendMail(hostname, port, username, password, from, to, subject, message) error` sends an email via SMTP. `hostname` and `port` specify the SMTP server to use; `username` and `password` are for authentication to the server. The `from` field is simply a string, while the `to` field should be a slice of strings containing email addresses. The `subject` and `message` fields are also strings which should contain the subject line and body of the email.
 * `sendMailTLS(hostname, port, username, password, from, to, subject, message, disableValidation) error` sends an email via SMTP using TLS. `hostname` and `port` specify the SMTP server to use; `username` and `password` are for authentication to the server. The `from` field is simply a string, while the `to` field should be a slice of strings containing email addresses. The `subject` and `message` fields are also strings which should contain the subject line and body of the email.  The disableValidation argument is a boolean which disables TLS certificate validation.  Setting disableValidation to true is insecure and may expose the email client to man-in-the-middle attacks.
 
+### Creating and Ingesting Entries
+
+It is possible to ingest new entries into the indexers from within a script using the following functions:
+
+* `newEntry(time.Time, data) Entry` hands back a new entry with the given timestamp (a time.Time, as from time.Now()) and data (frequently a string).
+* `ingestEntries([]Entry, tag) error` ingests the given slice of entries with the specified tag string.
+
+The entries returned by the `getEntries` function can be modified if desired and re-ingested via `ingestEntries`, or new entries can be created wholesale. For example, to re-ingest some entries from a previous search into the tag "newtag":
+
+```
+# Get the first 100 entries from the search
+ents, _ = getEntries(mySearch, 0, 100)
+ingestEntries(ents, "newtag")
+```
+
+To ingest new entries based on some other condition:
+
+```
+if condition == true {
+	ents = make([]Entry)
+	ent += newEntry(time.Now(), "Script condition triggered")
+	ingestEntries(ents, "results")
+}
+```
+
 
 ## An example script
 
