@@ -137,7 +137,11 @@ Source-Override=DEAD:BEEF::FEED:FEBE
 
 ## Simple Relay
 
-Simple Relay is a text ingester which is capable of listening on multiple TCP or UDP ports.  Each port can be assigned a tag as well as an ingest standard (e.g. parse RFC5424 or simple newline delimited entries).  Simple Relay is the go-to ingester for ingesting remote syslog entries or consuming from any data source that can throw text logs over a network connection.
+[Complete Configuration and Documentation](#!/ingesters/simple_relay.md).
+
+Simple Relay is a text ingester which is capable of listening on multiple TCP or UDP ports.  Each port can be assigned a tag as well as an ingest standard (e.g. parse RFC5424 or simple newline delimited entries).  Simple Relay is the go-to ingester for ingesting remote syslog entries or consuming from any data source that can throw text logs over a network connection.  Simple Relay is used for remote syslog log collection, data over TCP, or any other line broken data source that can be delivered over a network.
+
+### Installation
 
 If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
 
@@ -152,48 +156,6 @@ root@gravserver ~ # bash gravwell_simple_relay_installer.sh
 ```
 
 If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately.  However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, it will be necessary to modify the configuration file in `/opt/gravwell/etc/simple_relay.conf` to match the `Ingest-Auth` value set on the Indexers.
-
-An example configuration for the Simple Relay ingester, configured to listen on several ports and apply a unique tag to each is as follows:
-
-```
-[Global]
-Ingest-Secret = IngestSecrets
-Connection-Timeout = 0
-Insecure-Skip-TLS-Verify=false
-#Cleartext-Backend-target=127.0.0.1:4023 #example of adding a cleartext connection
-#Cleartext-Backend-target=127.1.0.1:4023 #example of adding another cleartext connection
-#Encrypted-Backend-target=127.1.1.1:4024 #example of adding an encrypted connection
-Pipe-Backend-Target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
-#Ingest-Cache-Path=/opt/gravwell/cache/simple_relay.cache #adding an ingest cache for local storage when uplinks fail
-#Max-Ingest-Cache=1024 #Number of MB to store, localcache will only store 1GB before stopping.  This is a safety net
-Log-Level=INFO
-Log-File=/opt/gravwell/log/simple_relay.log
-
-#basic default logger, all entries will go to the default tag
-#no Tag-Name means use the default tag
-[Listener "default"]
-	Bind-String="0.0.0.0:7777" #we are binding to all interfaces, with TCP implied
-	#Lack of "Reader-Type" implines line break delimited logs
-	#Lack of "Tag-Name" implies the "default" tag
-	#Assume-Local-Timezone=false #Default for assume localtime is false
-	#Source-Override="DEAD::BEEF" #override the source for just this listener
-
-[Listener "syslogtcp"]
-	Bind-String="tcp://0.0.0.0:601" #standard RFC5424 reliable syslog
-	Reader-Type=rfc5424
-	Tag-Name=syslog
-	Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
-	Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
-
-[Listener "syslogudp"]
-	Bind-String="udp://0.0.0.0:514" #standard UDP based RFC5424 syslog
-	Reader-Type=rfc5424
-	Tag-Name=syslog
-	Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
-	Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
-```
-
-Note: The `Keep-Priority` field is necessary if you plan to analyze syslog entries with the [syslog search module](#!search/syslog/syslog.md).
 
 ## File Follower
 
