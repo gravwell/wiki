@@ -67,17 +67,19 @@ Listeners support several configuration parameters which allow for specifying pr
 
 The Bind-String parameter controls which interface and port the listener will bind to.  The listener can bind to TCP or UDP ports, specific addresses, and specific ports.  IPv4 and IPv6 are supported.
 
-Binding to TCP port 7777 on all interfaces:
-```Bind-String=0.0.0.0:7777```
+```
+#bind to all interfaces on TCP port 7777
+Bind-String=0.0.0.0:7777
 
-Binding to UDP port 514 on all interfaces:
-```Bind-String=udp://0.0.0.0:514```
+#bind to all interfaces on UDP port 514
+Bind-String=udp://0.0.0.0:514
 
-Binding to TCP port 1234 on the IPv6 Link Local address on device "p1p1":
-```Bind-String=[fe80::4ecc:6aff:fef9:48a3%p1p1]:1234```
+#bind to port 1234 on link local IPv6 address on interface p1p
+Bind-String=[fe80::4ecc:6aff:fef9:48a3%p1p1]:1234
 
-Binding to TCP port 901 on the IPv6 globally scoped address "2600:1f18:63ef:e802:355f:aede:dbba:2c03":
-```Bind-String=[2600:1f18:63ef:e802:355f:aede:dbba:2c03]:901```
+#bind to IPv6 globally routable address on TCP port 901
+Bind-String=[2600:1f18:63ef:e802:355f:aede:dbba:2c03]:901
+```
 
 #### Ignore-Timestamps
 
@@ -198,5 +200,122 @@ An example listener specification which removes the priority tag from entries:
 
 Note: The priority portion of a syslog message is codified in the RFC specification.  Removing the priority means that the Gravwell [syslog](#!search/syslog/syslog.md) search module will be unable to properly parse the values.  Paid Gravwell licenses are all unlimited and we reccomend that the priority field is left in syslog messages.  The syslog search module is also dramatically faster than attempting to hand parse syslog messages with regular expressions.
 
+### JSON Listeners
 
+The JSON Listener type enables some mild JSON processing at the time of ingest.  The purpose of a JSON reader would be to apply a unique tag to an entry based on the value of a field in a JSON entry.   Many applications export JSON data with a field that indicates the format of the JSON, from a processing efficiency standpoint it can be beneficial to tag the different formats with specific tags.
 
+A great example use case is the JSON over TCP data export functionality found in many Bro sensor appliances.  The appliances export all Bro log data over a single TCP stream, however there are multiple data types within the stream built by different modules.  Using the JSON Listener we can derive the data type from the module field and apply a unique tag.  this allows us to do things like keep the Bro conn logs in one well, the Bro DNS logs in another, and all other Bro logs in yet another.  As a result, we can differentiate the data types with different tags and take advantage of Gravwell Wells when multiple JSON data types are coming in via a single stream.
+
+#### JSON Listener Configuration Parameters
+
+The JSON Listener blocks implement the universion listener types as documented above.  Additional parameters allow for specifying which field we wish to pivot on to define a tag.
+
+##### Extractor Parameter
+
+The "Extractor" parameter specifies a JSON extraction string which is used to pull a field from a JSON entry.  The Extraction string follows the same syntax as the Gravwell [json](#!search/json/json.md) search module minus any inline filtering.
+
+Given the following JSON:
+
+```
+{
+  "time": "2018-09-12T12:25:33.503294982-06:00",
+  "class": 5.1041415140005e+18,
+  "data": "Have I come to Utopia to hear this sort of thing?",
+  "identity": {
+    "user": "alexanderdavis605",
+    "name": "Noah White",
+    "email": "alexanderdavis605@test.org",
+    "phone": "+52 27 83 68 75069 2"
+  },
+  "location": {
+    "address": "43 Wilson Pkwy,\nBury, AL, 66232",
+    "state": "PW",
+    "country": "Pakistan"
+  },
+  "group": "carp",
+  "useragent": "Mozilla\/5.0 (X11; Fedora; Linux x86_64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/52.0.2743.116 Safari\/537.36",
+  "ip": "8.83.94.200"
+}
+```
+
+We could extract the location and state value and apply a tag based on which state abbreviation we find using the following Extraction parameter:
+
+```
+Extractor=location.state
+```
+
+##### Tag-Match
+
+Each JSONListener supports multiple field value to tag match specifications.  The value to tag assignment is specified as an argument to the "Tag-Match" paramter in the form <field value>:<tag name>.
+
+For example, if we extracted a field with the value "foo" and wanted to assign it to the tag "bar" we would add the following to the JSONListener configuration block:
+
+```
+Tag-Match=foo:bar
+```
+
+The field extraction values can contain ":" characters, to specify a field value with a ":" character in it encapsulate the value with double quotes.
+
+For example, if we wanted to assign the tag "baz" to the extracted value "foo:bar" the "Tag-Match" parameter would be as follows:
+
+```
+Tag-Match="foo:bar":baz
+```
+
+Extraction value to tag mappings can be many to one, meaning that multiple extraction values can be mapped to the same tag.  For example the following parameters will map both "foo" and "bar" extracted values to the tag "baz":
+
+```
+Tag-Match=foo:baz
+Tag-Match=bar:baz
+```
+
+However, a single extraction value CANNOT be mapped to multiple tags.  The following is invalid:
+
+```
+Tag-Match=foo:baz
+Tag-Match=foo:bar
+```
+
+##### Default-Tag
+
+When extracting fields and applying tags, the JSON Listener will apply a default tag if there is no matching Tag-Match specified.
+
+#### Example JSONListener behaviors
+
+Assume the following configured JSONListener:
+
+```
+[JSONListener "testing"]
+	Bind-String=0.0.0.0:7777
+	Extractor="field1"
+	Default-Tag=json
+	Tag-Match=test1:tag1
+	Tag-Match=test2:tag2
+	Tag-Match=test3:tag3
+```
+
+Some example JSON data and resulting tag:
+
+##### Matched field
+
+```
+{ "field1": "test1", "field2": "test2" }
+```
+
+The entry gets the tag "tag1" because the field "field1" matched the "Tag-Match=test1:tag1"
+
+##### Unmatched field
+
+```
+{ "field1": "foobar", "field2": "test2" }
+```
+
+The entry gets the tag "json" because the field "field1" did not match any "Tag-Match" parameters.
+
+##### Extraction field not found
+
+```
+{ "fieldfoo": "test1", "fieldbar": "test2" }
+```
+
+The entry gets the tag "json" because the extractor could not find the field "field1".
