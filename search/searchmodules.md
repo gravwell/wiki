@@ -19,6 +19,7 @@ Every search module has universal enumerated values for records.
 * SRC -- the source of the entry data.
 * TAG -- the tag attached to the entry.
 * TIMESTAMP -- the timestamp of the entry.
+* DATA -- the actual entry data.
 
 These can be used just like user-defined enumerated values.
 

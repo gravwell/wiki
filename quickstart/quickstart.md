@@ -1,41 +1,104 @@
 # Quick Start Instructions
 
-This section contains basic “quick start” instructions for getting Gravwell up and running. 
-These instructions support the most common use case and act as an introduction to Gravwell.  Please note, the “Quick Start” instructions do not take advantage of the more advanced Gravwell features regarding distributed search and storage that are available in the Cluster Edition. If you require a more advanced setup, please review the Advanced topics section of this guide.
+This section contains basic “quick start” instructions for getting Gravwell up and running.  These instructions support the most common use case and act as an introduction to Gravwell.  Please note, the “Quick Start” instructions do not take advantage of the more advanced Gravwell features regarding distributed search and storage that are available in the Cluster Edition. If you require a more advanced setup, please review the Advanced Topics section of this guide.
+
+This guide is suitable for Community Edition users as well as users with a paid single-node Gravwell subscription.
+
+Note: Community Edition users will need to obtain their own license from [https://www.gravwell.io/gravwell-community-edition](https://www.gravwell.io/gravwell-community-edition) before beginning installation. Paid users should already have received a license file via email.
 
 ## Installation
-Installing Gravwell on a single machine is quite simple. Just follow the instructions in this section. For more advanced environments involving multiple systems, review the Advanced Topics section.
-
-### Community Edition Users
-
-If you are a Community Edition user, jump over the [Community Edition Quickstart](community-edition.md) to read about installing Community Edition from our Debian repo or the standalone installer. If you want to follow along with the later sections of this document, take a look at the subsections about installing ingesters below, then jump ahead to "Feeding Data".
+Installing Gravwell on a single machine is quite simple--just follow the instructions in this section. For more advanced environments involving multiple systems, review the Advanced Topics section.
 
 ### Install the Gravwell Indexer & Frontend
-The Gravwell core package comes as an installer file. You should have received an installer file or a link to download one (probably named something like “gravwell_8675309_0.2.sh”). Gravwell has been tested on all of the major Linux distributions and runs well, but Ubuntu Server LTS is preferred. Help installing Ubuntu can be found at https://tutorials.ubuntu.com/tutorial/tutorial-install-ubuntu-server.
 
-Using a terminal on the server that is to host Gravwell issue the following command as a superuser (e.g. via the `sudo` command):
+Gravwell is distributed in three ways: via a Docker container, via a distribution-agnostic self-extracting installer, and via a Debian package repository. We recommend using the Debian repository if your system runs Debian or Ubuntu, the Docker container if you have Docker setup, and the self-extracting installer otherwise. Gravwell has been tested on all of the major Linux distributions and runs well, but Ubuntu Server LTS is preferred. Help installing Ubuntu can be found at https://tutorials.ubuntu.com/tutorial/tutorial-install-ubuntu-server.
+
+### Debian repository
+
+Installing from the Debian repository is quite simple. We need to take a few steps first to add Gravwell's PGP signing key and Debian package repository, but then it's just a matter of installing the `gravwell` package:
 
 ```
-root@gravserver ~ # bash gravwell_8675309_0.2.sh
+curl https://update.gravwell.io/debian/update.gravwell.io.gpg.key | sudo apt-key add -
+echo 'deb [ arch=amd64 ] https://update.gravwell.io/debian/ community main' | sudo tee /etc/apt/sources.list.d/gravwell.list
+sudo apt-get install apt-transport-https
+sudo apt-get update
+sudo apt-get install gravwell
+```
+
+The installation process will prompt to set some shared secret values used by components of Gravwell. We strongly recommend allowing the installer to generate random values (the default) for security.
+
+![Read the EULA](eula.png)
+
+![Accept the EULA](eula2.png)
+
+![Generate secrets](secret-prompt.png)
+
+### Docker Container
+
+Gravwell is available on Dockerhub as a single container including both the webserver and indexer. Refer to [the Docker installation instructions](#!configuration/docker.md) for detailed instructions on installing Gravwell in Docker.
+
+### Self-contained Installer
+
+For non-Debian systems, download the [self-contained installer](https://update.gravwell.io/files/gravwell_2.2.4.sh) and verify it:
+
+```
+curl -O https://update.gravwell.io/files/gravwell_2.2.4.sh
+md5sum gravwell_2.2.4.sh #should be f549d11ed30b1ca1f71a511e2454b07b
+```
+
+Then run the installer:
+
+```
+sudo bash gravwell_2.2.4.sh
 ```
 
 Follow the prompts and, after completion, you should have a running Gravwell instance.
 
-After installing Gravwell, open a web browser and navigate to the server (e.g. https://gravwell.mycompany.com). You should be met with a login screen. The default username and password are “admin” and “changeme”. Needless to say, your first action after logging in should be changing the admin password. This can be done by choosing “Account Settings” from the navigation sidebar or clicking the “user” icon in the upper right.
+## Configuring the License
+
+Once Gravwell is installed, open a web browser and navigate to the server (e.g. [https://localhost/](https://localhost/)). It should prompt you to upload a license file.
+
+![Upload license](upload-license.png)
+
+Once the license is uploaded and verified, Gravwell should present a login screen. Log in as "admin" with the password "changeme".
+
+Attention: The default username/password combination for Gravwell is admin/changeme. We highly recommend changing the admin password as soon as possible! This can be done by choosing “Account Settings” from the navigation sidebar or clicking the “user” icon in the upper right.
 
 ![](login.png)
+
+## Configuring Ingesters
+
+A freshly installed Gravwell instance, by itself, is boring. You'll want some ingesters to provide data. You can either install them from the Debian repository or head over to [the Downloads page](downloads.md) to fetch self-extracting installers for each ingester.
+
+The ingesters available in the Debian repository can be viewed by running `apt-cache search gravwell`:
+
+```
+root@debian:~# apt-cache search gravwell
+gravwell - Gravwell data analytics platform (gravwell.io)
+gravwell-federator - Gravwell ingest federator
+gravwell-file-follow - Gravwell file follow ingester
+gravwell-netflow-capture - Gravwell netflow ingester
+gravwell-network-capture - Gravwell packet ingester
+gravwell-simple-relay - Gravwell simple relay ingester
+```
+
+If you install them on the same node as the main Gravwell instance, they should be automatically configured to connect to the indexer, but you'll need to set up data sources for most. See the [ingester configuration documents](#!ingesters/ingesters.md) for instructions on that.
+
+We highly recommend installing the File Follow ingester (gravwell-file-follow) as a first experiment; it comes pre-configured to ingest Linux log files, so you should be able to see some entries immediately by issuing a search such as `tag=auth`:
+
+![Auth entries](auth.png)
 
 ### File Ingester
 
 The File Follower ingester is one of the simplest ways to start getting logs into Gravwell, because it comes pre-configured to ingest standard Linux log files.
 
-If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
 apt-get install gravwell-file-follow
 ```
 
-Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
 
 ```
 root@gravserver ~ # bash gravwell_file_follow_installer.sh
@@ -47,13 +110,13 @@ If the Gravwell services are present on the same machine, the installation scrip
 
 Gravwell's 'Simple Relay' ingester can ingest line-delimited or syslog-formatted messages over the network. It's another good way to start getting data into Gravwell from your existing data sources.
 
-If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
 apt-get install gravwell-simple-relay
 ```
 
-Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
 
 ```
 root@gravserver ~ # bash gravwell_simple_relay_installer.sh
@@ -61,14 +124,14 @@ root@gravserver ~ # bash gravwell_simple_relay_installer.sh
 
 If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately.  However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, it will be necessary to modify the configuration file in `/opt/gravwell/etc/simple_relay.conf` to match the `Ingest-Auth` value set on the Indexers. See the [ingesters documentation](#!ingesters/ingesters.md) for more information on configuring the ingester.
 
-### Single Machine Gravwell Instance
+### Ingester Notes
 If your installation is entirely contained on one machine, as it is in these quick start instructions, the ingester installers will extract the configuration options and configure themselves appropriately. If you are using an advanced setup where not all Gravwell components are running on a single system, review the [ingesters](#!ingesters/ingesters.md) section of the documentation.
 
 You now have the File Follow and Simple Relay services running on the Gravwell server. File Follow will automatically ingest log entries from some files in `/var/log/`. Simple Relay will ingest syslog entries sent to it on TCP port 601 or UDP port 514; these will be tagged with the "syslog" tag.
 
 The Simple Relay config file also contains an entry to listen for any line-delimited data on port 7777. This can be disabled if you only intend to use syslog; simply comment out the `[Listener "default"]` section in the config file and restart the simple relay service. The configuration file for this service is located at `/opt/gravwell/etc/simple_relay.conf`. See the Simple Relay section of the [Ingesters documentation](#!ingesters/ingesters.md) for advanced configuration options.
 
-## Feeding Data
+## Feeding Data into Gravwell
 This section provides basic instructions for sending data into Gravwell. Review the [ingesters](#!ingesters/ingesters.md) section for instructions for setting up other data ingesters.
 
 The “System Stats” page in Gravwell can help you see if the Gravwell server is receiving any data. If no data is reported and you think that is an error, double-check that the ingesters are running (`ps aux | grep gravwell` should show `gravwell_webserver`, `gravwell_indexer`, `gravwell_simple_relay`, and `gravwell_file_follow`) and that their configuration files are correct.
@@ -107,13 +170,13 @@ Note: If you are ingesting a very large set of logs in multiple files, it is rec
 
 A primary strength of Gravwell is the ability to ingest binary data. The network ingester allows you to capture full packets from the network for later analysis; this provides much better flexibility than simply storing netflow or other condensed traffic information.
 
-If you're using the Gravwell Debian repository (see [the Community Edition quickstart](#!quickstart/community-edition.md)), installing is just a single apt command:
+If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
 apt-get install libpcap0.8 gravwell-network-capture
 ```
 
-Otherwise, download and unpack the installer from the [Downloads page](#!quickstart/downloads.md). To install the network ingester, simply run the installer as root (the file name may differ slightly):
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). To install the network ingester, simply run the installer as root (the file name may differ slightly):
 
 ```
 root@gravserver ~ # bash gravwell_network_capture_installer.sh
@@ -121,7 +184,7 @@ root@gravserver ~ # bash gravwell_network_capture_installer.sh
 
 If the ingester is on a machine with a Gravwell backend already installed, the installer should automatically pick up the correct `Ingest-Secrets` value and populate the config file with it. In any case, review the configuration file in `/opt/gravwell/etc/network_capture.conf` before running. Make sure at least one "Sniffer" section is uncommented, with the Interface field set to one of your system's network interfaces. For more information, see the [Ingesters documentation](#!ingesters/ingesters.md)
 
-Note: At this time, the Gravwell .sh installer will prompt with available interfaces to capture, but the Debian package does not. To be safe, check `/opt/gravwell/etc/network_capture.conf`, set the desired interface, and run `service gravwell_network_capture restart` to restart the ingester.
+Note: The Debian package and the standalone installer should both prompt for a device from which to capture. If you wish to change your selection, open `/opt/gravwell/etc/network_capture.conf`, set the desired interface, and run `service gravwell_network_capture restart` to restart the ingester.
 
 ## Searching
 Once the Gravwell server is up and running and receiving data, the power of the search pipeline is made available.
@@ -240,3 +303,36 @@ The pie chart of user accounts isn’t revealing any user accounts I have on the
 By default, zooming in on one overview will zoom in on any other searches that are attached to this dashboard. So, when I zoom in on the successful logins, the rest of the charts will update to reflect this smaller time range. The screenshot below shows that a single IP was attempting to login with the “support” user (which doesn’t exist on this server) and that the only logins were from a user “remasis” (me) and a couple of sudo commands were issued. All is well.
 
 ![ssh dashboard, zoomed in](ssh-dashboard-zoomed.png)
+
+## Advanced Topics
+
+### Clustered Configurations
+
+Users with multi-node licenses can deploy multiple indexer and webserver instances and coordinate them over the network. We highly recommend coordinating with Gravwell's support team before deploying such a setup, but will outline the basic steps in this document.
+
+For most use cases, a single webserver and multiple indexer nodes will be desirable. For simplicity, we will describe an environment in which the webserver resides on the same node as one of the indexers.
+
+First, perform a single-node Gravwell installation as described above on the system which will be the head node. This will install the webserver and indexer and generate authentication secrets:
+
+```
+root@headnode# bash gravwell_installer.sh
+```
+
+Next, make a copy of `/opt/gravwell/etc/gravwell.conf` somewhere else and remove any lines beginning with 'Indexer-UUID'. Copy this gravwell.conf file and the installer to each of the indexer nodes. On the indexer nodes, we pass additional arguments to the installer to disable installation of the webserver and to specify that the existing gravwell.conf file should be used rather than generating a new one:
+
+```
+root@indexer0# bash gravwell_installer.sh --no-webserver --no-searchagent --use-config /root/gravwell.conf
+```
+
+Repeat this process for each indexer node.
+
+The final step of the installation is to inform the webserver of all these indexers. On the *head node*, open `/opt/gravwell/etc/gravwell.conf` and find the 'Remote-Indexers' line. It should look something like `Remote-Indexers=net:127.0.0.1:9404`. Now duplicate that line and modify the IPs to point at the other indexers (you can specify IP addresses or hostnames). For example, if there is an indexer on the local machine and on 3 other machines named indexer0.example.net, indexer1.example.net, and indexer2.example.net, the config file should contain these lines:
+
+```
+Remote-Indexers=net:127.0.0.1:9404
+Remote-Indexers=net:indexer0.example.net:9404
+Remote-Indexers=net:indexer1.example.net:9404
+Remote-Indexers=net:indexer2.example.net:9404
+```
+
+Restart the webserver with the command `systemctl restart gravwell_webserver`. Now, when you view the "Systems Stats" page and click on the "Hardware" tab, you should see entries for each of the 4 indexer processes.

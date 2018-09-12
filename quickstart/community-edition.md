@@ -1,5 +1,7 @@
 # Gravwell Community Edition
 
+Attention: This document has been deprecated in favor of the [universal quickstart](#!quickstart/quickstart.md). We have left this intact to keep existing links functional but will not be updating it.
+
 Gravwell's Community Edition is a free licensing program intended for personal use. Unlike regular Gravwell licenses, Community Edition licenses are restricted to 2GB of ingested data per day. In our experience, we've found this to be more than enough for any home network applications (unless you decide to capture all packets and then start streaming Netflix!)
 
 Getting Gravwell Community Edition is straightforward. First, you'll install the software from either our Debian package repository, run the Docker container, or use the distribution-agnostic self-contained installer. Next, you'll sign up for a free license, which will be emailed to you. Finally, the newly-installed Gravwell instance will prompt you to upload the license file; once it's uploaded, you'll be ready to start using Gravwell!
@@ -37,18 +39,17 @@ Gravwell is available on Dockerhub as a single container including both the webs
 
 ### Self-contained Installer
 
-For non-Debian systems, download the [self-contained installer](https://update.gravwell.io/files/gravwell_2.2.3.tar.bz2) and extract it:
+For non-Debian systems, download the [self-contained installer](https://update.gravwell.io/files/gravwell_2.2.4.sh) and verify it:
 
 ```
-curl -O https://update.gravwell.io/files/gravwell_2.2.3.tar.bz2
-md5sum gravwell_2.2.3.tar.bz2 #should be b545b8aa2c40c3367c91d71b6042ea6f
-tar xjvf gravwell_2.2.3.tar.bz2
+curl -O https://update.gravwell.io/files/gravwell_2.2.4.sh
+md5sum gravwell_2.2.4.sh #should be f549d11ed30b1ca1f71a511e2454b07b
 ```
 
 Then run the installer:
 
 ```
-sudo bash gravwell_2.2.3.sh
+sudo bash gravwell_2.2.4.sh
 ```
 
 Follow the prompts and, after completion, you should have a running Gravwell instance.

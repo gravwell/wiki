@@ -314,3 +314,9 @@ Applies to:		Datastore
 Default Value:	`/opt/gravwell/resources/datastore`
 Example:		`Datastore-Resource-Store=/tmp/path/to/resources/datastore`
 Description:	The Datastore-Resource-Store parameter specifies where the datastore should store its resources. This directory **must** be unused by any other process and cannot be specified as the resource location for the indexer or webserver.
+
+**HTTP-Proxy***
+Applies to:		Webserver
+Default Value:
+Example:		`HTTP-Proxy=http://wwwproxy.example.com:8080/`
+Description:	The HTTP-Proxy parameter configures a proxy to be used for HTTP and HTTP requests by the webserver. It is effectively equivalent to setting the environment variable $http_proxy and allows the same syntax.
