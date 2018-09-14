@@ -39,17 +39,17 @@ Gravwell is available on Dockerhub as a single container including both the webs
 
 ### Self-contained Installer
 
-For non-Debian systems, download the [self-contained installer](https://update.gravwell.io/files/gravwell_2.2.5.sh) and verify it:
+For non-Debian systems, download the [self-contained installer](https://update.gravwell.io/files/gravwell_2.2.6.sh) and verify it:
 
 ```
-curl -O https://update.gravwell.io/files/gravwell_2.2.5.sh
-md5sum gravwell_2.2.5.sh #should be 7fd044ad530ca0d24b42289716fee7e7
+curl -O https://update.gravwell.io/files/gravwell_2.2.6.sh
+md5sum gravwell_2.2.5.sh #should be 8286880429c9f11aa18c9d93ccaebfc3
 ```
 
 Then run the installer:
 
 ```
-sudo bash gravwell_2.2.5.sh
+sudo bash gravwell_2.2.6.sh
 ```
 
 Follow the prompts and, after completion, you should have a running Gravwell instance.
