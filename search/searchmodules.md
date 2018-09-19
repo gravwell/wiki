@@ -40,6 +40,7 @@ These can be used just like user-defined enumerated values.
 * [join](join/join.md)
 * [json](json/json.md)
 * [langfind](langfind/langfind.md)
+* [length](length/length.md)
 * [limit](limit/limit.md)
 * [lookup](lookup/lookup.md)
 * [lower](upperlower/upperlower.md)
