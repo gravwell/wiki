@@ -51,7 +51,7 @@ If any of these locations are accidentally lost or deleted, they should be resto
 ```
 cp /opt/gravwell/etc/users.db /opt/gravwell/etc/datastore-users.db
 cp /opt/gravwell/etc/webstore.db /opt/gravwell/etc/webstore.db
-cp -r /opt/gravwell/etc/resources/webserver/* /opt/gravwell/etc/resources/datastore/
+cp -r /opt/gravwell/resources/webserver/* /opt/gravwell/resources/datastore/
 ```
 
 If the datastore is on a separate machine, use `scp` or another file transfer method to copy those files from a frontend server.
