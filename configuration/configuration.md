@@ -122,7 +122,6 @@ When reassigning tags between wells, the system will NOT move the data.  If you 
 
 A Gravwell cluster with multiple indexer nodes can be configured so that nodes replicate their data to one another in case of disk failure or accidental deletion. See the [replication documentation](replication.md) for information on configuring replication.
 
-
 ## Data Ageout
 
 Gravwell supports an ageout system whereby data management policies can be applied to individual wells.  The ageout policies control data retention, storage well utilization, and compression.  Each well supports a hot and cold storage location with a set of parameters which determine how data is moved from one storage system to the other.  An ideal Gravwell storage architecture is comprised of relatively small pools of high-speed storage that is tolerant to random accesses and a high volume/low cost storage pool to be used for longer term storage.  NVME-based flash and/or XPoint drives make a great hot well while magnetic RAID arrays, NAS, or SAN pools work well for cold pools.  Searching is not impeded during ageout, nor is ingestion.  
@@ -333,3 +332,9 @@ Example well configuration which keeps 7 days or 100GB in the hot pool and keeps
 	Delete-Frozen-Data=true
 ```
 
+<<<<<<< Updated upstream
+=======
+### Well Replication
+
+A Gravwell cluster with multiple indexer nodes can be configured so that nodes replicate their data to one another in case of disk failure or accidental deletion. See the [replication documentation](replication.md) for information on configuring replication.
+>>>>>>> Stashed changes
