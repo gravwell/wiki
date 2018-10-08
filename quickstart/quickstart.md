@@ -43,7 +43,7 @@ For non-Debian systems, download the [self-contained installer](https://update.g
 
 ```
 curl -O https://update.gravwell.io/files/gravwell_2.2.9.sh
-md5sum gravwell_2.2.9.sh #should be c774d32bb88ec142ed06db3aa5460713
+md5sum gravwell_2.2.9.sh #should be dfdd5f60f8a13c923da1167718e677b2
 ```
 
 Then run the installer:
