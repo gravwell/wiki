@@ -34,13 +34,13 @@ The syslog module extracts individual fields from an RFC 5424-formatted syslog r
 | Appname | The application which originally sent the syslog message, e.g. `systemd` | == != | Appname != "dhclient"
 | ProcID | A string representing the process which sent the message, often a PID | == != | ProcID != "7053"
 | MsgID | A string representing the type of message | == != | MsgID == "TCPIN"
-| StructuredData | A collection of key-values containing additional data. See below for further discussion. | == != | |
 | Message | The log message itself | == != | Message == "Critical error!" |
+| StructuredID | A string containing the structured data ID for the structured data element (see below) | == != | StructuredID == "ourSDID@32473"
 
 Consider the following syslog record (sourced from [https://github.com/influxdata/go-syslog](https://github.com/influxdata/go-syslog)):
 
 ```
-<165>4 2018-10-11T22:14:15.003Z mymach.it e - 1 [ex@32473 iut="3"] An application event log entry...
+<165>4 2018-10-11T22:14:15.003Z mymach.it e - 1 [ex@32473 iut="3" foo="bar"] An application event log entry...
 ```
 
 The syslog module would extract the following fields:
@@ -56,9 +56,7 @@ The syslog module would extract the following fields:
 * MsgID: "1"
 * Message: "An application event log entry..."
 
-The portion `[ex@32473 iut="3"]` is the *Structured Data* section. Structured Data sections contain key-value pairs; to access a value using the syslog module, specify a path to it: executing `syslog StructuredData.ex@32473.iut` will set an enumerated value named `iut` containing the value "3".
-
-Structured Data can consist of multiple elements contained in square brackets. A more complex example might look like `[foo@1234 name="Gravwell" year="2018"][bar@432 cake="lie"]`. Specifying `syslog StructuredData.foo@1234.year StructuredData.bar@432.cake` will extract two enumerated values, `year` with a value of "2018" and `cake` with a value of "lie".
+The portion `[ex@32473 iut="3" foo="bar"]` is the *Structured Data* section. Structured Data sections contain the structured value ID ("ex@32473", extracted with the `StructuredID` keyword) and any number of key-value pairs. To access a value using the syslog module, specify the key: executing `syslog iut` will set an enumerated value named `iut` containing the value "3". Similarly, `syslog StructuredID foo` would extract `StructuredID` containing "ex@32473" and `foo` containing "bar".
 
 ## Examples
 
