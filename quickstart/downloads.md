@@ -4,25 +4,25 @@
 
 The Gravwell core installer contains the indexer and webserver frontend. You'll need a license; either get a Community Edition free license, or contact info@gravwell.io for commercial options.
 
-[Download Gravwell Core Installer](https://update.gravwell.io/files/gravwell_2.2.9.sh) (MD5: dfdd5f60f8a13c923da1167718e677b2)
+[Download Gravwell Core Installer](https://update.gravwell.io/files/gravwell_2.3.0.sh) (MD5: 4808ab503b53c730e769d358162bbb87)
 
 ## Ingesters
 
 The core suite of ingesters are available for download as an installable packages.  Ingesters designed to operate on Linux machines are typically self contained, statically linked executables that are agnostic to the hosts package management system (with the exception of the NetworkCapture ingester).  Windows based ingesters are distributed as executable MSI packages.  Source code for many ingesters can be found at [Github](https://github.com/gravwell/ingesters).
 
-### Version 2.2.9 Ingester Releases
+### Version 2.3.0 Ingester Releases
 | Ingester | Description | MD5 | More Info |
 |:--------:|-------------|:---:|----------:|
-| [Simple Relay](#!ingesters/ingesters.md#Simple_Relay) | An ingester capable of accepting syslog or line brokend data sent over the network. |8257b736148b3647594ac50ae195f659| [Download](https://update.gravwell.io/files/gravwell_simple_relay_installer_2.2.9.sh)|
-| [File Follower](#!ingesters/ingesters.md#File_Follower) | The standard file following ingester designed to look for line broken log entries in files.  Useful for ingesting logs from systems that can only log to files. |d2eabc990ae2414d437f4a5f9e754041| [Download](https://update.gravwell.io/files/gravwell_file_follow_installer_2.2.9.sh) |
-| [Netflow Capture](#!ingesters/ingesters.md#Netflow_Ingester) | The Netflow Capture ingester acts as a Netflow v5 collector, ingesting Netflow records as Gravwell entries. |97994f572f111aef2079aa3904c5474c| [Download](http://update.gravwell.io/files/gravwell_netflow_capture_installer_2.2.9.sh) |
-| [Network Capture](#!ingesters/ingesters.md#Network_Ingester) | The Network Capture ingester is a passive network sniffing ingester which can bind to multiple network taps and send raw network traffic to Gravwell. |5772d629d69fc60615579b8b9749defd| [Download](https://update.gravwell.io/files/gravwell_network_capture_installer_2.2.9.sh) |
-| [Collectd Collector](#!ingesters/ingesters.md#collectd) | The collectd ingester acts as a standalone collectd collector.  |ff1abcba7c2a39819484570c9af0ad76| [Download](https://update.gravwell.io/files/gravwell_collectd_installer_2.2.9.sh) |
-| [Ingest Federator](#!ingesters/ingesters.md#Federator_Ingester) | The Federator ingester is designed to aggregate multiple downstream ingesters and relay entries to upstream ingestion points.  The Federator is useful for crossing trust boundaries, aggregating entry flows, and insulating Gravwell indexers from potentially untrusted downstream entry generators. |03d80c098d9cf8fa03f327c2d65b8796| [Download](https://update.gravwell.io/files/gravwell_federator_installer_2.2.9.sh) |
+| [Simple Relay](#!ingesters/ingesters.md#Simple_Relay) | An ingester capable of accepting syslog or line brokend data sent over the network. |e2b956b3f472dbeb685b9d7cbc2f3a27| [Download](https://update.gravwell.io/files/gravwell_simple_relay_installer_2.3.0.sh)|
+| [File Follower](#!ingesters/ingesters.md#File_Follower) | The standard file following ingester designed to look for line broken log entries in files.  Useful for ingesting logs from systems that can only log to files. |b128bb4ce578a915f72b5f89975c29bd| [Download](https://update.gravwell.io/files/gravwell_file_follow_installer_2.3.0.sh) |
+| [Netflow Capture](#!ingesters/ingesters.md#Netflow_Ingester) | The Netflow Capture ingester acts as a Netflow v5 collector, ingesting Netflow records as Gravwell entries. |554d012201d65fca6cf3e7c7efddcba6| [Download](http://update.gravwell.io/files/gravwell_netflow_capture_installer_2.3.0.sh) |
+| [Network Capture](#!ingesters/ingesters.md#Network_Ingester) | The Network Capture ingester is a passive network sniffing ingester which can bind to multiple network taps and send raw network traffic to Gravwell. |4c7f9ee538f58b7ab97973fc96df99f7| [Download](https://update.gravwell.io/files/gravwell_network_capture_installer_2.3.0.sh) |
+| [Collectd Collector](#!ingesters/ingesters.md#collectd) | The collectd ingester acts as a standalone collectd collector.  |c4b44634fb523084b309db4a19bd2177| [Download](https://update.gravwell.io/files/gravwell_collectd_installer_2.3.0.sh) |
+| [Ingest Federator](#!ingesters/ingesters.md#Federator_Ingester) | The Federator ingester is designed to aggregate multiple downstream ingesters and relay entries to upstream ingestion points.  The Federator is useful for crossing trust boundaries, aggregating entry flows, and insulating Gravwell indexers from potentially untrusted downstream entry generators. |15839396293bccae2b61f43b4896bfc3| [Download](https://update.gravwell.io/files/gravwell_federator_installer_2.3.0.sh) |
 | [Windows Events](#!ingesters/ingesters.md#Windows_Event_Service) | The Winevent uses the Windows events subsystem to acquire windows events and ship them to gravwell.  The Winevent ingester can be placed on a single Windows machine acting as a log collector, or on multiple endpoints. |cbcdd3c3781ad7396854a0482c19f16c| [Download](https://update.gravwell.io/files/gravwell_win_events_2.2.9.msi) |
 | [Windows File Follower](#!ingesters/ingesters.md#File_Follower) | The Windows file follower is identical to the File Follower ingester, but for Windows. |1d91e68533d3b5b564144dec96ff2ab9| [Download](https://update.gravwell.io/files/gravwell_file_follow_2.2.9.msi) |
-| [Amazon Kinesis](#!ingesters/ingesters.md#Kinesis_Ingester) | The Amazon Web Services Kinesis ingester can attach to the Kinesis stream and dramatically simplify logging a cloud deployment |b54589c882b62f8303dd0bacf5b8a7de| [Download](https://update.gravwell.io/files/gravwell_kinesis_ingest_installer_2.2.9.sh)|
-| [Google PubSub](#!ingesters/ingesters.md#GCP_PubSub) | The Google Cloud Platform PubSub Ingester can subscribe to exhausts on the GCP PubSub system, easing integration with GCP. |b913aeb2e48e685a04e61d2dd2e16e2f| [Download](https://update.gravwell.io/files/gravwell_pubsub_ingest_installer_2.2.9.sh)|
+| [Amazon Kinesis](#!ingesters/ingesters.md#Kinesis_Ingester) | The Amazon Web Services Kinesis ingester can attach to the Kinesis stream and dramatically simplify logging a cloud deployment |eb804cafe684b513a10195ee438d3946| [Download](https://update.gravwell.io/files/gravwell_kinesis_ingest_installer_2.3.0.sh)|
+| [Google PubSub](#!ingesters/ingesters.md#GCP_PubSub) | The Google Cloud Platform PubSub Ingester can subscribe to exhausts on the GCP PubSub system, easing integration with GCP. |afbfb70e209da8cbbad806c2bf4da4ed| [Download](https://update.gravwell.io/files/gravwell_pubsub_ingest_installer_2.3.0.sh)|
 
 [//]: <> (| [](#!ingesters/ingesters.md#) | | | [Download](https://update.gravwell.io/files/) |)
 [//]: <> (| [](#!ingesters/ingesters.md#) | | | [Download](https://update.gravwell.io/files/) |)
@@ -33,4 +33,4 @@ Some Gravwell components are distributed as optional additional installers, such
 
 | Component | Description | MD5 | More Info |
 |:---------:|-------------|:---:|----------:|
-| [Datastore](#!distributed/frontend.md) | The datastore keeps multiple Gravwell webservers in sync, enabling load balancing |296fe10236e9992e7c13e3cfeeb97fc8| [Download](https://update.gravwell.io/files/gravwell_datastore_installer_2.2.9.sh) |
+| [Datastore](#!distributed/frontend.md) | The datastore keeps multiple Gravwell webservers in sync, enabling load balancing |0dadb52d5e261a70824bdf72587c9f7c| [Download](https://update.gravwell.io/files/gravwell_datastore_installer_2.3.0.sh) |
