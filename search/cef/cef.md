@@ -17,6 +17,23 @@ The Gravwell CEF parser allows additional flexibility in extracting submember ke
 
 Extracted header and key values are extracted into enumerated values with the same name as the key or header.  However, using the "as" syntax the extracted values can be renamed to any value.  The gravwell CEF parser is designed with flexibility in mind, and can deal with poorly formed CEF records and records that technically violate the loosely defined CEF spec.
 
+## Supported Options
+
+* `-e`: The “-e” option specifies that the CEF module should operate on an enumerated value.  Operating on enumerated values can be useful when you have extracted a CEF record using upstream modules.  You could e.g. extract CEF records from raw PCAP and pass the records into the CEF module.
+
+## Processing Operators
+
+Each CEF field supports a set of operators that can act as fast filters.  The filters supported by each operator are determined by the data type of the field.
+
+| Operator | Name | Description |
+|----------|------|-------------|
+| == | Equal | Field must be equal
+| != | Not equal | Field must not be equal
+| ~  | Contains | Field must contain the sub sequence
+| !~ | Not contains | Field must NOT contain the sub sequence
+
+When possible, use the CEF inline filters so that the CEF module can zero into the types of records you want immediately, rather than relying on downstream modules.  Using inline filters is not only faster during worst case operation, it also enables you to take advantage of field accelerators when they are enabled.
+
 ### Examples
 
 If we wanted to extract the device vendor, product, severity, and msg from the following CEF record and draw a table with only records where the severity was > 7.
@@ -30,7 +47,7 @@ CEF:0|Citrix|NetScaler|NS11.0|APPFW|APPFW_STARTURL|6|src=192.168.1.1 method=GET 
 The Query:
 
 ```
-tag=firewall cef DeviceVendor DeviceProduct Severity msg | eval Severity > 7 | table DeviceVendor DeviceProduct msg
+tag=firewall cef DeviceVendor DeviceProduct Severity==7 msg | table DeviceVendor DeviceProduct msg
 ```
 
 However, if we had the technically invalid CEF record which contained a key value named Version and we wanted that instead of the header Version we can still access that value using the Ext designator.
@@ -44,15 +61,11 @@ CEF:0|Citrix|NetScaler|NS11.0|APPFW|APPFW_STARTURL|6|src=192.168.1.1 Version=11.
 The Query:
 
 ```
-tag=firewall cef DeviceVendor DeviceProduct Severity Ext.Version msg | eval Severity > 7 | table DeviceVendor DeviceProduct msg Version
+tag=firewall cef DeviceVendor==Citrix DeviceProduct==NetScaler Severity Ext.Version msg ~ Banned | table DeviceVendor DeviceProduct msg Version
 ```
 
-The query would extract the value "11.0" for version rather than "0" but if you ALSO wanted the header value we can make use of the "as" syntax to pull both the header Version and the key Version.
+The query would extract the value "11.0" for version rather than "0" but if you ALSO wanted the header value we can make use of the "as" syntax to pull both the header Version and the key Version.  The "~" inline filter states that we only want records containing the word "Banned" in the message field.
 
 ```
 tag=firewall cef DeviceVendor DeviceProduct Severity Version as hdrversion Ext.Version msg | eval Severity > 7 | table DeviceVendor DeviceProduct msg Version hdrversion
 ```
-
-### Supported Options
-
-* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
