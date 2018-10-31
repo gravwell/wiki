@@ -1,0 +1,144 @@
+#Gravwell Accelerators
+
+Gravwell enables for processing entries as they are ingested in order to perform field extraction.  The extracted fields are then processed and placed in acceleration blocks which accompany each shard.  Using the accelerators can enable dramatic speedups in throughput with minimal storage overhead.  Accelerators are specified on a per well basis and are designed to be as unobtrusive and flexible as possible.  If data enters a well that does not match the acceleration directive, or is missing the specified fields, Gravwell processes it just like any other entry.  Acceleration will engage when it can.
+
+## Acceleration Basics
+
+Gravwell accelerators are based on a filtering technique that operates best when data is relatively unique.  If a field value is extremely common, or present in almost every entry, it doesn't make much sense to include it in the accelerator specification.  Specifying and filtering on multiple fields can also improve accuracy which improves query speed.  Fields make good candidates for acceleration are fields that will be directly queried for.  Examples include process names, usernames, IP addresses, module names, or any other field that will be used in a needle-in-the-haystack type query.
+
+Most acceleration modules incur about a 1-1.5% storage overhead, but extremely low throughput wells may be much higher.  If a well typically sees about 1-10 entries per second acceleration may incur a 5-10% storage penalty, where a well with 10-15 thousand entries per second will see as little as 0.5% storage overhead.  Gravwell accelerators also allow for user specified collision rate adjustments.  If you can spare the storage a lower collision rate may increase accuracy and speed up queries while increasing storage overhead.  Reducing the accuracy reduces the storage penaly but decreases accuracy and reduces the effectiveness of the accelerator.
+
+Accelerators must operate on the direct data portion of an entry (with the exception of the src accelerator which directly operates on the SRC field).
+
+## Configuring Acceleration
+
+Accelerators are configured on a per well basis.  Each well can specify an acceleration module, fields for extraction, a collision rate, and the option to include the entry source field.  If it is commonplace to filter on specific sources (e.g. only look at syslog entries coming from a specific device) including the source field provides an effective way to boost accelerator accuracy independent of the fields being extracted.
+
+| Acceleration Parameter | Description | Example |
+|----------|------|-------------|
+| Accelerator-Name  | Specifies the field extraction module to use at ingest | Accelerator-Name="json" |
+| Accelerator-Args  | Specifies arguments for the acceleration module, often the fields to extract | Accelerator-Args="username hostname appname" |
+| Collision-Rate | Controls the accuracy for the acceleration modules.  Must be between 0.1 and 0.000001. Defaults to 0.001. |
+| Accelerate-On-Source | Specifies that the SRC field of each module should be included.  This allows combining a module like CEF with SRC. |
+
+### Example Configuration
+
+Below is an example configuration which extracts the 2nd, 4th, and 5th field in a tab delimited data stream like bro.  In this example we are extracting and accelerating on the source ip, destination ip, and destination port from each bro log.
+
+```
+[Storage-Well "bro"]
+	Location=/opt/gravwell/storage/bro
+	Tags=bro
+	Accelerator-Name="fields"
+	Accelerator-Args="-d \"\t\" [2] [4] [5]"
+	Accelerate-On-Source=true
+	Collision-Rate=0.0001
+```
+
+## Acceleration Modules
+
+Each acceleration module uses the same syntax as their companion search module for basic field extraction.  Accelerators do not support renaming, filtering, or operating on enumerated values.  They are the first level filter.  Acceleration modules are transparently invoked whenever the corresponding search module operates and performs an equality filter.
+
+For example, consider the following well configuration which uses the JSON accelerator.
+
+```
+[Storage-Well "applogs"]
+	Location=/opt/gravwell/storage/app
+	Tags=app
+	Accelerator-Name="json"
+	Accelerator-Args="username hostname app.field1 app.field2"
+```
+
+If we were to issue the following query:
+
+```
+tag=app json username==admin app.field1=="login event" app.field2 != "failure" | count by hostname | table hostname count
+```
+
+The json search module will transparently invoke the acceleration framework and provide a first level filter on teh username and "app.field1" extracted values.  The "app.field2" field is NOT accelerated on because it is not a direct equality filter.  Filters that exclude, compare, or check for subsets are not eligable for acceleration.
+
+### JSON
+
+The JSON accelerator module is specified using via the accelerator name "json" and uses the exact same syntax for picking fields as the JSON modules.  See the [JSON search module](/#!search/json/json.md) section for more information on field extraction.
+
+#### Example Well Configuration
+
+```
+[Storage-Well "applogs"]
+	Location=/opt/gravwell/storage/app
+	Tags=app
+	Accelerator-Name="json"
+	Accelerator-Args="username hostname \"strange-field.with.specials\".subfield"
+```
+
+### Syslog
+
+The Syslog accelerator is designed to operate on conformant RFC5424 Syslog messages.  See the [Syslog search module](/#!search/syslog/syslog.md) section for more information on field extraction.
+
+#### Example Well Configuration
+
+```
+[Storage-Well "syslog"]
+	Location=/opt/gravwell/storage/syslog
+	Tags=syslog
+	Accelerator-Name="syslog"
+	Accelerator-Args="Hostname Appname MsgID valueA valueB"
+```
+
+### CEF
+
+The CEF accelerator is designed to operate on CEF log messages and is just as flexible as the search module.  See the [CEF search module](/#!search/cef/cef.md) section for more information on field extraction.
+
+#### Example Well Configuration
+
+```
+[Storage-Well "ceflogs"]
+	Location=/opt/gravwell/storage/cef
+	Tags=app1
+	Accelerator-Name="cef"
+	Accelerator-Args="DeviceVendor DeviceProduct Version Ext.Version"
+```
+
+### Fields
+
+The fields accelerator can operate on any delimited data format, whether it be CSV, TSV, or any other delimiter.  The Fields accelerator supports specifying the delimiter the same way as the search module.  See the [Fields search module](#!search/fields/fields.md) secion for more informaton on field extraction.
+
+#### Example Well Configuration
+
+```
+[Storage-Well "security"]
+	Location=/opt/gravwell/storage/seclogs
+	Tags=secapp
+	Accelerator-Name="fields"
+	Accelerator-Args="-d \",\" [1] [2] [5] [3]"
+```
+
+### SRC
+
+The SRC accelerator can be used when only the SRC field should be accelerated.  However, its essentially possible to combine the SRC accelerator with other accelerators by enabling the "Accelerate-On-Source" flag and also adding a the src search module.  See the [SRC search module](#!search/src/src.md) for more information on filtering.
+
+#### Example Well Configuration
+
+```
+[Storage-Well "applogs"]
+	Location=/opt/gravwell/storage/app
+	Tags=app
+	Accelerator-Name="src"
+```
+
+#### Example Well Configuration and Query Combining SRC
+
+```
+[Storage-Well "applogs"]
+	Location=/opt/gravwell/storage/app
+	Tags=app
+	Accelerator-Name="fields"
+	Accelerator-Args="-d \",\" [1] [2] [5] [3]"
+	Accelerate-On-Source=true
+```
+
+The following query invokes both the fields accelerator and the SRC accelerator to specify specific log types coming from specific sources.
+
+```
+tag=app src dead::beef | fields -d "," [1]=="security" [2]="process" [5]="domain" [3] as processname | count by processname | table processname count
+```

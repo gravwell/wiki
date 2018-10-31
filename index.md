@@ -32,7 +32,11 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Docker Deployment](configuration/docker.md)
   
+  * [Data Ageout](configuration/ageout.md)
+
   * [Data Replication](configuration/replication.md)
+
+  * [Query Acceleration](configuration/accelerators.md)
 
   * [Distributed Frontends](distributed/frontend.md)
 
