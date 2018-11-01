@@ -30,6 +30,7 @@ These can be used just like user-defined enumerated values.
 * [canbus](canbus/canbus.md)
 * [cef](cef/cef.md)
 * [count](math/math.md)
+* [csv](csv/csv.md)
 * [eval](eval/eval.md)
 * [fields](fields/fields.md)
 * [geoip](geoip/geoip.md)
