@@ -32,11 +32,36 @@ The csv module allows for a filtering based on equality.  If a filter is enabled
 
 ### Examples
 
-Extract the URL column from a CSV http.log feed and name it "url".
+### Data Extraction
+
+The CSV module will always clean out surrounding whitespace and double quotes from extracted column data.  For example, consider the following entry:
+
+```
+2018-11-01T12:46:01.764386-06:00,daffodil, 15554,9870f7cd-b7d3-4bb6-8160-f5f146ebc764 , "OK, what sort of language would we have the world speak?
+Isabella", "CL", Lucien
+```
+
+The 3rd, 4th, and 5th columns contain surrounding whitespace, and the 5th column contains double quotes that encapsulate commas and new lines.  If we executed the CSV module with the following arguments:
+
+```
+csv [2] [3] [4] | table 2 3 4
+```
+
+The output would look as follows (notice the lack of quotes or surronding whitespace:
+
+| 2 | 3 | 4 |
+|----------|------|-------------|
+| 15554 | 9870f7cd-b7d3-4bb6-8160-f5f146ebc764 | OK, what sort of language would we have the world speak?<br>Isabella |
+
+
+### Example queries
+
+Extract a URL column from a CSV http.log feed and name it "url".
 
 ```
 tag=brohttp csv [9] as url
 ```
+
 
 Extract the URL and requester field from a CSV bro http.log feed and filter for only entries where the URL contains a space and outputing the results in a table.
 
@@ -44,11 +69,13 @@ Extract the URL and requester field from a CSV bro http.log feed and filter for 
 tag=brohttp csv [9] ~ " " as url [2] as requester | table url requester
 ```
 
+
 Extract the 4th, 5th, and 6th columns where the 6th column must not be "stuff" and the 4th column must contain "things.
 
 ```
 tag=default csv [5]!=stuff [4] [3]~"things" | table 3 4 5
 ```
+
 
 Extract a URI from an apache access log and then parse the "DATA" parameter as a CSV.
 
