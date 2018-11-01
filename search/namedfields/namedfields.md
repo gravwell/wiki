@@ -10,15 +10,15 @@ The namedfields module, at its core, maps numeric indexes within a line to user-
 
 | Index | Name |
 |-------|------|
-| 0		| start_time |
-| 1		| duration |
-| 2		| protocol |
-| 3		| src_ip |
-| 4		| src_port |
-| 5		| dst_ip |
-| 6		| dst_port |
-| 7		| packets |
-| 8		| bytes |
+| 0 | start_time |
+| 1 | duration |
+| 2 | protocol |
+| 3 | src_ip |
+| 4 | src_port |
+| 5 | dst_ip |
+| 6 | dst_port |
+| 7 | packets |
+| 8 | bytes |
 
 One or more groups are then gathered into a Gravwell resource in a format specified elsewhere in this document. When namedfields is run, the user specified which resource to load and which group within that resource should be used to map user-specified names to indexes.
 
@@ -58,11 +58,11 @@ tag=brointel namedfields -r brofields -g Intel source | count source | table sou
 
 Before the namedfields module can be used, a resource must be created to map names to indexes within a field. The resource is structured with JSON. Each resource can contain multiple groups, one of which is selected when running the module.
 
- The example below gives names to entries in Bro's `intel.log` file:
+ The example below gives names to entries in Bro's `intel.log` file as well as a custom application log formated as a CSV:
 
 ```
 {
-	"Version": 1,
+	"Version": 2,
 	"Set": [
 		{
 			"Delim": "\t",
@@ -81,7 +81,25 @@ Before the namedfields module can be used, a resource must be created to map nam
 					"Index": 2
 				}
 			]
+		},{
+			"Name": "App",
+			"Engine": "csv",
+			"Subs": [
+				{
+					"Name": "user",
+					"Index": 0
+				},
+				{
+					"Name": "host",
+					"Index": 1
+				},
+				{
+					"Name": "GUID",
+					"Index": 2
+				}
+			]
 		}
+
 	]
 }
 ```
@@ -91,6 +109,73 @@ Note the essential components:
 * `Version` specifies which version of the namedfields module this file is meant for. Leave it as 1.
 * `Set` contains an *array* of groups
 * This file's Set contains one group, named "Intel". The delimiter is specified as a tab character ("\t"), and a list of `Subs` are provided.
-* The "Subs" define sub-fields within this group. We see that the field at index 0 is named "source", while index 1 is named "desc" and index 2 is named "url".
+* The "Subs" member defines sub-fields within this group. We see that the field at index 0 is named "source", while index 1 is named "desc" and index 2 is named "url".
+* The "Engine" member declares which engine should be used on the group (fields, csv, etc...).
 
 The Gravwell-distributed [namedfields.json](https://github.com/gravwell/resources/blob/master/bro/namedfields/namedfields.json) file for Bro logs contains many groups; refer to it for more examples.
+
+### Namedfields Resource Generation
+
+Gravwell has provided a simple golang library to aid in the generation of namedfields resources.  The library can be used to programatically generate a resource which can the be used by the namedfields module.  The library is available in the tools Gravwell repository on github within the "nfgen" directory.
+
+The simplest usage of the named fields to generate two groups within a single resource would appear as:
+
+```
+package main
+
+import (
+	"github.com/gravwell/tools/nfgen"
+	"log"
+)
+
+func main() {
+	//create a new named fields resource using the CSV engine that knows how to deal with 2
+	//data types, one for login events and one for password failed events
+	nf := nfgen.NewGen()
+	g, err := nfgen.NewGroup("logins", "csv", ``)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err = g.AddSub(`username`, ``, 1); err != nil {
+		log.Fatal(err)
+	}
+	if err = g.AddSub(`host`, ``, 2); err != nil {
+		log.Fatal(err)
+	}
+	if err = g.AddSub(`srcip`, ``, 3); err != nil {
+		log.Fatal(err)
+	}
+	if err = nf.AddGroup(g); err != nil {
+		log.Fatal(err)
+	}
+	if g, err = nfgen.NewGroup("failedlogins", "csv", ``); err != nil {
+		log.Fatal(err)
+	}
+	if err = g.AddSub(`srcip`, ``, 2); err != nil {
+		log.Fatal(err)
+	}
+	if err = g.AddSub(`username`, ``, 3); err != nil {
+		log.Fatal(err)
+	}
+	if err = g.AddSub(`password`, ``, 4); err != nil {
+		log.Fatal(err)
+	}
+	if err = g.AddSub(`host`, ``, 5); err != nil {
+		log.Fatal(err)
+	}
+	if err = nf.AddGroup(g); err != nil {
+		log.Fatal(err)
+	}
+	if err = nf.Export("/tmp/lookups.json"); err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+Building and executing the afformentioned generator is simple if you have the golang buildchain installed:
+
+```
+go get -u github.com/gravwell/tools/nfgen
+go build main.go -o test
+./test
+```
