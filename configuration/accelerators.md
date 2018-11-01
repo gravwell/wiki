@@ -113,6 +113,20 @@ The fields accelerator can operate on any delimited data format, whether it be C
 	Accelerator-Args="-d \",\" [1] [2] [5] [3]"
 ```
 
+### CSV
+
+The CSV accelerator is designed to operate on comma seperated value data, automatically removing surrounding whitespace and double quotes from data.  See the [CSV search module](#!search/csv/csv.md) secion for more informaton on column extraction.
+
+#### Example Well Configuration
+
+```
+[Storage-Well "security"]
+	Location=/opt/gravwell/storage/seclogs
+	Tags=secapp
+	Accelerator-Name="csv"
+	Accelerator-Args="[1] [2] [5] [3]"
+```
+
 ### SRC
 
 The SRC accelerator can be used when only the SRC field should be accelerated.  However, its essentially possible to combine the SRC accelerator with other accelerators by enabling the "Accelerate-On-Source" flag and also adding a the src search module.  See the [SRC search module](#!search/src/src.md) for more information on filtering.
