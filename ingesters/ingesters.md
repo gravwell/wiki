@@ -217,6 +217,7 @@ Cleartext-Backend-target=172.20.0.2:4023 #example of adding another cleartext co
 #Pipe-Backend-target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
 State-Store-Location=/opt/gravwell/etc/file_follow.state
 Log-Level=ERROR #options are OFF INFO WARN ERROR
+Max-Files-Watched=64
 #Ingest-Cache-Path=/opt/gravwell/cache/file_follow.cache #allows for ingested entries to be cached when indexer is not available
 #basic default logger, all entries will go to the default tag
 #no Tag-Name means use the default tag
@@ -246,6 +247,8 @@ Log-Level=ERROR #options are OFF INFO WARN ERROR
         Tag-Name=kernel
         Ignore-Timestamps=true
 ```
+
+Note: The `Max-Files-Watched` parameter specifies that the File Follower should only actively watch up to 64 files. If more than 64 files match the specified filters, the least-recently-updated files will be dropped so the newer files can be watched. However, if an old file is written to, it will be detected. We recommend setting Max-Files-Watched with care, as going too high can cause interactions with kernel limits.
 
 ## Mass File Ingester
 
