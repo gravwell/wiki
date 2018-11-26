@@ -35,4 +35,4 @@ Some Gravwell components are distributed as optional additional installers, such
 
 | Component | Description | MD5 | More Info |
 |:---------:|-------------|:---:|----------:|
-| [Datastore](#!distributed/frontend.md) | The datastore keeps multiple Gravwell webservers in sync, enabling load balancing |0dadb52d5e261a70824bdf72587c9f7c| [Download](https://update.gravwell.io/files/gravwell_datastore_installer_2.3.0.sh) |
+| [Datastore](#!distributed/frontend.md) | The datastore keeps multiple Gravwell webservers in sync, enabling load balancing |fb79fd43b33271331c072de8d5620d6f| [Download](https://update.gravwell.io/files/gravwell_datastore_installer_2.3.1.sh) |
