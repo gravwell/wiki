@@ -137,7 +137,7 @@ Source-Override=DEAD:BEEF::FEED:FEBE
 
 ## Simple Relay
 
-[Complete Configuration and Documentation](#!/ingesters/simple_relay.md).
+[Complete Configuration and Documentation](#!ingesters/simple_relay.md).
 
 Simple Relay is a text ingester which is capable of listening on multiple TCP or UDP ports.  Each port can be assigned a tag as well as an ingest standard (e.g. parse RFC5424 or simple newline delimited entries).  Simple Relay is the go-to ingester for ingesting remote syslog entries or consuming from any data source that can throw text logs over a network connection.  Simple Relay is used for remote syslog log collection, data over TCP, or any other line broken data source that can be delivered over a network.
 
