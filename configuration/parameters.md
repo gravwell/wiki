@@ -74,6 +74,12 @@ Default Value:		10
 Example:			`Datastore-Update-Interval=5`
 Description:		The Datastore-Update-Interval parameter determines how long (in seconds) the webserver should wait before checking the datastore for updates. The default value of 10 seconds is typically suitable.
 
+**External-Addr**
+Applies to:		Webserver
+Default Value:
+Example:		`External-Addr=10.0.0.1:443`
+Description:	The External-Addr parameter specifies the address other webservers should use to contact this webserver. This parameter is **required** when using a datastore, to allow a user on one webserver to load the results of a search performed on another webserver.
+
 **Ingest-Port**
 Applies to:        Indexer
 Default Value:        `4023`
