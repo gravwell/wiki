@@ -86,6 +86,10 @@ The following fields can be updated:
 
 A script scheduled search can be changed to a standard scheduled search by pushing a SearchString and a Duration. Likewise a standard scheduled search can be converted to a script scheduled search by pushing a Script field.
 
+### Clearing a scheduled search error
+
+The LastError field in the scheduled search structure will be set if an error is encountered and will not be cleared by subsequent successful executions. It can be cleared manually by a DELETE on `/api/scheduledsearches/{id}/error`
+
 ### Deleting a scheduled search
 
 An existing scheduled search can be removed by performing a DELETE on `/api/scheduledsearches/{id}`.
