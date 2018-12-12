@@ -1,0 +1,48 @@
+# IP
+
+The ip module can convert enumerated values to the IP type and optionally perform filtering. This allows the user to, for instance, extract a string containing an IP address from a JSON structure, then use the ip module to convert that string to an IP address and check if it is in a certain subnet.
+
+## Supported Options
+
+* `-or`: The "-or" flag specifies that the ip module should allow an entry to continue down the pipeline if ANY of the filters are successful.
+
+## Processing Operators
+
+Enumerated values passed to the ip module can be compared against IP addresses or subnets using the following operators.
+
+| Operator | Name | Description |
+|----------|------|-------------|
+| == | Equal | IP must be equal to the given address
+| != | Not equal | IP must not be equal to the given address
+| ~ | Subset | IP must be a member of the given subnet
+| !~ | Not subset | IP must not be a member of the given subnet
+
+## Examples
+
+### Convert a string to an IP
+
+Assuming JSON-formatted entries containing an 'ipaddr' field, extract that field and convert it to an IP address for later use:
+
+```
+tag=json json ipaddr | ip ipaddr
+```
+
+The resulting IP enumerated value can also be assigned to a different enumerated value name rather than overwriting the original:
+
+```
+tag=json json ipaddr | ip ipaddr as IP
+```
+
+### Filter by address or subnet
+
+Assuming CSV-formatted data in which the 3rd field describes the source IP address of a connection, we can drop all connections not originating from 192.168.1.5:
+
+```
+tag=csv csv [2] as srcip | ip srcip==192.168.1.5
+```
+
+We can also eliminate any connections which originated in the local subnet:
+
+```
+tag=csv csv [2] as srcip | ip srcip !~ 192.168.0.0/16
+```
