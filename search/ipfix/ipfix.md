@@ -2,11 +2,11 @@
 
 The ipfix processor is designed to extract and filter raw IPFIX data frames, allowing for quickly identfying network flows, filtering on ports, or generally monitoring the behavior of aggregate flows.  Gravwell has a native IPFIX + Netflow ingester which is open source and avialable at https://github.com/gravwell/ingesters or as an installer in the [quickstart section](/#!quickstart/downloads.md).
 
-### Supported Options
+## Supported Options
 
 * `-e`: The “-e” option specifies that the ipfix module should operate on an enumerated value.  Operating on enumerated values can be useful when you have extracted an ipfix frame using upstream modules.  You could extract ipfix frames from raw PCAP and pass the frames into the ipfix module.
 
-### Processing Operators
+## Processing Operators
 
 Each IPFIX field supports a set of operators that can act as fast filters.  The filters supported by each operator are determined by the data type of the field. Numeric values support everything but the subset operators and IP addresses support just the subset operators.
 
@@ -22,13 +22,13 @@ Each IPFIX field supports a set of operators that can act as fast filters.  The 
 | !~ | Not subset | Field must not be a member of
 
 
-### Data Items
+## Data Items
 
 The ipfix search module is designed to process raw IPFIX frames.  A single IPFIX frame consists of a header and N data records. One essential difference between IPFIX and Netflow v5 is that all fields in Netflow are pre-defined, while IPFIX data records conform to templates specified by the generating device. Thus, one IPFIX generator might send source and destination IP & ports for flows, while a switch just sends IPFIX records containing packet counts.
 
 All elements of the IPFIX header can be used for filtering, as can some of the more common data elements. When filtering on Header data items, the filter applies to all records in the frame.  Header data items are processed first, and only if the header filters do not drop the frame are the individual records processed.  The ipfix processor is an expanding module; expanding modules break input entries into multiple output entries.  This means that when using the ipfix module more entries can come out of the pipeline than were fed in.
 
-#### IPFIX Header Data Items
+### IPFIX Header Data Items
 
 | Field |       Description        | Supported Operators | Example |
 |-------|--------------------------|---------------------|---------|
@@ -38,7 +38,7 @@ All elements of the IPFIX header can be used for filtering, as can some of the m
 | Sequence | Sequence counter of total flows on the sensing device | > < <= >= == != | Sequence == 1
 | Domain | The observation domain from which the record originated | > < <= >= == != | Domain == 0x1A
 
-#### IPFIX Data Record Items
+### IPFIX Data Record Items
 
 There are many possible fields which can be populated in any given IPFIX flow record; [IANA defines hundreds](https://www.iana.org/assignments/ipfix/ipfix.xhtml#ipfix-information-elements). We have implemented filtering for some of the most common:
 
@@ -66,9 +66,9 @@ Note: While the names we use are not as short / friendly as those used in the ne
 
 Beside the fields specified above, you can also extract (but not filter on) any other official IPFIX information element name as specified [here](https://www.iana.org/assignments/ipfix/ipfix.xhtml#ipfix-information-elements). You can also specify non-standard fields by giving an enterprise ID and field ID separated by a colon, e.g. "0x1ad7:0x15". We recommend extracting this to a more convenient name: `ipfix 0x1ad7:0x15 as foo`.
 
-### Examples
+## Examples
 
-#### Number of HTTPS flows by Source IP over time
+### Number of HTTPS flows by Source IP over time
 
 ```
 tag=ipfix ipfix sourceIPv4Address as Src destinationTransportPort==443 | count by Src | chart count by Src limit 24
