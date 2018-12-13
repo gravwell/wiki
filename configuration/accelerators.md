@@ -21,6 +21,15 @@ Accelerators are configured on a per well basis.  Each well can specify an accel
 | Collision-Rate | Controls the accuracy for the acceleration modules.  Must be between 0.1 and 0.000001. Defaults to 0.001. |
 | Accelerate-On-Source | Specifies that the SRC field of each module should be included.  This allows combining a module like CEF with SRC. |
 
+### Supported Extraction Modules
+
+* [CSV](/#!search/csv/csv.md)
+* [Fields](/#!search/fields/fields.md)
+* [Syslog](/#!search/syslog/syslog.md)
+* [JSON](/#!search/json/json.md)
+* [CEF](/#!search/cef/cef.md)
+* [Regex](/#!search/regex/regex.md)
+
 ### Example Configuration
 
 Below is an example configuration which extracts the 2nd, 4th, and 5th field in a tab delimited data stream like bro.  In this example we are extracting and accelerating on the source ip, destination ip, and destination port from each bro log.
@@ -35,7 +44,7 @@ Below is an example configuration which extracts the 2nd, 4th, and 5th field in 
 	Collision-Rate=0.0001
 ```
 
-## Acceleration Modules
+## Acceleration Basics
 
 Each acceleration module uses the same syntax as their companion search module for basic field extraction.  Accelerators do not support renaming, filtering, or operating on enumerated values.  They are the first level filter.  Acceleration modules are transparently invoked whenever the corresponding search module operates and performs an equality filter.
 
@@ -126,6 +135,22 @@ The CSV accelerator is designed to operate on comma seperated value data, automa
 	Accelerator-Name="csv"
 	Accelerator-Args="[1] [2] [5] [3]"
 ```
+
+### Regex
+
+The regex accelerator allows for specifying complicated extractions at ingest time in order to handle non-standard data formats.  Regular expressions are one of the slower extraction formats, so accelerating on specific fields can greatly increase query performance.
+
+#### Example Well Configuration
+
+```
+[Storage-Well "webapp"]
+	Location=/opt/gravwell/storage/webapp
+	Tags=webapp
+	Accelerator-Name="regex"
+	Accelerator-Args="^\\S+\\s\\[(?P<app>\\w+)\\]\\s<(?P<uuid>[\\dabcdef\\-]+)>\\s(?P<src>\\S+)\\s(?P<srcport>\\d+)\\s(?P<dst>\\S+)\\s(?P<dstport>\\d+)\\s(?P<path>\\S+)\\s"
+```
+
+Attention: Remember to escape backslashes '\\' when specifying regular expressions in the gravwell.conf file.  The regex argument '\\w' will become '\\\\w'
 
 ### SRC
 
