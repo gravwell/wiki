@@ -29,6 +29,7 @@ Accelerators are configured on a per well basis.  Each well can specify an accel
 * [JSON](/#!search/json/json.md)
 * [CEF](/#!search/cef/cef.md)
 * [Regex](/#!search/regex/regex.md)
+* [Winlog](/#!search/winlog/winlog.md)
 
 ### Example Configuration
 
@@ -151,6 +152,23 @@ The regex accelerator allows for specifying complicated extractions at ingest ti
 ```
 
 Attention: Remember to escape backslashes '\\' when specifying regular expressions in the gravwell.conf file.  The regex argument '\\w' will become '\\\\w'
+
+### Winlog
+
+The winlog module is one of if not the slowest extraction module.  The complexity of XML data combined with the Windows log schema means that the extraction module has to be extremely verbose, resulting in pretty poor extraction performance.  As a result, accelerating windows data may be the single most important performance optimization, as processing millions or billions of entries with the winlog module will be excruciatingly slow.  The accelerators help you narrow down the specific log entries you want without invoking the winlog module on every piece of data.  However, the slow extraction rate means that ingest of windows logs will be impacted, so don't expect Gravwell's typical ingest rate of hundreds of thousands of entries per second when ingesting into a winlog accelerated well.
+
+#### Example Well Configuration
+
+```
+[Storage-Well "windows"]
+	Location=/opt/gravwell/storage/windows
+	Tags=windows
+	Accelerator-Name="winlog"
+	Accelerator-Args="EventID Provider Computer TargetUserName SubjectUserName"
+```
+
+Attention: The winlog accelerator is permissive ('-or' flag is implied).  So specify any field you plan on using to filter searches on, even if two of the fields would not be present in the same entry.
+
 
 ### SRC
 
