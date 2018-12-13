@@ -49,7 +49,7 @@ Log-File=/opt/gravwell/log/simple_relay.log
 	Bind-String="udp://0.0.0.0:514" #standard UDP based RFC5424 syslog
 	Reader-Type=rfc5424
 	Tag-Name=syslog
-	Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
+	Timezone-Override="America/Chicago"
 	Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
 ```
 
@@ -85,9 +85,11 @@ Bind-String=[2600:1f18:63ef:e802:355f:aede:dbba:2c03]:901
 
 The "Ignore-Timestamps" parameter instructs the listener to not attempt to derive a timestamp from the read values, instead apply the current timestamp.  This parameter is useful for reading data where there may not be a timestamp present, or the timestamp is wrong on the originating system due to unreliable system clocks.  "Ignore-Timestamps" is false by default, to enable specify ```Ignore-Timestamps=true```
 
-#### Assume-Local-Timezone
+#### Assume-Local-Timezone and Timezone-Override
 
-Most timestamp formats have a timezone attached which indicates an offset to Universal Cordinated Time (UTC).  However, some systems do not specify the timezone leaving it up to the receiver to determine what timezone a log entry may be in.  Assume-Local-Timezone causes the reader to assume that the timestamp is in the same timezone as the Simple Relay reader when the timzeone is omitted.
+Most timestamp formats have a timezone attached which indicates an offset to Universal Cordinated Time (UTC).  However, some systems do not specify the timezone leaving it up to the receiver to determine what timezone a log entry may be in.  Assume-Local-Timezone causes the reader to assume that the timestamp is in the same timezone as the Simple Relay reader when the timzeone is omitted. Timezone-Override takes a string in the IANA timezone database format (e.g. "America/Chicago") and applies that timezone to timestamps which do not specify a timezone.
+
+Assume-Local-Timezone and Timezone-Override are mutually exclusive.
 
 #### Source-Override
 

@@ -178,7 +178,7 @@ If the Gravwell services are present on the same machine, the installation scrip
 
 ### Example Configurations
 
-The file follower configuration is nearly identical for both the Windows and Linux variants.
+The file follower configuration is nearly identical for both the Windows and Linux variants. More detailed configuration information is available [in the File Follower ingest documentation](file_follow.md)
 
 #### Windows
 
@@ -223,32 +223,31 @@ Max-Files-Watched=64
 #no Tag-Name means use the default tag
 [Follower "syslog"]
         Base-Directory="/var/log/"
-        File-Filter="{syslog,syslog.[0-9]}" #we are looking for all authorization log files
+        File-Filter="syslog,syslog.[0-9]" #we are looking for all authorization log files
         Tag-Name=syslog
         Assume-Local-Timezone=true #Default for assume localtime is false
 [Follower "auth"]
         Base-Directory="/var/log/"
-        File-Filter="{auth.log,auth.log.[0-9]}" #we are looking for all authorization log files
+        File-Filter="auth.log,auth.log.[0-9]" #we are looking for all authorization log files
         Tag-Name=syslog
         Assume-Local-Timezone=true #Default for assume localtime is false
 [Follower "packages"]
         Base-Directory="/var/log"
-        File-Filter="{dpkg.log,dpkg.log.[0-9]}" #we are looking for all dpkg files
+        File-Filter="dpkg.log,dpkg.log.[0-9]" #we are looking for all dpkg files
         Tag-Name=dpkg
         Ignore-Timestamps=true
 [Follower "kernel"]
         Base-Directory="/var/log"
-        File-Filter="{dmesg,dmesg.[0-9]}" #we are looking for all dpkg files
+        File-Filter="dmesg,dmesg.[0-9]"
         Tag-Name=kernel
         Ignore-Timestamps=true
 [Follower "kernel2"]
         Base-Directory="/var/log"
-        File-Filter="{kern.log,kern.log.[0-9]}" #we are looking for all dpkg files
+        File-Filter="kern.log,kern.log.[0-9]"
         Tag-Name=kernel
         Ignore-Timestamps=true
 ```
 
-Note: The `Max-Files-Watched` parameter specifies that the File Follower should only actively watch up to 64 files. If more than 64 files match the specified filters, the least-recently-updated files will be dropped so the newer files can be watched. However, if an old file is written to, it will be detected. We recommend setting Max-Files-Watched with care, as going too high can cause interactions with kernel limits.
 
 ## Mass File Ingester
 
