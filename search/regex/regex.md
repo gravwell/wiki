@@ -19,9 +19,27 @@ Because regular expressions can get very long, the regex module takes the `-r` f
 
 Note: Storing especially large regular expressions in resource files can clean up queries, and allows for easy reuse.  If `-r` is specified, do not specify a regular expression in the query -- instead the contents of the resource will be used. Handy!
 
+### Inline Filtering
+
+The regex module supports inline filtering to allow for downselecting data directly within the regex module.  The inline filtering also enables regex to engage accelerators to dramatically reduce the amount of data that needs to be processed.  Inline filtering is achieved in the same manner as other modules by using comparison operators.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
+
+
+| Operator | Name | Description |
+|----------|------|-------------|
+| == | Equal | Field must be equal
+| != | Not equal | Field must not be equal
+| ~ | Subset | Field contains the value
+| !~ | Not Subset | Field does NOT contain the value
+
+#### Filtering Examples
+
+```
+tag=syslog regex *shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" user==root ip ~ "192.168"
+```
+
 ### Parameter Structure
 ```
-regex <argument list> <regular expression>
+regex <argument list> <regular expression> <filter arguments>
 ```
 ### Example Search
 ```

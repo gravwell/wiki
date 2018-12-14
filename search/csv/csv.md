@@ -30,7 +30,11 @@ The csv module allows for a filtering based on equality.  If a filter is enabled
 | ~ | Subset | Field contains the value
 | !~ | Not Subset | Field does NOT contain the value
 
-### Examples
+#### Filtering Examples
+
+```
+csv [0] == "foo" [2] != "bar" [3] ~ baz as ID
+```
 
 ### Data Extraction
 
