@@ -23,13 +23,13 @@ Accelerators are configured on a per well basis.  Each well can specify an accel
 
 ### Supported Extraction Modules
 
-* [CSV](/#!search/csv/csv.md)
-* [Fields](/#!search/fields/fields.md)
-* [Syslog](/#!search/syslog/syslog.md)
-* [JSON](/#!search/json/json.md)
-* [CEF](/#!search/cef/cef.md)
-* [Regex](/#!search/regex/regex.md)
-* [Winlog](/#!search/winlog/winlog.md)
+* [CSV](/search/csv/csv.md)
+* [Fields](/search/fields/fields.md)
+* [Syslog](/search/syslog/syslog.md)
+* [JSON](/search/json/json.md)
+* [CEF](/search/cef/cef.md)
+* [Regex](/search/regex/regex.md)
+* [Winlog](/search/winlog/winlog.md)
 
 ### Example Configuration
 
@@ -69,7 +69,7 @@ The json search module will transparently invoke the acceleration framework and 
 
 ### JSON
 
-The JSON accelerator module is specified using via the accelerator name "json" and uses the exact same syntax for picking fields as the JSON modules.  See the [JSON search module](/#!search/json/json.md) section for more information on field extraction.
+The JSON accelerator module is specified using via the accelerator name "json" and uses the exact same syntax for picking fields as the JSON modules.  See the [JSON search module](/search/json/json.md) section for more information on field extraction.
 
 #### Example Well Configuration
 
@@ -83,7 +83,7 @@ The JSON accelerator module is specified using via the accelerator name "json" a
 
 ### Syslog
 
-The Syslog accelerator is designed to operate on conformant RFC5424 Syslog messages.  See the [Syslog search module](/#!search/syslog/syslog.md) section for more information on field extraction.
+The Syslog accelerator is designed to operate on conformant RFC5424 Syslog messages.  See the [Syslog search module](/search/syslog/syslog.md) section for more information on field extraction.
 
 #### Example Well Configuration
 
@@ -97,7 +97,7 @@ The Syslog accelerator is designed to operate on conformant RFC5424 Syslog messa
 
 ### CEF
 
-The CEF accelerator is designed to operate on CEF log messages and is just as flexible as the search module.  See the [CEF search module](/#!search/cef/cef.md) section for more information on field extraction.
+The CEF accelerator is designed to operate on CEF log messages and is just as flexible as the search module.  See the [CEF search module](/search/cef/cef.md) section for more information on field extraction.
 
 #### Example Well Configuration
 
