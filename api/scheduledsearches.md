@@ -18,7 +18,7 @@ A scheduled search contains the following fields:
 If the search is a 'standard' scheduled search, it will also set these fields:
 
 * SearchString: the Gravwell query to execute
-* Duration: a value in nanoseconds specifying how far back to run the search. This must be a negative value.
+* Duration: a value in seconds specifying how far back to run the search. This must be a negative value.
 
 If the search is on the other hand a script, it will set the following field:
 
@@ -33,7 +33,7 @@ The API commands in this section can be executed by any user.
 To get a list of all scheduled searches visible to the user (either owned by the user or marked accessible to one of the user's groups), perform a GET on `/api/scheduledsearches`. The result will look like this:
 
 ```
-[{"ID":2007987335,"Groups":null,"Name":"foo","Description":"test search","Owner":1,"Schedule":"* * * * *","Permissions":0,"SearchString":"tag=gravwell","Duration":-86400000000000,"Script":"","LastSearchIDs":null}]
+[{"ID":2007987335,"Groups":null,"Name":"foo","Description":"test search","Owner":1,"Schedule":"* * * * *","Permissions":0,"SearchString":"tag=gravwell","Duration":-86400,"Script":"","LastSearchIDs":null}]
 ```
 
 This example shows a single scheduled search named "foo", owned by UID 1 (admin). It runs every minute and executes the search `tag=gravwell` over the last 24 hours.
@@ -49,7 +49,7 @@ To create a new scheduled search, perform a POST request on `/api/scheduledsearc
 	"Groups": [2],
 	"Schedule": "0 8 * * *",
 	"SearchString": "tag=default grep foo",
-	"Duration": -86400000000000
+	"Duration": -86400
 }
 ```
 
@@ -62,7 +62,7 @@ The server will respond with the ID of the new scheduled search.
 Information about a single scheduled search may be accessed with a GET on `/api/scheduledsearches/{id}`. For example, given a scheduled search ID of 1353491046, we would query `/api/scheduledsearches/1353491046` and receive the following:
 
 ```
-{"ID":1353491046,"Groups":[2],"Name":"myscheduledsearch","Description":"a scheduled search","Owner":1,"Schedule":"0 8 * * *","Permissions":0,"SearchString":"tag=default grep foo","Duration":-86400000000000,"Script":"","LastSearchIDs":null}
+{"ID":1353491046,"Groups":[2],"Name":"myscheduledsearch","Description":"a scheduled search","Owner":1,"Schedule":"0 8 * * *","Permissions":0,"SearchString":"tag=default grep foo","Duration":-86400,"Script":"","LastSearchIDs":null}
 ```
 
 ### Updating an existing search
