@@ -92,6 +92,12 @@ Default Value:        `4024`
 Example:        `TLS-Ingest-Port=14024`
 Description:        The TLS-Ingest-Port parameter controls the port the indexers listen on for ingester connections.  Altering the TLS-Ingest-Port parameter can be useful when running multiple indexers on a single machine or another application is already bound to the default port of 4024.  By default, all ingesters using the TLS transport will validate remote certificates.  If a deployment is using the auto generated certificates, ingesters either need to have the certificates installed as trusted, or they must disable certificate validation (this effectively destroys the protections provided by a TLS transport).
 
+**Insecure-Skip-TLS-Verify**
+Applies to:        Indexer
+Default Value:     false
+Example:	   `Insecure-Skip-TLS-Verify=True`
+Description:	   SECURITY WARNING! Be advised that configuring this setting will skip TLS certificate validation which should generally never be done. DO NOT USE THIS! Get valid certificates, please. 
+
 **Pipe-Ingest-Path**
 Applies to:        Indexer
 Default Value:        `/opt/gravwell/comms/pipe`
