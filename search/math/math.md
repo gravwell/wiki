@@ -67,7 +67,9 @@ Example search charting the variance of throttle data on a Toyota vehicle.
 tag=CAN canbus ID=0x2C1 | slice byte(data[6:7]) as throttle | variance throttle | chart variance
 ```
 
-## Standard Deviation
+## Stddev
+
+Standard Deviation
 
 The stddev module returns the standard deviation information of a record. This is useful for highlighting anomalous events.
 
