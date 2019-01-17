@@ -425,7 +425,7 @@ tag=sysmon regex ".*EventID>11.*Image'>(?P<process>.*)<\/Data>.*TargetFilename'>
 
 ## Netflow Ingester
 
-The Netflow ingester acts as a Netflow collector (see [the wikipedia article](https://en.wikipedia.org/wiki/NetFlow) for a full description of Netflow roles), gathering records created by Netflow exporters and capturing them as Gravwell entries for later analysis. These entries can then be analyzed using the [netflow](#!/search/netflow/netflow.md) search module.
+The Netflow ingester acts as a Netflow collector (see [the wikipedia article](https://en.wikipedia.org/wiki/NetFlow) for a full description of Netflow roles), gathering records created by Netflow exporters and capturing them as Gravwell entries for later analysis. These entries can then be analyzed using the [netflow](#!search/netflow/netflow.md) search module.
 
 If you're using the Gravwell Debian repository, installation is just a single apt command:
 
