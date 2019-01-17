@@ -1,0 +1,90 @@
+# Stats Module
+
+The stats module allows the user to perform multiple stats operations simultaneously, where the individual math modules only perform one operation. The canonical example for the stats module is computing the mean and standard deviation of values in order to display error bars on a graph.
+
+## Syntax
+
+An invocation of the stats module consists of:
+
+* The module name (`stats`)
+* A list of operations, specifying which enumerated values should be operated on and optionally a name for the output (`mean(length)`, `count as foo`)
+* Optional "by" arguments, which specify that the operations should be performed separately for each combination of by arguments (as in `mean(Length) by SrcIP`)
+* An optional time window
+
+These components are discussed below.
+
+## Math Operations Specification
+
+An operation consists of the operation name, the "source" enumerated value contained in parentheses, and optionally a different name for the output enumerated value.
+
+The following operation names are supported:
+
+* count: count entries
+* sum: sum values and return the total
+* mean: calculate the average
+* stddev: calculate the standard deviation
+* variance: calculate the variance
+* min: return the minimum value seen
+* max: return the maximum value seen
+
+The operation is performed on the source enumerated value. Thus, specifying `stats sum(Bytes)` would tell the stats module to sum up the Bytes enumerated values, outputting a single entry with an enumerated value named `sum` containing the total.
+
+Note: If no source is specified, the operation is instead performed on the body of the entry. Specifying `stats sum` is equivalent to specifying `stats sum(DATA)`
+
+Multiple operations can be specified:
+
+```
+stats sum(Bytes) mean(Bytes)
+```
+
+```
+stats mean(Bytes) stddev(bytes) min(Length)
+```
+
+The output of an operation is, by default, assigned to an enumerated value with the name of the operation. Thus `stats sum(Bytes)` will create an enumerated value named `sum` to hold the output. You can change this with the `as` option:
+
+```
+stats mean(Bytes) as BytesAvg
+```
+
+This is particularly useful when performing the same operation on multiple different enumerated values:
+
+```
+stats mean(Bytes) as BytesAvg mean(Length) as LengthAvg
+```
+
+## "By" Arguments Specification
+
+When the user needs an operation performed separately for e.g. each different IP, it is necessary to specify "by arguments".
+
+```
+stats mean(Bytes) stddev(Bytes) by SrcIP
+```
+
+This tells the stats module to calculate separate mean and standard deviation for each unique SrcIP value. The result will be 1 entry for each SrcIP seen, each containing the appropriate SrcIP, mean, and stddev enumerated values.
+
+You can specify as many by arguments as you want:
+
+```
+stats mean(Bytes) stddev(Bytes) by SrcIP DstIP DstPort
+```
+
+The module will calculate a separate mean and standard deviation for *every combination of SrcIP, DstIP, and DstPort*.
+
+Attention: When working with very large datasets on systems with limited memory, specifying too many by arguments can lead to memory exhaustion as the stats module attempts to keep millions of combinations in memory.
+
+## Time Window Specification
+
+The stats module can operate in two modes: temporal or condensed.
+
+In condensed mode, it emits results only once. This occurs automatically when using the text renderer or when the `-nt` flag is passed to the table renderer.
+
+In temporal mode, the stats module operates over time windows, defaulting to 1 second. For every 1 second of data, the module emits a set of result entries. This is used when sending data to the chart renderer.
+
+While the default window is 1 second, the window size can be modified with the "over" option:
+
+```
+stats mean(Bytes) stddev(Bytes) by SrcIP over 5m
+```
+
+When sent to the chart module, the results will be calculated over a 5 minute window rather than the standard 1 second.
