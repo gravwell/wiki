@@ -5,10 +5,34 @@ The hexlify module is used to encode a data into ASCII hex representations.  The
 ### Supported Options
 
 * `-d`: Decode ASCII hex into an integer, rather than encoding an int as ASCII hex.
-* `-t <name>`: Assign encoded or decoded results into an enumerated value with the given name.
 
-### Example Search
+
+### Example Search to hexlify all data
+
+```
+tag=stuff hexlify
+```
+
+### Example Search to hexlify a single enumerated value	
 
 ```
 tag=CAN canbus ID Data | hexlify Data | table ID Data
+```
+
+### Example Search to hexlify all data and assign to a new name
+
+```
+tag=stuff hexlify DATA as hexdata | table DATA hexdata
+```
+
+### Example Search to hexlify a few enumerated values with reassignment
+
+```
+tag=CAN canbus ID Data | hexlify ID as hexid Data as hexdata | table ID hexid DATA hexdata
+```
+
+### Example decoding hex data
+
+```
+tag=apache json val | hexlify -d val as decodedval | table val decodedval
 ```
