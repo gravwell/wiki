@@ -55,6 +55,7 @@ Eval provides built-in utility functions, listed below in the format `functionNa
 
 * `setEnum(key, value)` creates an enumerated value named key containing value, which can be any valid enumerated value type.
 * `delEnum(key)` deletes an enumerated value named key.
+* `hasEnum(key) bool` returns a boolean indicating whether the entry has the enumerated value.
 * `setPersistentMap(mapname, key, value)` stores a key-value pair in a map which will persist for the entire search.
 * `getPersistentMap(mapname, key) value` returns the value associated with the given key from the named persistent map.
 * `len(val) int` returns the length of val, which can be a string, slice, etc.

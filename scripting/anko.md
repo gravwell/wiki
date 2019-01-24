@@ -181,6 +181,7 @@ The following functions are only available in scripts implementing the `Process`
 * `setEnum(key, value) error` creates an enumerated value on the current entry named `key` containing `value`.
 * `getEnum(key) value, error` returns the enumerated value specified by `key`
 * `delEnum(key)` deletes an enumerated value named `key` from the current entry.
+* `hasEnum(key) bool` returns whether the current entry has the enumerated value.
 
 The following functions are only available in scripts implementing the `Main` function:
 
@@ -189,10 +190,11 @@ The following functions are only available in scripts implementing the `Main` fu
 * `cloneEntry(ent) entry` returns a copy of the specified entry.
 * `setEntryEnum(ent, key, value)` sets an enumerated value on the specified entry.
 * `getEntryEnum(ent, key) value, error` reads an enumerated value from the specified entry.
+* `hasEntryEnum(ent, key) bool` returns whether the entry contains the enumerated value.
 * `delEntryEnum(ent, key)` deletes the specified enumerated value from the given entry.
 * `setEntryData(ent, value)` sets the data portion of an entry.
 
-Note: The `setEnum` and `delEnum` functions differ for scripts using `Process` functions vs. `Main` functions, because the `Process` function is implicitly operating on a particular entry.
+Note: The `setEnum`, `hasEnum`, and `delEnum` functions differ for scripts using `Process` functions vs. `Main` functions, because the `Process` function is implicitly operating on a particular entry.
 
 ## Available packages
 
