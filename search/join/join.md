@@ -18,6 +18,6 @@ Any number of enumerated values can be specified. The `-t` flag specifies a "tar
 ## Example
 
 ```
-tag=pcap packet ipv4.SrcIP ~ 192.168.0.0/16 tcp.SrcPort | join -s : -t dialstring SrcIP SrcPort | table SrcIP SrcPort dialstring
+tag=pcap packet ipv4.SrcIP ~ 192.168.0.0/16 tcp.SrcPort | join -s : -t dialstring SrcIP SrcPort | unique SrcIP,SrcPort | table SrcIP SrcPort dialstring
 ```
 ![](join.png)
