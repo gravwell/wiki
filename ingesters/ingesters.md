@@ -161,6 +161,8 @@ If the Gravwell services are present on the same machine, the installation scrip
 
 The File Follower ingester is designed to follow files and to capture logs from sources that cannot natively integrate with Gravwell or are incapable of sending logs via a network connection.  The file follower comes in both Linux and Windows flavors and can follow any logging file that is line delimited.  It is compatible with file rotation and employs a powerful pattern matching system so that the file follower can deal with applications that are not consistent with log file names.
 
+### Installation
+
 If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
@@ -248,6 +250,50 @@ Max-Files-Watched=64
         Ignore-Timestamps=true
 ```
 
+## HTTP POST
+
+The HTTP POST ingester is d
+
+### Installation
+
+If you're using the Gravwell Debian repository, installation is just a single apt command:
+
+```
+apt-get install gravwell-http-ingester
+```
+
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+
+```
+root@gravserver ~ # bash gravwell_http_ingester_installer_3.0.0.sh
+```
+
+If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately.  However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, it will be necessary to modify the configuration file in `/opt/gravwell/etc/gravwell_http_ingester.conf` to match the `Ingest-Auth` value set on the Indexers.
+
+### Example Configuration
+
+In addition to the universal global configuration parameters used by all ingesters, the HTTP POST ingester has two additional configuration parameters that control the behavior of the embedded webserver.  The first configuration parameter is the "Bind" option which specifies the interface and port that the webserver listens on.  The second is the "Max-Body" parameter which controls how large of a POST the webserver will allow.  The "Max-Body" parameter is a good safety net to prevent rogue processes from attempting to upload very large files into your gravwell instance as a single entry.  Gravwell can support up to 2GB as a single entry, but we wouldn't reccomend it.
+
+Multiple "Listener" definitions can be defined allowing for specific URLs to send entries to specific tags.  In the example configuration we show two listeners which accept data from a weather IOT device and a smart thermostat.
+
+```
+[Listener "weather"]
+	URL="/weather"
+	Tag-Name=weather
+
+
+[Listener "thermostat"]
+	URL="/smarthome/thermostat"
+	Tag-Name=thermostat
+```
+
+Any data that is sent in the body of a POST request sent to "/weather" or "/smarthome/thermostat" will be tagged with the "weather" and "thermostat" tags respectively.  The current timestamp will be attached to each entry at the time of the POST.
+
+A simple curl command can be used to test the HTTP POST ingester would look like so:
+
+```
+curl -d "its hot outside bro" -X POST http://10.0.0.1:8080/weather
+```
 
 ## Mass File Ingester
 
