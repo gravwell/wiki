@@ -60,6 +60,7 @@ These can be used just like user-defined enumerated values.
 * [slice](slice/slice.md)
 * [sort](sort/sort.md)
 * [src](src/src.md)
+* [stats](stats/stats.md)
 * [stddev](math/math.md#Stddev)
 * [strings](strings/strings.md)
 * [subnet](subnet/subnet.md)
