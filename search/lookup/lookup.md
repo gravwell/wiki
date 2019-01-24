@@ -31,17 +31,7 @@ In the above example, the table renderer automatically creates a resource named 
 
 #### CSVs
 
-CSV data can also be used for the lookup module, with some pre-processing. In order to use a csv file as a resource in the Gravwell lookup search module, we need to first convert it to a “lookupdata” format before we can upload it into the Gravwell resource manager.
-
-Use the lookupdata conversion tool to change the csv file into the Gravwell lookupdata file type and upload it into the resource. (See documentation on resources for more info on that process).
-
-```
-./csvToLookupdata -i ~/path/to/csv -o /path/to/final/lookupdata
-```
-
-The csv file has been converted and, once uploaded into a resource, is ready to use with the lookup search module.
-
-Note: This is a temporary workflow step that will be reduced in a future release.
+CSV data can also be used for the lookup module. In order to use a csv file as a resource in the Gravwell lookup search module the CSV must contain unique headers for the columns.
 
 ### Example Search
 
