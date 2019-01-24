@@ -17,6 +17,17 @@ Enumerated values passed to the ip module can be compared against IP addresses o
 | ~ | Subset | IP must be a member of the given subnet
 | !~ | Not subset | IP must not be a member of the given subnet
 
+The ip module defines the keyword PRIVATE to match any of the standard private networks:
+
+* 10.0.0.0/8
+* 172.16.0.0/12
+* 192.168.0.0/16
+* 127.0.0.0/8
+* 224.0.0.0/24
+* 169.254.0.0/16
+* fd00::/8
+* fe80::/10
+
 ## Examples
 
 ### Convert a string to an IP
@@ -45,4 +56,12 @@ We can also eliminate any connections which originated in the local subnet:
 
 ```
 tag=csv csv [2] as srcip | ip srcip !~ 192.168.0.0/16
+```
+
+### Use the PRIVATE keyword
+
+Assuming CSV-formatted data in which the 3rd field describes the source IP address of a connection, we can use the ip module to keep only those entries originating from private networks:
+
+```
+tag=csv csv [2] as srcip | ip srcip ~= PRIVATE
 ```
