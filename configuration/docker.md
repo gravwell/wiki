@@ -31,7 +31,7 @@ Attention: We **highly** recommend setting these values to secrets of your own c
 
 ## Upload license and log in
 
-Now that Gravwell is running, point a web browser at port 4443 on the host. It should prompt for a license upload:
+Now that Gravwell is running, point a web browser at port https://localhost:4443 on the host. It should prompt for a license upload:
 
 ![](license-upload-docker.png)
 
@@ -83,7 +83,7 @@ The `-p 2055:2055/udp` option forwards UDP port 2055 (Netflow v5 ingest port) fr
 
 Note: The netflow ingester is also configured by default to accept IPFIX records over UDP on port 6343. If you wish to ingest IPFIX records too, add `-p 6343:6343/udp` to the command line above.
 
-We can verify that the ingester is active by clicking on the System Stats item in the menu, then selecting the Remote Ingesters card at the top of the screen:
+We can verify that the ingester is active by clicking on the Ingesters item in the menu:
 
 ![](netflow_ingest.png)
 
