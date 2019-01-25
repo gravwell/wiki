@@ -7,10 +7,11 @@ The chart renderer is used display aggregate results such as trends, quantities,
 The following query generates a chart showing which usernames most commonly fail ssh authentication; due to online brute-forcing attacks, we can expect "root" to be the most common.
 
 ```
-tag=syslog grep sshd | grep "Failed password for" | regex "Failed\spassword\sfor\s(?P<user>\S+)" | count by user | chart count by user limit 64
+tag=syslog grep sshd | grep "Failed password for" | regex "Failed\spassword\sfor\s(?P<user>\S+)" | count by user | chart count by user limit 10
 ```
 
 ![](chart1.png)
 ![](chart2.png)
 ![](chart3.png)
 ![](chart4.png)
+![](chart5.png)
