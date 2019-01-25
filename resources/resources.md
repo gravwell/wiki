@@ -38,7 +38,7 @@ Luckily, it is also possible to select a resource by name with more precision by
 
 ## Managing resources with the GUI
 
-Resources are managed via the main menu of the user interface. Open the menu and select "Manage Resources".
+Resources are managed via the main menu of the user interface. Open the menu and select "Resources".
 
 ![](resourcelist.png)
 
@@ -50,23 +50,24 @@ To delete an existing resource, click the trash can icon next to the desired res
 
 ### Creating resources
 
-To create a new resource, select the "Create New" button from the action menu in the lower right. Gravwell will create a new, empty resource and open the resource editing screen:
+To create a new resource, select the "Add" button in the upper right:
 
 ![](newresource.png)
 
-Set the resource name and description as desired and select any groups which should be able to read the resource. To upload a file into the resource, simply click "Choose file" to pick a file and then click "Upload" to store it in the resource.
+Set the resource name and description as desired and select any groups which should be able to read the resource, then select a file to upload. Note that the resource will not be created or uploaded until you hit the 'Save' button!
 
-Attention: Changes to the resource description will not be saved unless the "Save Resource Info" button is clicked.
 
 ### Editing resources
 
-To edit an existing resource, click the pen-and-paper "Edit" icon next to the desired resource in the resource list. This will open the resource editing screen:
+To edit an existing resource, click the pencil "Edit" icon below the desired resource in the resource list. This will open the resource editing screen:
 
 ![](resourceedit.png)
 
 The name, description, and group sharing can all be managed from this screen. Admin users can also chose to make a resource global or non-global.
 
-To change the actual contents of the resource, use the "Choose file" and "Upload" buttons as when creating a new resource. Note that the Version, Hash, Size, and Last Modified fields change when a different file is uploaded.
+To change the actual contents of the resource, drag a file into the grey 'File' region or click to select a new file, exactly as when creating a new resource. Note that the Version, Hash, Size, and Last Modified fields change when a different file is uploaded.
+
+Attention: Changes to the resource description will not be saved unless the "Save" button is clicked.
 
 ## Using resources
 
@@ -104,7 +105,7 @@ Each resource belongs to a single user. The owner and the admin users are the on
 
 The owner can set a list of groups which are allowed to access the resource. They can read it, but not modify or delete.
 
-## Using the CLI
+## Managing Resources with the CLI
 
 The Gravwell CLI client has basic support for managing resources. Having started the client, run the `resource` command to enter resource mode.
 
