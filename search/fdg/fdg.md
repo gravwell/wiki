@@ -16,4 +16,12 @@ One example where a force directed graph can prove useful is to identify relatio
 tag=pcap packet ipv4.SrcIP ipv4.DstIP ipv4.Length | sum Length by SrcIP,DstIP | subnet -t SrcSub SrcIP /24 | subnet -t DstSub DstIP /24 | fdg -v sum -sg SrcSub -dg DstSub SrcIP DstIP
 ```
 
-![](fdg.png)
+![](fdg1.png)
+
+Hovering the mouse over a node shows its label and the labels of its neighbors:
+
+![](fdg2.png)
+
+The options menu can enable or disable animation and change between the standard force-directed graph and a circular graph as shown below:
+
+![](fdg3.png)
