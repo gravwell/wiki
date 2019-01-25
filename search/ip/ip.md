@@ -63,5 +63,5 @@ tag=csv csv [2] as srcip | ip srcip !~ 192.168.0.0/16
 Assuming CSV-formatted data in which the 3rd field describes the source IP address of a connection, we can use the ip module to keep only those entries originating from private networks:
 
 ```
-tag=csv csv [2] as srcip | ip srcip ~= PRIVATE
+tag=csv csv [2] as srcip | ip srcip ~ PRIVATE
 ```

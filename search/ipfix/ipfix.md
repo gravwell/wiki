@@ -71,7 +71,7 @@ Beside the fields specified above, you can also extract (but not filter on) any 
 ### Number of HTTPS flows by Source IP over time
 
 ```
-tag=ipfix ipfix sourceIPv4Address as Src destinationTransportPort==443 | count by Src | chart count by Src limit 24
+tag=ipfix ipfix destinationIPv4Address as Dst destinationTransportPort==443 | count by Dst | chart count by Dst
 ```
 
 ![Number of flows by ip](flowcount.png)

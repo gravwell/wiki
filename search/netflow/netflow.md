@@ -79,7 +79,7 @@ tag=netflow netflow Src Dst Port==80 | count by Src | chart count by Src limit 2
 #### Total traffic by IP and Protocol
 
 ```
-tag=netflow netflow IP ~ 10.0.0.0/8 Protocol Bytes as traffic |  sum traffic by IP,Protocol | stackgraph Protocol IP sum
+tag=netflow netflow IP Protocol Bytes as traffic | sum traffic by IP,Protocol | stackgraph IP Protocol sum
 ```
 
 ![Traffic by protocol per IP](IPProtoTrafficStackgraph.png)
