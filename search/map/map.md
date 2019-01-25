@@ -14,15 +14,15 @@ Pointmap translates entries into distinct markers on the map. If additional enum
 The following search displays a map of all IP addresses captured in netflow records:
 
 ```
-tag=netflow netflow IP | geoip IP.Location | pointmap
+tag=netflow netflow IP | geoip IP.Location | pointmap IP
 ```
 
 ![](map1.png)
 
-If we sum up the number of bytes from each IP and add the IP and Bytes enumerated values to pointmap's arguments, they will appear when we click on a point:
+If we sum up the number of bytes from each IP and add the IP and Bytes enumerated values to pointmap's arguments, they will appear when we click on a point (we also added the ASN Organization so we can see WHO we are talking to):
 
 ```
-tag=netflow netflow IP Bytes | sum Bytes by IP | geoip IP.Location | pointmap IP Bytes
+tag=netflow netflow IP Bytes | sum Bytes by IP | geoip IP.Location | geoip -r maxmindASN IP.ASNOrg | pointmap IP Bytes ASNOrg
 ```
 
 ![](map2.png)
@@ -44,3 +44,17 @@ tag=netflow netflow IP Bytes | sum Bytes by IP | geoip IP.Location | heatmap sum
 ```
 
 ![](map4.png)
+
+## Getting in on that 3D
+
+Heatmap and Pointmap also have 3D renderings, just click the "Globe" selector in the upper right hand side of the map and the map will redraw.
+
+![](selector.png)
+
+Running the exact same heatmap query, but rendered using the Globe system shows the following:
+
+![](map5.png)
+
+But there is one more super nifty trick, we can add rotation so that all your bosses know you are definitely thinking in realtime about all the global threats.
+
+![](rotation.gif)
