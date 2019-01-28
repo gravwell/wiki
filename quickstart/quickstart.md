@@ -141,10 +141,16 @@ The “System Stats” page in Gravwell can help you see if the Gravwell server 
 ### Ingesting Syslog
 Once the Gravwell server is installed and the Simple Relay text ingester service is running, you can start feeding any log or text data into Gravwell. Start with syslog. By default, the Simple Relay ingester listens for TCP syslog on port 601 and UDP syslog on port 514
 
-To send the syslog entries from any Linux server to Gravwell, a single configuration line should be added to the file /etc/rsyslog.conf on the desired server.
+To send the syslog entries from any Linux server to Gravwell, a single configuration line should be added to the file /etc/rsyslog.d/90-gravwell.conf on the desired server.
 
+#### UDP
 ```
 *.* @gravwell.addr.goes.here;RSYSLOG_SyslogProtocol23Format
+```
+
+#### TCP
+```
+*.* @@gravwell.addr.goes.here;RSYSLOG_SyslogProtocol23Format
 ```
 
 Many Linux services (such as DNS, Apache, ssh, and others) can be configured to send event data via syslog. Using syslog as a “go between” for those services and Gravwell is often the easiest way to configure those services to send events remotely.
