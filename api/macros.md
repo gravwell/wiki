@@ -62,7 +62,7 @@ A successful creation will return the ID of the new macro; in this example the n
 
 Updating a macro may be done by PUT to `/api/macros/{id}` using the same body format as a creation; note that for safety, it is best to populate the GIDs, Name, and Expanion fields every time even if no changes are made.
 
-A successful update returns HTTP 200 and no response contents.
+A successful update returns HTTP 200 and the updated macro in the body.
 
 ## Deleting a macro
 

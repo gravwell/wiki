@@ -25,6 +25,8 @@ The 'Data' property is the JSON used by the GUI to create the actual dashboard.
 
 If the "UID" parameter is omitted from the request, it should default to the UID of the requesting user.
 
+The webserver's response contains the ID of the newly-created dashboard.
+
 ## Retrieving Dashboards
 
 ### Getting all dashboards for the current user
@@ -139,6 +141,9 @@ WEB PUT /api/dashboards/2:
         }
 ]
 ```
+
+The server will respond to update requests with the updated dashboard structure.
+
 ## Deleting a dashboard
 To remove a dashboard issue a request with the **DELETE** method on the url **/api/dashboards/ID** where ID is the numeric ID of the dashboard.
 
