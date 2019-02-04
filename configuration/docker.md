@@ -35,7 +35,7 @@ Now that Gravwell is running, point a web browser at port https://localhost:4443
 
 ![](license-upload-docker.png)
 
-Note: Paid users and existing Community Edition users should have received a license via email. If you haven't signed up for Community Edition yet, head over to [https://www.gravwell.io/community-edition](https://www.gravwell.io/community-edition) and get a license.
+Note: Paid users and existing Community Edition users should have received a license via email. If you haven't signed up for Community Edition yet, head over to [https://www.gravwell.io/download](https://www.gravwell.io/download) and get a license.
 
 Once you upload the license and it is verified, you'll get a login prompt:
 

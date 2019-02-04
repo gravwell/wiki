@@ -56,7 +56,7 @@ Follow the prompts and, after completion, you should have a running Gravwell ins
 
 ## Getting a License
 
-To get your license file, head on over to [https://www.gravwell.io/gravwell-community-edition](https://www.gravwell.io/gravwell-community-edition) and fill out the form. Logbot will email one to you shortly therafter.
+To get your license file, head on over to [https://www.gravwell.io/download](https://www.gravwell.io/download) and fill out the form. Logbot will email one to you shortly therafter.
 
 Once Gravwell is installed, open a web browser and navigate to the server (e.g. [https://localhost/](https://localhost/)). It should prompt you to upload a license file.
 

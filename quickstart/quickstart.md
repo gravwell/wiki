@@ -4,7 +4,7 @@ This section contains basic “quick start” instructions for getting Gravwell 
 
 This guide is suitable for Community Edition users as well as users with a paid single-node Gravwell subscription.
 
-Note: Community Edition users will need to obtain their own license from [https://www.gravwell.io/gravwell-community-edition](https://www.gravwell.io/gravwell-community-edition) before beginning installation. Paid users should already have received a license file via email.
+Note: Community Edition users will need to obtain their own license from [https://www.gravwell.io/download](https://www.gravwell.io/download) before beginning installation. Paid users should already have received a license file via email.
 
 ## Installation
 Installing Gravwell on a single machine is quite simple--just follow the instructions in this section. For more advanced environments involving multiple systems, review the Advanced Topics section.
