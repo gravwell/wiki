@@ -301,11 +301,9 @@ The dashboard should have automatically created a tile for the search, but you m
 ### Dashboards in Action
 One common use case for Gravwell is keeping track of network activity. Here we see a dashboard that reports on outbound and inbound bandwidth rates, active MACs on wifi, Windows networking events, and general packet frequency. All of this data is extracted from pcap, netflow, and Windows events.
 
-In this screenshot I load up the dashboard to see how the network is performing. I notice there's a pretty big outbound spike for an otherwise quiet system around 10:34 AM so I zoom in by "brushing" on the Overview chart. I have linked zooming turned on for the dashboard so this causes all tiles to update to my zoomed timeframe.
-
 ![network dashboard](network-dashboard.png)
 
-By default, zooming in on one overview will zoom in on any other searches that are attached to this dashboard. So, when I zoom in on the successful logins, the rest of the charts will update to reflect this smaller time range. Zooming in we can see the spike for the address 10.0.0.57. To further investigate we could use a pre-built network investigation dashboard, but that's outside the scope of this quickstart.
+The outbound traffic chart shows a pretty big spike for an otherwise quiet system around 10:34 AM, so we zoom in by "brushing" out a smaller timeframe on the Overview chart. By default, zooming in on one overview will zoom in on any other searches that are attached to this dashboard. So, when we zoom in on the successful logins, the rest of the charts will update to reflect this smaller time range. Zooming in we can see the spike for the address 10.0.0.57. To further investigate we could use a pre-built network investigation dashboard, but that's outside the scope of this quickstart.
 
 ![network dashboard, zoomed in](network-dashboard-zoomed.png)
 
