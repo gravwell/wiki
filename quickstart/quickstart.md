@@ -54,6 +54,8 @@ sudo bash gravwell_3.0.0.sh
 
 Follow the prompts and, after completion, you should have a running Gravwell instance.
 
+Note: If your distribution does not use SystemD, you will have to start the Gravwell processes manually after installation. Please contact support@gravwell.io if you need help.
+
 ## Configuring the License
 
 Once Gravwell is installed, open a web browser and navigate to the server (e.g. [https://localhost/](https://localhost/)). It should prompt you to upload a license file.
@@ -104,7 +106,7 @@ Otherwise, download the installer from the [Downloads page](#!quickstart/downloa
 root@gravserver ~ # bash gravwell_file_follow_installer.sh
 ```
 
-If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately.  However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, it will be necessary to modify the configuration file in `/opt/gravwell/etc/file_follow.conf` to match the `Ingest-Auth` value set on the Indexers. See the [ingesters documentation](#!ingesters/ingesters.md) for more information on configuring the ingester.
+If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately. However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, the installer will prompt for the authentication token and the IP address of the Gravwell indexer. You can set these values during installation or leave them blank and modify the configuration file in `/opt/gravwell/etc/file_follow.conf` manually. See the [ingesters documentation](#!ingesters/ingesters.md) for more information on configuring the ingester.
 
 ### Simple Relay Ingester
 
@@ -122,14 +124,14 @@ Otherwise, download the installer from the [Downloads page](#!quickstart/downloa
 root@gravserver ~ # bash gravwell_simple_relay_installer.sh
 ```
 
-If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately.  However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, it will be necessary to modify the configuration file in `/opt/gravwell/etc/simple_relay.conf` to match the `Ingest-Auth` value set on the Indexers. See the [ingesters documentation](#!ingesters/ingesters.md) for more information on configuring the ingester.
+If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately.  However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, the installer will prompt for the authentication token and the IP address of the Gravwell indexer. You can set these values during installation or leave them blank and modify the configuration file in `/opt/gravwell/etc/simple_relay.conf` manually. See the [ingesters documentation](#!ingesters/ingesters.md) for more information on configuring the ingester.
 
 ### Ingester Notes
 If your installation is entirely contained on one machine, as it is in these quick start instructions, the ingester installers will extract the configuration options and configure themselves appropriately. If you are using an advanced setup where not all Gravwell components are running on a single system, review the [ingesters](#!ingesters/ingesters.md) section of the documentation.
 
-You now have the File Follow and Simple Relay services running on the Gravwell server. File Follow will automatically ingest log entries from some files in `/var/log/`. Simple Relay will ingest syslog entries sent to it on TCP port 601 or UDP port 514; these will be tagged with the "syslog" tag.
+You now have the File Follow and Simple Relay services running on the Gravwell server. File Follow will automatically ingest log entries from some files in `/var/log/`. By default it ingests /var/log/auth.log with the "auth" tag, /var/log/dpkg.log with the "dpkg" tag, and /var/log/dmesg and /var/log/kern.log with the "kernel" tag.
 
-The Simple Relay config file also contains an entry to listen for any line-delimited data on port 7777. This can be disabled if you only intend to use syslog; simply comment out the `[Listener "default"]` section in the config file and restart the simple relay service. The configuration file for this service is located at `/opt/gravwell/etc/simple_relay.conf`. See the Simple Relay section of the [Ingesters documentation](#!ingesters/ingesters.md) for advanced configuration options.
+Simple Relay will ingest syslog entries sent to it on TCP port 601 or UDP port 514; these will be tagged with the "syslog" tag. The Simple Relay config file also contains an entry to listen for any line-delimited data on port 7777. This can be disabled if you only intend to use syslog; simply comment out the `[Listener "default"]` section in the config file and restart the simple relay service. The configuration file for this service is located at `/opt/gravwell/etc/simple_relay.conf`. See the Simple Relay section of the [Ingesters documentation](#!ingesters/ingesters.md) for advanced configuration options.
 
 ## Feeding Data into Gravwell
 This section provides basic instructions for sending data into Gravwell. Review the [ingesters](#!ingesters/ingesters.md) section for instructions for setting up other data ingesters.
@@ -139,42 +141,50 @@ The “System Stats” page in Gravwell can help you see if the Gravwell server 
 ![](stats.png)
 
 ### Ingesting Syslog
-Once the Gravwell server is installed and the Simple Relay text ingester service is running, you can start feeding any log or text data into Gravwell. Start with syslog. By default, the Simple Relay ingester listens for TCP syslog on port 601 and UDP syslog on port 514
+Once the Gravwell server is installed and the Simple Relay text ingester service is running, you can start feeding any log or text data into Gravwell via the syslog protocol. By default, the Simple Relay ingester listens for TCP syslog on port 601 and UDP syslog on port 514.
 
-To send the syslog entries from any Linux server to Gravwell, a single configuration line should be added to the file /etc/rsyslog.d/90-gravwell.conf on the desired server.
+To send the syslog entries from a Linux server running rsyslog to Gravwell, create a new file named `/etc/rsyslog.d/90-gravwell.conf` on the server and paste the following line into it for UDP syslog:
 
-#### UDP
 ```
 *.* @gravwell.addr.goes.here;RSYSLOG_SyslogProtocol23Format
 ```
 
-#### TCP
+or use this instead for TCP syslog:
+
 ```
 *.* @@gravwell.addr.goes.here;RSYSLOG_SyslogProtocol23Format
 ```
 
+(note the use of `@` in the UDP configuration vs. `@@` for TCP)
+
+Then restart the rsyslog daemon:
+
+```
+sudo systemctl restart rsyslog.service
+```
+
 Many Linux services (such as DNS, Apache, ssh, and others) can be configured to send event data via syslog. Using syslog as a “go between” for those services and Gravwell is often the easiest way to configure those services to send events remotely.
 
-Adding this line to an Apache configuration entry, for example, will send all apache logs out via syslog:
+Adding this line to an Apache configuration entry, for example, will send all Apache logs to rsyslog, which will forward them to Gravwell:
 
 ```
 CustomLog "|/usr/bin/logger -t apache2.access -p local6.info" combined
 ```
 
 ### Archived Logs
-The Simple Relay ingester can also be used to ingest any old logs (such as apache, syslog, etc). By utilizing a basic network comms tool, like netcat, any data can be shoveled into the Simple Relay ingester's line-delimited listener, by default listening on port 7777.
+The Simple Relay ingester can also be used to ingest any old logs (Apache, syslog, etc) that are sitting around on the filesystem. By utilizing a basic network comms tool like netcat, any data can be shoveled into the Simple Relay ingester's line-delimited listener. By default Simple Relay listens for line-delimated entries on TCP port 7777.
 
-For example, on a webserver running apache, you could run a command like:
+For example, if you have some old Apache log files you'd like to analyze in Gravwell, you could run a command like this to ingest them:
 
 ```
-user@webserver ~# cat /var/log/apache2/access.log | nc -q gravwell.server.address 7777
+user@webserver ~# cat /tmp/apache-oct2017.log | nc -q gravwell.server.address 7777
 ```
 
-Note: If you are ingesting a very large set of logs in multiple files, it is recommended that the MassFileIngester utility is used to pre-optimize and ingest en masse, rather than relaying through the Simple Relay ingester.
+Note: If you are ingesting a very large set of logs in multiple files, we recommend using the MassFileIngester utility to pre-optimize and ingest en masse, rather than relaying through the Simple Relay ingester.
 
-### Network Ingester
+### Network Packet Ingester
 
-A primary strength of Gravwell is the ability to ingest binary data. The network ingester allows you to capture full packets from the network for later analysis; this provides much better flexibility than simply storing netflow or other condensed traffic information.
+A primary strength of Gravwell is the ability to ingest binary data. The network ingester allows you to capture full packets from the network for later analysis; this provides much better flexibility than simply storing Netflow or other condensed traffic information at the cost of increased storage use.
 
 If you're using the Gravwell Debian repository, installation is just a single apt command:
 
@@ -188,6 +198,8 @@ Otherwise, download the installer from the [Downloads page](#!quickstart/downloa
 root@gravserver ~ # bash gravwell_network_capture_installer.sh
 ```
 
+The network ingester requires the libpcap shared libraries. If using the standalone installer, you'll need to make sure you have also installed the libraries; the package is `libpcap0.8` on Debian.
+
 If the ingester is on a machine with a Gravwell backend already installed, the installer should automatically pick up the correct `Ingest-Secrets` value and populate the config file with it. In any case, review the configuration file in `/opt/gravwell/etc/network_capture.conf` before running. Make sure at least one "Sniffer" section is uncommented, with the Interface field set to one of your system's network interfaces. For more information, see the [Ingesters documentation](#!ingesters/ingesters.md)
 
 Note: The Debian package and the standalone installer should both prompt for a device from which to capture. If you wish to change your selection, open `/opt/gravwell/etc/network_capture.conf`, set the desired interface, and run `service gravwell_network_capture restart` to restart the ingester.
@@ -195,12 +207,12 @@ Note: The Debian package and the standalone installer should both prompt for a d
 ## Searching
 Once the Gravwell server is up and running and receiving data, the power of the search pipeline is made available.
 
-Here are a few example searches based on the type of data ingested in this quick-start setup. For these examples, we assume that there is syslog data being generated by some Linux servers and ingested by the Simple Relay text ingester, and that packets are being captured from the network as described in the preceding sections.
+Here are a few example searches based on the type of data ingested in this quick-start setup. For these examples, we assume there is syslog data being generated by Linux servers and ingested via the Simple Relay text ingester, and that packets are being captured from the network as described in the preceding sections.
 
 ### Syslog Example
-Syslog is a core component of any Unix logging and auditing operation. It is important to have complete visibility into logins, crashes, sessions, or any other service action while debugging and defending unix infrastructure.  Gravwell makes it easy to get syslog data off of many remote machines into a central location and ready for query.  For this example we will pursue some SSH logs and examine how an administrator or security professional might check up on secure shell activity.
+Syslog is a core component of any Unix logging and auditing operation. It is important to have complete visibility into logins, crashes, sessions, or any other service action while debugging and defending unix infrastructure.  Gravwell makes it easy to get syslog data off your many remote machines into a central location and ready for query.  For this example we will pursue some SSH logs and examine how an administrator or security professional might keep tabs on SSH activity.
 
-In this example, servers to send ssh login data to a Gravwell instance. If you want to see a list of all ssh-related entries, you can issue a search like:
+In this example, servers to send SSH login data to a Gravwell instance. If you want to see a list of all SSH-related entries, you can issue a search like:
 
 ```
 tag=syslog grep ssh
@@ -208,15 +220,16 @@ tag=syslog grep ssh
 
 The breakdown of the search command is as follows:
 
-<table><tr><td>tag=syslog</td><td>Only look at data tagged “syslog”. The SimpleRelay ingester is set up to tag data with the “syslog” tag when it comes in via TCP port 601 or UDP port 514.</td></tr><tr><td>grep ssh</td><td>The “grep” module (named after the similar linux command) searches for specific text. In this case, the search is looking for any entry that contains “ssh” in it.</td></tr></table>
+* `tag=syslog`: Only look at data tagged “syslog”. The SimpleRelay ingester is set up to tag data with the “syslog” tag when it comes in via TCP port 601 or UDP port 514.
+* `grep ssh`: The “grep” module (named after the similar linux command) searches for specific text. In this case, the search is looking for any entry that contains “ssh” in it.
 
-The search results come back as two graphs and a series of log entries. The graphs show the frequency plot of matching records that made it through the pipeline. These graphs can be used to identify the frequency of log entries and to navigate around the time window of the search, narrowing down the view without reissuing the search.  Nearly every search has the ability to refocus and adjust the time window, only searches which alter the order of time do not have the overview and zoomed graph.
+The search results come back as an overview graph and a series of log entries. The overview graph shows the frequency plot of matching records that made it through the pipeline. This graph can be used to identify the frequency of log entries and to navigate around the time window of the search, narrowing down the view without re-issuing the search.  Nearly every search has the ability to refocus and adjust the time window; only searches which alter the order of time do not have the overview graph.
 
-The “Overview” graph can be used as a tool to narrow down the window you would like to explore without re-issuing an entire search. Here are see the results of all entries containing “ssh”.
+Here are see the results of all entries containing “ssh”:
 
 ![Overview graph](overview.png)
 
-These results might give a very broad insight but now is the time to try and get a more focused search going. For this example, seeing successful ssh logins is the topic of interest. Of additional interest is extracting some fields and evaluating those fields. Since these are text records,  use the “regex” search pipeline module and issue the following search:
+These results might give a very broad insight, but to truly extract useful information we need to refine our search. For this example, we will extract successful SSH logins. We'll also extract some particular fields from the log records to make displaying the results easier:
 
 ```
 tag=syslog syslog Appname==sshd Message~Accepted | regex -e Message "Accepted\s(?P<method>\S+)\sfor\s(?P<user>\S+)\sfrom\s(?P<ip>\S+)"
@@ -236,7 +249,7 @@ If you click the "Enumerated Values" button at the bottom of the results, we can
 
 ![Search filtered to logins](logins-only-enums.png)
 
-If additional parameters are added to the end of that query, the responses can be charted  on those enumerated fields. If you want a chart of all the usernames that have logged in, you would issue the following search:
+We can specify a *render module* at the end of the query to change how results are displayed. If you want a chart of all the usernames that have logged in, you could issue the following search:
 
 ```
 tag=syslog syslog Appname==sshd Message~Accepted | regex -e Message "Accepted\s(?P<method>\S+)\sfor\s(?P<user>\S+)\sfrom\s(?P<ip>\S+)" | count by user | chart count by user
@@ -244,10 +257,10 @@ tag=syslog syslog Appname==sshd Message~Accepted | regex -e Message "Accepted\s(
 
 The breakdown of  the new search query items is as follows:
 
-* ```count by user```: Instructs the search pipeline to take the output from the regex module and hand that to a count aggregator module based on the “user” field.
-* ```chart count by user```: Pipe the output of the count module into a charting renderer on that ‘count by user’ field.
+* ```count by user```: The `count` module will count how many times each `user` value (as extracted by regex) appears.
+* ```chart count by user```: Pipe the output of the count module into a charting renderer, drawing a separate line per user with magnitude determined by the count module's results.
 
-The results show a nice graph of all users that have logged into the system during the search timeframe. You can change the graph type to get different views into the data as well as use the Overview chart to select window timeslices. Looks like the IT admin ‘remasis’ is the only user to log into these systems lately, as expected.
+The results show a nice graph of all users that have logged into the system during the search timeframe. You can change the graph type to get different views into the data as well as use the overview chart to select smaller timeframes of the results. Looks like the IT admin 'kris' is the only user to log into these systems lately, as expected.
 
 ![Search counting by users](users-chart.png)
 
@@ -255,30 +268,8 @@ You can also click on the charting icon (the zig zag line) and change the type o
 
 ![Search counting by users](users-chart-bar.png)
 
-### File Follow (local logs) example
-
-The File Follow ingester should have also been ingesting logs from the local system. The contents of `/var/log/auth.log` are given the "auth" tag (see `/opt/gravwell/etc/file_follow.conf` for the other data sources and tags). We can use a simple regular expression search to find out who has been using the sudo command:
-
-```
-tag=syslog syslog Appname==sshd Message~Accepted | regex -e Message "Accepted\s(?P<method>\S+)\sfor\s(?P<user>\S+)\sfrom\s(?P<ip>\S+)" | count by user method ip | table user method ip count
-tag=auth grep sudo | regex "sudo:\s+(?P<user>\S*)\s+:" | count by user | table user count
-```
-
-The components of the search are:
-
-* ```tag=syslog```: Limit searches to data tagged “syslog”
-* ```syslog Appname==sshd Message~Accepted```: This will invoke the syslog module to filter to only syslog messages generated by the "sshd" application and contain the string "Accepted" in the Message body
-* ```regex -e Message "Accepted\s(?P<method>\S+)\sfor\s(?P<user>\S+)\sfrom\s(?P<ip>\S+)"```: This is a regular expression operates on just the Message body which was extracted using the syslog module.  We extract the user, IP, and method of successful login.
-* ```count by user method ip```: We invoke the "count" math module to sum up the number of logins by user, method, and originating location.  This allows us to see if users are logging in differently from different locations.
-* ```table user method ip count```: The table module renders the results in a nice easy to parse table, suitable for humans.
-
-
-The screenshot below shows that the user 'kris' has logged into the system a few times, typically using a public key.  However, there was one login that used a password and it came from a machine that has used a public key in the past.  That might be a login worth investigating.
-
-![](login-methods.png)
-
 ### Network Examples
-Video games are a hobby in the example house. This led to wanting to see who was playing and how often. The example house uses a 10.0.0.0/24 network subnet and Blizzard Entertainment games use port 1119 for game traffic the following search in Gravwell was issued:
+Consider an example home network in which the user has set up the packet capture ingester on their Linux router, thus capturing all packets to and from the Internet. We can use this data to analyze use patterns, such as when particular games are played. The example house uses a 10.0.0.0/24 network subnet and Blizzard Entertainment games use port 1119 for game traffic. The following search will show which PCs are playing Blizzard games and when:
 
 ```
 tag=pcap packet ipv4.DstIP !~ 10.0.0.0/24 tcp.DstPort==1119 ipv4.SrcIP | count by SrcIP | chart count by SrcIP
@@ -286,15 +277,15 @@ tag=pcap packet ipv4.DstIP !~ 10.0.0.0/24 tcp.DstPort==1119 ipv4.SrcIP | count b
 
 A review of the search command is as follows:
 
-* ```tag=pcap```: Tells Gravwell to only search through items with this tag name. This tag gets set by the ingester. Good utilization of tags can acts as a first “filter” to make sure a search isn’t going through terabytes of video files to find an apache log entry.
+* ```tag=pcap```: Tells Gravwell to only search through items tagged 'pcap'.
 * ```packet```: Invokes the packet parsing search pipeline module and enables the rest of the options in this command.
-  * ```ipv4.DstIP !~ 10.0.0.0/2```: The Gravwell packet parser splits out a packet into its various fields. In this case, the search is comparing Destination IPs and looking for those not in the 10.0.0.x class C subnet
-  * ```tcp.DstPort == 1119```: Specify a port. This will filter only packets destined for port 1119, used by most Blizzard Entertainment games.
-  * ```ipv4.SrcIP```: Callout this field without a comparison operator to tell the packet parser to extract and place into the pipeline.
-* ```count by SrcIP```: Pipe the filtered results from the packet parser into the math count module and specify the field to be aggregated around.
-* ```chart count by SrcIP```: Pipe the count results into the charting renderer for display, again centered around the SrcIP enumerated value.
+  * ```ipv4.DstIP !~ 10.0.0.0/24```: The Gravwell packet parser splits out a packet into its various fields. In this case, the search is comparing Destination IPs and looking for those not in the 10.0.0.x class C subnet
+  * ```tcp.DstPort == 1119```: Specifies a destination port. This will filter only packets destined for port 1119, used by most Blizzard Entertainment games.
+  * ```ipv4.SrcIP```: Specifying this field without a comparison operator tells the packet parser to extract and place the source IP into the pipeline.
+* ```count by SrcIP```: Pipe the filtered results from the packet parser into the math count module and tell it to count how many times each source IP appears.
+* ```chart count by SrcIP```: Pipe the count results into the charting renderer for display, drawing a separate line for each source IP value.
 
-Results: The top charts represent the frequency of all packets matching those filters. The bottom chart is the end result of charting by Source IP. We see two systems, the yellow appears to be passive traffic and the blue is actively communicating with the blizzard games services.
+Results: We see two systems sending traffic to port 1119. The IP represented in yellow (10.0.0.6) appears to be passive traffic, while 10.0.0.183 in blue is actively communicating with the Blizzard games services.
 
 ![Game traffic](games.png)
 
@@ -303,12 +294,12 @@ For more details on using the packet parsing search module, see the [packet sear
 ## Dashboards
 Dashboards are aggregated views of searches that provide a view into multiple aspects of the data at once.
 
-Navigate to the “Dashboard List” and click the “+” floating action button to create a new dashboard -- call it “SSH auth monitoring”. Then, add a search. For this example, use the SSH authentication search from earlier. Re-issue that search and from the results screen, use the floating action button to open the actions menu and choose “Add to Dashboard” and select the new dashboard.
+Navigate to the “Dashboards" page (use the menu at top-left) and click the "+Add" button to create a new dashboard -- call it “SSH auth monitoring”. Then, add a search. For this example, use the SSH authentication search from earlier. Re-issue that search and from the results screen, use the 3-dot menu in the upper right to choose “Add to Dashboard” and select the new dashboard. A popup in the lower right should inform you that the search was added to the dashboard and provide a link to go to that dashboard; click the link.
 
-Next, a tile to display any results on the dashboard needs to be added. Click the “+” button, or use the floating action button to access the “Add a Tile” action button. Tiles need a data source and a display method (called a “renderer”). Select the ssh search and the “overview” renderer. Add another tile for the “zoom” renderer, and another for the “text” renderer to show the raw data.
+The dashboard should have automatically created a tile for the search, but you may wish to resize it. You can change how the tile is displayed by selecting "Edit tile" from the tile's menu.
 
 ### Dashboards in Action
-One common use case for Gravwell is keeping track of network activity. Here we see a dashboard that reports on outbound and inbound bandwidth rates, active MACs on wifi, windows networking events, and general packet frequency. All of this data is extracted from pcap, netflow, and windows events.
+One common use case for Gravwell is keeping track of network activity. Here we see a dashboard that reports on outbound and inbound bandwidth rates, active MACs on wifi, Windows networking events, and general packet frequency. All of this data is extracted from pcap, netflow, and Windows events.
 
 In this screenshot I load up the dashboard to see how the network is performing. I notice there's a pretty big outbound spike for an otherwise quiet system around 10:34 AM so I zoom in by "brushing" on the Overview chart. I have linked zooming turned on for the dashboard so this causes all tiles to update to my zoomed timeframe.
 
