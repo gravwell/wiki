@@ -87,7 +87,7 @@ We can verify that the ingester is active by clicking on the Ingesters item in t
 
 ![](netflow_ingest.png)
 
-Now we can configure our Netflow generators to send records to port 2055 of the host; they'll be passed in to the container and ingester into Gravwell.
+Now we can configure our Netflow generators to send records to port 2055 of the host; they'll be passed in to the container and ingested into Gravwell.
 
 ### Customizing ingester containers
 
