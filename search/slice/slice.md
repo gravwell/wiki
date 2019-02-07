@@ -5,7 +5,7 @@ The slice module is a powerful but very low-level tool for extracting bytes from
 The following search extracts the RPM from canbus messages on a Toyota vehicle by reading the first two bytes of the "data" enumerated value and parsing it as a 16-bit big-endian integer.
 
 ```
-tag=CAN canbus ID=0x2C4 | slice uint16BE(data[0:2]) as RPM | mean RPM | chart mean
+tag=CAN canbus ID=0x2C4 | slice uint16be(data[0:2]) as RPM | mean RPM | chart mean
 ```
 
 Slice can extract from raw entry contents, or it can operate on an enumerated value. The extracted bytes can optionally be parsed into a different type, such as an integer or a string. Some examples:
@@ -18,7 +18,9 @@ Slice can extract from raw entry contents, or it can operate on an enumerated va
 | `slice uint16be(Payload[-2:]) as value` | Pull the last two bytes from "Payload", parse them as an unsigned 16-bit big-endian integer, and store it as "value" |
 | `slice uint16be(Payload[-4:-2]) as value2` | Pull the two bytes preceding the last two bytes of "Payload", parse them as an unsigned 16-bit big-endian integer, and store as "value2"
 
-Supported Types
+### Supported Types
+
+An integral function of the slice module is casting the data to the appropriate type.  By default, data is extracted as a byte slice, but the option cast allows us to transform it into a type.  Types that have a suffix of "be" indicate a [Big Endian](https://en.wikipedia.org/wiki/Endianness) bit order, those without a "be" suffix use a Little Endian bit order.
 
 * byte
 * int16
@@ -47,3 +49,53 @@ Supported Types
 * float64be
 * array
 * string
+
+### Inline filtering
+
+The slice module supports inline filtering which allows for very fast processing of binary data.  Every type does not support every filter operation.  For example attempting to find a subset in a floating point number does not make any sense, nor does applying "less than" to a byte slice.  Below is the complete list of filter operators and a table showing which operators can be applied to which types:
+
+#### Filter Operators
+
+| Operator | Name | Description |
+|----------|------|-------------|
+| == | Equal | Field must be equal
+| != | Not equal | Field must not be equal
+| ~ | Subset | Field contains the value
+| !~ | Not Subset | Field does NOT contain the value
+| < | Less Than | Numeric value of field is less than
+| <= | Less Than or Equal to | Numeric value of field is less than or equal to
+| > | Greater Than | Numeric value of field is greater than
+| >= | Greater Than or Equal to | Numeric value of field is greater than or equal to
+
+#### Supported Operators by Type
+
+Type     | == | != | ~ | !~ | < | <= | > | >=
+----------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:
+byte     | X | X |  |  | X | X | X | X 
+int16    | X | X |  |  | X | X | X | X
+int16le  | X | X |  |  | X | X | X | X
+int16be  | X | X |  |  | X | X | X | X
+uint16   | X | X |  |  | X | X | X | X
+uint16le | X | X |  |  | X | X | X | X
+uint16be | X | X |  |  | X | X | X | X 
+int32    | X | X |  |  | X | X | X | X
+int32le  | X | X |  |  | X | X | X | X
+int32be  | X | X |  |  | X | X | X | X
+uint32   | X | X |  |  | X | X | X | X
+uint32le | X | X |  |  | X | X | X | X
+uint32be | X | X |  |  | X | X | X | X
+int64    | X | X |  |  | X | X | X | X
+int64le  | X | X |  |  | X | X | X | X
+int64be  | X | X |  |  | X | X | X | X
+uint64   | X | X |  |  | X | X | X | X
+uint64le | X | X |  |  | X | X | X | X
+uint64be | X | X |  |  | X | X | X | X
+float32  | X | X |  |  | X | X | X | X
+float32le| X | X |  |  | X | X | X | X
+float32be| X | X |  |  | X | X | X | X
+float64  | X | X |  |  | X | X | X | X
+float64le| X | X |  |  | X | X | X | X
+float64be| X | X |  |  | X | X | X | X
+array    | X | X | X | X |  |  |  |
+string   | X | X | X | X |  |  |  |
+
