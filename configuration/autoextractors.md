@@ -280,6 +280,12 @@ Showing binary data in text form is difficult, we will show the data hex encoded
 
 Note: The slice AX processor does not support any arguments (e.g. No "-e" allowed)
 
+#### Filtering
+
+The slice AX processor is designed to allow casting data to specific types.  As such it's filtering options are a little more nuanced.  Each extracted value has a specific set of filter operators based on its type.  For a full description of filtering operators and types, see the [Slice](../search/slice/slice.md) documentation section.
+
+#### Examples
+
 To start, lets look at our data in it's hex format using the [Hexlify]() module:
 
 ```
