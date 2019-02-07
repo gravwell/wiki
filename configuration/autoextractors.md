@@ -4,12 +4,12 @@ Gravwell enables defining a per-tag extraction definition that can ease the comp
 
 Autoextractors are simply definitions that can be applied to a tag which enable the "ax" module to automatically invoke the functionality of another module.  The autoextractor system supports the following extraction methods:
 
-* [CSV](/search/csv/csv.md)
-* [Fields](/search/fields/fields.md)
-* [Regex](/search/regex/regex.md)
-* [Slice](/search/slice/slice.md)
+* [CSV](../search/csv/csv.md)
+* [Fields](../search/fields/fields.md)
+* [Regex](../search/regex/regex.md)
+* [Slice](../search/slice/slice.md)
 
-Auto-extractor definitions are used by the [AX](/search/ax/ax.md) module which transparently references the correct extraction based on tags included in a search.
+Auto-extractor definitions are used by the [AX](../search/ax/ax.md) module which transparently references the correct extraction based on tags included in a search.
 
 ## Auto-Extractor Configuration
 
