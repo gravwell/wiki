@@ -1,4 +1,4 @@
-# Gravwell Auto-Extractors
+# Gravwel Auto-Extractors
 
 Gravwell enables defining a per-tag extraction definition that can ease the complexity of interacting with unstructure data and data formats that are not self-describing.  Unstructured data often requires complicated regular expressions to extract desired data fields which can be time consuming to produce and prone to errors.
 
@@ -17,7 +17,8 @@ Autoextractors are defined by creating "ax" files and installing them in the "ex
 
 Autoextractor files follow the [TOML V4](https://github.com/toml-lang/toml) format which allows for comments using the "#" character.  Each "ax" file can contain multiple autoextraction definitions and there can be multiple files in the extractions directory.
 
-Note: Only a single extraction can be defined per tag.
+Note: Only a single extraction can be defined per tag
+Note: Autoextractors always operate on the full underlying data of an entry.  They cannot be used to perform extractions on Enumerated Values (the "-e" argument is disallowed)
 
 Each extractor contains a header and the following parameters:
 
@@ -77,9 +78,137 @@ The second extraction for the "locs" tag demonstrates the ommission of non-essen
 * params
 * tag
 
+## Filtering
+
+The AX module supports integrated filtering at time of search.  Filtering cannot be applied to any autoextracton definition.
+
+#### Filtering Operators
+
+| Operator | Name | Description |
+|----------|------|-------------|
+| == | Equal | Field must be equal
+| != | Not equal | Field must not be equal
+| ~  | Subset | Field contains the value
+| !~ | Not Subset | Field does NOT contain the value
+
+#### Filtering Examples
+
+```
+ax foo=="bar" baz~"stuff"
+ax foo != bar baz !~ "stuff and things"
+```
+
 ## Processor Examples
 
 We will demonstrate a few auto-extraction definitions and compare and contrast queries which accomplish the same outcome with and without autoextractors.  We will also show how to use filters from within AX.
+
+### CSV
+
+CSV or "Comma Separated Values" can be a relatively efficient text transport and storage system.  However, CSV data is not self-describing, meaning that if all we have is a bunch fo CSV data it can be difficult to tell what columns actually are.  Auto extractors can be used to predefine column names and make it dramatically easier for a user work with CSV data.
+
+Here is an example data entry that is encoded using CSV:
+
+```
+2019-02-07T10:52:49.741926-07:00,fuschia,275,68d04d32-6ea1-453f-886b-fe87d3d0e0fe,174.74.125.81,58579,191.17.155.8,1406,"It is no doubt an optimistic enterprise. But it is good for awhile to be free from the carping note that must needs be audible when we discuss our present imperfections, to release ourselves from practical difficulties and the tangle of ways and means. It is good to stop by the track for a space, put aside the knapsack, wipe the brows, and talk a little of the upper slopes of the mountain we think we are climbing, would but the trees let us see it Benjamin", "TL",Bury,396632323a643862633a653733343a643166383a643762333a373032353a653839633a62333361
+```
+
+There is alot of data in there with no indication of which fields are what.  To make matters worse, CSV data can contain commas and surrounding spaces which makes identifying columns using the naked eye very difficult.  Auto extractors allow us to identify column names and types once and then transparently leverage them using the "ax" module.
+
+If we were to query the data and extract each item and name it, our query would be the following:
+
+```
+tag=csvdata csv [0] as ts [1] as name [2] as id [3] as guid [4] as src [5] as srcport [6] as dst [7] as dstport [8] as data [9] as country [10] as city [11] as hash | table
+```
+
+With the following autoextractor configuration declaration:
+
+```
+[[extraction]]
+	name="testcsv"
+	desc="CSV auto extraction for the super ugly CSV data"
+	module="csv"
+	tag="csvdata"
+	params="ts, name, id, guid, src, srcport, dst, dstport, data, country, city, hash"
+```
+
+That same query becomes:
+
+```
+tag=csvdata ax | table
+```
+
+Note: The CSV auto-extraction processor does not support any arguments
+Note: The position of the names in the params variable indicates the field name, treat it as a CSV header
+
+### Fields
+
+The fields module is an extremely flexible processing module that allows us to define arbitrary delimiters and field rules in order to extract data.  Many popular security applications like Bro/Zeek default to TSV (tab seperated values) for for data export.  Other custom applications may use weird separators like "|" or a series of bytes like "//".  With the fields extractor you can handle it all, and when combined with autoextractors users don't have to worry about the details of the data format.
+
+Unlike other autoextractor processors, the fields module has a variety of configuration arguments that can be specified.  The list of arguments is fully documented in the [fields](/#!search/fields/fields.md) documentation.  Only the "-e" flag is unsupported.
+
+Lets start with some tab delimited data:
+
+```
+2019-02-07T11:27:14.308769-07:00	green	21.41.53.11	1212	57.27.200.146	40348	Have I come to Utopia to hear this sort of thing?
+```
+
+Note: The last field is quoted to allow for tabs in it's data.
+
+Using the fields module to extract each data item our query would be:
+
+```
+tag=tabfields fields -d "\t" [0] as ts [1] as app [2] as src [3] as srcport [4] as dst [5] as dstport [6] as data
+```
+
+An auto-extraction configuration to accomplish the same thing is:
+
+```
+[[extraction]]
+	tag="tagfields"
+	name="tabfields"
+	desc="Tab delimited fields"
+	module="fields"
+	args='-d "\t"'
+	params="ts, app, src, srcport, dst, dstport, data"
+```
+
+Using the ax module and our autoextractor the query becomes:
+
+```
+tag=tagfields ax | table
+```
+
+Lets look at some data with a slightly stranger delimiter "|":
+
+```
+2019-02-07T11:57:24.230578-07:00|brave|164.5.0.239|1212|179.15.183.3|40348|"In C the OR operator is ||."
+```
+
+Note: The last data field contains our delimiter.
+
+The system that generated this data knew that it needed to include the delimiter in a data item, so it encapsulated that data item in double quotes.  The fields module knows how to deal with quoted data and allows for the "-q" flag which specifies that the module allow for quoted fields.  The quotes are kept on the extracted data unless the "-clean" flag is also specified.
+
+Using the fields module our query would be:
+
+```
+tag=barfields fields -d "\t" -q -clean [0] as ts [1] as app [2] as src [3] as srcport [4] as dst [5] as dstport [6] as data 
+```
+
+But with a slightly modified auto extraction configuration the query can still be the extremely simple "tag=barfields ax | table":
+
+```
+[[extraction]]
+	tag="barfields"
+	name="barfields"
+	desc="bar | delimited fields with quotes and cleaning"
+	module="fields"
+	args='-d "|" -q -clean'
+	params="ts, app, src, srcport, dst, dstport, data"
+```
+
+The results are properly cleaned with quotes removed:
+
+![Fields Results](fieldsax.png)
 
 ### Regex
 
@@ -143,4 +272,4 @@ If we only want specific fields, we can specify those fields which directs the a
 tag=test ax email~"test.org" app path | table
 ```
 
-### 
+### Slice
