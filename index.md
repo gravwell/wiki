@@ -28,8 +28,6 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
 [Installing and Configuring Gravwell](configuration/configuration.md)
 
-  * [Detailed configuration parameters](configuration/parameters.md)
-
   * [Docker Deployment](configuration/docker.md)
   
   * [Data Ageout](configuration/ageout.md)
@@ -38,9 +36,12 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Query Acceleration](configuration/accelerators.md)
 
+[//]: # (* [Data Auto-extraction](configuration/autoextractors.md))
   * [Distributed Frontends](distributed/frontend.md)
 
   * [Environment Variables](configuration/environment-variables.md)
+
+  * [Detailed configuration parameters](configuration/parameters.md)
 
 [The Resource System](resources/resources.md)
 
