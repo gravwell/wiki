@@ -273,3 +273,70 @@ tag=test ax email~"test.org" app path | table
 ```
 
 ### Slice
+
+The [Slice](/search/slice/slice.md) module is an extremely power binary slicing system that allows for extracting all manners of data from binary data streams.  Gravwell engineers have developed entire protocol dissectors using nothing but the slice module.  However, cutting up binary streams of data and interpretting the data is not for the faint of heart, and once you have built up beautiful query that slices and dices a proprietary data stream no one wants to remember it or even copy and paste it.
+
+Showing binary data in text form is difficult, we will show the data hex encoded, but you might want to just take our word for it.  We will be cutting up a binary data stream coming from a small control system that regulates a refridgerant refrigerant compressor to maintain precise temperature control.  The control system ships strings, integers, and some floating point values; and as is often the case in control systems all the data is in [Big Endian](https://en.wikipedia.org/wiki/Endianness) order.
+
+Note: The slice AX processor does not support any arguments (e.g. No "-e" allowed)
+
+To start, lets look at our data in it's hex format using the [Hexlify]() module:
+
+```
+tag=keg hexlify
+```
+
+Which results in entries that look like the following:
+
+```
+12000000000ed3ee7d4300000000014de536401800004b65672031
+```
+
+Using some sluething we were able to identify that the packed binary structure is the following:
+
+| ID | Timestamp Seconds | Timestamp Nanoseconds | Temperature as 32bit float | ASCII name |
+|----|-------------------|-----------------------|----------------------------|------------|
+|0:2 | 2:10              | 10:18                 | 18:22                      | 22:        |
+
+Which we were able to use to generate the following slice query which generated a table for each data item:
+
+```
+tag=keg slice uint16be([0:2]) as id int64be([2:10]) as sec uint64be([10:18]) as nsec float32be([18:22]) as temp [22:] as name | table
+```
+
+![Slice Table](sliceres.png)
+
+Using our manual query we can then generate the following auto-extraction configuration:
+
+```
+[[extraction]]
+	tag="keg"
+	name="kegdata"
+	desc="binary temperature control extractions"
+	module="slice"
+	params="uint16be([0:2]) as id int64be([2:10]) as sec uint64be([10:18]) as nsec float32be([18:22]) as temp [22:] as name"
+```
+
+The complicated slice query now becomes:
+
+```
+tag=keg ax | table
+```
+
+Using filtering and some math modules we can take it a step further and generate a cool graph showing the maximum temperature for each of the probes:
+
+```
+tag=keg ax id==0x1200 temp name | max temp by name | chart max by name
+```
+
+![Probe Temperature](temps.png)
+
+Additional filtering can be used to only look at the keg temperatures and examine the temperature variance to see how well the control system is maintaining a constant temperature:
+
+```
+tag=keg ax id==0x1200 temp name~Keg | stddev temp by name | chart stddev by name
+```
+
+![Probe Stddev](tempstddev.png)
+
+Using our auto-extractor and some basic math we can dissect the binary data and clearly see a periodic engagement of the compressor, which causes an oscillation of temperature over time.  If we were running a brewery we might call the head brewer and suggest that the control system logic be tweaked to tighten the temperature tolerances, or we might use this data to figure out the best time to pour a frosty beverage.
