@@ -12,7 +12,7 @@ The Gravwell core installer contains the indexer and webserver frontend. You'll 
 
 The core suite of ingesters are available for download as an installable packages.  Ingesters designed to operate on Linux machines are typically self contained, statically linked executables that are agnostic to the hosts package management system (with the exception of the NetworkCapture ingester).  Windows based ingesters are distributed as executable MSI packages.  Source code for many ingesters can be found at [Github](https://github.com/gravwell/ingesters).
 
-### Version 3.0.0 Ingester Releases
+### Version 3.0.1 Ingester Releases
 | Ingester | Description | MD5 | More Info |
 |:--------:|-------------|:---:|----------:|
 | [Simple Relay](#!ingesters/ingesters.md#Simple_Relay) | An ingester capable of accepting syslog or line brokend data sent over the network. |7009caf070580aa1f06b0577b5cf6108| [Download](https://update.gravwell.io/files/gravwell_simple_relay_installer_3.0.1.sh)|
@@ -22,8 +22,8 @@ The core suite of ingesters are available for download as an installable package
 | [Network Capture](#!ingesters/ingesters.md#Network_Ingester) | The Network Capture ingester is a passive network sniffing ingester which can bind to multiple network taps and send raw network traffic to Gravwell. |238f00e5f7327092c0fab17f8a1b0bbe| [Download](https://update.gravwell.io/files/gravwell_network_capture_installer_3.0.1.sh) |
 | [Collectd Collector](#!ingesters/ingesters.md#collectd) | The collectd ingester acts as a standalone collectd collector.  |cee294547a4f6b51597dbf04317f9115| [Download](https://update.gravwell.io/files/gravwell_collectd_installer_3.0.1.sh) |
 | [Ingest Federator](#!ingesters/ingesters.md#Federator_Ingester) | The Federator ingester is designed to aggregate multiple downstream ingesters and relay entries to upstream ingestion points.  The Federator is useful for crossing trust boundaries, aggregating entry flows, and insulating Gravwell indexers from potentially untrusted downstream entry generators. |8422deacb410c78142788f734ca48ee3| [Download](https://update.gravwell.io/files/gravwell_federator_installer_3.0.1.sh) |
-| [Windows Events](#!ingesters/ingesters.md#Windows_Event_Service) | The Winevent uses the Windows events subsystem to acquire windows events and ship them to gravwell.  The Winevent ingester can be placed on a single Windows machine acting as a log collector, or on multiple endpoints. |580e129ed3ee44077dc6723a4db829ad| [Download](https://update.gravwell.io/files/gravwell_win_events_3.0.0.msi) |
-| [Windows File Follower](#!ingesters/ingesters.md#File_Follower) | The Windows file follower is identical to the File Follower ingester, but for Windows. |56efb87fcfe15c7ab71a2775ac0c9fca| [Download](https://update.gravwell.io/files/gravwell_file_follow_3.0.0.msi) |
+| [Windows Events](#!ingesters/ingesters.md#Windows_Event_Service) | The Winevent uses the Windows events subsystem to acquire windows events and ship them to gravwell.  The Winevent ingester can be placed on a single Windows machine acting as a log collector, or on multiple endpoints. |0d9b555ca9b178a2502fd29b48a2cdc8| [Download](https://update.gravwell.io/files/gravwell_win_events_3.0.1.msi) |
+| [Windows File Follower](#!ingesters/ingesters.md#File_Follower) | The Windows file follower is identical to the File Follower ingester, but for Windows. |d41090f84310ae94d2348f4e13933934| [Download](https://update.gravwell.io/files/gravwell_file_follow_3.0.1.msi) |
 | [Amazon Kinesis](#!ingesters/ingesters.md#Kinesis_Ingester) | The Amazon Web Services Kinesis ingester can attach to the Kinesis stream and dramatically simplify logging a cloud deployment |4bbd3e5492cce02be4791743907fe381| [Download](https://update.gravwell.io/files/gravwell_kinesis_ingest_installer_3.0.1.sh)|
 | [Google PubSub](#!ingesters/ingesters.md#GCP_PubSub) | The Google Cloud Platform PubSub Ingester can subscribe to exhausts on the GCP PubSub system, easing integration with GCP. |1d4d687781755c6223f2b051b06670e3| [Download](https://update.gravwell.io/files/gravwell_pubsub_ingest_installer_3.0.1.sh)|
 
@@ -36,4 +36,4 @@ Some Gravwell components are distributed as optional additional installers, such
 
 | Component | Description | MD5 | More Info |
 |:---------:|-------------|:---:|----------:|
-| [Datastore](#!distributed/frontend.md) | The datastore keeps multiple Gravwell webservers in sync, enabling load balancing |fb1a09a8db3c8a5dc85128d798f55c16| [Download](https://update.gravwell.io/files/gravwell_datastore_installer_3.0.0.sh) |
+| [Datastore](#!distributed/frontend.md) | The datastore keeps multiple Gravwell webservers in sync, enabling load balancing |156f1417918753af7cb601eafbf2fe42| [Download](https://update.gravwell.io/files/gravwell_datastore_installer_3.0.1.sh) |
