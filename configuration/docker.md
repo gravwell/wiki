@@ -89,6 +89,63 @@ We can verify that the ingester is active by clicking on the Ingesters item in t
 
 Now we can configure our Netflow generators to send records to port 2055 of the host; they'll be passed in to the container and ingested into Gravwell.
 
+## Customizing services
+
+The official Gravwell docker container contains a service management system that makes launching and controlling multiple services within the container very easy.  The manager controls service restarts, error reporting, and back off controls.  Gravwell has opensourced the [manager](https://github.com/gravwell/manager) application on [github](https://github.com/gravwell) under the BSD 3-Clause license.  So if you want a very small and easily configured SystemD like service manager for your docker containers, have at it.
+
+The official gravwell Docker image contains the full Gravwell stack (indexer and webserver) as well as the Simple Relay ingester.  The default manager configuration is:
+
+```
+[Global]
+	Log-File=/opt/gravwell/log/manager.log
+	Log-Level=INFO
+
+[Error-Handler]
+	Exec=/opt/gravwell/bin/crashReport
+
+[Process "indexer"]
+	Exec="/opt/gravwell/bin/gravwell_indexer -stderr indexer"
+	Working-Dir=/opt/gravwell
+	Max-Restarts=3 #three attempts before cooling down
+	CoolDown-Period=60 #1 hour
+	Restart-Period=10 #10 minutes
+
+[Process "webserver"]
+	Exec="/opt/gravwell/bin/gravwell_webserver -stderr webserver"
+	Working-Dir=/opt/gravwell
+	Max-Restarts=3 #three attempts before cooling down
+	CoolDown-Period=30 #30 minutes
+	Restart-Period=10 #10 minutes
+
+[Process "searchagent"]
+	Exec="/opt/gravwell/bin/gravwell_searchagent -stderr searchagent"
+	Working-Dir=/opt/gravwell
+	Max-Restarts=3 #three attempts before cooling down
+	CoolDown-Period=10 #10 minutes
+	Restart-Period=10 #10 minutes
+
+[Process "simple_relay"]
+	Exec="/opt/gravwell/bin/gravwell_simple_relay -stderr simple_relay"
+	Working-Dir=/opt/gravwell
+	Max-Restarts=3 #three attempts before cooling down
+	CoolDown-Period=10 #10 minutes
+	Restart-Period=10 #10 minutes
+```
+
+This default configuration for the manager application enables the error reporting system which helps us identify and correct bugs.  If a service exits with a non-zero exit code, we get an error report.  To disable the error reporting system you can either remove the "[Error-Handler]" section or pass in the environment variable "DISABLE_ERROR_REPORTING" with a value of "TRUE".
+
+Individual services can be disabled at the time of launch by passing in an environment variable with the service name in all caps and prefixed with "DISABLE_" assined to "TRUE".
+
+For example, to launch the gravwell docker container without error reporting, launch with the "-e DISABLE_ERROR_REPORTING=true" option.
+
+If you would like to disable the integrated SimpleRelay ingester, add "-e DISABLE_SIMPLE_RELAY=TRUE" and if you wanted to launch with ONLY the indexer started chain them all up like so:
+
+```
+docker run --name gravwell -e GRAVWELL_INGEST_SECRET=MyIngestSecret -e DISABLE_SIMPLE_RELAY=TRUE -e DISABLE_WEBSERVER=TRUE -e DISABLE_SEARCHAGENT=TRUE gravwell/gravwell:latest
+```
+
+For more information about the service manager visit the [github page](https://github.com/gravwell/manager).
+
 ### Customizing ingester containers
 
 Once you've launched an ingester container, you may want to modify the default configuration somewhat. For instance, you may decide to run the Netflow ingester on a different port.
