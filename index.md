@@ -29,6 +29,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 [Installing and Configuring Gravwell](configuration/configuration.md)
 
   * [Docker Deployment](configuration/docker.md)
+
+  * [Setting up TLS/HTTPS](configuration/certificates.md)
   
   * [Data Ageout](configuration/ageout.md)
 
