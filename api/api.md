@@ -20,6 +20,7 @@ The bulk of the API is RESTful. The exception to this rule is the searching API 
 * [Ingesting Entries](ingest.md)
 * [Macros](macros.md)
 * [Miscellaneous APIs](misc.md)
+* [System Management](management.md)
 
 ## Searching and Search Stats
 
