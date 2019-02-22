@@ -26,6 +26,7 @@ These can be used just like user-defined enumerated values.
 ## Search module documentation
 
 * [anko](anko/anko.md)
+* [ax](ax/ax.md)
 * [base64](base64/base64.md)
 * [canbus](canbus/canbus.md)
 * [cef](cef/cef.md)
