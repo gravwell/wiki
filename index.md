@@ -32,6 +32,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Setting up TLS/HTTPS](configuration/certificates.md)
   
+  * [Setting up Extractors](configuration/autoextractors.md)
+  
   * [Data Ageout](configuration/ageout.md)
 
   * [Data Replication](configuration/replication.md)
