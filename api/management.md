@@ -13,3 +13,15 @@ To restart the webserver, send a POST request with an empty body to `/api/restar
 ### Restarting the indexers
 
 To restart all indexers to which the webserver is currently connected, send a POST request with an empty body to `/api/restart/indexers`. The webserver will signal to each indexer that it should shut itself down and restart. As the individual indexers come back up, the webserver will reconnect automatically.
+
+### Checking for a Distributed Frontend
+
+To check whether the Gravwell cluster is operating in a distributed frontend mode, perform a GET on `/api/distributed`.  The webserver will responde with a JSON object indicating whether the frontend is configured in a distributed mode.
+
+An example response when not in distributed mode:
+
+```
+{
+	"Distributed": false
+}
+```
