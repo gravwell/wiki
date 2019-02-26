@@ -19,6 +19,7 @@ The bulk of the API is RESTful. The exception to this rule is the searching API 
 * [Scheduled Searches](scheduledsearches.md)
 * [Ingesting Entries](ingest.md)
 * [Macros](macros.md)
+* [Auto-extractors](extractors.md)
 * [Miscellaneous APIs](misc.md)
 * [Templates and Pivots](templates.md)
 * [System Management](management.md)
