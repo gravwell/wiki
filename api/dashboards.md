@@ -42,6 +42,7 @@ A user can get all dashboards to which they have access (via ownership or group)
                 "GIDs": [],
                 "Description": "test2 description",
                 "Created": "2016-12-18T23:28:08.250051418Z",
+				"Guid": "d28b6887-ad55-479e-8af3-0cbcbd5084b1",
                 "Data": {
                         "A": "A2",
                         "B": "B2",
@@ -53,12 +54,13 @@ A user can get all dashboards to which they have access (via ownership or group)
 
 ```
 ### Getting a specific dashboard
-Getting a specific dashboard you just park the ID in the URL
+To fetch a particular ID, put its ID on the end of the dashboards URL:
 
 ```
-WEB GET /api/dashboards/2:
+GET /api/dashboards/2:
 ```
 
+It is also possible to fetch a specific dashboard by GUID, although this is not recommended
 ### Admin getting ALL dashboards of ALL users
 To get all dashboards the user MUST be an admin, and issue a **GET** request to **/api/dashboards/all**. If this request is issued by a non-admin user it should return all dashboards to which they have access (which would be equivocal to a GET on **/api/dashboards**)
 
@@ -72,6 +74,7 @@ WEB GET /api/dashboards/all:
                 "GIDs": [],
                 "Description": "test1 description",
                 "Created": "2016-12-18T23:28:07.679322121Z",
+				"Guid": "d28b6887-ad55-479e-8af3-0cbcbd5084b1",
                 "Data": {
                         "A": "A",
                         "B": "B",
@@ -86,6 +89,7 @@ WEB GET /api/dashboards/all:
                 "GIDs": [],
                 "Description": "test2 description",
                 "Created": "2016-12-18T23:28:08.250051418Z",
+				"Guid": "55bc7236-39e4-11e9-94e9-54e1ad7c66cf",
                 "Data": {
                         "A": "A2",
                         "B": "B2",
@@ -102,7 +106,7 @@ Updating a dashboard (to change the data or alter the name, description, GID lis
 In this example a user (UID 3) wishes to add permission for group 3 to access a dashboard (ID 2).
 
 ```
-WEB GET /api/dashboards/2:
+GET /api/dashboards/2:
 [
         {
                 "ID": 2,
@@ -110,6 +114,7 @@ WEB GET /api/dashboards/2:
                 "UID": 3,
                 "GIDs": [],
                 "Description": "test2 description",
+				"Guid": "5c6099dc-39e4-11e9-81a7-54e1ad7c66cf",
                 "Created": "2016-12-18T23:28:08.250051418Z",
                 "Data": {
                         "A": "A2",
@@ -131,6 +136,7 @@ WEB PUT /api/dashboards/2:
                 "UID": 3,
                 "GIDs": [3],
                 "Description": "marketing group dashboard",
+				"Guid": "5c6099dc-39e4-11e9-81a7-54e1ad7c66cf",
                 "Created": "2016-12-18T23:28:08.250051418Z",
                 "Data": {
                         "A": "A2",
@@ -161,6 +167,7 @@ WEB GET /api/users/1/dashboards:
                 ],
                 "Description": "dashGroup2",
                 "Created": "2016-12-28T21:37:12.703358455Z",
+				"Guid": "5c6099dc-39e4-11e9-81a7-54e1ad7c66cf",
                 "Data": {
                         "A": "A2",
                         "B": "B2",
@@ -185,6 +192,7 @@ WEB GET /api/groups/2/dashboards:
                 ],
                 "Description": "dashGroup1",
                 "Created": "2016-12-28T21:37:12.696460531Z",
+				"Guid": "5c6099dc-39e4-11e9-81a7-54e1ad7c66cf",
                 "Data": {
                         "A": "A2",
                         "B": "B2",
@@ -199,6 +207,7 @@ WEB GET /api/groups/2/dashboards:
                 "GIDs": [],
                 "Description": "test2 description",
                 "Created": "2016-12-18T23:28:08.250051418Z",
+				"Guid": "d28b6887-ad55-479e-8af3-0cbcbd5084b1",
                 "Data": {
                         "A": "A2",
                         "B": "B2",
@@ -221,6 +230,7 @@ WEB GET /api/dashboards/all:
                 "GIDs": [],
                 "Description": "test1 description",
                 "Created": "2016-12-18T23:28:07.679322121Z",
+				"Guid": "d28b6887-ad55-479e-8af3-0cbcbd5084b1",
                 "Data": {
                         "A": "A",
                         "B": "B",
@@ -235,6 +245,7 @@ WEB GET /api/dashboards/all:
                 "GIDs": [],
                 "Description": "test2 description",
                 "Created": "2016-12-18T23:28:08.250051418Z",
+				"Guid": "5c6099dc-39e4-11e9-81a7-54e1ad7c66cf",
                 "Data": {
                         "A": "A2",
                         "B": "B2",
