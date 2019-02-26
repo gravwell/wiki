@@ -33,7 +33,7 @@ The API commands in this section can be executed by any user.
 To get a list of all scheduled searches visible to the user (either owned by the user or marked accessible to one of the user's groups), perform a GET on `/api/scheduledsearches`. The result will look like this:
 
 ```
-[{"ID":2007987335,"Groups":null,"Name":"foo","Description":"test search","Owner":1,"Schedule":"* * * * *","Permissions":0,"SearchString":"tag=gravwell","Duration":-86400,"Script":"","LastSearchIDs":null}]
+[{"ID":2007987335,"GUID":"cdf011ae-7e60-46ec-827e-9d9fcb0ae66d","Groups":null,"Name":"foo","Description":"test search","Owner":1,"Schedule":"* * * * *","Permissions":0,"SearchString":"tag=gravwell","Duration":-86400,"Script":"","LastSearchIDs":null}]
 ```
 
 This example shows a single scheduled search named "foo", owned by UID 1 (admin). It runs every minute and executes the search `tag=gravwell` over the last 24 hours.
@@ -62,8 +62,10 @@ The server will respond with the ID of the new scheduled search.
 Information about a single scheduled search may be accessed with a GET on `/api/scheduledsearches/{id}`. For example, given a scheduled search ID of 1353491046, we would query `/api/scheduledsearches/1353491046` and receive the following:
 
 ```
-{"ID":1353491046,"Groups":[2],"Name":"myscheduledsearch","Description":"a scheduled search","Owner":1,"Schedule":"0 8 * * *","Permissions":0,"SearchString":"tag=default grep foo","Duration":-86400,"Script":"","LastSearchIDs":null}
+{"ID":1353491046,"GUID":"cdf011ae-7e60-46ec-827e-9d9fcb0ae66d","Groups":[2],"Name":"myscheduledsearch","Description":"a scheduled search","Owner":1,"Schedule":"0 8 * * *","Permissions":0,"SearchString":"tag=default grep foo","Duration":-86400,"Script":"","LastSearchIDs":null}
 ```
+
+A scheduled search can also be fetched by GUID. Note that this requires more work for the webserver and should only be used when necessary. To fetch the scheduled search shown above, do a GET on `/api/scheduledsearches/cdf011ae-7e60-46ec-827e-9d9fcb0ae66d`.
 
 ### Updating an existing search
 
