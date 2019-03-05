@@ -206,6 +206,9 @@ var json = import("encoding/json")
 
 For security reasons, the anko module does not allow access to *all* packages included with the full Anko scripting language. The following packages are available for use in anko scripts:
 
+* `bytes`: work with byte slices
+* `crypto/md5`, `crypto/sha1`, `crypto/sha256`, `crypto/sha512`: cryptographic hashing
+* `encoding/csv`: encode and decode CSV data
 * `encoding/json`: encode and decode json data
 * `errors`: handle Go errors
 * `flag`: handle command-line arguments
