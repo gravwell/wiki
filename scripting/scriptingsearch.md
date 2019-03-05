@@ -51,11 +51,25 @@ Search structs are used to actively read entries from a search, while search IDs
 * `deleteSearch(searchID) error` deletes the search with the specified ID
 * `backgroundSearch(searchID) error` sends the specified search to the background; this is useful for "keeping" a search for later manual inspection.
 * `downloadSearch(searchID, format, start, end) ([]byte, error)` downloads the given search as if a user had clicked the 'Download' button in the web UI. `format` should be a string containing either "json", "csv", "text", "pcap", or "lookupdata" as appropriate. `start` and `end` are time values.
+* `getDownloadHandle(searchID, format, start, end) (io.Reader, error)` returns a streaming handle to the results of the given search as if the user had clicked the 'Download' button in the web UI. The handle returned is suitable for use with the HTTP library functions shown later in this document.
 
 ### Sending results
 
+The scripting system provides several methods for transmitting script results to external systems.
+
+The following functions provide basic HTTP functionality:
+
 * `httpGet(url) (string, error)` performs an HTTP GET request on the given URL, returning the response body as a string.
 * `httpPost(url, contentType, data)` performs an HTTP POST request to the given URL with the specified content type (e.g. "application/json") and the given data as the POST body.
+
+More elaborate HTTP operations are possible with the "net/http" library. See the package documentation in the [anko document](anko.md) for a description of what is available, or see below for an example.
+
+If the user has configured their personal email settings within Gravwell, the `email` function is a very simple way to send an email:
+
+* `email(from, to, subject, message) error` sends an email via SMTP. The `from` field is simply a string, while `to` should be a slice of strings containing email addresses. The `subject` and `message` fields are also strings which should contain the subject line and body of the email.
+
+The following functions are deprecated but still available, allowing emails to be sent without configuring the user's email options:
+
 * `sendMail(hostname, port, username, password, from, to, subject, message) error` sends an email via SMTP. `hostname` and `port` specify the SMTP server to use; `username` and `password` are for authentication to the server. The `from` field is simply a string, while the `to` field should be a slice of strings containing email addresses. The `subject` and `message` fields are also strings which should contain the subject line and body of the email.
 * `sendMailTLS(hostname, port, username, password, from, to, subject, message, disableValidation) error` sends an email via SMTP using TLS. `hostname` and `port` specify the SMTP server to use; `username` and `password` are for authentication to the server. The `from` field is simply a string, while the `to` field should be a slice of strings containing email addresses. The `subject` and `message` fields are also strings which should contain the subject line and body of the email.  The disableValidation argument is a boolean which disables TLS certificate validation.  Setting disableValidation to true is insecure and may expose the email client to man-in-the-middle attacks.
 
@@ -215,4 +229,52 @@ if err != nil {
 # Post to an HTTP server
 httpPost("http://example.org:3002/", "application/json", encoded)
 detachSearch(s)
+```
+
+Sometimes, the results of a search may be very large, too large to hold in memory. The "net/http" library, combined with the `getDownloadHandle` function, allows you to stream results directly from the Gravwell search into an HTTP POST/PUT request. It also allows cookies or additional headers to be set:
+
+```
+var http = import("net/http")
+var time = import("time")
+var bytes = import("bytes")
+
+start = time.Now().Add(-72 * time.Hour)
+end = time.Now()
+s, err = startSearch("tag=gravwell", start, end)
+if err != nil {
+        return err
+}
+for {
+        f, err = isSearchFinished(s)
+        if err != nil {
+                return err
+        }
+        if f {
+                break
+        }
+		time.Sleep(1*time.Second)
+}
+
+# Get a handle on the search results
+rhandle, err = getDownloadHandle(s.ID, "text", start, end)
+if err != nil {
+        return err
+}
+# Build the request
+req, err = http.NewRequest("POST", "http://example.org:3002/", body)
+if err != nil {
+        return err
+}
+# Add a header
+req.Header.Add("My-Header", "gravwell")
+# Add a cookie
+cookie = make(http.Cookie)
+cookie.Name = "foo"
+cookie.Value = "bar"
+req.AddCookie(&cookie)
+
+# Perform the actual request
+resp, err = http.DefaultClient.Do(req)
+detachSearch(s)
+return err
 ```

@@ -213,6 +213,7 @@ For security reasons, the anko module does not allow access to *all* packages in
 * `math`: mathematical functions
 * `math/big`: bignums
 * `math/rand`: random numbers
+* `net/http`: limited HTTP functionality (client only)
 * `net/url`: URLs
 * `path`: paths
 * `path/filepath`: path functions specific to files
@@ -221,4 +222,31 @@ For security reasons, the anko module does not allow access to *all* packages in
 * `strings`: string processing functions
 * `time`: time processing functions
 
-An exhaustive description of every package is not possible in this document; you can view the available functions exported for each package at [the official anko repository](https://github.com/mattn/anko/tree/master/packages)
+An exhaustive description of every package is not possible in this document; you can view the available functions exported for each package at [the official anko repository](https://github.com/mattn/anko/tree/master/packages). Some specific packages are described further below, as they do not offer the complete functionality exported by the official anko repository.
+
+### The `net/http` package
+
+`net/http` exports a subset of functions, types, and variables for performing HTTP *requests*. The types `Client`, `Cookie`, `Request`, and `Response` are exported; see [the Go documentation](https://golang.org/pkg/net/http/) for a description of these types.
+
+The function `NewRequest(operation, url, body) (Request, error)` prepares a new http.Request with the given operation ("PUT", "POST", "GET", "DELETE") on the specified URL string. The body is an optional parameter for use with PUT and POST requests; it should be set to either 'nil' or an io.Reader.
+
+For most purposes, you will create a Request with the NewRequest function, then use http.DefaultClient to execute that request:
+
+```
+req, _ = http.NewRequest("GET", "http://example.org/foo", nil)
+http.DefaultClient.Do(req)
+```
+
+Additional headers or cookies can be set on the request before sending:
+
+```
+req, _ = http.NewRequest("GET", "http://example.org/foo", nil)
+# Add a header
+req.Header.Add("My-Header", "gravwell")
+# Add a cookie
+cookie = make(http.Cookie)
+cookie.Name = "foo"
+cookie.Value = "bar"
+req.AddCookie(&cookie)
+http.DefaultClient.Do(req)
+```
