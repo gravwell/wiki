@@ -72,7 +72,7 @@ The scripting system provides several methods for transmitting script results to
 The following functions provide basic HTTP functionality:
 
 * `httpGet(url) (string, error)` performs an HTTP GET request on the given URL, returning the response body as a string.
-* `httpPost(url, contentType, data)` performs an HTTP POST request to the given URL with the specified content type (e.g. "application/json") and the given data as the POST body.
+* `httpPost(url, contentType, data) (response, error)` performs an HTTP POST request to the given URL with the specified content type (e.g. "application/json") and the given data as the POST body.
 
 More elaborate HTTP operations are possible with the "net/http" library. See the package documentation in the [anko document](anko.md) for a description of what is available, or see below for an example.
 
