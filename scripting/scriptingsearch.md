@@ -53,6 +53,18 @@ Search structs are used to actively read entries from a search, while search IDs
 * `downloadSearch(searchID, format, start, end) ([]byte, error)` downloads the given search as if a user had clicked the 'Download' button in the web UI. `format` should be a string containing either "json", "csv", "text", "pcap", or "lookupdata" as appropriate. `start` and `end` are time values.
 * `getDownloadHandle(searchID, format, start, end) (io.Reader, error)` returns a streaming handle to the results of the given search as if the user had clicked the 'Download' button in the web UI. The handle returned is suitable for use with the HTTP library functions shown later in this document.
 
+### Search Datatype
+
+When executing a search via the startSearch or startBackgroundSearch functions the `search` datatype is returned.  The `search` datatype contains the following members:
+
+* `ID` - A string containing the search ID.  Use this member for other functions like getSearchStatus and attachSearch
+* `RenderMod` - A string indicating the renderer attached to the search.  It may be something like raw, text, table, chart, or fdg.
+* `SearchString` - A string containing the search string passed in during the request
+* `SearchStart` - A string containing the start timestamp for the search
+* `SearchEnd` - A string containing the end timestamp for the search
+* `Background` - A boolean indicating whether the search was started as a background search
+* `Name` - An optional string with a search name.
+
 ### Sending results
 
 The scripting system provides several methods for transmitting script results to external systems.
