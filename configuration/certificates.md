@@ -35,7 +35,7 @@ To enable HTTPS on the webserver, change the `Web-Port` directive from 80 to 443
 
 To enable TLS-encrypted ingester connections, find and uncomment the line `TLS-Ingest-Port=4024`.
 
-To enable HTTPS for the search agent, open /opt/gravwell/etc/searchagent.conf and comment out the `Insecure-Use-HTTP=true` line.
+To enable HTTPS for the search agent, open /opt/gravwell/etc/searchagent.conf and comment out the `Insecure-Use-HTTP=true` line and change the port in the `Webserver-Address` line from 80 to 443.
 
 Finally, restart the webserver, indexer, and search agent:
 
@@ -64,7 +64,7 @@ To enable HTTPS on the webserver, change the `Web-Port` directive from 80 to 443
 
 To enable TLS-encrypted ingester connections, find and uncomment the line `TLS-Ingest-Port=4024`.
 
-To enable HTTPS for the search agent, open /opt/gravwell/etc/searchagent.conf and comment out the `Insecure-Use-HTTP=true` line.
+To enable HTTPS for the search agent, open /opt/gravwell/etc/searchagent.conf and comment out the `Insecure-Use-HTTP=true` line and change the port in the `Webserver-Address` line from 80 to 443.
 
 Finally, restart the webserver, indexer, and search agent:
 
