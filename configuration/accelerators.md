@@ -23,13 +23,13 @@ Accelerators are configured on a per well basis.  Each well can specify an accel
 
 ### Supported Extraction Modules
 
-* [CSV](/search/csv/csv.md)
-* [Fields](/search/fields/fields.md)
-* [Syslog](/search/syslog/syslog.md)
-* [JSON](/search/json/json.md)
-* [CEF](/search/cef/cef.md)
-* [Regex](/search/regex/regex.md)
-* [Winlog](/search/winlog/winlog.md)
+* [CSV](search/csv/csv.md)
+* [Fields](search/fields/fields.md)
+* [Syslog](search/syslog/syslog.md)
+* [JSON](search/json/json.md)
+* [CEF](search/cef/cef.md)
+* [Regex](search/regex/regex.md)
+* [Winlog](search/winlog/winlog.md)
 
 ### Example Configuration
 
