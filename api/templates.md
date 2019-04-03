@@ -8,7 +8,7 @@ Templates and pivots are referred to by GUID. Note that if a user installs a tem
 * Shared with a group the user is a member of
 * Global
 
-## Create templates
+## Create a template
 
 To create a template, do a POST to `/api/templates`. The body should be a JSON structure with a 'Contents' field containing any valid JSON, and optionally a GUID, Name, and Descrption. The following are all valid:
 
@@ -33,55 +33,26 @@ The API will respond with the GUID of the newly-created template
 
 To list all templates available to a user, do a GET on `/api/templates`. The result will be an array of templates:
 
-```
-[{"GUID":"218ea16b-d831-48c0-bd1c-50c7b1b6079e","Name":"mytemplate","Description":"a template","Contents":{"test":"blah"}},{"GUID":"a0fe90f6-94ea-4f34-86a0-3fdeaaa11c80","Name":"template2","Description":"","Contents":"bar"}]
-```
+[{"GUID":"a8fbdee6-9d92-4d5e-80ab-540532babd54","UID":1,"GIDs":[2,3],"Global":false,"Name":"blah","Description":"","Updated":"2019-03-29T10:55:40.127258032-06:00","Contents":"bar"}]
 
-This example shows two templates.
+## Fetch a single template
 
-## Fetch a template's contents
+To fetch a single template, do a GET on `/api/templates/<guid>`:
 
-To fetch the contents of a single template, do a GET on `/api/templates/<guid>`.
+{"GUID":"a8fbdee6-9d92-4d5e-80ab-540532babd54","UID":1,"GIDs":[2,3],"Global":false,"Name":"blah","Description":"","Updated":"2019-03-29T10:55:40.127258032-06:00","Contents":"bar"}
 
-## Update a template's contents
+## Update a template
 
-To update the contents of a template, do a PUT to `/api/templates/<guid>`. The request body should resemble the structure sent to create a new template. Sending the GUID field is not necessary (it will be ignored) but the Name and Description fields should be sent even if not changed:
+To update a template, do a PUT to `/api/templates/<guid>`. The request body should be identical to that returned by a GET on the same path, with any desired elements changed. Note that the GUID cannot be changed; only the following fields may be modified:
 
-```
-{"Name":"mytemplate","Description":"a template","Contents": "foo"}
-```
-
-```
-{"GUID":"ce95b152-d47f-443f-884b-e0b506a215be","Name":"mytemplate","Description":"a template","Contents":{"a":1, "b":2}}
-```
-
-## Get details about a template
-
-To get information about a particular template, such as the owner's UID, do a GET on `/api/templates/<guid>/details`. The result will look like this:
-
-```
-{"GUID":"ce95b152-d47f-443f-884b-e0b506a215bf","UID":1,"GIDs":null,"Global":true,"Name":"mytemplate","Description":"a template","Updated":"2019-02-26T16:46:47.571887406-07:00"}
-```
-
-## Set group access, global flag, and UID of a template
-
-To change access rules on a template, do a PUT on `/api/templates/<uuid>/details`. The request body should be the same structure returned by a GET on that path, with the desired fields modified. The following fields can be set; all others will be ignored:
-
+* Contents: The actual body/contents of the template
+* Name: Change the name of the template
+* Description: Change the template's description
 * GIDs: May be set to an array of 32-bit integer group IDs, e.g. `"GIDs":[1,4]`
 * UID: (Admin only) Set to a 32-bit integer
 * Global: (Admin only) Set to a boolean true or false; Global templates are visible to all users.
 
-If the original details are the following:
-
-```
-{"GUID":"ce95b152-d47f-443f-884b-e0b506a215bf","UID":1,"GIDs":null,"Global":true,"Name":"mytemplate","Description":"a template","Updated":"2019-02-26T16:46:47.571887406-07:00"}
-```
-
-We can set the Global flag true by sending the following; note that the UID and GID fields must remain the same, although other fields can be omitted:
-
-```
-{"UID":1,"GIDs":[2],"Global":true,"}
-```
+Note: Leaving any of these field blank will result in the template being updated with a null value for that field!
 
 ## Delete a template
 

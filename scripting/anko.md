@@ -39,7 +39,7 @@ The `Finalize` function is called after `Process` or `Main` have completed. It i
 This example script operates in two modes, specified as an argument to the script. In 'build' mode, it takes the "SrcIP" field extracted from the packet module and builds a list of IP addresses seen in the current search, then stores that list as a resource. In 'apply' mode, it takes the previously-built table and drops any entries which contain a previously-seen "SrcIP" field. This script was used to look for new devices on a network, although the `lookup` module now provides the same functionality with more flexibility.
 
 ```
-table = {}
+table = make(map[string]interface)
 task = "build"
 
 var json = import("encoding/json")
@@ -80,8 +80,11 @@ func Process() {
 
 func Finalize() {
 	if task == "build" {
-		data, _ = json.Marshal(table)
-		setResource("lookuptable", data)
+		data, err = json.Marshal(table)
+		if err != nil {
+			return err
+		}
+		return setResource("lookuptable", data)
 	}
 }
 ```
