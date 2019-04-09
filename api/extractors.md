@@ -78,6 +78,24 @@ If an error occurs when adding an auto-extractor the webserver will return a lis
 
 Updating an autoextractor is performed by issuing a PUT request to `/api/autoextractors` with a valid definition JSON structure in the request boyd.  The structure must be valid and there must be an existing auto-extractor that is assigned to the same tag.  The tag associated with an updated auto-extractor cannot be changed via the update API.  To change the tag associated with an existing auto-extractor, the definition must be deleted then added again.  The data structure is identical to the add API.  If the definition is invalid a non-200 response with an error message in the body is returned.  If the structure is valid but an error occurs in distributing the updated definition a list of errors is returned in the body.
 
+## Testing Extractor Syntax
+
+Before adding or updating an autoextractor, it may be useful to validate the syntax. Doing a POST request to `/api/autoextractors/test` will validate the request.If there is a problem with the definition, an error will be returned:
+
+```
+{"Error":"asdf is not a supported engine"}
+```
+
+When adding a new auto-extractor, it is important that the new extractor does not conflict with an existing extraction on the same tag. When updating an existing extraction, this is not a concern. If an extraction already exists for the specified tag, the test API will set the 'TagExists' field in the returned structure:
+
+```
+{"TagExists":true,"FileExists":true,"Error":""}
+```
+
+If `TagExists` is true, it should be treated as an error if you intend to create a new extractor, and ignored if updating an existing extractor.
+
+The `FileExists` flag indicates that the proposed extraction would overwrite an existing extraction on disk; typically it will only be set when 'TagExists' is set. It should be treated as an error when creating a new extractor and ignored when updating.
+
 ## Deleting
 
 Deleting an existing auto-extractor is performed by issuing a DELETE request to `/api/autoextractors/{id}` where id is the tag associated with the auto-extractor.  For example, to delete the auto-extractor associated with the tag "syslog" the request would go to `/api/autoextractors/syslog`.  If the auto-extractor does not exist or there is an error removing it, the webserver will respond with a non-200 response and error in the response body.  If an error occurs when distributing the deletion to indexers there will be a 200 response and a list of warnings.
