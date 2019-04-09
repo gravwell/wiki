@@ -88,6 +88,7 @@ Replication is controlled by the "Replication" configuration group in the gravwe
 | Max-Replicated-Data-GB | Max-Replicated-Data-GB=4096 | Designates the maximum amount of storage the replication system will consume, in this case 4TB. |
 | Replication-Secret-Override | Replication-Secret-Override=replicationsecret | Overrides the authentication token used when establishing connections to replication peers.  By default the "Control-Auth" token from the Global configuration group is used. |
 | Insecure-Skip-TLS-Verify | Insecure-Skip-TLS-Verify=true | Disables verification and validation of TLS public keys.  TLS is still enabled, but the system will accept any public key presented by a peer. |
+| Disable-TLS | Disable-TLS=true | Disables TLS communication between replication peers. Defaults to false (TLS enabled) |
 | Key-File | Key-File=/opt/gravwell/etc/replicationkey.pem | Overrides the X509 private key used for negotiating a replication connection.  By default TLS connections use the Global key file. |
 | Certificate-File | Certificate-File=/opt/gravwell/etc/replicationcert.pem | Overrides the X509 public key certificate used for negotiating a replication connection.  By default TLS connections use the Global certificate file. |
 
