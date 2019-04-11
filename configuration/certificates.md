@@ -16,6 +16,8 @@ This is the default configuration for Gravwell, and no changes are needed to use
 
 Please note that without a certificate, ingesters will be unable to encrypt their traffic to the indexer. If you wish to encrypt ingester traffic but leave the webserver in HTTP-only mode, you may install a certificate as described in either of the other sections, but only uncomment the `Certificate-File`, `Key-File`, and `TLS-Ingest-Port` options in gravwell.conf. This will enable TLS for the indexer but not the webserver.
 
+Note: If you configure distributed webservers and a datastore with HTTPS disabled, you must set the `Datastore-Insecure-Disable-TLS` flag in gravwell.conf for both the datastore and the webservers.
+
 ## Install a properly-signed TLS certificate
 
 A properly-signed TLS certificate is the most secure way to access Gravwell. Browsers will automatically accept the certificate without complaint.
@@ -44,6 +46,8 @@ systemctl restart gravwell_webserver.service
 systemctl restart gravwell_indexer.service
 systemctl restart gravwell_searchagent.service
 ```
+
+Note: If using the datastore and multiple webservers, you must set the `Search-Forwarding-Insecure-Skip-TLS-Verify parameter` to `true` to enable webservers to communicate with each other using self-signed certs. If the datastore also uses self-signed certificates, set `Datastore-Insecure-Skip-TLS-Verify` on the webservers to enable them to communicate with the datastore.
 
 ## Install a self-signed certificate
 

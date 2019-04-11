@@ -98,6 +98,12 @@ Default Value:
 Example:		`External-Addr=10.0.0.1:443`
 Description:	The External-Addr parameter specifies the address other webservers should use to contact this webserver. This parameter is **required** when using a datastore, as it allows a user on one webserver to load the results of a search performed on another webserver.
 
+**Search-Forwarding-Insecure-Skip-TLS-Verify**
+Applies to:		Webserver
+Default Value:	`false`
+Example:		`Search-Forwarding-Insecure-Skip-TLS-Verify=true`
+Description:	This parameter is only useful when operating multiple webservers in distributed mode using a datastore. If the webservers have self-signed certificates, users will be unable to access searches from remote webservers *unless* this parameter is set to true.
+
 **Ingest-Port**
 Applies to:        Indexer
 Default Value:        `4023`
