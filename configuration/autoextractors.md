@@ -13,13 +13,15 @@ Auto-extractor definitions are used by the [AX](../search/ax/ax.md) module which
 
 ## Auto-Extractor Configuration
 
-Auto-extractors are defined by creating ax files and installing them in the "extractions" directory of each Gravwell node. The filenames used do not matter; any file placed in the extractions directory will be parsed as an "ax" file. By default the extractions directory is `/opt/gravwell/extractions` but it can be configured by setting/modifying the "Autoextract-Definition-Path" configuration variable in your `gravwell.conf` file.  Gravwell services must be restarted after changes to any auto-extractor "ax" files.
+Auto-extractors are defined by creating ax files and installing them in the "extractions" directory of each Gravwell node. The filenames used do not matter; any file placed in the extractions directory with an extension of "ax" will be parsed as an auto-extractor file. By default the extractions directory is `/opt/gravwell/extractions` but it can be configured by setting/modifying the "Autoextract-Definition-Path" configuration variable in your `gravwell.conf` file.  Gravwell services must be restarted after changes to any auto-extractor "ax" files.
 
 Auto-extractor files follow the [TOML V4](https://github.com/toml-lang/toml) format which allows comments using the "#" character.  Each "ax" file can contain multiple auto-extraction definitions and there can be multiple files in the extractions directory.
 
 Note: Only a single extraction can be defined per tag
 
 Note: Auto-extractors always operate on the full underlying data of an entry.  They cannot be used to perform extractions on Enumerated Values (the "-e" argument is disallowed)
+
+Note: The auto-extractor file extension is "ax", only files that have the ".ax" suffix will be read as auto-extractor definitions.
 
 Each extractor contains a header and the following parameters:
 
