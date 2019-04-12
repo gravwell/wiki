@@ -33,6 +33,7 @@ The packet processor supports a growing list of submodules which allow for break
 | ipv6 | IP Version 6 packets |
 | tcp | TCP packets |
 | udp | UDP packets |
+| icmpv4 | ICMP packets |
 | dot1q | VLAN tagged frames |
 | dot11 | 802.11 Wireless packets |
 | modbus | modbus/TCP packets |
@@ -59,7 +60,7 @@ The packet processor supports a growing list of submodules which allow for break
 | dot1q | Type | > < <= >= == != | dot1q.Type == 2
 | dot1q | DropEligible |  == != | dot1q.DropEligible == true
 
-The dot1q packet submodule is designed to enable parsing of VLAN tagged packets.  Packets with the VLAN header will not automatically invoke the VLAN parsing functionality and may be dropped by the packet engine without the dot1q module.  Even if no VLAN tagged values are needed, the module must be added to the query to support VLAN tagged packets.
+The dot1q packet submodule is designed to enable parsing of VLAN tagged packets.
 
 ##### Example Search
 
@@ -143,6 +144,25 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | udp | Checksum | == != < > <= >= | udp.Checksum != 0x1234 
 | udp | Payload | | udp.Payload
 
+#### ICMP V4
+
+| Packet type | Field | Operators | Example 
+|-----|-------|-----------|---------
+| icmpv4 | Type | == != < > <= >= | icmpv4.Type < 0x100 
+| icmpv4 | Checksum | == != < > <= >= | icmpv4.Checksum == 1024 
+| icmpv4 | ID | == != < > <= >= | icmpv4.ID == 4 
+| icmpv4 | Seq | == != < > <= >= | icmpv4.Seq > 100
+| icmpv4 | Payload | == != ~ !~ | icmpv4.Payload
+
+#### ICMP V6
+
+| Packet type | Field | Operators | Example 
+|-----|-------|-----------|---------
+| icmpv6 | Type | == != < > <= >= | icmpv6.Type < 0x100 
+| icmpv6 | Checksum | == != < > <= >= | icmpv6.Checksum == 1024 
+| icmpv6 | TypeBytes | == != ~ !~ | icmpv6.TypeBytes ~ "XYZ" 
+| icmpv6 | Payload | == != ~ !~ | icmpv6.Payload
+
 #### Modbus
 
 | Packet type | Field | Operators | Example 
@@ -178,18 +198,18 @@ Gravwell includes basic protocol crackers for Modbus, Ethernet/IP, and CIP. Due 
 | modbus | Exception | ==true, !=true | modbus.Exception == true
 | modbus | ReqResp | | modbus.ReqResp
 | modbus | Payload | | modbus.Payload
-| enip | Command | == != < > <= >= | enip.Command > 0
-| enip | Length | == != < > <= >= | enip.Length > 5
-| enip | SessionHandle | == != < > <= >= | enip.SessionHandle != 0
-| enip | Status | == != < > <= >= | enip.Status != 0
-| enip | Options | == != < > <= >= | enip.Options == 0x02
-| enip | CommandSpecific | | enip.CommandSpecific
-| enip | Payload | | enip.Payload
-| enip | SenderContext | | enip.SenderContext
-| cip | Response | ==true, !=true | cip.Response == true
-| cip | Service | == != < > <= >= | cip.Service == 0x02
-| cip | ClassID | == != < > <= >= | cip.ClassID == 0x00
-| cip | InstanceID | == != < > <= >= | cip.InstanceID == 0x01
-| cip | Status | == != < > <= >= | cip.Status != 0
-| cip | AdditionalStatus | | cip.AdditionalStatus
-| cip | Data | | cip.Data
+#| enip | Command | == != < > <= >= | enip.Command > 0
+#| enip | Length | == != < > <= >= | enip.Length > 5
+#| enip | SessionHandle | == != < > <= >= | enip.SessionHandle != 0
+#| enip | Status | == != < > <= >= | enip.Status != 0
+#| enip | Options | == != < > <= >= | enip.Options == 0x02
+#| enip | CommandSpecific | | enip.CommandSpecific
+#| enip | Payload | | enip.Payload
+#| enip | SenderContext | | enip.SenderContext
+#| cip | Response | ==true, !=true | cip.Response == true
+#| cip | Service | == != < > <= >= | cip.Service == 0x02
+#| cip | ClassID | == != < > <= >= | cip.ClassID == 0x00
+#| cip | InstanceID | == != < > <= >= | cip.InstanceID == 0x01
+#| cip | Status | == != < > <= >= | cip.Status != 0
+#| cip | AdditionalStatus | | cip.AdditionalStatus
+#| cip | Data | | cip.Data
