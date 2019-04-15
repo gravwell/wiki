@@ -57,6 +57,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
 [GUI User Preferences](configuration/gui.md)
 
+[Using the Command-Line Client](cli/cli.md)
+
 [API](api/api.md)
 
 [Changelogs](changelog/list.md)
