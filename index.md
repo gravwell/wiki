@@ -61,6 +61,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
 [API](api/api.md)
 
+[Licensing](license/license.md)
+
 [Changelogs](changelog/list.md)
 
 Documentation version 2.0
