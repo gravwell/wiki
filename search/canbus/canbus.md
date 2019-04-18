@@ -4,10 +4,10 @@ The canbus module extracts fields from CAN messages (i.e. vehicle data).
 
 | mod | Field | Operators | Example
 |-----|-------|-----------|----------
-| canbus | ID | == != | canbus ID=0x341
-| canbus | EID | == != | canbus EID=0x123456
-| canbus | RTR | == != | canbus RTR=1
-| canbus | Data | | canbus Data
+| canbus | ID | == != < > <= >= | canbus ID==0x341
+| canbus | EID | == != < > <= >= | canbus EID==0x123456
+| canbus | RTR | == != | canbus RTR==true
+| canbus | Data | ~ !~ | canbus Data
 
 ### Example Search
 
