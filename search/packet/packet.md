@@ -144,6 +144,7 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | udp | Checksum | == != < > <= >= | udp.Checksum != 0x1234 
 | udp | Payload | | udp.Payload
 
+
 #### ICMP V4
 
 | Packet type | Field | Operators | Example 
@@ -184,6 +185,27 @@ tag=pcap packet udp.DstPort==53 udp.Payload | grep -e Payload "tumblr" | text
 
 The `udp.DstPort==53` component specifies that we should only match on packets destined for UDP port 53, while the `udp.Payload` component specifies that the payload portion of each packet should be extracted into an enumerated value. We then use the `grep` module to search the payload for the word “tumblr” and send the results to the `text` renderer for display.
 
+#### MPLS
+
+The packet search module can decode MPLS headers and allows for selective filtering.  The following MPLS fields are available.
+
+| Packet type | Field | Operators | Example 
+|-----|-------|-----------|---------
+| mpls | Label | == != < > <= >= | mpls.Label==0x10
+| mpls | TrafficClass | == != < > <= >= | mpls.TrafficClass==4
+| mpls | StackBottom | == != | mpls.StackBottom==true
+| mpls | TTL | == != < > <= >= | mpls.TTL>1
+| mpls | Payload | == != ~ !~ | mpls.Payload~foo
+
+For example, the following command will filter all traffic which contains MPLS headers and a traffic Label of 5
+
+```
+tag=pcap packet mpls.Label==5 mpls.TrafficClass mpls.Payload | grep -e Payload "HTTP" | count by TrafficClass | table TrafficClass count
+```
+
+Note: The MPLS package module will only look at the first MPLS layer, if there are multiple layers you will need to use the [packetlayer](#!search/packetlayer/packetlayer.md) module to decode the additional layers by referencing the Payload enumerated value.
+
+<!---
 ### ICS-specific protocols
 
 Gravwell includes basic protocol crackers for Modbus, Ethernet/IP, and CIP. Due to the complexity of Ethernet/IP and CIP, only basic decoding is available, but this can still help establish baselines and detect anomalies.
@@ -213,3 +235,4 @@ Gravwell includes basic protocol crackers for Modbus, Ethernet/IP, and CIP. Due 
 #| cip | Status | == != < > <= >= | cip.Status != 0
 #| cip | AdditionalStatus | | cip.AdditionalStatus
 #| cip | Data | | cip.Data
+-->
