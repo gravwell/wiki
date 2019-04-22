@@ -203,6 +203,8 @@ For example, the following command will filter all traffic which contains MPLS h
 tag=pcap packet mpls.Label==5 mpls.TrafficClass mpls.Payload | grep -e Payload "HTTP" | count by TrafficClass | table TrafficClass count
 ```
 
+Note: The MPLS package module will only look at the first MPLS layer, if there are multiple layers you will need to use the [packetlayer](#!search/packetlayer/packetlayer.md) module to decode the additional layers by referencing the Payload enumerated value.
+
 <!---
 ### ICS-specific protocols
 
