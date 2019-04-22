@@ -410,3 +410,9 @@ Applies to:		Webserver
 Default Value:	`false`
 Example:		`Disable-Search-Agent-Notifications=true`
 Description:	If set to true, this parameter prevents the web UI from displaying a notification if the search agent fails to check in. This is useful if you have disabled the search agent and do not want to see the notification.
+
+**Indexer-Storage-Notification-Threshold**
+Applies to:		Indexer
+Default Value:		`90`
+Example:		Indexer-Storage-Notification-Threshold=98
+Description:		A percentage value which determines when to warn about storage usage.  If the value is above 0, a notification will be thrown whenever a storage device that is used by the Indexer uses more than the specified storage percentage.  The value MUST be between 0 and 99.
