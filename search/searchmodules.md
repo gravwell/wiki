@@ -25,6 +25,8 @@ These can be used just like user-defined enumerated values.
 
 ## Search module documentation
 
+* [abs](abs/abs.md)
+* [alias](alias/alias.md)
 * [anko](anko/anko.md)
 * [ax](ax/ax.md)
 * [base64](base64/base64.md)
