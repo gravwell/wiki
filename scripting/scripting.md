@@ -2,6 +2,11 @@
 
 Scripting is used in two ways within Gravwell: as part of a search pipeline, and as a method to automate search launching. The scripting language ([Anko](https://github.com/mattn/anko)) is the same in both cases, with some slight differences to account for the differing use cases. This article introduces both use cases and provides a high-level overview of the Anko language.
 
+* [`anko` module documentation](anko.md)
+* [`eval` module documentation](eval.md)
+* [Search scripts documentation](scriptingsearch.md) (contains detailed descriptions of functions available for scripting with the CLI client and in scheduled searches)
+* [Scheduled searches documentation](scheduledsearch.md)
+
 ## Scripting modules
 
 Gravwell includes two modules, `anko` and `eval`, which use the [Anko scripting language](https://github.com/mattn/anko) to provide Turing-complete scriptability in the search pipeline.  The anko module enables the full feature set of anko to provide a full [Turing-Complete](https://en.wikipedia.org/wiki/Turing_completeness) language and runtime.  Eval uses the anko runtime to execute a single statement entered directly in the search query.

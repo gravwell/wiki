@@ -22,3 +22,7 @@ The Search Agent is installed by default but can be disabled if desired by runni
 systemctl stop gravwell_searchagent.service
 systemctl disable gravwell_searchagent.service
 ```
+
+## Disabling network functions in search agent scripts
+
+By default, scheduled scripts run by the search agent are allowed to use network utilities such as the http library, sftp, and ssh. Setting the option `Disable-Network-Script-Functions=true' in `/opt/gravwell/etc/searchagent.conf` will disable this.

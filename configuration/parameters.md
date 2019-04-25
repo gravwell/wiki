@@ -414,5 +414,11 @@ Description:	If set to true, this parameter prevents the web UI from displaying 
 **Indexer-Storage-Notification-Threshold**
 Applies to:		Indexer
 Default Value:		`90`
-Example:		Indexer-Storage-Notification-Threshold=98
+Example:		`Indexer-Storage-Notification-Threshold=98`
 Description:		A percentage value which determines when to warn about storage usage.  If the value is above 0, a notification will be thrown whenever a storage device that is used by the Indexer uses more than the specified storage percentage.  The value MUST be between 0 and 99.
+
+**Disable-Network-Script-Functions**
+Applies to:		Webserver
+Default Value:	`false`
+Example:		`Disable-Network-Script-Functions=true`
+Description:	By default, anko scripts in the pipeline are allowed to use network functions such as the net/http library and the ssh/sftp utilities. Setting this to 'true' will disable those functions.

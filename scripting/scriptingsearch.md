@@ -110,8 +110,130 @@ if condition == true {
 }
 ```
 
+### Other Network Functions
 
-## An example script
+A set of wrapper functions provide access to SSH and SFTP clients. See [the ssh library documentation](https://godoc.org/golang.org/x/crypto/ssh) and [the sftp library documentation](https://godoc.org/github.com/pkg/sftp) for information about the method which can be called on the structures these return.
+
+* `sftpConnectPassword(hostname, username, password, hostkey) (*sftp.Client, error)`establishes an SFTP session on the given ssh server with the specified username and password. If the hostkey parameter is non-nil, it will be used as the expected public key from the host to perform host-key verification. If the hostkey parameter is nil, host key verification will be skipped.
+* `sftpConnectKey(hostname, username, privkey, hostkey) (*sftp.Client, error)` establishes an SFTP session on the specified ssh server with the given username, using the provided private key (a string or []byte) to authenticate.
+* `sshConnectPassword(hostname, username, password, hostkey) (*ssh.Client, error)` returns an SSH client for the given hostname, authenticating via password. Note that having established a Client, you will typically want to call client.NewSession() to establish a usable session; see the go documentation or the examples below.
+* `sshConnectKey(hostname, username, privkey, hostkey) (*sftp.Client, error)` connects to the specified SSH server with the given username, using the provided private key (a string or []byte) to authenticate.
+
+Note: The hostkey parameter should be in the known_hosts/authorized_keys format, e.g. "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOcrwoHMonZ/l3OJOGrKYLky2FHKItAmAMPzZUhZEgEb86NNaqfdAj4qmiBDqM04/o7B45mcbjnkTYRuaIUwkno=". To extract the appropriate key from your ~/.ssh/known_hosts, run `ssh-keygen -H -F <hostname>`.
+
+A telnet library is also available; no direct wrappers are provided, but it can be used by importing `github.com/ziutek/telnet` in the script and calling telnet.Dial, etc. An example below demonstrates a simple use of the telnet library.
+
+#### SFTP example
+
+This script connects to an SFTP server using password authentication and no host-key checking. It logs in as the user "sshtest", prints the contents of that user's home directory, and creates a new file named "hello.txt".
+
+```
+conn, err = sftpConnectPassword("example.com:22", "sshtest", "foobar", nil)
+if err != nil {
+	println(err)
+	return
+}
+
+w = conn.Walk("/home/sshtest")
+for w.Step() {
+    if w.Err() != nil {
+        continue
+    }
+    println(w.Path())
+}
+
+f, err = conn.Create("/home/sshtest/hello.txt")
+if err != nil {
+    conn.Close()
+	println(err)
+	return
+}
+_, err = f.Write("Hello world!")
+if err != nil {
+    conn.Close()
+	println(err)
+	return
+}
+
+// check it's there
+fi, err = conn.Lstat("hello.txt")
+if err != nil {
+    conn.Close()
+	println(err)
+	return
+}
+println(fi)
+conn.Close()
+```
+
+#### SSH example
+
+This script connects to a server using public-key authentication; note that the private key block is shortened for readability here. It also does host-key verification. It then runs `/bin/ps aux` and prints the results.
+
+```
+var bytes = import("bytes")
+
+# Get this via `ssh-keygen -H  -F <hostname`
+pubkey = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOcrwoHMonZ/l3OJOGrKYLky2FHKItAmAMPzZUhZEgEb86NNaqfdAj4qmiBDqM04/o7B45mcbjnkTYRuaIUwkno="
+
+privkey = `-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAr1vpoiftxU7Jj7P0bJIvgCQLTpM0tMrPmuuwvGMba/YyUO+A
+[...]
+5iMqZFaUncYZyOFE9hhHqY1xhgwxyjgCTeaI/J/KfbsaCSvrkeBq
+-----END RSA PRIVATE KEY-----`
+
+# Log in with a private key
+conn, err = sshConnectKey("example.com:22", "sshtest", privkey, pubkey)
+if err != nil {
+	println(err)
+	return
+}
+
+session, err = conn.NewSession()
+if err != nil {
+    println("Failed to create session: ", err)
+	return err
+}
+
+// Once a Session is created, you can execute a single command on
+// the remote side using the Run method.
+var b = make(bytes.Buffer)
+session.Stdout = &b
+err = session.Run("/bin/ps aux")
+if err != nil {
+    println("Failed to run: " + err.Error())
+	return err
+}
+println(b.String())
+
+session.Close()
+```
+
+#### Telnet example
+
+This script connects to a telnet server, logs in as root with the password "testing", and then prints everything it receives, up until a prompt (`$ `).
+
+```
+var telnet = import("github.com/ziutek/telnet")
+t, err = telnet.Dial("tcp", "example.org:23")
+if err != nil {
+	println(err)
+	return
+}
+t.SetUnixWriteMode(true)
+b, err = t.ReadUntil(":")
+println(toString(b))
+t.Write("root\n")
+b, err = t.ReadUntil(":")
+println(toString(b))
+t.Write("testing\n")
+for {
+	r, err = t.ReadUntil("$ ")
+	print(toString(r))
+}
+```
+
+## An example search script
 
 This script creates a backgrounded search that finds which IPs have communicated with Cloudflare's 1.1.1.1 DNS service over the last day. If no results are found, the search is deleted, but if there are results the search will remain for later perusal by the user in the 'Manage Searches' screen of the GUI.
 
