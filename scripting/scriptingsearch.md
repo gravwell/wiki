@@ -123,6 +123,8 @@ Note: The hostkey parameter should be in the known_hosts/authorized_keys format,
 
 A telnet library is also available; no direct wrappers are provided, but it can be used by importing `github.com/ziutek/telnet` in the script and calling telnet.Dial, etc. An example below demonstrates a simple use of the telnet library.
 
+Finally, the low-level Go [net library](https://golang.org/pkg/net) is available. The listener functions are disabled, but scripts may use the IP parsing functions as well as dial functions such as Dial, DialIP, DialTCP, etc. See below for an example.
+
 #### SFTP example
 
 This script connects to an SFTP server using password authentication and no host-key checking. It logs in as the user "sshtest", prints the contents of that user's home directory, and creates a new file named "hello.txt".
@@ -231,6 +233,23 @@ for {
 	r, err = t.ReadUntil("$ ")
 	print(toString(r))
 }
+```
+
+#### Net example
+
+This script connects to localhost at TCP port 7778 and writes "foo" to the connection. You could test this against netcat by running `nc -l 7778`.
+
+```
+var net = import("net")
+
+c, err = net.Dial("tcp", "localhost:7778")
+if err != nil {
+	println(err)
+	return err
+}
+
+c.Write("foo")
+c.Close()
 ```
 
 ## An example search script
