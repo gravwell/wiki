@@ -75,3 +75,9 @@ Note: Only the GroupACL, ResourceName, and Description fields can be modified by
 ## Deleting resources
 
 To delete a resource, simply issue a DELETE request on `/api/resources/{guid}`, replacing `{guid}` with the appropriate GUID of the resource as usual.
+
+## Admin actions
+
+Admin users may occasionally need to view all resources on the system. An administrator user may obtain a global listing of all resources in the system with a GET request on `/api/resources?admin=true`.
+
+Because resource GUIDs are unique across the system, the administrator may then modify/delete/retrieve any resource without the need to specify `?admin=true`, although adding the parameter unecessarily will not cause an error.
