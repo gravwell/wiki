@@ -31,7 +31,7 @@ Attention: We **highly** recommend setting these values to secrets of your own c
 
 ## Upload license and log in
 
-Now that Gravwell is running, point a web browser at port http://localhost on the host. It should prompt for a license upload:
+Now that Gravwell is running, point a web browser at port http://localhost:8080 on the host. It should prompt for a license upload:
 
 ![](license-upload-docker.png)
 
