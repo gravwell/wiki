@@ -14,7 +14,7 @@ An invocation of the stats module consists of:
 These components are discussed below.
 
 ## Math Operations Specification
-
+ 
 An operation consists of the operation name, the "source" enumerated value contained in parentheses, and optionally a different name for the output enumerated value.
 
 The following operation names are supported:
@@ -73,6 +73,26 @@ The module will calculate a separate mean and standard deviation for *every comb
 
 Attention: When working with very large datasets on systems with limited memory, specifying too many by arguments can lead to memory exhaustion as the stats module attempts to keep millions of combinations in memory.
 
+### Using complex "By" arguments
+
+If only a single "by" argument is provided and it is applied to the last operation then stats will apply it to all the operations.  This is a shorthand method.  If you do NOT want it applied to all operations ensure that the last operation does not have the "by" argument.
+
+For example, the following will run a "mean" operation using `SrcIP DstIP DstPort` as the keys, but the stddev operation is applied without keys:
+
+```
+stats mean(Bytes) by SrcIP DstIP DstPort stddev(Bytes)
+```
+
+The stats module can perform operations with complex keying, this means that you can provide a keyset (or lack thereof) for every operation.  This is useful if you want to see multiple operation with different keys in a single table or chart.
+
+For example, here is a query that performs a sum of packet sizes by IP but also provides a baseline sum across all packets:
+
+```
+tag=pcap packet ipv4.IP ~ 10.10.10.0/24 | length | stats sum(length) by IP sum(length) as total | chart total sum by IP 
+```
+
+![complex keys](complexkey.png)
+
 ## Time Window Specification
 
 The stats module can operate in two modes: temporal or condensed.
@@ -88,3 +108,5 @@ stats mean(Bytes) stddev(Bytes) by SrcIP over 5m
 ```
 
 When sent to the chart module, the results will be calculated over a 5 minute window rather than the standard 1 second.
+
+Note: Only one time window can be specified, and the time window is applied to all operations.  The timewindow must also be the LAST argument to stats
