@@ -94,6 +94,72 @@ The gauge module returns entries as an array of structures containing the gauge'
 }
 ```
 
+## Point-to-Point module responses
+
+The point2point module returns an array of entries containing DstLocation, SrcLocation, and Magnitude fields. Optionally, the entries may also contain a 'Values' array, containing additional enumerated values specified as arguments to the renderer. The names for these enumerated values are given in the 'ValueNames' array.
+
+This query:
+
+```
+tag=pcap packet tcp.Port ipv4.SrcIP ipv4.DstIP ipv4.Length | geoip SrcIP.Location as srcloc DstIP.Location as dstloc | sum Length by srcloc dstloc | point2point -srcloc srcloc -dstloc dstloc -mag sum SrcIP DstIP
+```
+
+should produce a result like this:
+
+```
+{
+    "AdditionalEntries": true,
+    "Entries": [
+        {
+            "DstLocation": "33.381516 -108.391164",
+            "Magnitude": 420471,
+            "SrcLocation": "34.054400 -118.244000",
+            "Values": [
+                "151.11.24.133",
+                "192.168.2.60"
+            ]
+        },
+        {
+            "DstLocation": "33.381516 -108.391164",
+            "Magnitude": 373204,
+            "SrcLocation": "52.382400 5.899500",
+            "Values": [
+                "185.19.10.154",
+                "192.168.2.60"
+            ]
+        },
+        {
+            "DstLocation": "33.381516 -108.391164",
+            "Magnitude": 246593,
+            "SrcLocation": "39.048100 -76.472800",
+            "Values": [
+                "53.1.11.28",
+                "192.168.2.60"
+            ]
+        },
+[...]
+        {
+            "DstLocation": "32.769700 -122.393300",
+            "Magnitude": 8662,
+            "SrcLocation": "33.381516 -108.391164",
+            "Values": [
+                "192.168.2.60",
+                "192.33.23.124"
+            ]
+        }
+    ],
+    "EntryCount": 16,
+    "Finished": true,
+    "ID": 18,
+    "ValueNames": [
+        "SrcIP",
+        "DstIP"
+    ]
+}
+```
+
+Note that the "Values" arrays on each entry correspond to the titles in the "ValueNames" array, e.g. the first entry has a "SrcIP" of 151.11.24.133.
+
 ## Chart module responses
 
 The chart module returns entries in a field called "Entries", containing a structure which defines "Names" and "Values". The "Names" component is an array of names for the lines being plotted; in the case of this example, it contains IP addresses. The "Values" component contains a timestamp and a "Data" array; the elements in the Data array are the values corresponding to the names in the "Names" array at the given timestamp.
