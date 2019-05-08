@@ -73,6 +73,27 @@ The table module returns the entries in a field called "Entries", containing a s
 }
 ```
 
+## Gauge module responses
+
+The gauge module returns entries as an array of structures containing the gauge's name, the magnitude, and (optionally) the minumum and maximum values defined for this gauge:
+
+```
+{
+	"ID": 16,
+	"EntryCount": 1,
+	"AdditionalEntries": true,
+	"Finished": true,
+	"Entries": [
+		{
+			"Name": "mean",
+			"Magnitude": "31691.213",
+			"Min": "0",
+			"Max": "64000"
+		}
+	]
+}
+```
+
 ## Chart module responses
 
 The chart module returns entries in a field called "Entries", containing a structure which defines "Names" and "Values". The "Names" component is an array of names for the lines being plotted; in the case of this example, it contains IP addresses. The "Values" component contains a timestamp and a "Data" array; the elements in the Data array are the values corresponding to the names in the "Names" array at the given timestamp.

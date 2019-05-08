@@ -22,6 +22,7 @@ The bulk of the API is RESTful. The exception to this rule is the searching API 
 * [Auto-extractors](extractors.md)
 * [Miscellaneous APIs](misc.md)
 * [Templates and Pivots](templates.md)
+* [User Files](userfiles.md)
 * [System Management](management.md)
 
 ## Searching and Search Stats

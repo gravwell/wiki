@@ -29,9 +29,11 @@ We have set several environment variables which bear examination. They set share
 
 Attention: We **highly** recommend setting these values to secrets of your own choosing if you intend to run this long-term, ESPECIALLY if you expose it to the Internet in any way.
 
+Attention: The secret value for GRAVWELL_INGEST_AUTH must match GRAVWELL_INGEST_SECRET
+
 ## Upload license and log in
 
-Now that Gravwell is running, point a web browser at port http://localhost on the host. It should prompt for a license upload:
+Now that Gravwell is running, point a web browser at port http://localhost:8080 on the host. It should prompt for a license upload:
 
 ![](license-upload-docker.png)
 

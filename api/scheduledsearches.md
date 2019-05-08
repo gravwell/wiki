@@ -106,7 +106,9 @@ The following commands are only available to admin users.
 
 ### Listing all searches
 
-A GET on `/api/scheduledsearches/all` will return an array containing all scheduled searches on the system.
+Admin users may occasionally need to view all scheduled searches on the system. An administrator user may obtain a global listing of all scheduled searches in the system with a GET request on `/api/scheduledsearches?admin=true`.
+
+Because scheduled search IDs are unique across the system, the administrator may then modify/delete/retrieve any search without the need to specify `?admin=true`, although adding the parameter unecessarily will not cause an error.
 
 ### Fetching a specific user's searches
 
