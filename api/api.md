@@ -39,6 +39,10 @@ The system stats also use a websocket for communication. This contains all infor
 
 [System Stats Websocket](websocket-stats.md)
 
+Some other stats may be accessed via REST calls.
+
+[REST Stats API](stats-json.md)
+
 ## Test API
 
 The System contains a test API located at _/api/test_ which can be used to test if the webserver is alive and functioning.  The test API is entirely unauthenticated and always responds with a StatusOK 200 and an empty body.
