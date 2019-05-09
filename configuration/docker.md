@@ -6,6 +6,8 @@ If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, conta
 
 Once you have set up Gravwell, check out the [quickstart](#!quickstart/quickstart.md) for some starting points on *using* Gravwell.
 
+Note: Users running Docker on MacOS should be aware that the MacOS host does not have direct IP access to containers, as explained [here](https://docs.docker.com/docker-for-mac/networking/). Be prepared to forward additional ports if you need to access container network services from the host.
+
 ## Create Docker network
 
 To keep our Gravwell containers separated from any other containers you may be running, we'll create a Docker network called `gravnet`:
@@ -62,6 +64,8 @@ In our case, it was **172.19.0.2**. We can then use netcat to send in some lines
 	$ netcat 172.19.0.2 7777
 	this is a test
 	this is another test
+
+Attention: MacOS users cannot access containers directly by IP, because the containers are actually run within a Linux VM. You can either use netcat from within a Docker container (either the same container or a new one), or forward port 7777 to the host when launching the Gravwell container.
 
 We can then run a quick search over the last hour to verify that the data made it in and Gravwell is working properly:
 
