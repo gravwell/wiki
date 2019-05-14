@@ -428,3 +428,9 @@ Applies to:		Webserver
 Default Value:	`false`
 Example:		`Webserver-Enable-Frame-Embedding=true`
 Description:	By default, the webserver disallows Gravwell pages from being rendered within frames by setting the header X-Frame-Options: deny. Setting this configuration parameter to 'true' will eliminate that header, allowing the pages to be embedded within frames.
+
+**Webserver-Content-Security-Policy**
+Applies to:		Webserver
+Default Value:	``
+Example:		`Webserver-Content-Security-Policy="default-src https:"`
+Description:	This parameter allows the administrator to defined a Content-Security-Policy header which will be sent with all Gravwell pages. This is an important security option and should be set for your organization based on your deployment requirements, such as requiring https-only.
