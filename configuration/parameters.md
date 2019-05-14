@@ -422,3 +422,9 @@ Applies to:		Webserver
 Default Value:	`false`
 Example:		`Disable-Network-Script-Functions=true`
 Description:	By default, anko scripts in the pipeline are allowed to use network functions such as the net/http library and the ssh/sftp utilities. Setting this to 'true' will disable those functions.
+
+**Webserver-Enable-Frame-Embedding**
+Applies to:		Webserver
+Default Value:	`false`
+Example:		`Webserver-Enable-Frame-Embedding=true`
+Description:	By default, the webserver disallows Gravwell pages from being rendered within frames by setting the header X-Frame-Options: deny. Setting this configuration parameter to 'true' will eliminate that header, allowing the pages to be embedded within frames.
