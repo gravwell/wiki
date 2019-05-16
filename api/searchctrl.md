@@ -82,3 +82,49 @@ Deleting a search terminates the search (and kicks off any active users) and imm
 WEB DELETE /api/searchctrl/010985768:
 null
 ```
+
+## Admin APIs
+
+Admin users can get information about any search, delete any search, load any search, send any search to the background, etc. using the API endpoints documented above.
+
+### List all searches
+
+In order to get a list of all searches that exist on the system, an admin user may do a GET on `/api/searchctrl/all`. The format is identical to that returned from `/api/searchctrl`, but includes all searches on the system.
+
+```
+[
+    {
+        "AttachedClients": 0,
+        "GID": 0,
+        "ID": "486574780",
+        "State": "DORMANT",
+        "StoredData": 9355,
+        "UID": 1
+    },
+    {
+        "AttachedClients": 0,
+        "GID": 0,
+        "ID": "815623546",
+        "State": "DORMANT",
+        "StoredData": 3536,
+        "UID": 4
+    },
+    {
+        "AttachedClients": 0,
+        "GID": 0,
+        "ID": "525125903",
+        "State": "DORMANT",
+        "StoredData": 0,
+        "UID": 7
+    },
+    {
+        "AttachedClients": 0,
+        "GID": 0,
+        "ID": "274379984",
+        "State": "DORMANT",
+        "StoredData": 319,
+        "UID": 4
+    }
+]
+
+```
