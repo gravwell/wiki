@@ -6,9 +6,40 @@ Gravwell enables for processing entries as they are ingested in order to perform
 
 Gravwell accelerators are based on a filtering technique that operates best when data is relatively unique.  If a field value is extremely common, or present in almost every entry, it doesn't make much sense to include it in the accelerator specification.  Specifying and filtering on multiple fields can also improve accuracy which improves query speed.  Fields make good candidates for acceleration are fields that will be directly queried for.  Examples include process names, usernames, IP addresses, module names, or any other field that will be used in a needle-in-the-haystack type query.
 
-Most acceleration modules incur about a 1-1.5% storage overhead, but extremely low throughput wells may be much higher.  If a well typically sees about 1-10 entries per second acceleration may incur a 5-10% storage penalty, where a well with 10-15 thousand entries per second will see as little as 0.5% storage overhead.  Gravwell accelerators also allow for user specified collision rate adjustments.  If you can spare the storage a lower collision rate may increase accuracy and speed up queries while increasing storage overhead.  Reducing the accuracy reduces the storage penaly but decreases accuracy and reduces the effectiveness of the accelerator.
+Most acceleration modules incur about a 1-1.5% storage overhead when using the bloom engine, but extremely low throughput wells may be much higher.  If a well typically sees about 1-10 entries per second acceleration may incur a 5-10% storage penalty, where a well with 10-15 thousand entries per second will see as little as 0.5% storage overhead.  Gravwell accelerators also allow for user specified collision rate adjustments.  If you can spare the storage a lower collision rate may increase accuracy and speed up queries while increasing storage overhead.  Reducing the accuracy reduces the storage penaly but decreases accuracy and reduces the effectiveness of the accelerator.  The index engine will consume significantly more space depending on the number of fields extracted and the variability of the extracted data.  For example, full text indexing may cause the accelerator files to consume as much space as the stored data files.
 
 Accelerators must operate on the direct data portion of an entry (with the exception of the src accelerator which directly operates on the SRC field).
+
+## Acceleration Engines
+
+Gravwell supports two acceleration engines; the engine is the system that actually stores the extracted acceleration data.  Each engine provide different benefits depending on designed ingest rates, disk overhead, search performance, and data volumes.  The acceleration engine is entirely independent from the accelerator-name (extraction system).
+
+The default engine is the "bloom" engine.  The bloom engine uses bloom filters to provide an indication of whether or not a piece of data exists in a given block.  The bloom engine typically has very little disk overhead and works well with needle-in-haystack style queries, an example might be finding logs where a specific IP showed up.  The bloom engine performs poorly on filters where filtered entries occur regularly.  The bloom engine is a poor choice when combined with the fulltext accelerator.
+
+The "index" engine is a full indexing system designed to be fast across all query types.  The index engine typically consumes considerably more disk space than the bloom engine but is significantly faster when operating on very large data volumes or queries that may touch a significant portion of the total data.  It is not uncommon for the index engine to consume as much space as the compressed data in heavily indexed systems.
+
+### Optimizing the Index Engine
+
+The "index" uses a file-backed data structure to store and query key data, the file-backing is performed using memory maps which can be pretty abusive when the kernel is too eager to write back dirty pages.  It is highly reccomended that you tune the kernel dirty page parameters to reduce the frequency that the kernel writes back dirty pages.  This is done via the "/proc" interface and can be made permanent using the "/etc/sysctl.conf" configuration file.  The following script will set some efficient parameters and ensure they stick across reboots.
+
+```
+#!/bin/bash
+user=$(whoami)
+if [ "$user" != "root" ]; then
+	echo "must run as root"
+fi
+
+echo 70 > /proc/sys/vm/dirty_ratio
+echo 60 > /proc/sys/vm/dirty_background_ratio
+echo 2000 > /proc/sys/vm/dirty_writeback_centisecs
+echo 3000 > /proc/sys/vm/dirty_expire_centisecs
+
+echo "vm.dirty_ratio = 70" >> /etc/sysctl.conf
+echo "vm.dirty_background_ratio = 60" >> /etc/sysctl.conf
+echo "vm.dirty_writeback_centisecs = 2000" >> /etc/sysctl.conf
+echo "vm.dirty_expire_centisecs = 3000" >> /etc/sysctl.conf
+
+```
 
 ## Configuring Acceleration
 
@@ -18,8 +49,9 @@ Accelerators are configured on a per well basis.  Each well can specify an accel
 |----------|------|-------------|
 | Accelerator-Name  | Specifies the field extraction module to use at ingest | Accelerator-Name="json" |
 | Accelerator-Args  | Specifies arguments for the acceleration module, often the fields to extract | Accelerator-Args="username hostname appname" |
-| Collision-Rate | Controls the accuracy for the acceleration modules.  Must be between 0.1 and 0.000001. Defaults to 0.001. |
+| Collision-Rate | Controls the accuracy for the acceleration modules using the bloom engine.  Must be between 0.1 and 0.000001. Defaults to 0.001. |
 | Accelerate-On-Source | Specifies that the SRC field of each module should be included.  This allows combining a module like CEF with SRC. |
+| Accelerate-Engine-Override | Specifies the engine to use for indexing.  By default the bloom engine is used. |
 
 ### Supported Extraction Modules
 
@@ -30,10 +62,11 @@ Accelerators are configured on a per well basis.  Each well can specify an accel
 * [CEF](search/cef/cef.md)
 * [Regex](search/regex/regex.md)
 * [Winlog](search/winlog/winlog.md)
+* [Slice](search/slice/slice.md)
 
 ### Example Configuration
 
-Below is an example configuration which extracts the 2nd, 4th, and 5th field in a tab delimited data stream like bro.  In this example we are extracting and accelerating on the source ip, destination ip, and destination port from each bro log.
+Below is an example configuration which extracts the 2nd, 4th, and 5th field in a tab delimited data stream like bro.  In this example we are extracting and accelerating on the source ip, destination ip, and destination port from each bro log.  All entries which enter "bro" well (which is only the tag bro for this example) will pass through the extraction module during ingest.  If a piece of data does not conform to the 
 
 ```
 [Storage-Well "bro"]
