@@ -131,7 +131,7 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | tcp | Checksum | == != < > <= >= | tcp.Checksum != 0x1234 
 | tcp | Urgent | == != < > <= >= | tcp.Urgent==0b111010101010101 
 | tcp | DataOffset | == != < > <= >= | tcp.DataOffset > 96 
-| tcp | Payload | | tcp.Payload
+| tcp | Payload | ~ !~ | tcp.Payload ~ "HTTP"
 
 #### UDP
 
@@ -142,14 +142,15 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | udp | Port | == != < > <= >= | udp.Port == 53 
 | udp | Length | == != < > <= >= | udp.Length > 100 
 | udp | Checksum | == != < > <= >= | udp.Checksum != 0x1234 
-| udp | Payload | | udp.Payload
+| udp | Payload | ~ !~ | udp.Payload
 
 
 #### ICMP V4
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
-| icmpv4 | Type | == != < > <= >= | icmpv4.Type < 0x100 
+| icmpv4 | Type | == != < > <= >= | icmpv4.Type < 0x10 
+| icmpv4 | Code | == != < > <= >= | icmpv4.Code ==0x2 
 | icmpv4 | Checksum | == != < > <= >= | icmpv4.Checksum == 1024 
 | icmpv4 | ID | == != < > <= >= | icmpv4.ID == 4 
 | icmpv4 | Seq | == != < > <= >= | icmpv4.Seq > 100
@@ -159,9 +160,9 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
-| icmpv6 | Type | == != < > <= >= | icmpv6.Type < 0x100 
+| icmpv6 | Type | == != < > <= >= | icmpv6.Type < 0x10 
+| icmpv6 | Code | == != < > <= >= | icmpv6.Code != 0x2
 | icmpv6 | Checksum | == != < > <= >= | icmpv6.Checksum == 1024 
-| icmpv6 | TypeBytes | == != ~ !~ | icmpv6.TypeBytes ~ "XYZ" 
 | icmpv6 | Payload | == != ~ !~ | icmpv6.Payload
 
 #### Modbus
