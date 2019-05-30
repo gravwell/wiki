@@ -85,6 +85,14 @@ The following functions are deprecated but still available, allowing emails to b
 * `sendMail(hostname, port, username, password, from, to, subject, message) error` sends an email via SMTP. `hostname` and `port` specify the SMTP server to use; `username` and `password` are for authentication to the server. The `from` field is simply a string, while the `to` field should be a slice of strings containing email addresses. The `subject` and `message` fields are also strings which should contain the subject line and body of the email.
 * `sendMailTLS(hostname, port, username, password, from, to, subject, message, disableValidation) error` sends an email via SMTP using TLS. `hostname` and `port` specify the SMTP server to use; `username` and `password` are for authentication to the server. The `from` field is simply a string, while the `to` field should be a slice of strings containing email addresses. The `subject` and `message` fields are also strings which should contain the subject line and body of the email.  The disableValidation argument is a boolean which disables TLS certificate validation.  Setting disableValidation to true is insecure and may expose the email client to man-in-the-middle attacks.
 
+### Creating Notifications
+
+Scripts may create notifications targeted at the script owner. A notification consists of an integer ID, a string message, an optional HTTP link, and an expiration. If the expiration is in the past, or more than 24 hours in the future, Gravwell will instead set the expiration to be 12 hours.
+
+	addSelfTargetedNotification(7, "This is my notification", "https://gravwell.io", time.Now().Add(3 * time.Hour)
+
+The notification ID uniquely identifies the notification. This allows the user to update existing notifications by calling the function again with the same notification ID, but it also allows the user to add multiple simultaneous notifications by specifying different IDs.
+
 ### Creating and Ingesting Entries
 
 It is possible to ingest new entries into the indexers from within a script using the following functions:
