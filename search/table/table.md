@@ -29,6 +29,14 @@ tag=syslog grep sshd | regex "authentication error for (?P<user>\S+)" | count by
 
 ![](table-render.png)
 
+### Using the -nt option
+
+In a situation with massive quantities of data, force table into non-temporal mode so the count module will condense results instead:
+
+```
+tag=jsonlogs json source | count by source | table -nt source count
+```
+
 ### Using the -save option
 
 Use DHCP logs to build a lookup table containing IP to MAC mappings:
@@ -45,10 +53,56 @@ tag=syslog grep sshd | regex "Accepted .* for (?P<user>\S+) from (?P<ip>\S+)" | 
 
 ![](table-ipmac.png)
 
-### Using the -nt option
+### Using the -update option
 
-In a situation with massive quantities of data, force table into non-temporal mode so the count module will condense results instead:
+In this example, we build a table containing IP addresses seen on the local network, then update it with more.
+
+First, we construct a table that contains all unique private IPv4 addresses seen on the 192.168.2.0/24 network:
 
 ```
-tag=jsonlogs json source | count by source | table -nt source count
+tag=pcap packet ipv4.SrcIP ~ PRIVATE | unique SrcIP | subnet SrcIP /24 | eval subnet == toIP("192.168.2.0") | table -save test -csv SrcIP
 ```
+
+![](update1.png)
+
+Downloading the resulting resource (named 'test') shows the expected table:
+
+```
+SrcIP
+192.168.2.1
+192.168.2.52
+192.168.2.60
+192.168.2.51
+192.168.2.61
+```
+
+Next, we run another search to *add* IPs seen in the 192.168.0.0/24 subnet:
+
+```
+tag=pcap packet ipv4.SrcIP ~ PRIVATE | unique SrcIP | subnet SrcIP /24 | eval subnet == toIP("192.168.0.0") | table -update SrcIP -save test -csv SrcIP
+```
+
+![](update2.png)
+
+Although the table that is *displayed* only shows the new IP addresses, the resource now contains the results of both searches:
+
+```
+SrcIP
+192.168.0.50
+192.168.0.60
+192.168.0.1
+192.168.0.71
+192.168.0.30
+192.168.0.2
+192.168.0.73
+192.168.0.70
+192.168.0.42
+192.168.0.72
+192.168.2.1
+192.168.2.52
+192.168.2.60
+192.168.2.51
+192.168.2.61
+```
+
+We passed 'SrcIP' as the argument to -update. This is used for deduplication; any rows in the old table whose SrcIP match a row in the new table are not included in the updated resource.
