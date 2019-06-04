@@ -74,7 +74,7 @@ Adding an autoextractor is performed by issuing a POST to `/api/autoextractors` 
 
 If an error occurs when adding an auto-extractor the webserver will return a list of errors.
 
-## Upating
+## Updating
 
 Updating an autoextractor is performed by issuing a PUT request to `/api/autoextractors` with a valid definition JSON structure in the request boyd.  The structure must be valid and there must be an existing auto-extractor that is assigned to the same tag.  The tag associated with an updated auto-extractor cannot be changed via the update API.  To change the tag associated with an existing auto-extractor, the definition must be deleted then added again.  The data structure is identical to the add API.  If the definition is invalid a non-200 response with an error message in the body is returned.  If the structure is valid but an error occurs in distributing the updated definition a list of errors is returned in the body.
 
@@ -95,6 +95,22 @@ When adding a new auto-extractor, it is important that the new extractor does no
 If `TagExists` is true, it should be treated as an error if you intend to create a new extractor, and ignored if updating an existing extractor.
 
 The `FileExists` flag indicates that the proposed extraction would overwrite an existing extraction on disk; typically it will only be set when 'TagExists' is set. It should be treated as an error when creating a new extractor and ignored when updating.
+
+## Uploading Files
+
+Autoextractor definitions are stored on-disk in a TOML format. This format is human-readable and can be a convenient way to distribute extractor definitions. An example is shown below:
+
+```
+[[extraction]]
+	tag="bro-conn"
+	name="bro-conn"
+	desc="Bro conn logs"
+	module="fields"
+	args='-d "\t"'
+	params="ts, uid, orig, orig_port, resp, resp_port, proto, service, duration, orig_bytes, dest_bytes, conn_state, local_orig, local_resp, missed_bytes, history, orig_pkts, orig_ip_pkts, resp_pkts, resp_ip_bytes, tunnel_parents"
+```
+
+Rather than parsing out this file to populate a JSON structure, this type of definition can be uploaded directly to the webserver via a multipart form sent in a POST request to `/api/autoextractors/upload`. The form should contain a file field named `extraction` which holds the contents of the extractor definition. The server will respond with a 200 response if the definition is valid and was successfully installed.
 
 ## Deleting
 
