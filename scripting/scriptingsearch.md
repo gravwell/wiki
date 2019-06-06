@@ -122,6 +122,8 @@ if condition == true {
 
 A set of wrapper functions provide access to SSH and SFTP clients. See [the ssh library documentation](https://godoc.org/golang.org/x/crypto/ssh) and [the sftp library documentation](https://godoc.org/github.com/pkg/sftp) for information about the method which can be called on the structures these return.
 
+Attention: The clients returned by these functions *must* be closed via their Close() method when you're done using them. See examples below.
+
 * `sftpConnectPassword(hostname, username, password, hostkey) (*sftp.Client, error)`establishes an SFTP session on the given ssh server with the specified username and password. If the hostkey parameter is non-nil, it will be used as the expected public key from the host to perform host-key verification. If the hostkey parameter is nil, host key verification will be skipped.
 * `sftpConnectKey(hostname, username, privkey, hostkey) (*sftp.Client, error)` establishes an SFTP session on the specified ssh server with the given username, using the provided private key (a string or []byte) to authenticate.
 * `sshConnectPassword(hostname, username, password, hostkey) (*ssh.Client, error)` returns an SSH client for the given hostname, authenticating via password. Note that having established a Client, you will typically want to call client.NewSession() to establish a usable session; see the go documentation or the examples below.
@@ -217,6 +219,7 @@ if err != nil {
 println(b.String())
 
 session.Close()
+conn.Close()
 ```
 
 #### Telnet example
