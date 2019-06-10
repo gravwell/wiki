@@ -434,3 +434,9 @@ Applies to:		Webserver
 Default Value:	``
 Example:		`Webserver-Content-Security-Policy="default-src https:"`
 Description:	This parameter allows the administrator to defined a Content-Security-Policy header which will be sent with all Gravwell pages. This is an important security option and should be set for your organization based on your deployment requirements, such as requiring https-only.
+
+**Default-Language**
+Applies to:		Webserver
+Default Value:	`en-US`
+Example:		`Default-Language=en-US`
+Description:	Setting the Default-Language parameter controls what is provided on the unauthenticated API at /api/language and is used by the GUI to determine which language should be default in deployments with multiple languages. This is the fallback if the user has not chosen a language and their browser is not providing a preferred language via `window.navigator.language`.
