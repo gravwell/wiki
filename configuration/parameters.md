@@ -369,7 +369,7 @@ Default Value:	`false`
 Example:		`Docker-Secrets=true`
 Description:	The Docker-Secrets parameter tells Gravwell that it should attempt to read the ingest, control, and search agent secrets from [Docker secrets](https://docs.docker.com/engine/swarm/secrets/). It expects the secrets to be named `ingest_secret`, `control_secret`, and `search_agent_secret`, respectively, and they should be accessible from within the VM in the `/run/secrets/` directory.
 
-**HTTP-Proxy***
+**HTTP-Proxy**
 Applies to:		Webserver
 Default Value:
 Example:		`HTTP-Proxy=http://wwwproxy.example.com:8080/`
@@ -437,6 +437,6 @@ Description:	This parameter allows the administrator to defined a Content-Securi
 
 **Default-Language**
 Applies to:		Webserver
-Default Value:	`en-US`
+Default Value:		`en-US`
 Example:		`Default-Language=en-US`
-Description:	Setting the Default-Language parameter controls what is provided on the unauthenticated API at /api/language and is used by the GUI to determine which language should be default in deployments with multiple languages. This is the fallback if the user has not chosen a language and their browser is not providing a preferred language via `window.navigator.language`.
+Description:		Setting the Default-Language parameter controls what is provided on the unauthenticated API at /api/language and is used by the GUI to determine which language should be default in deployments with multiple languages. This is the fallback if the user has not chosen a language and their browser is not providing a preferred language via `window.navigator.language`.
