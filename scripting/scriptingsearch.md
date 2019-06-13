@@ -32,6 +32,7 @@ Scripted searches can use built-in functions that mostly match those available f
 * `toFloat(val) float64` converts val to a floating point number if possible. Returns 0.0 if no conversion is possible.
 * `toBool(val) bool` attempts to convert val to a boolean. Returns false if no conversion is possible. Non-zero numbers and the strings “y”, “yes”, and “true” will return true.
 * `typeOf(val) type` returns the type of val as a string, e.g. “string”, “bool”.
+* `hashItems(val...) (uint64, ok)` hashes one or more items into a uint64 using the siphash algorithm. 'ok' is true if at least one of the items could be hashed. Note that the hash function can really only hash scalars; passing slices or maps will typically not work.
 
 ### Search management
 
