@@ -17,3 +17,4 @@ Every search module has universal enumerated values for records.
 * [text](text/text.md)
 * [table](table/table.md)
 * [pointmap / heatmap](map/map.md)
+* [gauge](gauge/gauge.md)
