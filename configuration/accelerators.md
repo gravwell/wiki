@@ -339,6 +339,8 @@ Query, ingest, and storage performance characteristics will vary with each datas
 | Disk      | Samsung 960 EVO NVME |
 | Filesystem | BTRFS with zstd transparent compression |
 
+These tests were conducted using Gravwell version `3.1.5`
+
 ### Ingest Performance
 
 For ingest we will use the singleFile ingester.  The singleFile ingester is designed to ingest a single newline delimited file, deriving timestamps as it goes.  Because the ingester is deriving timestamps, it requires some CPU resources.  The singleFile ingester is available on our [github page](https://github.com/gravwell/ingesters/). The exact invocation of the singleFile ingester is:
