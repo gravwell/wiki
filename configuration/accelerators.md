@@ -1,26 +1,28 @@
 #Gravwell Accelerators
 
-Gravwell enables for processing entries as they are ingested in order to perform field extraction.  The extracted fields are then processed and placed in acceleration blocks which accompany each shard.  Using the accelerators can enable dramatic speedups in throughput with minimal storage overhead.  Accelerators are specified on a per well basis and are designed to be as unobtrusive and flexible as possible.  If data enters a well that does not match the acceleration directive, or is missing the specified fields, Gravwell processes it just like any other entry.  Acceleration will engage when it can.
+Gravwell can process entries as they are *ingested* in order to perform field extraction.  The extracted fields are then recorded in acceleration blocks which accompany each shard.  Using the accelerators can enable dramatic speedups in throughput with minimal storage overhead.  Accelerators are specified on a per-well basis and are designed to be as unobtrusive and flexible as possible.  If data enters a well that does not match the acceleration directive, or is missing the specified fields, Gravwell processes it just like any other entry.  Acceleration will engage when it can.
+
+We refer to "accelerators" and "acceleration" rather than "indexers" and "indexing" for two reasons. First, Gravwell already has a very important component called an "indexer". Second, acceleration can be done by direct indexing **or** with a bloom filter, so describing about an "index" is not necessarily accurate.
 
 ## Acceleration Basics
 
-Gravwell accelerators are based on a filtering technique that operates best when data is relatively unique.  If a field value is extremely common, or present in almost every entry, it doesn't make much sense to include it in the accelerator specification.  Specifying and filtering on multiple fields can also improve accuracy which improves query speed.  Fields make good candidates for acceleration are fields that will be directly queried for.  Examples include process names, usernames, IP addresses, module names, or any other field that will be used in a needle-in-the-haystack type query.
+Gravwell accelerators use a filtering technique that works best when data is relatively unique.  If a field value is extremely common, or present in almost every entry, it doesn't make much sense to include it in the accelerator specification.  Specifying and filtering on multiple fields can also improve accuracy, which improves query speed.  Fields which make good candidates for acceleration are fields that users will query for directly.  Examples include process names, usernames, IP addresses, module names, or any other field that will be used in a needle-in-the-haystack type query.
 
-Most acceleration modules incur about a 1-1.5% storage overhead when using the bloom engine, but extremely low throughput wells may be much higher.  If a well typically sees about 1-10 entries per second acceleration may incur a 5-10% storage penalty, where a well with 10-15 thousand entries per second will see as little as 0.5% storage overhead.  Gravwell accelerators also allow for user specified collision rate adjustments.  If you can spare the storage a lower collision rate may increase accuracy and speed up queries while increasing storage overhead.  Reducing the accuracy reduces the storage penaly but decreases accuracy and reduces the effectiveness of the accelerator.  The index engine will consume significantly more space depending on the number of fields extracted and the variability of the extracted data.  For example, full text indexing may cause the accelerator files to consume as much space as the stored data files.
+Most acceleration modules incur about a 1-1.5% storage overhead when using the bloom engine, but extremely low-throughput wells may consume more storage.  If a well typically sees about 1-10 entries per second, acceleration may incur a 5-10% storage penalty, where a well with 10-15 thousand entries per second may see as little as 0.5% storage overhead.  Gravwell accelerators also allow for user specified collision rate adjustments.  If you can spare the storage, a lower collision rate may increase accuracy and speed up queries while increasing storage overhead.  Reducing the accuracy reduces the storage penaly but decreases accuracy and reduces the effectiveness of the accelerator.  The index engine will consume significantly more space depending on the number of fields extracted and the variability of the extracted data.  For example, full text indexing may cause the accelerator files to consume as much space as the stored data files.
 
 Accelerators must operate on the direct data portion of an entry (with the exception of the src accelerator which directly operates on the SRC field).
 
 ## Acceleration Engines
 
-Gravwell supports two acceleration engines; the engine is the system that actually stores the extracted acceleration data.  Each engine provide different benefits depending on designed ingest rates, disk overhead, search performance, and data volumes.  The acceleration engine is entirely independent from the accelerator-name (extraction system).
+The engine is the system that actually stores the extracted acceleration data.  Gravwell supports two acceleration engines. Each engine provide different benefits depending on desired ingest rates, disk overhead, search performance, and data volumes.  The acceleration engine is entirely independent from the accelerator extractor itself (as specified with the Accelerator-Name configuration option).
 
-The default engine is the "bloom" engine.  The bloom engine uses bloom filters to provide an indication of whether or not a piece of data exists in a given block.  The bloom engine typically has very little disk overhead and works well with needle-in-haystack style queries, an example might be finding logs where a specific IP showed up.  The bloom engine performs poorly on filters where filtered entries occur regularly.  The bloom engine is a poor choice when combined with the fulltext accelerator.
+The default engine is the "bloom" engine.  The bloom engine uses bloom filters to indicate whether or not a piece of data exists in a given block.  The bloom engine typically has very little disk overhead and works well with needle-in-haystack style queries, for example finding logs where a specific IP showed up.  The bloom engine performs poorly on filters where filtered entries occur regularly.  The bloom engine is also a poor choice when combined with the fulltext accelerator.
 
-The "index" engine is a full indexing system designed to be fast across all query types.  The index engine typically consumes considerably more disk space than the bloom engine but is significantly faster when operating on very large data volumes or queries that may touch a significant portion of the total data.  It is not uncommon for the index engine to consume as much space as the compressed data in heavily indexed systems.
+The "index" engine is a full indexing system designed to be fast across all query types.  The index engine typically consumes considerably more disk space than the bloom engine but is significantly faster when operating on very large data volumes or queries that may touch a significant portion of the total data.  It is not uncommon for the index engine to consume as much space as the compressed data in heavily-indexed systems.
 
 ### Optimizing the Index Engine
 
-The "index" uses a file-backed data structure to store and query key data, the file-backing is performed using memory maps which can be pretty abusive when the kernel is too eager to write back dirty pages.  It is highly reccomended that you tune the kernel dirty page parameters to reduce the frequency that the kernel writes back dirty pages.  This is done via the "/proc" interface and can be made permanent using the "/etc/sysctl.conf" configuration file.  The following script will set some efficient parameters and ensure they stick across reboots.
+The "index" uses a file-backed data structure to store and query key data. The file backing is performed using memory maps, which can be pretty abusive when the kernel is too eager to write back dirty pages.  It is highly reccomended that you tune the kernel's dirty page parameters to reduce the frequency that the kernel writes back dirty pages.  This is done via the "/proc" interface and can be made permanent using the "/etc/sysctl.conf" configuration file.  The following script will set some efficient parameters and ensure they stick across reboots.
 
 ```
 #!/bin/bash
@@ -43,15 +45,15 @@ echo "vm.dirty_expire_centisecs = 3000" >> /etc/sysctl.conf
 
 ## Configuring Acceleration
 
-Accelerators are configured on a per well basis.  Each well can specify an acceleration module, fields for extraction, a collision rate, and the option to include the entry source field.  If it is commonplace to filter on specific sources (e.g. only look at syslog entries coming from a specific device) including the source field provides an effective way to boost accelerator accuracy independent of the fields being extracted.
+Accelerators are configured on a per-well basis.  Each well can specify an acceleration module, fields for extraction, a collision rate, and the option to include the entry source field.  If you commonly filter on specific sources (e.g. only look at syslog entries coming from a specific device) including the source field provides an effective way to boost accelerator accuracy independent of the fields being extracted.
 
 | Acceleration Parameter | Description | Example |
 |----------|------|-------------|
 | Accelerator-Name  | Specifies the field extraction module to use at ingest | Accelerator-Name="json" |
-| Accelerator-Args  | Specifies arguments for the acceleration module, often the fields to extract | Accelerator-Args="username hostname appname" |
-| Collision-Rate | Controls the accuracy for the acceleration modules using the bloom engine.  Must be between 0.1 and 0.000001. Defaults to 0.001. |
-| Accelerate-On-Source | Specifies that the SRC field of each module should be included.  This allows combining a module like CEF with SRC. |
-| Accelerate-Engine-Override | Specifies the engine to use for indexing.  By default the bloom engine is used. |
+| Accelerator-Args  | Specifies arguments for the acceleration module, typically the fields to extract | Accelerator-Args="username hostname appname" |
+| Collision-Rate | Controls the accuracy for the acceleration modules using the bloom engine.  Must be between 0.1 and 0.000001. Defaults to 0.001. | Collision-Rate=0.01
+| Accelerate-On-Source | Specifies that the SRC field of each module should be included.  This allows combining a module like CEF with SRC. | Accelerate-On-Source=true
+| Accelerator-Engine-Override | Specifies the engine to use for indexing.  By default the bloom engine is used. | Accelerator-Engine-Override=index
 
 ### Supported Extraction Modules
 
