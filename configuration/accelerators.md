@@ -72,7 +72,7 @@ Accelerators are configured on a per-well basis.  Each well can specify an accel
 
 ### Example Configuration
 
-Below is an example configuration which extracts the 2nd, 4th, and 5th field in a tab delimited data stream like zeek.  In this example we are extracting and accelerating on the source ip, destination ip, and destination port from each bro log.  All entries which enter "bro" well (which is only the tag bro for this example) will pass through the extraction module during ingest.  If a piece of data does not conform to the extraction, it will still be ingested and Gravwell can still search it, but it will not be put into the index.
+Below is an example configuration which extracts the 2nd, 4th, and 5th field in a tab-delimited entry, for example a line from a bro log file.  In this example we are extracting and accelerating on the source ip, destination ip, and destination port from each bro connection log.  All entries which enter the "bro" well (which contains only the tag "bro" for this example) will pass through the extraction module during ingest.  If a piece of data does not conform to the acceleration specification, it will be stored but not accelerated; it will be included in the query, but if many nonconforming entries are in the well, queries will be much slower.
 
 ```
 [Storage-Well "bro"]
@@ -86,9 +86,9 @@ Below is an example configuration which extracts the 2nd, 4th, and 5th field in 
 
 ## Acceleration Basics
 
-Each acceleration module uses the same syntax as their companion search module for basic field extraction.  Accelerators do not support renaming, filtering, or operating on enumerated values.  They are the first level filter.  Acceleration modules are transparently invoked whenever the corresponding search module operates and performs an equality filter.
+Each acceleration module uses the same syntax as their companion search module for basic field extraction.  Accelerators do not support renaming, filtering, or operating on enumerated values.  They are the first-level filter.  Acceleration modules are transparently invoked whenever the corresponding search module operates and performs an equality filter.
 
-For example, consider the following well configuration which uses the JSON accelerator.
+For example, consider the following well configuration which uses the JSON accelerator:
 
 ```
 [Storage-Well "applogs"]
@@ -104,8 +104,7 @@ If we were to issue the following query:
 tag=app json username==admin app.field1=="login event" app.field2 != "failure" | count by hostname | table hostname count
 ```
 
-The json search module will transparently invoke the acceleration framework and provide a first level filter on the username and "app.field1" extracted values.  The "app.field2" field is NOT accelerated on because it is not a direct equality filter.  Filters that exclude, or check for subsets are not eligable for acceleration.
-
+The json search module will transparently invoke the acceleration framework and provide a first-level filter on the "username" and "app.field1" extracted values.  The "app.field2" field is NOT accelerated in this query because it does not use a direct equality filter.  Filters that exclude, compare, or check for subsets are not eligible for acceleration.
 ## Fulltext
 
 The fulltext accelerator is designed to index words within text logs and is considered the most flexible acceleration option.  Many of the other search modules support invoking the fulltext accelerator when executing queries.  However, the primary search module for engaging with the fulltext accelerator is the [grep](/search/grep/grep.md) module with the `-w` flag.  Much like the unix grep utility, `grep -w` specifies that the provided filter is expected to a word, rather than a subset of bytes.  Running a search with `grep -w foo` will look for the word foo and engage the fulltext accelerator.
@@ -135,7 +134,7 @@ The following well configuraiton performs fulltext acceleration using the `index
 
 ### JSON
 
-The JSON accelerator module is specified using via the accelerator name "json" and uses the exact same syntax for picking fields as the JSON modules.  See the [JSON search module](/search/json/json.md) section for more information on field extraction.
+The JSON accelerator module is specified using the accelerator name "json" and uses the exact same syntax for picking fields as the JSON modules.  See the [JSON search module](#!search/json/json.md) section for more information on field extraction.
 
 #### Example Well Configuration
 
@@ -149,7 +148,7 @@ The JSON accelerator module is specified using via the accelerator name "json" a
 
 ### Syslog
 
-The Syslog accelerator is designed to operate on conformant RFC5424 Syslog messages.  See the [Syslog search module](/search/syslog/syslog.md) section for more information on field extraction.
+The syslog accelerator is designed to operate on conformant RFC5424 syslog messages.  See the [syslog search module](#!search/syslog/syslog.md) section for more information on field extraction.
 
 #### Example Well Configuration
 
@@ -163,7 +162,7 @@ The Syslog accelerator is designed to operate on conformant RFC5424 Syslog messa
 
 ### CEF
 
-The CEF accelerator is designed to operate on CEF log messages and is just as flexible as the search module.  See the [CEF search module](/search/cef/cef.md) section for more information on field extraction.
+The CEF accelerator is designed to operate on CEF log messages and is just as flexible as the search module.  See the [CEF search module](#!search/cef/cef.md) section for more information on field extraction.
 
 #### Example Well Configuration
 
@@ -177,9 +176,11 @@ The CEF accelerator is designed to operate on CEF log messages and is just as fl
 
 ### Fields
 
-The fields accelerator can operate on any delimited data format, whether it be CSV, TSV, or any other delimiter.  The Fields accelerator supports specifying the delimiter the same way as the search module.  See the [Fields search module](#!search/fields/fields.md) secion for more informaton on field extraction.
+The fields accelerator can operate on any delimited data format, whether it be CSV, TSV, or some other delimiter.  The fields accelerator allows you to specify the delimiter the same way as the search module.  See the [fields search module](#!search/fields/fields.md) secion for more information on field extraction.
 
 #### Example Well Configuration
+
+This configuration extracts four fields from a comma-separated entry. Note the use of the `-d` flag to specify the delimiter.
 
 ```
 [Storage-Well "security"]
@@ -191,7 +192,7 @@ The fields accelerator can operate on any delimited data format, whether it be C
 
 ### CSV
 
-The CSV accelerator is designed to operate on comma seperated value data, automatically removing surrounding whitespace and double quotes from data.  See the [CSV search module](#!search/csv/csv.md) secion for more informaton on column extraction.
+The CSV accelerator is designed to operate on comma-separated value data, automatically removing surrounding whitespace and double quotes from data.  See the [CSV search module](#!search/csv/csv.md) section for more informaton on column extraction.
 
 #### Example Well Configuration
 
@@ -205,7 +206,7 @@ The CSV accelerator is designed to operate on comma seperated value data, automa
 
 ### Regex
 
-The regex accelerator allows for specifying complicated extractions at ingest time in order to handle non-standard data formats.  Regular expressions are one of the slower extraction formats, so accelerating on specific fields can greatly increase query performance.
+The regex accelerator allows complicated extractions at ingest time in order to handle non-standard data formats.  Regular expressions are one of the slower extraction formats, so accelerating on specific fields can greatly increase query performance.
 
 #### Example Well Configuration
 
@@ -221,7 +222,7 @@ Attention: Remember to escape backslashes '\\' when specifying regular expressio
 
 ### Winlog
 
-The winlog module is one of if not the slowest extraction module.  The complexity of XML data combined with the Windows log schema means that the extraction module has to be extremely verbose, resulting in pretty poor extraction performance.  As a result, accelerating windows data may be the single most important performance optimization, as processing millions or billions of entries with the winlog module will be excruciatingly slow.  The accelerators help you narrow down the specific log entries you want without invoking the winlog module on every piece of data.  However, the slow extraction rate means that ingest of windows logs will be impacted, so don't expect Gravwell's typical ingest rate of hundreds of thousands of entries per second when ingesting into a winlog accelerated well.
+The winlog module is perhaps *the* slowest search module.  The complexity of XML data combined with the Windows log schema means that the module has to be extremely verbose, resulting in pretty poor performance.  This means that accelerating Windows log data may be your single most important performance optimization, as processing millions or billions of unaccelerated entries with the winlog module will be excruciatingly slow.  The accelerators help you narrow down the specific log entries you want without invoking the winlog search module on every piece of data.  However, accelerating winlog data simply shifts processing from search time to ingest time, meaning that ingest of Windows logs will be slower when acceleration is enabled, so don't expect Gravwell's typical ingest rate of hundreds of thousands of entries per second when ingesting into a winlog-accelerated well.
 
 #### Example Well Configuration
 
@@ -254,7 +255,7 @@ This example configuration uses the `bloom` engine and is accelerating on the so
 
 ### SRC
 
-The SRC accelerator can be used when only the SRC field should be accelerated.  However, its essentially possible to combine the SRC accelerator with other accelerators by enabling the "Accelerate-On-Source" flag and also adding a the src search module.  See the [SRC search module](#!search/src/src.md) for more information on filtering.
+The src accelerator can be used when only the entry's source field should be accelerated.  However, it is essentially possible to combine the src accelerator with other accelerators by enabling the "Accelerate-On-Source" flag and using src search module in your queries.  See the [src search module](#!search/src/src.md) for more information on filtering.
 
 #### Example Well Configuration
 
@@ -276,7 +277,7 @@ The SRC accelerator can be used when only the SRC field should be accelerated.  
 	Accelerate-On-Source=true
 ```
 
-The following query invokes both the fields accelerator and the SRC accelerator to specify specific log types coming from specific sources.
+The following query invokes both the fields accelerator and the src accelerator to specify specific log types coming from specific sources.
 
 ```
 tag=app src dead::beef | fields -d "," [1]=="security" [2]="process" [5]="domain" [3] as processname | count by processname | table processname count
