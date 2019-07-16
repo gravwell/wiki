@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 )
 
@@ -16,5 +17,5 @@ func noCacheLoggingHandler(h http.Handler) http.Handler {
 
 func main() {
 	http.Handle("/", noCacheLoggingHandler(http.FileServer(http.Dir("."))))
-	http.ListenAndServe(":3001", nil)
+	log.Fatal(http.ListenAndServe(":3001", nil))
 }
