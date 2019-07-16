@@ -426,7 +426,7 @@ if err != nil {
         return err
 }
 # Build the request
-req, err = http.NewRequest("POST", "http://example.org:3002/", body)
+req, err = http.NewRequest("POST", "http://example.org:3002/", rhandle)
 if err != nil {
         return err
 }

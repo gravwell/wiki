@@ -261,9 +261,9 @@ Max-Files-Watched=64
         Ignore-Timestamps=true
 ```
 
-## HTTP POST
+## HTTP
 
-The HTTP POST ingester sets up HTTP listeners on one or more paths. If an HTTP POST request is sent to one of those paths, the request's Body will be ingested as a single entry.
+The HTTP ingester sets up HTTP listeners on one or more paths. If an HTTP request is sent to one of those paths, the request's Body will be ingested as a single entry.
 
 This is an extremely convenient method for scriptable data ingest, since the `curl` command makes it easy to do a POST request using standard input as the body.
 
@@ -282,6 +282,18 @@ root@gravserver ~ # bash gravwell_http_ingester_installer_3.0.0.sh
 ```
 
 If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately. However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, the installer will prompt for the authentication token and the IP address of the Gravwell indexer. You can set these values during installation or leave them blank and modify the configuration file in `/opt/gravwell/etc/gravwell_http_ingester.conf` manually.
+
+#### Configuring HTTPS
+
+By default the HTTP Ingester runs a cleartext HTTP server, but it can be configured to run an HTTPS server using x509 TLS certificates.  To configure the HTTP Ingester as an HTTPS server provide a certificate and key PEM files in the Global configuration space using the `TLS-Certificate-File` and `TLS-Key-File` parameters.
+
+An example global configuration with HTTPS enabled might look like the following:
+
+```
+[Global]
+	TLS-Certificate-File=/opt/gravwell/etc/cert.pem
+	TLS-Key-File=/opt/gravwell/etc/key.pem
+```
 
 ### Example Configuration
 
@@ -312,6 +324,89 @@ If you have an API key for OpenWeatherMap.org, you can set up a cron job to auto
 
 ```
 curl "http://api.openweathermap.org/data/2.5/weather?q=Spokane&APPID=YOUR_APP_ID" | curl http://10.0.0.1:8088/weather -X POST -d @-
+```
+
+#### Listener Authentication
+
+Each HTTP Ingester listener can be configured to enforce authentication.  The supported authentication methods are:
+
+* none
+* basic
+* jwt
+
+When specifying an authentication system other than none, a username and password must also be provided.
+
+The default authentication method is none, allowing anyone that can reach the ingester to push entries.  The `basic` authentication mechanism uses HTTP Basic authentication, where a username and password is base64 encoded and sent with every request.
+
+Here is an example listener using the basic authentication system:
+
+```
+[Listener "basicauth"]
+	URL="/basic/data"
+	Tag-Name=stuff
+	AuthType=basic
+	Username=secretuser
+	Password=secretpassword
+```
+
+An example curl command to send an entry with basic authentication might look like:
+
+```
+curl -d "only i can say hi" --user secretuser:secretpassword -X POST http://10.0.0.1:8080/basic/data
+```
+
+The JWT authentication system uses a cryptographically signed token for authentication.  When using jwt authentication you must specify an Login URL where clients will authenticate and recieve a token which must then be sent with each request.  The jwt tokens expire after 48 hours.
+
+Authenticating with the HTTP ingester using a jwt authentication is a two step process and requires an additional configuration parameter.  Here is an example configuration:
+
+```
+[Listener "jwtauth"]
+	URL="/jwt/data"
+	LoginURL="/jwt/login"
+	Tag-Name=stuff
+	AuthType=basic
+	Username=secretuser
+	Password=secretpassword
+```
+
+Sending entries requires that endpoints first authenticate to obtain a token, the token can then be reused for up to 48 hours.  If a request receives a 401 response, clients should re-authenticate.  Here is an example using curl to authenticate and then push data.
+
+```
+x=$(curl -X POST -d "username=user1&password=pass1" http://127.0.0.1:8080/jwt/login) #grab the token and stuff it into a variable
+curl -X POST -H "Authorization: Bearer $x" -d "this is a test 2 using basic auth" http://127.0.0.1:8080/jwt #send the request with the token
+```
+Warning: Like any other webpage, authentication is NOT SECURE over cleartext connections.
+
+#### Listener Methods
+
+The HTTP Ingester can be configured to use virtually any method, but data is always expected to be in the body of the request.
+
+For example, here is a Listener configuration that expects the PUT method:
+
+```
+[Listener "test"]
+	URL="/data"
+	Method=PUT
+	Tag-Name=stuff
+```
+
+The corresponding curl command would be:
+
+```
+curl -X PUT -d "this is a test 2 using basic auth" http://127.0.0.1:8080/data
+```
+
+The HTTP Ingester can go out of spec on methods, accepting almost any ASCII string that does not contain special characters.
+
+```
+[Listener "test"]
+	URL="/data"
+	Method=SUPER_SECRET_METHOD
+	Tag-Name=stuff
+```
+
+```
+curl -X SUPER_SECRET_METHOD -d "this is a test 2 using basic auth" http://127.0.0.1:8080/data
 ```
 
 ## Mass File Ingester
