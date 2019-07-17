@@ -399,6 +399,34 @@ echo 3 > /proc/sys/vm/drop_caches
 
 Note: The regex search module/autoextractor is not fully compatible with the fulltext accelerator, so we have to modify the queries slightly to engage the accelerators.  They are ```grep -w "106.218.21.57"``` and ```grep -w list | ax url=="/list" method | count by method | chart count by method```
 
+#### Fulltext
+
+The above benchmarks make it very apparent that the fulltext accelerator has significant ingest and storage penalties and the example queries don't appear to justify those expenses.  If your dat is entirely token based such as tab delimited, csv, or json and every token is entirely descreet (single words, numbers, IPs, values, etc...) the fulltext accelerator doesn't make much sense.  However, if your data has complex components the fulltext accelerator can do things the other accelerators cannot.  We have been using Apache combined access logs, lets look at a query that allows the fulltext accelerator to really shine.
+
+We are going to look at subcomponents of the URL and get a chart of users that are browsing our the `/apps` subdirectory using a PowerPC Macintosh computer.  The regular expressions in the above examples index on full fields within the Apache log.  They cannot drill down and use parts of those fields for acceleration, fulltext can.
+
+We will optimized the query for both the fulltext indexer and the others so that we can be fair, however both queries will work on either of the datasets.
+
+The fulltext accelerator optimized query:
+```
+grep -s -w apps Macintosh PPC | ax url~"/apps" useragent~"Macintosh; U; PPC" | count | chart count
+```
+
+The query optimized for non-fulltext:
+```
+ax url~"/apps" useragent~"Macintosh; U; PPC" | count | chart count
+```
+
+The results show why fulltext may often be worth the storage and ingest penalty:
+
+|  Well      | Query Time | Speedup |
+|------------|------------|---------|
+| raw        | 71.7s      | 0X      |
+| regexbloom | 72.6s      | ~0X     |
+| regexindex | 72.6       | ~0X     |
+| fulltext   | 5.73s      | 12.49X  |
+
+
 #### Query AX modules
 
 The AX definition file for all four tags is below, see the [AX]() documentation for more information:
