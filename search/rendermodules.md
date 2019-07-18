@@ -10,10 +10,18 @@ Every search module has universal enumerated values for records.
 
 ## Renderer Module list
 
-* [chart](chart/chart.md)
-* [fdg](fdg/fdg.md)
-* [raw](raw/raw.md)
-* [stackgraph](stackgraph/stackgraph.md)
-* [text](text/text.md)
-* [table](table/table.md)
-* [pointmap / heatmap](map/map.md)
+### Charts, Graphs, and Gauges
+* [chart](chart/chart.md) - Render data as line graphs, bar graphs, etc.
+* [fdg](fdg/fdg.md) - Force-directed graphs.
+* [stackgraph](stackgraph/stackgraph.md) - Stack graphs.
+* [gauge](gauge/gauge.md) - Gauges and numeric cards.
+
+### Tables and Text
+* [table](table/table.md) - Display tables of enumerated values.
+* [text](text/text.md) - Output the body of entries with minimal formatting.
+* [raw](raw/raw.md) - Output data completely unformatted.
+* [pcap](pcap/pcap.md) - Show an overview of the contents of network packets.
+
+### Maps
+* [pointmap / heatmap](map/map.md) - Display heatmaps or individual points on a map.
+* [point2point](point2point/point2point.md) - Display data entries which have both a source and a destination.
