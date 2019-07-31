@@ -33,13 +33,13 @@ Scheduled searches are managed from the 'Scheduled Searches' page. The following
 
 ![](sched1.png)
 
-### Creating a Scheduled Search
+## Creating a Scheduled Search
 
 To create a new scheduled search, click the 'Add' button in the upper-right corner of the Scheduled Searches page. A new page will open:
 
 ![](newsched.png)
 
-The drop-down allows you to switch between running a search query and running a scheduled script; in this case, we will leave it alone. You must provide a search query, specify a timeframe over which it should run, give it a name and description, and define the schedule. You may also optionally chose one or more groups whose members may see the results of this scheduled search.
+You must provide a search query, specify a timeframe over which it should run, give it a name and description, and define the schedule. You may also optionally chose one or more groups whose members may see the results of this scheduled search.
 
 Note: Gravwell uses the cron schedule format to specify when a search should run. If you're not familiar with cron, check out [the Wikipedia article](https://en.wikipedia.org/wiki/Cron) and try [this site to experiment with scheduling](https://cron.help/)
 
@@ -53,7 +53,13 @@ After clicking Save, the search now shows up in the scheduled search listing and
 
 ![](lastrun.png)
 
-### Viewing Search Results
+## Creating a Scheduled Script
+
+To schedule a script instead of a search query, click the 'Add' button as normal, but change the drop-down in the upper right from 'Search query' to 'Anko script':
+
+![](newscript.png)
+
+## Viewing Search Results
 
 To see the last results of a scheduled search, click the 'View Results' icon:
 
@@ -63,7 +69,7 @@ The most recent set of results for the scheduled search will load:
 
 ![](results2.png)
 
-### Disabling a Scheduled Search
+## Disabling a Scheduled Search
 
 Disabling a scheduled search will prevent it from running again until it is re-enabled. To disable a search, open the three-dot menu to view additional options and select Disable:
 
@@ -71,8 +77,15 @@ Disabling a scheduled search will prevent it from running again until it is re-e
 
 To re-enable, repeat the process; rather than "Disable", the menu will say "Enable".
 
-### Scheduling a Search Immediately
+## Scheduling a Search Immediately
 
 You can force a scheduled search to run immediately at any time. Open the three-dot menu for that search and select "Scheduled immediately". The search agent will run the query as soon as possible.
 
 ![](immediate.png)
+
+
+## Deleting a Scheduled Search
+
+To delete a scheduled search, select the "Delete" option:
+
+![](delete.png)
