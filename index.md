@@ -10,59 +10,84 @@ If you're just starting out with Gravwell, we recommend reading the [Quickstart]
 
 Gravwell is pleased to announce our free [Community Edition](https://www.gravwell.io/download)!
 
-[Quickstart](quickstart/quickstart.md)
+## Quickstart and Downloads
+
+  * [Quickstart](quickstart/quickstart.md)
 
   * [Downloads](quickstart/downloads.md)
 
-[Searching with Gravwell](search/search.md)
+## Searching with Gravwell
+
+  * [Search overview](search/search.md)
 
   * [Search modules](search/searchmodules.md)
 
   * [Render modules](search/rendermodules.md)
 
-[Gravwell System Architecture](architecture/architecture.md)
+## System Architecture
 
-[Setting Up Ingesters](ingesters/ingesters.md)
+  * [Gravwell System Architecture](architecture/architecture.md)
+
+  * [The Resource System](resources/resources.md)
+
+## Ingester Configuration: Getting Data Into Gravwell
+
+  * [Setting Up Ingesters](ingesters/ingesters.md)
+
+    * [The File Follower Ingester](ingesters/file_follow.md)
+
+    * [The Simple Relay Ingester](ingesters/simple_relay.md)
 
   * [Service Integrations](ingesters/integrations.md)
 
-[Installing and Configuring Gravwell](configuration/configuration.md)
+## Advanced Gravwell Installation and Configuration
+
+  * [Installing and Configuring Gravwell](configuration/configuration.md)
 
   * [Docker Deployment](configuration/docker.md)
 
   * [Setting up TLS/HTTPS](configuration/certificates.md)
-  
-  * [Setting up Extractors](configuration/autoextractors.md)
-  
-  * [Data Ageout](configuration/ageout.md)
- 
-  * [Data Archive](configuration/archive.md)
 
-  * [Data Replication](configuration/replication.md)
-
-  * [Query Acceleration](configuration/accelerators.md)
-
-[//]: # (* [Data Auto-extraction](configuration/autoextractors.md))
   * [Distributed Frontends](distributed/frontend.md)
 
   * [Environment Variables](configuration/environment-variables.md)
 
   * [Detailed configuration parameters](configuration/parameters.md)
 
-[The Resource System](resources/resources.md)
+## Query Acceleration, Auto-Extraction, and Data Management
+  
+  * [Setting up Auto-extractors](configuration/autoextractors.md)
+  
+  * [Query Acceleration (indexing and bloom filters)](configuration/accelerators.md)
 
-[Orchestration](scripting/scriptingsearch.md)
+  * [Data Replication](configuration/replication.md)
+
+  * [Data Ageout](configuration/ageout.md)
+
+  * [Data Archiving](configuration/archive.md)
+
+## Orchestration
+
+  * [Scheduled Searches](scripting/scheduledsearch.md)
 
   * [Scripting](scripting/scripting.md)
 
-[GUI User Preferences](configuration/gui.md)
+    * [Scheduled Scripts](scripting/scriptingsearch.md)
 
-[Using the Command-Line Client](cli/cli.md)
+## User Interfaces
 
-[API](api/api.md)
+  * [GUI User Preferences](configuration/gui.md)
 
-[Licensing](license/license.md)
+  * [Using the Command-Line Client](cli/cli.md)
 
-[Changelogs](changelog/list.md)
+## API
+
+  * [API](api/api.md)
+
+## Misc
+
+  * [Licensing](license/license.md)
+
+  * [Changelogs](changelog/list.md)
 
 Documentation version 2.0
