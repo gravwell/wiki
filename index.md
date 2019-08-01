@@ -28,6 +28,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Gravwell System Architecture](architecture/architecture.md)
 
+    * [Network Ports Used by Gravwell](configuration/networking.md)
+
   * [The Resource System](resources/resources.md)
 
 ## Ingester Configuration: Getting Data Into Gravwell
