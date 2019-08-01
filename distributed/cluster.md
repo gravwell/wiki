@@ -24,7 +24,7 @@ There are several things to keep in mind while planning your cluster:
 
 The last point is tricky, because the number of indexers required to store a given amount of data depends heavily on the hardware available (how much RAM per node, NVME vs SSD vs spinning disk, etc.) and how much querying you intend to do. We recommend contacting [Gravwell support](mailto:support@gravwell.io) for help in planning your cluster.
 
-Before beginning, it is useful to know the specific IP addresses or hostnames which will be used for the webserver and the indexers.
+Before beginning, it is useful to know the specific IP addresses or hostnames which will be used for the webserver and the indexers. Also, review the ports in [this document](#!configuration/networking.md) to ensure that your network is configured to allow necessary connections between Gravwell components; in brief, you'll want to make sure the webserver can reach port 9404 on the indexers, that users can reach port 80 and 443 on the webserver, and that your ingesters will be able to reach ports 4023 and 4024 on the indexers.
 
 **Do I need multiple webservers?** Most likely, no. Multiple webservers make your cluster more complex. In general, we recommend setting up a single webserver, then adding more if the load is too high in use. 
 
