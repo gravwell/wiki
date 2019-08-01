@@ -48,6 +48,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Setting up TLS/HTTPS](configuration/certificates.md)
 
+  * [Building a Gravwell Cluster](distributed/cluster.md)
+
   * [Distributed Frontends](distributed/frontend.md)
 
   * [Environment Variables](configuration/environment-variables.md)
