@@ -40,7 +40,10 @@ All elements of the IPFIX header can be used for filtering, as can some of the m
 
 ### IPFIX Data Record Items
 
-There are many possible fields which can be populated in any given IPFIX flow record; [IANA defines hundreds](https://www.iana.org/assignments/ipfix/ipfix.xhtml#ipfix-information-elements). We have implemented filtering for some of the most common:
+There are many possible fields which can be populated in any given IPFIX flow record; [IANA defines hundreds](https://www.iana.org/assignments/ipfix/ipfix.xhtml#ipfix-information-elements). We have implemented filtering for some of the most common.
+
+Attention: Because IPFIX is template-based, any given data record may or may not contain the fields described below. If you attempt to extract e.g. "sourceIPv4PrefixLength" but get empty results, it is possible that your IPFIX records do not contain that field.
+
 
 | Field |       Description        | Supported Operators | Example |
 |-------|--------------------------|---------------------|---------|
