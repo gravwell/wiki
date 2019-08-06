@@ -68,6 +68,8 @@ Accelerators are configured on a per-well basis.  Each well can specify an accel
 * [Regex](#!search/regex/regex.md)
 * [Winlog](#!search/winlog/winlog.md)
 * [Slice](#!search/slice/slice.md)
+* [Netflow](#!search/netflow/netflow.md)
+* [IPFIX](#!search/ipfix/ipfix.md)
 * Fulltext
 
 ### Example Configuration
@@ -111,7 +113,7 @@ The fulltext accelerator is designed to index words within text logs and is cons
 
 While the fulltext accelerator may be the most flexible, it is also the most costly.  Using the fulltext accelerator can significantly reduce the ingest performance of Gravwell and can consume significant storage space, this is due to the fact that the fulltext accelerator is indexing on virtually every component of every entry.
 
-#### Fulltext Arguments
+### Fulltext Arguments
 
 The fulltext accelerator supports a few options which allow for refining the types of data that is indexed and removing fields that incur significant storage overhead but may not help much at query time.
 
@@ -121,7 +123,7 @@ The fulltext accelerator supports a few options which allow for refining the typ
 | -min | Require that extracted tokens be at least X bytes.  This can help prevent indexing on very small words that will never be searched on | `-min 3` | DISABLED |
 | -ignoreUUID | Enable a filter that allows the fulltext indexer to ignore UUID values.  Some logs will generate a unique UUID for every entry which incurs significant overhead and provides very little value. | `ignoreUUID ` | DISABLED |
 
-#### Example Well Configuration
+### Example Well Configuration
 
 The following well configuraiton performs fulltext acceleration using the `index` engine.  We are attempting to identify and ignore timestamps, UUIDs, and require that all tokens be at least 2 bytes in length.
 
@@ -132,11 +134,11 @@ The following well configuraiton performs fulltext acceleration using the `index
 	Accelerator-Args="-ignoreTS -ignoreUUID -min 2"
 ```
 
-### JSON
+## JSON
 
 The JSON accelerator module is specified using the accelerator name "json" and uses the exact same syntax for picking fields as the JSON modules.  See the [JSON search module](#!search/json/json.md) section for more information on field extraction.
 
-#### Example Well Configuration
+### Example Well Configuration
 
 ```
 [Storage-Well "applogs"]
@@ -146,11 +148,11 @@ The JSON accelerator module is specified using the accelerator name "json" and u
 	Accelerator-Args="username hostname \"strange-field.with.specials\".subfield"
 ```
 
-### Syslog
+## Syslog
 
 The syslog accelerator is designed to operate on conformant RFC5424 syslog messages.  See the [syslog search module](#!search/syslog/syslog.md) section for more information on field extraction.
 
-#### Example Well Configuration
+### Example Well Configuration
 
 ```
 [Storage-Well "syslog"]
@@ -160,11 +162,11 @@ The syslog accelerator is designed to operate on conformant RFC5424 syslog messa
 	Accelerator-Args="Hostname Appname MsgID valueA valueB"
 ```
 
-### CEF
+## CEF
 
 The CEF accelerator is designed to operate on CEF log messages and is just as flexible as the search module.  See the [CEF search module](#!search/cef/cef.md) section for more information on field extraction.
 
-#### Example Well Configuration
+### Example Well Configuration
 
 ```
 [Storage-Well "ceflogs"]
@@ -174,11 +176,11 @@ The CEF accelerator is designed to operate on CEF log messages and is just as fl
 	Accelerator-Args="DeviceVendor DeviceProduct Version Ext.Version"
 ```
 
-### Fields
+## Fields
 
 The fields accelerator can operate on any delimited data format, whether it be CSV, TSV, or some other delimiter.  The fields accelerator allows you to specify the delimiter the same way as the search module.  See the [fields search module](#!search/fields/fields.md) secion for more information on field extraction.
 
-#### Example Well Configuration
+### Example Well Configuration
 
 This configuration extracts four fields from a comma-separated entry. Note the use of the `-d` flag to specify the delimiter.
 
@@ -190,11 +192,11 @@ This configuration extracts four fields from a comma-separated entry. Note the u
 	Accelerator-Args="-d \",\" [1] [2] [5] [3]"
 ```
 
-### CSV
+## CSV
 
 The CSV accelerator is designed to operate on comma-separated value data, automatically removing surrounding whitespace and double quotes from data.  See the [CSV search module](#!search/csv/csv.md) section for more informaton on column extraction.
 
-#### Example Well Configuration
+### Example Well Configuration
 
 ```
 [Storage-Well "security"]
@@ -204,11 +206,11 @@ The CSV accelerator is designed to operate on comma-separated value data, automa
 	Accelerator-Args="[1] [2] [5] [3]"
 ```
 
-### Regex
+## Regex
 
 The regex accelerator allows complicated extractions at ingest time in order to handle non-standard data formats.  Regular expressions are one of the slower extraction formats, so accelerating on specific fields can greatly increase query performance.
 
-#### Example Well Configuration
+### Example Well Configuration
 
 ```
 [Storage-Well "webapp"]
@@ -220,11 +222,11 @@ The regex accelerator allows complicated extractions at ingest time in order to 
 
 Attention: Remember to escape backslashes '\\' when specifying regular expressions in the gravwell.conf file.  The regex argument '\\w' will become '\\\\w'
 
-### Winlog
+## Winlog
 
 The winlog module is perhaps *the* slowest search module.  The complexity of XML data combined with the Windows log schema means that the module has to be extremely verbose, resulting in pretty poor performance.  This means that accelerating Windows log data may be your single most important performance optimization, as processing millions or billions of unaccelerated entries with the winlog module will be excruciatingly slow.  The accelerators help you narrow down the specific log entries you want without invoking the winlog search module on every piece of data.  However, accelerating winlog data simply shifts processing from search time to ingest time, meaning that ingest of Windows logs will be slower when acceleration is enabled, so don't expect Gravwell's typical ingest rate of hundreds of thousands of entries per second when ingesting into a winlog-accelerated well.
 
-#### Example Well Configuration
+### Example Well Configuration
 
 ```
 [Storage-Well "windows"]
@@ -236,11 +238,11 @@ The winlog module is perhaps *the* slowest search module.  The complexity of XML
 
 Attention: The winlog accelerator is permissive ('-or' flag is implied).  So specify any field you plan on using to filter searches on, even if two of the fields would not be present in the same entry.
 
-### Netflow
+## Netflow
 
 The [netflow](#!search/netflow/netflow.md) module allows for accelerating on netflow V5 fields and speeding up queries on large amounts of netflow data.  While the netflow module is very fast and the data is extremely compact, it can still be beneficial to engage acceleration if you have very large netflow data volumes.  The netflow module can use any of the direct netflow fields, but cannot use the pivot helper fields.  This means that you must specify `Src` or `Dst` and not `IP`.  The `IP` and `Port` fields cannot be specified in the acceleration arguments.
 
-#### Exampel Well Configuration
+### Example Well Configuration
 
 This example configuration uses the `bloom` engine and is accelerating on the source and destination IP/Port pairs as well as the protocol.
 
@@ -253,11 +255,28 @@ This example configuration uses the `bloom` engine and is accelerating on the so
 	Accelerator-Engine-Override="bloom"
 ```
 
-### SRC
+## IPFIX
+
+The [ipfix](#!search/ipfix/ipfix.md) module can accelerate queries on IPFIX-formatted records. This module can accelerate on any of the 'normal' IPFIX fields, but not pivot helper fields. This means you must specify `sourceTransportPort` or `destinationTransportPort` rather than `port`, or `src`/`dst` rather than `ip`.
+
+### Example Well Configuration
+
+This example configuration uses the `index` engine to accelerate on source/destination ip/port pairs as well as the IP protocol of the flow, comparable to the example shown in the netflow section.
+
+```
+[Storage-Well "ipfix"]
+	Location=/opt/gravwell/storage/ipfix
+	Tags=ipfix
+	Accelerator-Name="ipfix"
+	Accelerator-Args="src dst sourceTransportPort destinationTransportPort protocolIdentifier"
+	Accelerator-Engine-Override=index
+```
+
+## SRC
 
 The src accelerator can be used when only the entry's source field should be accelerated.  However, it is essentially possible to combine the src accelerator with other accelerators by enabling the "Accelerate-On-Source" flag and using src search module in your queries.  See the [src search module](#!search/src/src.md) for more information on filtering.
 
-#### Example Well Configuration
+### Example Well Configuration
 
 ```
 [Storage-Well "applogs"]
@@ -266,7 +285,7 @@ The src accelerator can be used when only the entry's source field should be acc
 	Accelerator-Name="src"
 ```
 
-#### Example Well Configuration and Query Combining SRC
+### Example Well Configuration and Query Combining SRC
 
 ```
 [Storage-Well "applogs"]
