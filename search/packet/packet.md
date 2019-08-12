@@ -36,6 +36,7 @@ The packet processor supports a growing list of submodules which allow for break
 | icmpv4 | ICMP packets |
 | dot1q | VLAN tagged frames |
 | dot11 | 802.11 Wireless packets |
+| dot11info | 802.11 information elements |
 | modbus | modbus/TCP packets |
 
 ### Packet Processing Submodules
@@ -82,6 +83,12 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | dot11 | ToDS | == ! | dot11.ToDS == true
 | dot11 | FromDS | == ! | dot11.FromDS != false
 | dot11 | Payload | | dot11.Payload
+
+#### 802.11 Information Elements
+
+| Packet Type | Field | Operators | Example
+|-----|-------|-----------|---------
+| dot11info | SSID | == != | dot11.SSID != xfinitywifi
 
 #### IPv4
 
