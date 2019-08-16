@@ -76,18 +76,6 @@ WEB PATCH /api/searchctrl/10985768/save:
 null
 ```
 
-## Retrieving search metadata
-
-Saved searches optionally contain metadata in the form of a JSON object.  The metadata can be retrieved regardless of the state of a search via a `GET` request to the metadata path of the search.  The metadata will be returned in the body of the request.
-
-```
-WEB GET /api/searchctrl/10985768/metadata:
-{
-   "foo": 42,
-   "bar": "important information"
-}
-```
-
 ## Deleting/terminating a search
 
 Deleting a search terminates the search (and kicks off any active users) and immediately removes any storage associated with the search results.  A search may be deleted while in any state.  To delete a search peroform a DELETE request to /api/searchctrl/:ID with the correct ID.  The server will return 200 on success, 5XX on error, and 403 if the user is not authorized to modify the search.
