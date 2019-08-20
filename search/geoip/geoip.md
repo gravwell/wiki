@@ -4,9 +4,11 @@ The geoip module uses [MaxMind](https://maxmind.com/) GeoIP databases to extract
 
 ### Setting Up Databases
 
-Before using the geoip module, you must install [resources](#!resources/resources.md) containing the MaxMind databases. You can either [download the free, limited databases](https://dev.maxmind.com/geoip/geoip2/geolite2/) or purchase their enterprise versions. We recommend installing both the City and ASN databases. On the website, select the MaxMind DB versions as shown below and unpack the resulting tar files to find the requisite files (GeoLite2-City.mmdb and GeoLite2-ASN.mmdb)
+Before using the geoip module, you must install [resources](#!resources/resources.md) containing the MaxMind databases. You can either [download the free, limited databases](https://dev.maxmind.com/geoip/geoip2/geolite2/) or purchase their enterprise versions. We recommend installing both the City and ASN databases. On the website, select the MaxMind DB versions as shown below and unpack the resulting tar files to find the requisite files (GeoLite2-City.mmdb and GeoLite2-ASN.mmdb).
 
-![](download.png)
+Note: Make sure you download the binary version and extract the .mmdb file from tar.gz file.  Gravwell uses the native MaxmindDB format to ensure great throughput.
+
+[![Maxmind Download](download.png "Example download options")](https://dev.maxmind.com/geoip/geoip2/geolite2/)
 
 By default, the geoip module expects the MaxMind "city" database (GeoLite2-City.mmdb) to be in a resource named "maxmind". This will allow you to do GeoIP extractions without specifying the resource name explicitly.
 
