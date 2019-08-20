@@ -21,7 +21,7 @@ The Gravwell installer supports several flags to make automated installation or 
 | `--no-crash-report` | Do not install the automated debug report component
 | `--use-config` | Use a specific config file
 
-### Common use-case examples of advanced installation requirements
+### Common use-cases for advanced installation requirements
 
 If you are deploying Gravwell to a cluster with multiple indexers, you would not want to install the webserver component on your indexer nodes.
 
@@ -29,13 +29,13 @@ If you are using an automated deployment tool you don’t want the installer sto
 
 If you already have your list of indexers with ingest and control shared secrets, specifying a configuration file at install time can greatly speed up the process.
 
-An example argument list for installing the indexer component without installing the webserver or randomizing passwords is:
+For example, to install the indexer component without installing the webserver or randomizing passwords, run:
 
 ```
-root@gravserver# bash gravwell_8675309_0.2.sh --no-questions --no-random-passwords --no-webserver
+root@gravserver# bash gravwell_installer.sh --no-questions --no-random-passwords --no-webserver
 ```
 
-If you choose to randomize passwords, you will need to go back through your indexers and webserver and ensure the Control-Auth parameter in the gravwell.conf file matches for the webserver and each indexer.
+If you choose to randomize passwords, you will need to go back through your indexers and webserver and ensure the `Control-Auth` parameter in the `gravwell.conf` file matches for the webserver and each indexer. You'll also want to set the same `Ingest-Auth` value on all the indexers.
 
 ## General Configuration
 
@@ -51,9 +51,9 @@ Attention: In clustered Gravwell installations, it is essential that all nodes a
 
 ## Webserver Configuration
 
-The webserver acts as the focusing point for all searches, and provides an interactive interface into Gravwell.  While the webserver does not require significant storage, it can benefit from small pools of very fast storage so that even when a search hands back large amounts of data, users can fluidly navigate their results.  The webserver also participates in the search pipeline and often performs some of the filtering, metadata extraction, and rendering of data.  When speccing a webserver, we recommend a reasonably sized solid state disk (NVME if possible), a memory pool of 16GB of RAM or more, and at least 4 physical cores.  Gravwell is built to be extremely concurrent, so more CPU cores and additional memory will only increase its performance.  An Intel E5 or AMD Epic chip with 32GB of memory or more is a good choice, and more is always better.
+The webserver acts as the focusing point for all searches, and provides an interactive interface into Gravwell.  While the webserver does not require significant storage, it can benefit from small pools of very fast storage so that even when a search hands back large amounts of data, users can fluidly navigate their results.  The webserver also participates in the search pipeline and often performs some of the filtering, metadata extraction, and rendering of data.  When speccing a webserver, we recommend a reasonably sized solid state disk (NVME if possible), a memory pool of 16GB of RAM or more, and at least 4 physical cores.  Gravwell is built to be extremely concurrent, so more CPU cores and additional memory will only increase its performance.  An Intel E5 or AMD Epyc chip with 32GB of memory or more is a good choice, and more is always better.
 
-Two configuration options inform the webserver which indexers it should use for searching. The `Remote-Indexers` option specifies the IPs of the indexers, and the `Control-Auth` option gives a shared key used by the webserver to authenticate to the indexers. A webserver connecting to three indexers might contain the following in its `gravwell.conf`:
+Two configuration options tell the webserver how to communicate with indexers. The `Remote-Indexers` option specifies the IPs or hostnames of the indexers, and the `Control-Auth` option gives a shared key used by the webserver to authenticate to the indexers. A webserver connecting to three indexers might contain the following in its `gravwell.conf`:
 
 ```
 Control-Auth=MySuperSecureControlToken
@@ -63,6 +63,10 @@ Remote-Indexers=net:10.0.1.3:9404
 ```
 
 Note: The indexers listed above are listening for control connections on port 9404, the default. This port is set by the `Control-Port` option in the indexer's gravwell.conf file.
+
+### Webserver TLS
+
+By default, Gravwell does not generate TLS certificates. For instructions on setting up properly-signed TLS certificates or self-signed certificates on the webserver, refer to the [TLS/HTTP instructions](certificates.md). 
 
 ### Webserver Configuration Pitfalls
 
@@ -77,7 +81,7 @@ Note: The indexers listed above are listening for control connections on port 94
 
 ## Indexer Configuration
 
-Indexers are the storage centers of Gravwell and are responsible for storing, retrieving, and processing data.  Indexers perform the first heavy lifting when executing a query, first finding the data then pushing it into the search pipeline.  The search pipeline will distribute as much of a query as is possible to ensure that the indexers can do as much work in parallel as possible.  Indexers benefit from high speed low latency storage and as much RAM as possible.  Gravwell can take advantage of file system caches, which means that as you are running multiple queries over the same data it won’t even have to go to the disks.  We have seen Gravwell operate at over 5GB/s per node on well-cached data.  The more memory, the more data can be cached.  When searching over large pools that exceed the memory capacity of even the largest machines, high speed RAID arrays can help increase throughput.
+Indexers are the storage centers of Gravwell and are responsible for storing, retrieving, and processing data.  Indexers perform the first heavy lifting when executing a query, first finding the data then pushing it into the search pipeline.  The search pipeline will perform as much work as possible in parallel on the indexers for efficiency.  Indexers benefit from high-speed low-latency storage and as much RAM as possible.  Gravwell can take advantage of file system caches, which means that as you are running multiple queries over the same data it won’t even have to go to the disks.  We have seen Gravwell operate at over 5GB/s per node on well-cached data.  The more memory, the more data can be cached.  When searching over large pools that exceed the memory capacity of even the largest machines, high speed RAID arrays can help increase throughput.
 
 We recommend indexers have at least 32GB of memory with 8 CPU cores.  If possible, Gravwell also recommends a very high speed NVME solid state disk that can act as a hot well, holding just a few days of of the most recent data and aging out to the slower spinning disk pools.  The hot well enables very fast access to the most recent data, while enabling Gravwell to organize and consolidate older data so that he can be searched as efficiently as possible.
 

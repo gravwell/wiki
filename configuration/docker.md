@@ -33,6 +33,22 @@ Attention: We **highly** recommend setting these values to secrets of your own c
 
 Attention: The secret value for GRAVWELL_INGEST_AUTH must match GRAVWELL_INGEST_SECRET
 
+### Configuring Persistent Storage
+
+The default Gravwell docker deployment uses the base container for all storage, this means that if you delete the container all data is lost.  Docker provides several options for configuring persistent storage that is independent from the underlying container, including binds and volumes.  When deploying gravwell in a production environment you will want to maintain a few directories in persistent storage depending on the component.  See the [Docker Volumes](https://docs.docker.com/storage/volumes/) documentation for additional information on persistent storage.
+
+#### Indexer Persistent Storage
+
+The Gravwell indexer keeps two critical sets of data, the stored data shards and the `tags.dat` file.  Almost every other component of an indexer can be recovered without data loss, but under normal operation several directories should be bound to persistent storage.  Important data exists in the `storage`, `extractions`, `resources`, `log`, and `etc` directories.  Each of the directories can be mounted to individual volumes or configured in the `gravwell.conf` file to point to a single persitent storage directory.  An example `gravwell.conf` designed for docker deployment with persistent storage within docker might modify the storage paths for each of the data directories to point to alternate paths within `/opt/gravwell/persistent` rather than just `/opt/gravwell`.  Complete documentation on all `gravwell.conf` configuration parameters can be found on the [Detailed Configuration](parameters.md) page.
+
+#### Webserver Persistent Storage
+
+The Gravwell webserver holds a few directories that should be maintained in order to not lose any configuration data or search results.  The `etc`, `extractions`, `resources`, and `saved` directories contain critical that should be maintained across container deployments.  The `saved` directory contains saved search results that users have chosen to keep.  The `etc` directory contains the user database, webstore, and `tags.dat` files; all of which are critical to proper operation of Gravwell.
+
+#### Ingester Persistent Storage
+
+Gravwell ingesters are designed to relay data and typically don't need persistent storage, the one exception is the cache system.  The Gravwell ingest API contains an integrated cache system so that if uplinks to indexers fail, ingesters can locally cache data in a persistent store so that data is never lost.  Most ingesters do not deploy the cache by default, but a common cache storage location is `/opt/gravwell/cache`.  Binding the `cache`directory to persistent storage ensures that ingesters can maintain state and not lose data across container restarts and/or updates.
+
 ## Upload license and log in
 
 Now that Gravwell is running, point a web browser at port http://localhost:8080 on the host. It should prompt for a license upload:

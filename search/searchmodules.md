@@ -75,4 +75,5 @@ These can be used just like user-defined enumerated values.
 * [upper](upperlower/upperlower.md)
 * [variance](math/math.md#Variance)
 * [winlog](winlog/winlog.md)
+* [words](words/words.md)
 * [xml](xml/xml.md)

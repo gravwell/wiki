@@ -20,6 +20,16 @@ Selecting 'Number card' in the chart type dropdown will change the display to th
 
 ![](gauge3.png)
 
+## Specifying a Label
+
+The default label is not always ideal, especially when creating a gauge for use in a dashboard. If you would like a more informative label, wrap the magnitude enumerated value and the desired label in parentheses as below:
+
+```
+tag=json json class | mean class | gauge (mean "Avg Class")
+```
+
+![](gauge-label.png)
+
 ## Specifying Max and Min Limits
 
 You can specify minimum and maximum values for the gauge by wrapping the magnitude enumerated value and the desired min/max values in parentheses:
@@ -43,6 +53,16 @@ Or use a mix of constants and enumerated values:
 ```
 tag=json json class | stats mean(class) max(class) | gauge (mean 1 max)
 ```
+
+## Combining Min/Max with Labels
+
+You can, of course, specify a gauge with both min/max values *and* a label:
+
+```
+tag=json json class | mean class | gauge (mean 0 100000 "Avg Class")
+```
+
+![](gauge-label2.png)
 
 ## Multiple Gauges
 

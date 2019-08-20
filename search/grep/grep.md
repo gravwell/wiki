@@ -53,7 +53,7 @@ tag=reddit json Subreddit | grep -v -e Subreddit "Ask*" "foo"
 Grab only user agents that contain Mozilla and Windows
 
 ```
-tag=apache grep -s Mozilla Apache
+tag=apache grep -s Mozilla Windows
 ```
 
 ### Working With Word Matches

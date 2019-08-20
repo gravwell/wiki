@@ -40,7 +40,10 @@ All elements of the IPFIX header can be used for filtering, as can some of the m
 
 ### IPFIX Data Record Items
 
-There are many possible fields which can be populated in any given IPFIX flow record; [IANA defines hundreds](https://www.iana.org/assignments/ipfix/ipfix.xhtml#ipfix-information-elements). We have implemented filtering for some of the most common:
+There are many possible fields which can be populated in any given IPFIX flow record; [IANA defines hundreds](https://www.iana.org/assignments/ipfix/ipfix.xhtml#ipfix-information-elements). We have implemented filtering for some of the most common.
+
+Attention: Because IPFIX is template-based, any given data record may or may not contain the fields described below. If you attempt to extract e.g. "sourceIPv4PrefixLength" but get empty results, it is possible that your IPFIX records do not contain that field.
+
 
 | Field |       Description        | Supported Operators | Example |
 |-------|--------------------------|---------------------|---------|
@@ -64,6 +67,16 @@ There are many possible fields which can be populated in any given IPFIX flow re
 
 Note: While the names we use are not as short / friendly as those used in the netflow or packet parsers, they match exactly [the names assigned by the specification](https://www.iana.org/assignments/ipfix/ipfix.xhtml#ipfix-information-elements).
 
+The module also provides a handful of "shortcuts" for convenience:
+
+| Field |       Description        | Supported Operators | Example |
+|-------|--------------------------|---------------------|---------|
+| src | The source address for this flow (IPv4 or IPv6) | ~ !~ == != | src == ::1
+| dst | The destination address for this flow (IPv4 or IPv6) | ~ !~ == != | dst !~ PRIVATE
+| ip | Extract the first IP that matches a filter.  If no filter is specified the Src is used | ~ !~ == != | ip ~ 10.0.0.0/24
+| port | Extract the first port that matches the filter.  If no filter is specified the source port is used | > < <= >= == != | port == 80
+| vlan | Extracts the first VLAN that matches a filter, where the VLAN may be drawn from either the vlanId or dot1qVlanId field. | > < <= >= == != | vlan == 100
+
 Beside the fields specified above, you can also extract (but not filter on) any other official IPFIX information element name as specified [here](https://www.iana.org/assignments/ipfix/ipfix.xhtml#ipfix-information-elements). You can also specify non-standard fields by giving an enterprise ID and field ID separated by a colon, e.g. "0x1ad7:0x15". We recommend extracting this to a more convenient name: `ipfix 0x1ad7:0x15 as foo`.
 
 ## Examples
@@ -75,3 +88,9 @@ tag=ipfix ipfix destinationIPv4Address as Dst destinationTransportPort==443 | co
 ```
 
 ![Number of flows by ip](flowcount.png)
+
+### Find out which IPs are using port 80
+
+```
+tag=ipfix ipfix port==80 ip ~ PRIVATE | unique ip | table ip
+```

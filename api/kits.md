@@ -19,7 +19,7 @@ A given kit will also have the following attributes, specified at build time:
 
 ## Building a kit
 
-Kits are built by sending a POST request to `/api/kit/build` containing a KitBuildRequest structure, as defined below:
+Kits are built by sending a POST request to `/api/kits/build` containing a KitBuildRequest structure, as defined below:
 
 ```
 type KitBuildRequest struct {
@@ -74,15 +74,15 @@ The system will respond with a structure describing the newly-built kit:
 }
 ```
 
-This kit can be downloaded by doing a GET on `/api/kit/build/<uuid>`; given the above response, one would fetch the kit from `/api/kit/build/2f5e485a-2739-475b-810d-de4f80ae5f52`
+This kit can be downloaded by doing a GET on `/api/kits/build/<uuid>`; given the above response, one would fetch the kit from `/api/kits/build/2f5e485a-2739-475b-810d-de4f80ae5f52`
 
 ## Uploading a Kit
 
-Before a kit can be installed, it must first be uploaded to the webserver. Kits are uploaded by a POST request to `/api/kit`. The request should contain a multipart form. To upload a file from the local system, add a file field to the form named `file` containing the kit file. To upload a file from a remote system such as an HTTP server, add a field named `remote` containing the URL of the kit.
+Before a kit can be installed, it must first be uploaded to the webserver. Kits are uploaded by a POST request to `/api/kits`. The request should contain a multipart form. To upload a file from the local system, add a file field to the form named `file` containing the kit file. To upload a file from a remote system such as an HTTP server, add a field named `remote` containing the URL of the kit.
 
 ## Listing Kits
 
-A GET request on `/api/kit` will return a list of all known kits. Here is an example showing the result when the system has one kit uploaded but not yet installed:
+A GET request on `/api/kits` will return a list of all known kits. Here is an example showing the result when the system has one kit uploaded but not yet installed:
 
 ```
 [
@@ -144,8 +144,8 @@ A GET request on `/api/kit` will return a list of all known kits. Here is an exa
 
 ## Installing a Kit
 
-To install a kit once it has been uploaded, send a PUT request to `/api/kit/<uui>`, where the UUID is the UUID field from the list of kits. The server will return a 200 status code upon successful installation.
+To install a kit once it has been uploaded, send a PUT request to `/api/kits/<uuid>`, where the UUID is the UUID field from the list of kits. The server will return a 200 status code upon successful installation.
 
 ## Uninstalling a kit
 
-To remove a kit, issue a DELETE request on `/api/kit/<uuid>`.
+To remove a kit, issue a DELETE request on `/api/kits/<uuid>`.

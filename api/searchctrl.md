@@ -69,8 +69,10 @@ null
 
 Saving a search is used to inform the webserver that we wish to keep the results of this search.  A backgrounded search will stay resident (even if no one is connected to it) as long as the webserver doesn't need the disk space (or it isn't explicitly deleted).  Saving moves the results to the saved location, and the results will not be deleted unless someone (with the proper authority) explicitly requests it.  To Save a search perform a PATCH on the url /api/searchctrl/:ID/save correct ID.   The Search can be in in any state, but will only begin transferring to the persistent storage once it hits the dormant state.  The transfer to persistent storage is either instantaneous (if the persistent storage is on the same drive) or requires a full copy.  This is done in the background in its own goroutine, so nothing is blocked while it happens.
 
+An optional set of metadata can be attached to a saved search, the metadata must be a valid JSON structure.  This metadata can be used to attach notes, info, or pretty much anything that can be encoded as a JSON blob.  Metadata should be encoded into the body of the `PATCH` request to save the search.
+
 ```
-WEB PATCH /api/searchctrl/010985768/save:
+WEB PATCH /api/searchctrl/10985768/save:
 null
 ```
 

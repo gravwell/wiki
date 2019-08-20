@@ -108,7 +108,7 @@ We will demonstrate a few auto-extraction definitions and compare and contrast q
 
 ### CSV
 
-CSV or "Comma Separated Values" can be a relatively efficient text transport and storage system.  However, CSV data is not self-describing, meaning that if all we have is a bunch fo CSV data it can be difficult to tell what columns actually are.  Auto-extractors can be used to predefine column names and make it dramatically easier to work with CSV data.
+CSV or "Comma Separated Values" can be a relatively efficient text transport and storage system.  However, CSV data is not self-describing, meaning that if all we have is a bunch of CSV data it can be difficult to tell what columns actually are.  Auto-extractors can be used to predefine column names and make it dramatically easier to work with CSV data.
 
 Here is an example data entry that is encoded using CSV:
 
@@ -140,6 +140,8 @@ That same query becomes:
 ```
 tag=csvdata ax | table
 ```
+
+If you are not interested in extracting a particular field, you can simply leave the name blank. For example, if we have no need to extract the GUID in the example above, we could change the params field to `params="ts, name, id,, src, srcport, dst, dstport, data, country, city, hash"`.
 
 Note: The CSV auto-extraction processor does not support any arguments
 
