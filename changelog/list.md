@@ -1,5 +1,6 @@
 # Changelogs for recent version updates
 
+* [3.2.1](3.2.1.md)
 * [3.2.0](3.2.0.md)
 * [3.1.5](3.1.5.md)
 * [3.1.4](3.1.4.md)
