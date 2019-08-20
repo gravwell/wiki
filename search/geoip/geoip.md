@@ -1,5 +1,21 @@
 ## Geoip
 
+The geoip module uses [MaxMind](https://maxmind.com/) GeoIP databases to extract location information about IP addresses. It can extract approximate latitude/longitude as well as city, country, and continent names. It can also extract ASN numbers and the ASN organization associated with the IP.
+
+### Setting Up Databases
+
+Before using the geoip module, you must install [resources](#!resources/resources.md) containing the MaxMind databases. You can either [download the free, limited databases](https://dev.maxmind.com/geoip/geoip2/geolite2/) or purchase their enterprise versions. We recommend installing both the City and ASN databases. On the website, select the MaxMind DB versions as shown below and unpack the resulting tar files to find the requisite files (GeoLite2-City.mmdb and GeoLite2-ASN.mmdb)
+
+![](download.png)
+
+By default, the geoip module expects the MaxMind "city" database (GeoLite2-City.mmdb) to be in a resource named "maxmind". This will allow you to do GeoIP extractions without specifying the resource name explicitly.
+
+![](maxmind.png)
+
+While there is no default name for the ASN database, we recommend naming it something simple like "asn" to reduce typing:
+
+![](asn.png)
+
 ### Supported Options
 
 * `-r <arg>`: The “-r” option specifies the resource name or UUID which contains a Maxmind geoip database.  If no "-r" is specified the geoip module uses the default "maxmind" resource name.
@@ -22,20 +38,27 @@ The geoip extractors support direct operators that allow for very fast filtering
 
 ### Data Item Extractors
 
+The following extractions are possible with the standard MaxMind GeoIP database:
+
 | Extractor | Operators | Description | Example 
 |-----------|-----------|-------------|----------
-| ISP | == != | ISP which owns the IP | SrcIP.ISP != Comcast
+| ISP | == != | ISP which owns the IP (only available with MaxMind enterprise database) | SrcIP.ISP != Comcast
 | Country | == != | Country code for the IP | DstIP.Country == "US"
 | CountryName | == != | Country name for the IP | SrcIP.CountryName != "United States"
 | City |  == != | City name for the IP | DstIP.City
 | Continent |  == != | Continent code for the IP | SrcIP.Continent == NA
 | ContinentName |  == != | Continent name for the IP | DstIP.ContinentName != "North America"
 | TZ |  == != | Timezone for the IP | SrcIP.TZ != "MST"
-| ASNOrg |  == != | Autonomous system number organization owner for IP | DstIP.ASNOrg != Google
-| ASN |  > < <= >= == != | Autonomous system number | DstIP.ASN >= 1024
 | Location |  | Latitude and Longitude location for IP | SrcIP.Location
 | Lat | > < <= >= == != | Latitude for IP | DstIP.Lat < 22.5432
 | Long |  > < <= >= == != | Longitude for IP | DstIP.Long > -15.1234
+
+The following require the separate ASN database (specified with the -r flag):
+
+| Extractor | Operators | Description | Example 
+|-----------|-----------|-------------|----------
+| ASNOrg |  == != | Autonomous system number organization owner for IP | DstIP.ASNOrg != Google
+| ASN |  > < <= >= == != | Autonomous system number | DstIP.ASN >= 1024
 
 ### Examples
 
@@ -60,3 +83,11 @@ tag=pcap packet ipv4.SrcIP ~ 10.10.10.0/24 ipv4.DstIP !~ 10.0.0.0/8 ipv4.Length 
 ```
 tag=pcap packet ipv4.SrcIP ipv4.DstIP | geoip DstIP.City as dest SrcIP.City as src | fdg -b src dst
 ```
+
+#### Extracting ASN Org
+
+```
+tag=pcap packet ipv4.SrcIP !~ PRIVATE | geoip -r asn SrcIP.ASNOrg | table
+```
+
+![](asnorg.png)
