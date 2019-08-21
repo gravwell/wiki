@@ -140,24 +140,6 @@ Cold pools contain the same directive requirement, meaning that Gravwell will no
 
 Time-based ageout relies on the system clock to determine when data should be aged out, meaning that an improper system clock could cause data to be aged out prematurely.  Administrators must ensure that system clocks are well maintained and if NTP is in use, it is a trusted source.  If an attacker can gain control over the system clock of a Gravwell indexer for reasonable periods of time, they can cause ageouts.  Time is the anchor in Gravwell and it must be protected with the same vigor as the storage pools.
 
-### Compression
-
-The cold storage locations are compressed by default, which helps shift some load from storage to CPU.  Gravwell is a highly asynchronous system built for modern hardware in a scale wide paradigm.  Modern systems are typically overprovisioned on CPU with mass storage lagging behind.  By employing compression in the cold pool Gravwell can reduce stress on storage links while employing excess CPU cycles to asynchronously decompress data.  The result is that searches can be faster when employing compression on slower mass storage devices.
-
-A notable exception is data that will not compress much (if at all). In this situation, attempting to compress the data burns CPU time with no actual improvement in storage space or speed. Raw network traffic is a good example where encryption and high entropy prevent effective compression.  To disable compression in a cold storage pool, add the "Disable-Compression=true" directive.
-
-An example storage well with compression disabled and the hot pool constrained by total storage:
-
-```
-[Storage-Well "network"]
-	Location=/mnt/xpoint/gravwell/network
-	Cold-Location=/mnt/storage/gravwell_cold/network
-	Tags=pcap
-	Max-Hot-Data-GB=100
-	Max-Cold-Data-GB=1000
-	Delete-Frozen-Data=true
-	Disable-Compression=true
-```
 
 ### Ageout Rule Interactions
 

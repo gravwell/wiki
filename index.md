@@ -68,6 +68,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Data Ageout](configuration/ageout.md)
 
+  * [Data Compression](configuration/compression.md)
+
   * [Data Archiving](configuration/archive.md)
 
 ## Orchestration
