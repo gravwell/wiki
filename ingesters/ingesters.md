@@ -12,6 +12,40 @@ The Gravwell GUI has an Ingesters page (under the System menu category) which ca
 
 Attention: The [replication system](#!configuration/replication.md) does not replicate entries larger than 999MB. Larger entries can still be ingested and searched as usual, but they are omitted from replication. This is not a concern for 99.9% of use cases, as all the ingesters detailed in this page tend to create entries no larger than a few kilobytes.
 
+## Tags
+
+Tags are an essential Gravwell concept. Every entry has a single tag associated with it; these tags allow us to separate and categorize data at a basic level. For example, we may chose to apply the "syslog" tag to entries read from a Linux system's log files, apply "winlog" to Windows logs, and "pcap" to raw network packets. The ingesters determine which tags are applied to the entries.
+
+From the user's point of view, tags are strings such as "syslog", "pcap-router", or "default". The following characters are not allowed in tag names:
+
+```
+!@#$%^&*()=+<>,.:;"'{}[]|\
+```
+
+You should also refrain from using nonprinting or difficult-to-type characters when selecting tag names, as this will make querying a challenge for users. Although you *could* ingest into a tag named ☺, that doesn't mean it's a good idea!
+
+### Tag Wildcards
+
+When chosing tag names, keep in mind that Gravwell allows wildcards when specifying tag names to query. By selecting your tag names carefully, you can make later querying easier.
+
+For instance, if you are collecting system logs from five servers, of which two are HTTP servers, two are file servers, and one is an email server, you may chose to use the following tags:
+
+* syslog-http-server1
+* syslog-http-server2
+* syslog-file-server1
+* syslog-file-server2
+* syslog-email-server1
+
+This will allow your [queries](#!search/search.md) greater flexibility in selecting logs. You can search over all system logs by specifying `tag=syslog-*`. You can search over all HTTP server logs by specifying `tag=syslog-http-*`, or you can select a single server by saying `tag=syslog-http-server1`. You can also select multiple wildcard groups, e.g. `tag=syslog-http-*,syslog-email-*`.
+
+### Tag Internals
+
+Reading this section is not necessary to use Gravwell, but it may help to understand how tags are managed internally.
+
+Internally, Gravwell *indexers* store tags as 16-bit integers. Each indexer maintains its own mapping of tag names to tag numbers, which can be found in `/opt/gravwell/etc/tags.dat`. Never modify or delete this file unless explicitly instructed by Gravwell support!
+
+When an *ingester* connects to an indexer, it sends a list of tag names it intends to use. The indexer then responds with the mapping of tag name to tag numbers. Whenever the ingester sends an entry to that indexer, it will add the appropriate *tag number* to the entry.
+
 ## Global Configuration Parameters
 
 Most of the core ingesters support a common set of global configuration parameters.  The shared Global configuration parameters are implemented using the [ingest config](https://godoc.org/github.com/gravwell/ingest/config#IngestConfig) package.  Global configuration parameters should be specified in the Global section of each Gravwell ingester config file.  The following Global ingester paramters are available:
