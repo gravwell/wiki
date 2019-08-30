@@ -39,6 +39,7 @@ These can be used just like user-defined enumerated values.
 * [fields](fields/fields.md)
 * [geoip](geoip/geoip.md)
 * [grep](grep/grep.md)
+* [grok](grok/grok.md)
 * [hexlify](hexlify/hexlify.md)
 * [ip](ip/ip.md)
 * [ipexist](ipexist/ipexist.md)
