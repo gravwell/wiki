@@ -42,7 +42,7 @@ Note: We filter for PUT and the IP using the words module to engage indexing and
 
 ## Performance
 
-Grok can dramatically simplify complicated regular expressions and allow mere mortals to crack apart large log fragments.  However, a grok pattern designed to extract and validate every field in a log is going to be complex and slow.  If you don't need every field, consider using fragments and primatives.  A smaller grok pattern that only extracts a few items can be dramatically faster than a complete pattern that extracts everything.
+Grok can dramatically simplify complicated regular expressions and allow mere mortals to crack apart large log fragments.  However, a grok pattern designed to extract and validate every field in a log is going to be complex and slow.  If you don't need every field, consider using fragments and primitives.  A smaller grok pattern that only extracts a few items can be dramatically faster than a complete pattern that extracts everything.
 
 For example, let's look at two queries that compile response code counts for each HTTP method and display them in a stackgraph, the first query uses grok with the `COMBINEDAPACHELOG` pattern allows for a very simple query:
 
@@ -50,7 +50,7 @@ For example, let's look at two queries that compile response code counts for eac
 tag=apache grok "%{COMBINEDAPACHELOG}" | stats count by verb response | stackgraph verb response count
 ```
 
-The second query uses grok primatives to extract only the fields that are explicitely needed:
+The second query uses grok primitives to extract only the fields that are explicitely needed:
 
 ```
 tag=apache grok "] \"%{WORD:verb}\s\S+\s\S+\s%{POSINT:response}" | stats count by verb response | stackgraph verb response count
@@ -60,7 +60,7 @@ Both queries produce identical results:
 
 ![](apachestackgraph.png)
 
-However, to process 10M apache access logs the first query took `2m 39s`.  The second query took only `3.46s`, that is over a 45X speedup.  So while the simpler query looks great, it can be worth your time to work with primative patterns when working on large data sets.
+However, to process 10M Apache access logs the first query took `2m 39s`.  The second query took only `3.46s`, that is over a 45X speedup.  So while the simpler query looks great, it can be worth your time to work with primative patterns when working on large data sets.
 
 ## Pre-defined Patterns
 
