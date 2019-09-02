@@ -17,6 +17,7 @@ Because regular expressions can get very long, the regex module takes the `-r` f
 * `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record. For example, a pipeline that showed packets not headed for port 80 but that have HTTP text would be `tag=pcap packet ipv4.DstPort!=80 tcp.Payload | regex -e Payload ".*GET \/ HTTP\/1.1.*"`
 * `-r <arg>`: The “-r” option specifies that the regular expression statement is located in a resource file. 
 * `-v`: The "-v" option tells regex to operate in inverse mode, dropping any entries which match the regex and passing entries which do not match.
+* `-p`: The "-p" option tells regex to allow entries through if the regular expression does not match at all.  The permissive flag does not change the operation of filters.
 
 Note: Storing especially large regular expressions in resource files can clean up queries, and allows for easy reuse.  If `-r` is specified, do not specify a regular expression in the query -- instead the contents of the resource will be used. Handy!
 

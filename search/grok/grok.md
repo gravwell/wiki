@@ -13,6 +13,7 @@ Note: Because some filters incorporate extremely strict and complext patterns, t
 * `-e <arg>`: Operate on the specified enumerated value instead of the entire record.
 * `-r <resource>`: load custom grok patterns from the resource with the specified name, rather than the default `grok` resource.
 * `-v`: Operate in inverse mode; entries which do *not* match the pattern will be passed, and entries which *do* match will be dropped. You cannot specify any filters when using this flag.
+* `-p`: The "-p" option tells grok to allow entries through if the expression does not match at all.  The permissive flag does not change the operation of filters.
 
 ### Parse Apache Logs
 
@@ -60,7 +61,7 @@ Both queries produce identical results:
 
 ![](apachestackgraph.png)
 
-However, to process 10M Apache access logs the first query took `2m 39s`.  The second query took only `3.46s`, that is over a 45X speedup.  So while the simpler query looks great, it can be worth your time to work with primative patterns when working on large data sets.
+However, to process 10M Apache access logs the first query took `2m 39s`.  The second query took only `3.46s`, that is over a 45X speedup.  So while the simpler query looks great, it can be worth your time to work with primitive patterns when working on large data sets.
 
 ## Pre-defined Patterns
 
