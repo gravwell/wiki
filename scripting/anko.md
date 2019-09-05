@@ -4,6 +4,10 @@ As introduced in [the search modules documentation](#!search/searchmodules.md#An
 
 See the generic description of the scripting languaged used in [the Anko scripting language documentation](scripting.md) for more details about the language itself.
 
+### Disabling network functions in anko scripts
+
+By default, anko scripts are allowed to use network utilities such as the http and net libraries, sftp, and ssh. You may not want to give Gravwell users network access; setting the option `Disable-Network-Script-Functions=true' in `/opt/gravwell/etc/gravwell.conf` will disable this.
+
 ## Managing anko scripts
 
 In order to run an anko script in a search, the text file containing the script must be uploaded as a resource. See the [resources section](#!resources/resources.md) for information on how to create and upload a resource.
