@@ -28,9 +28,13 @@ If a `Main` function is defined, it will be called only once; the programmer mus
 
 We strongly recommend writing scripts with `Process` instead of `Main` whenever possible, because it is conceptually much simpler.
 
+### Optional function definitions
+
 The script may also contain functions named `Parse` and `Finalize`.
 
 The `Parse` function is called before `Process` or `Main` and is given the command line arguments as an array of arguments. The `Parse` function indicates that the arguments have been successfully processed by returning nil; any non-nil return is treated as an error and presented to the user. See the sample script below for a sample of how to parse script arguments.
+
+Attention: The Parse function MUST explicitly return a value. Returning nil signals a successful parse; returning anything else indicates an error. In case of an error, we recommend returning a string describing the problem.
 
 The `Finalize` function is called after `Process` or `Main` have completed. It is the last code executed in the script; this is a good place to create resources if desired.
 
