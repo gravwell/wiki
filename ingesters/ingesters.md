@@ -471,6 +471,18 @@ Encrypted-Backend-target=ip.addr.goes.here:port
 
 Once configured, this file can be copied to any other Windows system from which you would like to collect events.
 
+#### Silent Installation
+
+The Windows event ingester is designed to be compatible with an automated deployment.  This means that an Active Directory server can push the installer to clients and invoke its installation without user interaction.  To force a silent installation execute the installer with administrative privileges via [msiexec](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec) with the `/quiet` and `NOCONFIG=1` arguments.  This installation method will install the default configuration and start the service.  To configure your specific parameters you will then need to push a modified configuration file to `C:\Program Files\gravwell\config.cfg` and restart the service.
+
+A complete execution sequence for a Group Policy push might look like:
+
+```
+msiexec.exe /i gravwell_win_events_3.2.1.msi /quiet NOCONFIG=1
+xcopy \\fileshare\\gravwell_config.cfg C:\Program Files\gravwell\config.cfg
+sc restart GravwellEvents
+```
+
 ### Optional Sysmon Integration
 
 The Sysmon utility, part of the sysinternals suite, is an effective and popular tool for monitoring Windows systems. There are plenty of resources with examples of good sysmon configuration files. At Gravwell, we like to use the config created by infosec Twitter personality @InfosecTaylorSwift.

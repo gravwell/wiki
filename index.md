@@ -36,9 +36,15 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Setting Up Ingesters](ingesters/ingesters.md)
 
-    * [The File Follower Ingester](ingesters/file_follow.md)
+    * [File Follower Ingester](ingesters/file_follow.md)
 
-    * [The Simple Relay Ingester](ingesters/simple_relay.md)
+    * [Simple Relay Ingester](ingesters/simple_relay.md)
+    
+    * [Windows Events Ingester](ingesters/ingesters.md#Windows_Event_Service)
+
+    * [Netflow/IPFIX Ingester](ingesters/ingesters.md#Netflow_Ingester)
+
+    * [Collectd](ingesters/ingesters.md#collectd_Ingester)
 
   * [Service Integrations](ingesters/integrations.md)
 
