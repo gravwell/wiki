@@ -80,6 +80,24 @@ More elaborate HTTP operations are possible with the "net/http" library. See the
 If the user has configured their personal email settings within Gravwell, the `email` function is a very simple way to send an email:
 
 * `email(from, to, subject, message) error` sends an email via SMTP. The `from` field is simply a string, while `to` should be a slice of strings containing email addresses. The `subject` and `message` fields are also strings which should contain the subject line and body of the email.
+  * The email function also takes an optional list of attachments.
+  * Attachments can be sent as a byte array, and they will be given an automatic file name
+  * If the attachment parameter is a map, the key is the file name and the value is the attachment
+
+Example sending an email with attachments:
+```
+#easy way just throwing text into an attachment named "attachment1"
+email(`user@example.com`, `bob@accounting.org`, "Hey bob", "We need to talk", "A random attachement")
+
+#Adding a list of attached files with specific names
+mp = map[interface]interface{}
+mp["stuff.txt"] = "this is some stuff"
+mp["things.csv"] = CsvData
+
+subj="Forgot attachments"
+body="Forgot to send the stuff and things files"
+email(`user@example.com`, `bob@accounting.org`, subj, body, mp)
+```
 
 The following functions are deprecated but still available, allowing emails to be sent without configuring the user's email options:
 

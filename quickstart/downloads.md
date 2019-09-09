@@ -6,7 +6,7 @@ Attention: The debian repository is more easily maintained than these standalone
 
 The Gravwell core installer contains the indexer and webserver frontend. You'll need a license; either get a Community Edition free license, or contact info@gravwell.io for commercial options.
 
-[Download Gravwell Core Installer](https://update.gravwell.io/files/gravwell_3.2.1.sh) (MD5: 082e42e93a548e8f4d2cd1a286da32cf)
+[Download Gravwell Core Installer](https://update.gravwell.io/files/gravwell_3.2.1-10.sh) (MD5: 146c61265d8688763ef08877c3f7572f)
 
 ## Ingesters
 
@@ -22,8 +22,8 @@ The core suite of ingesters are available for download as an installable package
 | [Network Capture](#!ingesters/ingesters.md#Network_Ingester) | The Network Capture ingester is a passive network sniffing ingester which can bind to multiple network taps and send raw network traffic to Gravwell. |35a3c315dfe868e3c58d79368c6f4833| [Download](https://update.gravwell.io/files/gravwell_network_capture_installer_3.2.1.sh) |
 | [Collectd Collector](#!ingesters/ingesters.md#collectd) | The collectd ingester acts as a standalone collectd collector.  |f1ba837222083faee4a0c4813e0f9d8d| [Download](https://update.gravwell.io/files/gravwell_collectd_installer_3.2.1.sh) |
 | [Ingest Federator](#!ingesters/ingesters.md#Federator_Ingester) | The Federator ingester is designed to aggregate multiple downstream ingesters and relay entries to upstream ingestion points.  The Federator is useful for crossing trust boundaries, aggregating entry flows, and insulating Gravwell indexers from potentially untrusted downstream entry generators. |2fdea520a41b1e131ee2ad6a9765ceaa| [Download](https://update.gravwell.io/files/gravwell_federator_installer_3.2.1.sh) |
-| [Windows Events](#!ingesters/ingesters.md#Windows_Event_Service) | The Winevent uses the Windows events subsystem to acquire windows events and ship them to gravwell.  The Winevent ingester can be placed on a single Windows machine acting as a log collector, or on multiple endpoints. |49b0fc2e4da9145e289538691a7a6e71| [Download](https://update.gravwell.io/files/gravwell_win_events_3.1.5.msi) |
-| [Windows File Follower](#!ingesters/ingesters.md#File_Follower) | The Windows file follower is identical to the File Follower ingester, but for Windows. |491578e7a6be13a6bc9ed39754918469| [Download](https://update.gravwell.io/files/gravwell_file_follow_3.1.5.msi) |
+| [Windows Events](#!ingesters/ingesters.md#Windows_Event_Service) | The Winevent ingester uses the Windows events subsystem to acquire windows events and ship them to gravwell.  The Winevent ingester can be placed on a single Windows machine acting as a log collector, or on multiple endpoints. |548b3b1de5230b1f83606bf9b0eabc7f| [Download](https://update.gravwell.io/files/gravwell_win_events_3.2.1.msi) |
+| [Windows File Follower](#!ingesters/ingesters.md#File_Follower) | The Windows file follower is identical to the File Follower ingester, but for Windows. |f2322fd64d12b87973056c7c0cc6cdab| [Download](https://update.gravwell.io/files/gravwell_file_follow_3.2.1.msi) |
 | [Amazon Kinesis](#!ingesters/ingesters.md#Kinesis_Ingester) | The Amazon Web Services Kinesis ingester can attach to the Kinesis stream and dramatically simplify logging a cloud deployment |9d5698de3166ce24d822841d7950663f| [Download](https://update.gravwell.io/files/gravwell_kinesis_ingest_installer_3.2.1.sh)|
 | [Google PubSub](#!ingesters/ingesters.md#GCP_PubSub) | The Google Cloud Platform PubSub Ingester can subscribe to exhausts on the GCP PubSub system, easing integration with GCP. |9d2976c0e42accdb6b1be3045a14202a| [Download](https://update.gravwell.io/files/gravwell_pubsub_ingest_installer_3.2.1.sh)|
 
