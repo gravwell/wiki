@@ -473,14 +473,22 @@ Once configured, this file can be copied to any other Windows system from which 
 
 #### Silent Installation
 
-The Windows event ingester is designed to be compatible with an automated deployment.  This means that an Active Directory server can push the installer to clients and invoke its installation without user interaction.  To force a silent installation execute the installer with administrative privileges via [msiexec](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec) with the `/quiet` and `NOCONFIG=1` arguments.  This installation method will install the default configuration and start the service.  To configure your specific parameters you will then need to push a modified configuration file to `C:\Program Files\gravwell\config.cfg` and restart the service.
+The Windows event ingester is designed to be compatible with an automated deployment.  This means that a domain controller can push the installer to clients and invoke installation without user interaction.  To force a silent installation execute the installer with administrative privileges via [msiexec](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec) with the `/quiet` argument.  This installation method will install the default configuration and start the service.
+
+To configure your specific parameters you will then need to either push a modified configuration file to `C:\Program Files\gravwell\config.cfg` and restart the service, or also provide the `CONFIGFILE` argument with the fully qualified path to the `config.cfg` file.
 
 A complete execution sequence for a Group Policy push might look like:
 
 ```
-msiexec.exe /i gravwell_win_events_3.2.1.msi /quiet NOCONFIG=1
-xcopy \\fileshare\\gravwell_config.cfg C:\Program Files\gravwell\config.cfg
+msiexec.exe /i gravwell_win_events_3.2.1.msi /quiet
+xcopy \\share\gravwell_config.cfg C:\Program Files\gravwell\gravwellevents.cfg
 sc restart GravwellEvents
+```
+
+Or
+
+```
+msiexec.exe /i gravwell_win_events_3.2.1.msi /quiet CONFIGFILE=\\share\gravwellevents.cfg
 ```
 
 ### Optional Sysmon Integration
