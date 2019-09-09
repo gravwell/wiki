@@ -186,6 +186,8 @@ Anko provides built-in utility functions, listed below in the format `functionNa
 * `toFloat(val) float64` converts val to a floating point number if possible. Returns 0.0 if no conversion is possible.
 * `toBool(val) bool` attempts to convert val to a boolean. Returns false if no conversion is possible. Non-zero numbers and the strings “y”, “yes”, and “true” will return true.
 * `typeOf(val) type` returns the type of val as a string, e.g. “string”, “bool”.
+* `producesEnum(val)` Informs the pipeline that the script plans to produce an Enumerated Value of that name.  Should be called in the Parse() function.
+* `consumesEnum(val)` Informs the pipeline that the script plans to consume the Enumerated Value of that name.  Should be called in the Parse() function.
 
 The following functions are only available in scripts implementing the `Process` function:
 
