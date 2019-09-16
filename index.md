@@ -64,6 +64,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Detailed configuration parameters](configuration/parameters.md)
 
+  * [Single Sign-On](configuration/sso.md)
+
 ## Query Acceleration, Auto-Extraction, and Data Management
   
   * [Setting up Auto-extractors](configuration/autoextractors.md)
