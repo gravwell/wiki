@@ -14,6 +14,7 @@ The bulk of the API is RESTful. The exception to this rule is the searching API 
 * [Search Controls](searchctrl.md)
 * [Downloading Search Results](download.md)
 * [Search History](searchhistory.md)
+* [Search Library](searchlibrary.md)
 * [Logging](loglevel.md)
 * [Resources](resources.md)
 * [Scheduled Searches](scheduledsearches.md)
