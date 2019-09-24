@@ -36,6 +36,14 @@ Luckily, it is also possible to select a resource by name with more precision by
 * `user=jfloren:myscript` specifies a resource named `myscript` belonging to the user `jfloren`. Note that this will fail if the invoking user does not have access to this resource.
 * `group=security:myscript` specifies a resource named `myscript` which is shared to the group `security`. Note that this will fail if the invoking user is not a member of the security group.
 
+### Resource Domains
+
+In some situations, multiple webservers may be connected to the same set of indexers. For instance, a service provider may set up a separate Gravwell cluster per customer, but also have an "overwatch" webserver which connects to *all* indexers and allows them to gather statistics across all customers. If two webservers have different sets of resources and connect to the same indexer, the indexer will thrash as it attempts to keep its set of resources synchronized to both webservers at the same time.
+
+In order to prevent this problem, webservers can be configured with a *domain*. The domain is a number which essentially provides an additional namespace for resources. The domain is specified using the `Webserver-Domain` config parameter in `gravwell.conf`; the default value is 0. In the overwatch example described above, the service provider may chose to leave the customer clusters configured in domain 0, and set up their overwatch webserver in domain 1. This allows multiple non-synchronized webservers to communicate with the same set of indexers without interfering with each others' resources.
+
+Note: Webservers configured as [distributed webservers using the datastore](#!distributed/frontend.md) do not experience this problem, because they coordinate and synchronize resources between each other. All webservers which connect to the same datastore should be in the same domain, though.
+
 ## Managing resources with the GUI
 
 Resources are managed via the main menu of the user interface. Open the menu and select "Resources".
