@@ -44,6 +44,12 @@ Default Value:	`false`
 Example:		`Insecure-Disable-HTTPS=true`
 Description:	By default Gravwell operates in HTTPS mode. Setting `Insecure-Disable-HTTPS=true` instructs Gravwell to instead use plaintext HTTP, listening on `Web-Port`.
 
+**Webserver-Domain**
+Applies to:		Webserver
+Default Value:	0
+Example:		`Webserver-Domain=17`
+Description: The `Webserver-Domain` parameter controls the [resources](#!resources/resources.md) domain on the webserver. If two webservers are configured with the same domain, have differing resource sets, are connected to the same indexer(s), and are *not* synchronized via the datastore, the indexer(s) will thrash between the two sets of resources. Putting the webservers in different domains allows them both to use the same indexer without resource conflicts.
+
 **Control-Listen-Address**
 Applies to:        Indexer
 Default Value:

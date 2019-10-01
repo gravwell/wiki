@@ -17,9 +17,9 @@ Attention: To specify filter values and or extraction names which contain specia
 ### Supported Options
 
 * `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
-* `-d <arg>` : The “-d” option specifies the delimiter used to extract fiels.  A delimiter can be any string of bytes.  The default is a comma: ",".
-* `-s` : The “-s” option speciies that the fields module operate in a strict mode.  If any field specification cannot be met, the entry is dropped.  For example if you want the 0th, 1st, and 2nd field but an entry only has 2 fields the strict flag will cause the entry to be dropped.
-* `-q` : The “-q” option speciies that the fields can be quoted.  This is useful when dealing with delimiters which might show up in fields.  For example, if the field delimiter is a space, columns may need to contain a space and will be quoted.  If the "-q" argument is specified, any delimiter that is surrounded boy double quotes will be ignored and included in the field.  Delimiters cannot contain double quotes when using the "-q" flag.
+* `-d <arg>` : The “-d” option specifies the delimiter used to extract fields.  A delimiter can be any string of bytes.  The default is a comma: ",".
+* `-s` : The “-s” option specifies that the fields module should operate in a strict mode.  If any field specification cannot be met, the entry is dropped.  For example if you want the 0th, 1st, and 2nd field but an entry only has 2 fields the strict flag will cause the entry to be dropped.
+* `-q` : The “-q” option specifies that the fields can be quoted.  This is useful when dealing with delimiters which might show up in fields.  For example, if the field delimiter is a space, columns may need to contain a space and will be quoted.  If the "-q" argument is specified, any delimiter that is surrounded boy double quotes will be ignored and included in the field.  Delimiters cannot contain double quotes when using the "-q" flag.
 * `-clean` : The “-clean” flag specifies that the fields module should remove all surrounding whitespace from extracted fields.  Data formats like CSV which may have trailing whitespace can use the "-clean" flag to remove the unwated whitespace.  If the "-q" flag is specified with "-clean" double quotes will be removed from quoted fields.
 
 ### Filtering Operators
