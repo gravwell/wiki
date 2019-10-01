@@ -48,6 +48,7 @@ These can be used just like user-defined enumerated values.
 * [j1939](j1939/j1939.md)
 * [join](join/join.md)
 * [json](json/json.md)
+* [kv](kv/kv.md)
 * [langfind](langfind/langfind.md)
 * [length](length/length.md)
 * [limit](limit/limit.md)
