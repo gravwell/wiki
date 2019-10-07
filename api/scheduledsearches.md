@@ -103,6 +103,10 @@ A script scheduled search can be changed to a standard scheduled search by pushi
 
 The LastError field in the scheduled search structure will be set if an error is encountered and will not be cleared by subsequent successful executions. It can be cleared manually by a DELETE on `/api/scheduledsearches/{id}/error`
 
+### Clearing a scheduled search's persistent state
+
+A DELETE on `/api/scheduledsearches/{id}/state` will clear both the LastError field and the persistent maps for the scheduled search. This allows you to reset a scheduled search if the state becomes corrupt due to a bad script.
+
 ### Deleting a scheduled search
 
 An existing scheduled search can be removed by performing a DELETE on `/api/scheduledsearches/{id}`.
