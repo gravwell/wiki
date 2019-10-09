@@ -10,6 +10,8 @@ Gravwell supports two types of compression: default and transparent compression.
 
 Transparent compression allows for offloading compression/decompression work to the host kernel while maintaining an uncompressed page cache.  Transparent compression can allow for very fast and efficient compression/decompression but requires that the underlying filesystem support transparent compression.  Currently the [BTRFS](https://btrfs.wiki.kernel.org/index.php/Main_Page) and [ZFS](https://wiki.archlinux.org/index.php/ZFS) filesystem are supported.
 
+Attention: Transparent compression has important implications for ageout rules involving total storage. Please refer to the [ageout documentation](ageout.md) for more information.
+
 **Disable-Compression**
 Default Value: `false`
 Example: `Disable-Compression=true`

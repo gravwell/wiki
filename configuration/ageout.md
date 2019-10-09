@@ -130,6 +130,12 @@ Time-based constraints require that the entire shard fall outside the specified 
 
 Take care when combining time-based constraints with total storage constraints. If `Hot-Duration=7D` and `Cold-Duration=90D` are specified, data will be deleted after 97 days. However, if `Max-Hot-Storage-GB=2` and `Cold-Duration=90D` are specified, data will move from the hot well to the cold well when the hot well exceeds 2GB, and **data will be deleted from the cold well when it is 90 days old**.
 
+#### Transparent Compression + Docker Caveats
+
+[Transparent compression](compression.md) has important implications for ageout rules involving total storage. A file with transparent compression enabled takes up less space on disk than the uncompressed version, but it is difficult to find out precisely *how much* disk space it is actually using. Consider a well configured with `Max-Hot-Storage-GB=5`; if transparent compression is enabled, we would prefer to ageout data only when 5GB of *actual disk space* are used, rather than when the size of the uncompressed data reaches 5GB.
+
+Gravwell attempts to query the actual on-disk size of shards on BTRFS systems with compression enabled. On a typical Linux system, this will work fine. However, **when using Docker containers**, extra care must be taken. If Docker's runtime directory (default `/var/lib/docker`) is on a BTRFS filesystem, wells can use transparent compression, *but* the on-disk size query will fail because certain IOCTL calls are disabled by default. You can enable the appropriate IOCTL calls for your Docker container by passing the `--cap-add=SYS_ADMIN` flag to the command you use to instantiate the indexer container.
+
 #### Deletion Safety Nets
 
 Ageout policies can and will **delete data**.  It is critically important that administrators vet configurations and hardware resources to ensure that both hot and cold storage pools can accommodate the requested ageout constraints.  Well configurations require that deletion be explicitely authorized via a "Delete-X-Data" directive (`Delete-Cold-Data` for hot pools and `Delete-Frozen-Data` for cold pools).
