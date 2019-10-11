@@ -66,6 +66,7 @@ These can be used just like user-defined enumerated values.
 * [require](require/require.md)
 * [slice](slice/slice.md)
 * [sort](sort/sort.md)
+* [split](split/split.md)
 * [src](src/src.md)
 * [stats](stats/stats.md)
 * [stddev](math/math.md#Stddev)
