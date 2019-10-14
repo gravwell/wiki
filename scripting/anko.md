@@ -251,7 +251,8 @@ For most purposes, you will create a Request with the NewRequest function, then 
 
 ```
 req, _ = http.NewRequest("GET", "http://example.org/foo", nil)
-http.DefaultClient.Do(req)
+resp, _ = http.DefaultClient.Do(req)
+resp.Body.Close()
 ```
 
 Additional headers or cookies can be set on the request before sending:
@@ -265,5 +266,8 @@ cookie = make(http.Cookie)
 cookie.Name = "foo"
 cookie.Value = "bar"
 req.AddCookie(&cookie)
-http.DefaultClient.Do(req)
+resp, _ = http.DefaultClient.Do(req)
+resp.Body.Close()
 ```
+
+Warning: You *must* close the http.Response's Body field when you are finished, as shown above. Leaving the Body open will leave a network connection open, eventually causing the search agent to run out of sockets. The `httpGet` and `httpPost` functions will close the Body automatically; please consider using those wherever possible.
