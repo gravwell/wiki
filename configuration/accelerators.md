@@ -70,6 +70,7 @@ Accelerators are configured on a per-well basis.  Each well can specify an accel
 * [Slice](#!search/slice/slice.md)
 * [Netflow](#!search/netflow/netflow.md)
 * [IPFIX](#!search/ipfix/ipfix.md)
+* [Packet](#!search/packet/packet.md)
 * Fulltext
 
 ### Example Configuration
@@ -273,6 +274,24 @@ This example configuration uses the `index` engine to accelerate on source/desti
 	Accelerator-Name="ipfix"
 	Accelerator-Args="src dst sourceTransportPort destinationTransportPort protocolIdentifier"
 	Accelerator-Engine-Override=index
+```
+
+## Packet
+
+The [packet](#!search/packet/packet.md) module can accelerate raw packet captures using the same syntax as the search module of the same name.  There is a subtle but important difference in how the packet accelerator is applied as compared to the search modules; the accelerator can use overlapping layers.  This means that you can specify both UDP and TCP items and extract the right field depending on the packet being processed.
+
+A well configuration can be configured to accelerate IPv4, IPv6, TCP, UDP, ICMP, etc... all at the same time.  The packet accelerator does not treat specified fields as implied filters.
+
+The packet accelerator also requires direct fields, this means you cannot use the convenience extractors like `IP` and `Port`.  You must specify exactly what you want to accelerate on.
+
+### Example Well Configuration
+
+```
+[Storage-Well "packets"]
+	Location=/opt/gravwell/storage/pcap
+	Tags=pcap
+	Accelerator-Name="packet"
+	Accelerator-Args="ipv4.SrcIP ipv4.DstIP ipv6.SrcIP ipv6.DstIP tcp.SrcPort tcp.DstPort udp.SrcPort udp.DstPort"
 ```
 
 ## SRC
