@@ -999,6 +999,8 @@ Log-Level=ERROR #options are OFF INFO WARN ERROR
 # This is the access key *ID* to access the AWS account
 AWS-Access-Key-ID=REPLACEMEWITHYOURKEYID
 # This is the secret key which is only displayed once, when the key is created
+#   Note: This option is not required if running in an AWS instance (the AWS
+#         the AWS SDK handles that)
 AWS-Secret-Access-Key=REPLACEMEWITHYOURKEY
 
 [KinesisStream "stream1"]

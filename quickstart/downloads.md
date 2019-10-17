@@ -6,7 +6,7 @@ Attention: The debian repository is more easily maintained than these standalone
 
 The Gravwell core installer contains the indexer and webserver frontend. You'll need a license; either get a Community Edition free license, or contact info@gravwell.io for commercial options.
 
-[Download Gravwell Core Installer](https://update.gravwell.io/files/gravwell_3.2.4.sh) (MD5: b13a0d9c26854be3d291f21a3e7254fb)
+[Download Gravwell Core Installer](https://update.gravwell.io/files/gravwell_3.2.4.sh) (MD5: 1755734211217615ca0a0bf6e2c1500c)
 
 ## Ingesters
 
@@ -25,7 +25,7 @@ The core suite of ingesters are available for download as an installable package
 | [Windows Events](#!ingesters/ingesters.md#Windows_Event_Service) | The Winevent ingester uses the Windows events subsystem to acquire windows events and ship them to gravwell.  The Winevent ingester can be placed on a single Windows machine acting as a log collector, or on multiple endpoints. |1b21e815bb1c35243e7b2c5a036caead| [Download](https://update.gravwell.io/files/gravwell_win_events_3.2.2.msi) |
 | [Windows File Follower](#!ingesters/ingesters.md#File_Follower) | The Windows file follower is identical to the File Follower ingester, but for Windows. |aa8bd348e847fd593c41ca4e0ff679a6| [Download](https://update.gravwell.io/files/gravwell_file_follow_3.2.2.msi) |
 | [Apache Kafka](#!ingesters/ingesters.md#Kafka) | The Apache Kafka ingester can attach to one or many Kafka clusters and read topics. It can simplify massive deployments. |baa656e6f554903014bbe3e0c43086b2| [Download](https://update.gravwell.io/files/gravwell_kafka_installer_3.2.4.sh)|
-| [Amazon Kinesis](#!ingesters/ingesters.md#Kinesis_Ingester) | The Amazon Web Services Kinesis ingester can attach to the Kinesis stream and dramatically simplify logging a cloud deployment |da371bf6bbdce832289d3b67ccb47fc9| [Download](https://update.gravwell.io/files/gravwell_kinesis_ingest_installer_3.2.4.sh)|
+| [Amazon Kinesis](#!ingesters/ingesters.md#Kinesis_Ingester) | The Amazon Web Services Kinesis ingester can attach to the Kinesis stream and dramatically simplify logging a cloud deployment |2c3192386b73d97e017bac917a1d8f6b| [Download](https://update.gravwell.io/files/gravwell_kinesis_ingest_installer_3.2.4.sh)|
 | [Google PubSub](#!ingesters/ingesters.md#GCP_PubSub) | The Google Cloud Platform PubSub Ingester can subscribe to exhausts on the GCP PubSub system, easing integration with GCP. |6f3c5c21e0dbbe946213fba92b4a4d16| [Download](https://update.gravwell.io/files/gravwell_pubsub_ingest_installer_3.2.4.sh)|
 
 [//]: <> (| [](#!ingesters/ingesters.md#) | | | [Download](https://update.gravwell.io/files/) |)
