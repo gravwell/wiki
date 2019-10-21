@@ -107,6 +107,7 @@ tag=app json username==admin app.field1=="login event" app.field2 != "failure" |
 ```
 
 The json search module will transparently invoke the acceleration framework and provide a first-level filter on the "username" and "app.field1" extracted values.  The "app.field2" field is NOT accelerated in this query because it does not use a direct equality filter.  Filters that exclude, compare, or check for subsets are not eligible for acceleration.
+
 ## Fulltext
 
 The fulltext accelerator is designed to index words within text logs and is considered the most flexible acceleration option.  Many of the other search modules support invoking the fulltext accelerator when executing queries.  However, the primary search module for engaging with the fulltext accelerator is the [grep](/search/grep/grep.md) module with the `-w` flag.  Much like the unix grep utility, `grep -w` specifies that the provided filter is expected to a word, rather than a subset of bytes.  Running a search with `grep -w foo` will look for the word foo and engage the fulltext accelerator.
@@ -121,7 +122,9 @@ The fulltext accelerator supports a few options which allow for refining the typ
 |----------|-------------|---------|---------------|
 | -ignoreTS | Engage the timegrinder system to identify and ignore timestamps in the data | `-ignoreTS` | DISABLED |
 | -min | Require that extracted tokens be at least X bytes.  This can help prevent indexing on very small words that will never be searched on | `-min 3` | DISABLED |
-| -ignoreUUID | Enable a filter that allows the fulltext indexer to ignore UUID values.  Some logs will generate a unique UUID for every entry which incurs significant overhead and provides very little value. | `ignoreUUID ` | DISABLED |
+| -max | Require that extracted tokens be less than.  This can help prevent indexing on very large blobs within logs that will never be searched on | `-max 256` | DISABLED |
+| -ignoreUUID | Enable a filter to ignore UUID/GUID values.  Some logs will generate a unique UUID for every entry which incurs significant overhead and provides very little value. | `-ignoreUUID` | DISABLED |
+| -ignoreFloat | Enable a filter ignore floating point numbers. Logs that have request reponse times can make use of `-ignoreFloat`, especially when the precision is high. | `-ignoreFloat` | DISABLED |
 
 ### Example Well Configuration
 
