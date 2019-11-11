@@ -476,3 +476,33 @@ Applies to:		Webserver
 Default Value:	7
 Example:		`Gravwell-Tile-Server-Cache-Timeout-Days=2`
 Description:	The Gravwell tile proxy maintains a cache of recently-accessed tiles to speed up map rendering. This parameter controls the maximum number of days a cached tile should be considered valid; after that time has elapsed, the tile will be purged and re-fetched from the upstream server.
+
+**Disable-Single-Indexer-Optimization**
+Applies to:		Webserver
+Default Value:	false
+Example:		`Disable-Single-Indexer-Optimization=true`
+Description:	When Gravwell is used with a single indexer, it will by default run all modules (except for the render module) on the *indexer* to reduce the amount of data transferred from the indexer to the webserver. This option disables that optimization. We strongly recommend leaving this option set to `false` unless instructed by Gravwell support.
+
+**Library-Dir**
+Applies to:		Webserver
+Default Value:	`/opt/gravwell/libs`
+Example:		`Library-Dir=/scratch/libs`
+Description:	Scheduled scripts may import additional libraries using the `include` function. These libraries are fetched from an external repository and cached locally; this configuration option sets the directory in which the cached libraries are stored.
+
+**Library-Repository**
+Applies to:		Webserver
+Default Value:	`https://github.com/gravwell/libs`
+Example:		`Library-Repository=https://github.com/example/gravwell-libs`
+Description:	Scheduled scripts may import additional libraries using the `include` function. These libraries are loaded from files found in the repository specified by this parameter. By default, it points to a Gravwell-maintained repository of convenient libraries. If you wish to provide your own set of libraries, set this parameter to point at a git repository you control.
+
+**Library-Commit**
+Applies to:		Webserver
+Default Value:
+Example:		`Library-Commit=19b13a3a8eb877259a06760e1ee35fae2669db73`
+Description:	Scheduled scripts may import additional libraries using the `include` function. These libraries are loaded from files found in the repository specified by the `Library-Repository` option. By default, Gravwell uses the latest version. If a git commit string is specified, Gravwell will attempt to use the specified version of the repository instead.
+
+**Disable-Library-Repository**
+Applies to:		Webserver
+Default Value:	false
+Example:		`Disable-Library-Repository=true`
+Description:	Scheduled scripts may import additional libraries using the `include` function. Setting `Disable-Library-Repository` to true disables this functionality.
