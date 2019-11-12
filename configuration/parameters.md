@@ -446,3 +446,63 @@ Applies to:		Webserver
 Default Value:		`en-US`
 Example:		`Default-Language=en-US`
 Description:		Setting the Default-Language parameter controls what is provided on the unauthenticated API at /api/language and is used by the GUI to determine which language should be default in deployments with multiple languages. This is the fallback if the user has not chosen a language and their browser is not providing a preferred language via `window.navigator.language`.
+
+**Disable-Map-Tile-Server-Proxy**
+Applies to:		Webserver
+Default Value:	`false`
+Example:		`Disable-Map-Tile-Server-Proxy=true`
+Description:	This parameter controls Gravwell's built-in maps proxy. To avoid placing undue load on map servers, the Gravwell webserver caches map tiles. However, use of the proxy means that the requests sent to the actual map servers originate from the Gravwell webserver rather than the user's web browser; if the Gravwell installation is on a locked-down network, this may fail due to outgoing HTTP being disabled. Setting `Disable-Map-Tile-Server-Proxy` to true will disable the built-in proxy and cause the GUI to make map requests directly. If the proxy is disabled and the `Map-Tile-Server` parameter is also set, the GUI will make its requests to that server.
+
+**Map-Tile-Server**
+Applies to:		Webserver
+Default Value:	``
+Example:		`Map-Tile-Server=https://maps.example.com/osm/`
+Description:	The Map-Tile-Server parameter allows the administrator to define a different source for map tiles. By default, Gravwell will fetch tiles from a Gravwell map server, falling back to OpenStreetMap servers if necessary. Setting this parameter forces Gravwell to use *only* the specified server. The URL specified should be a prefix to the standard OpenStreetMap tile server format as defined [here](https://wiki.openstreetmap.org/wiki/Tile_servers), leaving out the z/x/y coordinate parameters. For example, if tiles may be accessed at `https://maps.wikimedia.org/osm-intl/${z}/${x}/${y}.png`, e.g. https://maps.wikimedia.org/osm-intl/0/1/2.png, you could set `Map-Tile-Server=https://maps.wikimedia.org/osm-intl/`.
+
+**Gravwell-Tile-Server-Cooldown-Minutes**
+Applies to:		Webserver
+Default Value:	5
+Example:		`Gravwell-Tile-Server-Cooldown-Minutes=1`
+Description:	When the Gravwell tile proxy is operating in normal mode (not disabled, `Map-Tile-Server` parameter not set), it will attempt to fetch map tiles from a Gravwell-operated server. If a request send to that server fails, the proxy will instead fall back to openstreetmap.org servers for the duration of the cooldown. Setting this parameter to 0 disables the cooldown.
+
+**Gravwell-Tile-Server-Cache-MB**
+Applies to:		Webserver
+Default Value:	4
+Example:		`Gravwell-Tile-Server-Cache-MB=32`
+Description:	The Gravwell tile proxy maintains a cache of recently-accessed tiles to speed up map rendering. This parameter controls how many megabytes of storage the cache may use.
+
+**Gravwell-Tile-Server-Cache-Timeout-Days**
+Applies to:		Webserver
+Default Value:	7
+Example:		`Gravwell-Tile-Server-Cache-Timeout-Days=2`
+Description:	The Gravwell tile proxy maintains a cache of recently-accessed tiles to speed up map rendering. This parameter controls the maximum number of days a cached tile should be considered valid; after that time has elapsed, the tile will be purged and re-fetched from the upstream server.
+
+**Disable-Single-Indexer-Optimization**
+Applies to:		Webserver
+Default Value:	false
+Example:		`Disable-Single-Indexer-Optimization=true`
+Description:	When Gravwell is used with a single indexer, it will by default run all modules (except for the render module) on the *indexer* to reduce the amount of data transferred from the indexer to the webserver. This option disables that optimization. We strongly recommend leaving this option set to `false` unless instructed by Gravwell support.
+
+**Library-Dir**
+Applies to:		Webserver
+Default Value:	`/opt/gravwell/libs`
+Example:		`Library-Dir=/scratch/libs`
+Description:	Scheduled scripts may import additional libraries using the `include` function. These libraries are fetched from an external repository and cached locally; this configuration option sets the directory in which the cached libraries are stored.
+
+**Library-Repository**
+Applies to:		Webserver
+Default Value:	`https://github.com/gravwell/libs`
+Example:		`Library-Repository=https://github.com/example/gravwell-libs`
+Description:	Scheduled scripts may import additional libraries using the `include` function. These libraries are loaded from files found in the repository specified by this parameter. By default, it points to a Gravwell-maintained repository of convenient libraries. If you wish to provide your own set of libraries, set this parameter to point at a git repository you control.
+
+**Library-Commit**
+Applies to:		Webserver
+Default Value:
+Example:		`Library-Commit=19b13a3a8eb877259a06760e1ee35fae2669db73`
+Description:	Scheduled scripts may import additional libraries using the `include` function. These libraries are loaded from files found in the repository specified by the `Library-Repository` option. By default, Gravwell uses the latest version. If a git commit string is specified, Gravwell will attempt to use the specified version of the repository instead.
+
+**Disable-Library-Repository**
+Applies to:		Webserver
+Default Value:	false
+Example:		`Disable-Library-Repository=true`
+Description:	Scheduled scripts may import additional libraries using the `include` function. Setting `Disable-Library-Repository` to true disables this functionality.

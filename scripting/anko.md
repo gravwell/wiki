@@ -201,11 +201,14 @@ The following functions are only available in scripts implementing the `Main` fu
 * `readEntry() entry, error` returns the next entry and an error (if any). It will return an error when no entries remain.
 * `writeEntry(ent) error` writes out the given entry down the pipeline, returning an error if any.
 * `cloneEntry(ent) entry` returns a copy of the specified entry.
+* `newEntry() entry` creates an entirely new entry, with the timestamp set to the current time.
 * `setEntryEnum(ent, key, value)` sets an enumerated value on the specified entry.
 * `getEntryEnum(ent, key) value, error` reads an enumerated value from the specified entry.
 * `hasEntryEnum(ent, key) bool` returns whether the entry contains the enumerated value.
 * `delEntryEnum(ent, key)` deletes the specified enumerated value from the given entry.
 * `setEntryData(ent, value)` sets the data portion of an entry.
+* `setEntrySrc(ent, ip)` sets the source field of an entry.
+* `setEntryTimestamp(ent, time)` sets the timestamp of an entry.
 
 Note: The `setEnum`, `hasEnum`, and `delEnum` functions differ for scripts using `Process` functions vs. `Main` functions, because the `Process` function is implicitly operating on a particular entry.
 
@@ -251,7 +254,8 @@ For most purposes, you will create a Request with the NewRequest function, then 
 
 ```
 req, _ = http.NewRequest("GET", "http://example.org/foo", nil)
-http.DefaultClient.Do(req)
+resp, _ = http.DefaultClient.Do(req)
+resp.Body.Close()
 ```
 
 Additional headers or cookies can be set on the request before sending:
@@ -265,5 +269,8 @@ cookie = make(http.Cookie)
 cookie.Name = "foo"
 cookie.Value = "bar"
 req.AddCookie(&cookie)
-http.DefaultClient.Do(req)
+resp, _ = http.DefaultClient.Do(req)
+resp.Body.Close()
 ```
+
+Warning: You *must* close the http.Response's Body field when you are finished, as shown above. Leaving the Body open will leave a network connection open, eventually causing the search agent to run out of sockets. The `httpGet` and `httpPost` functions will close the Body automatically; please consider using those wherever possible.
