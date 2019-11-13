@@ -26,6 +26,7 @@ The following operation names are supported:
 * variance: calculate the variance
 * min: return the minimum value seen
 * max: return the maximum value seen
+* unique_count: return the number of unique instances of the source were seen.
 
 The operation is performed on the source enumerated value. Thus, specifying `stats sum(Bytes)` would tell the stats module to sum up the Bytes enumerated values, outputting a single entry with an enumerated value named `sum` containing the total.
 
