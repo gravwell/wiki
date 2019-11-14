@@ -128,3 +128,66 @@ Performing a GET on `/api/scheduledsearches/user/{uid}`, where `uid` is a numeri
 ### Deleting all of a specific user's searches
 
 Performing a DELETE on `/api/scheduledsearches/user/{uid}` will delete all scheduled searches belonging to the specified user.
+
+### Running a test parse of a scheduled search
+
+The scheduledsearches API provides an API to test scheduled searches before saving them.  The Parse API is located at `/api/scheduledsearches/parse` and is accessed via a PUT request.  An authenticated user can send a scheduled script to be parsed and checked without saving or modifying an existing scheduled script.
+
+To Perform a parse, send the following JSON structure in the body of a PUT request `/api/scheduledsearches/parse`:
+
+```
+{
+	Script string
+}
+```
+
+The API will respond with the following JSON structure:
+```
+{
+	OK bool
+	Error string
+	ErrorLine int
+	ErrorColumn int
+}
+```
+
+If the script passes the parsing test, the response will contain `true` in the OK field.  The Error field will be omitted and the ErrorLine and ErrorColumn fields will both be `-1`.  If the provided script failed to parse correctly, the OK field will be `false` with the Error field indicating the failure reason and the ErrorLine and ErrorColumn indicating where in the script the error occurred.
+
+The ErrorLine and ErrorColumn fields may not always be populated.  Values of -1 indicate that the script parsing system did not know where in the script the errors are located.
+
+Here is an example request and response:
+
+#### Valid Script
+Request
+```
+{
+	"Script":"fmt = import(\"fmt\")\nfmt.Println(\"Hello\")\nfmt.Sstuff(\"Goodbye\")\n"
+}
+```
+
+Response
+```
+{
+	"OK":true,
+	"ErrorLine":-1,
+	"ErrorColumn":-1
+}
+```
+
+#### Invalid Script
+Request
+```
+{
+	"Script":"fmt = import(\"fmt\")\nfmt.Println(\"Hello\")\nfmt.Sstuff(\"Goodbye)\n"
+}
+```
+
+Response
+```
+{
+	"OK":false,
+	"Error":"syntax error",
+	"ErrorLine":3,
+	"ErrorColumn":21
+}
+```
