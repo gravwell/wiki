@@ -995,6 +995,7 @@ Connection-Timeout = 0
 Insecure-Skip-TLS-Verify = false
 Pipe-Backend-target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
 Log-Level=ERROR #options are OFF INFO WARN ERROR
+State-Store-Location=/opt/gravwell/etc/kinesis_ingest.state
 
 # This is the access key *ID* to access the AWS account
 AWS-Access-Key-ID=REPLACEMEWITHYOURKEYID
@@ -1007,10 +1008,12 @@ AWS-Secret-Access-Key=REPLACEMEWITHYOURKEY
 	Region="us-west-1"
 	Tag-Name=kinesis
 	Stream-Name=MyKinesisStreamName	# should be the stream name as AWS knows it
-	Iterator-Type=LATEST
+	Iterator-Type=TRIM_HORIZON
 	Parse-Time=false
 	Assume-Localtime=true
 ```
+
+Note the `State-Store-Location` option. This sets the location of a state file which will track the ingester's position in the streams, to prevent re-ingesting entries which have already been seen.
 
 You will need to set at least the following fields before starting the ingester:
 
@@ -1023,7 +1026,7 @@ You can configure multiple `KinesisStream` sections to support multiple differen
 
 You can test the config by running `/opt/gravwell/bin/gravwell_kinesis_ingester -v` by hand; if it does not print out errors, the configuration is probably acceptable.
 
-Most of the fields are self-explanatory, but the `Iterator-Type` setting deserves a note. This setting selects where the ingester starts reading data. By setting it to TRIM_HORIZON, the ingester will start reading records from the oldest available. If it is set to LATEST, the ingester will ignore all existing records and only read records created after the ingester starts. In most situations, to avoid duplicating data it should be set to LATEST; set it TRIM_HORIZON if you have existing data you want to ingest, then shut down the ingester and change the value to LATEST before restarting.
+Most of the fields are self-explanatory, but the `Iterator-Type` setting deserves a note. This setting selects where the ingester starts reading data **if it does not have a state file entry** for the stream/shard. The default is "LATEST", which means the ingester will ignore all existing records and only read records created after the ingester starts. By setting it to TRIM_HORIZON, the ingester will start reading records from the oldest available. In most situations we recommend settting it to TRIM_HORIZON so you can fetch older data; on further runs of the ingester, the state file will maintain the sequence number and prevent duplicate ingestion.
 
 ## GCP PubSub Ingester
 
