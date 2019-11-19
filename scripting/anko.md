@@ -212,6 +212,14 @@ The following functions are only available in scripts implementing the `Main` fu
 
 Note: The `setEnum`, `hasEnum`, and `delEnum` functions differ for scripts using `Process` functions vs. `Main` functions, because the `Process` function is implicitly operating on a particular entry.
 
+## Built-in variables
+
+The following variables are pre-defined for anko scripts:
+
+* `START`: the start time of the query.
+* `END`: the end time of the query.
+* `TAGMAP`: a map of string tag names to entry.EntryTag tag numbers. This only contains tags used in the current query, so if you say `tag=default,foo` TAGMAP will contain 'default'→0 and 'foo'→1. Use this in conjunction with the `cloneEntry` or `newEntry` functions.
+
 ## Available packages
 
 It is possible to import anko wrappers for certain Go libraries with syntax similar to the following:
