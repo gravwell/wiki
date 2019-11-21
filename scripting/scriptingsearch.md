@@ -8,6 +8,13 @@ Orchestration scripts can be run [on a schedule](scheduledsearch.md) or by hand 
 
 Scripted searches can use built-in functions that mostly match those available for the [anko](#!scripting/anko.md) module, with some additions for launching and managing searches. The functions are listed below in the format `functionName(<functionArgs>) <returnValues>`.
 
+### Controlling Versions
+
+Gravwell is constantly adding new modules, methods, and functionality.  It is often desirable to be able to validate that a given SOAR script will work with the current version.  This is Achieved using two built in scripting functions.  These functions are used to specify the minimum and maximum versions of Gravwell that they are compatible with.  If either assertion fails, the script will fail immediately with an error indicating that the version is incompatible.
+
+* `MinVer(major, minor, point)` Ensures that the current version is at least the as high as specified
+* `MaxVer(major, minor, point)` Ensures that the current version is not greater than specified.
+
 ### Resources and persistent data
 
 * `getResource(name) []byte, error` returns the slice of bytes is the content of the specified resource, while the error is any error encountered while fetching the resource.
