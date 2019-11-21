@@ -81,3 +81,7 @@ You can escape double quote characters if you need to use them, for instance to 
 ```
 grep "\","
 ```
+
+## Macros
+
+Macros can help turn long, complex queries into easy-to-remember shortcuts. See [the full macro documentation](#!search/macros.md) for more information.

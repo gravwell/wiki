@@ -20,6 +20,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Search overview](search/search.md)
 
+	* [Search Macros](search/macros.md)
+
   * [Search modules](search/searchmodules.md)
 
   * [Render modules](search/rendermodules.md)
