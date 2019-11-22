@@ -60,6 +60,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Distributed Frontends](distributed/frontend.md)
 
+    * [Overwatch](distributed/overwatch.md)
+
   * [Environment Variables](configuration/environment-variables.md)
 
   * [Detailed configuration parameters](configuration/parameters.md)
