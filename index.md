@@ -48,6 +48,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
     * [Collectd](ingesters/ingesters.md#collectd_Ingester)
 
+  * [Ingester Preprocessors](ingesters/preprocessors/preprocessors.md)
+
   * [Service Integrations](ingesters/integrations.md)
 
 ## Advanced Gravwell Installation and Configuration

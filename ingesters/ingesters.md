@@ -181,6 +181,27 @@ Source-Override=0.0.0.0
 Source-Override=DEAD:BEEF::FEED:FEBE
 ```
 
+## Data Consumer Configuration
+
+Besides the global configuration options, each ingester which uses a config file will need to define at least one *data consumer*. A data consumer is a config definition which tells the ingester:
+
+* Where to get data
+* What tag to use on the data
+* Any special timestamp processing rules
+* Overrides for fields such as the SRC field
+
+The Simple Relay ingester and the HTTP ingester define "Listeners"; File Follow uses "Followers"; the netflow ingester defines "Collectors". The individual ingester sections below describe the ingester's particular data consumer types and any unique configurations they may require. The following example shows how the File Follower ingester defines a "Follower" data consumer to read data from a particular directory:
+
+```
+[Follower "syslog"]
+        Base-Directory="/var/log/"
+        File-Filter="syslog,syslog.[0-9]" #we are looking for all authorization log files
+        Tag-Name=syslog
+        Assume-Local-Timezone=true #Default for assume localtime is false
+```
+
+Note how it specifies the data source (via the `Base-Directory` and `File-Filter` rules), which tag to use (via `Tag-Name`), and an additional rule for parsing timestamps in the incoming data (`Assume-Local-Timezone`).
+
 ## Simple Relay
 
 [Complete Configuration and Documentation](#!ingesters/simple_relay.md).
