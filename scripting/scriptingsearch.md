@@ -15,6 +15,24 @@ Gravwell is constantly adding new modules, methods, and functionality.  It is of
 * `MinVer(major, minor, point)` Ensures that the current version is at least the as high as specified
 * `MaxVer(major, minor, point)` Ensures that the current version is not greater than specified.
 
+### Libraries and external functions
+
+Version 3.3.1 of Gravwell now enables SOAR scripts to include external scripting libraries.  Two functions allow for including additional libraries.
+
+* `include(path, repo, commitid) error` Includes a file, the repo and commitid arguments are optional.  If the include fails, the failure reason is returned.
+* `require(path, repo, commitid)` Identical behavior to `include`, but if it fails the script is halted and the failure reason is attached to the SOAR response info.
+
+Both `include` and `require` can optionally specify an exact repository or commitid.  If the `repo` argument is ommitted the Gravwell default library repo of `https://github.com/gravwell/libs` is used.  If the `commitid` is ommitted then the `HEAD` commit is used.  Repos should be accessible by the Gravwell webserver via the schema defined (either `http://`, `https://`, or `git://`) in the repo path.  The SOAR system will automatically go get repos as needed, if a commit id is requested that isn't currently known Gravwell will attempt to update the repo.
+
+If you are in an airgapped system, or otherwise do not want Gravwell to have access to github, you can specify an internal mirror and/or default commit in the `gravwell.conf` file using the `Library-Repository` and `Library-Commit` configuration variables.  For example:
+
+```
+Library-Repository="https://github.com/foobar/baz" #override the default library
+Library-Commit=da4467eb8fe22b90e5b2e052772832b7de464d63
+```
+
+The `include` and `require` can be disabled (thereby disallowing external code) by setting `Disable-Library-Repository` in the `gravwell.conf` file.
+
 ### Resources and persistent data
 
 * `getResource(name) []byte, error` returns the slice of bytes is the content of the specified resource, while the error is any error encountered while fetching the resource.
