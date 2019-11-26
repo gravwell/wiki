@@ -20,6 +20,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Search overview](search/search.md)
 
+	* [Search Macros](search/macros.md)
+
   * [Search modules](search/searchmodules.md)
 
   * [Render modules](search/rendermodules.md)
@@ -46,6 +48,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
     * [Collectd](ingesters/ingesters.md#collectd_Ingester)
 
+  * [Ingester Preprocessors](ingesters/preprocessors/preprocessors.md)
+
   * [Service Integrations](ingesters/integrations.md)
 
 ## Advanced Gravwell Installation and Configuration
@@ -59,6 +63,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
   * [Building a Gravwell Cluster](distributed/cluster.md)
 
   * [Distributed Frontends](distributed/frontend.md)
+
+    * [Overwatch](distributed/overwatch.md)
 
   * [Environment Variables](configuration/environment-variables.md)
 
