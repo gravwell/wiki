@@ -16,6 +16,10 @@ Preprocessors can be used with the following ingesters:
 
 * Simple Relay
 * Kinesis
+* Kafka
+* Google Pub/Sub
+* Office 365
+* HTTP
 
 The other Gravwell ingesters will receive preprocessor support soon.
 
