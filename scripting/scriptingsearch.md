@@ -31,6 +31,12 @@ Library-Repository="https://github.com/foobar/baz" #override the default library
 Library-Commit=da4467eb8fe22b90e5b2e052772832b7de464d63
 ```
 
+The Library-Repository can also be a local folder that is readable by the Gravwell webserver process.  For example, if you are running Gravwell in a completely airgapped environment, you may still want access to the libs and the ability to update them.  Just unpack the git repository and set the `Library-Repository` as that path.
+
+```
+Library-Repository="/opt/gitstuff/gravwell/libs"
+```
+
 The `include` and `require` can be disabled (thereby disallowing external code) by setting `Disable-Library-Repository` in the `gravwell.conf` file.
 
 ### Resources and persistent data
