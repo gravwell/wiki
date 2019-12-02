@@ -15,6 +15,12 @@ We recommend the following when running multiple Gravwell clusters for external 
 * Clients should not be allowed to SSH into their webserver or indexer systems. This could allow them to break their configurations.
 * For extra security, *client* Gravwell clusters should not be able to route to each other. The Overwatch server must be allowed to route to each cluster, but they should not be allowed to communicate with each other.
 
+## Licensing Notes
+
+Gravwell overwatch requires a specific license that is unique to overwatch webservers, if you are interested in getting access to overwatch, email [sales](mailto:sales@gravwell.io).
+
+Overwatch webservers will NOT distribute their license to client nodes.  This means that an overwatch webserver cannot be used for the initial setup of a Gravwell cluster as the indexers will not receive licenses during setup.  Overwatch licenses also cannot be used on indexers.
+
 ## Configuring Overwatch
 
 Before setting up your Overwatch server, note that *all* indexers must use the same `Control-Auth` token. This allows the Overwatch server to connect to all the indexers simultaneously.
@@ -23,7 +29,15 @@ To install an Overwatch server, use the Gravwell installer to install only the w
 
 Next, the webserver should be configured in an **Overwatch Domain**. The domain is set with the `Webserver-Domain` parameter in gravwell.conf. Client webservers can safely be left in domain 0, but the Overwatch webserver should be set to a different number; this can be any integer between 0 and 32767.
 
-Those are the only essential configurations for the Overwatch webserver. You may wish to [configure TLS](#!configuration/certificates.md) or set p other options, but at this point it should be safe to restart the webserver (`systemctl restart gravwell_webserver.service`) and begin use.
+Those are the only essential configurations for the Overwatch webserver. You may wish to [configure TLS](#!configuration/certificates.md) or set other options, but at this point it should be safe to restart the webserver (`systemctl restart gravwell_webserver.service`) and begin use.
+
+### Configuring Multiple Overwatch Servers
+
+It may be advantagous to configure multiple overwatch systems that are tied to either all or some subset of client indexers.  MSSPs may want the ability to segment their customer base such that specific analysts operate on some subset of clients.  Enterprises may wish to provide fully independent overwatch webservers to multiple organizations.  Because overwatch systems operate on the domain configuration parameter, multiple overwatch webservers can be configured on multiple domains.
+
+Warning: Multiple Overwatch webservers *MUST* be on seperate domains unless they are configured to operate in distributed mode. If multiple Overwatch webservers are configured on the same domain, resources will be improperly mananged on the indexers, leading to query errors.
+
+![](OverwatchMutiple.png)
 
 ## Using an Overwatch server
 
