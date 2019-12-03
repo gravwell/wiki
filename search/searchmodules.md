@@ -45,6 +45,7 @@ These can be used just like user-defined enumerated values.
 * [ip](ip/ip.md)
 * [ipexist](ipexist/ipexist.md)
 * [ipfix](ipfix/ipfix.md)
+* [iplookup](iplookup/iplookup.md)
 * [j1939](j1939/j1939.md)
 * [join](join/join.md)
 * [json](json/json.md)
