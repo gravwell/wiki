@@ -20,6 +20,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Search overview](search/search.md)
 
+	* [Search Macros](search/macros.md)
+
   * [Search modules](search/searchmodules.md)
 
   * [Render modules](search/rendermodules.md)
@@ -45,6 +47,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
     * [Netflow/IPFIX Ingester](ingesters/ingesters.md#Netflow_Ingester)
 
     * [Collectd](ingesters/ingesters.md#collectd_Ingester)
+
+  * [Ingester Preprocessors](ingesters/preprocessors/preprocessors.md)
 
   * [Service Integrations](ingesters/integrations.md)
 

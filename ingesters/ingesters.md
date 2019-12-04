@@ -181,6 +181,38 @@ Source-Override=0.0.0.0
 Source-Override=DEAD:BEEF::FEED:FEBE
 ```
 
+## Data Consumer Configuration
+
+Besides the global configuration options, each ingester which uses a config file will need to define at least one *data consumer*. A data consumer is a config definition which tells the ingester:
+
+* Where to get data
+* What tag to use on the data
+* Any special timestamp processing rules
+* Overrides for fields such as the SRC field
+
+The Simple Relay ingester and the HTTP ingester define "Listeners"; File Follow uses "Followers"; the netflow ingester defines "Collectors". The individual ingester sections below describe the ingester's particular data consumer types and any unique configurations they may require. The following example shows how the File Follower ingester defines a "Follower" data consumer to read data from a particular directory:
+
+```
+[Follower "syslog"]
+        Base-Directory="/var/log/"
+        File-Filter="syslog,syslog.[0-9]" #we are looking for all authorization log files
+        Tag-Name=syslog
+        Assume-Local-Timezone=true #Default for assume localtime is false
+```
+
+Note how it specifies the data source (via the `Base-Directory` and `File-Filter` rules), which tag to use (via `Tag-Name`), and an additional rule for parsing timestamps in the incoming data (`Assume-Local-Timezone`).
+
+## Time Parsing Overrides
+
+Most ingesters attempt to apply a timestamp to each entry by extracting a timestamp from the data. There are several options which can be applied to each *data consumer* for fine-tuning of this timestamp extraction:
+
+* `Ignore-Timestamps` (boolean): setting `Ignore-Timestamps=true` will make the ingester apply the current time to each entry rather than attempting to extract a timestamp. This can be the only option for ingesting data when you have extremely incoherent incoming data.
+* `Assume-Local-Timezone` (boolean): By default, if a timestamp does not include a time zone the ingester will assume it is a UTC timestamp. Setting `Assume-Local-Timezone=true` will make the ingester instead assume whatever the local computer's timezone is. This is mutually exclusive with the Timezone-Override option.
+* `Timezone-Override` (string): Setting `Timezone-Override` tells the ingester that timestamps which don't include a timezone should be parsed in the specified timezone. Thus `Timezone-Override=US/Pacific` would tell the ingester to treat incoming timestamps as if they were in US Pacific time. See [this page](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for a complete list of acceptable timezone names (in the 'TZ database name' column). Mutually exclusive with Assume-Local-Timezone.
+* `Timestamp-Format-Override` (string): This parameter tells the ingester to look for a specific timestamp format in the data, e.g. `Timestamp-Format-Override="Mon Jan 2 15:04:05 MST 2006"`. The [Go time package's reference time format](https://golang.org/pkg/time/#pkg-constants) describes how to declare a timestamp format.
+
+The Kinesis and Google Pub/Sub ingesters do not provide the `Ignore-Timestamps` option. Kinesis and Pub/Sub include an arrival timestamp with every entry; by default, the ingesters will use that as the Gravwell timestamp. If `Parse-Time=true` is specified in the data consumer definition, the ingester will instead attempt to extract a timestamp from the message body. See these ingesters' respective sections for additional information.
+
 ## Simple Relay
 
 [Complete Configuration and Documentation](#!ingesters/simple_relay.md).
@@ -995,6 +1027,7 @@ Connection-Timeout = 0
 Insecure-Skip-TLS-Verify = false
 Pipe-Backend-target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
 Log-Level=ERROR #options are OFF INFO WARN ERROR
+State-Store-Location=/opt/gravwell/etc/kinesis_ingest.state
 
 # This is the access key *ID* to access the AWS account
 AWS-Access-Key-ID=REPLACEMEWITHYOURKEYID
@@ -1007,10 +1040,12 @@ AWS-Secret-Access-Key=REPLACEMEWITHYOURKEY
 	Region="us-west-1"
 	Tag-Name=kinesis
 	Stream-Name=MyKinesisStreamName	# should be the stream name as AWS knows it
-	Iterator-Type=LATEST
+	Iterator-Type=TRIM_HORIZON
 	Parse-Time=false
 	Assume-Localtime=true
 ```
+
+Note the `State-Store-Location` option. This sets the location of a state file which will track the ingester's position in the streams, to prevent re-ingesting entries which have already been seen.
 
 You will need to set at least the following fields before starting the ingester:
 
@@ -1023,7 +1058,9 @@ You can configure multiple `KinesisStream` sections to support multiple differen
 
 You can test the config by running `/opt/gravwell/bin/gravwell_kinesis_ingester -v` by hand; if it does not print out errors, the configuration is probably acceptable.
 
-Most of the fields are self-explanatory, but the `Iterator-Type` setting deserves a note. This setting selects where the ingester starts reading data. By setting it to TRIM_HORIZON, the ingester will start reading records from the oldest available. If it is set to LATEST, the ingester will ignore all existing records and only read records created after the ingester starts. In most situations, to avoid duplicating data it should be set to LATEST; set it TRIM_HORIZON if you have existing data you want to ingest, then shut down the ingester and change the value to LATEST before restarting.
+Most of the fields are self-explanatory, but the `Iterator-Type` setting deserves a note. This setting selects where the ingester starts reading data **if it does not have a state file entry** for the stream/shard. The default is "LATEST", which means the ingester will ignore all existing records and only read records created after the ingester starts. By setting it to TRIM_HORIZON, the ingester will start reading records from the oldest available. In most situations we recommend settting it to TRIM_HORIZON so you can fetch older data; on further runs of the ingester, the state file will maintain the sequence number and prevent duplicate ingestion.
+
+The Kinesis ingester does not provide the `Ignore-Timestamps` option found in many other ingesters. Kinesis messages include an arrival timestamp; by default, the ingester will use that as the Gravwell timestamp. If `Parse-Time=true` is specified in the data consumer definition, the ingester will instead attempt to extract a timestamp from the message body.
 
 ## GCP PubSub Ingester
 
@@ -1075,6 +1112,63 @@ Note the following essential fields:
 You can configure multiple `PubSub` sections to support multiple different PubSub topics within a single GCP project.
 
 You can test the config by running `/opt/gravwell/bin/gravwell_pubsub_ingester -v` by hand; if it does not print out errors, the configuration is probably acceptable.
+
+The PubSub ingester does not provide the `Ignore-Timestamps` option found in many other ingesters. PubSub messages include an arrival timestamp; by default, the ingester will use that as the Gravwell timestamp. If `Parse-Time=true` is specified in the data consumer definition, the ingester will instead attempt to extract a timestamp from the message body.
+
+## Office 365 Log Ingester
+
+Gravwell provides an ingester for Microsoft Office 365 logs. The ingester can process all supported log types. In order to configure the ingester, you will need to register a new *application* within the Azure Active Directory management portal; this will generate a set of keys which can be used to access the logs. You will need the following information:
+
+* Client ID: a UUID generated for your application via the Azure management console
+* Client secret: a secret token generated for your application via the Azure console
+* Azure Directory ID: A UUID representing your Active Directory instance, found in the Azure Active Directory dashboard
+* Tenant Domain: The domain of your Office 365 domain, e.g. "mycorp.onmicrosoft.com"
+
+### Installation and configuration
+
+First, download the installer from the [Downloads page](#!quickstart/downloads.md), then install the ingester:
+
+```
+root@gravserver ~# bash gravwell_o365_installer.sh
+```
+
+If the Gravwell services are present on the same machine, the installation script should automatically extract and configure the `Ingest-Auth` parameter and set it appropriately. You will now need to open the `/opt/gravwell/etc/o365_ingest.conf` configuration file and set it up for your Office 365 account, replacing the placeholder fields and modifying tags as desired. Once you have modified the configuration as described below, start the service with the command `systemctl start gravwell_o365_ingest.service`
+
+The example below shows a sample configuration which connects to an indexer on the local machine (note the `Pipe-Backend-target` setting) and feeds it logs from all supported log types:
+
+```
+[Global]
+Ingest-Secret = IngestSecrets
+Connection-Timeout = 0
+Pipe-Backend-target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
+Log-Level=ERROR #options are OFF INFO WARN ERROR
+State-Store-Location=/opt/gravwell/etc/o365_ingest.state
+
+Client-ID=79fb8690-109f-11ea-a253-2b12a0d35073
+Client-Secret="<secret>"
+Directory-ID=e8b7895e-109f-11ea-9dcc-93fb14b5dab5
+Tenant-Domain=mycorp.onmicrosoft.com
+
+[ContentType "azureAD"]
+	Content-Type="Audit.AzureActiveDirectory"
+	Tag-Name="365-azure"
+
+[ContentType "exchange"]
+	Content-Type="Audit.Exchange"
+	Tag-Name="365-exchange"
+
+[ContentType "sharepoint"]
+	Content-Type="Audit.SharePoint"
+	Tag-Name="365-sharepoint"
+
+[ContentType "general"]
+	Content-Type="Audit.General"
+	Tag-Name="365-general"
+
+[ContentType "dlp"]
+	Content-Type="DLP.All"
+	Tag-Name="365-dlp"
+```
 
 ## Disk Monitor
 

@@ -9,6 +9,8 @@ This API implements the creation, installation, and deletion of Gravwell kits. K
 * Templates
 * Pivots
 * User files
+* Macros
+* Search library entries
 
 A given kit will also have the following attributes, specified at build time:
 
@@ -33,7 +35,8 @@ type KitBuildRequest struct {
 	Files             []uuid.UUID 
 	Resources         []string    
 	ScheduledSearches []int32     
-	Macros            []uint64    
+	Macros            []uint64
+	SearchLibraries   []uuid.UUID    
 	Extractors        []string    
 }
 ```
