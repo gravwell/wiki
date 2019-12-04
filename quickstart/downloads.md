@@ -38,3 +38,4 @@ Some Gravwell components are distributed as optional additional installers, such
 | Component | Description | MD5 | More Info |
 |:---------:|-------------|:---:|----------:|
 | [Datastore](#!distributed/frontend.md) | The datastore keeps multiple Gravwell webservers in sync, enabling load balancing |dc16ebda1bbdf8c09a588a67fc5bdf38| [Download](https://update.gravwell.io/files/gravwell_datastore_installer_3.3.1.sh) |
+| [Offline Replicator](#!configuration/replication.md) | The offline replication server acts as a standalone replication peer, it will not participate in queries and is best paired with single indexer Gravwell installations |5db2d2eb067680565e67d1707a16426a| [Download](https://update.gravwell.io/files/gravwell_offline_replication_installer_3.3.1.sh) |
