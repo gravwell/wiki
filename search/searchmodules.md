@@ -38,6 +38,7 @@ These can be used just like user-defined enumerated values.
 * [entropy](math/math.md#Entropy)
 * [eval](eval/eval.md)
 * [fields](fields/fields.md)
+* [first/last](firstlast/firstlast.md)
 * [geoip](geoip/geoip.md)
 * [grep](grep/grep.md)
 * [grok](grok/grok.md)
