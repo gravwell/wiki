@@ -116,3 +116,9 @@ An example query which calculates the entropy of URLS by host and sorts the list
 ```
 tag=pcap packet tcp.Port==80 ipv4.IP !~ 10.0.0.0/8 tcp.Payload | grep -e Payload GET PUT HEAD POST | regex -e Payload "[A-Z]+\s(?P<url>\S+)\sHTTP\/" | entropy url by IP | table IP entropy
 ```
+
+The entropy module can take the `-p` flag, which tells it to calculate entropy *per entry*, rather than over a window as normal. The following will calculate the entropy of each windows log entry and display the entropy plus the data:
+
+```
+tag=winlog entropy -p | table DATA entropy
+```

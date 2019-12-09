@@ -71,6 +71,8 @@ The following fields can be extracted
 | ThreadID | Event.System.Execution[ThreadID] |
 | Channel | Event.System.Channel |
 | Computer | Event.System.Computer |
+| Correlation | Event.System.Correlation |
+| Security | Event.System.Security |
 
 Specifying a field not listed above will cause the winlog module to attempt to extract `Event.Data[Name]==<field>`. For example, the SubjectLogonId in the example above (0x3e3) can be extracted by simply specifying `SubjectLogonId` to the winlog module.
 
