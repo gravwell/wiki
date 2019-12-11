@@ -15,14 +15,15 @@ Some flags appear in several different search modules and have the same meaning 
 
 ## Universal Enumerated Values
 
-Every search module has universal enumerated values for records.
+The following enumerated values are available for every entry. They're actually convenient names for properties of the raw entries themselves, but can be treated as enumerated value names.
 
 * SRC -- the source of the entry data.
 * TAG -- the tag attached to the entry.
 * TIMESTAMP -- the timestamp of the entry.
 * DATA -- the actual entry data.
+* NOW -- the current time.
 
-These can be used just like user-defined enumerated values.
+These can be used just like user-defined enumerated values, thus `table foo bar DATA NOW` is valid. They do not need to be explicitly *extracted* anywhere; they are always available.
 
 ## Search module documentation
 
