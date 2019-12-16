@@ -14,6 +14,7 @@ We determined that the most straight-forward course of action was to have the *i
 
 * `-e <name>`: The “-e” option specifies that the ipfix module should operate on an enumerated value.  Operating on enumerated values can be useful when you have extracted an ipfix frame using upstream modules. 
 * `-s`: The "-s" option puts the ipfix module in strict mode. In strict mode, any specified extractions *must* succeed, or the entry will be dropped; thus, `ipfix protocolIdentifier==1 srcPort` would drop all entries, because ICMP messages (IP protocol 1) will never contain a source port field.
+* `-f`: The "-f" flag tells the module to extract a list of available fields for each IPFIX data record it sees and drop them, in human-readable format, into an enumerated value called "FIELDS". This is mutually exclusive with field extraction; if you specify -f, you cannot specify any fields to extract.
 
 ## Processing Operators
 
@@ -125,3 +126,11 @@ This example filters down to only Netflow v9 records, then extracts the protocol
 ```
 tag=v9 ipfix Version==9 PROTOCOL | count by PROTOCOL | table PROTOCOL count
 ```
+
+### Extract a list of fields in each data record
+
+```
+tag=ipfix ipfix -f | table FIELDS
+```
+
+![](fields.png)
