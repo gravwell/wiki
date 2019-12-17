@@ -28,6 +28,10 @@ The following are more advanced parameters which may need to be adjusted based o
 * `Surname-Attribute` [default: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"]: defines the SAML attribute which will contain the user's surname.
 * `Email-Attribute` [default: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"]: defines the SAML attribute which will contain the user's email address. On a Shibboleth server this should be set to "mail" instead.
 
+## Example: Setting up Azure Active Directory
+
+Documentation on setting up SSO with Azure Active Directory is separated into its own page. [Click here](sso-azure/azure.md) to read it.
+
 ## Example: Setting up Windows Server 2016
 
 Gravwell SSO works well with Microsoft's AD FS (Active Directory Federation Services) as provided with Windows Server. We'll describe how to configure AD FS and Gravwell for SSO authentication.
