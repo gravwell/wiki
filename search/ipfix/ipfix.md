@@ -94,10 +94,14 @@ The module also provides a handful of "shortcuts" for convenience:
 | srcPort | The source port for this flow. | > < <= >= == != | srcPort == 80
 | dstPort | The destination port for this flow. | > < <= >= == != | dstPort == 80
 | ip | Extract the first IP that matches a filter.  If no filter is specified the Src is used | ~ !~ == != | ip ~ 10.0.0.0/24
-| port | Extract the first port that matches the filter.  If no filter is specified the source port is used | > < <= >= == != | port == 80
+| port | Extract the first port that matches the filter.  If no filter is specified the lower value is used | > < <= >= == != | port == 80
 | vlan | Extracts the first VLAN that matches a filter, where the VLAN may be drawn from either the vlanId or dot1qVlanId field. | > < <= >= == != | vlan == 100
 | srcMac | Extracts the source MAC address for the flow | == != | srcMac==01:23:45:67:89:00
 | dstMac | Extracts the destination MAC address for the flow | == != | dstMac==01:23:45:67:89:00
+| bytes | Total bytes seen, this adds the `octetDeltaCount` and `postOctetDeltaCount` values together | > < <= >= == != | bytes <= 10000
+| packets | Total packets seen, this adds the `packetDeltaCount` and `postPacketDeltaCount` values together | > < <= >= == != | packets > 0xffffff 
+| flowStart | The start timestamp of the flow, this shorthand uses any of the following fields: `flowStartSeconds`, `flowStartMilliseconds`, `flowStartMicroseconds`, `flowStartNanoseconds` and outputs a proper timestamp | | flowStart
+| flowEnd | The end timestamp of the flow, this shorthand uses any of the following fields: `flowEndSeconds`, `flowEndMilliseconds`, `flowSEndMicroseconds`, `flowEndNanoseconds` and outputs a proper timetamp | | flowStart
 
 #### Filtering on other fields
 
