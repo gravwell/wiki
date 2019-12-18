@@ -28,6 +28,11 @@ The following are more advanced parameters which may need to be adjusted based o
 * `Surname-Attribute` [default: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"]: defines the SAML attribute which will contain the user's surname.
 * `Email-Attribute` [default: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"]: defines the SAML attribute which will contain the user's email address. On a Shibboleth server this should be set to "mail" instead.
 
+Gravwell can be configured to receive a list of group memberships with the user's login response, auto-generate any required groups, and add the user to those groups. To enable this, you must set `Groups-Attribute` and define at least one `Group-Mapping`:
+
+* `Groups-Attribute` [default: "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"]: defines the SAML attribute which contain's the list of groups to which the user belongs. You will typically have to explicitly configure the SSO provider to send the group list.
+* `Group-Mapping`: Defines one of the groups which may be automatically created if listed in the user's group memberships. This may be specified multiple times to allow multiple groups. The argument should consist of two names separated by a colon; the first is the SSO server-side name for the group (typically a name for AD FS, a UUID for Azure, etc.) and the second is the name Gravwell should use. Thus, if we define `Group-Mapping=Gravwell Users:gravwell-users`, if we receive a login token for a user who is a member of the group "Gravwell Users", we will create a local group named "gravwell-users" and add the user to it.
+
 ## Example: Setting up Azure Active Directory
 
 Documentation on setting up SSO with Azure Active Directory is separated into its own page. [Click here](sso-azure/azure.md) to read it.
@@ -104,6 +109,19 @@ query = ";mail,givenName,sn;{0}", param = c.Value);
 When finished, you should have three rules:
 
 ![](sso-policy.png)
+
+### (Optional) Send Group Info
+
+Gravwell can automatically create groups and add SSO users to these groups as mentioned earlier in this document. You can configure Active Directory to send a claim containing a list of group names by creating an LDAP claim rule that maps "Token-Groups - Unqualified Names" to "Group" as shown in the screenshot below:
+
+![](sso-groups.png)
+
+In gravwell.conf, you'll need to add a `Groups-Attribute` field (`http://schemas.microsoft.com/ws/2008/06/identity/claims/groups` if you set the outgoing claim type to "Group" as shown above) to indicate which attribute contains the list of groups. You'll also need at least one `Group-Mapping` field to map Active Directory group names to desired group names within Gravwell. The example below maps an AD group named "Gravwell Users" to a Gravwell group named "gravwell-users":
+
+```
+	Groups-Attribute=http://schemas.xmlsoap.org/claims/Group
+	Group-Mapping=Gravwell Users:gravwell-users
+```
 
 ### Test Configuration
 

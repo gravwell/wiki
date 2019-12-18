@@ -72,3 +72,16 @@ Click it; you should be taken to a Microsoft login page:
 ![](login.png)
 
 Log in as one of the users you set up to access the Gravwell application. Once login is complete, you should be redirected to the Gravwell webserver, logged in as a user with the same username as the Azure user.
+
+## Notes on Groups
+
+Gravwell can automatically create groups and add SSO users to these groups as [documented on the main SSO page](#!configuration/sso.md). You can configure Azure AD to send a claim with groups by clicking 'Add a group claim' in the application's User Attributes & Claims configuration page:
+
+![](groups.png)
+
+To enable groups, you'll need to tell Gravwell which attribute contains the list of groups and specify the mapping from Azure group IDs (which are sent as UUIDs) to the desired group name in Gravwell. If you have a group with Azure Object ID = dc4b4166-21d7-11ea-a65f-cfd3443399ee that you want to be named "gravwell-users", you should add this to your gravwell.conf's SSO section:
+
+```
+	Groups-Attribute=http://schemas.microsoft.com/ws/2008/06/identity/claims/groups
+	Group-Mapping=dc4b4166-21d7-11ea-a65f-cfd3443399ee:gravwell-users
+```
