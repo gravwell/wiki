@@ -13,6 +13,10 @@ An invocation of the stats module consists of:
 
 These components are discussed below.
 
+### Supported Flags
+
+* `-b`: This flag tells the stats module to always preserve the original body of the entry. For example, saying `tag=* length | stats max(length) | text` would normally cause the output entry's body to be overwritten with the maximum length seen, for convenient display with the text renderer. Adding the `-b` flag (`tag=* length | stats -b max(length) | text`) would preserve the original body, meaning the renderer will instead display the *contents* of the longest entry seen.
+
 ## Math Operations Specification
  
 An operation consists of the operation name, the "source" enumerated value contained in parentheses, and optionally a different name for the output enumerated value.
