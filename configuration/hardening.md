@@ -1,10 +1,12 @@
 # Hardening a Gravwell Installation
 
-Hardening a Gravwell installation is a pretty straight forward process.  We take pride in shipping a well contained and well isolated product that adheres to the [principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege).
+Hardening a Gravwell installation is a pretty straight forward process.  We take pride in shipping a well contained and well isolated product that adheres to the [principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege).  Beyond a few basics tweaks and some common sense measures, hardening a Gravwell install is the exact same as hardening any other system.  Gravwell runs entirely in userspace with an unpriveleged account, it is at the mercy of the system it runs on, so protect that system and you will protect Gravwell.
+
+The [Linux Audit](https://linux-audit.com/linux-server-hardening-most-important-steps-to-secure-systems/) page has a few good tips.
 
 There are a few areas that may warrant some attention upon initial installation, namely TLS certificates.  We ship with a set of defaults that should satisfy a most users but there are a few settings that you may went to tweak.
 
-We also highly reccomend keeping up-to-date with the latest Gravwell releases and occasionally checking in on the [changelog](/docs/#!changelog/list.md).  If we encounter a security issue we will document it there.  We will also notify customers of critical security issues via the prescribed point of contact.
+We also highly reccomend keeping up-to-date with the latest Gravwell releases and occasionally checking in on the [changelog](../#!changelog/list.md).  If we encounter a security issue we will document it there.  We will also notify customers of critical security issues via the prescribed point of contact.
 
 ## Quickstart
 
@@ -12,10 +14,19 @@ Securing Gravwell is not much different than securing any other accessible appli
 
 If you are in a hurry and just want to hit the high points, do this:
 
-1. Install a valid TLS Certificate and enable HTTPS [More Info](/docs/#!configuration/certificates.md)
-2. Change the admin users password
+1. Change the password for the admin user
+2. Install a valid TLS Certificate and enable HTTPS [More Info](certificates.md)
 3. Change the username for the admin password
-4. Ensure you use good secrets for ingesters and enable Ciphertext connections [More Info](/docs/#!ingesters/ingesters.md)
+4. Ensure you use good secrets for ingesters and enable Ciphertext connections [More Info](../#!ingesters/ingesters.md)
+5. Enable HTTPS communication in the Search Agent [More Info](certificates.md)
+6. Ensure communication between webservers and indexers are on a trusted network.
+
+Installing a valid TLS certificate and enabling HTTPs is only slightly less important than changing the default password for the admin user.  When logging in, if Gravwell detects that you are not using HTTPS the login problem will show a warning.
+
+
+![](tls_warning.png)
+
+Without HTTPS enabled and valid TLS certificates attackers could sniff login credentials.
 
 # Gravwell Users and Groups
 
@@ -28,13 +39,39 @@ Gravwell users and groups loosely follow the unix design patterns.  At a high le
 5. Admin users are not restricted in anyway (think `root`)
 6. The Admin user with UID 1 cannot be deleted or locked out of the system (again, think `root`)
 
-## Default Admin User
+User and Group management is the sole responsibility of admin users, non-admins cannot modify users or change user group memberships.
 
-Default Gravwell installations have a single user named `admin` with the user `changeme`.  The default admin user has the special UID of 1, while you can change the name of the default admin user, you cannot change its UID.  Gravwell treats UID 1 in the same way that Unix treats UID 0.  It is special and cannot be deleted, locked, or otherwise disabled.  You should protect this account.
+## Default Accounts
 
-## Account Lockout
+Default Gravwell installations have a single user named `admin` with the user `changeme`.  This default account uses the coveted UID of 1.  Gravwell treats UID 1 in the same way that Unix treats UID 0.  It is special and cannot be deleted, locked, or otherwise disabled.  You should protect this account!
+
+While you cannot delete the `admin` user with the special UID of 1, you can change the username; which we **HIGHLY** reccomend you do.  This makes it much harder for an unauthorized user to guess credentials.  To try and further drive home the point that this default account requires your attention, we also gave it the name "Sir changeme of change my password the third".  Seriously, the first thing you should do is lock down this account.
+
+A default installation also contains a basic `users` group.  This group is just a starting point and does not have any special priveleges.
+
+### Account Storage and Password Hashing
+
+Gravwell uses the [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) hashing system to store and validate logins.  This means that passwords are **NEVER** stored plaintext and we have no way to recover them.
+
+We start with a pretty aggressive bcrypt hash cost of 12 and routinely re-evaluate whether we need to increase that cost. 
+
+### Account Brute Force Protections
+
+Gravwell employs a login throttling system to protect accounts.  If a user repeatedly failes authentication, Gravwell will introduce a delay in the authentication process that grows with each failed login attempt, eventually locking the account.  The login throttling controls can be tweaked using the following parameters in the `gravwell.conf` file:
+
+`Login-Fail-Lock-Count` - Controls how many times a user can fail authentication before we start slowing down the login attempts.  The default value is 5.
+
+`Login-Fail-Lock-Durat` - Duration in minutes used for calculating the failure count.  The default is 5.
+
+The default settings mean that a user can fail to login 5 times in 5 minutes before we start aggressively throttling the login attempts.  Setting the `Login-Fail-Lock-Count` to zero disables the locking of accounts.  Locked accounts can be unlocked in the user control panel.
+
+![](locked_account.png)
 
 ## Persistent Sessions
+
+The default `gravwell.conf` configuration enables persistent sessions.  This means that when the Gravwell webserver shuts down it will save all the active user session tokens to internal storage.  These tokens are not particularly sensitive, but if an attacker could read that internal storage **AND** originate a request from the IP address bound to the session they could impersonate users.
+
+If you do not trust your persistent storage and want to further lock down sessions, you can disable persistent sessions by setting `Persist-Web-Logins=false` in the `[Global]` section of the `gravwell.conf` file.  If you do disable persistent sessions, then users will be required to log in if Gravwell restarts.
 
 # Installation Components
 
@@ -98,20 +135,21 @@ Notice that we don't limit the number of open file descriptors using the `LimitN
 
 All Gravwell service executables (excluding the Windows ingesters) are installed in `/opt/gravwell/bin` and owned by the user `gravwell` and the group `gravwell`.  The permission bits on the executables do not allow for reading, writing, or execution by `other`.  This means that only the root user and/or the `gravwell`:`gravwell` user and group can execute or read the applications.
 
-### Application Capabilities
+Some components are installed with special capabilities that allow them to perform specific actions without executing as a special user or group.  At this time, Gravwell components only make use of the following two capabilities:
 
-Some components are installed with special capabilities that allow them to access specific resources without executing as a special user or group.  The following table outlines each component that is installed with additional capabilities and why.
+* `CAP_NET_BIND_SERVICE` - allows non-root applications to bind to ports less than 1024.
+* `CAP_NET_RAW` - Allows a non-root application to open a raw socket.
 
-## Gravwell Stored Data
+The `CAP_NET_RAW` capability is only used by the [Network Capture](/#!ingesters/ingesters.md#Network_Ingester) ingester so that it can capture raw packets from an interface without running as root.
 
-# Webserver to Indexer Communications
-
-# Distributed Webservers
-
-# Ingesters
-
-# Search Agent
+The `CAP_NET_BIND_SERVICE` capability is used by the [Simple Relay](/#!ingesters/ingesters.md#Simple_Relay) and the Webserver so that they can bind to low numbered ports such as 80, and 443 for the webserver and 601 and 514 for the Simple Relay ingester.
 
 # Search Scripting and Automation (SOAR)
 
-# Query Controls
+The Gravwell SOAR system is extremely powerful, it can execute queries, update resources, reach out and touch external systems.  The SOAR system is underpinned by a [Turing Complete](https://simple.wikipedia.org/wiki/Turing_complete) language and can essentially do ANYTHING.  But with great power comes great responsibility.  It may be beneficial to disable "risky" API access in SOAR scripts to limit what a user can do.  SOAR APIs that are deemed "risky" are any API that can establish external connectivity outside of Gravwell, these include HTTP, network, SSH, FTP, SFTP, etc..
+
+Disabling the risky APIs can reduce the risk that users export sensitive data.  Disable the risky SOAR APIs by setting the following in your Gravwell.conf file.
+
+`Disable-Network-Script-Functions=true`
+
+[//]: # (# Query Controls)
