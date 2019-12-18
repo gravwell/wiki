@@ -22,6 +22,7 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
     * [Search Macros](search/macros.md)
 
+
   * [Search modules](search/searchmodules.md)
 
   * [Render modules](search/rendermodules.md)
@@ -31,6 +32,7 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
   * [Gravwell System Architecture](architecture/architecture.md)
 
     * [Network Ports Used by Gravwell](configuration/networking.md)
+
 
   * [The Resource System](resources/resources.md)
 
@@ -65,6 +67,7 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
   * [Distributed Frontends](distributed/frontend.md)
 
     * [Overwatch](distributed/overwatch.md)
+
 
   * [Environment Variables](configuration/environment-variables.md)
 
