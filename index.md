@@ -20,7 +20,7 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Search overview](search/search.md)
 
-	* [Search Macros](search/macros.md)
+    * [Search Macros](search/macros.md)
 
   * [Search modules](search/searchmodules.md)
 
@@ -71,6 +71,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
   * [Detailed configuration parameters](configuration/parameters.md)
 
   * [Single Sign-On](configuration/sso.md)
+
+  * [Hardening Gravwell](configuration/hardening.md)
 
 ## Query Acceleration, Auto-Extraction, and Data Management
   
