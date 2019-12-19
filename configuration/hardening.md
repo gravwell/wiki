@@ -58,17 +58,17 @@ We start with a pretty aggressive bcrypt hash cost of 12 and routinely re-evalua
 
 ### Account Brute Force Protections
 
-[//]: # (Gravwell employs a login throttling system to protect accounts.  If a user repeatedly fails authentication, Gravwell will introduce a delay in the authentication process that grows with each failed login attempt, eventually locking the account.  The login throttling controls can be tweaked using the following parameters in the `gravwell.conf` file:)
+Gravwell employs a login throttling system to protect accounts.  If a user repeatedly fails authentication, Gravwell will introduce a delay in the authentication process that grows with each failed login attempt, eventually locking the account.  The login throttling controls can be tweaked using the following parameters in the `gravwell.conf` file:
 
-Gravwell employs a login throttling system to protect accounts.  If a user repeatedly fails authentication, Gravwell will introduce a delay in the authentication process, making brute-forcing passwords more difficult.  The login throttling controls can be tweaked using the following parameters in the `gravwell.conf` file:
+`Login-Fail-Lock-Count` - Controls how many times a user can fail authentication before we start slowing down the login attempts.  The default value is 0.
 
-`Login-Fail-Lock-Count` - Controls how many times a user can fail authentication before we start slowing down the login attempts.  The default value is 5.
+`Login-Fail-Lock-Duration` - Duration in minutes used for calculating the failure count.  The default is 0.
 
-`Login-Fail-Lock-Duration` - Duration in minutes used for calculating the failure count.  The default is 5.
+The account lockout feature is disabled by default, however the `gravwell.conf` configuration shipped in the Docker containers and installers sets a value of 5 and 5, this means that a user can fail logging in up to 5 times in 5 minutes without locking their account.
 
-The default settings mean that a user can fail to login 5 times in 5 minutes before we start aggressively throttling the login attempts.
+The special UID 1 admin account **IS** subject to login throttling and exponential delays, but is **NOT** subject to account locking.  That account cannot be locked out.  Accounts that are locked due to brute force attempts do not eject all active sessions, while a user cannot login after having their account locked, they CAN maintain any active sessions.  This is so an attacker cannot DOS the Gravwell system and boot active users.
 
-[//]: # (Setting the `Login-Fail-Lock-Count` to zero disables the locking of accounts.  Locked accounts can be unlocked in the user control panel.)
+Setting either the `Login-Fail-Lock-Count` or `Login-Fail-Lock-Duration` to zero disables the locking of accounts.  Locked accounts can be unlocked in the user control panel.
 
 [//]: # (![](locked_account.png))
 
