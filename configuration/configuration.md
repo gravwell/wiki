@@ -133,3 +133,33 @@ A Gravwell cluster with multiple indexer nodes can be configured so that nodes r
 ## Query Acceleration
 
 Gravwell supports the notion of "accelerators" for individual wells, which allow you apply parsers to data at ingest to generate optimization blocks.  Accelerators are just as felexible as query modules and are transparently engaged when performing queries.  Accelerators are extremely useful for needle-in-haystack style queries, where you need to zero in on data that has specific field values very quickly.  See the [Accelerators](accelerators.md) section for more information and configuration techniques.
+
+## Password Complexity
+
+Gravwell supports the option to enforce password complexity on users when not in single sign on mode.  Enabling password complexity requirements is performed by adding the following structure to the `gravwell.conf` file:
+
+
+```
+[Password-Controls]
+	Min-Length=<integer>
+	Require-Uppercase=<bool>
+	Require-Lowercase=<bool>
+	Require-Number=<bool>
+	Require-Special=<bool>
+```
+
+The default Gravwell deployment does not enforce any rules on password complexity, and because Gravwell uses a secure bcrypt password hashing system, we have no way to enforce these rules after the fact.  Once you enable password complexity requirements all future password changes will be required to abide by the requirements.
+
+Here is an example configuration block that requires complex passwords that are at least 10 characters in length:
+
+```
+[Password-Controls]
+	Min-Length=10
+	Require-Uppercase=true
+	Require-Lowercase=true
+	Require-Number=true
+	Require-Special=true
+
+```
+
+Note that Gravwell fully supports UTF-8 character sets and that many languages do not have the concept of case.  So while the password `パスワードを推測することはできません!#$@42` may look very complex, it doesn't meet the requirements above due to the lack of uppoer and lower case values.

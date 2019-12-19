@@ -18,8 +18,9 @@ If you are in a hurry and just want to hit the high points, do this:
 2. Install a valid TLS Certificate and enable HTTPS [More Info](certificates.md)
 3. Change the username for the admin user
 4. Ensure you use good secrets for ingesters and enable Ciphertext connections [More Info](../#!ingesters/ingesters.md)
-5. Enable HTTPS communication in the Search Agent [More Info](certificates.md)
-6. Ensure communications between webservers and indexers are over a trusted network.
+5. Enable [password complexity controls](/docs/#!configuration/configuration.md#Password_Complexity) or [Single Sign On](/docs/#!configuration/sso.md)
+6. Enable HTTPS communication in the Search Agent [More Info](certificates.md)
+7. Ensure communications between webservers and indexers are over a trusted network.
 
 Installing a valid TLS certificate and enabling HTTPS is only slightly less important than changing the default password for the admin user.  When logging in, if Gravwell detects that you are not using HTTPS the login prompt will show a warning:
 
