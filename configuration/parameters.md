@@ -506,3 +506,16 @@ Applies to:		Webserver
 Default Value:	false
 Example:		`Disable-Library-Repository=true`
 Description:	Scheduled scripts may import additional libraries using the `include` function. Setting `Disable-Library-Repository` to true disables this functionality.
+
+**Password-Control**
+Applies to:		Webserver
+Example:
+```
+[Password-Control]
+	Min-Length=8
+	Require-Uppercase=true
+	Require-Lowercase=true
+	Require-Special=true
+	Require-Special=true
+```
+Description:	A new configuration block that is specified in the `gravwell.conf` file that can be used to enforce password complexity rules when users are created or passwords are changed.  These complexity configuration rules do not apply when using Single Sign On.
