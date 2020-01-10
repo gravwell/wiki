@@ -378,8 +378,8 @@ Description:	The Docker-Secrets parameter tells Gravwell that it should attempt 
 **HTTP-Proxy**
 Applies to:		Webserver
 Default Value:
-Example:		`HTTP-Proxy=http://wwwproxy.example.com:8080/`
-Description:	The HTTP-Proxy parameter configures a proxy to be used for HTTP and HTTP requests by the webserver. It is effectively equivalent to setting the environment variable $http_proxy and allows the same syntax.
+Example:		`HTTP-Proxy=wwwproxy.example.com:8080`
+Description:	The HTTP-Proxy parameter configures a proxy to be used for HTTP and HTTP requests by the webserver. It is effectively equivalent to setting the environment variable $http_proxy and allows the same syntax.  The specified proxy value will be used for both `HTTP` and `HTTPS` requests.
 
 **Webserver-Ingest-Groups**
 Applies to:		Webserver
