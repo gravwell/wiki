@@ -35,6 +35,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [cef](cef/cef.md)
 * [count](math/math.md#Count)
 * [csv](csv/csv.md)
+* [diff](diff/diff.md)
 * [entropy](math/math.md#Entropy)
 * [eval](eval/eval.md)
 * [fields](fields/fields.md)
