@@ -37,7 +37,7 @@ type KitBuildRequest struct {
 	ScheduledSearches []int32     
 	Macros            []uint64
 	SearchLibraries   []uuid.UUID    
-	Extractors        []string    
+	Extractors        []uuid.UUID    
 }
 ```
 
