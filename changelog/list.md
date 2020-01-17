@@ -1,8 +1,9 @@
 # Changelogs for recent version updates
 
-## Current Version [3.3.3](3.3.3.md)
+## Current Version [3.3.4](3.3.4.md)
 
-* [3.3.1](3.3.2.md)
+* [3.3.3](3.3.3.md)
+* [3.3.2](3.3.2.md)
 * [3.3.1](3.3.1.md)
 * [3.3.0](3.3.0.md)
 * [3.2.5](3.2.5.md)
