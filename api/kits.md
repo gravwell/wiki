@@ -149,6 +149,30 @@ A GET request on `/api/kits` will return a list of all known kits. Here is an ex
 
 To install a kit once it has been uploaded, send a PUT request to `/api/kits/<uuid>`, where the UUID is the UUID field from the list of kits. The server will return a 200 status code upon successful installation.
 
+Additional kit installation options may be specified by passing a configuration structure in the body of the request, e.g.:
+
+```
+{
+	"OverwriteExisting": true,
+	"Global": true,
+	"AllowUnsigned": false,
+	"InstallationGroup": 3,
+	"Labels": ["foo", "bar"]
+}
+```
+
+Note: All of the following are optional. Any or all of them may be omitted; to take the default options, simply omit the body from the request.
+
+If set, `OverwriteExisting` tells the installer to simply replace any existing items which have the name unique identifier as the kit's version.
+
+The `Global` flag may only be set by the administrator. If set, all items will be marked as Global, meaning all users will have access.
+
+Regular users can only install properly-signed kits from Gravwell. If `AllowUnsigned` is set, *administrators* can install unsigned kits.
+
+`InstallationGroup` allows the installing user to share the contents of the kit with one of the groups to which he belongs.
+
+`Labels` is a list of additional labels which should be applied to all label-able items in the kit upon installation. Note that Gravwell automatically labels kit-installed items with "kit" and the ID of the kit (e.g. "io.gravwell.coredns").
+
 ## Uninstalling a kit
 
 To remove a kit, issue a DELETE request on `/api/kits/<uuid>`.
