@@ -77,7 +77,7 @@ Adding an autoextractor is performed by issuing a POST to `/api/autoextractors` 
 }
 ```
 
-If an error occurs when adding an auto-extractor the webserver will return a list of errors.
+If an error occurs when adding an auto-extractor the webserver will return a list of errors. If successful, the server will respond with the UUID of the new extractor.
 
 Note: There is no need to set the `uuid`, `uid`, `gids`, `synced`, or `lastupdated` fields when creating an extractor--these are automatically filled in. Only an admin user may set the `global` flag to true.
 
