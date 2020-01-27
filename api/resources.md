@@ -76,6 +76,16 @@ Metadata can be modified by performing a PUT request on `/api/resources/{guid}`.
 
 Note: Only the GroupACL, ResourceName, and Description fields can be modified by regular users. Admin users can also modify the Global field. Any other modified fields will be ignored by the server.
 
+## Getting resource content-type
+
+A GET request to `/api/resources/{guid}/contenttype` will return a structure containing the detected content-type of the resource and the first 512 bytes of the resource body:
+
+```
+{"ContentType":"text/plain; charset=utf-8","Body":"IyBEdW1wcyB0aGUgcm93cyBvZiB0aGUgc3BlY2lmaWVkIENTViByZXNvdXJjZSBhcyBlbnRyaWVzLCB3aXRoCiMgZW51bWVyYXRlZCB2YWx1ZXMgY29udGFpbmluZyB0aGUgY29sdW1ucy4KIyBlLmcuIGdpdmVuIGEgcmVzb3VyY2UgbmFtZWQgImZvbyIgY29udGFpbmluZyB0aGUgZm9sbG93aW5nOgojCWhvc3RuYW1lLGRlcHQKIwl3czEsc2FsZXMKIwl3czIsbWFya2V0aW5nCiMJbWFpbHNlcnZlcjEsSVQKIyBydW5uaW5nIHRoZSBmb2xsb3dpbmcgcXVlcnk6CiMJdGFnPWRlZmF1bHQgYW5rbyBkdW1wIGZvbwojIHdpbGwgb3V0cHV0IDQgZW50cmllcyB3aXRoIHRoZSB0YWcgImRlZmF1bHQiLCBjb250YWluaW5nIGVudW1lcmF0ZWQKIyB2YWx1ZXMgbmFtZWQgImhvc3RuYW1lIiBhbmQgImRlcHQiIHdob3NlIGNvbnRlbnRzIG1hdGNoIHRoZSByb3dzCiMgb2YgdGhlIHJlc291cmNlLgojIEZsYWdzOgojICAtZDogc3BlY2lmaWVzIHRoYXQgaW5jb21pbmcgZW50cmllcyBzaG91bGQgYmUgZHJvcHBlZCA="}
+```
+
+Adding the bytes parameter, e.g. `/api/resources/{guid}/contenttype?bytes=1024` will change the number of bytes returned. Note that for successful content-type detection, the API will always read at least 128 bytes; if fewer than 128 bytes are specified, the API will default to reading 512 bytes.
+
 ## Deleting resources
 
 To delete a resource, simply issue a DELETE request on `/api/resources/{guid}`, replacing `{guid}` with the appropriate GUID of the resource as usual.
