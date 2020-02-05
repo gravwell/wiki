@@ -33,6 +33,38 @@ The installation process will prompt to set some shared secret values used by co
 
 ![Generate secrets](secret-prompt.png)
 
+### Upgrading Gravwell
+
+Upgrading Gravwell is an uneventful affair, we take great pains to ensure that the installation and upgrade process is fast and easy.  The upgrade process is different depending on your original installation method.  If you are using one of the package repositories, such as Debian, Gravwell is upgraded like any other application:
+
+
+```
+apt update
+apt upgrade
+```
+
+
+If your original installation method was the self-contained shell installer, you simply download and run the latest version of the installer.  The self-contained installers act as both installation and upgrade systems, they will detect an existing installation and skip over any steps that do not apply to an upgrade.
+
+
+#### Upgrade Tips
+
+There are a few tips to upgrading that can help in some installations.
+
+
+* Cluster configurations should cascade indexer upgrades so that ingesters can continue normal operation during the upgrade
+ * The same is true for distributed webserver configurations, the load balancer will shift users as needed
+* If possible, time upgrades to the search agent when there are not large SOAR jobs running
+* Distribution package managers will sometimes prompt about upstream configuration file changes, keep your configs
+ * Its ok to check what changed, we are usually just adding configurations for new features
+ * If you accept upstream configuration files it may overwrite your configurations and cause components failures
+
+
+After an upgrade it is always a good practice to check the state of Gravwell by ensuring that all indexers are present and accounted for and that ingesters have reconnected and are reporting the expected version numbers.
+
+
+![Ingester status](ingesters.png)
+
 ### Docker Container
 
 Gravwell is available on Dockerhub as a single container including both the webserver and indexer. Refer to [the Docker installation instructions](#!configuration/docker.md) for detailed instructions on installing Gravwell in Docker.
