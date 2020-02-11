@@ -97,7 +97,7 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Scripting](scripting/scripting.md)
 
-    * [Scheduled Scripts](scripting/scriptingsearch.md)
+    * [SOAR](scripting/scriptingsearch.md)
 
 ## User Interfaces
 

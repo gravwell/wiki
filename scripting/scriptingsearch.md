@@ -1,4 +1,4 @@
-# Orchestration and Scripting Searches
+# SOAR - Search Orchestration Automation and Response
 
 Gravwell provides a robust scripting engine in which you can run searches, update resources, send alerts, or take action.  The orchestration engine allows for automating the tedious steps in an investigation and taking action based on search results without the need to involve a human.  
 
@@ -225,21 +225,21 @@ if err != nil {
 
 w = conn.Walk("/home/sshtest")
 for w.Step() {
-    if w.Err() != nil {
-        continue
-    }
-    println(w.Path())
+	if w.Err() != nil {
+		continue
+	}
+	println(w.Path())
 }
 
 f, err = conn.Create("/home/sshtest/hello.txt")
 if err != nil {
-    conn.Close()
+	conn.Close()
 	println(err)
 	return
 }
 _, err = f.Write("Hello world!")
 if err != nil {
-    conn.Close()
+	conn.Close()
 	println(err)
 	return
 }
@@ -247,7 +247,7 @@ if err != nil {
 // check it's there
 fi, err = conn.Lstat("hello.txt")
 if err != nil {
-    conn.Close()
+	conn.Close()
 	println(err)
 	return
 }
@@ -280,7 +280,7 @@ if err != nil {
 
 session, err = conn.NewSession()
 if err != nil {
-    println("Failed to create session: ", err)
+	println("Failed to create session: ", err)
 	return err
 }
 
@@ -290,7 +290,7 @@ var b = make(bytes.Buffer)
 session.Stdout = &b
 err = session.Run("/bin/ps aux")
 if err != nil {
-    println("Failed to run: " + err.Error())
+	println("Failed to run: " + err.Error())
 	return err
 }
 println(b.String())
@@ -483,28 +483,28 @@ start = time.Now().Add(-72 * time.Hour)
 end = time.Now()
 s, err = startSearch("tag=gravwell", start, end)
 if err != nil {
-        return err
+		return err
 }
 for {
-        f, err = isSearchFinished(s)
-        if err != nil {
-                return err
-        }
-        if f {
-                break
-        }
+		f, err = isSearchFinished(s)
+		if err != nil {
+				return err
+		}
+		if f {
+				break
+		}
 		time.Sleep(1*time.Second)
 }
 
 # Get a handle on the search results
 rhandle, err = getDownloadHandle(s.ID, "text", start, end)
 if err != nil {
-        return err
+		return err
 }
 # Build the request
 req, err = http.NewRequest("POST", "http://example.org:3002/", rhandle)
 if err != nil {
-        return err
+		return err
 }
 # Add a header
 req.Header.Add("My-Header", "gravwell")
@@ -518,4 +518,109 @@ req.AddCookie(&cookie)
 resp, err = http.DefaultClient.Do(req)
 detachSearch(s)
 return err
+```
+
+## CSV Helpers
+
+CSV is a pretty common export format for resources and just generatlly getting data out of Gravwell.  The CSV library provided by `encoding/csv` is robust and flexible but a little verbose.  We have wrapped the CSV writer to provide a simpler interface for use within the Gravwell SOAR system.  To create a simplified CSV builder, import the `encoding/csv` package and instead of invoking `NewWriter` call `NewBuilder` without any arguments.
+
+The CSV builder manages its own internal buffers and returns a byte array upon executing `Flush`.  This can simplify the process of building up CSVs for exporting or saving.  Here is an example script that uses the simplified csv Builder to create a resource comprised of two table columns:
+
+```
+csv = import("encoding/csv")
+time = import("time")
+
+query = `tag=pcap packet ipv4.SrcIP ipv4.DstIP ipv4.Length | sum Length by SrcIP DstIP | table SrcIP DstIP sum`
+end = time.Now()
+start = end.Add(-1 * time.Hour)
+
+ents, err = executeSearch(query, start, end)
+if err != nil {
+	return err
+}
+
+bldr = csv.NewBuilder()
+err = bldr.WriteHeaders([`src`, `dst`, `total`])
+if err != nil {
+	return err
+}
+
+for ent in ents {
+	src, err = getEntryEnum(ent, "SrcIP")
+	if err != nil {
+		return err
+	}
+	dst, err = getEntryEnum(ent, "DstIP")
+	if err != nil {
+		return err
+	}
+	sum, err = getEntryEnum(ent, "sum")
+	if err != nil {
+		return err
+	}
+	err = bldr.Write([src, dst, sum])
+	if err != nil {
+		return err
+	}
+}
+
+buff, err = bldr.Flush()
+if err != nil {
+	return err
+}
+return setResource("csv", buff)
+```
+
+
+## IPExist Datasets
+
+The [ipexist](#!search/ipexist/ipexist.md) search module is designed to test whether an IPv4 address exists in a set, this module is a simple filtering module that is designed for one thing and one thing only: speed.  Under the hood, `ipexist` uses a highly optimized bitmap system so that its possible for a modest machine to represent the entirety of the IPv4 address space in it's filter system.  IPExist is a great tool for holding threatlists and performing initial filtering operations on very large sets of data before performing more expensive lookups using the [iplookup](#!search/iplookup/iplookup.md) module.
+
+The Gravwell SOAR system has access to the ipexist builder functions, enabling you to generate high speed ip membership tables from existing data.  The ipexist builder functions are open source and available on [github](https://github.com/gravwell/ipexist).  Below is a basic script which generates an ip membership resource using a query:
+
+```
+ipexist = import("github.com/gravwell/ipexist")
+bytes = import("bytes")
+time = import("time")
+
+query = `tag=ipfix ipfix port==22 src dst | stats count by src dst | table`
+end = time.Now()
+start = end.Add(-1 * time.Hour)
+
+ipe = ipexist.New()
+
+ents, err = executeSearch(query, start, end)
+if err != nil {
+	return err
+}
+
+for ent in ents {
+	ip, err = getEntryEnum(ent, "src")
+	if err != nil {
+		return err
+	}
+	err = ipe.AddIP(toIP(ip))
+	if err != nil {
+		return err
+	}
+	
+	ip, err = getEntryEnum(ent, "dst")
+	if err != nil {
+		 return err
+	}
+	err = ipe.AddIP(toIP(ip))
+	if err != nil {
+		return err
+	}
+}
+
+bb = bytes.NewBuffer(nil)
+err = ipe.Encode(bb)
+if err != nil {
+	return err
+}
+ipe.Close()
+buff = bb.Bytes()
+println("buffer", len(buff))
+return setResource("sshusers", buff)
 ```
