@@ -176,3 +176,102 @@ Regular users can only install properly-signed kits from Gravwell. If `AllowUnsi
 ## Uninstalling a kit
 
 To remove a kit, issue a DELETE request on `/api/kits/<uuid>`.
+
+## Querying Remote Kit Server
+
+To get a list of remote kits from the Gravwell Kit Server, issue a GET on `/api/kits/remote/list`.  This will return a JSON encoded list of kit metadata structures that represents the latest versions for all available kits.  The API path `/api/kits/remote/list/all` will provide all kits for all versions.
+
+The Metadata structure is as follows:
+
+```
+type KitMetadata struct {
+	ID            string
+	Name          string
+	GUID          string
+	Version       uint
+	Description   string
+	Signed        bool
+	AdminRequired bool
+	MinVersion    CanonicalVersion
+	MaxVersion    CanonicalVersion
+	Size          int64
+	Created       time.Time
+	Ingesters     []string //ingesters associated with the kit
+	Tags          []string //tags associated with the kit
+	Assets        []KitMetadataAsset
+}
+
+type KitMetadataAsset struct {
+	Type     string
+	Source   string //URL
+	Legend   string //some description about the asset
+	Featured bool
+}
+
+type CanonicalVersion struct {
+	Major uint32
+	Minor uint32
+	Point uint32
+}
+```
+
+Here is an example:
+
+```
+WEB GET http://172.19.0.2:80/api/kits/remote/list:
+[
+	{
+		"ID": "io.gravwell.test",
+		"Name": "testkit",
+		"GUID": "c2870b48-ff31-4550-bd58-7b2c1c10eeb3",
+		"Version": 1,
+		"Description": "Testing a kit with a license in it",
+		"Signed": true,
+		"AdminRequired": false,
+		"MinVersion": {
+			"Major": 0,
+			"Minor": 0,
+			"Point": 0
+		},
+		"MaxVersion": {
+			"Major": 0,
+			"Minor": 0,
+			"Point": 0
+		},
+		"Size": 0,
+		"Created": "2020-02-10T16:31:23.03192303Z",
+		"Ingesters": [
+			"SimpleRelay",
+			"FileFollower"
+		],
+		"Tags": [
+			"syslog",
+			"auth"
+		],
+		"Assets": [
+			{
+				"Type": "image",
+				"Source": "cover.jpg",
+				"Legend": "TEAM RAMROD!",
+				"Featured": true
+			},
+			{
+				"Type": "readme",
+				"Source": "readme.md",
+				"Legend": "",
+				"Featured": false
+			},
+			{
+				"Type": "image",
+				"Source": "testkit.jpg",
+				"Legend": "",
+				"Featured": false
+			}
+		]
+	}
+]
+```
+
+### Pulling kit assets from the remote kitserver
+
+Kits also contain assets that can be used to display images, markdown, licenses, and additional files that help explore the purpose of the kit prior to actually downloading/installing a kit.  These assets can be retrieved from the remote system by executing GET requests on `api/kits/remote/<guid>/<asset>`.  For example, if we wanted to pull back the asset of Type "image" and Legend "TEAM RAMROD!" for the kit with the guid `c2870b48-ff31-4550-bd58-7b2c1c10eeb3` you would issue a GET on `/api/kits/remote/c2870b48-ff31-4550-bd58-7b2c1c10eeb3/cover.jpg`.

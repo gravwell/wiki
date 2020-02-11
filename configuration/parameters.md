@@ -519,3 +519,14 @@ Example:
 	Require-Special=true
 ```
 Description:	A new configuration block that is specified in the `gravwell.conf` file that can be used to enforce password complexity rules when users are created or passwords are changed.  These complexity configuration rules do not apply when using Single Sign On.
+
+**Gravwell-Kit-Server**
+Applies to:	Webserver
+Default Value:	https://kits.gravwell.io/kits
+Example:	http://internal.mycompany.io/gravwell/kits
+Description:	Allows for overriding the Gravwell kitserver host, this can be useful in airgapped or segmented deployments where you host a mirror of the Gravwell kitserver.  Set this value to an empty string to completely disable access to the remote kitserver.
+Example:
+```
+Gravwell-Kit-Server="" #disable remote access to gravwell kitserver
+Gravwell-Kit-Server="http://gravwell.mycompany.com/kits" #override to use internal mirror
+```
