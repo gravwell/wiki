@@ -19,8 +19,8 @@ Gravwell is constantly adding new modules, methods, and functionality.  It is of
 
 Version 3.3.1 of Gravwell now enables SOAR scripts to include external scripting libraries.  Two functions allow for including additional libraries.
 
-* `include(path, repo, commitid) error` Includes a file, the repo and commitid arguments are optional.  If the include fails, the failure reason is returned.
-* `require(path, repo, commitid)` Identical behavior to `include`, but if it fails the script is halted and the failure reason is attached to the SOAR response info.
+* `include(path, commitid, repo) error` Includes a file, the repo and commitid arguments are optional.  If the include fails, the failure reason is returned.
+* `require(path, commitid, repo)` Identical behavior to `include`, but if it fails the script is halted and the failure reason is attached to the SOAR response info.
 
 Both `include` and `require` can optionally specify an exact repository or commitid.  If the `repo` argument is ommitted the Gravwell default library repo of `https://github.com/gravwell/libs` is used.  If the `commitid` is ommitted then the `HEAD` commit is used.  Repos should be accessible by the Gravwell webserver via the schema defined (either `http://`, `https://`, or `git://`) in the repo path.  The SOAR system will automatically go get repos as needed, if a commit id is requested that isn't currently known Gravwell will attempt to update the repo.
 
