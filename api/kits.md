@@ -272,6 +272,64 @@ WEB GET http://172.19.0.2:80/api/kits/remote/list:
 ]
 ```
 
+## Pull Single Kit Information
+
+The Remote kit API also supports pulling back information about a specific kit by issuing a `GET` on `/api/kits/remote/<guid>`, which will return a single `KitMetadata` structure.
+
+For example if we issue a `GET` on `/api/kits/remote/c2870b48-ff31-4550-bd58-7b2c1c10eeb3` the webserver will return:
+
+```
+{
+	"ID": "io.gravwell.test",
+	"Name": "testkit",
+	"GUID": "c2870b48-ff31-4550-bd58-7b2c1c10eeb3",
+	"Version": 1,
+	"Description": "Testing a kit with a license in it",
+	"Signed": true,
+	"AdminRequired": false,
+	"MinVersion": {
+		"Major": 0,
+		"Minor": 0,
+		"Point": 0
+	},
+	"MaxVersion": {
+		"Major": 0,
+		"Minor": 0,
+		"Point": 0
+	},
+	"Size": 0,
+	"Created": "2020-02-10T16:31:23.03192303Z",
+	"Ingesters": [
+		"SimpleRelay",
+		"FileFollower"
+	],
+	"Tags": [
+		"syslog",
+		"auth"
+	],
+	"Assets": [
+		{
+			"Type": "image",
+			"Source": "cover.jpg",
+			"Legend": "TEAM RAMROD!",
+			"Featured": true
+		},
+		{
+			"Type": "readme",
+			"Source": "readme.md",
+			"Legend": "",
+			"Featured": false
+		},
+		{
+			"Type": "image",
+			"Source": "testkit.jpg",
+			"Legend": "",
+			"Featured": false
+		}
+	]
+}
+```
+
 ### Pulling kit assets from the remote kitserver
 
 Kits also contain assets that can be used to display images, markdown, licenses, and additional files that help explore the purpose of the kit prior to actually downloading/installing a kit.  These assets can be retrieved from the remote system by executing GET requests on `api/kits/remote/<guid>/<asset>`.  For example, if we wanted to pull back the asset of Type "image" and Legend "TEAM RAMROD!" for the kit with the guid `c2870b48-ff31-4550-bd58-7b2c1c10eeb3` you would issue a GET on `/api/kits/remote/c2870b48-ff31-4550-bd58-7b2c1c10eeb3/cover.jpg`.
