@@ -54,27 +54,36 @@ Given a log entry in this format:
 
 The following fields can be extracted
 
-| Field | XML spec |
-|-------|----------|
-| ProviderName | Event.System.Provider[Name] |
-| ProviderGUID | Event.System.Provider[Guid] |
-| GUID | Event.System.Provider[Guid] |
-| EventID | Event.System.EventID |
-| Version | Event.System.Version |
-| Level | Event.System.Level |
-| Task | Event.System.Task |
-| Opcode | Event.System.Opcode |
-| Keywords | Event.System.Keywords |
-| TimeCreated | Event.System.TimeCreated[SystemTime] |
-| EventRecordID | Event.System.EventRecordID |
-| ProcessID | Event.System.Execution[ProcessID] |
-| ThreadID | Event.System.Execution[ThreadID] |
-| Channel | Event.System.Channel |
-| Computer | Event.System.Computer |
-| Correlation | Event.System.Correlation |
-| Security | Event.System.Security |
+| Field | XML spec | Type | Filter Options |
+|-------|----------|------|----------------|
+| System | Event.System | bytes | == != ~ !~ |
+| EventData | Event.EventData | bytes | == != ~ !~ |
+| UserData | Event.UserData | bytes | == != ~ !~ |
+| Provider | Event.System.Provider[Name] | bytes | == != ~ !~ |
+| ProviderName | Event.System.Provider[Name] | bytes | == != ~ !~ |
+| ProviderGUID | Event.System.Provider[Guid] | bytes | == != ~ !~ |
+| GUID | Event.System.Provider[Guid] | bytes | == != ~ !~ |
+| EventID | Event.System.EventID | uint | == != < <= > >= |
+| Version | Event.System.Version | uint | == != < <= > >= |
+| Level | Event.System.Level | uint | == != < <= > >= |
+| Task | Event.System.Task | uint | == != < <= > >= |
+| Opcode | Event.System.Opcode | bytes | == != ~ !~ |
+| Keywords | Event.System.Keywords | bytes | == != ~ !~ |
+| TimeCreated | Event.System.TimeCreated[SystemTime] | bytes | == != ~ !~ |
+| EventRecordID | Event.System.EventRecordID | uint | == != < <= > >= |
+| ProcessID | Event.System.Execution[ProcessID] | uint | == != < <= > >= |
+| ThreadID | Event.System.Execution[ThreadID] | uint | == != < <= > >= |
+| Channel | Event.System.Channel | bytes | == != ~ !~ |
+| Computer | Event.System.Computer | bytes | == != ~ !~ |
+| Correlation | Event.System.Correlation | bytes | == != ~ !~ |
+| UserID | Event.System.Security[UserID] | uint | == != < <= > >= |
 
 Specifying a field not listed above will cause the winlog module to attempt to extract `Event.Data[Name]==<field>`. For example, the SubjectLogonId in the example above (0x3e3) can be extracted by simply specifying `SubjectLogonId` to the winlog module.
+
+### Data Field Filtering
+
+Every extractable field in a windows log supports inline filtering with various comparison operations depending on the type of the field.  Some of the Event System fields are integers and can be compared as an integer, such as the `EventID`, `Version`, and `Level` fields.  The other System fields and all data fields are treated as byte arrays.  As with most Gravwell search modules it is almost always faster to perform filtering right when an enumerated value is created.
+
 
 ## Examples
 
