@@ -4,28 +4,36 @@ This section documents the web API used between the GUI and the "frontend" webse
 
 The bulk of the API is RESTful. The exception to this rule is the searching API which uses websockets due to the nature of data exchange and transfer involved in launching and observing data from a search.
 
-## Primary APIs
+## Basic APIs
 
 * [Login](login.md)
 * [User Preferences](userprefs.md)
 * [Account controls](account.md)
-* [Dashboards](dashboards.md)
 * [Notifications](notifications.md)
 * [Search Controls](searchctrl.md)
 * [Downloading Search Results](download.md)
 * [Search History](searchhistory.md)
-* [Search Library](searchlibrary.md)
 * [Logging](loglevel.md)
+* [Ingesting Entries](ingest.md)
+* [Miscellaneous APIs](misc.md)
+* [System Management](management.md)
+
+## Objects within Gravwell
+
+There are a variety of "things" which users may create and modify. Their APIs are listed in this section.
+
+* [Auto-extractors](extractors.md)
+* [Dashboards](dashboards.md)
+* [Kits](kits.md)
+* [Macros](macros.md)
+* [Playbooks](playbooks.md)
 * [Resources](resources.md)
 * [Scheduled Searches](scheduledsearches.md)
-* [Ingesting Entries](ingest.md)
-* [Macros](macros.md)
-* [Auto-extractors](extractors.md)
-* [Miscellaneous APIs](misc.md)
+* [Search Library](searchlibrary.md)
 * [Templates and Pivots](templates.md)
 * [User Files](userfiles.md)
-* [System Management](management.md)
-* [Kits](kits.md)
+
+
 
 ## Searching and Search Stats
 
