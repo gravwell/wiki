@@ -11,6 +11,7 @@ The playbook structure contains the following components:
 * `Name`: The user-friendly name of the playbook.
 * `Desc`: A description of the playbook.
 * `Body`: A byte array which stores the playbook contents.
+* `Metadata`: A byte array which stores playbook metadata, for use by the client.
 * `Labels`: An array of strings containing optional labels to apply to the playbook.
 * `LastUpdated`: A timestamp indicating when the playbook was last modified.
 * `Synced`: Used internally by Gravwell
@@ -21,10 +22,16 @@ The playbook structure contains the following components:
 To list playbooks, send a GET request to `/api/playbooks`. The server will respond with an array of playbook structures which the user has permission to view:
 
 ```
-[{"UUID":"0bbff773-9ee2-4874-89a4-bf85a4b800df","UID":1,"GIDs":null,"Global":false,"Name":"foo","Desc":"bar","Body":"blah","Labels":["test"],"LastUpdated":"2020-02-12T10:13:02.864666484-07:00","Synced":false}]
+[{"UUID":"0bbff773-9ee2-4874-89a4-bf85a4b800df","UID":1,"GIDs":null,"Global":false,"Name":"foo","Desc":"bar","Body":"","Labels":["test"],"LastUpdated":"2020-02-12T10:13:02.864666484-07:00","Metadata":"asdf","Synced":false}]
 ```
 
+Note that the Body parameter is empty; because playbooks can be quite large, the body is left out when listing all playbooks.
+
 Appending the `?admin=true` parameter to the URL will return a list of *all* playbooks on the system, provided the user is an Administrator.
+
+## Fetching a Playbook
+
+To get a specific playbook, including the Body, send a GET request to `/api/playbooks/<uuid>`.
 
 ## Creating a Playbook
 
@@ -33,6 +40,7 @@ Playbooks are created by sending a POST request to `/api/playbooks`. The body of
 ```
 {
     "Body": <contents of the playbook>,
+	"Metadata": <any desired metadata>,
     "Name": "ssh syslog",
     "Desc": "A playbook for monitoring syslog entries for ssh sessions",
     "GIDs": null,
