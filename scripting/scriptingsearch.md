@@ -124,6 +124,16 @@ The ScheduledSearch structure contains the following fields:
 * `LastSearchIDs` - An array of strings listing the IDs of any searches created during the last run.
 * `LastError` - A string containing any error results from the previous run of the script/search.
 
+## Querying Infrastructure Information
+
+The SOAR system can also be used to monitor the state of the Gravwell installation using API calls.  This allows you to monitor ingester status, system loads, and indexer connectivity within the SOAR platform.  The following calls can provide information about the physical deployment:
+
+* `ingesters` - Returns a map containing an ingester status block for each indexer.
+* `indexers` - Returns a map containing a well status for each indexer.
+* `indexerStates` - Returns a map with a boolean indicating whether the indexer is healthy.
+* `systemStates` - Returns a map with disk, CPU, and memory loads for each system.
+* `systems` - Returns a map with physical system information such as CPU, memory, disk, and software versions.
+
 ## Sending results
 
 The scripting system provides several methods for transmitting script results to external systems.
