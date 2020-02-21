@@ -97,3 +97,23 @@ To get a list of all available render modules and some info about each one, do a
     }
 ]
 ```
+
+## GUI Settings
+
+This API provides some basic information for the user interface. A GET on `/api/settings` will return a structure similar to the following:
+
+```
+{
+    "DisableMapTileProxy": false,
+    "DistributedWebservers": false,
+    "MapTileUrl": "http://localhost:8080/api/maps",
+    "MaxFileSize": 8388608,
+    "MaxResourceSize": 134217728
+}
+```
+
+* `DisableMapTileProxy`, if true, tells the UI that it should send map requests directly to OpenStreetMap servers, rather than using the Gravwell proxy.
+* `MapTileUrl` is the URL which the UI should use to fetch map tiles.
+* `DistributedWebservers` will be set to true if there are multiple webservers coordinating via a datastore.
+* `MaxFileSize` is the maximum allowable file size (in bytes) which may be uploaded to the `/api/files` APIs.
+* `MaxResourceSize` is the maximum allowable resource size, in bytes.
