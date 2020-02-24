@@ -62,6 +62,8 @@ The `include` and `require` can be disabled (thereby disallowing external code) 
 * `toInt(val) int64` converts val to an integer if possible. Returns 0 if no conversion is possible.
 * `toFloat(val) float64` converts val to a floating point number if possible. Returns 0.0 if no conversion is possible.
 * `toBool(val) bool` attempts to convert val to a boolean. Returns false if no conversion is possible. Non-zero numbers and the strings “y”, “yes”, and “true” will return true.
+* `toHumanSize(val) string` attempts to convert val into an integer, then represent it as a human-readable byte count, e.g. `toHumanSize(15127)` will be converted to "14.77 KB".
+* `toHumanCount(val) string` attempts to convert val into an integer, then represent it as a human-friendly number, e.g. `toHumanCount(15127)` will be converted to "15.13 K".
 * `typeOf(val) type` returns the type of val as a string, e.g. “string”, “bool”.
 * `hashItems(val...) (uint64, ok)` hashes one or more items into a uint64 using the siphash algorithm. 'ok' is true if at least one of the items could be hashed. Note that the hash function can really only hash scalars; passing slices or maps will typically not work.
 
