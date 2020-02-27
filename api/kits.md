@@ -145,6 +145,8 @@ A GET request on `/api/kits` will return a list of all known kits. Here is an ex
 ]
 ```
 
+See the listing at the end of this page for a list of what "AdditionalInfo" fields are available for each type of kit item.
+
 ## Installing a Kit
 
 To install a kit once it has been uploaded, send a PUT request to `/api/kits/<uuid>`, where the UUID is the UUID field from the list of kits. The server will return a 200 status code upon successful installation.
@@ -333,3 +335,69 @@ For example if we issue a `GET` on `/api/kits/remote/c2870b48-ff31-4550-bd58-7b2
 ### Pulling kit assets from the remote kitserver
 
 Kits also contain assets that can be used to display images, markdown, licenses, and additional files that help explore the purpose of the kit prior to actually downloading/installing a kit.  These assets can be retrieved from the remote system by executing GET requests on `api/kits/remote/<guid>/<asset>`.  For example, if we wanted to pull back the asset of Type "image" and Legend "TEAM RAMROD!" for the kit with the guid `c2870b48-ff31-4550-bd58-7b2c1c10eeb3` you would issue a GET on `/api/kits/remote/c2870b48-ff31-4550-bd58-7b2c1c10eeb3/cover.jpg`.
+
+
+## Kit item "Additional Info" fields
+
+When listing kits (GET on `/api/kits`), each kit will include a list of items, which contain AddditionalInfo fields. These fields give more information about the items within the kit; the contents vary based on the item type and are enumerated below:
+
+```
+Resources:
+		VersionNumber int
+		ResourceName  string
+		Description   string
+		Size          uint64
+
+Scheduled Search:
+		Name         string
+		Description  string
+		Schedule     string
+		SearchString string 
+		Duration     int64  
+		Script       string 
+
+Dashboard:
+		UUID        string
+		Name        string
+		Description string
+
+Extractor:
+		Name   string 
+		Desc   string 
+		Module string 
+		Tag    string 
+
+Template:
+		UUID        string
+		Name        string
+		Description string
+
+Pivot:
+		UUID        string
+		Name        string
+		Description string
+
+File:
+		UUID        string
+		Name        string
+		Description string
+		Size        int64
+		ContentType string
+
+Macro:
+		Name      string
+		Expansion string
+
+Search Library:
+		Name        string
+		Description string
+		Query       string
+
+Playbook:
+		UUID        string
+		Name        string
+		Description string
+
+License:
+		(contents of license file itself)
+```
