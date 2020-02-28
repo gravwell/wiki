@@ -83,6 +83,8 @@ This kit can be downloaded by doing a GET on `/api/kits/build/<uuid>`; given the
 
 Before a kit can be installed, it must first be uploaded to the webserver. Kits are uploaded by a POST request to `/api/kits`. The request should contain a multipart form. To upload a file from the local system, add a file field to the form named `file` containing the kit file. To upload a file from a remote system such as an HTTP server, add a field named `remote` containing the URL of the kit.
 
+You can also add a field named `metadata` to the request. The contents of this field are not parsed by the server; instead, it adds the contents to the Metadata field on the uploaded kit. This allows you to keep track of e.g. the URL from which the kit originated, the date on which the kit was uploaded, etc.
+
 ## Listing Kits
 
 A GET request on `/api/kits` will return a list of all known kits. Here is an example showing the result when the system has one kit uploaded but not yet installed:
