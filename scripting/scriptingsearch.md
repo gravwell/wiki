@@ -46,6 +46,7 @@ The `include` and `require` can be disabled (thereby disallowing external code) 
 * `setPersistentMap(mapname, key, value)` stores a key-value pair in a map which will persist between executions of a scheduled script.
 * `getPersistentMap(mapname, key) value` returns the value associated with the given key from the named persistent map.
 * `delPersistentMap(mapname, key)` deletes the specified key/value pair from the given map.
+* `persistentMap(mapname)` returns the entire named map, changes to the returned map will persist automatically on successful execution.
 
 ## Search entry manipulation
 
