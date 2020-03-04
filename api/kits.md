@@ -85,6 +85,57 @@ Before a kit can be installed, it must first be uploaded to the webserver. Kits 
 
 You can also add a field named `metadata` to the request. The contents of this field are not parsed by the server; instead, it adds the contents to the Metadata field on the uploaded kit. This allows you to keep track of e.g. the URL from which the kit originated, the date on which the kit was uploaded, etc.
 
+The server will respond with a description of the kit which has been uploaded, e.g.:
+
+```
+	{
+		"UUID": "549c0805-a693-40bd-abb5-bfb29fc98ef1",
+		"UID": 7,
+		"GID": 0,
+		"ID": "io.gravwell.test",
+		"Name": "test-gravwell",
+		"Description": "Test Gravwell kit",
+		"Version": 2,
+		"Installed": false,
+		"Signed": false,
+		"AdminRequired": false,
+		"Items": [
+			{
+				"Name": "84270dbd-1905-418e-b756-834c15661a54",
+				"Type": "resource",
+				"AdditionalInfo": {
+					"VersionNumber": 1,
+					"ResourceName": "maxmind_asn",
+					"Description": "ASN database",
+					"Size": 6196221
+				}
+			},
+			{
+				"Name": "a",
+				"Type": "dashboard",
+				"AdditionalInfo": {
+					"UUID": "5567707c-8508-4250-9121-0d1a9d5ebe32",
+					"Name": "Foo",
+					"Description": "My dashboard"
+				}
+			}
+		],
+		"ModifiedItems": [
+			{
+				"Name": "a",
+				"Type": "dashboard",
+				"AdditionalInfo": {
+					"UUID": "5567707c-8508-4250-9121-0d1a9d5ebe32",
+					"Name": "Foo",
+					"Description": "My dashboard"
+				}
+			}
+		]
+	}
+```
+
+Note the "ModifiedItems" field. If an earlier version of this kit is already installed, this field will contain a list of items which *the user has modified*. Installing the staged kit will overwrite these items, so users should be notified and given a chance to save their changes.
+
 ## Listing Kits
 
 A GET request on `/api/kits` will return a list of all known kits. Here is an example showing the result when the system has one kit uploaded but not yet installed:
