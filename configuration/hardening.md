@@ -154,3 +154,13 @@ Disabling the risky APIs can reduce the chances that users export sensitive data
 Note: The network scripting functions are extremely useful, so only disable them if you're concerned about users abusing them.
 
 [//]: # (# Query Controls)
+
+# Notes on SELinux
+
+Gravwell's installers attempt to configure SELinux appropriately if SELinux is enabled. This configuration consists of the following:
+
+* Adding the usr_t context to all files in `/opt/gravwell/` (excepting the `bin` subdirectory) via the semanage command.
+* Adding the bin_t context to all files in `/opt/gravwell/bin` via the semanage command.
+* Using the `restorecon` command to apply the new context rules.
+
+If you find that SELinux is preventing Gravwell from running, check the rules using `/sbin/semanage fcontext -l | grep /opt/gravwell`.

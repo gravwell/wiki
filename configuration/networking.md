@@ -25,3 +25,34 @@ This port is used by indexers to communicate with each other for [replication](#
 ## Datastore Port: TCP 9405
 
 This port is used when a Gravwell cluster has [multiple webservers](#!distributed/frontend.md) configured. The *datastore* component listens on this port (specified using the `Datastore-Port` option) for incoming connections from *webservers*.
+
+## RHEL (Redhat Enterprise Linux) and CentOS firewall commands
+
+RHEL/CentOS uses its own firewall commands. For convenience, we have collected the commands needed to open ports for the webserver and indexer components, plus the Simple Relay ingester. Note that any ingesters which listen on network ports will likely need ports opened in this manner.
+
+Note: The commands shown here will only *temporarily* open ports; rebooting the system will reset the rules. To make the rule changes permanent, run `sudo firewall-cmd --runtime-to-permanent`
+
+
+### Indexer ports
+
+```
+sudo firewall-cmd --zone=public --add-port=9404/tcp 
+sudo firewall-cmd --zone=public --add-port=9405/tcp
+sudo firewall-cmd --zone=public --add-port=4023/tcp
+sudo firewall-cmd --zone=public --add-port=4024/tcp
+```
+
+### Webserver ports
+
+```
+sudo firewall-cmd --zone=public --add-service=http
+sudo firewall-cmd --zone=public --add-service=https
+```
+
+### Simple Relay ports
+
+```
+sudo firewall-cmd --zone=public --add-port=7777/tcp
+sudo firewall-cmd --zone=public --add-port=601/tcp
+sudo firewall-cmd --zone=public --add-port=514/udp
+```
