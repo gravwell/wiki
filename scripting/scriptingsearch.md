@@ -39,6 +39,28 @@ Library-Repository="/opt/gitstuff/gravwell/libs"
 
 The `include` and `require` can be disabled (thereby disallowing external code) by setting `Disable-Library-Repository` in the `gravwell.conf` file.
 
+## Global configuration
+
+* `loadConfig(resource) (map[string]interface, error)` loads the specified resource and attempts to parse it as a JSON structure, returning the results in a map. If the resource contains `{"foo":"bar","a":1}`, this function will return a map where "foo" → "bar" and "a" → 1.
+
+If you have many SOAR scripts on the system, you may find it useful to keep a repository of configuration values somewhere for use across all the scripts. Suppose you wanted to use a particular revision of the email alerting library across all your scripts; you could put the following into a resource named "soar-config":
+
+```
+{
+"email_lib_revision":"14ceec90b69943992f4efae8fc9e24c3f4767944"
+}
+```
+
+and then use the following code in your scripts:
+
+```
+cfg, err = loadConfig("soar-config")
+if err != nil {
+	return nil
+}
+require(`alerts/email.ank`, cfg.email_lib_revision)
+```
+
 ## Resources and persistent data
 
 * `getResource(name) []byte, error` returns the slice of bytes is the content of the specified resource, while the error is any error encountered while fetching the resource.
