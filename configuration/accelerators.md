@@ -126,6 +126,7 @@ The fulltext accelerator supports a few options which allow for refining the typ
 | -max | Require that extracted tokens be less than.  This can help prevent indexing on very large blobs within logs that will never be searched on | `-max 256` | DISABLED |
 | -ignoreUUID | Enable a filter to ignore UUID/GUID values.  Some logs will generate a unique UUID for every entry which incurs significant overhead and provides very little value. | `-ignoreUUID` | DISABLED |
 | -ignoreFloat | Enable a filter ignore floating point numbers. Logs that have request reponse times can make use of `-ignoreFloat`, especially when the precision is high. | `-ignoreFloat` | DISABLED |
+| -maxInt | Enable a maximum integer value | Enable a filter that will only index integers below a certain size.  This can be valuable when indexing data that such as HTTP access logs.  You want to index the return codes, but not the response times and data sizes. |
 
 ### Example Well Configuration
 
