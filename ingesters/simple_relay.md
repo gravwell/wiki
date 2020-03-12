@@ -1,6 +1,6 @@
 # Simple Relay
 
-Simple Relay is the go-to ingester for text based data sources that can be delivered over plaintext TCP and/or UDP network connections via either IPv4 or IPv6.
+Simple Relay is the go-to ingester for text based data sources that can be delivered over plaintext TCP, encrypted TCP, or plaintext UDP network connections via either IPv4 or IPv6.
 
 Some common use cases for Simple Relay are:
 
@@ -65,7 +65,7 @@ Listeners support several configuration parameters which allow for specifying pr
 
 #### Bind-String
 
-The Bind-String parameter controls which interface and port the listener will bind to.  The listener can bind to TCP or UDP ports, specific addresses, and specific ports.  IPv4 and IPv6 are supported.
+The Bind-String parameter controls which interface and port the listener will bind to.  The listener can bind to plaintext/encrypted TCP or plaintext UDP ports, specific addresses, and specific ports.  IPv4 and IPv6 are supported.
 
 ```
 #bind to all interfaces on TCP port 7777
@@ -79,7 +79,26 @@ Bind-String=[fe80::4ecc:6aff:fef9:48a3%p1p1]:1234
 
 #bind to IPv6 globally routable address on TCP port 901
 Bind-String=[2600:1f18:63ef:e802:355f:aede:dbba:2c03]:901
+
+#listen for TLS connections on port 9999
+Bind-String=tls://0.0.0.0:9999
 ```
+
+#### Cert-File
+
+If using a TLS `Bind-String`, you must also specify `Cert-File`. The value should be the path to a file containing a valid TLS certificate:
+
+```
+Cert-File=/opt/gravwell/etc/cert.pem
+``` 
+
+#### Key-File
+
+If using a TLS `Bind-String`, you must also specify `Key-File`. The value should be the path to a file containing a valid TLS key:
+
+```
+Key-File=/opt/gravwell/etc/key.pem
+``` 
 
 #### Ignore-Timestamps
 
@@ -246,7 +265,7 @@ We could extract the location and state value and apply a tag based on which sta
 Extractor=location.state
 ```
 
-##### Tag-Match
+**Tag-Match**
 
 Each JSONListener supports multiple field value to tag match specifications.  The value to tag assignment is specified as an argument to the "Tag-Match" paramter in the form <field value>:<tag name>.
 
@@ -278,7 +297,7 @@ Tag-Match=foo:baz
 Tag-Match=foo:bar
 ```
 
-##### Default-Tag
+**Default-Tag**
 
 When extracting fields and applying tags, the JSON Listener will apply a default tag if there is no matching Tag-Match specified.
 
