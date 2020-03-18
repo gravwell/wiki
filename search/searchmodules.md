@@ -78,6 +78,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [sum](math/math.md#Sum)
 * [syslog](syslog/syslog.md)
 * [taint](taint/taint.md)
+* [time](time/time.md)
 * [unique](math/math.md#Unique)
 * [upper](upperlower/upperlower.md)
 * [variance](math/math.md#Variance)
