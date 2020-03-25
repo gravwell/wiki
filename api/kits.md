@@ -37,7 +37,9 @@ type KitBuildRequest struct {
 	ScheduledSearches []int32     
 	Macros            []uint64
 	SearchLibraries   []uuid.UUID    
-	Extractors        []uuid.UUID    
+	Extractors        []uuid.UUID
+	Icon              string    
+	Dependencies      []KitDependency
 }
 ```
 
@@ -78,6 +80,19 @@ The system will respond with a structure describing the newly-built kit:
 ```
 
 This kit can be downloaded by doing a GET on `/api/kits/build/<uuid>`; given the above response, one would fetch the kit from `/api/kits/build/2f5e485a-2739-475b-810d-de4f80ae5f52`
+
+### Dependencies
+
+A kit may depend on other kits. List these dependencies in the Dependencies array using the following sturcture:
+
+```
+{
+	ID			string
+	MinVersion	uint
+}
+```
+
+The ID field specifies the dependency's ID, e.g. io.gravwell.testresource. The MinVersion field specifies the minimum version of that kit which must be installed, e.g. 3.
 
 ## Uploading a Kit
 
@@ -130,11 +145,74 @@ The server will respond with a description of the kit which has been uploaded, e
 					"Description": "My dashboard"
 				}
 			}
-		]
+		],
+        "RequiredDependencies": [
+            {
+                "AdminRequired": false,
+                "Assets": [
+                    {
+                        "Featured": true,
+                        "Legend": "Littering AAAAAAND",
+                        "Source": "cover.jpg",
+                        "Type": "image"
+                    },
+                    {
+                        "Featured": false,
+                        "Legend": "",
+                        "Source": "readme.md",
+                        "Type": "readme"
+                    }
+                ],
+                "Created": "2020-03-23T15:36:00.294625802-06:00",
+                "Dependencies": null,
+                "Description": "A simple test kit that just provides a resource",
+                "ID": "io.gravwell.testresource",
+                "Ingesters": [
+                    "simplerelay"
+                ],
+                "Items": [
+                    {
+                        "AdditionalInfo": {
+                            "Description": "hosts",
+                            "ResourceName": "devlookup",
+                            "Size": 610,
+                            "VersionNumber": 1
+                        },
+                       "Name": "devlookup",
+                        "Type": "resource"
+                    },
+                    {
+                        "AdditionalInfo": "Testkit resource\n\nThis really has no restrictions, go nuts!\n",
+                        "Name": "LICENSE",
+                        "Type": "license"
+                    }
+                ],
+                "MaxVersion": {
+                    "Major": 0,
+                    "Minor": 0,
+                    "Point": 0
+                },
+                "MinVersion": {
+                    "Major": 0,
+                    "Minor": 0,
+                    "Point": 0
+                },
+                "Name": "Testing resource kit",
+                "Signed": true,
+                "Size": 10240,
+                "Tags": [
+                    "syslog"
+                ],
+                "UUID": "d2a0cb10-ff25-4426-8b87-0dd0409cae48",
+                "Version": 1
+            }
+        ]
 	}
 ```
 
 Note the "ModifiedItems" field. If an earlier version of this kit is already installed, this field will contain a list of items which *the user has modified*. Installing the staged kit will overwrite these items, so users should be notified and given a chance to save their changes.
+
+Note also the "RequiredDependencies" field. This array contains a list of metadata structures for any currently-uninstalled dependencies of this kit, including an Items set which may contain licenses which should be displayed.
 
 ## Listing Kits
 
@@ -202,7 +280,9 @@ See the listing at the end of this page for a list of what "AdditionalInfo" fiel
 
 ## Installing a Kit
 
-To install a kit once it has been uploaded, send a PUT request to `/api/kits/<uuid>`, where the UUID is the UUID field from the list of kits. The server will return a 200 status code upon successful installation.
+To install a kit once it has been uploaded, send a PUT request to `/api/kits/<uuid>`, where the UUID is the UUID field from the list of kits. The server will perform some preliminary checks and return an integer, which can be used to query the progress of the installation using the installation status API (see below).
+
+During installation, all required dependencies (as listed in the RequiredDepdencies field of the staging response) will be staged and installed automatically before the final installation of the kit itself.
 
 Additional kit installation options may be specified by passing a configuration structure in the body of the request, e.g.:
 
@@ -227,6 +307,27 @@ Regular users can only install properly-signed kits from Gravwell. If `AllowUnsi
 `InstallationGroup` allows the installing user to share the contents of the kit with one of the groups to which he belongs.
 
 `Labels` is a list of additional labels which should be applied to all label-able items in the kit upon installation. Note that Gravwell automatically labels kit-installed items with "kit" and the ID of the kit (e.g. "io.gravwell.coredns").
+
+### Installation Status API
+
+When an installation request is sent, the server places the request into a queue for processing, since installation of a large package with many dependencies may take some time. The server responds to the installation request with an integer, e.g. `2019727887`. This can be used with the installation status API to query the progress of the installation by sending a GET request to `/api/kits/status/<id>`, e.g. `/api/kits/status/2019727887` might return this:
+
+```
+{
+    "CurrentStep": "Done",
+    "Done": true,
+    "Error": "",
+    "InstallID": 2019727887,
+    "Log": "\nQueued installation of kit io.gravwell.testresource, with 0 dependencies also to be installed\nBeginning installation of io.gravwell.testresource (9b701e75-76ee-40fc-b9b5-4c7e1706339d) for user Admin John (1)\nInstalling requested kit io.gravwell.testresource\nDone",
+    "Owner": 1,
+    "Percentage": 1,
+    "Updated": "2020-03-25T15:39:37.184221203-06:00"
+}
+```
+
+"Owner" is the UID of the user who submitted the installation request. "Done" is set to true when the kit is fully installed. "Percentage" is a value between 0 and 1 which indicates how much of the installation has been completed. "CurrentStep" is the current status of the installation, while "Log" maintains a complete record of statuses from the entire installation. "Error" will be empty unless something has gone wrong with the installation process. "Updated" is the time at which the status was last modified.
+
+One may also request a list of *all* kit installation statuses by doing a GET on `/api/kits/status`, which returns an array of the sort of objects seen above. Note that by default this will only return statuses for the current user; administrators may append `?admin=true` to the URL to get *all* statuses on the system.
 
 ## Uninstalling a kit
 
