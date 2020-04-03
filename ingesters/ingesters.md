@@ -518,17 +518,17 @@ Usage of ./massFile:
 
 ## Windows Event Service
 
-The Gravwell Windows events ingester runs as a service on a windows machine and sends Windows events to the Gravwell indexer.
+The Gravwell Windows events ingester runs as a service on a Windows machine and sends Windows events to the Gravwell indexer.  The ingester consumes from the `System`, `Application`, `Setup`, and `Security` channels by default.  Each channel can be configured to consume from a specific set of events or providers.
 
 ### Installation
 
 Download the Gravwell Windows ingester installer from the [Downloads page](#!quickstart/downloads.md).
 
-Run the .msi installation wizard to install the Gravwell events service.
+Run the .msi installation wizard to install the Gravwell events service.  On first installation the installation wizard will prompt to configure the indexer endpoint and ingest secret.  Subsequent installations and/or upgrades will identify a resident configuration file and will not prompt.
 
-Future versions of the wizard will prompt for Gravwell configuration options directly, but for now, the config file located at `C:\Program Files\gravwell\config.cfg` needs to be manually configured.
+The ingester is configured with the `config.cfg` file located at `%PROGRAMDATA%\gravwell\eventlog\config.cfg`.  The configuration file follows the same form as other Gravwell ingesters with a `[Global]` section configuring the indexer connections and multiple `EventChannel` definitions.
 
-Change the connection ip address to the IP of your Gravwell server and set the Ingest-Secret value
+To modify the indexer connection or specify multiple indexers, change the connection ip address to the IP of your Gravwell server and set the Ingest-Secret value.  This example shows configuring an encrypted transport:
 
 ```
 Ingest-Secret=YourSecretGoesHere
@@ -574,9 +574,7 @@ Edit the Gravwell Windows agent config file located at `C:\Program Files\gravwel
 
 [Download sysmon](https://technet.microsoft.com/en-us/sysinternals/sysmon)
 
-Put sysmon and that config in `C:\Program Files\gravwell`
-
-In an admin powershell run:
+Install `sysmon` with your configuration using an administrator shell (Powershell works too) by running the following command:
 
 ```
 sysmon.exe -accepteula -i sysmonconfig-export.xml
@@ -594,15 +592,19 @@ Restart the Gravwell service via standard windows service management.
         #no Level means pull all levels
         #no Max-Reachback means look for logs starting from now
         Channel=System #pull from the system channel
+
 [EventChannel "application"]
         Tag-Name=windows
         Channel=Application #pull from the system channel
+
 [EventChannel "security"]
         Tag-Name=windows
         Channel=Security #pull from the system channel
+
 [EventChannel "setup"]
         Tag-Name=windows
         Channel=Setup #pull from the system channel
+
 [EventChannel "sysmon"]
         Tag-Name=windows
         Provider=Microsoft-Windows-Sysmon #Only look for the provider
