@@ -4,7 +4,7 @@ Gravwell users care about what's going on in their networks--it's a big reason p
 
 ## Crash Reporting
 
-When a Gravwell component crashes, an automated crash report is sent to Gravwell. This consists of the console output from the component in question, which typically includes some brief information about the license (in order to determine whose system just crashed) and a stack trace.
+When a Gravwell component crashes, an automated crash report is sent to Gravwell. This consists of the console output from the component in question, which typically includes some brief information about the license (in order to determine whose system just crashed) and a stack trace. **Every** Gravwell component--the webserver, the indexer, the ingesters, the search agent--is set up to send crash reports.
  
 Note: Crash reports are always sent via TLS-verified HTTPS to update.gravwell.io. If we are unable to fully validate the remote certificate, the report does *not* go out.
 
@@ -67,7 +67,7 @@ If you would like us to remove all past crash reports that your system has sent,
 
 ## Metrics Reporting
 
-The Gravwell webserver component will occasionally send an HTTPS POST request to the Gravwell corporate servers with generic usage statistics. This information helps us figure out which features get the most use and which can use more work. We can generate statistics about how much RAM is being consumed by Gravwell--do we need to optimize garbage collection, or be more conservative in our default configuration? It also allows us to make sure paid licenses aren't being deployed improperly.
+The Gravwell webserver component (*only* the webserver) will occasionally send an HTTPS POST request to the Gravwell corporate servers with generic usage statistics. This information helps us figure out which features get the most use and which can use more work. We can generate statistics about how much RAM is being consumed by Gravwell--do we need to optimize garbage collection, or be more conservative in our default configuration? It also allows us to make sure paid licenses aren't being deployed improperly.
 
 Our most important goal in gathering these metrics is to protect the anonymity of your data. These metrics reports will **never** include the actual contents of any data stored in Gravwell, nor will they ever send actual search queries or even a list of tags on the system.
 
