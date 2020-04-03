@@ -541,27 +541,30 @@ Once configured, this file can be copied to any other Windows system from which 
 
 The Windows event ingester is designed to be compatible with an automated deployment.  This means that a domain controller can push the installer to clients and invoke installation without user interaction.  To force a silent installation execute the installer with administrative privileges via [msiexec](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec) with the `/quiet` argument.  This installation method will install the default configuration and start the service.
 
-To configure your specific parameters you will then need to either push a modified configuration file to `C:\Program Files\gravwell\config.cfg` and restart the service, or also provide the `CONFIGFILE` argument with the fully qualified path to the `config.cfg` file.
+To configure your specific parameters you will then need to either push a modified configuration file to `%PROGRAMDATA%\gravwell\eventlog\config.cfg` and restart the service, or also provide the `CONFIGFILE` argument with the fully qualified path to the `config.cfg` file.
+
+Note that you may need to create the `%PROGRAMDATA%\gravwell\eventlog` path.
 
 A complete execution sequence for a Group Policy push might look like:
 
 ```
-msiexec.exe /i gravwell_win_events_3.2.1.msi /quiet
-xcopy \\share\gravwell_config.cfg C:\Program Files\gravwell\gravwellevents.cfg
-sc restart GravwellEvents
+msiexec.exe /i gravwell_win_events_3.3.12.msi /quiet
+xcopy \\share\gravwell_config.cfg %PROGRAMDATA%\gravwell\eventlog\config.cfg
+sc stop "GravwellEvent Service"
+sc start "GravwellEvent Service"
 ```
 
 Or
 
 ```
-msiexec.exe /i gravwell_win_events_3.2.1.msi /quiet CONFIGFILE=\\share\gravwellevents.cfg
+msiexec.exe /i gravwell_win_events_3.3.12.msi /quiet CONFIGFILE=\\share\gravwell_config.cfg
 ```
 
 ### Optional Sysmon Integration
 
 The Sysmon utility, part of the sysinternals suite, is an effective and popular tool for monitoring Windows systems. There are plenty of resources with examples of good sysmon configuration files. At Gravwell, we like to use the config created by infosec Twitter personality @InfosecTaylorSwift.
 
-Edit the Gravwell Windows agent config file located at `C:\Program Files\gravwell\config.cfg` and add the following lines:
+Edit the Gravwell Windows agent config file located at `%PROGRAMDATA%\gravwell\eventlog\config.cfg` and add the following lines:
 
 ```
 [EventChannel "Sysmon"]
@@ -633,27 +636,27 @@ To see ALL Windows events in their entirety run:
 tag=windows
 ```
 
-For the following searches, I took the Windows results and threw them in a regex validator [regex101.com](regex101.com) to build the regex. Anything you "name" with a `(<?P<foo>.*)` style regex is something you can chart by adding `| count by foo | chart count by foo`. See documentation about the search modules for more information on regex extractions.
-
-To see all network creation by non-standard processes:
+For the following searches we can use the `winlog` search module to filter and extract specific events and fields.  To see all network creation by non-standard processes:
 
 ```
-tag=sysmon regex ".*EventID>3.*'Image'>(?P<exe>\S*)<\/Data>.*SourceHostname'>(?P<src>\S*)<\/Data>.*DestinationIp'>(?P<dst>[0-9]+.[0-9]+.[0-9]+.[0-9]+).*DestinationPort'>(?P<dport>[0-9]*)"
+tag=sysmon regex winlog EventID==3 Image SourceHostname DestinationIp DestinationPort |
+table TIMESTAMP SourceHostname Image DestinationIP DestinationPort
 ```
 
 To chart network creation by source host:
 
 ```
-tag=sysmon regex ".*EventID>3.*'Image'>(?P<exe>\S*)<\/Data>.*SourceHostname'>(?P<src>\S*)<\/Data>.*DestinationIp'>(?P<dst>[0-9]+.[0-9]+.[0-9]+.[0-9]+).*DestinationPort'>(?P<dport>[0-9]*)" | count by src | chart count by src limit 10
+tag=sysmon regex winlog EventID==3 Image SourceHostname DestinationIp DestinationPort |
+count by SourceHostname |
+chart count by SourceHostname limit 10
 ```
 
 To see suspicious file creation:
 
 ```
-tag=sysmon regex ".*EventID>11.*Image'>(?P<process>.*)<\/Data>.*TargetFilename'>(?P<file>[\-:\.\ _\a-zA-z]*)<\/Data><Data Name='"
-```
-```
-tag=sysmon regex ".*EventID>11.*Image'>(?P<process>.*)<\/Data>.*TargetFilename'>(?P<file>[\-:\.\ _\a-zA-z]*)<\/Data><Data Name='" | count by file | chart count by file
+tag=sysmon winlog EventID==11 Image TargetFilename |
+count by TargetFilename |
+chart count by TargetFilename
 ```
 
 ## Netflow Ingester
