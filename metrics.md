@@ -45,7 +45,7 @@ created by gravwell/pkg/search.(*SearchManager).GetSystemStats.func1
 
 The message starts with the particular component that crashed, in this case the webserver. It then lists the Gravwell version, the IP and hostname of the system that crashed, and a path where Gravwell staff can find a full copy of the crash log--if a backtrace is particularly long, we receive an email with only the first 100 lines or so.
 
-The remainder of the message is the console output from the crashed program. The crash reporter pulls this directly from the component's output file in `/dev/shm`; you can see what your system might send by looking at e.g. `/dev/shm/gravwell_webserver`.
+The remainder of the message is the console output from the crashed program. The crash reporter pulls this directly from the component's output file in `/dev/shm`; you can see what your system might send by looking at e.g. `/dev/shm/gravwell_webserver`. You can also view any past crash reports in `/opt/gravwell/log/crash`, but be aware that if you *disable* the crash reporter, crash logs will no longer be stored in that directory.
 
 The first few lines (Version, API Version, Build Date, and Build ID) help us determine exactly what version of Gravwell was running. "Cmdline", "Executing user", "Parent PID", "Parent cmdline", and "Parent user" all help us figure out how the Gravwell process is being run and identify potential issues there--in this example, because the parent process as PID 1 and named "manager", we can infer that Gravwell is being run in a Docker container. Sometimes issues can crop up in one environment (e.g. in Docker being launched by "manager") but not in others (Ubuntu, launching via systemd), and this helps us chase that down.
 
@@ -62,6 +62,8 @@ If for any reason you decide you don't want to send crash reports, you have mult
 * If you're using the Gravwell Docker image, you can disable the crash reporter by passing `-e DISABLE_ERROR_HANDLING=true` in the Docker command.
 
 However, we'd really appreciate if you'd leave crash reporting enabled. Thanks to these crash reports, we can often identify and fix problems that users may not even notice! It's one of our best feedback mechanisms to improve our software.
+
+If you would like us to remove all past crash reports that your system has sent, please email support@gravwell.io and we will permanently delete them from our system.
 
 ## Metrics Reporting
 
