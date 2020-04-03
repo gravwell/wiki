@@ -336,6 +336,10 @@ The outbound traffic chart shows a pretty big spike for an otherwise quiet syste
 
 ## Advanced Topics
 
+### Crash Reporting and Metrics
+
+The Gravwell software has automated crash reporting & metrics reporting built in. For more information about what gets sent back to us at Gravwell, see the [crash reporting and metrics page](#!metrics.md)
+
 ### Clustered Configurations
 
 Users with multi-node licenses can deploy multiple indexer and webserver instances and coordinate them over the network. We highly recommend coordinating with Gravwell's support team before deploying such a setup, but will outline the basic steps in this document.

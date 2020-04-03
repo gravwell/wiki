@@ -193,6 +193,11 @@ If you intend to expose the forwarded container ports to the Internet, it is **c
 * The 'admin' password must be changed from default 'changeme'.
 * The GRAVWELL_INGEST_SECRET, GRAVWELL_INGEST_AUTH, GRAVWELL_CONTROL_AUTH, and GRAVWELL_SEARCHAGENT_AUTH environment variables set when launching the indexer & webserver (see above) must be set to complex strings.
 
+## Crash Reporting and Metrics
+
+The Gravwell software has automated crash reporting & metrics reporting built in. For more information about what gets sent back to us at Gravwell, and how to opt out, see the [crash reporting and metrics page](#!metrics.md)
+
+
 ## More Info
 
 With Gravwell running, refer to [the rest of the documentation](#!index.md) for more information on how to use the system.
