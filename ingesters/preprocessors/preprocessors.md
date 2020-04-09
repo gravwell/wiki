@@ -115,7 +115,7 @@ Becomes two entries, one containing "bob" and one containing "alice".
 
 * `Extraction` (string, required): specifies the JSON field containing a struct which should be split, e.g. `Extraction=Users`, `Extraction=foo.bar`.
 * `Passthrough-Misses` (boolean, optional): If set to true, the preprocessor will pass along entries for which it was unable to extract the requested field. By default, these entries are dropped.
-* `Force-JSON-Object` (boolean, optional): By default, the preprocessor will emit entries with each containing one item in the list and nothing else; thus extracting `foo` from `{"foo": ["a", "b"]}` would result in two entries containing "a" and "b" respectively. If this option is set, that same entry would result in two entries containg `{"foo": "a"}` and `{"foo": "b"}`.
+* `Force-JSON-Object` (boolean, optional): By default, the preprocessor will emit entries with each containing one item in the list and nothing else; thus extracting `foo` from `{"foo": ["a", "b"]}` would result in two entries containing "a" and "b" respectively. If this option is set, that same entry would result in two entries containing `{"foo": "a"}` and `{"foo": "b"}`.
 
 ### Common Use Cases
 
@@ -319,14 +319,45 @@ Ingesters will typically attempt to extract a timestamp from an entry by looking
 
 * `Regex` (string, required): This parameter specifies the regular expression to be applied to the incoming entries. It must contain at least one [named capturing group](https://www.regular-expressions.info/named.html), e.g. `(?P<timestamp>.+)` which will be used with the `TS-Match-Name` parameter.
 * `TS-Match-Name` (string, required): This parameter gives the name of the named capturing group from the `Regex` parameter which will contain the extracted timestamp.
-* `Timestamp-Format-Override` (string, optional): This can be used to specify an alternate timestamp parsing format. Refer to the [Go time package's reference time format](https://golang.org/pkg/time/#pkg-constants) for information on how to specify this.
+* `Timestamp-Format-Override` (string, optional): This can be used to specify an alternate timestamp parsing format. Available time formats are:
+	- AnsiC
+	- Unix
+	- Ruby
+	- RFC822
+	- RFC822Z
+	- RFC850
+	- RFC1123
+	- RFC1123Z
+	- RFC3339
+	- RFC3339Nano
+	- Apache
+	- ApacheNoTz
+	- Syslog
+	- SyslogFile
+	- SyslogFileTZ
+	- DPKG
+	- NGINX
+	- UnixMilli
+	- ZonelessRFC3339
+	- SyslogVariant
+	- UnpaddedDateTime
+	- UnpaddedMilliDateTime
+	- UK
+	- Gravwell
+	- LDAP
+	- UnixSeconds
+	- UnixMs
+	- UnixNano
+
+	Some timestamp formats have values that overlap (for example LDAP and UnixNano can produce timestamps with the same number of digits). If `Timestamp-Format-Override` is not used, the preprocessor will attempt to derive the timestamp in the order listed above. Always use `Timestamp-Format-Override` if using a timestamp format that can conflict with others in this list.
+
 * `Timezone-Override` (string, optional): If the extracted timestamp doesn't contain a timezone, the timezone specified here will be applied. Example: `US/Pacific`, `Europe/Rome`, `Cuba`.
 * `Assume-Local-Timezone` (boolean, optional): This option tells the preprocessor to assume the timestamp is in the local timezone if no timezone is included. This is mutually exclusive with the `Timezone-Override` parameter.
 
 
 ### Common Use Cases
 
-Many data streams may have multiple timestamps or values that can easily be interpretted as timestamps.  The regextimestamp preprocessor allows you to force timegrinder to examine a specific timestamp within a log stream.  A good example is a log stream that is transported via syslog using an application that includes it's own timestamp but does not relay that timestamp to the syslog API.  The syslog wrapper will have a well formed timestamp which, but the actual data stream may need to use some internal field for the accurate timestamp.
+Many data streams may have multiple timestamps or values that can easily be interpreted as timestamps.  The regextimestamp preprocessor allows you to force timegrinder to examine a specific timestamp within a log stream.  A good example is a log stream that is transported via syslog using an application that includes it's own timestamp but does not relay that timestamp to the syslog API.  The syslog wrapper will have a well formed timestamp which, but the actual data stream may need to use some internal field for the accurate timestamp.
 
 ### Example: Wrapped Syslog Data
 
@@ -348,7 +379,7 @@ This config could be used to extract the timestamp shown in the example above:
 
 ## Regex Extraction Preprocessor
 
-It is highly common for transport busses to wrap data streams with additional metadata that may not be pertinent to the actual event.  Syslog is an excellent example where the Syslog header may not provide value to the underlying data and/or may simply complicate the analysis of the data.  The regexextractor preprocessor allows for declaring a regular expression that can extract multiple fields and reform them into a new structure for format.
+It is highly common for transport buses to wrap data streams with additional metadata that may not be pertinent to the actual event.  Syslog is an excellent example where the Syslog header may not provide value to the underlying data and/or may simply complicate the analysis of the data.  The regexextractor preprocessor allows for declaring a regular expression that can extract multiple fields and reform them into a new structure for format.
 
 The regexextraction preprocessor uses named regular expression extraction fields and a template to extract data and then reform it into an output record.  Output templates can contain static values and completely reform the output data if needed.
 
@@ -373,7 +404,7 @@ Given the following record, we want to remove the syslog header and ship just th
 <30>1 2020-03-20T15:35:20Z webserver.example.com loginapp 4961 - - {"user": "bob", "action": "login", "result": "success", "UID": 123, "ts": "2020-03-20T15:35:20Z"}
 ```
 
-The syslog message contains a well structured JSON blob but the syslog transport adds additional metadata that does not nessarily enhance the record.  We can use the Regex extractor to pull out the data we want and reform it into an easy to use record.
+The syslog message contains a well structured JSON blob but the syslog transport adds additional metadata that does not necessarily enhance the record.  We can use the Regex extractor to pull out the data we want and reform it into an easy to use record.
 
 We will use the regex extractor to pull out the data fields and the hostname, we will then use the template to build a new JSON blob with the host inserted.
 
@@ -397,13 +428,13 @@ The resulting data is:
 {"host": "loginapp", "data": {"user": "bob", "action": "login", "result": "success", "UID": 123, "ts": "2020-03-20T15:35:20Z"}}
 ```
 
-NOTE: Templates can specify multiple fieds constant values.  Extracted fields can be inserted multiple times.
+NOTE: Templates can specify multiple fields constant values.  Extracted fields can be inserted multiple times.
 
 ## Forwarding Preprocessor
 
 The forwarding preprocessor is used to split a log stream and forward it to another endpoint.  This can be extremely useful when standing up additional logging tools or when feeding data to external archive processors.  The Forwarding preprocessor is a forking preprocessors.  This means that it will not alter the data stream, it only forwards the data on to additional endpoints.
 
-By default the forwarding preprocessor is blocking, this means that if you specify a forwarding endpoint using a stateful connection like tcp or tls and the endpoint is not up or is unable to accept data it will block ingestion.  This behavior can be altered using the `Non-Blocking` flag or by using a UDP protocol.
+By default the forwarding preprocessor is blocking, this means that if you specify a forwarding endpoint using a stateful connection like TCP or TLS and the endpoint is not up or is unable to accept data it will block ingestion.  This behavior can be altered using the `Non-Blocking` flag or by using a UDP protocol.
 
 The forwarding preprocessor also supports several filter mechanisms to cut down or specify exactly which data streams are forwarded.  Streams can be filtered using entry tags, sources, or regular expressions which operation on the actual log data.  Each filter specification can be specified multiple times to create an OR pattern.
 
