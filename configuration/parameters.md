@@ -399,6 +399,12 @@ Default Value:	`false`
 Example:		`Disable-Update-Notification=false`
 Description:	If Disable-Update-Notification is set to true, the web UI will not present a notification when a new version of Gravwell is available.
 
+**Disable-Stats-Report**
+Applies to: Webserver
+Default Value: false
+Example: `Disable-Stats-Report=true`
+Description:	Setting this parameter to true will tell the webserver's [metrics reporting routine](#!metrics.md) to send only minimal information about the license, omitting the broader system statistics.
+
 **Temp-Dir**
 Applies to:		Webserver
 Default Value:	`/opt/gravwell/tmp`
