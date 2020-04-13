@@ -247,6 +247,8 @@ Attention: The winlog accelerator is permissive ('-or' flag is implied).  So spe
 
 The [netflow](#!search/netflow/netflow.md) module allows for accelerating on netflow V5 fields and speeding up queries on large amounts of netflow data.  While the netflow module is very fast and the data is extremely compact, it can still be beneficial to engage acceleration if you have very large netflow data volumes.  The netflow module can use any of the direct netflow fields, but cannot use the pivot helper fields.  This means that you must specify `Src` or `Dst` and not `IP`.  The `IP` and `Port` fields cannot be specified in the acceleration arguments.
 
+Note: The helper extractions `Timestamp` and `Duration` cannot be used in accelerators.
+
 ### Example Well Configuration
 
 This example configuration uses the `bloom` engine and is accelerating on the source and destination IP/Port pairs as well as the protocol.
