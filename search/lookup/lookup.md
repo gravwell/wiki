@@ -1,6 +1,6 @@
 ## Lookup
 
-The lookup module is used to do data enrichment and translation off of a static lookup table stored in a resource. The contents of an *enumerated value* are compared against values in the *match column* until a match is found, then the value in that row's *extract column* is extracted into another enumerated value:
+The lookup module is used to do data enrichment and translation off of a static lookup table stored in a resource. The contents of one or more *enumerated values* are compared against values in the *match columns* until a match is found, then the value in that row's *extract column* is extracted into another enumerated value:
 
 ```
 lookup -r <resource name> <enumerated value> <column to match> <column to extract> as <valuename>
@@ -20,10 +20,24 @@ You can also extract multiple columns for each match. The following example matc
 lookup -r mytable A B (C as foo D as bar)
 ```
 
+Lookup also supports vectored matches, this means you can match a set of enumerated values against a set of columns.  Vectored matches are performed by specifying match and extraction lists.  When performing vectored matches the number of extracted enumerated values much match the number of columns to match against.
+
+```
+lookup -r mytable [A B] [A B] (C as foo D as bar)
+```
+
 ### Supported Options
 * `-r <arg>`: The "-r" option informs the lookup module which lookup resource should be used to enrich data.
 * `-s`: The "-s" option specifies that the lookup modules should require that all extractions succeed or the entry will be dropped.
 * `-v`: The "-v" flag inverts the flow logic in the lookup module, meaning that successful matches are suppressed and missed matches are passed on.  The "-v" and "-s" flags can be combined to provide basic whitelisting, passing only values which do not exist in the specified lookup table.
+
+Note: When using the `-s` or `-v` flags it is legal to specify that no extractions are to take place.  This operation can be useful when performing whitelisting or blacklisting.
+
+Here is an example that ensures that enumerated values `A` and `B` exist in the columns `X` and `Y` but does not enchrich data.
+
+```
+lookup -v -r mytable [A B] [X Y] ()
+```
 
 ### Setting up a lookupdata resource
 
