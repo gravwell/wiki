@@ -35,6 +35,7 @@ User files may be listed by a GET on `/api/files`. The result is an array of str
 		"Type": "text/plain; charset=utf-8",
 		"Name": "blah",
 		"Desc": "bar",
+		"Labels": ["foo"],
 		"Updated": "2019-04-04T15:50:19.290186504-06:00"
 	}
 ]
@@ -47,6 +48,25 @@ The contents of a file may be read by a GET request on `/api/files/<uuid>`, e.g.
 ## Updating a file
 
 A file's name, description, and contents can be changed via a POST request to `/api/files/<uuid>`. The request should be identical to one used to create a new file, with the `file`, `name`, and `desc` fields set to the desired values. Note that the `guid` field will be ignored.
+
+## Updating file metadata
+
+The various fields of a file (Name, Desc, Global, GIDs, Labels) can be updated with a PATCH request to `/api/files/<uuid>`. The body of the request should contain the same structure as was returned in a list (GET `/api/files`), e.g.:
+
+```
+{
+	"UID": 1,
+	"GIDs": null,
+	"Global": false,
+	"Name": "blah",
+	"Desc": "bar",
+	"Labels": ["foo"],
+}
+```
+
+Note that any fields beyond those show above may be present but will be ignored.
+
+Attention: The UID of a file may be changed, but only by an administrator and only when the `?admin=true` parameter has been set.
 
 ## Deleting a file
 
