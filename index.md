@@ -114,4 +114,6 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Changelogs](changelog/list.md)
 
+  * [Gravwell EULA](eula.md)
+
 Documentation version 2.0
