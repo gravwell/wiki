@@ -171,6 +171,18 @@ The server will respond with a description of the kit which has been uploaded, e
 				}
 			}
 		],
+		"ConflictingItems": [
+			{
+				"Name": "84270dbd-1905-418e-b756-834c15661a54",
+				"Type": "resource",
+				"AdditionalInfo": {
+					"VersionNumber": 1,
+					"ResourceName": "maxmind_asn",
+					"Description": "ASN database",
+					"Size": 6196221
+				}
+			}
+		],
         "RequiredDependencies": [
             {
                 "AdminRequired": false,
@@ -236,6 +248,8 @@ The server will respond with a description of the kit which has been uploaded, e
 ```
 
 Note the "ModifiedItems" field. If an earlier version of this kit is already installed, this field will contain a list of items which *the user has modified*. Installing the staged kit will overwrite these items, so users should be notified and given a chance to save their changes.
+
+"ConflictingItems" lists items which appear to conflict with user-created objects. In this example, it appears that the user has previously created their own resource named "maxmind_asn". If an installation request is sent with `OverwriteExisting` set to true, that resource will be overwritten with the version in the kit; if set to false, the installation process will return an error.
 
 The "RequiredDependencies" field contains a list of metadata structures for any currently-uninstalled dependencies of this kit, including an Items set which may contain licenses which should be displayed.
 
