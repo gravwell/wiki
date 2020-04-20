@@ -382,7 +382,31 @@ One may also request a list of *all* kit installation statuses by doing a GET on
 
 ## Uninstalling a kit
 
-To remove a kit, issue a DELETE request on `/api/kits/<uuid>`.
+To remove a kit, issue a DELETE request on `/api/kits/<uuid>`. If any of the items in the kit have been modified by the user since installation, the response will have a 400 status code and contain a structure detailing what has changed:
+
+```
+{
+    "Error": "Kit items have been modified since installation, set ?force=true to override",
+    "ModifiedItems": [
+        {
+            "AdditionalInfo": {
+                "Description": "Network services (protocol + port) database",
+                "ResourceName": "network_services",
+                "Size": 531213,
+                "VersionNumber": 1
+            },
+            "ID": "2e4c8f31-92a4-48b5-a040-d2c895caf0b2",
+            "KitID": "io.gravwell.networkenrichment",
+            "KitName": "Network enrichment",
+            "KitVersion": 1,
+            "Name": "network_services",
+            "Type": "resource"
+        }
+    ]
+}
+```
+
+The UI should prompt the user at this point; to force removal of the kit, add the `?force=true` parameter to the request.
 
 ## Querying Remote Kit Server
 
