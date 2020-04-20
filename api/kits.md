@@ -52,6 +52,13 @@ Note that while the ID, Name, Description, and Version fields are required, the 
 	"Name": "test-gravwell",
 	"Description": "Test Gravwell kit",
 	"Version": 1,
+	"ConfigMacros": [
+		{
+			"MacroName": "KIT_WINDOWS_TAG",
+			"Description": "Tag or tags containing Windows event entries",
+			"DefaultValue": "windows"
+		}
+	],
 	"Dashboards": [
 		7,
 		10
