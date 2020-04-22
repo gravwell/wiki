@@ -349,7 +349,7 @@ root@gravserver ~ # bash gravwell_http_ingester_installer_3.0.0.sh
 
 If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately. However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, the installer will prompt for the authentication token and the IP address of the Gravwell indexer. You can set these values during installation or leave them blank and modify the configuration file in `/opt/gravwell/etc/gravwell_http_ingester.conf` manually.
 
-#### Configuring HTTPS
+### Configuring HTTPS
 
 By default the HTTP Ingester runs a cleartext HTTP server, but it can be configured to run an HTTPS server using x509 TLS certificates.  To configure the HTTP Ingester as an HTTPS server provide a certificate and key PEM files in the Global configuration space using the `TLS-Certificate-File` and `TLS-Key-File` parameters.
 
@@ -361,7 +361,7 @@ An example global configuration with HTTPS enabled might look like the following
 	TLS-Key-File=/opt/gravwell/etc/key.pem
 ```
 
-### Example Configuration
+#### Example Configuration
 
 In addition to the universal configuration parameters used by all ingesters, the HTTP POST ingester has two additional global configuration parameters that control the behavior of the embedded webserver.  The first configuration parameter is the `Bind` option, which specifies the interface and port that the webserver listens on.  The second is the `Max-Body` parameter, which controls how large of a POST the webserver will allow.  The Max-Body parameter is a good safety net to prevent rogue processes from attempting to upload very large files into your Gravwell instance as a single entry.  Gravwell can support up to 2GB as a single entry, but we wouldn't recommend it.
 
@@ -399,8 +399,15 @@ Each HTTP Ingester listener can be configured to enforce authentication.  The su
 * none
 * basic
 * jwt
+* cookie
+* preshared-token
+* preshared-parameter
 
-When specifying an authentication system other than none, a username and password must also be provided.
+When specifying an authentication system other than none crendentials must be provided.  The `jwt` and `cookie` and cookie authentication systems require a username and password while the `preshared-token` and `preshared-parameter` must provide a token value and optional token name.
+
+Warning: Like any other webpage, authentication is NOT SECURE over cleartext connections and attackers that can sniff traffic can capture tokens and cookies.
+
+#### No Authentication
 
 The default authentication method is none, allowing anyone that can reach the ingester to push entries.  The `basic` authentication mechanism uses HTTP Basic authentication, where a username and password is base64 encoded and sent with every request.
 
@@ -421,9 +428,11 @@ An example curl command to send an entry with basic authentication might look li
 curl -d "only i can say hi" --user secretuser:secretpassword -X POST http://10.0.0.1:8080/basic/data
 ```
 
-The JWT authentication system uses a cryptographically signed token for authentication.  When using jwt authentication you must specify an Login URL where clients will authenticate and recieve a token which must then be sent with each request.  The jwt tokens expire after 48 hours.
+#### JWT Authentication
 
-Authenticating with the HTTP ingester using a jwt authentication is a two step process and requires an additional configuration parameter.  Here is an example configuration:
+The JWT authentication system uses a cryptographically signed token for authentication.  When using jwt authentication you must specify an Login URL where clients will authenticate and recieve a token which must then be sent with each request.  The jwt tokens expire after 48 hours.  Authentication is performed by sending a `POST` request to the login URL with the `username` and `password` form fields populated.
+
+Authenticating with the HTTP ingester using jwt authentication is a two step process and requires an additional configuration parameter.  Here is an example configuration:
 
 ```
 [Listener "jwtauth"]
@@ -439,11 +448,79 @@ Sending entries requires that endpoints first authenticate to obtain a token, th
 
 ```
 x=$(curl -X POST -d "username=user1&password=pass1" http://127.0.0.1:8080/jwt/login) #grab the token and stuff it into a variable
-curl -X POST -H "Authorization: Bearer $x" -d "this is a test 2 using basic auth" http://127.0.0.1:8080/jwt #send the request with the token
+curl -X POST -H "Authorization: Bearer $x" -d "this is a test using JWT auth" http://127.0.0.1:8080/jwt/data #send the request with the token
 ```
-Warning: Like any other webpage, authentication is NOT SECURE over cleartext connections.
 
-#### Listener Methods
+#### Cookie Authentication
+
+The cookie authentication system is virtually identical to JWT authentication other than the method of controlling state.  Listeners that use cookie authentication require that a client login with a username and password to acquire a cookie which is set by the login page.  Subsequent requests to the ingest URL must provide the cookie in each request.
+
+Here is an example configuration block:
+
+```
+[Listener "cookieauth"]
+	URL="/cookie/data"
+	LoginURL="/cookie/login"
+	Tag-Name=stuff
+	AuthType=basic
+	Username=secretuser
+	Password=secretpassword
+```
+
+An example set of curl commands that login and retrieve the cookie before ingesting some data might look like:
+
+```
+curl -c /tmp/cookie.txt -d "username=user1&password=pass1" localhost:8080/cookie/login
+curl -X POST -c /tmp/cookie.txt -b /tmp/cookie.txt -d "this is a cookie data" localhost:8080/cookie/data
+```
+
+#### Preshared Token
+
+The Preshared token authentication mechanism uses a preshared secret rather than a login mechanism.  The preshared secret is expected to be sent with each request in an Authorization header.  Many HTTP frameworks expect this type of ingest, such as the Splunk HEC and supporting AWS Kinesis and Lambda infrastructure.  Using a preshared token listener we can define a capture system that is a plugin replacement for Splunk HEC.
+
+Note: If you do not define a `TokenName` value, the default value of `Bearer` will be used.
+
+An example configuration which defines a preshared token:
+
+```
+[Listener "presharedtoken"]
+	URL="/preshared/token/data"
+	Tag-name=token
+	AuthType="preshared-token"
+	TokenName=foo
+	TokenValue=barbaz
+```
+
+An example curl command the sends data using the preshared secret:
+
+```
+curl -X POST -H "Authorization: foo barbaz" -d "this is a preshared token" localhost:8080/preshared/token/data
+```
+
+#### Preshared Parameter
+
+The Preshared Parameter authentication mechanism uses a preshared secret that is provided as a query parameter.  The `preshared-parameter` system can be useful when scripting or using data producers that typically do not support authentication by embedding the authentication token into the URL.
+
+Note: Embedding the authentication token into the URL means the proxies and HTTP logging infrastructure may capture and log authentication tokens.
+
+An example configuration which defines a preshared parameter:
+
+```
+[Listener "presharedtoken"]
+	URL="/preshared/parameter/data"
+	Tag-name=token
+	AuthType="preshared-parameter"
+	TokenName=foo
+	TokenValue=barbaz
+```
+
+An example curl command the sends data using the preshared secret:
+
+```
+curl -X POST -d "this is a preshared parameter" localhost:8080/preshared/parameter/data?foo=barbaz
+```
+
+### Listener Methods
 
 The HTTP Ingester can be configured to use virtually any method, but data is always expected to be in the body of the request.
 

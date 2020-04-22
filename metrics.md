@@ -391,4 +391,6 @@ We carefully considered the information we report, taking pains to make it impos
 
 ### Limiting Metric Reporting
 
-Customers with an appropriately-enabled license may set `Disable-Stats-Report=true` in gravwell.conf, which will strip down the metrics report to a bare minimum containing the CustomerUUID, CustomerNumber, BuildVer, ApiVer, LicenseTimeLeft, and LicenseHash fields--just enough information to verify that the correct license is installed and the system is running.
+Customers may set `Disable-Stats-Report=true` in gravwell.conf, which will strip down the metrics report to a bare minimum containing the CustomerUUID, CustomerNumber, BuildVer, ApiVer, LicenseTimeLeft, and LicenseHash fields--just enough information to verify that the correct license is installed and the system is running.
+
+We'd really appreciate if you'd leave full stats reports enabled, though. As we said above, these stats reports help us figure out which features are getting used the most, what kind of systems Gravwell is running on, how much RAM it's using--information that, in aggregate, can help us decide where to prioritize future improvements.

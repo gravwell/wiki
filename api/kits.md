@@ -40,6 +40,7 @@ type KitBuildRequest struct {
 	Extractors        []uuid.UUID
 	Icon              string    
 	Dependencies      []KitDependency
+	ConfigMacros	  []KitConfigMacro
 }
 ```
 
@@ -51,6 +52,13 @@ Note that while the ID, Name, Description, and Version fields are required, the 
 	"Name": "test-gravwell",
 	"Description": "Test Gravwell kit",
 	"Version": 1,
+	"ConfigMacros": [
+		{
+			"MacroName": "KIT_WINDOWS_TAG",
+			"Description": "Tag or tags containing Windows event entries",
+			"DefaultValue": "windows"
+		}
+	],
 	"Dashboards": [
 		7,
 		10
@@ -94,6 +102,22 @@ A kit may depend on other kits. List these dependencies in the Dependencies arra
 
 The ID field specifies the dependency's ID, e.g. io.gravwell.testresource. The MinVersion field specifies the minimum version of that kit which must be installed, e.g. 3.
 
+### Config Macros
+
+A kit may define "config macros", which are special macros which will be created by Gravwell when the kit is installed. A config macro looks like this:
+
+```
+{
+	"MacroName": "KIT_WINDOWS_TAG",
+	"Description": "Tag or tags containing Windows event entries",
+	"DefaultValue": "windows",
+	"Value": "",
+}
+```
+
+The UI should prompt for the desired value of the macro at installation time and include the user's response in the KitConfig structure.
+
+
 ## Uploading a Kit
 
 Before a kit can be installed, it must first be uploaded to the webserver. Kits are uploaded by a POST request to `/api/kits`. The request should contain a multipart form. To upload a file from the local system, add a file field to the form named `file` containing the kit file. To upload a file from a remote system such as an HTTP server, add a field named `remote` containing the URL of the kit.
@@ -114,6 +138,14 @@ The server will respond with a description of the kit which has been uploaded, e
 		"Installed": false,
 		"Signed": false,
 		"AdminRequired": false,
+		"ConfigMacros": [
+			{
+				"MacroName": "KIT_WINDOWS_TAG",
+				"Description": "Tag or tags containing Windows event entries",
+				"DefaultValue": "windows",
+				"Value": "winlog",
+			}
+		],
 		"Items": [
 			{
 				"Name": "84270dbd-1905-418e-b756-834c15661a54",
@@ -143,6 +175,18 @@ The server will respond with a description of the kit which has been uploaded, e
 					"UUID": "5567707c-8508-4250-9121-0d1a9d5ebe32",
 					"Name": "Foo",
 					"Description": "My dashboard"
+				}
+			}
+		],
+		"ConflictingItems": [
+			{
+				"Name": "84270dbd-1905-418e-b756-834c15661a54",
+				"Type": "resource",
+				"AdditionalInfo": {
+					"VersionNumber": 1,
+					"ResourceName": "maxmind_asn",
+					"Description": "ASN database",
+					"Size": 6196221
 				}
 			}
 		],
@@ -212,7 +256,11 @@ The server will respond with a description of the kit which has been uploaded, e
 
 Note the "ModifiedItems" field. If an earlier version of this kit is already installed, this field will contain a list of items which *the user has modified*. Installing the staged kit will overwrite these items, so users should be notified and given a chance to save their changes.
 
-Note also the "RequiredDependencies" field. This array contains a list of metadata structures for any currently-uninstalled dependencies of this kit, including an Items set which may contain licenses which should be displayed.
+"ConflictingItems" lists items which appear to conflict with user-created objects. In this example, it appears that the user has previously created their own resource named "maxmind_asn". If an installation request is sent with `OverwriteExisting` set to true, that resource will be overwritten with the version in the kit; if set to false, the installation process will return an error.
+
+The "RequiredDependencies" field contains a list of metadata structures for any currently-uninstalled dependencies of this kit, including an Items set which may contain licenses which should be displayed.
+
+The ConfigMacros field contains a list of configuration macros (see previous section) which will be installed by this kit. If a previous version of this kit (or another kit altogether) has already installed a macro with the same name, the webserver will pre-populate the "Value" field with the current value in the macro. If a *user* has previously installed a macro with the same name, the webserver will return an error.
 
 ## Listing Kits
 
@@ -292,7 +340,15 @@ Additional kit installation options may be specified by passing a configuration 
 	"Global": true,
 	"AllowUnsigned": false,
 	"InstallationGroup": 3,
-	"Labels": ["foo", "bar"]
+	"Labels": ["foo", "bar"],
+		"ConfigMacros": [
+			{
+				"MacroName": "KIT_WINDOWS_TAG",
+				"Description": "Tag or tags containing Windows event entries",
+				"DefaultValue": "windows",
+				"Value": "winlog",
+			}
+		]
 }
 ```
 
@@ -307,6 +363,8 @@ Regular users can only install properly-signed kits from Gravwell. If `AllowUnsi
 `InstallationGroup` allows the installing user to share the contents of the kit with one of the groups to which he belongs.
 
 `Labels` is a list of additional labels which should be applied to all label-able items in the kit upon installation. Note that Gravwell automatically labels kit-installed items with "kit" and the ID of the kit (e.g. "io.gravwell.coredns").
+
+`ConfigMacros` is the list of ConfigMacros found in the kit information structure, with the "Value" fields optionally set to whatever the user wishes. If the "Value" field is blank, the webserver will use the "DefaultValue".
 
 ### Installation Status API
 
@@ -331,7 +389,31 @@ One may also request a list of *all* kit installation statuses by doing a GET on
 
 ## Uninstalling a kit
 
-To remove a kit, issue a DELETE request on `/api/kits/<uuid>`.
+To remove a kit, issue a DELETE request on `/api/kits/<uuid>`. If any of the items in the kit have been modified by the user since installation, the response will have a 400 status code and contain a structure detailing what has changed:
+
+```
+{
+    "Error": "Kit items have been modified since installation, set ?force=true to override",
+    "ModifiedItems": [
+        {
+            "AdditionalInfo": {
+                "Description": "Network services (protocol + port) database",
+                "ResourceName": "network_services",
+                "Size": 531213,
+                "VersionNumber": 1
+            },
+            "ID": "2e4c8f31-92a4-48b5-a040-d2c895caf0b2",
+            "KitID": "io.gravwell.networkenrichment",
+            "KitName": "Network enrichment",
+            "KitVersion": 1,
+            "Name": "network_services",
+            "Type": "resource"
+        }
+    ]
+}
+```
+
+The UI should prompt the user at this point; to force removal of the kit, add the `?force=true` parameter to the request.
 
 ## Querying Remote Kit Server
 
