@@ -1269,6 +1269,45 @@ Note that this configuration sends entries to a local indexer via `/opt/gravwell
 
 You can configure any number of `Queue` entries, one for each SQS queue, and provide unique authentication, tag names, etc., for each one.
 
+## Google Stenographer Ingester
+
+The Google Stenographer Ingester provides a mechanism to query a running Google Stenographer instance and have results ingested per-packet into Gravwell. 
+
+Each Stenographer ingester listens on a given port (```Listen-Address```) and accepts Stenographer queries (see query syntax below) as an HTTP POST. On receiving a query, the ingester returns an integer job ID, and asyncrhonously queries the Stenographer instance and begins to ingest the returned PCAP. Multiple in-flight queries can be ran concurrently. Job status can be viewed by issuing an HTTP GET on "/status", which returns a JSON-encoded array of in-flight job IDs. 
+
+A simple web interface to submit and view job status is also available by browsing to the specified ingester port.
+
+### Query Language ###
+
+A user requests packets from stenographer by specifying them with a very simple
+query language.  This language is a simple subset of BPF, and includes the
+primitives:
+
+    host 8.8.8.8          # Single IP address (hostnames not allowed)
+    net 1.0.0.0/8         # Network with CIDR
+    net 1.0.0.0 mask 255.255.255.0  # Network with mask
+    port 80               # Port number (UDP or TCP)
+    ip proto 6            # IP protocol number 6
+    icmp                  # equivalent to 'ip proto 1'
+    tcp                   # equivalent to 'ip proto 6'
+    udp                   # equivalent to 'ip proto 17'
+
+    # Stenographer-specific time additions:
+    before 2012-11-03T11:05:00Z      # Packets before a specific time (UTC)
+    after 2012-11-03T11:05:00-07:00  # Packets after a specific time (with TZ)
+    before 45m ago        # Packets before a relative time
+    before 3h ago         # Packets after a relative time
+
+**NOTE**: Relative times must be measured in integer values of hours or minutes
+as demonstrated above.
+
+Primitives can be combined with and/&& and with or/||, which have equal
+precendence and evaluate left-to-right.  Parens can also be used to group.
+
+    (udp and port 514) or (tcp and port 8080)
+
+**Note**: This section sourced from [Google Stenographer](https://github.com/google/stenographer/blob/master/README.md)
+
 ## The Gravwell Federator
 
 The Federator is an entry relay: ingesters connect to the Federator and send it entries, then the Federator passes those entries to an indexer.  The Federator can act as a trust boundary, securely relaying entries across network segments without exposing ingest secrets or allowing untrusted nodes to send data for disallowed tags.  The Federator upstream connections are configured like any other ingester, allowing multiplexing, local caching, encryption, etc.
