@@ -330,7 +330,7 @@ See the listing at the end of this page for a list of what "AdditionalInfo" fiel
 
 A GET request on `/api/kits/<GUID>` where `<GUID>` is a guid of a specifically installed or staged kit will provide info about that specific kit.
 
-For example, a GET request on `/api/kits/<549c0805-a693-40bd-abb5-bfb29fc98ef1>` will yield:
+For example, a GET request on `/api/kits/549c0805-a693-40bd-abb5-bfb29fc98ef1` will yield:
 
 ```
 {
