@@ -25,7 +25,9 @@ The Library API is rooted at `/api/library` and responds to the following reques
 | PUT    | Update an existing library entry | TRUE |
 | DELETE | Delete an existing library entry | TRUE |
 
-The `DELETE` and `PUT` method require that the GUID of a specific library entry be appended to the URL.  For example, to update the entry with the GUID of `5f72d51e-d641-11e9-9f54-efea47f6014a` a `PUT` request would be issued against `/api/library/5f72d51e-d641-11e9-9f54-efea47f6014a` with a complete entry structure encoded into the body of the request.
+Every search library entry has both a "ThingUUID" and a "GUID" associated with it. The "ThingUUID" is always unique: there will only ever be one search library entry with a given ThingUUID on the system. The "GUID", on the other hand, is an ID which is used to refer to a search library entry from other things like dashboards or actionables; when you install a kit, all the search library entries will have the same GUID as on the kit creator's system, allowing cross-linking. Each user could potentially have a search library entry with the same GUID, but each of those entries will have a unique ThingUUID.
+
+The `DELETE` and `PUT` method require that the "ThingUUID" or "GUID" of a specific library entry be appended to the URL. The ThingUUID and the GUID can be used interchangeably in the API, but be aware that in "admin mode" there may be multiple accessible items with the same GUID. For example, to update the entry with the GUID of `5f72d51e-d641-11e9-9f54-efea47f6014a` a `PUT` request would be issued against `/api/library/5f72d51e-d641-11e9-9f54-efea47f6014a` with a complete entry structure encoded into the body of the request.
 
 The `GET` method can optionally append a GUID to request a specific library entry, if not GUID is present the GET method returns a list of all available entries.  If a users does not have access to a specific entry specified by the GUID the webserver will return a response of 403.
 
@@ -33,7 +35,8 @@ The structure of a library entry is as follows:
 
 ```
 struct {
-	ThingUUID GUID
+	ThingUUID   uuid.UUID
+	GUID        uuid.UUID
 	UID         int32
 	GIDS        []int32
 	Global      boolean
@@ -49,7 +52,8 @@ The structure members are:
 
 | Member      | Description                     | Omitted if Empty |
 | ----------- | ------------------------------- | ---------------- |
-| ThingUUID   | Globally unique identifier      |                  |
+| ThingUUID   | Unique identifier *on the local system* |                  |
+| GUID        | Global "name"; persists across kit installation. Multiple users may have search library entries with the same GUID. | |
 | UID         | Owners system user id           |                  |
 | GIDs        | List of group ids the entry is shared with | X |
 | Global      | Boolean indicating whether the entry is globally readable | |
@@ -64,6 +68,7 @@ Here is an example entry that is owned by the user with UID 1 and shared with 3 
 ```
 {
 	"ThingUUID": "69755a85-d5b1-11e9-89c2-0242ac130005",
+	"GUID": "ae132ecc-88dd-11ea-a6aa-373f4c2439d4",
 	"UID": 1,
 	"GIDs": [1, 3, 5],
 	"Global": false,
@@ -104,10 +109,13 @@ POST /api/library
 }
 ```
 
+Note: Because the "GUID" field is not set here, the system will assign one. You may also include the GUID in the request.
+
 Response:
 ```
 {
 	"ThingUUID": "c9169d15-d643-11e9-99d3-0242ac130005",
+	"GUID": "ae132ecc-88dd-11ea-a6aa-373f4c2439d4",
 	"UID": 1,
 	"GIDs": [1, 2],
 	"Global": false,
@@ -135,6 +143,7 @@ Response:
 [
 	{
 		"ThingUUID": "0b5a66cb-d642-11e9-931c-0242ac130005",
+		"GUID": "ae132ecc-88dd-11ea-a6aa-373f4c2439d4",
 		"UID": 1,
 		"Global": false,
 		"Name": "netflow agg",
@@ -152,6 +161,7 @@ Response:
 	},
 	{
 		"ThingUUID": "69755a85-d5b1-11e9-89c2-0242ac130005",
+		"GUID": "d57611be-88dd-11ea-a94d-df6bfb56a8a8",
 		"UID": 1,
 		"Global": false,
 		"Name": "test2",
@@ -171,13 +181,14 @@ Response:
 Request:
 
 ```
-GET http://172.19.0.5:80/api/library/0b5a66cb-d642-11e9-931c-0242ac130005
+GET http://172.19.0.5:80/api/library/ae132ecc-88dd-11ea-a6aa-373f4c2439d4
 ```
 
 Response:
 ```
 {
 	"ThingUUID": "0b5a66cb-d642-11e9-931c-0242ac130005",
+	"GUID": "ae132ecc-88dd-11ea-a6aa-373f4c2439d4",
 	"UID": 1,
 	"Global": false,
 	"Name": "netflow agg",
@@ -195,6 +206,8 @@ Response:
 }
 ```
 
+Note that you would get the same response from `api/library/0b5a66cb-d642-11e9-931c-0242ac130005` too.
+
 ### Updating an Entry
 
 Request:
@@ -202,6 +215,7 @@ Request:
 PUT /api/library/69755a85-d5b1-11e9-89c2-0242ac130005
 {
 	"ThingUUID": "69755a85-d5b1-11e9-89c2-0242ac130005",
+	"GUID": "d57611be-88dd-11ea-a94d-df6bfb56a8a8",
 	"Global": false,
 	"Name": "SyslogAgg",
 	"Description": "Updated Syslog aggregate",
@@ -219,6 +233,7 @@ Response:
 ```
 {
 	"ThingUUID": "69755a85-d5b1-11e9-89c2-0242ac130005",
+	"GUID": "d57611be-88dd-11ea-a94d-df6bfb56a8a8",
 	"UID": 1,
 	"Global": false,
 	"Name": "SyslogAgg",
@@ -242,6 +257,8 @@ DELETE /api/library/69755a85-d5b1-11e9-89c2-0242ac130005
 ### Admin Deleting an Entry
 
 If an non-admin appends the admin flag the webserver will ignore the flag, if the non-admin is the owner of the specified entry the action (DELETE in this case) still works.  If the non-admin user does NOT own the entry the webserver responds with a 403 StatusForbidden.
+
+When performing an admin deletion, always use the ThingUUID in the URL parameter or else the wrong item may be deleted.
 
 Request:
 ```
