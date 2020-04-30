@@ -1346,9 +1346,9 @@ Note that this configuration sends entries to a local indexer via `/opt/gravwell
 
 You can configure any number of `Queue` entries, one for each SQS queue, and provide unique authentication, tag names, etc., for each one.
 
-## Google Stenographer Ingester
+## Packet Fleet Ingester
 
-The Google Stenographer Ingester provides a mechanism to query a running Google Stenographer instance and have results ingested per-packet into Gravwell. 
+The Packet Fleet Ingester provides a mechanism to query Google Stenographer instances and have results ingested per-packet into Gravwell. 
 
 Each Stenographer ingester listens on a given port (```Listen-Address```) and accepts Stenographer queries (see query syntax below) as an HTTP POST. On receiving a query, the ingester returns an integer job ID, and asyncrhonously queries the Stenographer instance and begins to ingest the returned PCAP. Multiple in-flight queries can be ran concurrently. Job status can be viewed by issuing an HTTP GET on "/status", which returns a JSON-encoded array of in-flight job IDs. 
 
