@@ -326,6 +326,71 @@ A GET request on `/api/kits` will return a list of all known kits. Here is an ex
 
 See the listing at the end of this page for a list of what "AdditionalInfo" fields are available for each type of kit item.
 
+## Kit Info
+
+A GET request on `/api/kits/<GUID>` where `<GUID>` is a guid of a specifically installed or staged kit will provide info about that specific kit.
+
+For example, a GET request on `/api/kits/549c0805-a693-40bd-abb5-bfb29fc98ef1` will yield:
+
+```
+{
+	"UUID": "549c0805-a693-40bd-abb5-bfb29fc98ef1",
+	"UID": 7,
+	"GID": 0,
+	"ID": "io.gravwell.test",
+	"Name": "test-gravwell",
+	"Description": "Test Gravwell kit",
+	"Version": 1,
+	"Installed": false,
+	"Signed": false,
+	"AdminRequired": false,
+	"Items": [
+		{
+			"Name": "84270dbd-1905-418e-b756-834c15661a54",
+			"Type": "resource",
+			"AdditionalInfo": {
+				"VersionNumber": 1,
+				"ResourceName": "maxmind_asn",
+				"Description": "ASN database",
+				"Size": 6196221
+			}
+		},
+		{
+			"Name": "55c81086",
+			"Type": "scheduled search",
+			"AdditionalInfo": {
+				"Name": "count",
+				"Description": "count all entries",
+				"Schedule": "* * * * *",
+				"Duration": -3600,
+				"Script": "var time = import(\"time\")\n\naddSelfTargetedNotification(7, \"hello\", \"/#/search/486574780\", time.Now().Add(30 * time.Second))"
+			}
+		},
+		{
+			"Name": "a",
+			"Type": "dashboard",
+			"AdditionalInfo": {
+				"UUID": "5567707c-8508-4250-9121-0d1a9d5ebe32",
+				"Name": "Foo",
+				"Description": "My dashboard"
+			}
+		},
+		{
+			"Name": "ae9f2598-598f-4859-a3d4-832a512b6104",
+			"Type": "pivot",
+			"AdditionalInfo": {
+				"UUID": "ae9f2598-598f-4859-a3d4-832a512b6104",
+				"Name": "foo",
+				"Description": "foobar"
+			}
+		}
+	]
+}
+
+```
+
+If the kit does not exist a 404 is returned, if the user does not have access to the specific kit requested a 400 is returned.
+
 ## Installing a Kit
 
 To install a kit once it has been uploaded, send a PUT request to `/api/kits/<uuid>`, where the UUID is the UUID field from the list of kits. The server will perform some preliminary checks and return an integer, which can be used to query the progress of the installation using the installation status API (see below).

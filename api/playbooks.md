@@ -5,6 +5,7 @@ This API is used to manipulate playbooks withing Gravwell. A playbook is a user-
 The playbook structure contains the following components:
 
 * `UUID`: The unique identifier of the playbook, set at installation time.
+* `GUID`: The global name of the playbook; this is set by the original creator of the playbook and will remain the same even if the playbook is bundled into a kit and installed on another system. Each user may only have one playbook with a given GUID, but multiple users could each have a copy of a playbook with the same GUID.
 * `UID`: The user ID of the playbook owner.
 * `GIDs`: A list of group IDs which are allowed to access this playbook.
 * `Global`: A boolean flag; if set, all users on the system may view the playbook.
@@ -16,13 +17,14 @@ The playbook structure contains the following components:
 * `LastUpdated`: A timestamp indicating when the playbook was last modified.
 * `Synced`: Used internally by Gravwell
 
+Note that the UUID and GUID fields may be used interchangeably in all API calls. This is so playbooks included in kits may link to each other, by using links containing GUIDs which will persist across kit installation.
 
 ## Listing Playbooks
 
 To list playbooks, send a GET request to `/api/playbooks`. The server will respond with an array of playbook structures which the user has permission to view:
 
 ```
-[{"UUID":"0bbff773-9ee2-4874-89a4-bf85a4b800df","UID":1,"GIDs":null,"Global":false,"Name":"foo","Desc":"bar","Body":"","Labels":["test"],"LastUpdated":"2020-02-12T10:13:02.864666484-07:00","Metadata":"asdf","Synced":false}]
+[{"UUID":"0bbff773-9ee2-4874-89a4-bf85a4b800df","GUID":"d57611be-88dd-11ea-a94d-df6bfb56a8a8","UID":1,"GIDs":null,"Global":false,"Name":"foo","Desc":"bar","Body":"","Labels":["test"],"LastUpdated":"2020-02-12T10:13:02.864666484-07:00","Metadata":"asdf","Synced":false}]
 ```
 
 Note that the Body parameter is empty; because playbooks can be quite large, the body is left out when listing all playbooks.
@@ -31,7 +33,11 @@ Appending the `?admin=true` parameter to the URL will return a list of *all* pla
 
 ## Fetching a Playbook
 
-To get a specific playbook, including the Body, send a GET request to `/api/playbooks/<uuid>`.
+To get a specific playbook, including the Body, send a GET request to `/api/playbooks/<uuid>`. The web server will attempt to find a playbook with a matching UUID field; if that is not successful, it will look for a playbook that the user can read with the following precedence:
+
+* Top precedence: playbooks owned by the user.
+* Next: playbooks shared with one of the user's groups.
+* Finally: playbooks with the Global flag set.
 
 ## Creating a Playbook
 
@@ -51,7 +57,7 @@ Playbooks are created by sending a POST request to `/api/playbooks`. The body of
 }
 ```
 
-The server will respond with the UUID of the newly-created playbook.
+The server will respond with the UUID of the newly-created playbook. If the `GUID` field is set in the request, the server will use it, otherwise it will generate a new one.
 
 ## Modifying a Playbook
 
