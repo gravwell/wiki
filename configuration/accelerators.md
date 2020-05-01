@@ -111,7 +111,7 @@ The json search module will transparently invoke the acceleration framework and 
 
 ## Fulltext
 
-The fulltext accelerator is designed to index words within text logs and is considered the most flexible acceleration option.  Many of the other search modules support invoking the fulltext accelerator when executing queries.  However, the primary search module for engaging with the fulltext accelerator is the [grep](/search/grep/grep.md) module with the `-w` flag.  Much like the unix grep utility, `grep -w` specifies that the provided filter is expected to a word, rather than a subset of bytes.  Running a search with `grep -w foo` will look for the word foo and engage the fulltext accelerator.
+The fulltext accelerator is designed to index words within text logs and is considered the most flexible acceleration option.  Many of the other search modules support invoking the fulltext accelerator when executing queries.  However, the primary search module for engaging with the fulltext accelerator is the [grep](/search/grep/grep.md) module with the `-w` flag.  Much like the unix grep utility, `grep -w` specifies that the provided filter is expected to a word, rather than a subset of bytes.  Running a search with `words foo bar baz` will look for the words foo, bar, and baz and engage the fulltext accelerator.
 
 While the fulltext accelerator may be the most flexible, it is also the most costly.  Using the fulltext accelerator can significantly reduce the ingest performance of Gravwell and can consume significant storage space, this is due to the fact that the fulltext accelerator is indexing on virtually every component of every entry.
 
@@ -121,12 +121,14 @@ The fulltext accelerator supports a few options which allow for refining the typ
 
 | Argument | Description | Example | Default State |
 |----------|-------------|---------|---------------|
-| -ignoreTS | Engage the timegrinder system to identify and ignore timestamps in the data | `-ignoreTS` | DISABLED |
+| -acceptTS | By default the fulltext accelerator engages the timegrinder system to identify and ignore timestamps in the data, this disables that functionality | `-acceptTS` | DISABLED |
 | -min | Require that extracted tokens be at least X bytes.  This can help prevent indexing on very small words that will never be searched on | `-min 3` | DISABLED |
 | -max | Require that extracted tokens be less than.  This can help prevent indexing on very large blobs within logs that will never be searched on | `-max 256` | DISABLED |
 | -ignoreUUID | Enable a filter to ignore UUID/GUID values.  Some logs will generate a unique UUID for every entry which incurs significant overhead and provides very little value. | `-ignoreUUID` | DISABLED |
-| -ignoreFloat | Enable a filter ignore floating point numbers. Logs that have request reponse times can make use of `-ignoreFloat`, especially when the precision is high. | `-ignoreFloat` | DISABLED |
+| -ignoreFloat | Disable filters which ignore floating point numbers. Logs where floating point numbers are used for filters can make use of `-accptFloat`. | `-acceptFloat` | DISABLED |
 | -maxInt | Enable a maximum integer value | Enable a filter that will only index integers below a certain size.  This can be valuable when indexing data that such as HTTP access logs.  You want to index the return codes, but not the response times and data sizes. |
+
+NOTE: Make sure you understand your data before enabling the `acceptTS` and `-acceptFloat` flags as these can dramatically bloat the index when using the index engine.  The Bloom engine is less impacted by orthogonal data such as timestamps and floating point numbers.
 
 ### Example Well Configuration
 
