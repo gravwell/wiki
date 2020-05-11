@@ -27,6 +27,7 @@ func Process() {
 	} else {
 		setEnum("postlen", "long")
 	}
+	return true
 }
 ```
 
@@ -37,5 +38,7 @@ tag=reddit json Body | anko CheckPostLen | count by postlen | table postlen coun
 ```
 
 The `Process` function will be executed once for every search entry which reaches the anko module, checking the length of the enumerated value `Body` and setting a new enumerated value `postlen` based on the length of the body.
+
+Note: The `return true` at the end of the process function is critical.  The Process function returns a boolean indicating whether the entry should be passed through or filtered out.  Returning false means drop the entry.  Returning true means allow the entry to continue down the pipeline.
 
 This example is quite simple; it implements only a `Process` function (not the optional `Parse` or `Finalize` functions). For more complex examples, refer to the [full anko module documentation](#!scripting/anko.md)
