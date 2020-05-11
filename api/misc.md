@@ -117,3 +117,21 @@ This API provides some basic information for the user interface. A GET on `/api/
 * `DistributedWebservers` will be set to true if there are multiple webservers coordinating via a datastore.
 * `MaxFileSize` is the maximum allowable file size (in bytes) which may be uploaded to the `/api/files` APIs.
 * `MaxResourceSize` is the maximum allowable resource size, in bytes.
+
+## SOAR Libraries
+
+This API allows SOAR scripts to import SOAR libraries from github repositories using the `require` function. There is also an endpoint which will trigger a git pull on all the user's repositories.
+
+### Fetching a library
+
+This endpoint is probably only useful for the searchagent to use via library functions but is included for completeness. To fetch a file from a given repository, do a GET with parameters in the URL, e.g.:
+
+```
+/api/libs?repo=github.com/gravwell/libs&commit=40e98d216bb6e69642df392b255e8edc0f57eb06&path=utils/links.ank
+```
+
+The "repo" and "commit" values may be omitted. If "repo" is omitted, it defaults to github.com/gravwell/libs. If "commit" is omitted, it defaults to the tip of the master branch.
+
+### Updating libraries
+
+A set of repositories is maintained for each user. A user may force a `git pull` on their own repository set by sending a GET request to `/api/libs/pull`. Be aware that this may take some time.
