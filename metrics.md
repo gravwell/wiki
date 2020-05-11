@@ -19,16 +19,29 @@ Full Log Location:      /opt/gravwellCustomers/uploads/crash/webserver_3.3.5_X.X
 
 
 Log Snippet:
-Version         3.3.5
+Version         3.3.10
 API Version     0.1
-Build Date      2020-Jan-29
-Build ID        b05db4bc
-Cmdline         /opt/gravwell/bin/gravwell_webserver -stderr webserver
-Executing user  root
+Build Date      2020-Apr-30
+Build ID        745dc6ca
+Cmdline         /opt/gravwell/bin/gravwell_webserver -stderr gravwell_webserver.service
+Executing user  gravwell
 Parent PID      1
-Parent cmdline  /opt/gravwell/bin/manager -config-override
-/opt/gravwell/etc/manager.cfg
+Parent cmdline  /sbin/init
 Parent user     root
+Total memory    4147781632
+Memory used     5.781707651865122%
+Process heap allocation 2005776
+Process sys reserved    72112017
+CPU count       4
+Host hash       4224be94ae35247ed32013d9021f64bc40986c9fbbafac97787ab58b400f1666
+Virtualization role     guest
+Virtualization system   kvm
+max_map_count   65530
+RLIMIT_AS (address space)       18446744073709551615 / 18446744073709551615
+RLIMIT_DATA (data seg)  18446744073709551615 / 18446744073709551615
+RLIMIT_FSIZE (file size)        18446744073709551615 / 18446744073709551615
+RLIMIT_NOFILE (file count)      1048576 / 1048576
+RLIMIT_STACK (stack size)       8388608 / 18446744073709551615
 SKU             2UX
 Customer NUM    00000000
 Customer GUID   ffffffff-ffff-ffff-ffff-ffffffffffff
@@ -48,6 +61,8 @@ The message starts with the particular component that crashed, in this case the 
 The remainder of the message is the console output from the crashed program. The crash reporter pulls this directly from the component's output file in `/dev/shm`; you can see what your system might send by looking at e.g. `/dev/shm/gravwell_webserver`. You can also view any past crash reports in `/opt/gravwell/log/crash`, but be aware that if you *disable* the crash reporter, crash logs will no longer be stored in that directory.
 
 The first few lines (Version, API Version, Build Date, and Build ID) help us determine exactly what version of Gravwell was running. "Cmdline", "Executing user", "Parent PID", "Parent cmdline", and "Parent user" all help us figure out how the Gravwell process is being run and identify potential issues there--in this example, because the parent process as PID 1 and named "manager", we can infer that Gravwell is being run in a Docker container. Sometimes issues can crop up in one environment (e.g. in Docker being launched by "manager") but not in others (Ubuntu, launching via systemd), and this helps us chase that down.
+
+We also include information about the amount of memory on the system and the rlimits set because this can help us track down certain classes of crashes--for instance, an out-of-memory error on a system with 512MB of RAM wouldn't be particularly surprising! Note that the "Host hash" field is a unique identifier for the host running the process, but because it is a hash we can only use it to say "This is the same machine as that other crash report"; no other information is included.
 
 The "SKU", "Customer NUM", and "Customer GUID" fields describe the license in use. The SKU describes the capabilities allowed by the user's license; in this case, the Gravwell employee is using an unlimited ("UX") license. The customer number and customer GUID fields allow us to refer to our customer database and see who is having the problem.
 
