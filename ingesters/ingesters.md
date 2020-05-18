@@ -1354,6 +1354,30 @@ Each Stenographer ingester listens on a given port (```Listen-Address```) and ac
 
 A simple web interface to submit and view job status is also available by browsing to the specified ingester port.
 
+### Configuration Options ###
+
+Packet Fleet requires several Global and per-stenographer configuration options. Global settings include setting up TLS (if applicable) and the listen address for the web interface, as shown below:
+
+```
+Use-TLS=true
+Listen-Address=":9002"
+Server-Cert="server.cert"
+Server-Key="server.key"
+```
+
+For each Stenographer instance, the following stanza is required. The example name `Region 1` here is used by the web interface to list Stenographer instances. 
+
+```
+[Stenographer "Region 1"]
+	URL="https://127.0.0.1:9001"
+	CA-Cert="ca_cert.pem"
+	Client-Cert="client_cert.pem"
+	Client-Key="client_key.pem"
+	Tag-Name=steno
+	#Assume-Local-Timezone=false #Default for assume localtime is false
+	#Source-Override="DEAD::BEEF" #override the source for just this Queue 
+```
+
 ### Query Language ###
 
 A user requests packets from stenographer by specifying them with a very simple

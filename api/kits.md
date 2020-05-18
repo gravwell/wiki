@@ -702,3 +702,15 @@ Playbook:
 License:
 		(contents of license file itself)
 ```
+
+## Kit Build Request History
+
+Successful kit build requests are stored by the webserver. You can get a list of build requests for the current user by sending a GET request to `/api/kits/build/history`. The response will be an array of build requests:
+
+```
+[{"ID":"io.gravwell.test","Name":"test","Description":"","Version":1,"MinVersion":{"Major":0,"Minor":0,"Point":0},"MaxVersion":{"Major":0,"Minor":0,"Point":0},"Macros":[4,41],"ConfigMacros":null}]
+```
+
+Note: This store is keyed on UID + kit ID; if I build a kit named "io.gravwell.test" again, it will overwrite the version in the store.
+
+You can delete a particular item by sending a DELETE request to `/api/kits/build/history/<id>`, e.g. `/api/kits/build/history/io.gravwell.test`.
