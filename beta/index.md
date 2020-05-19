@@ -31,7 +31,7 @@ We are actively iterating on these features and they may change entirely so mayb
 
 ### Known Issues
 
-Here are the issues we are aware of, so you don't necessarily need to test or report them
+Here are the issues we are aware of, so you don't necessarily need to test or report them.
 
 * Long-running chrome tabs can become unresponsive.
  * We believe we've got an angle on this but be advised that you may need to close the Gravwell UI and open in a new tab or otherwise refresh your page in order to resolve this issue. If you can consistently reproduce this, please jot down your path and pop that over to `beta@gravwell.io`
