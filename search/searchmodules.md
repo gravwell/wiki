@@ -57,6 +57,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [limit](limit/limit.md)
 * [lookup](lookup/lookup.md)
 * [lower](upperlower/upperlower.md)
+* [maclookup](maclookup/maclookup.md)
 * [Math (list of math modules)](math/math.md)
 * [max](math/math.md#Max)
 * [mean](math/math.md#Mean)
