@@ -17,20 +17,26 @@ Testing desires for this sprint (in order of priority)
 * Templates
 
 
-We are actively iterating on these features and they may change entirely so maybe don't put a ton of work in building stuff around them. :)
+We are actively iterating on these features and they may change entirely so maybe don't put a ton of work in building stuff around them.
 
-* Building Kits - we intend to make it possible for the community to develop and publish kits but for now we are focused on testing Gravwell published and signed kits
-* Actionables - We are playing with how actionables work and including the idea of "active" and "passive" triggers that happen when things are regex-able vs only available when highlighted.
+* Building Kits
+ * We intend to make it possible for the community to develop and publish kits but for now we are focused on testing Gravwell published and signed kits
+* Actionables
+ * We are playing with how actionables work and including the idea of "active" and "passive" triggers that happen when things are regex-able vs only available when highlighted.
+ * We are working on cleaning up how actionables are catagorized to make it clearer what type of data you are pivoting into
 * Search Studio
-* Search templates need an optional "prefix" and "postfix" in order to support optional variables.
+* Search templates
+ * We are working on an optional "prefix" and "postfix" in order to support optional variables.
 
 
 ### Known Issues
 
 Here are the issues we are aware of, so you don't necessarily need to test or report them
 
-* Long-running chrome tabs can become unresponsive. We believe we've got an angle on this but be advised that you may need to close the Gravwell UI and open in a new tab or otherwise refresh your page in order to resolve this issue. If you can consistently reproduce this, please jot down your path and pop that over to beta@gravwell.io
-* Outdated cached data - Updates to objects like playbooks or installed kits aren't always making it to actual rendering in the UI despite having successfully occurred.  Refreshing the page should update appropriately.
+* Long-running chrome tabs can become unresponsive.
+ * We believe we've got an angle on this but be advised that you may need to close the Gravwell UI and open in a new tab or otherwise refresh your page in order to resolve this issue. If you can consistently reproduce this, please jot down your path and pop that over to `beta@gravwell.io`
+* Outdated cached data.
+ * Updates to objects like playbooks or installed kits aren't always making it to actual rendering in the UI despite having successfully occurred.  Refreshing the page should update appropriately.
 * Search history is being crabby
 
 
@@ -39,7 +45,7 @@ Here are the issues we are aware of, so you don't necessarily need to test or re
 We're very excited to say this build is now available for your use and testing. We have created a new ubuntu repository and Docker images. Switching from Stable to Beta is done by modifying your apt source respository (or our quick start instructions if installing from scratch).
 
 ### Upgrading:
-Edit your /etc/apt/sources.list.d/gravwell.list file and substitute `https://update.gravwell.io/debian/` for `https://update.gravwell.io/debianbeta/`. Then `apt update` and `apt upgrade` and you should be on the new release.
+Edit your `/etc/apt/sources.list.d/gravwell.list` file and substitute `https://update.gravwell.io/debian/` for `https://update.gravwell.io/debianbeta/`. Then `apt update` and `apt upgrade` and you should be on the new release.
 
 ### Installing from scratch:
 
@@ -53,14 +59,16 @@ sudo apt-get install gravwell
 
 ### Docker
 
-The Docker images is available at gravwell/beta. You can substitue "gravwell/gravwell" with "gravwell/beta" in any of the docker documentation and it should work well for you.
+The Docker images is available at [gravwell/beta](https://hub.docker.com/r/gravwell/beta). You can substitue `gravwell/gravwell` with `gravwell/beta` in any of the docker documentation and it should "just work."
 
 
-##Major features included in Gravwell Big Bang
+## Major features included in Gravwell Big Bang
+
+There are many new features in both the GUI and under the hood, but we would like to focus the beta on the features that may need some work.
 
 ### Kits
 
-This is it. The Big Bang. The supernova. The supermassive featureset that's coming to a galaxy near you.
+This is it. The Big Bang, the start, a beginning of time. The supermassive featureset that starts the future of Gravwell.
 
 Kits are pre-packaged use case bundles made of searches, dashboards, resources, and more. Read on to see what kind of awesome stuff can be included.
 
@@ -68,9 +76,9 @@ Kits are pre-packaged use case bundles made of searches, dashboards, resources, 
 
 Currently, there are two kits available in the Kit repository. We have a Network Enrichment kit, which provides a bunch of great resources for resolving things like port->service and IP geolocation. We also have a Netflow v5 kit, which comes with overview dashboards, investigative dashboards, query library searches, templates, and a playbook to get you started analyzing netflow data.
 
-NOTE: The current netflow kit REQUIRES that netflow data be coming in under the "netflow" tag. In the future, you will have the option of specifying the tag when you install a kit (since tags are arbitrary). For now, make sure that your netflow data is coming in under the "netflow" tag for your beta Gravwell instance.
+NOTE: The current netflow kit REQUIRES that netflow data be coming in under the `netflow` tag. In the future, you will have the option of specifying the tag when you install a kit (since tags are arbitrary). For now, make sure that your netflow data is coming in under the `netflow` tag for your beta Gravwell instance.
 
-https://docs.gravwell.io/docs/#!ingesters/ingesters.md#Netflow_Ingester
+See the [netflow ingester docs](https://docs.gravwell.io/docs/#!ingesters/ingesters.md#Netflow_Ingester) for more information.
 
 
 ### Query Library
