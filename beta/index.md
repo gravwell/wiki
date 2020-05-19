@@ -64,6 +64,10 @@ This is it. The Big Bang. The supernova. The supermassive featureset that's comi
 
 Kits are pre-packaged use case bundles made of searches, dashboards, resources, and more. Read on to see what kind of awesome stuff can be included.
 
+![A card list of available kits](kits-list.png)
+
+![Components inside the Netflow v5 Beta kit](kits-netflow-components.png)
+
 #### Available Kits
 
 Currently, there are two kits available in the Kit repository. We have a Network Enrichment kit, which provides a bunch of great resources for resolving things like port->service and IP geolocation. We also have a Netflow v5 kit, which comes with overview dashboards, investigative dashboards, query library searches, templates, and a playbook to get you started analyzing netflow data.
