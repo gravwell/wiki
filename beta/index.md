@@ -38,9 +38,9 @@ Here are the issues we are aware of, so you don't necessarily need to test or re
 * Long-running chrome tabs can become unresponsive.
  * We believe we've got an angle on this but be advised that you may need to close the Gravwell UI and open in a new tab or otherwise refresh your page in order to resolve this issue. If you can consistently reproduce this, please jot down your path and pop that over to `beta@gravwell.io`.
 * Outdated cached data.
- * Updates to objects like playbooks or installed kits aren't always making it to actual rendering in the UI despite having successfully occurred.  Refreshing the page should update appropriately.
+ * Updates to objects like playbooks or installed kits aren't always making it to actual rendering in the UI despite having successfully occurred. Refreshing the page should update appropriately.
 * Search history may be outdated.
- * when multiple sessions exist with the same user, there can be some delays in seeing search history.
+ * When multiple sessions exist with the same user, there can be some delays in seeing search history.
 
 
 ## Installation and Upgrade
