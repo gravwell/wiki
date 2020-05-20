@@ -25,6 +25,8 @@ We are actively iterating on these features and they may change entirely so mayb
  * We are playing with how actionables work and including the idea of "active" and "passive" triggers that happen when things are regex-able vs only available when highlighted.
  * We are working on cleaning up how actionables are catagorized to make it clearer what type of data you are pivoting into.
 * Search Studio
+ * Search Studio is a new experimental feature that allows for rapid testing and developement of queries.
+ * You must be in developer mode to see the Search Studio.
 * Search templates
  * We are working on an optional "prefix" and "postfix" in order to support optional variables.
 
@@ -36,8 +38,9 @@ Here are the issues we are aware of, so you don't necessarily need to test or re
 * Long-running chrome tabs can become unresponsive.
  * We believe we've got an angle on this but be advised that you may need to close the Gravwell UI and open in a new tab or otherwise refresh your page in order to resolve this issue. If you can consistently reproduce this, please jot down your path and pop that over to `beta@gravwell.io`.
 * Outdated cached data.
-* Updates to objects like playbooks or installed kits aren't always making it to actual rendering in the UI despite having successfully occurred. Refreshing the page should update appropriately.
-* Search history is being crabby
+ * Updates to objects like playbooks or installed kits aren't always making it to actual rendering in the UI despite having successfully occurred. Refreshing the page should update appropriately.
+* Search history may be outdated.
+ * When multiple sessions exist with the same user, there can be some delays in seeing search history.
 
 
 ## Installation and Upgrade
