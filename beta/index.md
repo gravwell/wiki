@@ -4,6 +4,12 @@ Greetings and salutations!
 
 You are reading this message because you are in the early access group for Gravwell 4.0 Beta, the Big Bang release! We sincerely thank you for your participation and look forward to feedback and bug reports.
 
+Please submit any bugs or feedback:
+* https://www.gravwell.io/beta
+* Email to beta@gravwell.io
+
+Thank you!
+
 ## Current "State of the Beta"
 
 ### Desired Testing
