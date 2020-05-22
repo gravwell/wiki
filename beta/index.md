@@ -4,6 +4,13 @@ Greetings and salutations!
 
 You are reading this message because you are in the early access group for Gravwell 4.0 Beta, the Big Bang release! We sincerely thank you for your participation and look forward to feedback and bug reports.
 
+Please submit any bugs or feedback:
+
+* https://www.gravwell.io/beta
+* Email to beta@gravwell.io
+
+Thank you!
+
 ## Current "State of the Beta"
 
 ### Desired Testing
@@ -74,6 +81,10 @@ There are many new features in both the GUI and under the hood, but we would lik
 This is it. The Big Bang, the start, a beginning of time. The supermassive featureset that starts the future of Gravwell.
 
 Kits are pre-packaged use case bundles made of searches, dashboards, resources, and more. Read on to see what kind of awesome stuff can be included.
+
+![A card list of available kits](kits-list.png)
+
+![Components inside the Netflow v5 Beta kit](kits-netflow-components.png)
 
 #### Available Kits
 
