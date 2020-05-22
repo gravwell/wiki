@@ -65,6 +65,17 @@ After an upgrade it is always a good practice to check the state of Gravwell by 
 
 ![Ingester status](ingesters.png)
 
+### Redhat/CentOS Repositories
+
+Gravwell is available as a `yum` repository for both Redhat and CentOS Linux distributions. To use the Gravwell `yum` repository, add the following stanza to your `yum.conf`:
+
+```
+[gravwell]
+name=gravwell
+baseurl=https://update.gravwell.io/rhel [update.gravwell.io]
+gpgkey=https://update.gravwell.io/rhel/gpg.key [update.gravwell.io]
+```
+
 ### Docker Container
 
 Gravwell is available on Dockerhub as a single container including both the webserver and indexer. Refer to [the Docker installation instructions](#!configuration/docker.md) for detailed instructions on installing Gravwell in Docker.
