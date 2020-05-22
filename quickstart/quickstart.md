@@ -67,14 +67,30 @@ After an upgrade it is always a good practice to check the state of Gravwell by 
 
 ### Redhat/CentOS Repositories
 
-Gravwell is available as a `yum` repository for both Redhat and CentOS Linux distributions. To use the Gravwell `yum` repository, add the following stanza to your `yum.conf`:
+Gravwell is available as a `yum` repository for both Redhat and CentOS Linux distributions. To use the Gravwell yum repository, add the following stanza to your `yum.conf` (located in `/etc/yum.conf`)
 
 ```
 [gravwell]
 name=gravwell
-baseurl=https://update.gravwell.io/rhel [update.gravwell.io]
-gpgkey=https://update.gravwell.io/rhel/gpg.key [update.gravwell.io]
+baseurl=https://update.gravwell.io/rhel 
+gpgkey=https://update.gravwell.io/rhel/gpg.key
 ```
+
+Next perform the following:
+
+```
+yum update
+yum install -y gravwell
+```
+
+Once installed you will have to bump the centOS firewall for webports, executing the following:
+
+```
+sudo firewall-cmd --zone=public --add-service=http
+sudo firewall-cmd --zone=public --add-service=https
+```
+
+You should now be able to access the Gravwell web interface on the IP assigned to the centOS/RHEL system.
 
 ### Docker Container
 
