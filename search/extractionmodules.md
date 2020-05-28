@@ -1,6 +1,16 @@
-# Search Modules
+# Search Extraction Modules
 
-Search modules are modules that operate on data in a passthrough mode, meaning that they perform some action (filter, modify, sort, etc.) and pass the entries down the pipeline. There can be many search modules and each operates in its own lightweight thread.  This means that if there are 10 modules in a search, the pipeline will spread out and use 10 threads.  Documentation for each module will indicate if the module causes distributed searches to collapse and/or sort.  Modules that collapse force the distributed pipelines to collapse, meaning that the module as well as all downstream modules execute on the frontend.  When starting a search it's best to put as many parallel modules as possible upstream of the first collapsing module, decreasing pressure on the communication pipe and allowing for greater parallelism.
+Gravwell is a structure-on-read data lake, and these are the modules that add that structure. This is where the power and flexibility of the platform can be seen, as information about data doesn't need to be known before collection. Instead, we can ingest the raw data and perform the extractions at search time which gives tremendous flexibility to search operations.
+
+Extraction modules are often the first module in a search. Netflow data, as an example, sits in it's native binary format on disk and any searches looking to operate on that data will be using the netflow extraction module as a first module in the analysis pipeline to do extraction and basic filtering. While you *could* do filtering before the `netflow` extraction module using modules like `grep`, that is unlikely to be effective.
+
+Search extraction modules extract fields from data which "ride along" with the raw data through the rest of the search pipeline. Any extracted data/fields/properties become Enumerated Values which exist alongside an entry for use by following modules in a pipeline. For example, a search using the module sequence `netflow Src | subnet Src /16 as srcsub | grep -e srcsub "10.1.0.0"` will extract the Src IP address from the raw netflow record, extract the /16 subnet from the Src IP address, and then filter based on the extracted subnet using grep. In this example, the raw data is available to the grep module as well as the "Src" and "srcsub" Enumerated Values.
+
+## Query Accelerators
+
+Extraction modules can make use of [query accelerators](/configuration/accelerators.md) (like full text indexing, JSON indexing, etc) when filtering is used with a given module. For example, using the module `netflow Src Dst Port==22` can use a properly configured accelerator to dramatically reduce search time because not all records need to be evaluated.
+
+Some processing modules (such as [words](words/words.md)) directly perform filtering against the accelerated indexes.
 
 ## Universal Flags
 
@@ -26,62 +36,27 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 
 ## Search module documentation
 
-* [abs](abs/abs.md)
-* [alias](alias/alias.md)
-* [anko](anko/anko.md)
+Note: The modules listed here have a primary function of extraction. They may also perform filtering and/or processing.
+
 * [ax](ax/ax.md)
-* [base64](base64/base64.md)
 * [canbus](canbus/canbus.md)
 * [cef](cef/cef.md)
-* [count](math/math.md#Count)
 * [csv](csv/csv.md)
-* [diff](diff/diff.md)
-* [entropy](math/math.md#Entropy)
-* [eval](eval/eval.md)
 * [fields](fields/fields.md)
-* [first/last](firstlast/firstlast.md)
-* [geoip](geoip/geoip.md)
-* [grep](grep/grep.md)
 * [grok](grok/grok.md)
-* [hexlify](hexlify/hexlify.md)
 * [ip](ip/ip.md)
-* [ipexist](ipexist/ipexist.md)
 * [ipfix](ipfix/ipfix.md)
-* [iplookup](iplookup/iplookup.md)
 * [j1939](j1939/j1939.md)
-* [join](join/join.md)
 * [json](json/json.md)
 * [kv](kv/kv.md)
-* [langfind](langfind/langfind.md)
-* [length](length/length.md)
-* [limit](limit/limit.md)
-* [lookup](lookup/lookup.md)
-* [lower](upperlower/upperlower.md)
-* [Math (list of math modules)](math/math.md)
-* [max](math/math.md#Max)
-* [mean](math/math.md#Mean)
-* [min](math/math.md#Min)
 * [namedfields](namedfields/namedfields.md)
 * [netflow](netflow/netflow.md)
 * [packet](packet/packet.md)
 * [packetlayer](packetlayer/packetlayer.md)
 * [regex](regex/regex.md)
-* [require](require/require.md)
 * [slice](slice/slice.md)
-* [sort](sort/sort.md)
-* [split](split/split.md)
-* [src](src/src.md)
-* [stats](stats/stats.md)
-* [stddev](math/math.md#Stddev)
 * [strings](strings/strings.md)
 * [subnet](subnet/subnet.md)
-* [sum](math/math.md#Sum)
 * [syslog](syslog/syslog.md)
-* [taint](taint/taint.md)
-* [time](time/time.md)
-* [unique](math/math.md#Unique)
-* [upper](upperlower/upperlower.md)
-* [variance](math/math.md#Variance)
 * [winlog](winlog/winlog.md)
-* [words](words/words.md)
 * [xml](xml/xml.md)
