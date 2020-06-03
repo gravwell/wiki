@@ -13,15 +13,34 @@ Auto-extractor definitions are used by the [AX](../search/ax/ax.md) module which
 
 ## Auto-Extractor Configuration
 
-Auto-extractors are defined by creating ax files and installing them in the "extractions" directory of each Gravwell node. The filenames used do not matter; any file placed in the extractions directory with an extension of "ax" will be parsed as an auto-extractor file. By default the extractions directory is `/opt/gravwell/extractions` but it can be configured by setting/modifying the "Autoextract-Definition-Path" configuration variable in your `gravwell.conf` file.  Gravwell services must be restarted after changes to any auto-extractor "ax" files.
+Extractors are managed through the "Extractors" page, found in the "Tools & Resources" sub-menu under the Gravwell main menu. The page will show any existing extractor definitions:
 
-Auto-extractor files follow the [TOML V4](https://github.com/toml-lang/toml) format which allows comments using the "#" character.  Each "ax" file can contain multiple auto-extraction definitions and there can be multiple files in the extractions directory.
+![](extractors.png)
 
-Note: Only a single extraction can be defined per tag
+New auto-extractors can be defined by clicking the "Add" button in the upper right and filling in the form which appears:
+
+![](new-extractor.png)
+
+The following fields must be populated:
+
+* Name - A human-friendly name for the extraction
+* Description - A human-friendly string that describes the extraction
+* Tag - The tag associated with the extraction; the dropdown will list existing tags
+* Module - The processing module used for extraction (regex, slice, csv, fields, etc.)
+* Parameters / Regex - The extraction definition
+* Arguments / Options - Module-specific arguments used to change the behavior of the extracton module (optional)
+
+An extractor may be edited after creation by clicking the pencil (edit) icon on its tile.
+
+Note: Only a single extraction can be defined per tag per user.
 
 Note: Auto-extractors always operate on the full underlying data of an entry.  They cannot be used to perform extractions on Enumerated Values (the "-e" argument is disallowed)
 
-Note: The auto-extractor file extension is "ax", only files that have the ".ax" suffix will be read as auto-extractor definitions.
+### Auto-Extractor File Definitions
+
+Auto-extractors can also be defined in text files and uploaded to Gravwell by clicking the "Upload" button in the upper-right corner of the Extractors management page. Because each file can contain multiple extractor definitions, and re-uploading a file will update any existing extractions, this can be a convenient way to share auto-extractor definitions or for mass-updating. Auto-extractor files follow the [TOML V4](https://github.com/toml-lang/toml) format which allows comments using the "#" character. 
+
+Attention: Older versions of Gravwell managed auto-extractors as files in `/opt/gravwell/extractions`. This is no longer supported, but any existing files in that directory will be automatically imported when Gravwell is updated. *All* extractor management should take place through the Gravwell UI.
 
 Each extractor contains a header and the following parameters:
 
