@@ -240,7 +240,7 @@ The regex router preprocessor is a flexible tool for routing entries to differen
 * `Regex` (string, required): This parameter specifies the regular expression to be applied to the incoming entries. It must contain at least one [named capturing group](https://www.regular-expressions.info/named.html), e.g. `(?P<app>.+)` which will be used with the `Route-Extraction` parameter.
 * `Route-Extraction` (string, required): This parameter specifies the name of the named capturing group from the `Regex` parameter which will contain the string used to compare against routes.
 * `Route` (string, required): At least one `Route` definition is required. This consists of two strings separated by a colon, e.g. `Route=sshd:sshlogtag`. The first string ('sshd') is matched against the value extracted via regex, and the second string defines the name of the tag to which matching entries should be routed. If the second string is left blank, entries matching the first string *will be dropped*.
-* `Drop-Misses` (boolean, optional): By default, entries which do not match the regular expression will be dropped. Setting `Drop-Misses` to true will make the ingester pass along those entries.
+* `Drop-Misses` (boolean, optional): By default, entries which do not match the regular expression will be passed through unmodified. Setting `Drop-Misses` to true will make the ingester drop any entries which 1) do not match the regular expression, or 2) match the regular expression but do not match any of the specified routes.
 
 ### Example: Routing to Tag Based on App Field Value
 
