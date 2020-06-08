@@ -3,6 +3,7 @@
 Most users will interact with Gravwell through the web GUI. This page describes a few high-level menus and interface concepts; the pages linked below go into detail on other topics.
 
 * [Labels and Filtering](labels/labels.md)
+* [Advanced GUI User Preferences](configuration/gui.md)
 
 ## GUI Introduction
 

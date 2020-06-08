@@ -98,9 +98,11 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
 ## User Interfaces
 
-  * [GUI User Preferences](configuration/gui.md)
+  * [Gravwell Web GUI](gui/gui.md)
 
-  * [Using the Command-Line Client](cli/cli.md)
+    * [Labels and Filtering](labels/labels.md)
+
+  * [Command-Line Client](cli/cli.md)
 
 ## API
 
