@@ -8,7 +8,7 @@ Most users will interact with Gravwell through the web GUI. This page describes 
 
 ## GUI Introduction
 
-After logging in, users will by default be directed to the search page, shown below.
+After logging in, you will by default be directed to the search page, shown below.
 
 ![](searchpage.png)
 
@@ -26,7 +26,7 @@ This menu is used to access all the primary functionalities of Gravwell, includi
 
 Items within these sub-menus will typically be used less frequently that the top-level items.
 
-Note: These screenshots include an "Administrator" sub-menu, which contains admin-only management tools and is only visible to the `admin` user.
+Note: These screenshots include an "Administrator" sub-menu, which contains admin-only management tools and is only visible to users flagged as administrators.
 
 ## Notifications
 
@@ -50,7 +50,7 @@ Selecting the User Profile icon in the upper right of the screen brings up a sma
 
 ### Account
 
-Selecting "Account" will open the current user's preferences page, shown below. Here, the user can change his/her email address, display name, or password; be sure to click "Update Account" after making changes! The "Log out all sessions" button at the bottom of the screen will kick *all* sessions the user has open, across all client machines.
+Selecting "Account" will open your preferences page, shown below. Here, you can change your email address, display name, or password; be sure to click "Update Account" after making changes! The "Log out all sessions" button at the bottom of the screen will kick *all* active sessions for your account, across all client machines.
 
 ![](account-prefs.png)
 
@@ -64,13 +64,13 @@ The "Chart theme" dropdown selects different color palettes which will be used w
 
 ### Preferences
 
-The third tab, "Preferences", allows the user to change some default behaviors of Gravwell.
+The third tab, "Preferences", allows you to change some default behaviors of Gravwell.
 
 ![](general-prefs.png)
 
-The "Home Page" dropdown menu selects which page will be displayed after logging in or clicking the Gravwell icon next to the main menu. By default, the new search page is shown, but users can chose to be shown a list of dashboards, kits, or playbooks instead.
+The "Home Page" dropdown menu selects which page will be displayed after logging in or clicking the Gravwell icon next to the main menu. By default, the new search page is shown, but you can chose to be shown a list of dashboards, kits, or playbooks instead.
 
-The "Search Group Visibility" option allows the user to share the results of all searches he/she runs with a given group; this can be a convenient way to collaborate. In the screenshot, the user has selected the group named "foo"; all members of that group will have access to the searches this user runs in the future.
+The "Search Group Visibility" option allows you to share the results of all searches with a given group; this can be a convenient way to collaborate. In the screenshot, the user has selected the group named "foo"; all members of that group will have access to the searches this user runs in the future.
 
 The "Advanced Preferences" section can be ignored by most users. Selecting "Developer mode" enables manual editing of JSON preferences (see [this page](!#configuration/gui.md) for more information), while toggling "Experimental Features" will enable the Experimental Features section in the main menu.
 

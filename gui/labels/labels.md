@@ -36,7 +36,7 @@ Note: All the filters described below can be combined with each other. A blue "X
 
 ### Filter by label
 
-The left-most dropdown, "Filter by label or kit", allows the user to select one or more labels or kits; clicking the Apply button will then show only those objects with the specified labels or installed by the specified kits. The screenshots below show the user selecting the "lookup" label, which reduces the display down to just three resources:
+The left-most dropdown, "Filter by label or kit", allows you to select one or more labels or kits; clicking the Apply button will then show only those objects with the specified labels or installed by the specified kits. The screenshots below show the user selecting the "lookup" label, which reduces the display down to just three resources:
 
 ![](filter-labels.png)
 
@@ -52,7 +52,7 @@ By default, most interfaces will show all objects the user has access to, regard
 
 ### Show hidden
 
-Objects with the special label "hidden" are not displayed by default. This is a convenience function which can keep displays clear of rarely-accessed objects. Click the "Show hidden record" toggle to show hidden objects. In the screenshot below, the toggling "Show hidden record" reveals an additional hidden macro:
+Objects with the special label "hidden" are not displayed by default. This is a convenience function which can keep displays clear of rarely-accessed objects. Click the "Show hidden record" toggle to show hidden objects. In the screenshot below, toggling "Show hidden record" reveals an additional hidden macro:
 
 ![](filter-hidden.png)
 
@@ -68,7 +68,7 @@ The string "hidden" is a special label; applying it to an object will prevent th
 
 ### Kit Label Prefixes
 
-Three label *prefixes* are used to manage Gravwell-internal information about objects which were installed as part of a kit. Users should **never** manually apply kit labels to objects; these labels are documented to prevent users from accidentally applying a conflicting label to an object. The following are considered reserved kit label prefixes:
+Three label *prefixes* are used to manage Gravwell-internal information about objects which were installed as part of a kit. You should **never** manually apply kit labels to objects; these labels are documented to prevent users from accidentally applying a conflicting label to an object. The following are considered reserved kit label prefixes:
 
 * `kit/`
 * `kit/dependency:`
