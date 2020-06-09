@@ -6,6 +6,8 @@ The search pipeline is the core of Gravwell's functionality. You specify a data 
 tag=reddit json Body | eval len(Body) < 20 | table Body
 ```
 
+The user interface used to run queries [is documented here](#!gui/queries/queries.md).
+
 ## Components of a Query
 
 The example query above can be broken into several individual portions, which are described below.
