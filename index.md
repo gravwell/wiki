@@ -100,7 +100,9 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Gravwell Web GUI](gui/gui.md)
 
-    * [Labels and Filtering](labels/labels.md)
+    * [The Search Interface](gui/queries/queries.md)
+
+    * [Labels and Filtering](gui/labels/labels.md)
 
   * [Command-Line Client](cli/cli.md)
 
