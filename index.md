@@ -20,9 +20,13 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Search overview](search/search.md)
 
-  * [Search modules](search/searchmodules.md)
+  * [Search Extraction modules](search/extractionmodules.md)
 
-  * [Render modules](search/rendermodules.md)
+  * [Search Processing modules](search/processingmodules.md)
+
+  * [Search Render modules](search/rendermodules.md)
+
+  * [Alphabetical List of All Pipeline Modules](search/complete-module-list.md)
 
 ## System Architecture
 
