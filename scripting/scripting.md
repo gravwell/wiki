@@ -4,8 +4,8 @@ Scripting is used in two ways within Gravwell: as part of a search pipeline, and
 
 * [`anko` module documentation](anko.md)
 * [`eval` module documentation](eval.md)
-* [Search scripts documentation](scriptingsearch.md) (contains detailed descriptions of functions available for scripting with the CLI client and in scheduled searches)
-* [Scheduled searches documentation](scheduledsearch.md)
+* [Automation scripting documentation](scriptingsearch.md) (contains detailed descriptions of functions available for automation scripts)
+* [Scheduling scripts & queries](scheduledsearch.md)
 
 ## Scripting modules
 
@@ -27,9 +27,9 @@ This document describes the Anko programming language itself. Documentation for 
 
 Where the `anko` and `eval` modules run scripts *inside* search pipelines, Gravwell also supports scripts which *launch* searches of their own and operate on the results. This is useful for automated queries, e.g. a script which runs every morning at 6 a.m. to look for particular suspicious network behavior.
 
-These scripts can be either run on a schedule (see [scheduled searches](#!scripting/scheduledsearch.md)) or run by hand using the [command line client](#!cli/cli.md). The scripting language is the same in both cases, although scripts run as scheduled searches cannot use `print` functions to display output.
+These scripts can be either run on a schedule (see [automation scripts](#!scripting/scheduledsearch.md)) or run by hand using the [command line client](#!cli/cli.md). The scripting language is the same in both cases, although scripts run on a schedule cannot use `print` functions to display output.
 
-The [scripting searches](scriptingsearch.md) documentation provides more information on how to write this type of script, including examples.
+The [automation script](scriptingsearch.md) documentation provides more information on how to write this type of script, including examples.
 
 ## Anko overview
 

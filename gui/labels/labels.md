@@ -7,7 +7,7 @@ Objects in Gravwell such as dashboards, resources, macros, etc. can be *labeled*
 * Kits
 * Playbooks
 * Resources
-* Scheduled Searches / SOAR Scripts
+* Scheduled Searches / Automation Scripts
 * Macros
 * Templates
 * Actionables
