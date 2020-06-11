@@ -4,6 +4,8 @@ Most users will interact with Gravwell through the web GUI. This page describes 
 
 * [The Search Interface](queries/queries.md)
 * [Labels and Filtering](labels/labels.md)
+* [Managing Resources](#!resources/resources.md)
+* [Managing Auto-Extractors](#!configuration/autoextractors.md)
 * [Advanced GUI User Preferences](configuration/gui.md)
 
 ## GUI Introduction
