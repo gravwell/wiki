@@ -102,6 +102,7 @@ The module also provides a handful of "shortcuts" for convenience:
 | packets | Total packets seen, this adds the `packetDeltaCount` and `postPacketDeltaCount` values together | > < <= >= == != | packets > 0xffffff 
 | flowStart | The start timestamp of the flow, this shorthand uses any of the following fields: `flowStartSeconds`, `flowStartMilliseconds`, `flowStartMicroseconds`, `flowStartNanoseconds` and outputs a proper timestamp | | flowStart
 | flowEnd | The end timestamp of the flow, this shorthand uses any of the following fields: `flowEndSeconds`, `flowEndMilliseconds`, `flowSEndMicroseconds`, `flowEndNanoseconds` and outputs a proper timetamp | | flowStart
+| flowDuration | The duration value calculated from `flowEnd` and `flowStart`. | == != < > <= >= | flowDuration > 1m 
 
 #### Filtering on other fields
 
