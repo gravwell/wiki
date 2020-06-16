@@ -108,6 +108,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
     * [Labels and Filtering](gui/labels/labels.md)
 
+	* [Kits](kits/kits.md)
+
   * [Command-Line Client](cli/cli.md)
 
 ## API
