@@ -54,7 +54,7 @@ There are a few tips to upgrading that can help in some installations.
 
 * Cluster configurations should cascade indexer upgrades so that ingesters can continue normal operation during the upgrade
  * The same is true for distributed webserver configurations, the load balancer will shift users as needed
-* If possible, time upgrades to the search agent when there are not large SOAR jobs running
+* If possible, time upgrades to the search agent when there are no large automated script jobs running
 * Distribution package managers will sometimes prompt about upstream configuration file changes, keep your configs
  * Its ok to check what changed, we are usually just adding configurations for new features
  * If you accept upstream configuration files it may overwrite your configurations and cause components failures

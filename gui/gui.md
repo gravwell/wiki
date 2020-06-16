@@ -4,7 +4,10 @@ Most users will interact with Gravwell through the web GUI. This page describes 
 
 * [The Search Interface](queries/queries.md)
 * [Labels and Filtering](labels/labels.md)
-* [Advanced GUI User Preferences](configuration/gui.md)
+* [Managing Resources](#!resources/resources.md)
+* [Managing Auto-Extractors](#!configuration/autoextractors.md)
+* [Managing Kits](#!kits/kits.md)
+* [Advanced GUI User Preferences](#!configuration/gui.md)
 
 ## GUI Introduction
 
@@ -58,7 +61,7 @@ Selecting "Account" will open your preferences page, shown below. Here, you can 
 
 The second tab of the Preferences page, "Interface & Appearance", has options for customizing the Gravwell user interface. The "Interface theme" dropdown is of particular interest, as it selects a GUI-wide color scheme (including the ever-popular dark modes). 
 
-The "Chart theme" dropdown selects different color palettes which will be used when drawing charts. The editor theme & font size options control the appearance of Gravwell's built-in text editor, which is used to create SOAR scripts and in a few other places.
+The "Chart theme" dropdown selects different color palettes which will be used when drawing charts. The editor theme & font size options control the appearance of Gravwell's built-in text editor, which is used to create automation scripts and in a few other places.
 
 ![](interface-prefs.png)
 
@@ -76,7 +79,7 @@ The "Advanced Preferences" section can be ignored by most users. Selecting "Deve
 
 ### Email Server
 
-The final tab, "Email Server", is extremely important for users who intend to do automated email alerting via SOAR scripts. It must be set up with a valid SMTP configuration before emails can be sent.
+The final tab, "Email Server", is extremely important for users who intend to do automated email alerting via scheduled scripts. It must be set up with a valid SMTP configuration before emails can be sent.
 
 ![](email-prefs.png)
 
