@@ -85,6 +85,10 @@ First, the json module parses the JSON in the raw entries and pulls out the "Bod
 
 Further examples throughout the documentation should help clarify the use of enumerated values.
 
+## Filtering
+
+Gravwell extraction modules will typically allow *extracted* items to be *filtered* at extraction time. Filtering lets you drop or pass entries based on whether or not they match particular criteria; see [this page](filtering.md) for full documentation.
+
 ## Quoting and tokenizing
 
 When specifying arguments to Gravwell modules, be mindful of special characters. Most modules treat spaces, tabs, newlines, and the following characters as separators: !#$%&'()*+,-./:;<=>?@
