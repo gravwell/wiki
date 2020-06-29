@@ -40,7 +40,7 @@ To install a kit, you must enter kit management mode by clicking the "Manage Kit
 
 ![](availablekits.png)
 
-You can click the kit details button to learn more about a given kit. Once you've decided on a kit to install, click the install kit button. The system will download the kit, then pop up a wizard for installation. In the screenshot below, we have selected the Netflow V5 kit for installation. The first page shows a list of items contained in the kit:
+You can click the kit details button to learn more about a given kit. Once you've decided on a kit to install, click the install kit button. The system will download the kit, then pop up a wizard for installation. In the screenshot below, we have selected the IPFIX kit for installation. The first page shows a list of items contained in the kit:
 
 ![](wizard1.png)
 
@@ -48,9 +48,13 @@ After reviewing the contents, click the checkbox and select the Next button. The
 
 ![](wizard2.png)
 
-The final page of the wizard prompts for additional options. "Override Existing Items", if checked, will overwrite any conflicting objects which may already exist on the system--for instance, if you have created a resource named "foo", but the kit will also create a resource named "foo". The "Group Access" dropdown allows you to optionally select a group which can see the contents of the kit. Admin users will also have the option to install the kit *globally*, meaning all users can see it.
+Next, the wizard will prompt for *Configuration Macros*, if any are defined by the kit. A configuration macro allows install-time configuration of the queries which are shipped by the kit; these will typically include a default value but also provide a description to help you figure out what to enter. In this screenshot, it needs to know which tag contains IPFIX records; because we intend to use the "ipfix" tag, we can leave the default value alone.
 
 ![](wizard3.png)
+
+The final page of the wizard prompts for additional options. "Override Existing Items", if checked, will overwrite any conflicting objects which may already exist on the system--for instance, if you have created a resource named "foo", but the kit will also create a resource named "foo". The "Group Access" dropdown allows you to optionally select a group which can see the contents of the kit. Admin users will also have the option to install the kit *globally*, meaning all users can see it.
+
+![](wizard4.png)
 
 When you click the "Deploy" button, the kit and any dependencies will be installed. This may take a minute or so, but eventually the kit will be listed as one of your installed kits.
 
