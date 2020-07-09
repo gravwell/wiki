@@ -530,3 +530,9 @@ Example:
 Gravwell-Kit-Server="" #disable remote access to gravwell kitserver
 Gravwell-Kit-Server="http://gravwell.mycompany.com/kits" #override to use internal mirror
 ```
+
+**Kit-Verification-Key**
+Applies to: Webserver
+Default Value:
+Example: /opt/gravwell/etc/kits-pub.pem
+Description:	Specifies a file containing a public key to use when verifying kits from the kitserver. Set this value if you have specified an alternate Gravwell-Kit-Server; it is not necessary when using Gravwell's official kit server. Keys suitable for signing kits can be generated with the [gencert](https://github.com/gravwell/gencert) utility.
