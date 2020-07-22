@@ -245,6 +245,8 @@ Note: The hostkey parameter should be in the known_hosts/authorized_keys format,
 
 A telnet library is also available; no direct wrappers are provided, but it can be used by importing `github.com/ziutek/telnet` in the script and calling telnet.Dial, etc. An example below demonstrates a simple use of the telnet library.
 
+We also provide access to the [github.com/RackSec/srslog](https://github.com/RackSec/srslog) syslog package, which lets scripts send notifications via syslog. An example is shown below.
+
 Finally, the low-level Go [net library](https://golang.org/pkg/net) is available. The listener functions are disabled, but scripts may use the IP parsing functions as well as dial functions such as Dial, DialIP, DialTCP, etc. See below for an example.
 
 ### SFTP example
@@ -356,6 +358,22 @@ for {
 	r, err = t.ReadUntil("$ ")
 	print(toString(r))
 }
+```
+
+### Syslog example
+
+Use the Dial function to get a connection to a syslog server, then call Alert and other functions to send messages. See [the godoc](https://pkg.go.dev/github.com/RackSec/srslog?tab=doc) for a list of available functions; note that the `NewLogger` and `New` functions are not enabled, because they would write messages to the local system only, which is typically not useful.
+
+```
+var syslog = import("github.com/RackSec/srslog")
+
+c, err = syslog.Dial("tcp", "localhost:601", syslog.LOG_ALERT|syslog.LOG_DAEMON, "gravalerts")
+if err != nil {
+    println(err)
+    return err
+}
+c.Alert("Detected something bad")
+c.Close()
 ```
 
 ### Net example
