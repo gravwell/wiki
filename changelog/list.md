@@ -1,7 +1,12 @@
 # Changelogs for recent version updates
 
-## Current Version [3.3.13](3.3.13.md)
+## Current Version 
 
+The most recent release was Gravwell [4.0.0](4.0.0.md).
+
+## Previous Versions
+
+* [3.3.13](3.3.13.md)
 * [3.3.12](3.3.12.md)
 * [3.3.11](3.3.11.md)
 * [3.3.10](3.3.10.md)
