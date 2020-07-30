@@ -38,6 +38,7 @@ The packet processor supports a growing list of submodules which allow for break
 | dot11 | 802.11 Wireless packets |
 | dot11info | 802.11 information elements |
 | modbus | modbus/TCP packets |
+| MPLS | Multiprotocol Label Switching |
 
 ### Packet Processing Submodules
 

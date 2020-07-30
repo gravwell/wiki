@@ -78,7 +78,7 @@ Note: If your distribution does not use SystemD, you will have to start the Grav
 
 ## Configuring the License
 
-Once Gravwell is installed, open a web browser and navigate to the server (e.g. [https://localhost/](https://localhost/)). It should prompt you to upload a license file.
+Once Gravwell is installed, open a web browser and navigate to the server (e.g. [http://localhost/](http://localhost/)). It should prompt you to upload a license file:
 
 ![Upload license](upload-license.png)
 
@@ -90,18 +90,32 @@ Attention: The default username/password combination for Gravwell is admin/chang
 
 ## Configuring Ingesters
 
-A freshly installed Gravwell instance, by itself, is boring. You'll want some ingesters to provide data. You can either install them from the Debian repository or head over to [the Downloads page](downloads.md) to fetch self-extracting installers for each ingester.
+A freshly installed Gravwell instance, by itself, is boring. You'll want some ingesters to provide data. You can either install packages from the repositories or head over to [the Downloads page](downloads.md) to fetch self-extracting installers for each ingester.
 
 The ingesters available in the Debian repository can be viewed by running `apt-cache search gravwell`:
 
 ```
 root@debian:~# apt-cache search gravwell
 gravwell - Gravwell data analytics platform (gravwell.io)
+gravwell-collectd - Gravwell collectd ingester
+gravwell-crash-reporter - Gravwell crash reporter service
+gravwell-datastore - Gravwell datastore service
 gravwell-federator - Gravwell ingest federator
 gravwell-file-follow - Gravwell file follow ingester
+gravwell-http-ingester - Gravwell HTTP ingester
+gravwell-kafka - Gravwell Kafka ingester
+gravwell-kafka-federator - Gravwell Kafka federator
+gravwell-kinesis - Gravwell Kinesis ingester
+gravwell-loadbalancer - Gravwell load balancing service
 gravwell-netflow-capture - Gravwell netflow ingester
 gravwell-network-capture - Gravwell packet ingester
+gravwell-o365 - Gravwell Office 365 log ingester
+gravwell-offline-replication - Gravwell offline replication service
+gravwell-packet-fleet - Gravwell Packet Fleet ingester
+gravwell-pubsub - Gravwell ingester for Google Pub/Sub streams
+gravwell-shodan - Gravwell Shodan ingester
 gravwell-simple-relay - Gravwell simple relay ingester
+gravwell-sqs - Gravwell SQS ingester
 ```
 
 If you install them on the same node as the main Gravwell instance, they should be automatically configured to connect to the indexer, but you'll need to set up data sources for most. See the [ingester configuration documents](#!ingesters/ingesters.md) for instructions on that.
@@ -163,16 +177,16 @@ The “System Stats” page in Gravwell can help you see if the Gravwell server 
 ### Ingesting Syslog
 Once the Gravwell server is installed and the Simple Relay text ingester service is running, you can start feeding any log or text data into Gravwell via the syslog protocol. By default, the Simple Relay ingester listens for TCP syslog on port 601 and UDP syslog on port 514.
 
-To send the syslog entries from a Linux server running rsyslog to Gravwell, create a new file named `/etc/rsyslog.d/90-gravwell.conf` on the server and paste the following line into it for UDP syslog:
+To send the syslog entries from a Linux server running rsyslog to Gravwell, create a new file named `/etc/rsyslog.d/90-gravwell.conf` on the server and paste the following line into it for UDP syslog, taking care to modify the hostname `gravwell.example.com` to point at your own Gravwell instance:
 
 ```
-*.* @gravwell.addr.goes.here;RSYSLOG_SyslogProtocol23Format
+*.* @gravwell.example.com;RSYSLOG_SyslogProtocol23Format
 ```
 
 or use this instead for TCP syslog:
 
 ```
-*.* @@gravwell.addr.goes.here;RSYSLOG_SyslogProtocol23Format
+*.* @@gravwell.example.com;RSYSLOG_SyslogProtocol23Format
 ```
 
 (note the use of `@` in the UDP configuration vs. `@@` for TCP)
@@ -327,6 +341,50 @@ The outbound traffic chart shows a pretty big spike for an otherwise quiet syste
 
 ![network dashboard, zoomed in](network-dashboard-zoomed.png)
 
+## Installing Kits
+
+Gravwell Kits are pre-packaged toolsets for analyzing a particular data source. Kits exist to analyze Netflow v5, IPFIX, CoreDNS, and more. They're a great way to get started with your data, a jumping-off place to building your own analysis.
+
+Most kits rely on you to set up ingesters (e.g. the Netflow v5 kit expects that you're running the Netflow ingester to gather Netflow records), but the *Weather* kit is actually entirely self-contained. It includes a script which will run every minute and fetch weather data for locations you specify.
+
+Note: To use the Weather kit, you'll need an API key from [openweathermap.org](https://openweathermap.org). The instructions to get an API key [can be found here](https://openweathermap.org/appid).
+
+You can find the kit by clicking the "Kits" item in the main menu. If there are no kits already installed, the GUI will automatically show you a list of *available* kits:
+
+![](available-kits.png)
+
+We want to install the Weather kit, so click the deploy icon (an arrow pointing out of a box) on the Weather kit's tile. This will bring up the installation wizard. The first page lists the items included in the kit and provides an opportunity to review the contents; select the checkbox at the bottom, then hit Next:
+
+![](kit-wizard1.png)
+
+The second page contains Configuration Macros. These are used to configure the kit. You'll need to enter your OpenWeatherMap API key in the first macro, then set a list of locations to monitor in the second. The third macro controls the units used and can be left at the default ("imperial") or changed to "metric". When entering values in the configuration macro fields, first click the "Enter custom value" link to turn off certain validation rules.
+
+Note: The list of locations should consist of a colon-separated list of locations as described in [this document](https://openweathermap.org/current#one). Note that multiple countries use the same ZIP code format as the US, so specifying "87110,us" is usually better than just "87110".
+
+![](kit-wizard2.1.png)
+
+![](kit-wizard2.2.png)
+
+![](kit-wizard2.3.png)
+
+When you are done setting up Config Macros, click "Next" for the final page of the wizard. This gives a few final options relating to the kit installation; you can simply click "Deploy":
+
+![](kit-wizard3.png)
+
+Once the kit is installed, you will be taken to a list of installed kits, which should show the newly-installed Weather kit:
+
+![](kit-list.png)
+
+The script included in the kit should soon begin pulling in weather data. After a minute or two, we should have some data to work with, so click the main menu, open the "Dashboards" page, and click the "Weather Overview" dashboard. There won't be much to see on the temperature charts yet, but you should at least be able to look at the "Current Conditions" table in the lower left:
+
+![](current-conditions.png)
+
+After a day or so, you'll have gathered enough data to see nice charts like this:
+
+![](weather.png)
+
+Refer to the [kits documentation](#!kits/kits.md) for more details on Gravwell Kits.
+
 ## Updating Gravwell
 
 Upgrading Gravwell is an uneventful affair, we take great pains to ensure that the installation and upgrade process is fast and easy.  The upgrade process is different depending on your original installation method.  If you are using one of the package repositories, such as Debian, Gravwell is upgraded like any other application:
@@ -345,20 +403,17 @@ If your original installation method was the self-contained shell installer, you
 
 There are a few tips to upgrading that can help in some installations.
 
-
 * Cluster configurations should cascade indexer upgrades so that ingesters can continue normal operation during the upgrade
  * The same is true for distributed webserver configurations, the load balancer will shift users as needed
 * If possible, time upgrades to the search agent when there are no large automated script jobs running
-* Distribution package managers will sometimes prompt about upstream configuration file changes, keep your configs
- * Its ok to check what changed, we are usually just adding configurations for new features
+* Distribution package managers will sometimes prompt about upstream configuration file changes, but make sure to keep your *existing* configs
+ * It's ok to check what changed, we are usually just adding configurations for new features
  * If you accept upstream configuration files it may overwrite your configurations and cause components failures
-
 
 After an upgrade it is always a good practice to check the state of Gravwell by ensuring that all indexers are present and accounted for and that ingesters have reconnected and are reporting the expected version numbers.
 
 
 ![Ingester status](ingesters.png)
-
 
 
 ## Advanced Topics
