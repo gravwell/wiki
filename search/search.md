@@ -8,6 +8,8 @@ The search pipeline is the core of Gravwell's functionality and operates in a si
 tag=reddit json Body | eval len(Body) < 20 | table Body
 ```
 
+The user interface used to run queries [is documented here](#!gui/queries/queries.md).
+
 ## Components of a Query
 
 The example query above can be broken into several individual portions, which are described below.
@@ -82,6 +84,10 @@ tag=reddit json Body | langfind -e Body | count by lang | sort by count desc | t
 First, the json module parses the JSON in the raw entries and pulls out the "Body" element, storing it in an enumerated value named `Body`. Then the langfind module accesses the `Body` enumerated values and attempts to analyze the language used; it puts the result in a new enumerated value called `lang`. Next, the count module reads the `lang` enumerated values and counts how many times each value appears, storing the results in enumerated values named `count`. The rest of the pipeline sorts the results based on the counts and creates a table from the `lang` and `count` enumerated values.
 
 Further examples throughout the documentation should help clarify the use of enumerated values.
+
+## Filtering
+
+Gravwell extraction modules will typically allow *extracted* items to be *filtered* at extraction time. Filtering lets you drop or pass entries based on whether or not they match particular criteria; see [this page](filtering.md) for full documentation.
 
 ## Quoting and tokenizing
 

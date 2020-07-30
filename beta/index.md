@@ -105,9 +105,9 @@ Playbooks are an opportunity to include READMEs, documentation, directions for a
 
 Built using markdown syntax, playbooks can include searches directly for a reader to launch from the playbook. We are actively developing this feature to include more syntactical goodies and are excited about the potential.
 
-### SOAR Scripts
+### Automation Scripts
 
-Also not a new feature, but we have expanded the debugging capability and enhanced the UX developing and managing SOAR scripts.
+Also not a new feature, but we have expanded the debugging capability and enhanced the UX developing and managing scripts.
 
 ### Actionables
 

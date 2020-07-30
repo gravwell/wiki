@@ -121,14 +121,16 @@ The fulltext accelerator supports a few options which allow for refining the typ
 
 | Argument | Description | Example | Default State |
 |----------|-------------|---------|---------------|
-| -acceptTS | By default the fulltext accelerator engages the timegrinder system to identify and ignore timestamps in the data, this disables that functionality | `-acceptTS` | DISABLED |
-| -min | Require that extracted tokens be at least X bytes.  This can help prevent indexing on very small words that will never be searched on | `-min 3` | DISABLED |
-| -max | Require that extracted tokens be less than.  This can help prevent indexing on very large blobs within logs that will never be searched on | `-max 256` | DISABLED |
-| -ignoreUUID | Enable a filter to ignore UUID/GUID values.  Some logs will generate a unique UUID for every entry which incurs significant overhead and provides very little value. | `-ignoreUUID` | DISABLED |
-| -ignoreFloat | Disable filters which ignore floating point numbers. Logs where floating point numbers are used for filters can make use of `-accptFloat`. | `-acceptFloat` | DISABLED |
-| -maxInt | Enable a maximum integer value | Enable a filter that will only index integers below a certain size.  This can be valuable when indexing data that such as HTTP access logs.  You want to index the return codes, but not the response times and data sizes. |
+| -acceptTS | By default the fulltext accelerator attempts to identify and ignore timestamps in the data. This flag disables that behavior and allows timestamps to be indexed. | `-acceptTS` | DISABLED |
+| -acceptFloat | By default, the fulltext accelerator attempts to identify and ignore floating-point numbers, since they typically vary widely and are not explicitly queried. Setting this flag disables that behavior and allows floating-point numbers to be indexed. | `-acceptFloat` | DISABLED |
+| -min | Require that extracted tokens be at least X bytes long.  This can help prevent indexing on very small words such as "is" or "I". | `-min 3` | DISABLED |
+| -max | Require that extracted tokens be less than X bytes long.  This can help prevent indexing on very large "blobs" within logs that will never be feasibly queried. | `-max 256` | DISABLED |
+| -ignoreUUID | Enable a filter to ignore UUID/GUID values.  Some logs will generate a UUID for every entry, which incurs significant indexing overhead and provides very little value. | `-ignoreUUID` | DISABLED |
+| -ignoreTS | Identify and ignore timestamps during acceleration. Because timestamps change so frequently, they can be a significant source of bloat. The fulltext accelerator ignores timestamps by default | `-ignoreTS` | ENABLED |
+| -ignoreFloat | Ignore floating point numbers. Logs where floating point numbers are used for filters can make use of `-accptFloat`. | `-acceptFloat` | ENABLED |
+| -maxInt | Enables a filter that will only index integers below a certain size.  This can be valuable when indexing data that such as HTTP access logs.  You want to index the return codes, but not the response times and data sizes. | `-maxInt 1000` | DISABLED |
 
-NOTE: Make sure you understand your data before enabling the `acceptTS` and `-acceptFloat` flags as these can dramatically bloat the index when using the index engine.  The Bloom engine is less impacted by orthogonal data such as timestamps and floating point numbers.
+NOTE: Make sure you understand your data before enabling the `-acceptTS` and `-acceptFloat` flags as these can dramatically bloat the index when using the index engine.  The Bloom engine is less impacted by orthogonal data such as timestamps and floating point numbers.
 
 ### Example Well Configuration
 

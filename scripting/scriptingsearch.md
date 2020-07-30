@@ -1,28 +1,28 @@
-# SOAR - Search Orchestration Automation and Response
+# Automation Scripts
 
-Gravwell provides a robust scripting engine in which you can run searches, update resources, send alerts, or take action.  The orchestration engine allows for automating the tedious steps in an investigation and taking action based on search results without the need to involve a human.  
+Gravwell provides a robust scripting engine in which you can run searches, update resources, send alerts, or take action.  The engine can run searches and examine data automatically, taking action based on search results without the need to involve a human.  
 
-Orchestration scripts can be run [on a schedule](scheduledsearch.md) or by hand from the [command line client](#!cli/cli.md). Because the CLI allows the script to be re-executed interactively, we recommend developing and testing scripts in the CLI before creating a scheduled search.
+Automation scripts can be run [on a schedule](scheduledsearch.md) or by hand from the [command line client](#!cli/cli.md). Because the CLI allows the script to be re-executed interactively, we recommend developing and testing scripts in the CLI before creating a scheduled search.
 
 ## Built-in functions
 
-Scripted searches can use built-in functions that mostly match those available for the [anko](#!scripting/anko.md) module, with some additions for launching and managing searches. The functions are listed below in the format `functionName(<functionArgs>) <returnValues>`.
+Scripts can use built-in functions that mostly match those available for the [anko](#!scripting/anko.md) module, with some additions for launching and managing searches. The functions are listed below in the format `functionName(<functionArgs>) <returnValues>`.
 
 ## Controlling Versions
 
-Gravwell is constantly adding new modules, methods, and functionality.  It is often desirable to be able to validate that a given SOAR script will work with the current version.  This is Achieved using two built in scripting functions.  These functions are used to specify the minimum and maximum versions of Gravwell that they are compatible with.  If either assertion fails, the script will fail immediately with an error indicating that the version is incompatible.
+Gravwell is constantly adding new modules, methods, and functionality.  It is often desirable to be able to validate that a given script will work with the current version.  This is achieved through two built-in scripting functions which specify the minimum and maximum versions of Gravwell that they are compatible with.  If either assertion fails, the script will fail immediately with an error indicating that the version is incompatible.
 
-* `MinVer(major, minor, point)` Ensures that the current version is at least the as high as specified
-* `MaxVer(major, minor, point)` Ensures that the current version is not greater than specified.
+* `MinVer(major, minor, point)` Ensures that Gravwell is at least a particular version.
+* `MaxVer(major, minor, point)` Ensures that Gravwell is no newer than a particular version.
 
 ## Libraries and external functions
 
-Version 3.3.1 of Gravwell now enables SOAR scripts to include external scripting libraries.  Two functions allow for including additional libraries.
+Version 3.3.1 of Gravwell now allows automation scripts to include external scripting libraries.  Two functions are provided for including additional libraries:
 
-* `include(path, commitid, repo) error` Includes a file, the repo and commitid arguments are optional.  If the include fails, the failure reason is returned.
-* `require(path, commitid, repo)` Identical behavior to `include`, but if it fails the script is halted and the failure reason is attached to the SOAR response info.
+* `include(path, commitid, repo) error` Includes a library file. The repo and commitid arguments are optional.  If the include fails, the failure reason is returned.
+* `require(path, commitid, repo)` Identical behavior to `include`, but if it fails the script is halted and the failure reason is attached to the script's results.
 
-Both `include` and `require` can optionally specify an exact repository or commitid.  If the `repo` argument is ommitted the Gravwell default library repo of `https://github.com/gravwell/libs` is used.  If the `commitid` is ommitted then the `HEAD` commit is used.  Repos should be accessible by the Gravwell webserver via the schema defined (either `http://`, `https://`, or `git://`) in the repo path.  The SOAR system will automatically go get repos as needed, if a commit id is requested that isn't currently known Gravwell will attempt to update the repo.
+Both `include` and `require` can optionally specify an exact repository or commitid.  If the `repo` argument is ommitted the Gravwell default library repo of `https://github.com/gravwell/libs` is used.  If the `commitid` is ommitted then the `HEAD` commit is used.  Repos should be accessible by the Gravwell webserver via the schema defined (either `http://`, `https://`, or `git://`) in the repo path.  The scripting system will automatically go get repos as needed: if a commit id is requested that isn't currently known Gravwell will attempt to update the repo.
 
 If you are in an airgapped system, or otherwise do not want Gravwell to have access to github, you can specify an internal mirror and/or default commit in the `gravwell.conf` file using the `Library-Repository` and `Library-Commit` configuration variables.  For example:
 
@@ -31,7 +31,7 @@ Library-Repository="https://github.com/foobar/baz" #override the default library
 Library-Commit=da4467eb8fe22b90e5b2e052772832b7de464d63
 ```
 
-The Library-Repository can also be a local folder that is readable by the Gravwell webserver process.  For example, if you are running Gravwell in a completely airgapped environment, you may still want access to the libs and the ability to update them.  Just unpack the git repository and set the `Library-Repository` as that path.
+The Library-Repository can also be a local folder that is readable by the Gravwell webserver process.  For example, if you are running Gravwell in a completely airgapped environment, you may still want access to the libs and the ability to update them.  Just unpack the git repository and set `Library-Repository` to that path.
 
 ```
 Library-Repository="/opt/gitstuff/gravwell/libs"
@@ -43,7 +43,7 @@ The `include` and `require` can be disabled (thereby disallowing external code) 
 
 * `loadConfig(resource) (map[string]interface, error)` loads the specified resource and attempts to parse it as a JSON structure, returning the results in a map. If the resource contains `{"foo":"bar","a":1}`, this function will return a map where "foo" → "bar" and "a" → 1.
 
-If you have many SOAR scripts on the system, you may find it useful to keep a repository of configuration values somewhere for use across all the scripts. Suppose you wanted to use a particular revision of the email alerting library across all your scripts; you could put the following into a resource named "soar-config":
+If you have many automation scripts on the system, you may find it useful to keep a repository of configuration values somewhere for use across all the scripts. Suppose you wanted to use a particular revision of the email alerting library across all your scripts; you could put the following into a resource named "script-config":
 
 ```
 {
@@ -54,7 +54,7 @@ If you have many SOAR scripts on the system, you may find it useful to keep a re
 and then use the following code in your scripts:
 
 ```
-cfg, err = loadConfig("soar-config")
+cfg, err = loadConfig("script-config")
 if err != nil {
 	return nil
 }
@@ -151,7 +151,7 @@ The ScheduledSearch structure contains the following fields:
 
 ## Querying Infrastructure Information
 
-The SOAR system can also be used to monitor the state of the Gravwell installation using API calls.  This allows you to monitor ingester status, system loads, and indexer connectivity within the SOAR platform.  The following calls can provide information about the physical deployment:
+The automation scripting system can also be used to monitor the state of the Gravwell installation using API calls.  This allows you to monitor ingester status, system loads, and indexer connectivity within the platform.  The following calls can provide information about the physical deployment:
 
 * `ingesters` - Returns a map containing an ingester status block for each indexer.
 * `indexers` - Returns a map containing a well status for each indexer.
@@ -244,6 +244,8 @@ Attention: The clients returned by these functions *must* be closed via their Cl
 Note: The hostkey parameter should be in the known_hosts/authorized_keys format, e.g. "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOcrwoHMonZ/l3OJOGrKYLky2FHKItAmAMPzZUhZEgEb86NNaqfdAj4qmiBDqM04/o7B45mcbjnkTYRuaIUwkno=". To extract the appropriate key from your ~/.ssh/known_hosts, run `ssh-keygen -H -F <hostname>`.
 
 A telnet library is also available; no direct wrappers are provided, but it can be used by importing `github.com/ziutek/telnet` in the script and calling telnet.Dial, etc. An example below demonstrates a simple use of the telnet library.
+
+We also provide access to the [github.com/RackSec/srslog](https://github.com/RackSec/srslog) syslog package, which lets scripts send notifications via syslog. An example is shown below.
 
 Finally, the low-level Go [net library](https://golang.org/pkg/net) is available. The listener functions are disabled, but scripts may use the IP parsing functions as well as dial functions such as Dial, DialIP, DialTCP, etc. See below for an example.
 
@@ -356,6 +358,22 @@ for {
 	r, err = t.ReadUntil("$ ")
 	print(toString(r))
 }
+```
+
+### Syslog example
+
+Use the Dial function to get a connection to a syslog server, then call Alert and other functions to send messages. See [the godoc](https://pkg.go.dev/github.com/RackSec/srslog?tab=doc) for a list of available functions; note that the `NewLogger` and `New` functions are not enabled, because they would write messages to the local system only, which is typically not useful.
+
+```
+var syslog = import("github.com/RackSec/srslog")
+
+c, err = syslog.Dial("tcp", "localhost:601", syslog.LOG_ALERT|syslog.LOG_DAEMON, "gravalerts")
+if err != nil {
+    println(err)
+    return err
+}
+c.Alert("Detected something bad")
+c.Close()
 ```
 
 ### Net example
@@ -557,7 +575,7 @@ return err
 
 ## CSV Helpers
 
-CSV is a pretty common export format for resources and just generatlly getting data out of Gravwell.  The CSV library provided by `encoding/csv` is robust and flexible but a little verbose.  We have wrapped the CSV writer to provide a simpler interface for use within the Gravwell SOAR system.  To create a simplified CSV builder, import the `encoding/csv` package and instead of invoking `NewWriter` call `NewBuilder` without any arguments.
+CSV is a pretty common export format for resources and just generatlly getting data out of Gravwell.  The CSV library provided by `encoding/csv` is robust and flexible but a little verbose.  We have wrapped the CSV writer to provide a simpler interface for use within the Gravwell scripting system.  To create a simplified CSV builder, import the `encoding/csv` package and instead of invoking `NewWriter` call `NewBuilder` without any arguments.
 
 The CSV builder manages its own internal buffers and returns a byte array upon executing `Flush`.  This can simplify the process of building up CSVs for exporting or saving.  Here is an example script that uses the simplified csv Builder to create a resource comprised of two table columns:
 
@@ -611,7 +629,7 @@ return setResource("csv", buff)
 
 The [ipexist](#!search/ipexist/ipexist.md) search module is designed to test whether an IPv4 address exists in a set, this module is a simple filtering module that is designed for one thing and one thing only: speed.  Under the hood, `ipexist` uses a highly optimized bitmap system so that its possible for a modest machine to represent the entirety of the IPv4 address space in it's filter system.  IPExist is a great tool for holding threatlists and performing initial filtering operations on very large sets of data before performing more expensive lookups using the [iplookup](#!search/iplookup/iplookup.md) module.
 
-The Gravwell SOAR system has access to the ipexist builder functions, enabling you to generate high speed ip membership tables from existing data.  The ipexist builder functions are open source and available on [github](https://github.com/gravwell/ipexist).  Below is a basic script which generates an ip membership resource using a query:
+The Gravwell scripting system has access to the ipexist builder functions, enabling you to generate high speed ip membership tables from existing data.  The ipexist builder functions are open source and available on [github](https://github.com/gravwell/ipexist).  Below is a basic script which generates an ip membership resource using a query:
 
 ```
 ipexist = import("github.com/gravwell/ipexist")

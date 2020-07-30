@@ -58,6 +58,8 @@ Most of the core ingesters support a common set of global configuration paramete
 * Pipe-Backend-Target
 * Ingest-Cache-Path
 * Max-Ingest-Cache
+* Cache-Depth
+* Cache-Mode
 * Log-Level
 * Log-File
 * Source-Override
@@ -142,6 +144,25 @@ Max-Ingest-Cache limits the amount of storage space an ingester will consume whe
 Max-Ingest-Cache=32
 Max-Ingest-Cache=1024
 Max-Ingest-Cache=10240
+```
+
+### Cache-Depth
+
+Cache-Depth sets the number of entries to keep in an in-memory buffer. The default value is 128, and the in-memory buffer is always enabled, even if Ingest-Cache-Path is disabled. Setting Cache-Depth to a large value enables absorbing burst behavior on ingesters as the expense of more memory consumption.
+
+#### Example
+```
+Cache-Depth=256
+```
+
+### Cache-Mode
+
+Cache-Mode sets the behavior of the backing cache (enabled by setting Ingest-Cache-Path) at runtime. Available modes are "always" and "fail". In "always" mode, the cache is always enabled, allowing the ingester to write entries to disk any time the in-memory buffer (set with Cache-Depth) is full. This can occur on a dead or slow indexer connection, or when the ingester is attempting to push more data than is possible over the connection it has to the indexer. By using "always" mode, you ensure the ingester will not drop entries or block data ingest at any time. Setting Cache-Mode to "fail" changes the cache behavior to only enable when all indexer connections are down.
+
+#### Examples
+```
+Cache-Mode=always
+Cache-Mode=fail
 ```
 
 ### Log-File

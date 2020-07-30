@@ -92,19 +92,25 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Data Archiving](configuration/archive.md)
 
-## Orchestration
+## Automation
 
-  * [Scheduled Searches](scripting/scheduledsearch.md)
+  * [Scheduled Searches & Scripts](scripting/scheduledsearch.md)
 
-  * [Scripting](scripting/scripting.md)
+  * [Scripting Overview](scripting/scripting.md)
 
-    * [SOAR](scripting/scriptingsearch.md)
+    * [Automation Script APIs & Examples](scripting/scriptingsearch.md)
 
 ## User Interfaces
 
-  * [GUI User Preferences](configuration/gui.md)
+  * [Gravwell Web GUI](gui/gui.md)
 
-  * [Using the Command-Line Client](cli/cli.md)
+    * [The Search Interface](gui/queries/queries.md)
+
+    * [Labels and Filtering](gui/labels/labels.md)
+
+	* [Kits](kits/kits.md)
+
+  * [Command-Line Client](cli/cli.md)
 
 ## API
 

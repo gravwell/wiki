@@ -46,6 +46,8 @@ The following configuration parameters are available:
 * **Log-Level** specifies the logging verbosity over the integrated gravwell tag.  Options are _OFF_ _INFO_ _WARN_ _ERROR_.  Default is _ERROR_.
 * **Ingest-Cache-Path** specifies a file path for the cache system which engages when indexer connectivity is lost.  Path must be an absolute path to a writable file.
 * **Max-Cache-Size-MB** specifies in megabytes the maximum size of the cache file.  This is used as a safty net.  Zero value is the default and represents unlimited.
+* **Cache-Depth** specifies the size of the in-memory ingest buffer, in entries. The default is 128.
+* **Cache-Mode** specifies the behavior of the backing cache based on the state of indexer connections. The default mode is "always".
 
 
 A basic Gravwell definition looks like so:

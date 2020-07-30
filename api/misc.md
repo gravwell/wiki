@@ -118,9 +118,9 @@ This API provides some basic information for the user interface. A GET on `/api/
 * `MaxFileSize` is the maximum allowable file size (in bytes) which may be uploaded to the `/api/files` APIs.
 * `MaxResourceSize` is the maximum allowable resource size, in bytes.
 
-## SOAR Libraries
+## Scripting Libraries
 
-This API allows SOAR scripts to import SOAR libraries from github repositories using the `require` function. There is also an endpoint which will trigger a git pull on all the user's repositories.
+This API allows automation scripts to import libraries from github repositories using the `require` function. There is also an endpoint which will trigger a git pull on all the user's repositories.
 
 ### Fetching a library
 

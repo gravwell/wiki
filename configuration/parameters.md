@@ -1,6 +1,72 @@
-# Global Configuration Parameters
+# Configuration Parameters
+
+The `gravwell.conf` configuration file is used by indexers, webservers, and the datastore for configuration. The configuration contains *sections*, which are defined inside square brackets (e.g. `[Global]`); each section contains parameters. The following example includes a Global section, a Replication section, a Default-Well section, and a Storage-Well section:
+
+```
+[global]
+### Authentication tokens
+Ingest-Auth=IngestSecrets
+Control-Auth=ControlSecrets
+Search-Agent-Auth=SearchAgentSecrets
+
+### Web server HTTP/HTTPS settings
+Web-Port=80
+Insecure-Disable-HTTPS=true
+
+### Other web server settings
+Remote-Indexers=net:127.0.0.1:9404
+Persist-Web-Logins=True
+Session-Timeout-Minutes=1440
+Login-Fail-Lock-Count=4
+Login-Fail-Lock-Duration=5
+
+### Ingester settings
+Ingest-Port=4023
+Control-Port=9404
+Search-Pipeline-Buffer-Size=4
+
+### Other settings
+Log-Level=WARN
+
+### Paths
+Pipe-Ingest-Path=/opt/gravwell/comms/pipe
+Log-Location=/opt/gravwell/log
+Web-Log-Location=/opt/gravwell/log/web
+Render-Store=/opt/gravwell/render
+Saved-Store=/opt/gravwell/saved
+Search-Scratch=/opt/gravwell/scratch
+Web-Files-Path=/opt/gravwell/www
+License-Location=/opt/gravwell/etc/license
+User-DB-Path=/opt/gravwell/etc/users.db
+Web-Store-Path=/opt/gravwell/etc/webstore.db
+
+[Replication]
+	Peer=10.0.0.1
+	Storage-Location=/opt/gravwell/replication_storage
+	Insecure-Skip-TLS-Verify=true
+	Disable-TLS=true
+	Connect-Wait-Timeout=20
+
+[Default-Well]
+	Location=/opt/gravwell/storage/default/
+	Accelerator-Name=fulltext #fulltext is the most resilent to varying data types
+	Accelerator-Engine-Override=bloom #The bloom engine is effective and fast with minimal disk overhead
+	Disable-Compression=true
+
+[Storage-Well "syslog"]
+	Location=/opt/gravwell/storage/syslog
+	Tags=syslog
+	Tags=kernel
+	Tags=dmesg
+	Accelerator-Name=fulltext #fulltext is the most resilent to varying data types
+	Accelerator-Args="-ignoreTS" #tell the fulltext accelerator to not index timestamps, syslog entries are easy to ID
+```
 
 Each parameter has a default value which applies if the parameters is empty, or not specified in the configuration file.
+
+## Global Parameters
+
+The parameters in this section go under the `[Global]` heading of the config file, which is typically at the top of the file.
 
 **Indexer-UUID**
 Applies to:			Indexer
@@ -387,12 +453,6 @@ Default Value:
 Example:		`Webserver-Ingest-Groups=ingestUsers`
 Description:	The Webserver-Ingest-Groups parameter is a list parameter which specifies groups whose users are allowed to ingest entries directly via the Gravwell web API. As a list parameter, it can be specified multiple times to enable multiple groups to ingest via web API.
 
-**Autoextract-Definition-Path**
-Applies to:		Webserver and Indexer
-Default Value:	`/opt/gravwell/extractions` 
-Example:		`Autoextract-Definition-Path=/tmp/extractions`
-Description:	The Autoextract-Definition-Path parameter specifies a directory which will contain autoextractor definitions.
-
 **Disable-Update-Notification**
 Applies to:		Webserver
 Default Value:	`false`
@@ -513,9 +573,29 @@ Default Value:	false
 Example:		`Disable-Library-Repository=true`
 Description:	Scheduled scripts may import additional libraries using the `include` function. Setting `Disable-Library-Repository` to true disables this functionality.
 
-**Password-Control**
-Applies to:		Webserver
+**Gravwell-Kit-Server**
+Applies to:	Webserver
+Default Value:	https://kits.gravwell.io/kits
+Example:	`Gravwell-Kit-Server=http://internal.mycompany.io/gravwell/kits`
+Description:	Allows for overriding the Gravwell kitserver host, this can be useful in airgapped or segmented deployments where you host a mirror of the Gravwell kitserver.  Set this value to an empty string to completely disable access to the remote kitserver.
 Example:
+```
+Gravwell-Kit-Server="" #disable remote access to gravwell kitserver
+Gravwell-Kit-Server="http://gravwell.mycompany.com/kits" #override to use internal mirror
+```
+
+**Kit-Verification-Key**
+Applies to: Webserver
+Default Value:
+Example: `Kit-Verification-Key=/opt/gravwell/etc/kits-pub.pem`
+Description:	Specifies a file containing a public key to use when verifying kits from the kitserver. Set this value if you have specified an alternate Gravwell-Kit-Server; it is not necessary when using Gravwell's official kit server. Keys suitable for signing kits can be generated with the [gencert](https://github.com/gravwell/gencert) utility.
+
+## Password Control
+
+The `[Password-Control]` configuration section can be used to enforce password complexity rules when users are created or passwords are changed. Options set in this block apply only to webservers. These complexity configuration rules do not apply when using Single Sign On.
+
+Note: The `Password-Control` section should not be declared more than once.
+
 ```
 [Password-Control]
 	Min-Length=8
@@ -524,15 +604,351 @@ Example:
 	Require-Special=true
 	Require-Special=true
 ```
-Description:	A new configuration block that is specified in the `gravwell.conf` file that can be used to enforce password complexity rules when users are created or passwords are changed.  These complexity configuration rules do not apply when using Single Sign On.
 
-**Gravwell-Kit-Server**
-Applies to:	Webserver
-Default Value:	https://kits.gravwell.io/kits
-Example:	http://internal.mycompany.io/gravwell/kits
-Description:	Allows for overriding the Gravwell kitserver host, this can be useful in airgapped or segmented deployments where you host a mirror of the Gravwell kitserver.  Set this value to an empty string to completely disable access to the remote kitserver.
-Example:
+**MinLength**
+Default Value:	0
+Example:		`MinLength=8`
+Description:	`MinLength` specifies the minimum character length of passwords.
+
+**Require-Uppercase**
+Default Value:	false
+Example:		`Require-Uppercase=true`
+Description:	If `Require-Uppercase` is set, passwords must contain at least one upper-case character.
+
+**Require-Lowercase**
+Default Value:	false
+Example:		`Require-Lowercase=true`
+Description:	If `Require-Lowercase` is set, passwords must contain at least one lower-case character.
+
+**Require-Number**
+Default Value:	false
+Example:		`Require-Number=true`
+Description:	If `Require-Number` is set, passwords must contain at least one numeric digit.
+
+**Require-Special**
+Default Value:	false
+Example:		`Require-Special=true`
+Description:	If `Require-Special` is set, passwords must contain at least one "special" character. The set of special characters includes all Unicode characters which are not numbers or letters.
+
+## Well Configuration
+
+The parameters in this section apply to well specifications, including the `Default-Well` specification. Well configurations only apply to *indexers*; they are ignored by webservers. Below is a sample of two well configurations, `Default-Well` and another well named "pcap".
+
 ```
-Gravwell-Kit-Server="" #disable remote access to gravwell kitserver
-Gravwell-Kit-Server="http://gravwell.mycompany.com/kits" #override to use internal mirror
+[Default-Well]
+	Location=/opt/gravwell/storage/default/
+	Cold-Location=/opt/gravwell/cold-storage/default
+	Accelerator-Name=fulltext
+	Accelerator-Engine-Override=bloom
+	Max-Hot-Storage-GB=20
+
+[Storage-Well "pcap"]
+	Location=/opt/gravwell/storage/pcap
+	Cold-Location=/opt/gravwell/cold-storage/pcap
+	Hot-Duration=1D
+	Cold-Duration=12W
+	Delete-Frozen-Data=true
+	Max-Hot-Storage-GB=20
+	Disable-Compression=true
+	Tags=pcap
 ```
+
+The configuration file should contain exactly one `Default-Well` section. It may also include one or more `Storage-Well` sections.
+
+Refer to the [ageout documentation](ageout.md) for more information on how wells move entries between hot, cold, and archive storage.
+
+Note: `Default-Well` cannot include `Tags=` specifications; instead, the default well contains all tags *not contained in other wells*
+
+**Location**
+Default Value:	`/opt/gravwell/storage/default` for `Default-Well`, none for `Storage-Well`
+Example:		`Location=/opt/gravwell/storage/foo`
+Description:	This parameter controls where the well stores "hot" data. No two wells should be allowed to point at the same directory!
+
+### Ageout Options
+
+**Hot-Duration**
+Default Value:
+Example:		`Hot-Duration=1w`
+Description:	This parameter determines how long data remains in the "hot" storage location. The value should consist of a number followed by a suffix, either "d" for "day" or "w" for "week"; thus `Hot-Duration=30d` indicates that data should be kept for 30 days. Note that data will not actually be moved out of hot storage unless the `Cold-Location` parameter is specified or `Delete-Cold-Data` is set to true.
+
+**Cold-Location**
+Default Value:
+Example:		`Cold-Location=/opt/gravwell/cold_storage/foo`
+Description:	This parameter sets the storage location for cold data, data which has been moved out of the hot store specified by `Location`.
+
+**Cold-Duration**
+Default Value:
+Example:		`Cold-Duration=365d`
+Description:	This parameter determines how long data remains in the "cold" storage location. Data will not actually be moved out of cold storage unless `Delete-Frozen-Data` is set to true.
+
+**Max-Hot-Storage-GB**
+Default Value:
+Example:		`Max-Hot-Storage-GB=100`
+Description:	This parameter sets a maximum disk consumption for a given well's hot storage, in gigabytes. If this number is exceeded, the oldest data will be migrated to cold storage (if possible), sent to cloud storage (if configured), or deleted (if allowed).
+
+**Max-Cold-Storage-GB**
+Default Value:
+Example:		`Max-Cold-Storage-GB=100`
+Description:	This parameter sets a maximum disk consumption for a given well's cold storage, in gigabytes. If this number is exceeded, the oldest data will be sent to cloud storage (if configured) and deleted (if allowed).
+
+**Hot-Storage-Reserve**
+Default Value:
+Example:		`Hot-Storage-Reserve=10`
+Description:	This parameter tells the well that it must leave at least a particular percentage free on the disk. Thus, if `Hot-Storage-Reserve=10` is set, the well will attempt to age-out data from hot storage when the disk reaches 90% utilization.
+
+**Cold-Storage-Reserve**
+Default Value:
+Example:		`Cold-Storage-Reserve=10`
+Description:	This parameter tells the well that it must leave at least a particular percentage free on the disk. Thus, if `Cold-Storage-Reserve=10` is set, the well will attempt to age-out data from cold storage when the disk reaches 90% utilization.
+
+**Delete-Cold-Data**
+Default Value:	false
+Example:		`Delete-Cold-Data=true`
+Description:	Setting this parameter true means that data can be deleted from the hot storage location when one of the ageout criteria has been met.
+
+**Delete-Frozen-Data**
+Default Value:	false
+Example:		`Delete-Frozen-Data=true`
+Description:	Setting this parameter true means that data can be deleted from the cold storage location when one of the ageout criteria has been met.
+
+**Archive-Deleted-Shards**
+Default Value:	false
+Example:		`Archive-Deleted-Shards=true`
+Description:	If this option is set, the well will attempt to upload shards to an external archive server before deleting them. Note that this will only work if the `[Cloud-Archive]` section is configured!
+
+**Disable-Compression, Disable-Hot-Compression, Disable-Cold-Compression**
+Default Value:	false
+Example:		`Disable-Compression=true`
+Description:	These parameters control user-mode compression of data in the wells. By default, Gravwell will compress data in the well. Setting `Disable-Hot-Compression` or `Disable-Cold-Compression` will disable it for the hot or cold storage, respectively; setting `Disable-Compression` disables it for both.
+
+**Enable-Transparent-Compression, Enable-Hot-Transparent-Compression, Enable-Cold-Transparent-Compression**
+Default Value:	false
+Example:		`Enable-Transparent-Compression=true`
+Description:	These parameters control kernel-level, transparent compression of data in the wells. If enabled, Gravwell can instruct the `btrfs` filesystem to transparently compress data. This is more efficient than user-mode compression. Setting `Enable-Transparent-Compression` true automatically turns off user-mode compression. Note that setting `Disable-Compression=true` will **disable** transparent compression.
+
+**Ageout-Time-Override**
+Default Value:
+Example:		`Ageout-Time-Override="3:00AM"`
+Description:	This parameter allows you to specify a particular time at which the ageout routine should run. This is typically not needed.
+
+### Acceleration Options
+
+**Accelerator-Name**
+Default Value:	
+Example:		`Accelerator-Name=json`
+Description:	Setting the `Accelerator-Name` parameter (and the `Accelerator-Args` parameter) enables acceleration on the well. See [the acceleration documentation](#!configuration/accelerators.md) for more information.
+
+**Accelerator-Args**
+Default Value:	
+Example:		`Accelerator-Args="username hostname \"strange-field.with.specials\".subfield"`
+Description:	Setting the `Accelerator-Args` parameter (and the `Accelerator-Name` parameter) enables acceleration on the well. See [the acceleration documentation](#!configuration/accelerators.md) for more information.
+
+**Accelerate-On-Source**
+Default Value:	false
+Example:		`Accelerate-On-Source=true`
+Description:	Specifies that the SRC field of each module should be included. This allows combining a module like CEF with SRC.
+
+**Accelerator-Engine-Override**
+Default Value:	"index"
+Example:		`Accelerator-Engine-Override=bloom`
+Description:	Selects the acceleration engine to be used. By default, the indexing accelerator will be used. Setting this parameter to "bloom" will instead select the bloom filter.
+
+**Collision-Rate**
+Default Value:	0.001
+Example:		`Collision-Rate=0.01`
+Description:	Sets the accuracy of the bloom filter acceleration engine. Must be a value between 0.1 and 0.000001.
+
+### General Options
+
+**Disable-Replication**
+Default Value:	false
+Example:		`Disable-Replication=true`
+Description:	If set, the contents of this well will not be replicated.
+
+**Enable-Quarantine-Corrupted-Shards**
+Default Value:	false
+Example:		`Enable-Quarantine-Corrupted-Shards=true`
+Description:	If set, corrupted shards which cannot be recovered will be copied to a quarantine location for later analysis. By default, badly corrupted shards may be deleted.
+
+## Replication Configuration
+
+The `[Replication]` section configures [Gravwell's replication capability](#!configuration/replication.md). An example configuration might look like this:
+
+```
+[Replication]
+	Disable-Server=true
+	Peer=10.0.01
+	Storage-Location=/opt/gravwell/replication_storage
+```
+
+The replication configuration block only applies to indexers.
+
+**Peer**
+Default Value:
+Example:		`Peer=10.0.0.1:9406`
+Description:	The `Peer` parameter specifies a replication peer. It takes an IP or hostname, with an optional port at the end. If no port is specified, the default port (9406) is used. `Peer` may be specified multiple times.
+
+**Listen-Address**
+Default Value:	":9406"
+Example:		`Listen-Address=192.168.1.1:9406`
+Description:	This parameter defines the IP and port on which Gravwell should listen for *incoming* replication connections. By default, it listens on all interfaces on port 9406.
+
+**Storage-Location**
+Default Value:	
+Example:		`Storage-Location=/opt/gravwell/replication`
+Description:	Sets the storage location for data replicated from other Gravwell indexers.
+
+**Max-Replicated-Data-GB**
+Default Value:
+Example:		`Max-Replicated-Data-GB=100`
+Description:	Sets, in gigabytes, the maximum amount of replicated data to store. When this is exceeded, the indexer will begin walking the replicated data to clean up; it will first remove any shards which have been deleted on the original indexer, then it will begin deleting the oldest shards. Once the storage size is below the limit, deletion will stop.
+
+**Replication-Secret-Override**
+Default Value:
+Example:		`Replication-Secret-Override=MyReplicationSecret`
+Description:	By default, Gravwell uses the `Control-Auth` token to authenticate for replication. Setting this parameter will instead define a custom replication authentication token.
+
+**Disable-TLS**
+Default Value:	false
+Example:		`Disable-TLS=true`
+Description:	Setting this parameter to true will disable TLS for replication. The indexer will listen for unencrypted incoming connections, and will use unencrypted connections to communicate with peers.
+
+**Key-File**
+Default Value: (value of `Key-File` in `[Global]` section)
+Example:		`Key-File=/opt/gravwell/etc/replication-key.pem`
+Description:	This parameter allows you to use a separate key for TLS connections, rather than the globally-defined one.
+
+**Certificate-File**
+Default Value: (value of `Certificate-File` in `[Global]` section)
+Example:		`Certificate-File=/opt/gravwell/etc/replication-cert.pem`
+Description:	This parameter allows you to use a separate certificate for TLS connections, rather than the globally-defined one.
+
+**Insecure-Skip-TLS-Verify**
+Default Value:	false
+Example:		`Insecure-Skip-TLS-Verify=false`
+Description:	Setting this parameter to true will disable validation of TLS certificates when connecting to replication peers.
+
+**Connect-Wait-Timeout**
+Default Value:	30
+Example:		`Connect-Wait-Timeout=60`
+Description:	Configures the timeout, in seconds, to be used when connecting to replication peers.
+
+**Disable-Server**
+Default Value:	false
+Example:		`Disable-Server=true`
+Description:	Disables the replication *server* functionality. If set, the indexer will push its own data out to replication peers, but will not allow any other indexers to push to it.
+
+**Disable-Compression**
+Default Value:	false
+Example:		`Disable-Compression=true`
+Description:	Controls compression of replicated data. By default, replicated data is compressed on disk.
+
+**Enable-Transparent-Compression**
+Default Value:	false
+Example:		`Enable-Transparent-Compression=true`
+Description:	If this parameter is set to true, Gravwell will attempt to use btrfs transparent compression on the replicated data. Setting `Disable-Compression=true` will disable this!
+
+## Single Sign-On Configuration
+
+The `[SSO]` configuration section controls single sign-on options for the Gravwell webserver. A sample section could be as simple as this:
+
+```
+[SSO]
+	Gravwell-Server-URL=https://10.10.254.1:8080
+	Provider-Metadata-URL=https://sso.gravwell.io/FederationMetadata/2007-06/FederationMetadata.xml
+```
+
+But it will more frequently require additional configuration:
+
+```
+[SSO]
+	Gravwell-Server-URL=https://10.10.254.1:8080
+	Provider-Metadata-URL=https://sso.gravwell.io/FederationMetadata/2007-06/FederationMetadata.xml
+	Groups-Attribute=http://schemas.xmlsoap.org/claims/Group
+	Group-Mapping=Gravwell:gravwell-users
+	Group-Mapping=TestGroup:testgroup
+	Username-Attribute = "uid"
+	Common-Name-Attribute = "cn"
+	Given-Name-Attribute  = "givenName"
+	Surname-Attribute = "sn"
+	Email-Attribute = "mail"
+```
+
+Refer to the [SSO configuration documentation](sso.md) for more information.
+
+**Gravwell-Server-URL**
+Default Value:
+Example:		`Gravwell-Server-URL=https://gravwell.example.org/`
+Description:	Specifies the URL to which users will be redirected once the SSO server has authenticated them. This should be the user-facing hostname or IP address of your Gravwell server. This parameter is required.
+
+**Provider-Metadata-URL**
+Default Value:
+Example:		 `Provider-Metadata-URL=https://sso.example.org/FederationMetadata/2007-06/FederationMetadata.xml`
+Description:	Specifies the URL of the SSO server's XML metadata. The path shown above (`/FederationMetadata/2007-06/FederationMetadata.xml`) should work for AD FS servers, but may need to be adjusted for other SSO providers. This parameter is required.
+
+**Insecure-Skip-TLS-Verify**
+Default Value:	false
+Example:		`Insecure-Skip-TLS-Verify=true`
+Description:	If set to true, this parameter instructs Gravwell to ignore invalid TLS certificates when communicating with the SSO server. Set this option with care!
+
+**Username-Attribute**
+Default Value:	"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn"
+Example: 		`Username-Attribute = "uid"`
+Description:	Defines the SAML attribute which will contain the username. On a Shibboleth server this should be set to "uid" instead.
+
+**Common-Name-Attribute**
+Default Value: "http://schemas.xmlsoap.org/claims/CommonName"
+Example:		`Common-Name-Attribute="cn"`
+Description:	Defines the SAML attribute which will contain the user's "common name". On a Shibboleth server this should be set to "cn" instead.
+
+**Given-Name-Attribute**
+Default Value:	"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"
+Example:		`Given-Name-Attribute="givenName"`
+Description:	Defines the SAML attribute which will contain the user's given name. On a Shibboleth server this should be set to "givenName" instead.
+
+**Surname-Attribute**
+Default Value:	"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"
+Example:		`Surname-Attribute=sn`
+Description:	Defines the SAML attribute which will contain the user's surname. On a Shibboleth server this should be set to "sn" instead.
+
+**Email-Attribute**
+Default Value:	"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+Example:		`Email-Attribute="mail"`
+Description:	Defines the SAML attribute which will contain the user's email address. On a Shibboleth server this should be set to "mail" instead.
+
+**Groups-Attribute**
+Default Value:	"http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"
+Example:		`Groups-Attribute="groups"`
+Description:	Defines the SAML attribute which contain's the list of groups to which the user belongs. You will typically have to explicitly configure the SSO provider to send the group list.
+
+**Group-Mapping**
+Default Value:	
+Example:		`Group-Mapping=Gravwell:gravwell-users`
+Description:	Defines one of the groups which may be automatically created if listed in the user's group memberships. This may be specified multiple times to allow multiple groups. The argument should consist of two names separated by a colon; the first is the SSO server-side name for the group (typically a name for AD FS, a UUID for Azure, etc.) and the second is the name Gravwell should use. Thus, if we define `Group-Mapping=Gravwell Users:gravwell-users`, if we receive a login token for a user who is a member of the group "Gravwell Users", we will create a local group named "gravwell-users" and add the user to it.
+
+## Cloud Archive Configuration
+
+Gravwell can be configured to archive data shards to a remote Cloud Archive server before deleting them, via the `Archive-Deleted-Shards` parameter on individual wells. The `[Cloud-Archive]` configuration section defines information about the Cloud Archive server to enable this.
+
+```
+[Cloud-Archive]
+	Archive-Server=10.0.0.2:443
+	Archive-Shared-Secret=MyArchiveSecret
+```
+
+Cloud archive configurations only apply to indexers.
+
+**Archive-Server**
+Default Value:
+Example:		`Archive-Server=cloudarchive.example.org:443`
+Description:	This parameter specifies an IP/hostname and optionally a port for the Cloud Archive server. If no port is specified, default (443) is used.
+
+**Archive-Shared-Secret**
+Default Value:
+Example:		`Archive-Shared-Secret=MyArchiveSecret`
+Description:	Sets the shared secret to use when authenticating to the Cloud Archive server. The indexer will use the license's customer ID number as the other half of the authentication process.
+
+**Insecure-Skip-TLS-Verify**
+Default Value:	false
+Example:		`Insecure-Skip-TLS-Verify=true`
+Description:	If set to true, the indexer will not verify the Cloud Archive server's TLS certificate when connecting.
