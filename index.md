@@ -126,4 +126,6 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Gravwell EULA](eula.md)
 
+  * [Open-source licenses](open_source.md)
+
 Documentation version 2.0
