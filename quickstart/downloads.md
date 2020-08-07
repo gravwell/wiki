@@ -6,7 +6,7 @@ Attention: The debian repository is more easily maintained than these standalone
 
 The Gravwell core installer contains the indexer and webserver frontend. You'll need a license; either get a Community Edition free license, or contact info@gravwell.io for commercial options.
 
-[Download Gravwell Core Installer](https://update.gravwell.io/files/gravwell_4.0.0.sh) (SHA256: 0a1a4dd9da16861b9a4888131519c408eeeb7ec02b06ef0e8e5f389f45748e7e)
+[Download Gravwell Core Installer](https://update.gravwell.io/files/gravwell_4.0.0.sh) (SHA256: 051d53b35bc5e5348fbfd5ef60bb575ab8ed23f331917366f859e0a8bf776e57)
 
 ## Ingesters
 
