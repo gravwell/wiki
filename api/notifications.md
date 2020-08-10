@@ -38,7 +38,9 @@ All notifications are ephemeral.  If the webserver/frontend reboots, they are lo
 All notifications have an ID, and each ID monotonically increases and is always represented as a base-10 uint64.
 
 The basic REST APIs URLs are:
+
 ```
+/api/notifications
 /api/notifications/all/{id:[0-9]+}
 /api/notifications/{id:[0-9]+}
 /api/notifications/broadcast
@@ -94,7 +96,7 @@ Non-admin users can create notifications with a POST to `/api/notifications/targ
 
 ## Getting notifications
 
-Users can get all their notifications with a GET request to `/api/notifications/`.  To get all notifications which were created after a specific notification ID, issue a GET on /api/notifications/{id}.  For example if have previously seen notifications 0 through 10, you can make a request for /api/notifications/10 and you will only get NEW notifications that the user has access to.
+Users can get all their notifications with a GET request to `/api/notifications`.  To get all notifications which were created after a specific notification ID, issue a GET on /api/notifications/{id}.  For example if have previously seen notifications 0 through 10, you can make a request for /api/notifications/10 and you will only get NEW notifications that the user has access to.
 
 ### Fetching All Notifications (Admin-only)
 
