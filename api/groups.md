@@ -92,7 +92,7 @@ Administrators or members of a particular group may get information about a part
 
 ## Listing users in a group
 
-Administrators or members of a particular group may query the list of users in that group by sending a GET request to `/api/groups/{gid}/members`. The response will be an array of user details structures:
+Administrators or members of a particular group may query the list of users in that group by issuing a GET request to `/api/groups/{gid}/members`. The response will be an array of user details structures:
 
 ```
 [

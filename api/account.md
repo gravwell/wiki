@@ -188,7 +188,7 @@ Any field that is NOT populated will be ignored.  The backend will respond with 
 
 ## Changing a users password
 
-To change a password, sent a PUT to the url `/api/users/{id}/pwd`.
+To change a password, issue a PUT to the url `/api/users/{id}/pwd`.
 
 ```
 {
@@ -220,7 +220,7 @@ Example JSON on success:
 
 ## Get user sessions
 
-A user may get a list of his or her own sessions by issuing a GET request to `/api/users/{id}/sessions`. An admin may issue the request for any UID. The response will be a list of session objects, as shown below:
+A user may get a list of his or her own sessions by issuing a GET request to `/api/users/{id}/sessions`. An admin may issue the request for any UID. The response will be an array of session objects, as shown below:
 
 ```
 {
@@ -239,7 +239,7 @@ A user may get a list of his or her own sessions by issuing a GET request to `/a
 
 ## Set default search group
 
-Each user can set a default search group. If set, all queries run by the user will be shared with that group by default. To set the default search group, do a PUT request to `/api/users/{id}/searchgroup`, with the desired group specified in the request body as shown below:
+Each user can set a default search group. If set, all queries run by the user will be shared with that group by default. To set the default search group, issue a PUT request to `/api/users/{id}/searchgroup`, with the desired group specified in the request body as shown below:
 
 ```
 {
@@ -249,7 +249,7 @@ Each user can set a default search group. If set, all queries run by the user wi
 
 ## Get default search group
 
-Each user can set a default search group. If set, all queries run by the user will be shared with that group by default. To fetch the user's search group, do a GET request to `/api/users/{id}/searchgroup`. The server's response will contain an integer GID, e.g. `3`.
+Each user can set a default search group. If set, all queries run by the user will be shared with that group by default. To fetch the user's search group, issue a GET request to `/api/users/{id}/searchgroup`. The server's response will contain an integer GID, e.g. `3`.
 
 ## User preferences
 
@@ -261,15 +261,15 @@ To set the user's preferences, issue a PUT request to `/api/users/{id}/preferenc
 
 ### Get user preferences
 
-To fetch the user's preferences, do a GET request on `/api/users/{id}/preferences`. The body of the response will contain any previously-set preferences.
+To fetch the user's preferences, issue a GET request on `/api/users/{id}/preferences`. The body of the response will contain any previously-set preferences.
 
 ### Clear user preferences
 
-To clear out anything in the user's preferences, do a DELETE on `/api/users/{id}/preferences`.
+To clear out anything in the user's preferences, issue a DELETE on `/api/users/{id}/preferences`.
 
 ### Admin only: Fetch all user preferences
 
-The administrator can do a GET request on `/api/users/preferences` to get a complete listing of all users' preferences. The response will include both user preferences (with Name == "prefs") and user *email* configurations (Name == "emailSettings"). The interface to set and modify email settings is described elsewhere:
+The administrator can issue a GET request on `/api/users/preferences` to get a complete listing of all users' preferences. The response will include both user preferences (with Name == "prefs") and user *email* configurations (Name == "emailSettings"). The interface to set and modify email settings is described elsewhere:
 
 ```
 [
@@ -306,7 +306,7 @@ To remove a user from a specific group, an admin can send a DELETE request to `/
 
 ## Get user groups
 
-To get a list of groups to which a user belongs, the user (or an admin) should send a GET request to `/api/users/{id}/group`. The response will be an array of group details structures, as below:
+To get a list of groups to which a user belongs, the user (or an admin) should issue a GET request to `/api/users/{id}/group`. The response will be an array of group details structures, as below:
 
 ```
 [
