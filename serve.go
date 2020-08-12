@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"sort"
 	"strings"
 	"sync"
 	"syscall"
@@ -43,7 +44,7 @@ type server struct {
 	http.Server
 	blink string //the base link anchor
 	dir   string
-	links map[string][]string
+	links map[string][]ref
 }
 
 func main() {
@@ -67,7 +68,7 @@ func main() {
 		},
 		dir:   *sdir,
 		blink: *blink,
-		links: map[string][]string{}, //just to prevent nil-pointer errors
+		links: map[string][]ref{}, //just to prevent nil-pointer errors
 
 	}
 	mx := http.NewServeMux()
@@ -119,7 +120,7 @@ func noCacheLoggingHandler(h http.Handler) http.Handler {
 
 func (s *server) reloadIndex() (err error) {
 
-	links := make(map[string][]string)
+	links := make(map[string][]ref)
 
 	//walk the directory
 	err = filepath.Walk(s.dir, func(path string, info os.FileInfo, err error) error {
@@ -148,7 +149,7 @@ func (s *server) reloadIndex() (err error) {
 }
 
 // renderMarkdownFile reads the entire file into memory, so caller should do some sanity checking
-func (s *server) renderMarkdownFile(pth, relpath string, links map[string][]string) (err error) {
+func (s *server) renderMarkdownFile(pth, relpath string, links map[string][]ref) (err error) {
 	var md []byte
 	if md, err = ioutil.ReadFile(pth); err != nil {
 		return
@@ -199,7 +200,7 @@ type search struct {
 }
 
 type response struct {
-	Links []string `json:"links"`
+	Links []ref `json:"links"`
 }
 
 type respError struct {
@@ -221,7 +222,7 @@ func (s *server) search(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(rerr)
 		return
 	}
-	terms, err := s.searchTerms(req.Value)
+	terms, err := s.searchTerms(strings.ToLower(req.Value))
 	if err != nil {
 		rerr := respError{
 			Error: err.Error(),
@@ -235,7 +236,7 @@ func (s *server) search(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(rerr)
 		return
 	}
-	var linkset [][]string
+	var linkset [][]ref
 	s.Lock()
 	for _, term := range terms {
 		if v, ok := s.links[term]; ok {
@@ -244,6 +245,7 @@ func (s *server) search(w http.ResponseWriter, r *http.Request) {
 	}
 	s.Unlock()
 	resp.Links = union(linkset)
+	sortLinks(resp.Links)
 	json.NewEncoder(w).Encode(resp)
 
 	return
@@ -254,7 +256,7 @@ var empty es
 type es struct{}
 
 // this is a CRAZY expensive method for creating a union, something better?
-func union(sls [][]string) []string {
+func union(sls [][]ref) []ref {
 	if len(sls) == 0 {
 		return nil
 	} else if len(sls) == 1 {
@@ -263,31 +265,66 @@ func union(sls [][]string) []string {
 	v := sls[0]
 	sls = sls[1:]
 
-	mp := make(map[string]es, len(v))
+	mp := make(map[ref]es, len(v))
 	for i := range v {
 		mp[v[i]] = empty
 	}
 
 	for _, sl := range sls {
 		for k := range mp {
-			if !inStringList(k, sl) {
+			if !inRefList(k, sl) {
 				delete(mp, k)
 			}
 		}
 	}
 
-	r := make([]string, 0, len(mp))
+	r := make([]ref, 0, len(mp))
 	for k := range mp {
 		r = append(r, k)
 	}
 	return r
 }
 
+type ref struct {
+	page     string
+	pageName string
+	heading  string
+	ref      string
+}
+
+func (r ref) link() string {
+	if r.ref != "" {
+		return r.page + "#" + r.ref
+	}
+	return r.page
+
+}
+
+func (r ref) MarshalJSON() (bts []byte, err error) {
+	x := struct {
+		Page    string
+		Heading string
+		Link    string
+	}{
+		Page:    r.pageName,
+		Heading: r.heading,
+		Link:    r.link(),
+	}
+	bts, err = json.Marshal(x)
+	return
+}
+
+func (r ref) depth() int {
+	return strings.Count(r.page, `/`)
+}
+
 type cracker struct {
-	debug bool
-	links map[string][]string
-	pth   string
-	pref  string
+	debug   bool
+	links   map[string][]ref
+	pth     string
+	page    string
+	heading string
+	pref    string
 }
 
 // extractLinks will walk a markdown document and attempt to resolve items from it to insert links
@@ -295,11 +332,14 @@ func (c *cracker) extractLinks(root ast.Node) (err error) {
 	return c.walkNode(root, "")
 }
 
-func (c *cracker) link() string {
-	if c.pref != "" {
-		return c.pth + "#" + c.pref
+func (c *cracker) ref() (r ref) {
+	r = ref{
+		page:     c.pth,
+		pageName: c.page,
+		heading:  c.heading,
+		ref:      c.pref,
 	}
-	return c.pth
+	return
 }
 
 func (c *cracker) walkNode(n ast.Node, indent string) error {
@@ -307,14 +347,19 @@ func (c *cracker) walkNode(n ast.Node, indent string) error {
 		if indent == "" {
 			fmt.Printf("%s\n", c.pth)
 		} else {
-			fmt.Printf("%s %s [%s]\n", indent, val(n), c.link())
+			fmt.Printf("%s %s [%s]\n", indent, val(n), c.ref())
 		}
 	}
 	if v, ok := n.(*ast.Heading); ok {
 		if v != nil && len(v.Children) == 1 {
 			if t, ok := v.Children[0].(*ast.Text); ok && t.Literal != nil {
 				//this is a heading, so update our paragraph reference
-				c.pref = getHeadingAnchor(t.Literal)
+				if c.page == `` {
+					c.page = string(t.Literal)
+				} else {
+					c.heading = string(t.Literal)
+					c.pref = getHeadingAnchor(t.Literal)
+				}
 				return c.processNode(t)
 			}
 		}
@@ -356,7 +401,7 @@ func (c *cracker) processNode(n ast.Node) error {
 	if len(bts) == 0 {
 		return nil
 	}
-	return c.processString(string(bts))
+	return c.processString(strings.ToLower(string(bts)))
 }
 
 func (c *cracker) processString(bts string) error {
@@ -369,7 +414,7 @@ func (c *cracker) processString(bts string) error {
 				//process the sub strings
 				return c.processString(txt)
 			}
-			c.addLink(txt)
+			c.addRef(txt)
 		}
 	}
 	if err := scanner.Err(); err != nil {
@@ -380,18 +425,18 @@ func (c *cracker) processString(bts string) error {
 	return nil
 }
 
-func (c *cracker) addLink(txt string) {
+func (c *cracker) addRef(txt string) {
 	if len(txt) == 0 {
 		return
 	}
-	lnk := c.link()
+	lnk := c.ref()
 	if v, ok := c.links[txt]; ok {
-		if !inStringList(lnk, v) {
-			v = append(v, c.link())
+		if !inRefList(lnk, v) {
+			v = append(v, c.ref())
 			c.links[txt] = v
 		}
 	} else {
-		c.links[txt] = []string{lnk}
+		c.links[txt] = []ref{lnk}
 	}
 	if c.debug {
 		fmt.Printf("%q -> %s\n", txt, lnk)
@@ -491,4 +536,45 @@ func inStringList(v string, sl []string) bool {
 		}
 	}
 	return false
+}
+
+func inRefList(v ref, sl []ref) bool {
+	for i := range sl {
+		if sl[i] == v {
+			return true
+		}
+	}
+	return false
+}
+
+// sortLinks sorts a set of reference links by the following structure
+// whether this is a search module
+// most shallow (e.g. you aren't deep into the system"
+// page
+// href
+func sortLinks(r []ref) {
+	sort.SliceStable(r, func(i, j int) bool {
+		isr := isSearchRef(r[i].page)
+		jsr := isSearchRef(r[j].page)
+		if isr != jsr {
+			return isr
+		}
+		id := r[i].depth()
+		jd := r[j].depth()
+		if id < jd {
+			return true //less
+		} else if jd < id {
+			return false //greater
+		}
+		//same depth, check the page
+		if r[i].pageName == r[j].pageName {
+			return r[i].ref < r[j].ref
+		}
+
+		return r[i].pageName < r[j].pageName
+	})
+}
+
+func isSearchRef(pg string) bool {
+	return strings.Contains(pg, `search/`)
 }
