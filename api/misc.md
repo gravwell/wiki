@@ -2,6 +2,31 @@
 
 Some APIs don't fit nicely into the main categories. They are listed here.
 
+## Connectivity test
+
+This API is for validating that the backend is responding to HTTP requests. A GET on `/api/test` should return a 200 status with no body content. No authentication required.
+
+## Version API
+
+Perform a GET on `/api/version` to get version info.  No authentication required.
+
+```
+{
+    "API": {
+        "Major": 0,
+        "Minor": 1
+    },
+    "Build": {
+        "BuildDate": "2020-05-04T00:00:00Z",
+        "BuildID": "6c48dd4c",
+        "GUIBuildID": "b5c8cd58",
+        "Major": 4,
+        "Minor": 0,
+        "Point": 0
+    }
+}
+```
+
 ## Tag List
 
 The webserver maintains a list of all tags known to the indexers. This list can be fetched with a GET request on `/api/tags`. This will return a list of tags:

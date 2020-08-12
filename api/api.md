@@ -8,7 +8,8 @@ The bulk of the API is RESTful. The exception to this rule is the searching API 
 
 * [Login](login.md)
 * [User Preferences](userprefs.md)
-* [Account controls](account.md)
+* [User account controls](account.md)
+* [User group controls](groups.md)
 * [Notifications](notifications.md)
 * [Search Controls](searchctrl.md)
 * [Downloading Search Results](download.md)
@@ -32,8 +33,6 @@ There are a variety of "things" which users may create and modify. Their APIs ar
 * [Search Library](searchlibrary.md)
 * [Templates and Pivots](templates.md)
 * [User Files](userfiles.md)
-
-
 
 ## Searching and Search Stats
 
