@@ -34,7 +34,7 @@ var (
 	lp     = flag.Uint("listen-port", 3001, "listening port")
 	la     = flag.String("listen-address", "", "listening address")
 	sdir   = flag.String("host-dir", ".", "Root directory for files")
-	blink  = flag.String("base-link", "/#!", "Base value to return for all links")
+	blink  = flag.String("base-link", "#!", "Base value to return for all links")
 	fdebug = flag.Bool("debug", false, "Output a ton of info while running")
 )
 
