@@ -43,7 +43,7 @@ const search = function(form) {
     const kwd = addSearchKeyword();
     console.log(kwd)
     if (!kwd || kwd.length === 0) {
-        populate([], kwd);
+        populate([]);
         return;
     }
 
