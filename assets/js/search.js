@@ -80,3 +80,14 @@ const fillSearch = function(kwd) {
     }
 
 }
+
+$(document).ready(function() {
+    $.ajax({
+        url: '/api/search',
+        type: 'HEAD',
+        success: function() {
+            const field = document.querySelector('#search-field');
+            field.style.display = null;
+        },
+    });
+});
