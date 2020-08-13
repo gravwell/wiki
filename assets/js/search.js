@@ -72,14 +72,17 @@ const addSearchKeyword = function() {
     return kwd;
 }
 
+const getSearchField = function() {
+    return document.querySelector('#search-field');;
+}
+
 const fillSearch = function(kwd) {
-    const field = document.querySelector('#search-field');
+    const field = getSearchField();
     if (field) {
         field.value = kwd;
     } else {
         setTimeout(() => fillSearch(kwd), 100)
     }
-
 }
 
 $(document).ready(function() {
@@ -87,7 +90,7 @@ $(document).ready(function() {
         url: '/api/search',
         type: 'HEAD',
         success: function() {
-            const field = document.querySelector('#search-field');
+            const field = getSearchField();
             field.style.display = null;
         },
     });
