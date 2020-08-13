@@ -37,7 +37,7 @@ The webserver maintains a list of all tags known to the indexers. This list can 
 
 ## Search Module List
 
-To get a list of all available search modules and some info about each one, do a GET on `/api/info/searchmodules/`. This will return a list of module info structures:
+To get a list of all available search modules and some info about each one, do a GET on `/api/info/searchmodules`. This will return a list of module info structures:
 
 ```
 [
@@ -93,7 +93,7 @@ To get a list of all available search modules and some info about each one, do a
 
 ## Render Module List
 
-To get a list of all available render modules and some info about each one, do a GET on `/api/info/rendermodules/`. This will return a list of module info structures:
+To get a list of all available render modules and some info about each one, do a GET on `/api/info/rendermodules`. This will return a list of module info structures:
 
 ```
 [
