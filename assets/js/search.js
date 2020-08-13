@@ -46,7 +46,7 @@ const search = function(form) {
         return;
     }
 
-    const url = '/api/search';
+    const url = 'api/search';
     $.ajax({
         url: url,
         type: 'POST',
@@ -87,7 +87,7 @@ const fillSearch = function(kwd) {
 
 $(document).ready(function() {
     $.ajax({
-        url: '/api/search',
+        url: 'api/search',
         type: 'HEAD',
         success: function() {
             const field = getSearchField();
