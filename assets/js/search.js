@@ -1,11 +1,14 @@
+const SESS_Q = 'q';
+
 const goToSearch = function(form) {
-    const kwd = form.querySelector('input[type="search"]').value;
     console.log('go')
+    const kwd = form.querySelector('input[type="search"]').value;
     window.location.href = '/?#!search-results.md?q=' + encodeURI(kwd);
+    window.sessionStorage.setItem(SESS_Q, kwd);
 }
 
 
-const populate = function (links, kwd) {
+const populate = function (links) {
     const container = document.querySelector('#search-results');
     if (!Array.isArray(links))  {
         links = [];
@@ -26,7 +29,7 @@ const populate = function (links, kwd) {
         if (!l.Heading || l.Heading.trim().length === 0) {
             l.Heading = l.Page;
         }
-        html += `<p><a href="${l.Link}?q=${kwd}">
+        html += `<p><a href="${l.Link}">
            ${l.Heading}
             </a></p>`
         previousPage = l.Page;
@@ -51,9 +54,9 @@ const search = function(form) {
         data: JSON.stringify({value: kwd}),
         success: function(resp) {
             if (resp && Array.isArray(resp.links)) {
-                populate(resp.links, kwd);
+                populate(resp.links);
             } else {
-                populate([], kwd);
+                populate([]);
             }
         },
         dataType: 'json',
@@ -62,10 +65,9 @@ const search = function(form) {
 }
 
 const addSearchKeyword = function() {
-    const split = window.location.href.split('?q=');
-    let kwd = '';
-    if (split.length === 2) {
-        kwd = decodeURIComponent(split[1]).trim();
+    let kwd = window.sessionStorage.getItem(SESS_Q);
+    if (kwd) {
+        kwd = kwd.trim();
     }
     fillSearch(kwd);
     return kwd;
@@ -79,6 +81,10 @@ const fillSearch = function(kwd) {
         setTimeout(() => fillSearch(kwd), 100)
     }
 
+}
+
+window.onbeforeunload = () => {
+    window.sessionStorage.removeItem(SESS_Q);
 }
 
 $(document).ready(function() {
