@@ -73,7 +73,7 @@ const addSearchKeyword = function() {
 }
 
 const getSearchField = function() {
-    return document.querySelector('#search-field');;
+    return document.querySelector('#search-field');
 }
 
 const fillSearch = function(kwd) {
