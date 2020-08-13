@@ -2,7 +2,7 @@ const SESS_Q = 'q';
 
 const goToSearch = function(form) {
     const kwd = form.querySelector('input[type="search"]').value;
-    window.location.href = '/?#!search-results.md?q=' + encodeURI(kwd);
+    window.location.href = '#!search-results.md?q=' + encodeURI(kwd);
     window.sessionStorage.setItem(SESS_Q, kwd);
 }
 
