@@ -1,7 +1,6 @@
 const SESS_Q = 'q';
 
 const goToSearch = function(form) {
-    console.log('go')
     const kwd = form.querySelector('input[type="search"]').value;
     window.location.href = '/?#!search-results.md?q=' + encodeURI(kwd);
     window.sessionStorage.setItem(SESS_Q, kwd);
@@ -42,7 +41,8 @@ const populate = function (links) {
 
 const search = function(form) {
     const kwd = addSearchKeyword();
-    if (kwd.length === 0) {
+    console.log(kwd)
+    if (!kwd || kwd.length === 0) {
         populate([], kwd);
         return;
     }
@@ -81,10 +81,6 @@ const fillSearch = function(kwd) {
         setTimeout(() => fillSearch(kwd), 100)
     }
 
-}
-
-window.onbeforeunload = () => {
-    window.sessionStorage.removeItem(SESS_Q);
 }
 
 $(document).ready(function() {
