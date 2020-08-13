@@ -207,6 +207,20 @@ type response struct {
 	Links []ref `json:"links"`
 }
 
+func (r response) MarshalJSON() (bts []byte, err error) {
+	if len(r.Links) == 0 {
+		bts = []byte(`{"links":[]}`)
+	} else {
+		mr := struct {
+			Links []ref `json:"links"`
+		}{
+			Links: r.Links,
+		}
+		bts, err = json.Marshal(mr)
+	}
+	return
+}
+
 type respError struct {
 	Error string `jons:"error,omitempt"`
 }
@@ -568,6 +582,13 @@ func inRefList(v ref, sl []ref) bool {
 // href
 func sortLinks(r []ref) {
 	sort.SliceStable(r, func(i, j int) bool {
+		//changelogs are always at the end
+		icl := isChangeLogRef(r[i].page)
+		jcl := isChangeLogRef(r[j].page)
+		if icl != jcl {
+			return !icl
+		}
+		//search modules are always up front
 		isr := isSearchRef(r[i].page)
 		jsr := isSearchRef(r[j].page)
 		if isr != jsr {
@@ -591,4 +612,8 @@ func sortLinks(r []ref) {
 
 func isSearchRef(pg string) bool {
 	return strings.Contains(pg, `search/`)
+}
+
+func isChangeLogRef(pg string) bool {
+	return strings.Contains(pg, `changelog/`)
 }
