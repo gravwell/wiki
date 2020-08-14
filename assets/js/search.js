@@ -91,7 +91,9 @@ $(document).ready(function() {
         type: 'HEAD',
         success: function() {
             const field = getSearchField();
-            field.style.display = null;
+            if (field) {
+                field.style.display = null;
+            }
         },
     });
 });
