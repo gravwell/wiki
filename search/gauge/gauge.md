@@ -85,3 +85,21 @@ tag=json json class | stats mean(class) stddev(class) min(class) max(class) | ga
 The renderer also behaves appropriately in "number card" mode with multiple items:
 
 ![](gauge-multi3.png)
+
+## Keyed Multi-Gauge
+
+If you specify a magnitude which is *keyed*, gauge will output values for each combination of keys. So for instance, one might take weather data from multiple cities and find the average *per city*, then pass the resulting average to gauge:
+
+```
+tag=weather json main.temp name | stats mean(temp) by name | gauge mean
+```
+
+![](keyed1.png)
+
+If you specify a label, it will be used appropriately:
+
+```
+tag=weather json main.temp name | stats mean(temp) by name | gauge (mean "Fahrenheit temp")
+```
+
+![](keyed2.png)
