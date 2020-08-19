@@ -90,6 +90,38 @@ Adding the bytes parameter, e.g. `/api/resources/{guid}/contenttype?bytes=1024` 
 
 To delete a resource, simply issue a DELETE request on `/api/resources/{guid}`, replacing `{guid}` with the appropriate GUID of the resource as usual.
 
+## Cloning a resource
+
+An existing resource may be cloned by issuing a POST request on `/api/resources/{guid}/clone`, replacing `{guid}` with the GUID of the original resource. The body of the request should be a JSON structure containing the name for the newly-created clone:
+
+```
+{
+	"Name": "Copy of Foo"
+}
+```
+
+The server will respond with the metadata for the newly-cloned resource:
+
+```
+{
+  "UID": 1,
+  "GUID": "bbf682f8-363f-4245-8182-d7f6286022ff",
+  "Domain": 0,
+  "LastModified": "2020-08-19T20:31:11.258257937Z",
+  "VersionNumber": 1,
+  "GroupACL": null,
+  "Global": false,
+  "ResourceName": "Copy of Foo",
+  "Description": "foobar",
+  "Size": 207,
+  "Hash": "xfV5dQG4eRe75ULzdb2e2A==",
+  "Synced": false,
+  "Labels": [
+    "blah"
+  ]
+}
+```
+
 ## Admin actions
 
 Admin users may occasionally need to view all resources on the system. An administrator user may obtain a global listing of all resources in the system with a GET request on `/api/resources?admin=true`.
