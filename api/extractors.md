@@ -117,6 +117,12 @@ Autoextractor definitions can be represented in a TOML format. This format is hu
 
 Rather than parsing out this file to populate a JSON structure, this type of definition can be uploaded directly to the webserver via a multipart form sent in a POST request to `/api/autoextractors/upload`. The form should contain a file field named `extraction` which holds the contents of the extractor definition. The server will respond with a 200 response if the definition is valid and was successfully installed.
 
+## Downloading Files
+
+You can download autoextractor definitions in TOML format by issuing a GET request to `/api/autoextractors/download`. For each definition you wish to download, add its UUID as a parameter to the URL; thus if you wish to download two extractors with UUIDs ad782c81-7a60-4d5f-acbf-83f70e68ecb0 and c7389f9b-ba52-4cbe-b883-621d577c6bcc, you would send a GET request to `/api/autoextractors/download?id=ad782c81-7a60-4d5f-acbf-83f70e68ecb0&id=c7389f9b-ba52-4cbe-b883-621d577c6bcc`.
+
+If the current user has access to all the specified extractors, the server will respond with a downloadable file containing the definitions in TOML format. This file can be uploaded to another Gravwell system using the file upload API described above.
+
 ## Deleting
 
 Deleting an existing auto-extractor is performed by issuing a DELETE request to `/api/autoextractors/{uuid}` where `uuid` is the UUID associated with the auto-extractor. If the auto-extractor does not exist or there is an error removing it, the webserver will respond with a non-200 response and error in the response body.
