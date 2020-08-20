@@ -112,11 +112,18 @@ A kit may define "config macros", which are special macros which will be created
 	"Description": "Tag or tags containing Windows event entries",
 	"DefaultValue": "windows",
 	"Value": "",
+	"Type": "TAG"
 }
 ```
 
 The UI should prompt for the desired value of the macro at installation time and include the user's response in the KitConfig structure.
 
+Config macro definitions can include a Type field, which give a hint about the sort of value that the macro expects. The following options are currently defined:
+
+	* "TAG": the value should be a valid tag. This tag does not necessarily have to exist on the current system, but it may be useful to check and alert the user if they enter a non-existent tag.
+	* "STRING": the value can be a free-form string.
+
+If no Type is specified, assume "STRING" (free-form entry).
 
 ## Uploading a Kit
 
@@ -144,6 +151,7 @@ The server will respond with a description of the kit which has been uploaded, e
 				"Description": "Tag or tags containing Windows event entries",
 				"DefaultValue": "windows",
 				"Value": "winlog",
+				"Type": "TAG"
 			}
 		],
 		"Items": [
