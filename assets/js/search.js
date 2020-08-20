@@ -89,10 +89,12 @@ $(document).ready(function() {
     $.ajax({
         url: 'api/search',
         type: 'HEAD',
-        success: function() {
+        success: function showSearchField() {
             const field = getSearchField();
             if (field) {
                 field.style.display = null;
+            } else {
+                setTimeout(showSearchField, 500);
             }
         },
     });
