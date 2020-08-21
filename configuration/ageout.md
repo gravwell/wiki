@@ -38,7 +38,7 @@ Similarly, when data ages out of the cold well ("frozen") it will not be deleted
 
 Examples of these rules can be seen in the configuration snippets in the following sections.
 
-Warning: You *must* specify either `Delete-Cold-Data` (if using only a hot well) or `Delete-Frozen-Data` (if using both hot & cold wells) if you want data to be actually removed from the disk. If you do not include the appropriate deletion parameter in your well config, data will never be deleted and your disk will eventually fill up!
+Warning: You *must* specify either `Delete-Cold-Data` (if using only a hot well) or `Delete-Frozen-Data` (if using both hot & cold wells) if you want data to be actually removed from the disk. These settings require explicit authorization from the user, because our general policy is to never delete anything unless asked. If you do not include the appropriate deletion parameter in your well config, data will never be deleted and your disk will eventually fill up!
 
 ## Time-Based Ageout Rules
 
