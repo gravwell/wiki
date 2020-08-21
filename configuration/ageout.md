@@ -38,6 +38,8 @@ Similarly, when data ages out of the cold well ("frozen") it will not be deleted
 
 Examples of these rules can be seen in the configuration snippets in the following sections.
 
+Warning: You *must* specify either `Delete-Cold-Data` (if using only a hot well) or `Delete-Frozen-Data` (if using both hot & cold wells) if you want data to be actually removed from the disk. If you do not include the appropriate deletion parameter in your well config, data will never be deleted and your disk will eventually fill up!
+
 ## Time-Based Ageout Rules
 
 Time-based ageout manages data based on time retention requirements.  For example, an organization may have requirements that all logs be kept for 90 days.  The time-based ageout constraint is best used on data pools where policy and/or legal requirements dictate log retention times.  Time based ageout durations can be specified in days and weeks using the following case-insensitive abbreviations:
