@@ -15,16 +15,75 @@ The playbook structure contains the following components:
 * `Metadata`: A byte array which stores playbook metadata, for use by the client.
 * `Labels`: An array of strings containing optional labels to apply to the playbook.
 * `LastUpdated`: A timestamp indicating when the playbook was last modified.
-* `Synced`: Used internally by Gravwell
+* `Author`: A structure containing information about the author of the playbook (see below).
+* `Synced`: Used internally by Gravwell.
 
 Note that the UUID and GUID fields may be used interchangeably in all API calls. This is so playbooks included in kits may link to each other, by using links containing GUIDs which will persist across kit installation.
+
+The author information structure contains the following fields, any of which may be left blank:
+
+* `Name`: The author's name.
+* `Email`: The author's email address.
+* `Company`: The author's company.
+* `URL`: A web address for more information about the author.
 
 ## Listing Playbooks
 
 To list playbooks, send a GET request to `/api/playbooks`. The server will respond with an array of playbook structures which the user has permission to view:
 
 ```
-[{"UUID":"0bbff773-9ee2-4874-89a4-bf85a4b800df","GUID":"d57611be-88dd-11ea-a94d-df6bfb56a8a8","UID":1,"GIDs":null,"Global":false,"Name":"foo","Desc":"bar","Body":"","Labels":["test"],"LastUpdated":"2020-02-12T10:13:02.864666484-07:00","Metadata":"asdf","Synced":false}]
+[
+  {
+    "UUID": "2cbc8500-5fc5-453f-b292-8386fe412f5b",
+    "GUID": "c9da126b-1608-4740-a7cd-45495e8341a3",
+    "UID": 1,
+    "GIDs": [
+      0
+    ],
+    "Global": false,
+    "Name": "Netflow V5 Playbook",
+    "Desc": "A top-level playbook for netflow, with background and starting points.",
+    "Body": "",
+    "Metadata": "eyJkYXNoYm9hcmRzIjpbXSwiYXR0YWNobWVudHMiOlt7ImNvbnRleHQiOiJjb3ZlciIsImZpbGVHVUlEIjoiNDhjNmIwZWYtNmU3Ni00MjA4LWJjYTctMGI5NWU0NzAwYmRkIiwidHlwZSI6ImltYWdlIn1dfQ==",
+    "Labels": [
+      "netflow",
+      "netflow-v5",
+      "kit/io.gravwell.netflowv5"
+    ],
+    "LastUpdated": "2020-08-14T16:17:03.778971838-06:00",
+    "Author": {
+      "Name": "John Floren",
+      "Email": "john@example.org",
+      "Company": "Gravwell",
+      "URL": "http://grawell.io"
+    },
+    "Synced": false
+  },
+  {
+    "UUID": "973fcc22-1964-4efa-848c-7196ac67094e",
+    "GUID": "dbd84b95-11b7-450d-9111-9bb33d63741b",
+    "UID": 1,
+    "GIDs": [
+      0
+    ],
+    "Global": false,
+    "Name": "Network Enrichment Kit Overview",
+    "Desc": "",
+    "Body": "",
+    "Metadata": "eyJkYXNoYm9hcmRzIjpbXSwiYXR0YWNobWVudHMiOlt7ImNvbnRleHQiOiJjb3ZlciIsImZpbGVHVUlEIjoiOGIwZjQzMjItOTY1My00OTQyLWJkODctY2Y4ZWM5NjZmNmFmIiwidHlwZSI6ImltYWdlIn1dfQ==",
+    "Labels": [
+      "kit/io.gravwell.networkenrichment"
+    ],
+    "LastUpdated": "2020-08-05T12:14:48.739069332-06:00",
+    "Author": {
+      "Name": "John Floren",
+      "Email": "john@example.org",
+      "Company": "Gravwell",
+      "URL": "http://grawell.io"
+    },
+    "Synced": false
+  }
+]
 ```
 
 Note that the Body parameter is empty; because playbooks can be quite large, the body is left out when listing all playbooks.
@@ -51,6 +110,9 @@ Playbooks are created by sending a POST request to `/api/playbooks`. The body of
     "Desc": "A playbook for monitoring syslog entries for ssh sessions",
     "GIDs": null,
     "Global": true,
+	"Author": {
+		"Name": "Dean Martin"
+	},
     "Labels": [
         "syslog"
     ]
@@ -61,7 +123,7 @@ The server will respond with the UUID of the newly-created playbook. If the `GUI
 
 ## Modifying a Playbook
 
-To update the contents of a playbook, send a PUT request to `/api/playbooks/<uuid>`, where the UUID matches the desired playbook. The body of the request should contain the playbook structure to be updated. Note that changes to the UUID, LastUpdated, and Synced fields will be ignored. Administrators are allowed to modify the UID field, but regular users cannot.
+To update the contents of a playbook, send a PUT request to `/api/playbooks/<uuid>`, where the UUID matches the desired playbook. The body of the request should contain the playbook structure to be updated. Note that changes to the UUID, GUID, LastUpdated, and Synced fields will be ignored. Administrators are allowed to modify the UID field, but regular users cannot.
 
 Note: If you do not intend to update the contents of a field, you should send the original value in the request. The server has no way to know if e.g. an un-set "Desc" field means you wish to preserve the original value, or you wish to clear the field.
 
