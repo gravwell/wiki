@@ -6,8 +6,8 @@ The searchctrl group is used to query information about persistent searches and 
 
 ## Basic API overview
 
-The basic action here is to perform a GET, DELETE, or PATCH on a REST url
-j
+The basic action here is to perform a GET, DELETE, or PATCH on a REST url.
+
 ## Search States
 
 Searches can be in any of the following states:
