@@ -2,14 +2,25 @@
 
 REST API located at /api/searchctrl
 
-The searchctrl group is used to query information about active searches and optionally invoke some action.  We currently provide the ability to query all active searches, get information about a specific search, background a an active search, archive an active search, and delete/terminate a search.
+The searchctrl group is used to query information about persistent searches and optionally invoke some action.  We currently provide the ability to query all active searches, get information about a specific search, background a an active search, archive an active search, and delete/terminate a search.
 
 ## Basic API overview
 
 The basic action here is to perform a GET, DELETE, or PATCH on a REST url
+j
+## Search States
+
+Searches can be in any of the following states:
+
+- Active: The search is running and/or finished and there is a session attached to it.
+- Backgrounded: The search is actively running but marked in a way that it will persist without an attached session.
+- Saving: The search has been marked as saved, but is still waiting for completion to move its contents to a persistent location.
+- Saved: The search is marked as saved and moved to the appropriate persistent location.
+- Dormant: The search is being kept (background or saved) and no sessions are attached.
+- Attached: The search is saved and a session has re-attached to it.
 
 ## Getting a list of searches
-When requesting the list of searches the web server will return all searches the current user is authorized to view.  No json package is posted, but rather an empty GET is performed against '/api/searchctrl/'.  
+When requesting the list of searches the web server will return all searches the current user is authorized to view.  No json package is posted, but rather an empty GET is performed against '/api/searchctrl'.  
 
 ```
 [
@@ -17,14 +28,14 @@ When requesting the list of searches the web server will return all searches the
                 "ID": "181382061",
                 "UID": 1,
                 "GID": 0,
-                "State": "DORMANT",
-                "AttachedClients": 0
+                "State": "ACTIVE",
+                "AttachedClients": 1
         },
         {
                 "ID": "010985768",
                 "UID": 1,
                 "GID": 0,
-                "State": "DORMANT",
+                "State": "BACKGROUNDED",
                 "AttachedClients": 0
         },
         {
@@ -42,18 +53,20 @@ Getting the status of a specific search is performed by performing a GET the RES
 
 ```
 WEB GET /api/searchctrl/795927171:
-{
-        "ID": "795927171",
-        "UID": 1,
-        "UserQuery": "grep paco | grep chico",
-        "EffectiveQuery": "grep paco | grep chico | text",
-        "StartRange": "2016-12-22T12:41:27.011080417-07:00",
-        "EndRange": "2016-12-22T13:01:27.011080417-07:00",
-        "Started": "2016-12-22T13:01:27.01227455-07:00",
-        "Finished": "0001-01-01T00:00:00Z",
-        "StoreSize": 0,
-        "IndexSize": 0
-}
+[
+	{
+		"ID": "795927171",
+		"UID": 1,
+		"UserQuery": "grep paco | grep chico",
+		"EffectiveQuery": "grep paco | grep chico | text",
+		"StartRange": "2016-12-22T12:41:27.011080417-07:00",
+		"EndRange": "2016-12-22T13:01:27.011080417-07:00",
+		"Started": "2016-12-22T13:01:27.01227455-07:00",
+		"Finished": "0001-01-01T00:00:00Z",
+		"StoreSize": 0,
+		"IndexSize": 0
+	}
+]
 ```
 
 ## Backgrounding a search
