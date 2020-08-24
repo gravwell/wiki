@@ -26,16 +26,16 @@ Cleartext-Backend-target=127.0.0.1:4023 #example of adding a cleartext connectio
 Log-Level=INFO
 
 [Listener "default"]
-        Bind-String="0.0.0.0:7777" #we are binding to all interfaces, with TCP implied
-        Tag-Name=default
-        Preprocessor=timestamp
+	Bind-String="0.0.0.0:7777" #we are binding to all interfaces, with TCP implied
+	Tag-Name=default
+	Preprocessor=timestamp
 
 [Listener "syslog"]
 	Bind-String="0.0.0.0:601" # TCP syslog
 	Tag-Name=syslog
 
 [preprocessor "timestamp"]
-        type = regextimestamp
+	type = regextimestamp
 	Regex ="(?P<badtimestamp>.+) MSG (?P<goodtimestamp>.+) END"
 	TS-Match-Name=goodtimestamp
 	Timezone-Override=US/Pacific
