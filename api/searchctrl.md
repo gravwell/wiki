@@ -10,7 +10,7 @@ The basic action here is to perform a GET, DELETE, or PATCH on a REST url.
 
 ## Search States
 
-Searches can be in any of the following states:
+Searches can be in any of the following states, and can be in more than one state at a time (such as ACTIVE/BACKGROUNDED, SAVED/ATTACHED, or DORMANT/SAVED). 
 
 - Active: The search is running and/or finished and there is a session attached to it.
 - Backgrounded: The search is actively running but marked in a way that it will persist without an attached session.
