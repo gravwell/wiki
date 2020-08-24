@@ -12,9 +12,9 @@ Each preprocessor will have the opportunity to modify the entries. The preproces
 
 ## Configuring Preprocessors
 
-Preprocessors are supported on all packaged ingesters, one-off and unsupported ingesters may not support preprocessors.
+Preprocessors are supported on all packaged ingesters.  One-off and unsupported ingesters may not support preprocessors.
 
-Preprocessors are configured in the ingester's config file using the `preprocessor` configuration stanza.  Each preprocessor stanza must declare the preprocessor module in use via the `type` configuration parameter, followed by the preprocessors specific configuration parameters. Consider the following example for the Simple Relay ingester:
+Preprocessors are configured in the ingester's config file using the `preprocessor` configuration stanza.  Each Preprocessor stanza must declare the preprocessor module in use via the `Type` configuration parameter, followed by the preprocessor's specific configuration parameters. Consider the following example for the Simple Relay ingester:
 
 ```
 [Global]
@@ -35,7 +35,7 @@ Log-Level=INFO
 	Tag-Name=syslog
 
 [preprocessor "timestamp"]
-	type = regextimestamp
+	Type = regextimestamp
 	Regex ="(?P<badtimestamp>.+) MSG (?P<goodtimestamp>.+) END"
 	TS-Match-Name=goodtimestamp
 	Timezone-Override=US/Pacific
@@ -47,7 +47,7 @@ This configuration defines two data consumers (Simple Relay calls them "Listener
 
 The gzip preprocessor can uncompress entries which have been compressed with the GNU 'gzip' algorithm.
 
-The GZIP preprocessor type is `gzip`.
+The GZIP preprocessor Type is `gzip`.
 
 ### Supported Options
 
@@ -74,7 +74,7 @@ The JSON extraction preprocessor can parse the contents of an entry as JSON, ext
 
 If only a single field extraction is specified, the result will contain purely the contents of that field; if multiple fields are specified, the preprocessor will generate valid JSON containing those fields.
 
-The JSON Extraction preprocessor type is `jsonextract`.
+The JSON Extraction preprocessor Type is `jsonextract`.
 
 ### Supported Options
 
@@ -85,7 +85,7 @@ The JSON Extraction preprocessor type is `jsonextract`.
 
 ### Common Use Cases
 
-Many data sources may provide additional metadata related to transport and/or storage that are not part of the actual log stream.  The jsonextract preprocessor can down select fields to reduce storage costs.
+Many data sources may provide additional metadata related to transport and/or storage that are not part of the actual log stream.  The jsonextract preprocessor can downselect fields to reduce storage costs.
 
 ### Example: Condensing JSON Data Records
 
@@ -106,7 +106,7 @@ This preprocessor can split an array in a JSON object into individual entries. F
 
 Becomes two entries, one containing "bob" and one containing "alice".
 
-The JSON Array Split preprocessor type is `jsonarraysplit`.
+The JSON Array Split preprocessor Type is `jsonarraysplit`.
 
 ### Supported Options
 
@@ -138,7 +138,7 @@ It can be configured to either *pass* only those entries whose fields match the 
 
 This preprocessor is particularly useful to narrow down a firehose of general data before sending it across a slow network link.
 
-The JSON Field Filtering preprocessor type is `jsonfilter`.
+The JSON Field Filtering preprocessor Type is `jsonfilter`.
 
 ### Supported Options
 
@@ -235,7 +235,7 @@ This new preprocessor extracts the `EventID` and `System` fields from every entr
 
 The regex router preprocessor is a flexible tool for routing entries to different tags based on the contents of the entries. The configuration specifies a regular expression containing a [named capturing group](https://www.regular-expressions.info/named.html), the contents of which are then tested against user-defined routing rules.
 
-The Regex Router preprocessor type is `regexrouter`.
+The Regex Router preprocessor Type is `regexrouter`.
 
 ### Supported Options
 
@@ -317,7 +317,7 @@ Note that this new preprocessor definition defines routes for the applications n
 
 Ingesters will typically attempt to extract a timestamp from an entry by looking for the first thing which appears to be a valid timestamp and parsing it. In combination with additional ingester configuration rules for parsing timestamps (specifying a specific timestamp format to look for, etc.) this is usually sufficient to properly extract the appropriate timestamp, but some data sources may defy these straightforward methods. Consider a situation where a network device may send CSV-formatted event logs wrapped in syslog--a situation we have seen at Gravwell!
 
-The Regex Timestamp Extraction preprocessor type is `regextimestamp`.
+The Regex Timestamp Extraction preprocessor Type is `regextimestamp`.
 
 ### Supported Options
 
@@ -389,7 +389,7 @@ The regexextraction preprocessor uses named regular expression extraction fields
 
 Templates reference extracted values by name using field definitions similar to bash.  For example, if your regex extracted a field named `foo` you could insert that extraction in the template with `${foo}`.
 
-The Regex Extraction preprocessor type is `regexextract`.
+The Regex Extraction preprocessor Type is `regexextract`.
 
 ### Supported Options
 
@@ -446,7 +446,7 @@ The forwarding preprocessor also supports several filter mechanisms to cut down 
 
 Multiple forwarding preprocessors can be specified, allowing for a specific log stream to be forwarded to multiple endpoints.
 
-The Forwarding preprocessor type is `forwarder`.
+The Forwarding preprocessor Type is `forwarder`.
 
 ### Supported Options
 
@@ -555,19 +555,19 @@ For this example we are using the Gravwell Federator to forward subsets of logs 
 
 ## Gravwell Forwarding Preprocessor
 
-The Gravwell forwarding processor allows for creating a complete Gravwell muxer which can duplicate entries to multiple instances of Gravwell.  This preprocessor can be useful for testing or situations where a specific Gravwell data stream needs to be duplicated to an alternate set of indexers.  The Gravwell forwarding preprocessor utilizes the same configuration structure to specify indexers, ingest secrets, and even cache controls as the package ingesters.  The Gravwell forwarding preprocessor is a blocking preprocessor, this means that if you do not enable a local cache it can block the ingest pipeline if the preprocessor cannot forward entries to the specified indexers.
+The Gravwell forwarding processor allows for creating a complete Gravwell muxer which can duplicate entries to multiple instances of Gravwell.  This preprocessor can be useful for testing or situations where a specific Gravwell data stream needs to be duplicated to an alternate set of indexers.  The Gravwell forwarding preprocessor utilizes the same configuration structure to specify indexers, ingest secrets, and even cache controls as the packaged ingesters.  The Gravwell forwarding preprocessor is a blocking preprocessor, this means that if you do not enable a local cache it can block the ingest pipeline if the preprocessor cannot forward entries to the specified indexers.
 
-The Gravwell Forwarding preprocessor type is `gravwellforwarder`.
+The Gravwell Forwarding preprocessor Type is `gravwellforwarder`.
 
 ### Supported Options
 
-See the [Global Configuration Parameters](#!ingesters/ingesters.md#Global_Configuration_Parameters) section for full details on all the Gravwell ingester options.  Most global configuration blocks from any production ingester configurations in the Gravwell Forwarder preprocessor.
+See the [Global Configuration Parameters](#!ingesters/ingesters.md#Global_Configuration_Parameters) section for full details on all the Gravwell ingester options.  Most global ingester configuration options are supported by the Gravwell Forwarder preprocessor.
 
 ### Example: Duplicating Data In a Federator
 
 For this example we are going to specify a complete Federator configuration that will duplicate all entries to a second cluster.
 
-NOTE: We are enabling an always cache on the forwarding preprocessor so that it won't ever block the normal ingest path.
+NOTE: We are enabling an `always` cache on the forwarding preprocessor so that it won't ever block the normal ingest path.
 
 ```
 [Global]
