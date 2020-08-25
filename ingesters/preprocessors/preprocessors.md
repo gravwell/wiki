@@ -12,18 +12,9 @@ Each preprocessor will have the opportunity to modify the entries. The preproces
 
 ## Configuring Preprocessors
 
-Preprocessors can be used with the following ingesters:
+Preprocessors are supported on all packaged ingesters.  One-off and unsupported ingesters may not support preprocessors.
 
-* Simple Relay
-* Kinesis
-* Kafka
-* Google Pub/Sub
-* Office 365
-* HTTP
-
-The other Gravwell ingesters will receive preprocessor support soon.
-
-Preprocessors are configured in the ingester's config file. Consider the following example for the Simple Relay ingester:
+Preprocessors are configured in the ingester's config file using the `preprocessor` configuration stanza.  Each Preprocessor stanza must declare the preprocessor module in use via the `Type` configuration parameter, followed by the preprocessor's specific configuration parameters. Consider the following example for the Simple Relay ingester:
 
 ```
 [Global]
@@ -35,16 +26,16 @@ Cleartext-Backend-target=127.0.0.1:4023 #example of adding a cleartext connectio
 Log-Level=INFO
 
 [Listener "default"]
-        Bind-String="0.0.0.0:7777" #we are binding to all interfaces, with TCP implied
-        Tag-Name=default
-        Preprocessor=timestamp
+	Bind-String="0.0.0.0:7777" #we are binding to all interfaces, with TCP implied
+	Tag-Name=default
+	Preprocessor=timestamp
 
 [Listener "syslog"]
 	Bind-String="0.0.0.0:601" # TCP syslog
 	Tag-Name=syslog
 
 [preprocessor "timestamp"]
-        type = regextimestamp
+	Type = regextimestamp
 	Regex ="(?P<badtimestamp>.+) MSG (?P<goodtimestamp>.+) END"
 	TS-Match-Name=goodtimestamp
 	Timezone-Override=US/Pacific
@@ -55,6 +46,8 @@ This configuration defines two data consumers (Simple Relay calls them "Listener
 ## gzip Preprocessor
 
 The gzip preprocessor can uncompress entries which have been compressed with the GNU 'gzip' algorithm.
+
+The GZIP preprocessor Type is `gzip`.
 
 ### Supported Options
 
@@ -80,6 +73,8 @@ Example config:
 The JSON extraction preprocessor can parse the contents of an entry as JSON, extract one or more fields from the JSON, and replace the entry contents with those fields. This is a useful way to simplify overly-complex messages into more concise entries containing only the information of interest.
 
 If only a single field extraction is specified, the result will contain purely the contents of that field; if multiple fields are specified, the preprocessor will generate valid JSON containing those fields.
+
+The JSON Extraction preprocessor Type is `jsonextract`.
 
 ### Supported Options
 
@@ -111,6 +106,8 @@ This preprocessor can split an array in a JSON object into individual entries. F
 
 Becomes two entries, one containing "bob" and one containing "alice".
 
+The JSON Array Split preprocessor Type is `jsonarraysplit`.
+
 ### Supported Options
 
 * `Extraction` (string, required): specifies the JSON field containing a struct which should be split, e.g. `Extraction=Users`, `Extraction=foo.bar`.
@@ -141,6 +138,8 @@ It can be configured to either *pass* only those entries whose fields match the 
 
 This preprocessor is particularly useful to narrow down a firehose of general data before sending it across a slow network link.
 
+The JSON Field Filtering preprocessor Type is `jsonfilter`.
+
 ### Supported Options
 
 * `Field-Filter` (string, required): This specifies two things: the name of the JSON field of interest, and the path to a file which contains values to match against. For example, one might specify `Field-Filter=ComputerName,/opt/gravwell/etc/computernames.txt` in order to extract a field named "ComputerName" and compare it against values in `/opt/gravwell/etc/computernames.txt`. The `Field-Filter` option may be specified multiple times in order to filter against multiple fields.
@@ -153,7 +152,7 @@ Note: If a field is specified in the configuration but is not present on an entr
 
 ### Common Use Cases
 
-The json field filtering preprocessor can downselect entries based on fields within the entries.  This allows for building blacklists and whitelists on data flows to ensure that data either does or does not make it to storage.
+The json field filtering preprocessor can down select entries based on fields within the entries.  This allows for building blacklists and whitelists on data flows to ensure that data either does or does not make it to storage.
 
 ### Example: Simple Whitelisting
 
@@ -236,6 +235,8 @@ This new preprocessor extracts the `EventID` and `System` fields from every entr
 
 The regex router preprocessor is a flexible tool for routing entries to different tags based on the contents of the entries. The configuration specifies a regular expression containing a [named capturing group](https://www.regular-expressions.info/named.html), the contents of which are then tested against user-defined routing rules.
 
+The Regex Router preprocessor Type is `regexrouter`.
+
 ### Supported Options
 
 * `Regex` (string, required): This parameter specifies the regular expression to be applied to the incoming entries. It must contain at least one [named capturing group](https://www.regular-expressions.info/named.html), e.g. `(?P<app>.+)` which will be used with the `Route-Extraction` parameter.
@@ -316,6 +317,8 @@ Note that this new preprocessor definition defines routes for the applications n
 
 Ingesters will typically attempt to extract a timestamp from an entry by looking for the first thing which appears to be a valid timestamp and parsing it. In combination with additional ingester configuration rules for parsing timestamps (specifying a specific timestamp format to look for, etc.) this is usually sufficient to properly extract the appropriate timestamp, but some data sources may defy these straightforward methods. Consider a situation where a network device may send CSV-formatted event logs wrapped in syslog--a situation we have seen at Gravwell!
 
+The Regex Timestamp Extraction preprocessor Type is `regextimestamp`.
+
 ### Supported Options
 
 * `Regex` (string, required): This parameter specifies the regular expression to be applied to the incoming entries. It must contain at least one [named capturing group](https://www.regular-expressions.info/named.html), e.g. `(?P<timestamp>.+)` which will be used with the `TS-Match-Name` parameter.
@@ -386,6 +389,8 @@ The regexextraction preprocessor uses named regular expression extraction fields
 
 Templates reference extracted values by name using field definitions similar to bash.  For example, if your regex extracted a field named `foo` you could insert that extraction in the template with `${foo}`.
 
+The Regex Extraction preprocessor Type is `regexextract`.
+
 ### Supported Options
 
 * Passthrough-Misses (boolean, optional): This parameter specifies whether the preprocessor should pass the record through unchanged if the regular expression does not match.
@@ -440,6 +445,8 @@ By default the forwarding preprocessor is blocking, this means that if you speci
 The forwarding preprocessor also supports several filter mechanisms to cut down or specify exactly which data streams are forwarded.  Streams can be filtered using entry tags, sources, or regular expressions which operation on the actual log data.  Each filter specification can be specified multiple times to create an OR pattern.
 
 Multiple forwarding preprocessors can be specified, allowing for a specific log stream to be forwarded to multiple endpoints.
+
+The Forwarding preprocessor Type is `forwarder`.
 
 ### Supported Options
 
@@ -544,4 +551,90 @@ For this example we are using the Gravwell Federator to forward subsets of logs 
 	Non-Blocking=false
 
 
+```
+
+## Gravwell Forwarding Preprocessor
+
+The Gravwell forwarding processor allows for creating a complete Gravwell muxer which can duplicate entries to multiple instances of Gravwell.  This preprocessor can be useful for testing or situations where a specific Gravwell data stream needs to be duplicated to an alternate set of indexers.  The Gravwell forwarding preprocessor utilizes the same configuration structure to specify indexers, ingest secrets, and even cache controls as the packaged ingesters.  The Gravwell forwarding preprocessor is a blocking preprocessor, this means that if you do not enable a local cache it can block the ingest pipeline if the preprocessor cannot forward entries to the specified indexers.
+
+The Gravwell Forwarding preprocessor Type is `gravwellforwarder`.
+
+### Supported Options
+
+See the [Global Configuration Parameters](#!ingesters/ingesters.md#Global_Configuration_Parameters) section for full details on all the Gravwell ingester options.  Most global ingester configuration options are supported by the Gravwell Forwarder preprocessor.
+
+### Example: Duplicating Data In a Federator
+
+For this example we are going to specify a complete Federator configuration that will duplicate all entries to a second cluster.
+
+NOTE: We are enabling an `always` cache on the forwarding preprocessor so that it won't ever block the normal ingest path.
+
+```
+[Global]
+Ingest-Secret = IngestSecrets
+Connection-Timeout = 0
+Verify-Remote-Certificates = true
+Cleartext-Backend-Target=172.19.0.2:4023 #example of adding a cleartext connection
+Log-Level=INFO
+
+[IngestListener "enclaveA"]
+	Ingest-Secret = CustomSecrets
+	Cleartext-Bind = 0.0.0.0:4423
+	Tags=windows
+	Tags=syslog-*
+	Preprocessor=dup
+
+[Preprocessor "dup"]
+	Type=GravwellForwarder
+	Ingest-Secret = IngestSecrets
+	Connection-Timeout = 0
+	Cleartext-Backend-Target=172.19.0.4:4023 #indexer1
+	Cleartext-Backend-Target=172.19.0.5:4023 #indexer2 (cluster config)
+	Ingest-Cache-Path=/opt/gravwell/cache/federator_dup.cache # must be a unique path
+	Max-Ingest-Cache=1024 #Limit forwarder disk usage
+```
+
+### Example: Stacking Duplicate Forwarders
+
+For this example we are going to specify a complete Federator configuration and multiple Gravwell preprocessors so that we can duplicate our single stream of entries to multiple Gravwell clusters.
+
+NOTE: The preprocessor control logic does NOT check that you are not forwarding to the same cluster multiple times.
+
+```
+[Global]
+Ingest-Secret = IngestSecrets
+Connection-Timeout = 0
+Verify-Remote-Certificates = true
+Cleartext-Backend-Target=172.19.0.2:4023 #example of adding a cleartext connection
+Log-Level=INFO
+
+[IngestListener "enclaveA"]
+	Ingest-Secret = CustomSecrets
+	Cleartext-Bind = 0.0.0.0:4423
+	Tags=windows
+	Tags=syslog-*
+	Preprocessor=dup1
+	Preprocessor=dup2
+	Preprocessor=dup3
+
+[Preprocessor "dup1"]
+	Type=GravwellForwarder
+	Ingest-Secret = IngestSecrets1
+	Cleartext-Backend-Target=172.19.0.101:4023
+	Ingest-Cache-Path=/opt/gravwell/cache/federator_dup1.cache
+	Max-Ingest-Cache=1024
+
+[Preprocessor "dup2"]
+	Type=GravwellForwarder
+	Ingest-Secret = IngestSecrets2
+	Cleartext-Backend-Target=172.19.0.102:4023
+	Ingest-Cache-Path=/opt/gravwell/cache/federator_dup2.cache
+	Max-Ingest-Cache=1024
+
+[Preprocessor "dup3"]
+	Type=GravwellForwarder
+	Ingest-Secret = IngestSecrets3
+	Cleartext-Backend-Target=172.19.0.103:4023
+	Ingest-Cache-Path=/opt/gravwell/cache/federator_dup3.cache
+	Max-Ingest-Cache=1024
 ```
