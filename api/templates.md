@@ -27,6 +27,19 @@ To create a template, do a POST to `/api/templates`. The body should be a JSON s
 ```
 {"GUID":"ce95b152-d47f-443f-884b-e0b506a215be","Contents": "foo","Name":"mytemplate"}
 ```
+
+```
+{"GUID":"ce95b152-d47f-443f-884b-e0b506a215be","Contents": "foo","GIDs": [0, 1]}
+```
+
+```
+{"Contents": "foo","Name":"mytemplate","Global", true}
+```
+
+```
+{"Contents": "foo","Name":"mytemplate","Labels",["suits", "ladders"]}
+```
+
 The API will respond with the GUID of the newly-created template
 
 ## List templates
