@@ -1170,7 +1170,7 @@ The Kinesis ingester does not provide the `Ignore-Timestamps` option found in ma
 Gravwell provides an ingester capable of fetching entries from Google Compute Platform's [PubSub stream](https://cloud.google.com/pubsub/) service. The ingester can process multiple PubSub streams within a single GCP project. The process of setting up a PubSub stream is outside the scope of this document, but in order to configure the PubSub ingester for an existing stream you will need:
 
 * The Google Project ID
-* A file containing GCP service account credentials (see the [Creating a service account](https://cloud.google.com/docs/authentication/getting-started) documentation)
+* A file containing GCP service account credentials (see the [Creating a service account](https://cloud.google.comauthentication/getting-started) documentation)
 * The name of a PubSub topic
 
 Once the stream is configured, each record in the PubSub stream topic will be stored as a single entry in Gravwell.
