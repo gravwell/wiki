@@ -31,7 +31,8 @@ There are a variety of "things" which users may create and modify. Their APIs ar
 * [Resources](resources.md)
 * [Scheduled Searches](scheduledsearches.md)
 * [Search Library](searchlibrary.md)
-* [Templates and Pivots](templates.md)
+* [Templates](templates.md)
+* [Pivots (actionables)](pivots.md)
 * [User Files](userfiles.md)
 
 ## Searching and Search Stats
