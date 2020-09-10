@@ -28,6 +28,7 @@ The core suite of ingesters are available for download as an installable package
 | [Amazon Kinesis](#!ingesters/ingesters.md#Kinesis_Ingester) | The Amazon Web Services Kinesis ingester can attach to the Kinesis stream and dramatically simplify logging a cloud deployment |a01d42aa8bae5373261ce5cb99a0729f764ecd75c00b54d93f5f966cae519b7f| [Download](https://update.gravwell.io/files/gravwell_kinesis_ingest_installer_4.0.1.sh)|
 | [Google PubSub](#!ingesters/ingesters.md#GCP_PubSub) | The Google Cloud Platform PubSub Ingester can subscribe to exhausts on the GCP PubSub system, easing integration with GCP. |28dda55ae5489928209673b93306adf1573e5306ee90c35359ae135c6cedf916| [Download](https://update.gravwell.io/files/gravwell_pubsub_ingest_installer_4.0.1.sh)|
 | [Office 365 Logs](#!ingesters/ingesters.md#Office_365_Log_Ingester) | The Office 365 log ingester can fetch log events from Microsoft Office 365. |6d7d8a720a07eeeb5d5d00e70ea30d21e0108491604d3df9e562e3678642c3cd| [Download](https://update.gravwell.io/files/gravwell_o365_installer_4.0.1.sh)|
+| [Microsoft Graph API](#!ingesters/ingesters.md#Microsoft_Graph_API_Ingester) | The MS Graph API ingester can fetch security information from the Microsoft Graph API. |7d7d8a720a07eeeb5d5d00e70ea30d21e0108491604d3df9e562e3678642c3cd| [Download](https://update.gravwell.io/files/gravwell_msgraph_installer_4.0.1.sh)|
 
 [//]: <> (| [](#!ingesters/ingesters.md#) | | | [Download](https://update.gravwell.io/files/) |)
 
