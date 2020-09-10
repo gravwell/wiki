@@ -1222,8 +1222,8 @@ The PubSub ingester does not provide the `Ignore-Timestamps` option found in man
 
 Gravwell provides an ingester for Microsoft Office 365 logs. The ingester can process all supported log types. In order to configure the ingester, you will need to register a new *application* within the Azure Active Directory management portal; this will generate a set of keys which can be used to access the logs. You will need the following information:
 
-* Client ID: a UUID generated for your application via the Azure management console
-* Client secret: a secret token generated for your application via the Azure console
+* Client ID: A UUID generated for your application via the Azure management console
+* Client secret: A secret token generated for your application via the Azure console
 * Azure Directory ID: A UUID representing your Active Directory instance, found in the Azure Active Directory dashboard
 * Tenant Domain: The domain of your Office 365 domain, e.g. "mycorp.onmicrosoft.com"
 
@@ -1277,8 +1277,8 @@ Tenant-Domain=mycorp.onmicrosoft.com
 
 Gravwell provides an ingester which can pull security information from Microsoft's Graph API. In order to configure the ingester, you will need to register a new *application* within the Azure Active Directory management portal; this will generate a set of keys which can be used to access the logs. You will need the following information:
 
-* Client ID: a UUID generated for your application via the Azure management console
-* Client secret: a secret token generated for your application via the Azure console
+* Client ID: A UUID generated for your application via the Azure management console
+* Client secret: A secret token generated for your application via the Azure console
 * Tenant Domain: The domain of your Azure domain, e.g. "mycorp.onmicrosoft.com"
 
 ### Installation and configuration
