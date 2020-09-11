@@ -2,10 +2,11 @@
 
 ## Current Version 
 
-The most recent release was Gravwell [4.0.1](4.0.1.md).
+[4.0.2](4.0.2.md).
 
 ## Previous Versions
 
+* [4.0.1](4.0.1.md)
 * [4.0.0](4.0.0.md)
 * [3.3.13](3.3.13.md)
 * [3.3.12](3.3.12.md)
