@@ -112,3 +112,12 @@ grep "\","
 ## Macros
 
 Macros can help turn long, complex queries into easy-to-remember shortcuts. See [the full macro documentation](#!search/macros.md) for more information.
+
+## Comments
+
+Queries support C-Style comments anywhere in the query text. Comments are saved in the search histroy, and are useful for debugging queries and adding inline notes. For example:
+
+```
+tag=foo json foo.bar /* a c-style comment that has no impact on the search */ baz | table
+```
+
