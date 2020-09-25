@@ -2,7 +2,7 @@
 
 The user files API is designed so kits can store small files for use as e.g. icons.
 
-User files are referred to by GUID. GUIDs are not necessarily unique across a system; this allows users to have e.g. a dashboard referring to a particular file by GUID, but with each user installing their own preferred file. If multiple templates or pivots exist with the same GUID, they are prioritized in the following order:
+User files are referred to by GUID. GUIDs are not necessarily unique across a system; this allows users to have e.g. a dashboard referring to a particular file by GUID, but with each user installing their own preferred file. If multiple files exist with the same GUID, they are prioritized in the following order:
 
 * Owned by the user
 * Shared with a group the user is a member of
@@ -76,6 +76,6 @@ User files may be removed via a DELETE on `/api/files/<uuid>`
 
 Admin users may occasionally need to view all user files on the system, modify them, or delete them. Because GUIDs are not necessarily unique, the admin API must refer instead to the unique UUID Gravwell uses internally to store the items. Note that the example file listings above include a field named "ThingUUID". This is the internal, unique identifier for that user file.
 
-An administrator user may obtain a global listing of all user files in the system with a GET request on `/api/templates?admin=true`.
+An administrator user may obtain a global listing of all user files in the system with a GET request on `/api/files?admin=true`.
 
 The administrator may then delete a particular file with a DELETE message to `/api/files/<ThingUUID>?admin=true`, substituting in the ThingUUID value for the desired file. The same pattern applies to updating.

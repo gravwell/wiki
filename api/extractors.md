@@ -2,62 +2,83 @@
 
 The extractor web API provides methods for accessing, modifying, adding, and deleting autoextractor definitions. For more information about autoextractors and their configuration, see the [Auto-Extractors](/#!configuration/autoextractors.md) section.
 
-## Definition Structure
+## Data Structure
 
-Auto-Extractors are defined using the following JSON structure:
+Autoextractors contain the following fields:
+
+* Tag: The tag which is being extracted.
+* Name: A user-friendly name for the extractor.
+* Desc: A more detailed description of the extractor.
+* Module: The module to use ("csv", "fields", "regex", or "slice").
+* Params: Extraction module parameters.
+* Args: Extraction module arguments.
+* Labels: An array of strings containing [labels](#!gui/labels/labels.md).
+* UID: The numeric ID of the dashboard's owner.
+* GIDs: An array of numeric group IDs with which this dashboard is shared.
+* Global: A boolean, set to true if dashboard should be visible to all users (admin only).
+* UUID: A unique ID for this particular extractor.
+* LastUpdated: The time at which this extractor was most recently modified.
+
+This is a Typescript description of the structure:
 
 ```
-{
-	"tag": string,
-	"name": string,
-	"desc": string,
-	"module": string,
-	"params": string,
-	"args": string,
-	"uid": int32,
-	"gids": []int32,
-	"global": bool,
-	"uuid": string,
-	"synced": bool,
-	"lastupdated": string
+type RawAutoExtractorModule = 'csv' | 'fields' | 'regex' | 'slice';
+
+interface RawAutoExtractor {
+	UUID: RawUUID;
+
+	UID: RawNumericID;
+	GIDs: Array<RawNumericID> | null;
+
+	Name: string;
+	Desc: string;
+	Labels: Array<string> | null;
+
+	Global: boolean;
+	LastUpdated: string; // Timestamp
+
+	Tag: string;
+	Module: RawAutoExtractorModule;
+	Params: string;
+	Args?: string;
 }
 ```
 
 ## Listing
 
-Listing autoextractors is done by performing a GET on `/api/autoextractors`.  The webserver will return a list of JSON structures that represent the set of installed to which the current user has access.  An example response is:
+Issuing a GET on `/api/autoextractors` will return a list of JSON structures that represent the set of extractors to which the current user has access.  An example response is:
 
 ```
 [
-    {
-        "accelerated": "",
-        "desc": "csv extractor",
-        "gids": null,
-        "global": false,
-        "lastupdated": "2020-01-08T09:45:29.617936398-07:00",
-        "module": "csv",
-        "name": "csvextract",
-        "params": "col1, col2, col3",
-        "synced": false,
-        "tag": "csv",
-        "uid": 1,
-        "uuid": "3674b59e-6064-4cf0-8023-4bf444e84625"
-    },
-    {
-        "accelerated": "",
-        "args": "-d \"\\t\"",
-        "desc": "Bro conn logs",
-        "gids": null,
-        "global": true,
-        "lastupdated": "2020-01-08T14:45:28.514723502-07:00",
-        "module": "fields",
-        "name": "bro-conn",
-        "params": "ts, uid, orig, orig_port, resp, resp_port, proto, service, duration, orig_bytes, dest_bytes, conn_state, local_orig, local_resp, missed_bytes, history, orig_pkts, orig_ip_pkts, resp_pkts, resp_ip_bytes, tunnel_parents",
-        "synced": false,
-        "tag": "bro-conn",
-        "uid": 1,
-        "uuid": "bdb2c2f6-5d50-4222-8558-ecbe3a0822aa"
-    }
+  {
+    "Name": "Apache Combined Access Log",
+    "Desc": "Apache Combined access logs using regex module.",
+    "Module": "regex",
+    "Params": "^(?P<ip>\\S+) (?P<ident>\\S+) (?P<auth>\\S+) \\[(?P<date>[^\\]]+)\\] \\\"(?P<method>\\S+) (?P<url>.+) HTTP\\/(?P<version>\\S+)\\\" (?P<response>\\d+) (?P<bytes>\\d+) \\\"(?P<referrer>\\S+)\\\" \\\"(?P<useragent>.+)\\\"",
+    "Tag": "apache",
+    "Labels": [
+      "apache"
+    ],
+    "UID": 1,
+    "GIDs": null,
+    "Global": false,
+    "UUID": "0e105901-92a7-4131-87bb-a00287d46f96",
+    "LastUpdated": "2020-06-24T13:49:39.013266326-06:00"
+  },
+  {
+    "Name": "vpcflow",
+    "Desc": "VPC flow logs (TSV format)",
+    "Module": "fields",
+    "Params": "version, account_id, interface_id, srcaddr, dstaddr, srcport, dstport, protocol, packets, bytes, start, end, action, log_status",
+    "Args": "-d \" \"",
+    "Tag": "vpcflowraw",
+    "Labels": null,
+    "UID": 1,
+    "GIDs": null,
+    "Global": false,
+    "UUID": "7f80df6a-a2ce-42aa-b531-ac11c596f64a",
+    "LastUpdated": "2020-05-29T15:00:41.883390284-06:00"
+  }
 ]
 ```
 
@@ -65,25 +86,30 @@ Performing a GET request with the admin flag set (`/api/autoextractors?admin=tru
 
 ## Adding
 
-Adding an autoextractor is performed by issuing a POST to `/api/autoextractors` with a valid definition JSON structure in the request body.  The structure must be valid and there cannot be an existing auto-extractor that is assigned to the tag.  An example POST JSON structure that adds a new auto-extractor:
+Adding an autoextractor is performed by issuing a POST to `/api/autoextractors` with a valid definition in the request body.  The structure must be valid and the user cannot have an existing autoextractor defined for the same tag.  An example POST JSON structure that adds a new auto-extractor:
 
 ```
 {
-	"name": "testCSVExt",
-	"desc": "testing extractor",
-	"module": "csv",
-	"params": "a, b, c, src, dst, extra",
-	"tag": "test4"
+  "Tag": "foo",
+  "Name": "my extractor",
+  "Desc": "an extractor using the fields module",
+  "Module": "fields",
+  "Params": "version, account_id, interface_id, srcaddr, dstaddr, srcport, dstport, protocol, packets, bytes, start, end, action, log_status",
+  "Args": "-d \" \"",
+  "Labels": [
+    "foo"
+  ],
+  "Global": false
 }
 ```
 
 If an error occurs when adding an auto-extractor the webserver will return a list of errors. If successful, the server will respond with the UUID of the new extractor.
 
-Note: There is no need to set the `uuid`, `uid`, `gids`, `synced`, or `lastupdated` fields when creating an extractor--these are automatically filled in. Only an admin user may set the `global` flag to true.
+Note: There is no need to set the `UUID`, `UID`, `GIDs`, or `LastUpdated` fields when creating an extractor--these are automatically filled in. Only an admin user may set the `Global` flag to true.
 
 ## Updating
 
-Updating an autoextractor is performed by issuing a PUT request to `/api/autoextractors` with a valid definition JSON structure in the request body.  The structure must be valid and there must be an existing auto-extractor with the same UUID.  All non-modified fields should be included as originall returned by the server.  If the definition is invalid a non-200 response with an error message in the body is returned.  If the structure is valid but an error occurs in distributing the updated definition a list of errors is returned in the body.
+Updating an autoextractor is performed by issuing a PUT request to `/api/autoextractors` with a valid definition JSON structure in the request body.  The structure must be valid and there must be an existing auto-extractor with the same UUID.  All non-modified fields should be included as originally returned by the server.  If the definition is invalid a non-200 response with an error message in the body is returned.  If the structure is valid but an error occurs in distributing the updated definition a list of errors is returned in the body.
 
 ## Testing Extractor Syntax
 
