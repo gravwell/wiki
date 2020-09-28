@@ -10,6 +10,7 @@ A scheduled search contains the following fields of interest:
 * GUID: a unique ID for this particular search. If left blank at creation, a random GUID will be assigned (this should be the standard use case)
 * Owner: the uid of the search's owner
 * Groups: a list of groups which are allowed to see the results of this search
+* Global: a boolean indicating that the results of the search should be visible to all users (only admins may set this field)
 * Name: the name of this scheduled search
 * Description: a textual description of the scheduled search
 * Schedule: a cron-compatible string specifying when to run
@@ -40,7 +41,34 @@ The API commands in this section can be executed by any user.
 To get a list of all scheduled searches visible to the user (either owned by the user or marked accessible to one of the user's groups), perform a GET on `/api/scheduledsearches`. The result will look like this:
 
 ```
-[{"ID":1439174790,"GUID":"efd1813d-283f-447a-a056-729768326e7b","Groups":null,"Name":"count","Description":"count all entries","Owner":1,"Schedule":"* * * * *","Permissions":0,"Updated":"2019-05-21T16:01:01.036703243-06:00","Disabled":false,"OneShot":false,"Synced":true,"SearchString":"tag=* count","Duration":-3600,"SearchSinceLastRun":false,"Script":"","PersistentMaps":{},"LastRun":"2019-05-21T16:01:00.013062447-06:00","LastRunDuration":1015958622,"LastSearchIDs":["672586805"],"LastError":""}]
+[
+  {
+    "ID": 1439174790,
+    "GUID": "efd1813d-283f-447a-a056-729768326e7b",
+    "Groups": null,
+	"Global": false,
+    "Name": "count",
+    "Description": "count all entries",
+    "Owner": 1,
+    "Schedule": "* * * * *",
+    "Permissions": 0,
+    "Updated": "2019-05-21T16:01:01.036703243-06:00",
+    "Disabled": false,
+    "OneShot": false,
+    "Synced": true,
+    "SearchString": "tag=* count",
+    "Duration": -3600,
+    "SearchSinceLastRun": false,
+    "Script": "",
+    "PersistentMaps": {},
+    "LastRun": "2019-05-21T16:01:00.013062447-06:00",
+    "LastRunDuration": 1015958622,
+    "LastSearchIDs": [
+      "672586805"
+    ],
+    "LastError": ""
+  }
+]
 
 ```
 
@@ -52,14 +80,18 @@ To create a new scheduled search, perform a POST request on `/api/scheduledsearc
 
 ```
 {
-	"Name": "myscheduledsearch",
-	"Description": "a scheduled search",
-	"Groups": [2],
-	"Schedule": "0 8 * * *",
-	"SearchString": "tag=default grep foo",
-	"Duration": -86400,
-	"SearchSinceLastRun": false
+  "Name": "myscheduledsearch",
+  "Description": "a scheduled search",
+  "Groups": [
+    2
+  ],
+  "Global": false,
+  "Schedule": "0 8 * * *",
+  "SearchString": "tag=default grep foo",
+  "Duration": -86400,
+  "SearchSinceLastRun": false
 }
+
 ```
 
 Alternately, if the SearchSinceLastRun field is set to true, the search agent will ignore the Duration (except for the first run of this new search) and instead perform the search over the time of the last run to the present time.
@@ -75,7 +107,32 @@ The server will respond with the ID of the new scheduled search.
 Information about a single scheduled search may be accessed with a GET on `/api/scheduledsearches/{id}`. For example, given a scheduled search ID of 1439174790, we would query `/api/scheduledsearches/1439174790` and receive the following:
 
 ```
-{"ID":1439174790,"GUID":"efd1813d-283f-447a-a056-729768326e7b","Groups":null,"Name":"count","Description":"count all entries","Owner":1,"Schedule":"* * * * *","Permissions":0,"Updated":"2019-05-21T16:01:01.036703243-06:00","Disabled":false,"OneShot":false,"Synced":true,"SearchString":"tag=* count","Duration":-3600,"SearchSinceLastRun":false,"Script":"","PersistentMaps":{},"LastRun":"2019-05-21T16:01:00.013062447-06:00","LastRunDuration":1015958622,"LastSearchIDs":["672586805"],"LastError":""}
+{
+  "ID": 1439174790,
+  "GUID": "efd1813d-283f-447a-a056-729768326e7b",
+  "Groups": null,
+  "Global": false,
+  "Name": "count",
+  "Description": "count all entries",
+  "Owner": 1,
+  "Schedule": "* * * * *",
+  "Permissions": 0,
+  "Updated": "2019-05-21T16:01:01.036703243-06:00",
+  "Disabled": false,
+  "OneShot": false,
+  "Synced": true,
+  "SearchString": "tag=* count",
+  "Duration": -3600,
+  "SearchSinceLastRun": false,
+  "Script": "",
+  "PersistentMaps": {},
+  "LastRun": "2019-05-21T16:01:00.013062447-06:00",
+  "LastRunDuration": 1015958622,
+  "LastSearchIDs": [
+    "672586805"
+  ],
+  "LastError": ""
+}
 ```
 
 A scheduled search can also be fetched by GUID. Note that this requires more work for the webserver and should only be used when necessary. To fetch the scheduled search shown above, do a GET on `/api/scheduledsearches/cdf011ae-7e60-46ec-827e-9d9fcb0ae66d`.
@@ -94,6 +151,7 @@ The following fields can be updated:
 * SearchSinceLastRun
 * Script
 * Groups
+* Global (admin only)
 * Disabled
 * OneShot
 
