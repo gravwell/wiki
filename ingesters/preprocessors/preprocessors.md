@@ -387,7 +387,7 @@ It is highly common for transport buses to wrap data streams with additional met
 
 The regexextraction preprocessor uses named regular expression extraction fields and a template to extract data and then reform it into an output record.  Output templates can contain static values and completely reform the output data if needed.
 
-Templates reference extracted values by name using field definitions similar to bash.  For example, if your regex extracted a field named `foo` you could insert that extraction in the template with `${foo}`.
+Templates reference extracted values by name using field definitions similar to bash.  For example, if your regex extracted a field named `foo` you could insert that extraction in the template with `${foo}`. The templates also support the special key `${_SRC_}`, which will be replaced by the SRC field of the current entry.
 
 The Regex Extraction preprocessor Type is `regexextract`.
 
@@ -396,7 +396,6 @@ The Regex Extraction preprocessor Type is `regexextract`.
 * Passthrough-Misses (boolean, optional): This parameter specifies whether the preprocessor should pass the record through unchanged if the regular expression does not match.
 * Regex (string, required): This parameter defines the regular expression for extraction
 * Template (string, required): This parameter defines the output form of the record.
-
 
 ### Common Use Cases
 
