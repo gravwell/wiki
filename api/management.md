@@ -43,7 +43,7 @@ NOTE: Only a single backup and/or restore may take place at any given time.
 
 ### Restoring from a system backup
 
-Admin users may restor the system from a backup archive by performing a `POST` to the `/api/backup` API and uploading a backup file using a multipart form.
+Admin users may restore the system from a backup archive by performing a `POST` to the `/api/backup` API and uploading a backup file using a multipart form.
 
 The API expects that the backup file be located in the `backup` form field and be uploaded using a multipart form.
 
