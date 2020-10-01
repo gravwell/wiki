@@ -148,7 +148,7 @@ In order to get a list of all searches that exist on the system, an admin user m
 
 An optional download format for a search is an `archive`.  An archive represents a fully self-contained search that can be imported into another Gravwell instance.  The import API accepts the saved search archives as an upload and unpacks the search into the saved search system.  Users can then attach to the search as if it were saved on the local system.
 
-When a search archive is reimported the search becomes owned by the user that imported it, regardless of the user that downloaded it.  An optional `GID` form field may be supplied as part of the import process to also assign a group to the imported search.
+When a search archive is reimported, the imported search is owned by the user that *imported* it, regardless of which user *downloaded* it.  An optional `GID` form field may be supplied in the import request to share the imported search with a group.
 
 Searches are imported by performing a multipart form `POST` to the `/api/searchctrl/import` URL.
 
