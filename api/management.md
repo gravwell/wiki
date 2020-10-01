@@ -35,7 +35,7 @@ A system backup can be used to save user and group accounts, dashboards, kits, q
 
 A backup is obtained by performing a `GET` request on `/api/backup` as an admin user, the API will then return a file download with the backup file.
 
-By default a backup does not contain any saved searches, to include saved searches in the backup append the `savedsearch=true` URL parameter on the GET request.
+By default a backup does not contain any saved searches; to include saved searches in the backup append the `savedsearch=true` URL parameter on the GET request.
 
 The `/api/backup` API may be authenticated using either the JWT authorization token or a cookie.
 
