@@ -4,6 +4,7 @@ Most users will interact with Gravwell through the web GUI. This page describes 
 
 * [The Search Interface](queries/queries.md)
 * [Dashboards](dashboards/dashboards.md)
+* [Persistent Searches](persistent/persistent.md)
 * [Labels and Filtering](labels/labels.md)
 * [The Query Library](querylibrary/querylibrary.md)
 * [Resources](#!resources/resources.md)
