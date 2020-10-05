@@ -1,6 +1,12 @@
-# Gauge
+# Gauge & Numbercard
 
 The gauge renderer is a condensing renderer used to turn entries into one or more final values suitable for display as "gauges". For instance, you might wish to find the total number of brute-force attempts over the last hour and display it in a dashboard. While this could be accomplished with the table renderer, the gauge renderer makes for a more attractive result with at-a-glance readability.
+
+![](gauge-example.png)
+
+The numbercard renderer is an "alias" of gauge: it has the exact same syntax as gauge, but will default to displaying simple numeric tiles instead of gauges:
+
+![](numbercard-example.png)
 
 ## Basic Usage
 
@@ -19,6 +25,15 @@ Selecting the gear icon allows you to change some options on the gauge. Clicking
 Selecting 'Number card' in the chart type dropdown will change the display to the other kind of gauge:
 
 ![](gauge3.png)
+
+If we specify `numbercard` instead of `gauge`, we will default to the 'Number card' view:
+
+
+```
+tag=json json class | stats mean(class) | numbercard mean
+```
+
+![](numbercard-basic.png)
 
 ## Specifying a Label
 
@@ -88,10 +103,10 @@ The renderer also behaves appropriately in "number card" mode with multiple item
 
 ## Keyed Multi-Gauge
 
-If you specify a magnitude which is *keyed*, gauge will output values for each combination of keys. So for instance, one might take weather data from multiple cities and find the average *per city*, then pass the resulting average to gauge:
+If you specify a magnitude which is *keyed*, gauge will output values for each combination of keys. So for instance, one might take weather data from multiple cities and find the average *per city*, then pass the resulting average to `gauge` or `numbercard`:
 
 ```
-tag=weather json main.temp name | stats mean(temp) by name | gauge mean
+tag=weather json main.temp name | stats mean(temp) by name | numbercard mean
 ```
 
 ![](keyed1.png)
