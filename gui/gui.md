@@ -12,6 +12,7 @@ Most users will interact with Gravwell through the web GUI. This page describes 
 * [Kits](#!kits/kits.md)
 * [Templates](templates/templates.md)
 * [Macros](#!search/macros.md)
+* [Actionables](actionables/actionables.md)
 * [Advanced GUI User Preferences](#!configuration/gui.md)
 
 ## GUI Introduction
