@@ -14,7 +14,7 @@ Actionables are created by specifying one or more regular expressions, along wit
 
 Actionables are made up of two components - triggers, which are simply regular expressions that Gravwell uses to match on text, and actions, which are the actions that can be taken on a matched trigger.
 
-An actionable can contain more than one trigger, and triggers can enumerate values within a regular expression. For example, if you wanted to extract the color "green" from the phrase "The color is green". You could write this regular expression trigger as:
+An actionable can contain more than one trigger and triggers can enumerate values within a regular expression. For example, if you wanted to extract the color "green" from the phrase "The color is green". You could write this regular expression trigger as:
 
 ```The color is (?<color>.*)```
 
@@ -38,9 +38,9 @@ For example, we could have a trigger to extract a given color from multiple form
 
 ```The sky is (?<color>.*)```
 
-For a given actionable with both of these triggers, any listed actions will appear for any instance of either of these triggers.
+For a given actionable with both of these triggers any listed actions will appear for any instance of either of these triggers.
 
-In the trigger menu, a "test" field is provided to allow you to enter example data to test the trigger.
+In the trigger menu a "test" field is provided to allow you to enter example data to test the trigger.
 
 ![](actionables-trigger.png)
 
