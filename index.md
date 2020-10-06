@@ -78,6 +78,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Hardening Gravwell](configuration/hardening.md)
 
+  * [Common Problems & Caveats](configuration/caveats.md)
+
 ## Query Acceleration, Auto-Extraction, and Data Management
   
   * [Setting up Auto-extractors](configuration/autoextractors.md)
