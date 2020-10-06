@@ -393,6 +393,36 @@ c.Write("foo")
 c.Close()
 ```
 
+## Management Functions
+
+The scripting system also has access to management functions that can be used to automatically interact with various Gravwell APIs.
+
+### Performing a system backup
+
+The helper function `backup` is provided to make it easy to perform a system backup and gain a handle on a `io.ReadCloser`.  The `backup` function has the following definition:
+```
+backup(io.Writer, bool) error
+```
+The backup function will write the entire backup package to the provided writer and return and error on failure.  The second argument to the backup function indicates whether you want to include saved searches in the backup.  Be aware that saved searches can be very large, which can make backup packages very large.
+
+#### An example backup script
+
+This example backup script will execute a backup and send the resulting package to an TCP network socket, essentially streaming a backup to a remote TCP listener:
+
+```
+var net = import("net")
+c, err = net.Dial("tcp", "127.0.0.1:9876")
+if err != nil {
+	return err
+}
+err = backup(c, true)
+if err != nil {
+	c.Close()
+	return err
+}
+return c.Close()
+```
+
 ## An example search script
 
 This script creates a backgrounded search that finds which IPs have communicated with Cloudflare's 1.1.1.1 DNS service over the last day. If no results are found, the search is deleted, but if there are results the search will remain for later perusal by the user in the 'Manage Searches' screen of the GUI.
