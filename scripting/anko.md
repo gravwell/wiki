@@ -232,29 +232,274 @@ var json = import("encoding/json")
 
 For security reasons, the anko module does not allow access to *all* packages included with the full Anko scripting language. The following packages are available for use in anko scripts:
 
-* `bytes`: work with byte slices
-* `crypto/md5`, `crypto/sha1`, `crypto/sha256`, `crypto/sha512`: cryptographic hashing
-* `encoding/csv`: encode and decode CSV data
-* `encoding/json`: encode and decode json data
-* `errors`: handle Go errors
-* `flag`: handle command-line arguments
-* `fmt`: printing & formatting strings
-* `math`: mathematical functions
-* `math/big`: bignums
-* `math/rand`: random numbers
-* `net/http`: limited HTTP functionality (client only)
-* `net/url`: URLs
-* `path`: paths
-* `path/filepath`: path functions specific to files
-* `regexp`: regular expressions
-* `sort`: sorting
-* `strings`: string processing functions
-* `time`: time processing functions
-* `github.com/ziutek/telnet`: telnet client functions (the Dial, DialTimeout, and NewConn functions are available, see [https://godoc.org/github.com/ziutek/telnet](https://godoc.org/github.com/ziutek/telnet) for documentation.
+* [bytes](https://golang.org/pkg/bytes): work with byte slices
+* [crypto/md5](https://golang.org/pkg/crypto/md5), [crypto/sha1](https://golang.org/pkg/crypto/sha1), [crypto/sha256](https://golang.org/pkg/crypto/sha256), [crypto/sha512](https://golang.org/pkg/crypto/sha512): cryptographic hashing
+* [crypto/tls](https://golang.org/pkg/crypto/tls): limited TLS functionality
+* [encoding/base64](https://golang.org/pkg/encoding/base64): limited base64 functionality
+* [encoding/csv](https://golang.org/pkg/encoding/csv): encode and decode CSV data
+* [encoding/hex](https://golang.org/pkg/encoding/hex): limited hex encoding functionality
+* [encoding/json](https://golang.org/pkg/encoding/json): encode and decode json data
+* [encoding/xml](https://golang.org/pkg/encoding/xml): limited XML encoding functionality
+* [errors](https://golang.org/pkg/errors): handle Go errors
+* [flag](https://golang.org/pkg/flag): limited flag parsing functionality
+* [fmt](https://golang.org/pkg/fmt): printing & formatting strings
+* [github.com/google/uuid](https://github.com/google/uuid): generate and inspect UUIDs
+* [github.com/gravwell/ipexist](https://github.com/gravwell/ipexist): Gravwell IP helper functions
+* [github.com/RackSec/srslog](https://github.com/RackSec/srslog): alternate syslog package to golang's standard library
+* [io](https://golang.org/pkg/io): basic I/O primitives
+* [io/util](https://golang.org/pkg/io/util): just the `ioutil.ReadAll` function (see below)
+* [math](https://golang.org/pkg/math): mathematical functions
+* [math/big](https://golang.org/pkg/math/big): bignums
+* [math/rand](https://golang.org/pkg/math/rand): random numbers
+* [net](https://golang.org/pkg/net): limited network functionality
+* [net/https](https://golang.org/pkg/net/https): limited HTTP functionality (client only)
+* [net/url](https://golang.org/pkg/net/url): URLs
+* [path](https://golang.org/pkg/path): paths
+* [path/filepath](https://golang.org/pkg/path/filepath): path functions specific to files
+* [regexp](https://golang.org/pkg/regexp): regular expressions
+* [sort](https://golang.org/pkg/sort): sorting
+* [strings](https://golang.org/pkg/strings): string processing functions
+* [time](https://golang.org/pkg/time): time processing functions
+* [github.com/ziutek/telnet](https://github.com/ziutek/telnet): telnet client functions 
 
 An exhaustive description of every package is not possible in this document; you can view the available functions exported for each package at [the official anko repository](https://github.com/mattn/anko/tree/master/packages). Some specific packages are described further below, as they do not offer the complete functionality exported by the official anko repository.
 
-### The `net/http` package
+## Package restrictions
+
+Some packages have functions that are potentially dangerous to export via a scripting language. Gravwell restricts certain package exports to a subset of those available in the full package. Below is a list of all package restrictions, if any, for each package.
+
+### crypto/md5
+
+`crypto/md5` only exports the "New" and "Sum" functions:
+
+- `md5.New`
+- `md5.Sum`
+
+### crypto/sha1
+
+`crypto/sha1` only exports the "New" and "Sum" functions:
+
+- `sha1.New`
+- `sha1.Sum`
+
+### crypto/sha256
+
+`crypto/sha256` only exports the various "New" and "Sum" functions:
+
+- `sha256.New`
+- `sha256.New224`
+- `sha256.Sum224`
+- `sha256.Sum256`
+
+### crypto/sha512
+
+`crypto/sha512` only exports the various "New" and "Sum" functions:
+
+- `sha512.New`
+- `sha512.New384`
+- `sha512.New512_224`
+- `sha512.New512_256`
+- `sha512.Sum384`
+- `sha512.Sum512`
+- `sha512.Sum512_224`
+- `sha512.Sum512_256`
+
+### crypto/tls
+
+This module is only available if `Disable-Network-Script-Functions` is set to `false` in the Gravwell config. `crypto/tls` only exports the TLS config type for use in the `net/http` module:
+
+- `tls.Config`
+
+### encoding/csv
+
+`encoding/csv` only exports CSV initializers:
+
+- `csv.NewReader` (actually calls `csv.NewReader` with the LazyQuotes option set to true)
+- `csv.NewWriter`
+- `csv.NewBuilder`
+
+### encoding/base64
+
+`encoding/base64` only exports base64 initializers and encoding types:
+
+- `base64.NewDecoder`
+- `base64.NewEncoder`
+- `base64.NewEncoding`
+- `base64.RawStdEncoding`
+- `base64.RawURLEncoding`
+- `base64.StdEncoding`
+- `base64.URLEncoding`
+
+### encoding/hex
+
+`encoding/hex` exports a subset of initializers and wrappers:
+
+- `hex.Decode`
+- `hex.DecodeString`
+- `hex.DecodedLen`
+- `hex.Dump`
+- `hex.Dumper`
+- `hex.Encode`
+- `hex.EncodeToString`
+- `hex.EncodedLen`
+- `hex.NewDecoder`
+- `hex.NewEncoder`
+
+### encoding/xml
+
+`encoding/exml` exports a subset of initializers, wrappers, and encoding options:
+
+- `xml.Escape`
+- `xml.EscapeText`
+- `xml.Marshal`
+- `xml.MarshalIndent`
+- `xml.Unmarshal`
+- `xml.NewDecoder`
+- `xml.NewTokenDecoder`
+- `xml.NewEncoder`
+- `xml.HTMLAutoClose`
+- `xml.HTMLEntity`
+- `xml.Attr`
+- `xml.CharData`
+- `xml.Comment`
+- `xml.Directive`
+- `xml.EndElement`
+- `xml.Name`
+- `xml.ProcInst`
+- `xml.StartElement`
+
+### flag 
+
+`flag` only exports a subset of types, instead of the entire `flag` package:
+
+- `flag.NewFlagSet`
+- `flag.PanicOnError`
+- `flag.ContinueOnError`
+
+### github.com/google/uuid
+
+`github.com/google/uuid` only exports the "New" and "Parse" functions:
+
+- `uuid.New`
+- `uuid.Parse`
+- `uuid.ParseBytes`
+
+### github.com/gravwell/ipexist
+
+This module is only available if `Disable-Network-Script-Functions` is set to `false` in the Gravwell config. `github.com/gravwell/ipexist` only exports the "New" related functions:
+
+- `ipexist.New`
+- `ipexist.NewIPBitMap`
+
+### github.com/RackSec/srslog
+
+This module is only available if `Disable-Network-Script-Functions` is set to `false` in the Gravwell config. `github.com/RackSec/srslog` only exposes the syslog related functionality:
+
+- `srslog.Dial`
+- `srslog.DefaultFormatter`
+- `srslog.DefaultFramer`
+- `srslog.RFC3164Formatter`
+- `srslog.RFC5424Formatter`
+- `srslog.RFC5425MessageLengthFramer`
+- `srslog.UnixFormatter`
+- `srslog.LOG_EMERG`
+- `srslog.LOG_ALERT`
+- `srslog.LOG_CRIT`
+- `srslog.LOG_ERR`
+- `srslog.LOG_WARNING`
+- `srslog.LOG_NOTICE`
+- `srslog.LOG_INFO`
+- `srslog.LOG_DEBUG`
+- `srslog.LOG_KERN`
+- `srslog.LOG_USER`
+- `srslog.LOG_MAIL`
+- `srslog.LOG_DAEMON`
+- `srslog.LOG_AUTH`
+- `srslog.LOG_SYSLOG`
+- `srslog.LOG_LPR`
+- `srslog.LOG_NEWS`
+- `srslog.LOG_UUCP`
+- `srslog.LOG_CRON`
+- `srslog.LOG_AUTHPRIV`
+- `srslog.LOG_FTP`
+- `srslog.LOG_LOCAL0`
+- `srslog.LOG_LOCAL1`
+- `srslog.LOG_LOCAL2`
+- `srslog.LOG_LOCAL3`
+- `srslog.LOG_LOCAL4`
+- `srslog.LOG_LOCAL5`
+- `srslog.LOG_LOCAL6`
+- `srslog.LOG_LOCAL7`
+
+### github.com/ziutek/telnet
+
+This module is only available if `Disable-Network-Script-Functions` is set to `false` in the Gravwell config. Exported functions and types include:
+
+- `telnet.Dial`
+- `telnet.DialTimeout`
+- `telnet.NewConn`
+- `telnet.Conn`
+
+### io/ioutil
+
+`io/ioutil` only exports one function, `ioutil.ReadAll()`.
+
+### net
+
+This module is only available if `Disable-Network-Script-Functions` is set to `false` in the Gravwell config. Exported functions and types include:
+
+- `net.CIDRMask`
+- `net.Dial`
+- `net.DialIP`
+- `net.DialTCP`
+- `net.DialTimeout`
+- `net.DialUDP`
+- `net.ErrWriteToConnected`
+- `net.FlagBroadcast`
+- `net.FlagLoopback`
+- `net.FlagMulticast`
+- `net.FlagPointToPoint`
+- `net.FlagUp`
+- `net.IPv4`
+- `net.IPv4Mask`
+- `net.IPv4allrouter`
+- `net.IPv4allsys`
+- `net.IPv4bcast`
+- `net.IPv4len`
+- `net.IPv4zero`
+- `net.IPv6interfacelocalallnodes`
+- `net.IPv6len`
+- `net.IPv6linklocalallnodes`
+- `net.IPv6linklocalallrouters`
+- `net.IPv6loopback`
+- `net.IPv6unspecified`
+- `net.IPv6zero`
+- `net.InterfaceAddrs`
+- `net.InterfaceByIndex`
+- `net.InterfaceByName`
+- `net.Interfaces`
+- `net.JoinHostPort`
+- `net.LookupAddr`
+- `net.LookupCNAME`
+- `net.LookupHost`
+- `net.LookupIP`
+- `net.LookupMX`
+- `net.LookupNS`
+- `net.LookupPort`
+- `net.LookupSRV`
+- `net.LookupTXT`
+- `net.ParseCIDR`
+- `net.ParseIP`
+- `net.ParseMAC`
+- `net.ResolveIPAddr`
+- `net.ResolveTCPAddr`
+- `net.ResolveUDPAddr`
+- `net.ResolveUnixAddr`
+- `net.SplitHostPort`
+
+### net/http
+
+This module is only available if `Disable-Network-Script-Functions` is set to `false` in the Gravwell config. 
 
 `net/http` exports a subset of functions, types, and variables for performing HTTP *requests*. The types `Client`, `Cookie`, `Request`, and `Response` are exported; see [the Go documentation](https://golang.org/pkg/net/http/) for a description of these types.
 
@@ -284,3 +529,4 @@ resp.Body.Close()
 ```
 
 Warning: You *must* close the http.Response's Body field when you are finished, as shown above. Leaving the Body open will leave a network connection open, eventually causing the search agent to run out of sockets. The `httpGet` and `httpPost` functions will close the Body automatically; please consider using those wherever possible.
+
