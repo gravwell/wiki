@@ -14,7 +14,7 @@ Every search module has universal enumerated values for records.
 * [chart](chart/chart.md) - Render data as line graphs, bar graphs, etc.
 * [fdg](fdg/fdg.md) - Force-directed graphs.
 * [stackgraph](stackgraph/stackgraph.md) - Stack graphs.
-* [gauge](gauge/gauge.md) - Gauges and numeric cards.
+* [gauge/numbercard](gauge/gauge.md) - Gauges and numeric cards.
 
 ### Tables and Text
 * [table](table/table.md) - Display tables of enumerated values.

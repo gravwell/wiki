@@ -387,7 +387,11 @@ It is highly common for transport buses to wrap data streams with additional met
 
 The regexextraction preprocessor uses named regular expression extraction fields and a template to extract data and then reform it into an output record.  Output templates can contain static values and completely reform the output data if needed.
 
-Templates reference extracted values by name using field definitions similar to bash.  For example, if your regex extracted a field named `foo` you could insert that extraction in the template with `${foo}`.
+Templates reference extracted values by name using field definitions similar to bash.  For example, if your regex extracted a field named `foo` you could insert that extraction in the template with `${foo}`. The templates also support the following special keys:
+
+* `${_SRC_}`, which will be replaced by the SRC field of the current entry.
+* `${_DATA_}`, which will be replaced by the string-formatted Data field of the current entry.
+* `${_TS_}`, which will be replaced by the string-formatted TS (timestamp) field of the current entry.
 
 The Regex Extraction preprocessor Type is `regexextract`.
 
@@ -396,7 +400,6 @@ The Regex Extraction preprocessor Type is `regexextract`.
 * Passthrough-Misses (boolean, optional): This parameter specifies whether the preprocessor should pass the record through unchanged if the regular expression does not match.
 * Regex (string, required): This parameter defines the regular expression for extraction
 * Template (string, required): This parameter defines the output form of the record.
-
 
 ### Common Use Cases
 
@@ -637,4 +640,56 @@ Log-Level=INFO
 	Cleartext-Backend-Target=172.19.0.103:4023
 	Ingest-Cache-Path=/opt/gravwell/cache/federator_dup3.cache
 	Max-Ingest-Cache=1024
+```
+
+## Drop Preprocessor
+
+The drop preprocessor does exactly what the name implies, it simple drops entries from the ingest pipeline, effectively throwing them away.
+
+This processor can be useful if an ingest stream is to be primarily handled by another set of preprocessors.  For example, if you want to send data to a remote system using the forwarder preprocessor but NOT ingest it upstream into a Gravwell indexer, you could add a final `drop` preprocessor which will simply discard all entries that it sees.
+
+### Supported Options
+
+None.
+
+### Example: Just Drop Everything
+
+This example has a single preprocessor `drop` which just discards all entries on a Simple Relay listener.
+
+```
+[Listener "default"]              
+	Bind-String="0.0.0.0:601"
+	Reader-Type=rfc5424
+	Tag-Name=syslog
+	Preprocessor=dropit
+
+[Preprocessor "dropit"]
+	Type=Drop               
+```
+
+### Example: Forward Entries and Drop
+
+This example forwards entries via a TCP forwarder then drops them.
+
+```
+[Listener "default"]              
+	Bind-String="0.0.0.0:601"
+	Reader-Type=rfc5424
+	Tag-Name=syslog
+	Preprocessor=forwardprivnet
+	Preprocessor=dropit
+
+[Preprocessor "forwardprivnet"]
+	Type=Forwarder               
+	Protocol=tcp
+	Target="172.17.0.3:601"
+	Format="raw"
+	Delimiter="\n"
+	Buffer=128
+	Source=192.168.0.1
+	Source=192.168.1.0/24
+	Non-Blocking=false
+
+[Preprocessor "dropit"]
+	Type=Drop               
 ```

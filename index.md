@@ -78,6 +78,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Hardening Gravwell](configuration/hardening.md)
 
+  * [Common Problems & Caveats](configuration/caveats.md)
+
 ## Query Acceleration, Auto-Extraction, and Data Management
   
   * [Setting up Auto-extractors](configuration/autoextractors.md)
@@ -108,7 +110,7 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
     * [Labels and Filtering](gui/labels/labels.md)
 
-	* [Kits](kits/kits.md)
+    * [Kits](kits/kits.md)
 
   * [Command-Line Client](cli/cli.md)
 

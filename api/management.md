@@ -25,3 +25,32 @@ An example response when not in distributed mode:
 	"Distributed": false
 }
 ```
+
+
+### Performing a system backup
+
+Admin users may request a system backup which will provide a backup file containing all content related to the state of Gravwell.
+
+A system backup can be used to save user and group accounts, dashboards, kits, query libraries, and even saved searches.  This is essentially everything but data and system configuration.
+
+A backup is obtained by performing a `GET` request on `/api/backup` as an admin user, the API will then return a file download with the backup file.
+
+By default a backup does not contain any saved searches; to include saved searches in the backup append the `savedsearch=true` URL parameter on the GET request.
+
+The `/api/backup` API may be authenticated using either the JWT authorization token or a cookie.
+
+NOTE: Only a single backup and/or restore may take place at any given time.
+
+### Restoring from a system backup
+
+Admin users may restore the system from a backup archive by performing a `POST` to the `/api/backup` API and uploading a backup file using a multipart form.
+
+The API expects that the backup file be located in the `backup` form field and be uploaded using a multipart form.
+
+The `/api/backup` API may be authenticated using either the JWT authorization token or a cookie.
+
+NOTE: A restoration is a complete restoration, any changes to users, content, or saved searches will after the restoration point will be lost.
+
+NOTE: Only a single backup and/or restore may take place at any given time.
+
+NOTE: Once the restoration begins, all sessions will be terminated.  Upon successful completion of a restore, all users will need to log back in.

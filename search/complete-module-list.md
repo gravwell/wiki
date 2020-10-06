@@ -40,6 +40,7 @@
 * [min](math/math.md#Min)
 * [namedfields](namedfields/namedfields.md)
 * [netflow](netflow/netflow.md)
+* [numbercard](gauge/gauge.md)
 * [packet](packet/packet.md)
 * [packetlayer](packetlayer/packetlayer.md)
 * [pcap](pcap/pcap.md)

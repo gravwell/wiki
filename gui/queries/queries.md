@@ -72,7 +72,7 @@ The results page also has a menu of additional actions for the search results, a
 
 ### Save results
 
-This option marks the search as SAVED. The results will be accessible in the Persistent Searches page until the search is deleted by the user.
+This option marks the search as SAVED. The results will be accessible in the [Persistent Searches](#!gui/persistent/persistent.md) page until the search is deleted by the user.
 
 ### Save query
 
@@ -88,7 +88,7 @@ This option lets you add the search to an existing dashboard, or create a new da
 
 ### Send to background
 
-This option is useful when a search is taking longer than expected to complete. Clicking "send to background" will make the search continue running in the background even after you navigate away from the results page; this allows you to do other things while the search completes. You can monitor the search's status and view the completed results from the Persistent Searches page. Note that backgrounded searches do *not* persist across webserver restarts; to keep results around permanently, use the "Save results" option.
+This option is useful when a search is taking longer than expected to complete. Clicking "send to background" will make the search continue running in the background even after you navigate away from the results page; this allows you to do other things while the search completes. You can monitor the search's status and view the completed results from the [Persistent Searches](#!gui/persistent/persistent.md) page. Note that backgrounded searches do *not* persist across webserver restarts; to keep results around permanently, use the "Save results" option.
 
 ### Schedule
 

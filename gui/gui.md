@@ -4,10 +4,15 @@ Most users will interact with Gravwell through the web GUI. This page describes 
 
 * [The Search Interface](queries/queries.md)
 * [Dashboards](dashboards/dashboards.md)
+* [Persistent Searches](persistent/persistent.md)
 * [Labels and Filtering](labels/labels.md)
-* [Managing Resources](#!resources/resources.md)
-* [Managing Auto-Extractors](#!configuration/autoextractors.md)
-* [Managing Kits](#!kits/kits.md)
+* [The Query Library](querylibrary/querylibrary.md)
+* [Resources](#!resources/resources.md)
+* [Auto-Extractors](#!configuration/autoextractors.md)
+* [Kits](#!kits/kits.md)
+* [Templates](templates/templates.md)
+* [Macros](#!search/macros.md)
+* [Actionables](actionables/actionables.md)
 * [Advanced GUI User Preferences](#!configuration/gui.md)
 
 ## GUI Introduction

@@ -143,7 +143,7 @@ The `CAP_NET_RAW` capability is only used by the [Network Capture](/#!ingesters/
 
 The `CAP_NET_BIND_SERVICE` capability is used by the [Simple Relay](/#!ingesters/ingesters.md#Simple_Relay) and the Webserver so that they can bind to low numbered ports such as 80, and 443 for the webserver and 601 and 514 for the Simple Relay ingester.
 
-# Search Scripting and Automation
+## Search Scripting and Automation
 
 The Gravwell automation system is extremely powerful. It can execute queries, update resources, and reach out to external systems.  The automation scripting system is underpinned by a [Turing Complete](https://simple.wikipedia.org/wiki/Turing_complete) language and can essentially do *anything*.  But with great power comes great responsibility.  Depending on your userbase, you may wish to disable "risky" API access in scripts to limit what a user can do.  APIs that are deemed "risky" are those that can establish external connectivity outside of Gravwell, including HTTP, network, SSH, FTP, SFTP, etc.
 
@@ -155,7 +155,7 @@ Note: The network scripting functions are extremely useful, so only disable them
 
 [//]: # (# Query Controls)
 
-# Notes on SELinux
+## Notes on SELinux
 
 Gravwell's installers attempt to configure SELinux appropriately if SELinux is enabled. This configuration consists of the following:
 

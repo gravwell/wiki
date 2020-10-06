@@ -245,7 +245,7 @@ Most ingesters attempt to apply a timestamp to each entry by extracting a timest
 * `Ignore-Timestamps` (boolean): setting `Ignore-Timestamps=true` will make the ingester apply the current time to each entry rather than attempting to extract a timestamp. This can be the only option for ingesting data when you have extremely incoherent incoming data.
 * `Assume-Local-Timezone` (boolean): By default, if a timestamp does not include a time zone the ingester will assume it is a UTC timestamp. Setting `Assume-Local-Timezone=true` will make the ingester instead assume whatever the local computer's timezone is. This is mutually exclusive with the Timezone-Override option.
 * `Timezone-Override` (string): Setting `Timezone-Override` tells the ingester that timestamps which don't include a timezone should be parsed in the specified timezone. Thus `Timezone-Override=US/Pacific` would tell the ingester to treat incoming timestamps as if they were in US Pacific time. See [this page](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for a complete list of acceptable timezone names (in the 'TZ database name' column). Mutually exclusive with Assume-Local-Timezone.
-* `Timestamp-Format-Override` (string): This parameter tells the ingester to look for a specific timestamp format in the data, e.g. `Timestamp-Format-Override="Mon Jan 2 15:04:05 MST 2006"`. The [Go time package's reference time format](https://golang.org/pkg/time/#pkg-constants) describes how to declare a timestamp format.
+* `Timestamp-Format-Override` (string): This parameter tells the ingester to look for a specific timestamp format in the data, e.g. `Timestamp-Format-Override="RFC822"`. Refer to [the timegrinder documentation](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder) for a full list of possible overrides, with examples.
 
 The Kinesis and Google Pub/Sub ingesters do not provide the `Ignore-Timestamps` option. Kinesis and Pub/Sub include an arrival timestamp with every entry; by default, the ingesters will use that as the Gravwell timestamp. If `Parse-Time=true` is specified in the data consumer definition, the ingester will instead attempt to extract a timestamp from the message body. See these ingesters' respective sections for additional information.
 
@@ -254,6 +254,46 @@ The Kinesis and Google Pub/Sub ingesters do not provide the `Ignore-Timestamps` 
 [Complete Configuration and Documentation](#!ingesters/simple_relay.md).
 
 Simple Relay is a text ingester which is capable of listening on multiple TCP or UDP ports.  Each port can be assigned a tag as well as an ingest standard (e.g. parse RFC5424 or simple newline delimited entries).  Simple Relay is the go-to ingester for ingesting remote syslog entries or consuming from any data source that can throw text logs over a network connection.
+
+### Listener Examples
+
+```
+[Listener "default"]
+	Bind-String="0.0.0.0:7777" # Bind to all interfaces, with TCP implied
+	Assume-Local-Timezone=false # Do not assume the local timezone if not provided
+	Tag-Name=foo # Set the tag to ingest into
+	Source-Override="DEAD::BEEF" # Override the source for just this listener
+	Ignore-Timestamps=true
+
+[Listener "syslogtcp"]
+	Bind-String="tcp://0.0.0.0:601" # standard RFC5424 reliable syslog
+	Reader-Type=rfc5424 # Syslog reader
+	Tag-Name=syslog
+	Keep-Priority=true # Leave the <nnn> priority value at the beginning of the syslog message
+	Assume-Local-Timezone=true # If a time format does not have a timezone, assume local time
+
+[Listener "syslogudp"]
+	Bind-String="udp://0.0.0.0:514" #standard UDP based RFC5424 syslog
+	Reader-Type=rfc5424
+	Tag-Name=syslog
+	Timezone-Override=America/Denver
+
+[JSONListener "json"]
+    Bind-String=[2600:1f18:63ef:e802:355f:aede:dbba:2c03]:901
+    Extractor="field1"
+    Default-Tag=json
+    Tag-Match=test1:tag1
+    Tag-Match=test2:tag2
+    Tag-Match=test3:tag3
+
+[Listener "tls"]
+	Bind-String="tls://0.0.0.0:514" # TLS over port 514
+	Reader-Type=rfc5424
+	Cert-File=/opt/gravwell/cert.pem
+	Key-File=/opt/gravwell/key.pem
+	Tag-Name=syslog
+	Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
+```
 
 ### Installation
 
@@ -274,6 +314,34 @@ If the Gravwell services are present on the same machine, the installation scrip
 ## File Follower
 
 The File Follower ingester is designed to watch files on the local system, capturing logs from sources that cannot natively integrate with Gravwell or are incapable of sending logs via a network connection.  The File Follower comes in both Linux and Windows flavors and can follow any line-delimited text file.  It is compatible with file rotation and employs a powerful pattern matching system to deal with applications that may name their logfiles inconsistently.
+
+### Follower Examples
+
+```
+[Follower "auth"]
+	Base-Directory="/var/log/"
+	File-Filter="auth.log,auth.log.[0-9]" # Look for all authorization log files
+	Tag-Name=auth
+	Assume-Local-Timezone=true 
+	Ignore-Timestamps=true
+
+[Follower "test"]
+	Base-Directory="/tmp/testing/"
+	File-Filter="*"
+	Tag-Name=default
+	Recursive=true
+	Ignore-Line-Prefix="#" # ignore lines beginning with #
+	Ignore-Line-Prefix="//"
+	Regex-Delimiter="###"
+
+[Follower "timevoodoo"]
+	Base-Directory="/tmp/time/"
+	File-Filter="*"
+	Tag-Name=default
+	Timestamp-Delimited=true
+	Timestamp-Regex=`[JFMASOND][anebriyunlgpctov]+\s+\S{1,2},\s+\d{4}\s+\d{1,2}:\d\d:\d\d,\d+\s+\S{2}\s+\S+`
+	Timestamp-Format-String="Jan _2, 2006 3:04:05,999 PM MST"
+```
 
 ### Installation
 
@@ -369,6 +437,54 @@ The HTTP ingester sets up HTTP listeners on one or more paths. If an HTTP reques
 
 This is an extremely convenient method for scriptable data ingest, since the `curl` command makes it easy to do a POST request using standard input as the body.
 
+### Listener Examples
+
+In addition to the universal configuration parameters used by all ingesters, the HTTP POST ingester has two additional global configuration parameters that control the behavior of the embedded webserver.  The first configuration parameter is the `Bind` option, which specifies the interface and port that the webserver listens on.  The second is the `Max-Body` parameter, which controls how large of a POST the webserver will allow.  The Max-Body parameter is a good safety net to prevent rogue processes from attempting to upload very large files into your Gravwell instance as a single entry.  Gravwell can support up to 2GB as a single entry, but we wouldn't recommend it.
+
+Multiple "Listener" definitions can be defined allowing specific URLs to send entries to specific tags.  In the example configuration we define two listeners which accept data from a weather IOT device and a smart thermostat.
+
+```
+ Example using basic authentication
+[Listener "basicAuthExample"]
+	URL="/basic"
+	Tag-Name=basic
+	AuthType=basic
+	Username=user1
+	Password=pass1
+
+[Listener "jwtAuthExample"]
+	URL="/jwt"
+	Tag-Name=jwt
+	AuthType=jwt
+	LoginURL="/jwt/login"
+	Username=user1
+	Password=pass1
+	Method=PUT # alternate method, data is still expected in the body of the request
+
+[Listener "cookieAuthExample"]
+	URL="/cookie"
+	Tag-Name=cookie
+	AuthType=cookie
+	LoginURL="/cookie/login"
+	Username=user1
+	Password=pass1
+	Method=PUT # alternate method, data is still expected in the body of the request
+
+[Listener "presharedTokenAuthExample"]
+	URL="/preshared/token"
+	Tag-Name=pretoken
+	AuthType="preshared-token"
+	TokenName=Gravwell
+	TokenValue=Secret
+
+[Listener "presharedTokenAuthExample"]
+	URL="/preshared/param"
+	Tag-Name=preparam
+	AuthType="preshared-parameter"
+	TokenName=Gravwell
+	TokenValue=Secret
+```
+
 ### Installation
 
 If you're using the Gravwell Debian repository, installation is just a single apt command:
@@ -395,37 +511,6 @@ An example global configuration with HTTPS enabled might look like the following
 [Global]
 	TLS-Certificate-File=/opt/gravwell/etc/cert.pem
 	TLS-Key-File=/opt/gravwell/etc/key.pem
-```
-
-#### Example Configuration
-
-In addition to the universal configuration parameters used by all ingesters, the HTTP POST ingester has two additional global configuration parameters that control the behavior of the embedded webserver.  The first configuration parameter is the `Bind` option, which specifies the interface and port that the webserver listens on.  The second is the `Max-Body` parameter, which controls how large of a POST the webserver will allow.  The Max-Body parameter is a good safety net to prevent rogue processes from attempting to upload very large files into your Gravwell instance as a single entry.  Gravwell can support up to 2GB as a single entry, but we wouldn't recommend it.
-
-Multiple "Listener" definitions can be defined allowing specific URLs to send entries to specific tags.  In the example configuration we define two listeners which accept data from a weather IOT device and a smart thermostat.
-
-```
-[Listener "weather"]
-	URL="/weather"
-	Tag-Name=weather
-
-
-[Listener "thermostat"]
-	URL="/smarthome/thermostat"
-	Tag-Name=thermostat
-```
-
-Any data that is sent in the body of a POST request sent to "/weather" or "/smarthome/thermostat" will be tagged with the "weather" and "thermostat" tags respectively.  The current timestamp will be attached to each entry at the time of the POST.
-
-You can test that a listener is working with a simple curl command:
-
-```
-curl -d "its hot outside bro" -X POST http://10.0.0.1:8080/weather
-```
-
-If you have an API key for OpenWeatherMap.org, you can set up a cron job to automatically pull down weather conditions and push them into Gravwell with a command like this:
-
-```
-curl "http://api.openweathermap.org/data/2.5/weather?q=Spokane&APPID=YOUR_APP_ID" | curl http://10.0.0.1:8088/weather -X POST -d @-
 ```
 
 #### Listener Authentication
@@ -593,6 +678,7 @@ curl -X SUPER_SECRET_METHOD -d "this is a test 2 using basic auth" http://127.0.
 The Mass File ingester is a very powerful but specialized tool for ingesting an archive of many logs from many sources.
 
 ### Example use case
+
 Gravwell users have used this tool when investigating a potential network breach. The user had Apache logs from over 50 different servers and needed to search them all. Ingesting them one after another causes poor temporal indexing performance. This tool was created to ingest the files while preserving the temporal nature of the log entries and ensuring solid performance.  The massfile ingester works best when the ingesting machine has enough space (storage and memory) to optimized the source logs prior to ingesting.  The optimization phase helps relieve pressure on the Gravwell storage system at ingest and during search, ensuring that incident responders can move quickly and get performant access to their log data in short order.
 
 ### Notes
@@ -632,6 +718,42 @@ Usage of ./massFile:
 ## Windows Event Service
 
 The Gravwell Windows events ingester runs as a service on a Windows machine and sends Windows events to the Gravwell indexer.  The ingester consumes from the `System`, `Application`, `Setup`, and `Security` channels by default.  Each channel can be configured to consume from a specific set of events or providers.
+
+### EventChannel Examples
+
+```
+[EventChannel "system"]
+	Tag-Name=windows
+	Channel=System #pull from the system channel
+
+[EventChannel "sysmon"]
+	Tag-Name=sysmon
+	Channel="Microsoft-Windows-Sysmon/Operational"
+	Max-Reachback=24h  #reachback must be expressed in hours (h), minutes (m), or seconds(s)
+
+[EventChannel "Application"]
+	Channel=Application #pull from the application channel
+	Tag-Name=winApp #Apply a new tag name
+	Provider=Windows System #Only look for the provider "Windows System"
+	EventID=1000-4000 #Only look for event IDs 1000 through 4000
+	Level=verbose #Only look for verbose entries
+	Max-Reachback=72h #start looking for logs up to 72 hours in the past
+	Request_Buffer=16 #use a large 16MB buffer for high throughput
+	Request_Size=1024 #Request up to 1024 entries per API call for high throughput
+
+[EventChannel "System Critical and Error"]
+	Channel=System #pull from the system channel
+	Tag-Name=winSysCrit #Apply a new tag name
+	Level=critical #look for critical entries
+	Level=error #AND for error entries
+	Max-Reachback=96h #start looking for logs up to 96 hours in the past
+
+[EventChannel "Security prune"]
+	Channel=Security #pull from the security channel
+	Tag-Name=winSec #Apply a new tag name
+	EventID=-400 #ignore event ID 400
+	EventID=-401 #AND ignore event ID 401
+```
 
 ### Installation
 
@@ -776,6 +898,23 @@ chart count by TargetFilename
 
 The Netflow ingester acts as a Netflow collector (see [the wikipedia article](https://en.wikipedia.org/wiki/NetFlow) for a full description of Netflow roles), gathering records created by Netflow exporters and capturing them as Gravwell entries for later analysis. These entries can then be analyzed using the [netflow](#!search/netflow/netflow.md) search module.
 
+### Collector Examples
+
+```
+[Collector "netflow v5"]
+	Bind-String="0.0.0.0:2055" #we are binding to all interfaces
+	Tag-Name=netflow
+	Assume-Local-Timezone=true
+	Session-Dump-Enabled=true
+
+[Collector "ipfix"]
+	Tag-Name=ipfix
+	Bind-String="0.0.0.0:6343"
+	Flow-Type=ipfix
+```
+
+### Installation
+
 If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
@@ -812,6 +951,23 @@ Note: At this time, the ingester only supports Netflow v5; keep this in mind whe
 ## Network Ingester
 
 A primary strength of Gravwell is the ability to ingest binary data. The network ingester allows you to capture full packets from the network for later analysis; this provides much better flexibility than simply storing netflow or other condensed traffic information.
+
+### Sniffer Examples
+
+```
+[Sniffer "spy1"]
+	Interface="p1p1" #sniffing from interface p1p1
+	Tag-Name="pcap"  #assigning tag  fo pcap
+	Snap-Len=0xffff  #maximum capture size
+	BPF-Filter="not port 4023" #do not sniff any traffic on our backend connection
+	Promisc=true
+
+[Sniffer "spy2"]
+	Interface="p5p2"
+	Source-Override=10.0.0.1
+```
+
+### Installation
 
 If you're using the Gravwell Debian repository, installation is just a single apt command:
 
@@ -922,6 +1078,30 @@ The Gravwell Kafka ingester is best suited as a colocated ingest point for a sin
 
 Most Kafka configurations enforce a data durability garuntee, which means data is stored in non-volitile storage when consumers are not available to consume it.  As a result we do not reccomend that the Gravwell ingest cache be enabled on Kafka ingester, instead let Kafka provide the data durability.
 
+### Consumer Examples
+
+```
+[Consumer "default"]
+	Leader="127.0.0.1"
+	Default-Tag=default   #send bad tag names to default tag
+	Tags=*                #allow all tags
+	Topic=default
+	Tag-Header=TAG        #look for the tag in the kafka TAG header
+	Source-Header=SRC     #look for the source in the kafka SRC header
+
+[Consumer "test"]
+	Leader="127.0.0.1:9092"
+	Tag-Name=test
+	Topic=test
+	Consumer-Group=mygroup
+	Synchronous=true
+	Key-As-Source=true #A custom feeder is putting its source IP in the message key value
+	Header-As-Source="TS" #look for a header key named TS and treat that as a source
+	Source-As-Text=true #the source value is going to come in as a text representation
+	Batch-Size=256 #get up to 256 messages before consuming and pushing
+	Rebalance-Strategy=roundrobin
+```
+
 ### Installation
 
 The Kafka ingester is avilable in the Gravwell debian repository as a debian package as well as a shell installer on our [Downloads page](#!quickstart/downloads.md).  Installation via the repository is performed using `apt`:
@@ -992,6 +1172,25 @@ Log-File=/opt/gravwell/log/kafka.log
 
 The collectd ingester is a fully standalone [collectd](https://collectd.org/) collection agent which can directly ship collectd samples to Gravwell.  The ingester supports multiple collectors which can be configured with different tags, security controls, and plugin-to-tag overrides.
 
+### Collector Examples
+
+```
+[Collector "default"]
+	Bind-String=0.0.0.0:25826
+	Tag-Name=collectd
+	Security-Level=encrypt
+	User=user
+	Password=secret
+	Encoder=json
+
+[Collector "example"]
+	Bind-String=10.0.0.1:9999 #default is "0.0.0.0:25826
+	Tag-Name=collectdext
+	Tag-Plugin-Override=cpu:collectdcpu
+	Tag-Plugin-Override=swap:collectdswap
+```
+
+### Installation
 If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
@@ -1126,6 +1325,26 @@ Gravwell provides an ingester capable of fetching entries from Amazon's [Kinesis
 
 Once the stream is configured, each record in the Kinesis stream will be stored as a single entry in Gravwell.
 
+### KinesisStream Examples
+
+```
+[KinesisStream "stream1"]
+	Region="us-west-1"
+	Tag-Name=kinesis
+	Stream-Name=MyKinesisStreamName	# should be the stream name as created in AWS
+	Iterator-Type=TRIM_HORIZON
+	Parse-Time=false
+	Assume-Local-Timezone=true
+
+[KinesisStream "stream2"]
+	Region="us-west-1"
+	Tag-Name=kinesis
+	Stream-Name=MyKinesisStreamName	# should be the stream name as created in AWS
+	Iterator-Type=TRIM_HORIZON
+	Metrics-Interval=60
+	JSON-Metric=true
+```
+
 ### Installation and configuration
 
 First, download the installer from the [Downloads page](#!quickstart/downloads.md), then install the ingester:
@@ -1190,6 +1409,21 @@ Gravwell provides an ingester capable of fetching entries from Google Compute Pl
 
 Once the stream is configured, each record in the PubSub stream topic will be stored as a single entry in Gravwell.
 
+### PubSub Examples
+
+```
+[PubSub "gravwell"]
+	Topic-Name=mytopic	# the pubsub topic you want to ingest
+	Tag-Name=gcp
+	Parse-Time=false
+	Assume-Local-Timezone=true
+
+[PubSub "my_other_topic"]
+	Topic-Name=foo # the pubsub topic you want to ingest
+	Tag-Name=gcp
+	Assume-Local-Timezone=false
+```
+
 ### Installation and configuration
 
 First, download the installer from the [Downloads page](#!quickstart/downloads.md), then install the ingester:
@@ -1241,6 +1475,30 @@ Gravwell provides an ingester for Microsoft Office 365 logs. The ingester can pr
 * Client secret: A secret token generated for your application via the Azure console
 * Azure Directory ID: A UUID representing your Active Directory instance, found in the Azure Active Directory dashboard
 * Tenant Domain: The domain of your Office 365 domain, e.g. "mycorp.onmicrosoft.com"
+
+### ContentType Examples
+
+```
+[ContentType "azureAD"]
+	Content-Type="Audit.AzureActiveDirectory"
+	Tag-Name="365-azure"
+
+[ContentType "exchange"]
+	Content-Type="Audit.Exchange"
+	Tag-Name="365-exchange"
+
+[ContentType "sharepoint"]
+	Content-Type="Audit.SharePoint"
+	Tag-Name="365-sharepoint"
+
+[ContentType "general"]
+	Content-Type="Audit.General"
+	Tag-Name="365-general"
+
+[ContentType "dlp"]
+	Content-Type="DLP.All"
+	Tag-Name="365-dlp"
+```
 
 ### Installation and configuration
 
@@ -1295,6 +1553,23 @@ Gravwell provides an ingester which can pull security information from Microsoft
 * Client ID: A UUID generated for your application via the Azure management console
 * Client secret: A secret token generated for your application via the Azure console
 * Tenant Domain: The domain of your Azure domain, e.g. "mycorp.onmicrosoft.com"
+
+### ContentType Examples
+
+```
+[ContentType "alerts"]
+	Content-Type="alerts"
+	Tag-Name="graph-alerts"
+
+[ContentType "scores"]
+	Content-Type="secureScores"
+	Tag-Name="graph-scores"
+	Ignore-Timestamps=true
+
+[ContentType "profiles"]
+	Content-Type="controlProfiles"
+	Tag-Name="graph-profiles"
+```
 
 ### Installation and configuration
 
@@ -1392,6 +1667,27 @@ The Amazon SQS Ingester (sqsIngester) is a simple ingester that can subscribe to
 
 For Gravwell, "at-least-once" delivery is an important caveat - The SQS ingester may receive duplicate messages with identical timestamps (depending on your configuration). It's also possible that the SQS ingester doesn't see some messages, depending on how your SQS workflow is deployed with other connected services. See [Amazon SQS](https://aws.amazon.com/sqs/) for more information.
 
+### Queue Examples
+
+```
+[Queue "default"]
+	Region="us-east-2"
+	Queue-URL="https://us-east-2.amazon..."
+	Tag-Name="sqs"
+	AKID="AKID..."
+	Secret="..."
+	Assume-Local-Timezone=false #Default for assume localtime is false
+	Source-Override="DEAD::BEEF" #override the source for just this Queue 
+
+[Queue "default"]
+	Region="us-west-1"
+	Queue-URL="https://us-west-1.amazon..."
+	Tag-Name="sqs"
+	AKID="AKID..."
+	Secret="..."
+```
+
+### Installation
 If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
@@ -1437,6 +1733,26 @@ The Packet Fleet Ingester provides a mechanism to query Google Stenographer inst
 Each Stenographer ingester listens on a given port (```Listen-Address```) and accepts Stenographer queries (see query syntax below) as an HTTP POST. On receiving a query, the ingester returns an integer job ID, and asyncrhonously queries the Stenographer instance and begins to ingest the returned PCAP. Multiple in-flight queries can be ran concurrently. Job status can be viewed by issuing an HTTP GET on "/status", which returns a JSON-encoded array of in-flight job IDs. 
 
 A simple web interface to submit and view job status is also available by browsing to the specified ingester port.
+
+### Stenographer Examples
+
+```
+[Stenographer "Region 1"]
+	URL="https://127.0.0.1:9001"
+	CA-Cert="ca_cert.pem"
+	Client-Cert="client_cert.pem"
+	Client-Key="client_key.pem"
+	Tag-Name=steno
+	Assume-Local-Timezone=false #Default for assume localtime is false
+	Source-Override="DEAD::BEEF" #override the source for just this Queue 
+
+[Stenographer "Region 2"]
+	URL="https://my.url:1234"
+	CA-Cert="ca_cert.pem"
+	Client-Cert="client_cert.pem"
+	Client-Key="client_key.pem"
+	Tag-Name=steno
+```
 
 ### Configuration Options ###
 
@@ -1498,6 +1814,25 @@ precendence and evaluate left-to-right.  Parens can also be used to group.
 The Federator is an entry relay: ingesters connect to the Federator and send it entries, then the Federator passes those entries to an indexer.  The Federator can act as a trust boundary, securely relaying entries across network segments without exposing ingest secrets or allowing untrusted nodes to send data for disallowed tags.  The Federator upstream connections are configured like any other ingester, allowing multiplexing, local caching, encryption, etc.
 
 ![](federatorDiagram.png)
+
+### IngestListener Examples
+
+```
+[IngestListener "enclaveA"]
+	Ingest-Secret = CustomSecrets
+	TLS-Bind = 0.0.0.0:4024
+	TLS-Certfile = /opt/gravwell/etc/cert.pem
+	TLS-Keyfile = /opt/gravwell/etc/key.pem
+	Tags=windows
+	Tags=syslog-*
+
+[IngestListener "enclaveB"]
+	Ingest-Secret = OtherIngestSecrets
+	Cleartext-Bind = 0.0.0.0:4023
+	Tags=apache
+	Tags=bash
+```
+
 
 ### Use Cases
 
