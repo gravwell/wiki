@@ -247,7 +247,7 @@ For security reasons, the anko module does not allow access to *all* packages in
 * [github.com/gravwell/ipexist](https://github.com/gravwell/ipexist): Gravwell IP helper functions
 * [github.com/RackSec/srslog](https://github.com/RackSec/srslog): alternate syslog package to golang's standard library
 * [io](https://golang.org/pkg/io): basic I/O primitives
-* [io/util](https://golang.org/pkg/io/util) just the `ioutil.ReadAll` function (see below)
+* [io/util](https://golang.org/pkg/io/util): just the `ioutil.ReadAll` function (see below)
 * [math](https://golang.org/pkg/math): mathematical functions
 * [math/big](https://golang.org/pkg/math/big): bignums
 * [math/rand](https://golang.org/pkg/math/rand): random numbers
@@ -260,7 +260,7 @@ For security reasons, the anko module does not allow access to *all* packages in
 * [sort](https://golang.org/pkg/sort): sorting
 * [strings](https://golang.org/pkg/strings): string processing functions
 * [time](https://golang.org/pkg/time): time processing functions
-* [github.com/ziutek/telnet](https://github.com/ziutek/telnet): telnet client functions (the Dial, DialTimeout, and NewConn functions are available.
+* [github.com/ziutek/telnet](https://github.com/ziutek/telnet): telnet client functions 
 
 An exhaustive description of every package is not possible in this document; you can view the available functions exported for each package at [the official anko repository](https://github.com/mattn/anko/tree/master/packages). Some specific packages are described further below, as they do not offer the complete functionality exported by the official anko repository.
 
