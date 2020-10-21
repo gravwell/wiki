@@ -52,6 +52,7 @@ Most of the core ingesters support a common set of global configuration paramete
 
 * Ingest-Secret
 * Connection-Timeout
+* Rate-Limit
 * Insecure-Skip-TLS-Verify
 * Cleartext-Backend-Target
 * Encrypted-Backend-Target
@@ -88,6 +89,27 @@ The Insecure-Skip-TLS-Verify token tells the ingester to ignore bad certificates
 ```
 Insecure-Skip-TLS-Verify=true
 Insecure-Skip-TLS-Verify=false
+```
+
+### Rate-Limit
+
+The Rate-Limit parameter sets a maximum bandwidth which the ingester can consume. This can be useful when configuring a "bursty" ingester that talks to the indexer over a slow connection, so the ingester doesn't hog all the available bandwidth when it is trying to send a lot of data.
+
+The argument should be a number followed by an optional rate suffix, e.g. `1048576` or `10Mbit`. The following suffixes exist:
+
+* **kbit, kbps, Kbit, Kbps**: "kilobits per second"
+* **KBps**: "kilobytes per second"
+* **mbit, mbps, Mbit, Mbps**: "megabits per second"
+* **MBps**: "megabytes per second"
+* **gbit, gbps, Gbit, Gbps**: "gigabits per second"
+* **GBps**: "gigabytes per second"
+
+#### Examples
+
+```
+Rate-Limit=1Mbit
+Rate-Limit=2048Kbps
+Rate-Limit=3MBps
 ```
 
 ### Cleartext-Backend-Target
