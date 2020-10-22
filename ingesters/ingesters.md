@@ -509,7 +509,7 @@ Multiple "Listener" definitions can be defined allowing specific URLs to send en
 
 ### Health Checks
 
-Some systems (such as AWS load balancers) require an unauthenticated URL that can be probed and interpretted as "proof of life".  The HTTP ingester can be configured to provide an a URL which when accessed with any method, body, and/or query parameters will always return a 200 OK.  To enable this health check endpoint add the `Health-Check-URL` stanza to the Global configuration block.
+Some systems (such as AWS load balancers) require an unauthenticated URL that can be probed and interpreted as "proof of life".  The HTTP ingester can be configured to provide an a URL which when accessed with any method, body, and/or query parameters will always return a 200 OK.  To enable this health check endpoint add the `Health-Check-URL` stanza to the Global configuration block.
 
 Here is a minimal example configuration snippet with the health check URL `/logbot/are/you/alive`:
 
