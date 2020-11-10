@@ -51,3 +51,21 @@ Gravwell makes an attempt to properly flag files in `/opt/gravwell` for SELinux 
 ## Gravwell Consumes Too Much Memory/CPU
 
 Because Gravwell often has to deal with huge quantities of data, we do not restrict how much memory or CPU time it can consume. If, however, you must run Gravwell on the same system as some other important software, you may wish to restrict its access to resources. In that case, see the "Systemd Unit Files" section of the [system hardening document](hardening.md).
+
+## Gravwell and Virtual Memory Areas
+
+Gravwell indexers use memory mapped (mmap) files to access stored data. Every mapped file counts against the indexer's maximum number of memory mapped files, as dictated by the Linux Kernel. On some systems, and depending on the amount and granularity of data in your indexer, you may have to increase the allowed number of memory mapped files to avoid crashes. Crashes caused by exhausting the available number of memory mapped files usually appear as a `malloc` failure. On most modern Linux distributions, the default number of allowed memory mapped files is 65536.
+
+To increase the number of allowed memory mapped files, use `sysctl`:
+
+```
+sysctl -w vm.max_map_count=262144
+```
+
+To permanently change the allowed number of memory mapped files, add the `sysctl` parameter to `sysctl.conf`:
+
+```
+echo vm.max_map_count=262144 >> /etc/sysctl.conf
+```
+
+
