@@ -69,6 +69,7 @@ require(`alerts/email.ank`, cfg.email_lib_revision)
 * `getPersistentMap(mapname, key) value` returns the value associated with the given key from the named persistent map.
 * `delPersistentMap(mapname, key)` deletes the specified key/value pair from the given map.
 * `persistentMap(mapname)` returns the entire named map, changes to the returned map will persist automatically on successful execution.
+* `getMacro(name) string, error` returns the value of the given macro or an error if it does not exist. Note that this function does not perform macro expansion.
 
 ## Search entry manipulation
 
@@ -99,6 +100,7 @@ Search structs are used to actively read entries from a search, while search IDs
 * `startBackgroundSearch(query, start, end) (search, err)` creates a backgrounded search with the given query string, executed over the time range specified by 'start' and 'end'. The return value is a Search struct. These time values should be specified using the time library; see the examples for a demonstration.
 * `startSearch(query, start, end) (search, err)` acts exactly like `startBackgroundSearch`, but does not background the search.
 * `detachSearch(search)` detaches the given search (a Search struct). This will allow non-backgrounded searches to be automatically cleaned up and should be called whenever you're done with a search.
+* `waitForSearch(search) error` waits for the given search to complete execution and returns an error if there is one.
 * `attachSearch(searchID) (search, error)` attaches to the search with the given ID and returns a Search struct which can be used to read entries etc.
 * `getSearchStatus(searchID) (string, error)` returns the status of the specified search, e.g. "SAVED".
 * `getAvailableEntryCount(search) (uint64, bool, error)` returns the number of entries that can be read from the given search, a boolean specifying if the search is complete, and an error if anything went wrong.
@@ -107,6 +109,7 @@ Search structs are used to actively read entries from a search, while search IDs
 * `executeSearch(query, start, end) ([]SearchEntry, error)` starts a search, waits for it to complete, retrieves up to ten thousand entries, detatches from search and returns the entries.
 * `deleteSearch(searchID) error` deletes the search with the specified ID
 * `backgroundSearch(searchID) error` sends the specified search to the background; this is useful for "keeping" a search for later manual inspection.
+* `saveSearch(searchID) error` Marks a given search results for long term storage.  This call does not wait for the query to complete and only returns an error if the request to mark it as saved fails.
 * `downloadSearch(searchID, format, start, end) ([]byte, error)` downloads the given search as if a user had clicked the 'Download' button in the web UI. `format` should be a string containing either "json", "csv", "text", "pcap", or "lookupdata" as appropriate. `start` and `end` are time values.
 * `getDownloadHandle(searchID, format, start, end) (io.Reader, error)` returns a streaming handle to the results of the given search as if the user had clicked the 'Download' button in the web UI. The handle returned is suitable for use with the HTTP library functions shown later in this document.
 
