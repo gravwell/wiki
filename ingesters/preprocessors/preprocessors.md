@@ -110,7 +110,7 @@ The JSON Array Split preprocessor Type is `jsonarraysplit`.
 
 ### Supported Options
 
-* `Extraction` (string, required): specifies the JSON field containing a struct which should be split, e.g. `Extraction=Users`, `Extraction=foo.bar`.
+* `Extraction` (string): specifies the JSON field containing a struct which should be split, e.g. `Extraction=Users`, `Extraction=foo.bar`. If you do not set `Extraction`, the preprocessor will attempt to treat the entire object as an array to split.
 * `Passthrough-Misses` (boolean, optional): If set to true, the preprocessor will pass along entries for which it was unable to extract the requested field. By default, these entries are dropped.
 * `Force-JSON-Object` (boolean, optional): By default, the preprocessor will emit entries with each containing one item in the list and nothing else; thus extracting `foo` from `{"foo": ["a", "b"]}` would result in two entries containing "a" and "b" respectively. If this option is set, that same entry would result in two entries containing `{"foo": "a"}` and `{"foo": "b"}`.
 * `Additional-Fields` (string, optional): A comma delimited list of additional fields outside the array to be split that will be extracted and included in each entry, e.g. `Additional-Fields="foo,bar, foo.bar.baz"`
@@ -122,6 +122,8 @@ Many data providers may pack multiple events into a single entry which can degra
 
 ### Example: Splitting Multiple Messages In a Single Record
 
+To split entries which consist of JSON records with an array named "Alerts":
+
 ```
 [preprocessor "json"]
 	Type=jsonarraysplit
@@ -129,6 +131,46 @@ Many data providers may pack multiple events into a single entry which can degra
 	Force-JSON-Object=true
 ```
 
+Input data:
+
+```
+{ "Alerts": [ "alert1", "alert2" ] }
+```
+
+Output:
+
+```
+{ "Alerts": "alert1" }
+```
+
+```
+{ "Alerts": "alert2" }
+```
+
+### Example: Splitting a Top-Level Array
+
+Sometimes the entire entry is an array:
+
+```
+[ {"foo": "bar"}, {"x": "y"} ]
+```
+
+To split this, use the following definition:
+
+```
+[preprocessor "json"]
+	Type=jsonarraysplit
+```
+
+Leaving the Extraction parameter un-set tells the module to treat the entire entry as an array, giving the following two output entries:
+
+```
+{"foo": "bar"}
+```
+
+```
+{"x": "y"}
+```
 
 ## JSON Field Filtering Preprocessor
 

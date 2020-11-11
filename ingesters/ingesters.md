@@ -507,6 +507,25 @@ Multiple "Listener" definitions can be defined allowing specific URLs to send en
 	TokenValue=Secret
 ```
 
+### Health Checks
+
+Some systems (such as AWS load balancers) require an unauthenticated URL that can be probed and interpreted as "proof of life".  The HTTP ingester can be configured to provide an a URL which when accessed with any method, body, and/or query parameters will always return a 200 OK.  To enable this health check endpoint add the `Health-Check-URL` stanza to the Global configuration block.
+
+Here is a minimal example configuration snippet with the health check URL `/logbot/are/you/alive`:
+
+```
+[Global]
+Ingest-Secret = IngestSecrets
+Connection-Timeout = 0
+Pipe-Backend-Target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
+Log-Level=INFO #options are OFF INFO WARN ERROR
+Bind=":8080"
+Max-Body=4096000 #about 4MB
+Log-File="/opt/gravwell/log/http_ingester.log"
+Health-Check-URL="/logbot/are/you/alive"
+
+```
+
 ### Installation
 
 If you're using the Gravwell Debian repository, installation is just a single apt command:
