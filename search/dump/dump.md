@@ -6,8 +6,11 @@ The Gravwell search system will infer from the query whether or not it needs to 
 
 ### Supported Options
 
-* `-r`: The “-r” option requires an argument and specifies the name or UUID of a resource to extract data from.  A resource must be specified and the current user must have read access to that resource.
-* `-p`: The "-p" indicates that the dump module is injecting values along side other data and the pipeline should query the indexers.
+* `-r`: The `-r` option requires an argument and specifies the name or UUID of a resource to extract data from.  A resource must be specified and the current user must have read access to that resource.
+* `-p`: The `-p` indicates that the dump module is injecting values along side other data and the pipeline should query the indexers. This flag cannot be used with the `-t` flag.
+* `-t`: Choose a column from the resource to serve as the timestamp in injected entries. Can be combined with `-tz` and `-f`. This flag cannot be used with `-p`.
+* `-tz`: Set the timezone for timestamps processed using `-t`, in tz [tz database format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), e.g. "America/Denver", "UTC", or "Atlantic/Reykjavik". 
+* `-f`: Specifies the format to be used when parsing timestamps when using `-t`. The format consists of a string representation of a specific time, "Mon Jan 2 15:04:05 MST 2006", as used by the [Go time library](https://golang.org/pkg/time/#pkg-constants). Refer to the linked documentation for more examples.
 
 ### Filtering and Column Inclusion
 
