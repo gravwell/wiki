@@ -250,7 +250,7 @@ Indexers maintain a list of all shards and wells and can produce a shard level v
 
 When in high availability mode, the indexers also maintain a mapping of replicated data and can resolve where data is replicated too, enabling a quick overview of which indexers are replicating for other indexers.
 
-The shard level view is access via a `GET` request to `/api/indexers/info` and will return a JSON map of each indexer.  The returned data set has extensive information about the configuration of the well, what tags have been assigned to it, and the shards populated within the well.
+The shard level view is accessed via a `GET` request to `/api/indexers/info` and will return a JSON map of each indexer. The returned data set has extensive information about the configuration of the well, what tags have been assigned to it, and the shards populated within the well.
 
 ### Example JSON Response
 Here is an example response from a cluster of 4 Gravwell indexers with 2 wells each and replication enabled.  Only a single shard is populated in the syslog well.
