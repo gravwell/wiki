@@ -129,12 +129,16 @@ This API provides some basic information for the user interface. A GET on `/api/
 
 ```
 {
-    "DisableMapTileProxy": false,
-    "DistributedWebservers": false,
-    "MapTileUrl": "http://localhost:8080/api/maps",
-    "MaxFileSize": 8388608,
-    "MaxResourceSize": 134217728
+  "DisableMapTileProxy": false,
+  "DistributedWebservers": false,
+  "MapTileUrl": "http://localhost:8080/api/maps",
+  "MaxFileSize": 8388608,
+  "MaxResourceSize": 134217728,
+  "ServerTime": "2020-11-30T11:50:29.478092519-08:00",
+  "ServerTimezone": "PST",
+  "ServerTimezoneOffset": -28800
 }
+
 ```
 
 * `DisableMapTileProxy`, if true, tells the UI that it should send map requests directly to OpenStreetMap servers, rather than using the Gravwell proxy.
@@ -142,6 +146,9 @@ This API provides some basic information for the user interface. A GET on `/api/
 * `DistributedWebservers` will be set to true if there are multiple webservers coordinating via a datastore.
 * `MaxFileSize` is the maximum allowable file size (in bytes) which may be uploaded to the `/api/files` APIs.
 * `MaxResourceSize` is the maximum allowable resource size, in bytes.
+* `ServerTime` is the current time on the webserver.
+* `ServerTimezone` is the webserver's timezone.
+* `ServerTimezoneOffset` is the webservers timezone offset, in seconds from UTC.
 
 ## Scripting Libraries
 
