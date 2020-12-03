@@ -151,6 +151,66 @@ grep "\","
 
 Macros can help turn long, complex queries into easy-to-remember shortcuts. See [the full macro documentation](#!search/macros.md) for more information.
 
+## Compound Queries
+
+You can combine multiple queries together as a single "compound" query in order to leverage multiple data sources, fuse data into another query, and simplify complex queries. Gravwell's compound query syntax is a simple sequence of in-order queries, with additional notation to create temporary resources that can be referenced in queries later in the sequence. 
+
+A compound query consists of a main query (the last query in a sequence), and one or more inner queries. The main query is written just like a normal query, while inner queries are always wrapped in the notation `@<identifier>{<query>}`. Queries are separated by `;`. 
+
+Inner queries generate named resources in the form of `@<identifier>`. These resources can be used as a regular resources with any module that supports table-based resources, listed below:
+
+| Module | Notes |
+|--------|-------|
+| [dump](#!search/dump/dump.md) | | 
+| [lookup](#!search/lookup/lookup.md) | | 
+| [iplookup](#!search/iplookup/iplookup.md) | |
+| [ipexist](#!search/ipexist/ipexist.md) | Inner queries must use the table module with the `-format ipexist` flag |
+| [anko](#!search/anko/anko.md) | Anko scripts can read from named resources |
+
+Named resources are scoped to the compound query they exist in, and are ephemeral - they are only accessible to other queries in the compound query, and are deleted as soon as the query is completed. 
+
+For example, say we have both DNS query and IP-level connection data under the tags "dns" and "conns", and we want to filter connection data down to only connections that didn't first have a corresponding DNS query. We can use compound queries to enrich our first query with DNS data and filter.
+
+Let's start with the inner query:
+
+```
+tag=dns json query answers | table query answers
+```
+
+This produces a table:
+
+![](compound-ex1.png)
+
+In the inner query, we simply create a table of all queries and answers in our DNS data. Since this is an inner query, we need to give it a name so later queries can reference its output, and wrap the query in braces. We'll call this inner query "dns":
+
+```
+@dns{tag=dns json query answers | table query answers}
+```
+
+In the main query, we use our connection data, and use the `lookup` module to read from our inner query "@dns":
+
+```
+tag=conns json SrcIP DstIP SrcIPBytes DstIPBytes | lookup -s -v -r @dns SrcIP answers query 
+| table SrcIP DstIP SrcIPBytes DstIPBytes 
+```
+
+This query uses the `lookup` module drop (via the `-s` and `-v` flags) any entry in our conns data that has a SrcIP that matches a DNS answer. From there we simply create a table of our data. 
+
+We wrap this into a compound query simply by joining the queries together and separating them with a `;`:
+
+```
+@dns{
+	tag=dns json query answers | table query answers
+};
+
+tag=conns json SrcIP DstIP SrcIPBytes DstIPBytes | lookup -s -v -r @dns SrcIP answers query 
+| table SrcIP DstIP SrcIPBytes DstIPBytes 
+```
+
+This gives us a table of just connections that didn't have a corresponding DNS query:
+
+![](compound-ex2.png)
+
 ## Comments
 
 Queries support C-Style comments anywhere in the query text. Comments are saved in the search histroy, and are useful for debugging queries and adding inline notes. For example:
