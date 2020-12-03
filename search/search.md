@@ -136,7 +136,7 @@ For example, say we have both DNS query and IP-level connection data under the t
 Let's start with the inner query:
 
 ```
-tag=dns table query answers
+tag=dns json query answers | table query answers
 ```
 
 This produces a table:
@@ -146,13 +146,13 @@ This produces a table:
 In the inner query, we simply create a table of all queries and answers in our DNS data. Since this is an inner query, we need to give it a name so later queries can reference its output, and wrap the query in braces. We'll call this inner query "dns":
 
 ```
-@dns{tag=dns table query answers}
+@dns{tag=dns json query answers | table query answers}
 ```
 
 In the main query, we use our connection data, and use the `lookup` module to read from our inner query "@dns":
 
 ```
-tag=conns lookup -s -v -r @dns SrcIP answers query 
+tag=conns json SrcIP DstIP SrcIPBytes DstIPBytes | lookup -s -v -r @dns SrcIP answers query 
 | table SrcIP DstIP SrcIPBytes DstIPBytes 
 ```
 
@@ -162,10 +162,10 @@ We wrap this into a compound query simply by joining the queries together and se
 
 ```
 @dns{
-	tag=dns table query answers
+	tag=dns json query answers | table query answers
 };
 
-tag=conns lookup -s -v -r @dns SrcIP answers query 
+tag=conns json SrcIP DstIP SrcIPBytes DstIPBytes | lookup -s -v -r @dns SrcIP answers query 
 | table SrcIP DstIP SrcIPBytes DstIPBytes 
 ```
 
