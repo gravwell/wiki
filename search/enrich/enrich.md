@@ -1,6 +1,6 @@
 ## Enrich
 
-The `enrich` module enables adding enumerated values to all entries in a pipeline within the query or using resources. `enrich` can be used to annotate data with constant enumerated values, such as "User=admin", in order to simplify visualization and reporting, pivoting within compound queries, and working with nontemporal data. 
+The `enrich` module can add enumerated values to each entry in a pipeline; these values can be specified in the module arguments or can come from a resource. `enrich` can be used to annotate data with constant enumerated values, such as "User=admin", in order to simplify visualization and reporting, pivoting within compound queries, and working with nontemporal data. 
 
 ### Supported Options
 
@@ -23,7 +23,7 @@ tag=jsondata json val | enrich foo "my data" bar "my other data" | table val foo
 
 ### Enriching with resources 
 
-The `enrich` module can extract columns from a CSV or lookup table resource. When using resources, only the first row will be used by `enrich`. Columns can be specified, and all columns will be used if none are specified. If a column conflicts with an existing enumerated value, it will only be overwritten if using the `-o` flag. 
+The `enrich` module can extract columns from a CSV or lookup table resource. When using resources, only the first row will be used by `enrich` (excluding the column headers for CSV resources). Columns can be specified, and all columns will be used if none are specified. If a column conflicts with an existing enumerated value, it will only be overwritten if using the `-o` flag. 
 
 For example, to use columns "foo" and "bar" from a resource "data":
 
@@ -31,4 +31,4 @@ For example, to use columns "foo" and "bar" from a resource "data":
 tag=jsondata val | enrich -r data foo bar | table val foo bar"
 ```
 
-NOTE: Only the first row of resources are used with the `enrich` module.
+NOTE: Only the first row of resources are used with the `enrich` module (excluding the column headers for CSV resources).
