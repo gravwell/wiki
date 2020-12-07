@@ -28,13 +28,13 @@ The `enrich` module can extract columns from a CSV or lookup table resource. Whe
 For example, to use columns "foo" and "bar" from a resource "data":
 
 ```
-tag=jsondata val | enrich -r data foo bar | table val foo bar"
+tag=jsondata val | enrich -r data foo bar | table val foo bar
 ```
 
 Additionally, the name of the enumerated value can be different from the column name by using the `as` keyword. For example, to enrich with the column "foo", but name the resulting enumerated value "bar":
 
 ```
-tag=jsondata val | enrich -r data foo as bar | table val bar"
+tag=jsondata val | enrich -r data foo as bar | table val bar
 ```
 
 NOTE: Only the first row of resources are used with the `enrich` module (excluding the column headers for CSV resources).
