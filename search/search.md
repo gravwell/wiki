@@ -162,9 +162,10 @@ Inner queries generate named resources in the form of `@<identifier>`. These res
 | Module | Notes |
 |--------|-------|
 | [dump](#!search/dump/dump.md) | | 
-| [lookup](#!search/lookup/lookup.md) | | 
-| [iplookup](#!search/iplookup/iplookup.md) | |
+| [enrich](#!search/enrich/enrich.md) | | 
 | [ipexist](#!search/ipexist/ipexist.md) | Inner queries must use the table module with the `-format ipexist` flag |
+| [iplookup](#!search/iplookup/iplookup.md) | Inner queries must use the table module with the `-format csv` flag |
+| [lookup](#!search/lookup/lookup.md) | |
 | [anko](#!search/anko/anko.md) | Anko scripts can read from named resources |
 
 Named resources are scoped to the compound query they exist in, and are ephemeral - they are only accessible to other queries in the compound query, and are deleted as soon as the query is completed. 
