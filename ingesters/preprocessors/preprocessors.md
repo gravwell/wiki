@@ -738,7 +738,7 @@ This example forwards entries via a TCP forwarder then drops them.
 
 ## Cisco ISE Preprocessor
 
-The Cisco ISE logging system can be extremely difficult to work, this preprocessor is designed to help overcome some of the difficult challenges posed by both the format and transport of Cisco ISE logs.  See the [Cisco Introduction to ISE Syslogs](https://www.cisco.com/c/en/us/td/docs/security/ise/syslog/Cisco_ISE_Syslogs/m_IntrotoSyslogs.pdf) for more information.
+The Cisco ISE preprocessor is designed to parse and accomodate the format and transport of Cisco ISE logs.  See the [Cisco Introduction to ISE Syslogs](https://www.cisco.com/c/en/us/td/docs/security/ise/syslog/Cisco_ISE_Syslogs/m_IntrotoSyslogs.pdf) for more information.
 
 The Cisco ISE preprocessor is named `cisco_ise` and supports the ability to reassemble multipart messages, reformat the messages into a format more appropriate for Gravwell and modern syslog systems, filter unwanted message pairs, and remove redundant message headers.
 
