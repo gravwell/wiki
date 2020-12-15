@@ -744,7 +744,7 @@ The Cisco ISE preprocessor is named `cisco_ise` and supports the ability to reas
 
 ### Attribute Filtering and Formatting
 
-The Cisco ISE logging system is designed to split a single message across multiple syslog messages.  The multipart message format for remote Cisco ISE syslog messages appears to be designed to support legacy systems that cannot appropriately handle larger syslog messages (even though the syslog specification can support very large messages).  Gravwell will handily accept messages that far exceed the maximum message size of syslog, however if you are supporting multiple targets for Cisco ISE messages is may be necessary to enable multipart messages.  Disabling multipart messages in your cisco device and letting Gravwell handle large payloads will be far more efficient.
+The Cisco ISE logging system is designed to split a single message across multiple syslog messages.  Gravwell will accept messages that far exceed the maximum message size of syslog, however if you are supporting multiple targets for Cisco ISE messages it may be necessary to enable multipart messages.  Disabling multipart messages in your cisco device and letting Gravwell handle large payloads will be far more efficient.
 
 ### Supported Options
 
