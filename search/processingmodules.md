@@ -34,6 +34,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [base64](base64/base64.md)
 * [count](math/math.md#Count)
 * [diff](diff/diff.md)
+* [enrich](enrich/enrich.md)
 * [entropy](math/math.md#Entropy)
 * [eval](eval/eval.md)
 * [first/last](firstlast/firstlast.md)

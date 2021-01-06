@@ -156,7 +156,7 @@ Description:		The Datastore-Update-Interval parameter determines how long (in se
 Applies to:		Webserver and Datastore
 Default Value:	`false`
 Example:		`Datastore-Insecure-Disable-TLS=true`
-Description:	The Datastore-Insecure-Disable-TLS parameter is used by both the webserver and the datastore. By default, the datastore listens for incoming HTTPS connections from webservers; setting this parameter to false makes the datastore expect plaintext HTTP and instructs the webservers to use HTTP.
+Description:	The Datastore-Insecure-Disable-TLS parameter is used by both the webserver and the datastore. By default, the datastore listens for incoming HTTPS connections from webservers; setting this parameter to true makes the datastore expect plaintext HTTP and instructs the webservers to use HTTP.
 
 **Datastore-Insecure-Skip-TLS-Verify**
 Applies to:		Webserver
@@ -234,7 +234,7 @@ Description:        The Persist-Web-Logins parameter is used to inform the webse
 Applies to:        Webserver
 Default Value:        `60`
 Example:        `Session-Timeout-Minutes=1440`
-Description:        The Session-Timeout-Minutes parameter controls how long a client can be idle before the webserver destroys the session.  For example, if a client closes a browser without logging out, the system will wait for the specified time period before invalidating the session.  The installers set this value to 1 day by default.
+Description:        The Session-Timeout-Minutes parameter controls how long a client can be idle before the webserver destroys the session.  For example, if a client closes a browser without logging out, the system will wait for the specified time period before invalidating the session.  The default value is 60 minutes, but most installers set this configuration value to 1 day by default.
 
 **Key-File**
 Applies to:        Indexer, Datastore, and Webserver
