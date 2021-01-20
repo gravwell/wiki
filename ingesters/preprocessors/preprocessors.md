@@ -369,7 +369,7 @@ The source router preprocessor Type is `srcrouter`.
 
 At least one `Route` definition is required, unless `Route-File` is used.
 
-A route can be either a single IP address or a properly formed CIDR specification, both IPv4 and IPv6 are supported
+A route can be either a single IP address or a properly formed CIDR specification, both IPv4 and IPv6 are supported.
 
 ### Example: Inline Route Definitions
 
