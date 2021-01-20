@@ -369,6 +369,8 @@ The source router preprocessor Type is `srcrouter`.
 
 At least one `Route` definition is required, unless `Route-File` is used.
 
+A route can be either a single IP address or a properly formed CIDR specification, both IPv4 and IPv6 are supported.
+
 ### Example: Inline Route Definitions
 
 The snippet below shows part of a Simple Relay ingester configuration that uses the source router preprocessor with routes defined inline. Entries originating from 10.0.0.1 will be tagged "internal-syslog", entries originating from 7.82.33.4 will be tagged "external-syslog", and all other entries will retain the default tag "syslog". Any entries with SRC=3.3.3.3 will be dropped.
@@ -381,9 +383,11 @@ The snippet below shows part of a Simple Relay ingester configuration that uses 
 
 [preprocessor "srcroute"]
         Type = srcrouter
-		Route=10.0.0.1:internal-syslog
-		Route=7.82.33.4:external-syslog
-		Route=3.3.3.3:
+        Route=10.0.0.0/24:internal-syslog
+        Route=7.82.33.4:external-syslog
+        Route=3.3.3.3:
+        Route=DEAD::BEEF:external-syslog
+        Route=FEED:FEBE::0/64:external-syslog
 ```
 
 ### Example: File-based Definitions
@@ -398,13 +402,13 @@ The snippet below shows part of a Simple Relay ingester configuration that uses 
 
 [preprocessor "srcroute"]
         Type = srcrouter
-		Route-File=/opt/gravwell/etc/syslog-routes
+        Route-File=/opt/gravwell/etc/syslog-routes
 ```
 
 The following is written to `/opt/gravwell/etc/syslog-routes`:
 
 ```
-10.0.0.1:internal-syslog
+10.0.0.0/24:internal-syslog
 7.82.33.4:external-syslog
 3.3.3.3:
 ```
