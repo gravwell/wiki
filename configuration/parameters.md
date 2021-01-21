@@ -590,6 +590,19 @@ Default Value:
 Example: `Kit-Verification-Key=/opt/gravwell/etc/kits-pub.pem`
 Description:	Specifies a file containing a public key to use when verifying kits from the kitserver. Set this value if you have specified an alternate Gravwell-Kit-Server; it is not necessary when using Gravwell's official kit server. Keys suitable for signing kits can be generated with the [gencert](https://github.com/gravwell/gencert) utility.
 
+**Disable-User-Ingester-Config-Reporting**
+Applies to: Webserver
+Default Value: false
+Example: `Disable-User-Ingester-Config-Reporting=true`
+Description:	Tells the webserver that regular (non-admin) users should not receive the Configuration field of ingester state updates. Although the configurations do not include ingest secrets or other "sensitive" items, you may wish to keep the entire configuration secret from regular users; this option does that.
+
+**Disable-Ingester-Config-Reporting**
+Applies to: Webserver
+Default Value: false
+Example: `Disable-Ingester-Config-Reporting=true`
+Description:	Tells the webserver that NO users should receive the Configuration field of ingester state updates. Although the configurations do not include ingest secrets or other "sensitive" items, you may wish to keep the entire configuration secret from ALL users; this option does that.
+
+
 ## Password Control
 
 The `[Password-Control]` configuration section can be used to enforce password complexity rules when users are created or passwords are changed. Options set in this block apply only to webservers. These complexity configuration rules do not apply when using Single Sign On.

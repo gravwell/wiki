@@ -175,10 +175,10 @@ More elaborate HTTP operations are possible with the "net/http" library. See the
 
 If the user has configured their personal email settings within Gravwell, the `email` function is a very simple way to send an email:
 
-* `email(from, to, subject, message) error` sends an email via SMTP. The `from` field is simply a string, while `to` should be a slice of strings containing email addresses. The `subject` and `message` fields are also strings which should contain the subject line and body of the email.
-  * The email function also takes an optional list of attachments.
+* `email(from, to, subject, message, attachments...) error` sends an email via SMTP. The `from` field is simply a string, while `to` should be a slice of strings containing email addresses or a single string containing one email address. The `subject` and `message` fields are also strings which should contain the subject line and body of the email. The attachments parameter is optional.
   * Attachments can be sent as a byte array, and they will be given an automatic file name
   * If the attachment parameter is a map, the key is the file name and the value is the attachment
+* `emailWithCC(from, to, cc, bcc, subject, message, attachments...) error` sends an email via SMTP. It behaves exactly like the `email` function, but it lets you specify CC and BCC recipients as well. These can be either single strings (`"foo@example.com"`) or arrays of strings (`["foo@example.com", "bar@example.com"]`).
 
 Example sending an email with attachments:
 ```
