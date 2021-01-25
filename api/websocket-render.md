@@ -26,6 +26,7 @@ All render modules will respond to the following requests:
 | REQ_STATS_GET			| 0x7F000003	| 2130706435| Request stats |
 | REQ_STATS_GET_RANGE	| 0x7F000004	| 2130706436| Request stats from a particular time range |
 | REQ_STATS_GET_SUMMARY	| 0x7F000005	| 2130706437| Request a summary of statistics |
+| REQ_SEARCH_METADATA   | 0x10001 | 65537 | Requests the enumerated value metadata stats for a query |
 
 Response values are the same as the request, with the addition of the special response code `RESP_ERROR` (0xFFFFFFFF)
 
@@ -44,7 +45,7 @@ Response values are the same as the request, with the addition of the special re
 | RESP_STATS_GET			| 0x7F000003	| 2130706435| Returning stats |
 | RESP_STATS_GET_RANGE		| 0x7F000004	| 2130706436| Returning stats for a time range |
 | RESP_STATS_GET_SUMMARY	| 0x7F000005	| 2130706437| Returning stats summary |
-
+| RESP_SEARCH_METADATA           | 0x10001 | 65537 | Returning the enumerated value metadata stats for a query |
 
 API requests should be sent as JSON over the search subprotocol established during search creation.
 
@@ -195,7 +196,8 @@ The response contains stats information and information about the search itself:
 			"csv",
 			"lookupdata"
 		],
-		"Duration": "0s"
+		"Duration": "0s",
+		"Tags": ["pcap"]
 	},
 	"EntryCount": 1575,
 	"AdditionalEntries": false,
@@ -574,5 +576,122 @@ Response:
         ],
         "Size": 0
     }
+}
+```
+
+## Asking for search metadata (request 0x10001)
+
+Requesting metadata stats for a search allows for getting a survey of values that may have passed through a pipeline.  The following stats set can from the following query:
+
+```
+tag=syslog syslog Hostname Appname |
+     length |
+     stats sum(length) count by Hostname Appname |
+     table Hostname Appname sum count
+```
+
+
+```
+{
+	"ID": 65537
+}
+```
+
+Response:
+
+```
+{
+	"ID": 65537,
+	"EntryCount": 1575,
+	"AdditionalEntries": false,
+	"Finished": true,
+	"Metadata": {
+		"ValueStats": [
+			{
+				"Name": "count",
+				"Type": "number",
+				"Number": {
+					"Count": 963,
+					"Min": 1,
+					"Max": 3
+				},
+				"Raw": {
+					"Map": null,
+					"Other": 0
+				}
+			},
+			{
+				"Name": "Hostname",
+				"Type": "raw",
+				"Number": {
+					"Count": 0,
+					"Min": 0,
+					"Max": 0
+				},
+				"Raw": {
+					"Map": {
+						"ant": 25,
+						"tracker": 25,
+						"voice": 22,
+						"warrior": 31,
+						"whale": 29
+					},
+					"Other": 0
+				}
+			},
+			{
+				"Name": "Appname",
+				"Type": "raw",
+				"Number": {
+					"Count": 0,
+					"Min": 0,
+					"Max": 0
+				},
+				"Raw": {
+					"Map": {
+						"alpine": 4,
+						"time": 2,
+						"zenith": 5
+					},
+					"Other": 865
+				}
+			},
+			{
+				"Name": "length",
+				"Type": "number",
+				"Number": {
+					"Count": 963,
+					"Min": 314,
+					"Max": 812
+				},
+				"Raw": {
+					"Map": null,
+					"Other": 0
+				}
+			},
+			{
+				"Name": "sum",
+				"Type": "number",
+				"Number": {
+					"Count": 963,
+					"Min": 314,
+					"Max": 1397
+				},
+				"Raw": {
+					"Map": null,
+					"Other": 0
+				}
+			}
+		],
+		"SourceStats": [
+			{
+				"IP": "192.168.1.1",
+				"Count": 963
+			}
+		],
+		"TagStats": {
+			"rawsyslog": 963
+		}
+	}
 }
 ```
