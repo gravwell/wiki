@@ -581,7 +581,7 @@ Response:
 
 ## Asking for search metadata (request 0x10001)
 
-Requesting metadata stats for a search allows for getting a survey of values that may have passed through a pipeline.  The following stats set can from the following query:
+This message requests a high-level survey of enumerated values which passed through the pipeline. Below a sample query and an example of the sort of metadata which may be generated:
 
 ```
 tag=syslog syslog Hostname Appname |
