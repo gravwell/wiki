@@ -21,6 +21,8 @@ All render modules will respond to the following requests:
 | REQ_GET_ENTRIES		| 0x10			| 16		| Request a block of search entries by index |
 | REQ_STREAMING			| 0x11			| 17		| Request that search entries be sent as they come in |
 | REQ_TS_RANGE			| 0x12			| 18		| Request a block of entries by time range |
+| REQ_GET_EXPLORE_ENTRIES	| 0xf010	| 61456		| Request a block of entries by index, with [data exploration](explore.md) applied |
+| REQ_EXPLORE_TS_RANGE		| 0xf012	| 61458		| Request a block of entries by time range, with [data exploration](explore.md) applied |
 | REQ_STATS_SIZE		| 0x7F000001	| 2130706433| Request the size of the statistics data |
 | REQ_STATS_RANGE		| 0x7F000002	| 2130706434| Request the time range of available stats |
 | REQ_STATS_GET			| 0x7F000003	| 2130706435| Request stats |
@@ -40,6 +42,8 @@ Response values are the same as the request, with the addition of the special re
 | RESP_GET_ENTRIES			| 0x10			| 16		| Returning search entries|
 | RESP_STREAMING			| 0x11			| 17		| Search entries will be streamed|
 | RESP_TS_RANGE				| 0x12			| 18		| Returning a block of entries for a time range |
+| RESP_GET_EXPLORE_ENTRIES	| 0xf010	| 61456		| Returning a block of entries by index, with [data exploration](explore.md) applied |
+| RESP_EXPLORE_TS_RANGE		| 0xf012	| 61458		| Returning a block of entries by time range, with [data exploration](explore.md) applied |
 | RESP_STATS_SIZE			| 0x7F000001	| 2130706433| Returning size of stats data |
 | RESP_STATS_RANGE			| 0x7F000002	| 2130706434| Returning the time range for stats |
 | RESP_STATS_GET			| 0x7F000003	| 2130706435| Returning stats |
