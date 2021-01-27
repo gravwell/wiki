@@ -2,11 +2,11 @@
 
 Websocket URL: /api/ws/search
 
-This page documents using the websocket protocol to initiate searches. A full example of JSON transferred between client and server when initiating a "grep foo" search, complete with entry data retrieval, can be found at the [Websocket Search Example](websocket-search-example.md) page.
+This page documents the websocket protocol for searches. A full example of JSON transferred between client and server when initiating a "grep foo" search, complete with entry data retrieval, can be found at the [Websocket Search Example](websocket-search-example.md) page.
 
 ## Ping/Pong keepalive
 
-The Search websocket is used for checking queries, sending searches, and receiving search results and search stats.  The search websocket expects to use the RoutingWebsocket system to handle message "types".  /ws/search expects the following message "subtypes" or "types" to be registered at startup: PONG, parse, search, attach.
+The search websocket is used for checking queries, sending searches, and receiving search results and search stats.  The search websocket expects to use the RoutingWebsocket system to handle message "types".  `/api/ws/search` expects the following message "subtypes" or "types" to be registered at startup: PONG, parse, search, attach.
 
 Note: Message "types" are sometimes referred to as "SubProto" due to legacy naming. This is likely to change in the future but if developing against this API, be aware that "SubProto" refers to the "type" value sent with a message and not the RFC Websocket subprotocol spec.
 
@@ -23,7 +23,7 @@ An example request with a valid query and response would result in the following
 request from frontend:
 ```json
 {
-        SearchString: "tags=apache grep firefox | regex "Firefox(<version>[0-9]+) .+" | count by version""
+        SearchString: "tag=apache grep firefox | regex "Firefox(<version>[0-9]+) .+" | count by version""
 }
 ```
 
@@ -31,7 +31,7 @@ response from backend:
 ```
 {
         GoodQuery: true,
-        ParseQuery: "tags=apache grep firefox | regex "Firefox(<version>[0-9]+) .+" | count by version"",
+        ParseQuery: "tag=apache grep firefox | regex "Firefox(<version>[0-9]+) .+" | count by version"",
         ModuleIndex: 0,
 }
 ```
@@ -41,7 +41,7 @@ An example request with an invalid query and response would result in the follow
 request from frontend:
 ```
 {
-        SearchString: "tags=apache grep firefox | MakeRainbows",
+        SearchString: "tag=apache grep firefox | MakeRainbows",
 }
 ```
 
@@ -70,7 +70,7 @@ SearchStart and SearchEnd should be the time ranges that the query will operate 
 An example search request with a good query would contain the following JSON:
 ```
 {
-       SearchString: "tags=apache grep firefox | nosort",
+       SearchString: "tag=apache grep firefox | nosort",
        SearchStart:  "2015-01-01T12:01:00.0Z07:00",
        SearchEnd:    "2015-01-01T12:01:30.0Z07:00",
        Background:   false,
@@ -83,7 +83,7 @@ An example search request with a good query would contain the following JSON:
 The response to a good query would contain the following JSON:
 ```
 {
-        SearchString: "tags=apache grep firefox | nosort",
+        SearchString: "tag=apache grep firefox | nosort",
         RenderModule: "text",
         RenderCmd:    "text",
         OutputSearchSubproto:  "searchSDF8973",
@@ -126,7 +126,7 @@ Stats are requested via the stats IDs
 ## Request/Response ID reference
 
 The list of request and response ID codes is:
-```json
+```
 {
     req: {
         REQ_CLOSE: 0x1,
@@ -142,7 +142,8 @@ The list of request and response ID codes is:
         REQ_GET_ENTRIES: 0x10, //1048578
         REQ_STREAMING: 0x11,
         REQ_TS_RANGE: 0x12,
-        TEXT_REQ_SEARCH_DETAILS: 0x01000004, //1048580
+		REQ_GET_EXPLORE_ENTRIES: 0xf010,
+		REQ_EXPLORE_TS_RANGE: 0xf012,
         SEARCH_CTRL_CMD_DELETE: 'delete',
         SEARCH_CTRL_CMD_ARCHIVE: 'archive',
         SEARCH_CTRL_CMD_BACKGROUND: 'background',
@@ -162,7 +163,8 @@ The list of request and response ID codes is:
         RESP_GET_ENTRIES: 0x10,
         RESP_STREAMING: 0x11,
         RESP_TS_RANGE: 0x12,
-        TEXT_RESP_SEARCH_DETAILS: 0x1000004,
+		RESP_GET_EXPLORE_ENTRIES: 0xf010,
+		RESP_EXPLORE_TS_RANGE: 0xf012,
         RESP_ERROR: 0xFFFFFFFF,
         SEARCH_CTRL_CMD_DELETE: 'delete',
         SEARCH_CTRL_CMD_ARCHIVE: 'archive',
