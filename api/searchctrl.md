@@ -98,6 +98,15 @@ WEB DELETE /api/searchctrl/010985768:
 null
 ```
 
+## Stopping an active search
+
+Stopping a search causes the indexers to stop feeding the search pipeline new data, but the existing data that has already been process is maintained and users can continue to interact with the output. A search may only be stopped when it is in an active running state, searches that are saved or in a dormant state will respond with an error if a stop command is issued. To stop a search perform a PUT request to /api/searchctrl/ID/stop with the correct ID. The server will return 200 on success, 5XX on error, and 403 if the user is not authorized to modify the search.  Only the owner of a search or an admin may stop an active search, users in a shared group may not stop a search they do not own.  Search results may still be saved after a stop command has been completed.
+
+```
+WEB PUT /api/searchctrl/010985768/stop:
+null
+```
+
 ## Importing a saved search archive
 
 An optional download format for a search is an `archive`.  An archive represents a fully self-contained search that can be imported into another Gravwell instance.  The import API accepts the saved search archives as an upload and unpacks the search into the saved search system.  Users can then attach to the search as if it were saved on the local system.

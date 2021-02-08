@@ -36,10 +36,14 @@ Instead of sending JSON, you may also set form fields "User" and "Pass" in the l
 * PUT /api/logout - logs your current instance out
 * DELETE /api/logout - logs out ALL your user's instances
 
-## JWT protections are enforced on all POSTs
+## JWT protections are enforced on all requests that are not used for file download operations.
 The JWT received from the login API must be included as an Authorization Bearer header on all other API requests.
 
 ```Authorization: Bearer reallylongjsonwebtokenstringishere```
+
+### Websocket Authentication
+
+As a convienence, the websocket API endpoints will also look for the JWT token in the `Sec-Websocket-Protocol` header value.  Many websocket implementations do not properly support passing header values, so we overload the websocket subprotocol negotiation header.  The API endpoints will still look for the standard `Authentication` header values as well.
 
 ## View active sessions
 Send a GET to `/api/users/{id}/sessions` and it will return a chunk of JSON.  Admins can request any users sessions, users can ONLY request their own sessions.
