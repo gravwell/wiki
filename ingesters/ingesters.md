@@ -271,6 +271,8 @@ Most ingesters attempt to apply a timestamp to each entry by extracting a timest
 
 The Kinesis and Google Pub/Sub ingesters do not provide the `Ignore-Timestamps` option. Kinesis and Pub/Sub include an arrival timestamp with every entry; by default, the ingesters will use that as the Gravwell timestamp. If `Parse-Time=true` is specified in the data consumer definition, the ingester will instead attempt to extract a timestamp from the message body. See these ingesters' respective sections for additional information.
 
+Custom timestamp formats are supported on many ingesters, see [Custom Time Formats](#!ingesters/customtime/customtime.md) for more information.
+
 ## Simple Relay
 
 [Complete Configuration and Documentation](#!ingesters/simple_relay.md).

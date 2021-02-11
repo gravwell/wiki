@@ -53,6 +53,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Ingester Preprocessors](ingesters/preprocessors/preprocessors.md)
 
+  * [Custom Time Formats](ingesters/customtime/customtime.md)
+
   * [Service Integrations](ingesters/integrations.md)
 
 ## Advanced Gravwell Installation and Configuration
