@@ -273,7 +273,7 @@ func (s *server) search(w http.ResponseWriter, r *http.Request) {
 	}
 	s.Unlock()
 	resp.Links = union(linkset)
-	sortLinks(resp.Links)
+	sortLinks(resp.Links, terms)
 	json.NewEncoder(w).Encode(resp)
 
 	return
@@ -580,20 +580,29 @@ func inRefList(v ref, sl []ref) bool {
 // most shallow (e.g. you aren't deep into the system"
 // page
 // href
-func sortLinks(r []ref) {
+func sortLinks(r []ref, terms []string) {
 	sort.SliceStable(r, func(i, j int) bool {
 		//changelogs are always at the end
 		icl := isChangeLogRef(r[i].page)
 		jcl := isChangeLogRef(r[j].page)
 		if icl != jcl {
-			return !icl
+			return jcl
 		}
+
+		//check if this is a DIRECT search ref
+		disr := isDirectSearchRef(r[i].page, terms)
+		djsr := isDirectSearchRef(r[j].page, terms)
+		if disr != djsr {
+			return disr
+		}
+
 		//search modules are always up front
 		isr := isSearchRef(r[i].page)
 		jsr := isSearchRef(r[j].page)
 		if isr != jsr {
 			return isr
 		}
+
 		id := r[i].depth()
 		jd := r[j].depth()
 		if id < jd {
@@ -617,3 +626,15 @@ func isSearchRef(pg string) bool {
 func isChangeLogRef(pg string) bool {
 	return strings.Contains(pg, `changelog/`)
 }
+
+func isDirectSearchRef(pg string, terms []string) (ok bool) {
+	for _, term := range terms {
+		pgSnippet := `search/`+term+`/`
+		if ok = strings.Contains(pg, pgSnippet); ok {
+			break
+		}
+	}
+	return
+}
+
+
