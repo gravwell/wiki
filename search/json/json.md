@@ -6,6 +6,7 @@ The json module is used to extract and filter data from search entries into enum
 
 * `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
 * `-s`: The “-s” option informs the json module that we are in strict mode, meaning that if any field extraction fails, drop the entire entry. If you say `json -s foo`, any entry which doesn't contain a field named "foo" will be dropped; conversely, `json foo` simply extracts "foo" when possible and drops nothing. Specifying `json -s foo bar` means each entry must contain fields named "foo" and "bar".
+* `-x <arg>`: The “-x” option tells the module to expand the contents of a JSON array into multiple entries, one per array value. The rest of the entry remains the same. The argument can be the output name of one of the current extractions, or it can be an enumerated value. Thus, both `tag=foo json -x bar foo.bar` and `tag=foo json foo.bar | json -x bar` are valid invocations.
 
 ## Filtering Operators
 
@@ -102,6 +103,16 @@ json groups.[0] as gid
 
 (If the extraction is not renamed, the enumerated value will be named "[0]" which is very clumsy)
 
+To expand an array, we extract the array and pass the output name to the `-x` flag:
+
+```
+json -x groups groups uid
+```
+
+This will turn the single entry into two entries, one with enumerated values `uid=1` and `groups=17`, one with `uid=1` and `groups=3`.
+
+Note: When expanding an array via the `-x` flag, the underlying Data field and all other enumerated values are duplicated intact; only the contents of the array enumerated value change.
+
 We can also extract components from within array elements:
 
 ```
@@ -111,6 +122,7 @@ We can also extract components from within array elements:
 ```
 json Metadata.[0].Value as Username
 ```
+
 
 ## Empty Fields and the Strict Flag
 
