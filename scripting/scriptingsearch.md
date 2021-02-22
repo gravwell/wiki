@@ -2,11 +2,11 @@
 
 Gravwell provides a robust scripting engine in which you can run searches, update resources, send alerts, or take action.  The engine can run searches and examine data automatically, taking action based on search results without the need to involve a human.  
 
-Automation scripts can be run [on a schedule](scheduledsearch.md) or by hand from the [command line client](#!cli/cli.md). Because the CLI allows the script to be re-executed interactively, we recommend developing and testing scripts in the CLI before creating a scheduled search.
+Automation scripts can be run [on a schedule](scheduledsearch.md) or by hand from the [command line client](#!cli/cli.md). Because the CLI allows the script to be re-executed interactively, we recommend developing and testing scripts in the CLI before creating a scheduled search. See the [Client](#!scripting/scriptingsearch.md#Gravwell_Client_Usage) example script below.
 
 ## Built-in functions
 
-Scripts can use built-in functions that mostly match those available for the [anko](#!scripting/anko.md) module, with some additions for launching and managing searches. The functions are listed below in the format `functionName(<functionArgs>) <returnValues>`.
+Scripts can use built-in functions that mostly match those available for the [anko](#!scripting/anko.md) module, with some additions for launching and managing searches. The functions are listed below in the format `functionName(<functionArgs>) <returnValues>`.  These functions are provided as convenience wrappers for specific functionality, however the complete [Gravwell client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) is available using the `getClient` wrapper.  The `getClient` wrapper will return a client object that is signed in as the user executing the script. 
 
 ## Controlling Versions
 
@@ -710,3 +710,48 @@ buff = bb.Bytes()
 println("buffer", len(buff))
 return setResource("sshusers", buff)
 ```
+
+## Gravwell Client Usage
+
+The `getClient` function will hand back a pointer to a new [Client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) object that is logged in and synchronized as the current user. Under normal operating conditions, the new client should be ready for immediate use.  However, it is possible for Gravwell webservers to become unavailable during script operations due to network failures or system upgrades.  We therefore recommend that scripts test the status of the client connection using the [TestLogin()](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client.TestLogin) method.
+
+This example script gets a client, makes a TCP connection to a remote server, and performs a [backup](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client.Backup) of the Gravwell system, sending the backup file out over the remote TCP connection:
+
+```
+net = import("net")
+time = import("time")
+
+BACKUP_SERVER=`10.0.0.1:5555`
+
+cli = getClient()
+if cli == nil {
+	return "Failed to get client"
+}
+err = cli.TestLogin()
+if err != nil {
+	return err
+}
+// Backup requests can take some time, increase the client request timeout
+err = cli.SetRequestTimeout(10*time.Minute)
+if err != nil {
+	return err
+}
+
+conn, err = net.Dial("tcp", BACKUP_SERVER)
+if err != nil {
+	return err
+}
+
+err = cli.Backup(conn, false)
+if err != nil {
+	return err
+}
+err = conn.Close()
+if err != nil {
+	return err
+}
+
+return cli.Close()
+``` 
+
+Note: The Gravwell client has a default request timeout of 5 seconds. For long running requests like system backups you should increase that timeout, but note that it is best practice to restore the original timeout when you've completed the long-running request; we have omitted that above for brevity.
