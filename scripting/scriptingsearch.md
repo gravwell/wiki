@@ -713,9 +713,9 @@ return setResource("sshusers", buff)
 
 ## Gravwell Client Usage
 
-The `getClient` function will create a new client and hand back a pointer to a [Client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) object that is logged in and synchronized, under nominal operating conditions the client should be ready for immediate use.  However, it is possible for Gravwell webservers to become unavailable during script operations due to network failures or system upgrades.  We reccomend that scripts test the status of the client connection using the [TestLogin()](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client.TestLogin) method.
+The `getClient` function will hand back a pointer to a new [Client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) object that is logged in and synchronized as the current user. Under normal operating conditions, the new client should be ready for immediate use.  However, it is possible for Gravwell webservers to become unavailable during script operations due to network failures or system upgrades.  We therefore recommend that scripts test the status of the client connection using the [TestLogin()](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client.TestLogin) method.
 
-This example script retrieves a client object, makes a TCP connection to a remove server, and performs a [backup](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client.Backup) of the Gravwell system, sending the backup file via the remote TCP connection:
+This example script gets a client, makes a TCP connection to a remote server, and performs a [backup](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client.Backup) of the Gravwell system, sending the backup file out over the remote TCP connection:
 
 ```
 net = import("net")
@@ -754,4 +754,4 @@ if err != nil {
 return cli.Close()
 ``` 
 
-Note: The Gravwell client has a default request timeout of 5 seconds, for long running requests like system backups you will want to increase that timeout.
+Note: The Gravwell client has a default request timeout of 5 seconds. For long running requests like system backups you should increase that timeout, but note that it is best practice to restore the original timeout when you've completed the long-running request; we have omitted that above for brevity.
