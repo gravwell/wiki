@@ -159,6 +159,58 @@ dashboards>  list
 dashboards>  
 ```
 
+## Kit Management
+
+Kits can be managed from the kits sub-menu:
+
+```
+#>  kits
+kits>  help
+list                	List installed kits
+get                 	Get kit details
+uninstall           	Remove an installed kit
+install             	Install an uploaded kit
+upload              	Upload a new kit
+pull                	Pull a kit from a remote kitserver
+build               	Build a kit from existing queries, resources, and dashboards
+rebuild             	Rebuild a kit from a previous build request, incrementing the version
+repack              	Repack a currently-installed kit, optionally changing attributes.
+remote              	List available kits from the remote kitserver
+```
+
+### Installing Kits
+
+There are two ways to install a kit: from the kitserver, or by uploading a local file. In either case, the installation process consists of two steps: staging the kit on the webserver, then installing it.
+
+To install a kit from the kit server, first use the `remote` command to list kits on the server. Copy the UUID of the desired kit, then run the `pull` command and paste the UUID when prompted. This will download the kit and stage it. Once the kit is staged, run the `install` command and select the staged kit to begin the installation process.
+
+To install a kit from a local file, run the `upload` command and enter the path to the file when prompted. This will stage the kit. Then run the `install` command and select the staged kit to begin the installation process.
+
+The `install` command will ask the user if the kit should be installed with default options; if the user answers "no", they must select each option individually:
+
+* Global: (admin-only) If true, kit items will be visible to all users (default: false)
+* Overwrite existing: If true, the installation process will overwrite any existing objects which conflict with the kit's contents (default: false)
+* Allow unsigned: Must be set in order to install unsigned kits (default: false)
+* Item labels: An optional list of additional labels to be applied to the items in the kit (default: none)
+* Kit labels: An optional list of additional labels to be applied to the kit itself (default: none)
+* Group: Select a group whose members can see the kit contents (default: none)
+
+### Building Kits
+
+The `build` command walks the user through the process of building a kit. It prompts for the kit ID, name, description, and version. Note that the ID should be a "namespaced" ID such as "io.gravwell.networkenrichment" to avoid conflicts; the name and description fields can be anything. The version must be an integer.
+
+After gathering basic information, the CLI will then prompt the user to select which objects should be included in the kit. It will prompt for dashboards, templates, actionables, etc. one after another. Pressing enter at a prompt indicates that you do not want to include any of that type of object.
+
+When all objects have been selected, the CLI will prompt for a location to download the resulting kit. You can enter either a filename or just a directory. When complete, it will print the location of the new kit.
+
+### Rebuilding Kits
+
+The `rebuild` command is used to build an updated version of a previously-built kit. When executed, it lists kits previously built by the user. The user selects one, then the UI gives the option to modify the list of included items in the kit if desired. It will then automatically increment the kit version number and generate a new kit file output, prompting (as in the `install` command) for where the resulting file should be saved.
+
+### Repacking Kits
+
+The `repack` command operates much like the `rebuild` command, except it re-packages one of the *currently-installed* kits, instead of rebuilding a *previously built* kit. This is useful if you want to modify an existing kit obtained from Gravwell or another user: install the kit, modify whatever items need to be changed, and then run the repack command on that kit.
+
 ## Searching via CLI
 
 The `search` command runs a search in the foreground:
