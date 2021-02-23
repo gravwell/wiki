@@ -180,7 +180,7 @@ remote              	List available kits from the remote kitserver
 
 ### Installing Kits
 
-There are two ways to install a kit: from the kitserver, or by uploading a local file. In either case, the installation process consists of two steps: staging the kit on the webserver, then installing it.
+There are two ways to install a kit: from the kitserver or by uploading a local file. In either case, the installation process consists of two steps: staging the kit on the webserver, then installing it.
 
 To install a kit from the kit server, first use the `remote` command to list kits on the server. Copy the UUID of the desired kit, then run the `pull` command and paste the UUID when prompted. This will download the kit and stage it. Once the kit is staged, run the `install` command and select the staged kit to begin the installation process.
 
