@@ -88,4 +88,9 @@ If you click "Uninstall", the kit will be removed, unless you have manually chan
 
 ## The Kit Server
 
-By default, Gravwell will check for available kits at `https://kits.gravwell.io/kits`. If you don't see any kits listed in the "Available Kits" page, make sure you can hit that server from your Gravwell webserver. We are currently working on a toolset to allow self-hosted kit servers.
+By default, Gravwell will check for available kits at `https://kits.gravwell.io/kits/list`. If you don't see any kits listed in the "Available Kits" page, make sure you can hit that server from your Gravwell webserver. We are currently working on a toolset to allow self-hosted kit servers.
+
+If you have `curl` and `jq` installed, you can use this command snippet to get a list of available kits:
+```
+curl "https://kits.gravwell.io/kits/list" | jq .[].ID
+```

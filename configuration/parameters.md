@@ -156,7 +156,7 @@ Description:		The Datastore-Update-Interval parameter determines how long (in se
 Applies to:		Webserver and Datastore
 Default Value:	`false`
 Example:		`Datastore-Insecure-Disable-TLS=true`
-Description:	The Datastore-Insecure-Disable-TLS parameter is used by both the webserver and the datastore. By default, the datastore listens for incoming HTTPS connections from webservers; setting this parameter to false makes the datastore expect plaintext HTTP and instructs the webservers to use HTTP.
+Description:	The Datastore-Insecure-Disable-TLS parameter is used by both the webserver and the datastore. By default, the datastore listens for incoming HTTPS connections from webservers; setting this parameter to true makes the datastore expect plaintext HTTP and instructs the webservers to use HTTP.
 
 **Datastore-Insecure-Skip-TLS-Verify**
 Applies to:		Webserver
@@ -234,7 +234,7 @@ Description:        The Persist-Web-Logins parameter is used to inform the webse
 Applies to:        Webserver
 Default Value:        `60`
 Example:        `Session-Timeout-Minutes=1440`
-Description:        The Session-Timeout-Minutes parameter controls how long a client can be idle before the webserver destroys the session.  For example, if a client closes a browser without logging out, the system will wait for the specified time period before invalidating the session.  The installers set this value to 1 day by default.
+Description:        The Session-Timeout-Minutes parameter controls how long a client can be idle before the webserver destroys the session.  For example, if a client closes a browser without logging out, the system will wait for the specified time period before invalidating the session.  The default value is 60 minutes, but most installers set this configuration value to 1 day by default.
 
 **Key-File**
 Applies to:        Indexer, Datastore, and Webserver
@@ -589,6 +589,19 @@ Applies to: Webserver
 Default Value:
 Example: `Kit-Verification-Key=/opt/gravwell/etc/kits-pub.pem`
 Description:	Specifies a file containing a public key to use when verifying kits from the kitserver. Set this value if you have specified an alternate Gravwell-Kit-Server; it is not necessary when using Gravwell's official kit server. Keys suitable for signing kits can be generated with the [gencert](https://github.com/gravwell/gencert) utility.
+
+**Disable-User-Ingester-Config-Reporting**
+Applies to: Webserver
+Default Value: false
+Example: `Disable-User-Ingester-Config-Reporting=true`
+Description:	Tells the webserver that regular (non-admin) users should not receive the Configuration field of ingester state updates. Although the configurations do not include ingest secrets or other "sensitive" items, you may wish to keep the entire configuration secret from regular users; this option does that.
+
+**Disable-Ingester-Config-Reporting**
+Applies to: Webserver
+Default Value: false
+Example: `Disable-Ingester-Config-Reporting=true`
+Description:	Tells the webserver that NO users should receive the Configuration field of ingester state updates. Although the configurations do not include ingest secrets or other "sensitive" items, you may wish to keep the entire configuration secret from ALL users; this option does that.
+
 
 ## Password Control
 

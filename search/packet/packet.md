@@ -23,8 +23,9 @@ Some field modules allow for flexible section where it is desirable to filter on
 | ~ | Subset | Field must be a member of
 | !~ | Not subset | Field must not be a member of
 
-### Packet Processing submodules
-The packet processor supports a growing list of submodules which allow for breaking out specific fields in a packet.  Each submodule and field supports a set of operators that allow the packet processor to also filter events based on the subfields.  The following sub modules are available:
+### Packet Processing Submodules
+
+The packet processor supports submodules which allow for breaking out specific fields in a packet. Each submodule and field supports a set of operators that allow the packet processor to also filter events based on the subfields.  The following sub modules are available:
 
 | Submodule | Description |
 |-----------|-------------|
@@ -40,7 +41,21 @@ The packet processor supports a growing list of submodules which allow for break
 | modbus | modbus/TCP packets |
 | MPLS | Multiprotocol Label Switching |
 
-### Packet Processing Submodules
+### Renaming Extractions
+
+Enumerated value names are derived by the last name in a submodule specification. For example, the specification "ipv4.SrcIP" will generate the enumerated value "SrcIP". Enumerated value names can be overridden with an "as" argument. For example, to extract "ipv4.SrcIP" as "foo":
+
+```
+tag=pcap packet ipv4.SrcIP as foo | table foo
+```
+
+Renamed enumerated values can also be used with filters:
+
+```
+tag=pcap packet ipv4.SrcIP="8.8.8.8" as foo | table foo
+```
+
+### List of Packet Processing Submodules
 
 #### Ethernet
 

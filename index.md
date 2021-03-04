@@ -53,6 +53,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Ingester Preprocessors](ingesters/preprocessors/preprocessors.md)
 
+  * [Custom Time Formats](ingesters/customtime/customtime.md)
+
   * [Service Integrations](ingesters/integrations.md)
 
 ## Advanced Gravwell Installation and Configuration
@@ -78,6 +80,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Hardening Gravwell](configuration/hardening.md)
 
+  * [Common Problems & Caveats](configuration/caveats.md)
+
 ## Query Acceleration, Auto-Extraction, and Data Management
   
   * [Setting up Auto-extractors](configuration/autoextractors.md)
@@ -96,9 +100,14 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Scheduled Searches & Scripts](scripting/scheduledsearch.md)
 
+    * [Automation Script APIs & Examples](scripting/scriptingsearch.md)
+
+
   * [Scripting Overview](scripting/scripting.md)
 
-    * [Automation Script APIs & Examples](scripting/scriptingsearch.md)
+	* [The Anko Module](scripting/anko.md)
+
+	* [The Eval Module](scripting/eval.md)
 
 ## User Interfaces
 
@@ -108,7 +117,7 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
     * [Labels and Filtering](gui/labels/labels.md)
 
-	* [Kits](kits/kits.md)
+    * [Kits](kits/kits.md)
 
   * [Command-Line Client](cli/cli.md)
 

@@ -117,30 +117,6 @@ character-range:
 	lo '-' hi   matches character c for lo <= c <= hi
 ```
 
-### Tag-Name
-
-The Tag-Name parameter specifies the tag to apply to entries ingested by this follower.
-
-### Ignore-Timestamps
-
-The Ignore-Timestamps parameter indicates that the follower should not attempt to extract a timestamp from each line of the file, but rather tag each line with the current time.
-
-### Assume-Local-Timezone
-
-Assume-Local-Timezone is a boolean setting which directs the ingester to parse timestamps which lack timezone specifications as though they were in the local time zone rather than the default UTC.
-
-Assume-Local-Timezone and Timezone-Override are mutually exclusive.
-
-### Timezone-Override
-
-The Timezone-Override parameter directs the ingester to parse timestamps which lack timezone specifications as though they were in the given time zone rather than the default UTC. The timezone should be specified in IANA database string format as shown in [https://en.wikipedia.org/wiki/List_of_tz_database_time_zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones); for example, US Central Time should be specified as follows:
-
-```
-Timezone-Override="America/Chicago"
-```
-
-Assume-Local-Timezone and Timezone-Override are mutually exclusive. `Timezone-Override="Local"` is functionally equivalent to `Assume-Local-Timezone=true`
-
 ### Recursive
 
 The recursive parameter directs the File Follower to ingest files matching the File-Filter recursively under the Base-Directory.
@@ -155,6 +131,10 @@ Recursive=false
 
 By setting Recusive=true, the configuration will ingest **any** file named foo.log at any directory depth under `/tmp/incoming`.
 
+### Tag-Name
+
+The Tag-Name parameter specifies the tag to apply to entries ingested by this follower.
+
 ### Ignore-Line-Prefix
 
 The ingester will drop (not ingest) any lines beginning with the string passed to Ignore-Line-Prefix. This is useful when ingesting log files which contain comments, such as Bro logs. The Ignore-Line-Prefix parameter may be specified multiple times.
@@ -166,34 +146,36 @@ Ignore-Line-Prefix="#"
 Ignore-Line-Prefix="//"
 ```
 
-### Timestamp-Format-Override
+### Regex-Delimiter
 
-Data values may contain multiple timestamps which can cause some confusion when attempting to derive timestamps out of the data.  Normally, the followers will grab the left most timestamp that can be derived, but it may be desirable to only look for a timestamp in a very specific format.  "Timestamp-Format-Override" tells the follower to only respect timestamps in a specific format.  The following timestamp formats are available:
+The `Regex-Delimiter` option allows the user to specify a regular expression which will be used to split entries, rather than newlines. Thus, if your input files look like this:
 
-* AnsiC
-* Unix
-* Ruby
-* RFC822
-* RFC822Z
-* RFC850
-* RFC1123
-* RFC1123Z
-* RFC3339
-* RFC3339Nano
-* Apache
-* ApacheNoTz
-* Syslog
-* SyslogFile
-* SyslogFileTZ
-* DPKG
-* Custom1Milli
-* NGINX
-* UnixMilli
-* ZonelessRFC3339
-* SyslogVariant
-* UnpaddedDateTime
+```
+####This is the first entry
+additional data
+####This is the second entry
+```
 
-To force the follower to only look for timestamps that match the RFC3339 specification add ```Timestamp-Format-Override=RFC3339``` to the follower.
+You could add the following line to your follower definition:
+
+```
+Regex-Delimiter="####"
+```
+
+This will parse the preceding file into two entries:
+
+```
+####This is the first entry
+additional data
+```
+
+and
+
+```
+####This is the second entry
+```
+
+Note: `Timestamp-Delimited` overrides `Regex-Delimiter`; set one or the other.
 
 ### Timestamp-Delimited
 
@@ -220,3 +202,69 @@ Line 2 of the first entry
 Line 2 of the second entry
 Line 3 of the second entry
 ```
+
+Note: `Timestamp-Delimited` overrides `Regex-Delimiter`; set one or the other.
+
+### Ignore-Timestamps
+
+The Ignore-Timestamps parameter indicates that the follower should not attempt to extract a timestamp from each line of the file, but rather tag each line with the current time.
+
+### Assume-Local-Timezone
+
+Assume-Local-Timezone is a boolean setting which directs the ingester to parse timestamps which lack timezone specifications as though they were in the local time zone rather than the default UTC.
+
+Assume-Local-Timezone and Timezone-Override are mutually exclusive.
+
+### Timezone-Override
+
+The Timezone-Override parameter directs the ingester to parse timestamps which lack timezone specifications as though they were in the given time zone rather than the default UTC. The timezone should be specified in IANA database string format as shown in [https://en.wikipedia.org/wiki/List_of_tz_database_time_zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones); for example, US Central Time should be specified as follows:
+
+```
+Timezone-Override="America/Chicago"
+```
+
+Assume-Local-Timezone and Timezone-Override are mutually exclusive. `Timezone-Override="Local"` is functionally equivalent to `Assume-Local-Timezone=true`
+
+### Timestamp-Format-Override
+
+Data values may contain multiple timestamps which can cause some confusion when attempting to derive timestamps out of the data.  Normally, the followers will grab the left most timestamp that can be derived, but if there are multiple timestamps in an entry it may be useful to specify a format to try first.  "Timestamp-Format-Override" tells the follower to try a specific format first.  The following timestamp formats are available:
+
+* AnsiC
+* Unix
+* Ruby
+* RFC822
+* RFC822Z
+* RFC850
+* RFC1123
+* RFC1123Z
+* RFC3339
+* RFC3339Nano
+* Apache
+* ApacheNoTz
+* Syslog
+* SyslogFile
+* SyslogFileTZ
+* DPKG
+* Custom1Milli
+* NGINX
+* UnixMilli
+* ZonelessRFC3339
+* SyslogVariant
+* UnpaddedDateTime
+
+Refer to [the timegrinder documentation](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder) for a full list of possible overrides, with examples.
+
+To force the follower to first look for timestamps that match the RFC3339 specification, add `Timestamp-Format-Override=RFC3339` to the follower. Note that if it is unable to find an RFC3339 timestamp, it will attempt to match against other formats too.
+
+### Timestamp-Regex and Timestamp-Format-String
+
+The `Timestamp-Regex` and `Timestamp-Format-String` options may be used in tandem to specify an additional timestamp format for use when parsing timestamps for this follower. For example, if you are ingesting logs containing Oracle WebLogic timestamps (e.g. "Sep 18, 2020 12:26:48,992 AM EDT"), you would add the following to your configuration:
+
+```
+	Timestamp-Regex=`[JFMASOND][anebriyunlgpctov]+\s+\S{1,2},\s+\d{4}\s+\d{1,2}:\d\d:\d\d,\d+\s+\S{2}\s+\S+`
+	Timestamp-Format-String="Jan _2, 2006 3:04:05,999 PM MST"
+```
+
+The `Timestamp-Format-String` parameter should be a Go-style timestamp format as defined [in this document](https://golang.org/pkg/time/). The `Timestamp-Regex` parameter should be a regular expression which can match the timestamps you wish to extract; note that it must also be able to match the `Timestamp-Format-String` and will return an error if it does not match.
+
+The format defined using these options will be inserted at the top of the list of formats used by timegrinder, meaning it will be checked first, but if a valid timestamp is not found with the user-defined format, the rest of the timegrinder formats will also be tried.

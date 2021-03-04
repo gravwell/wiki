@@ -5,6 +5,7 @@ The ip module can convert enumerated values to the IP type and optionally perfor
 ## Supported Options
 
 * `-or`: The "-or" flag specifies that the ip module should allow an entry to continue down the pipeline if ANY of the filters are successful.
+* `-categorize`: If the "-categorize" flag is set, the module will attempt to categorize each enumerated value as "PRIVATE", "PUBLIC", or "MULTICAST". Running `ip -categorize srcIP` will create an enumerated value named "srcIP_category" containing the category string.
 
 ## Processing Operators
 
@@ -65,3 +66,13 @@ Assuming CSV-formatted data in which the 3rd field describes the source IP addre
 ```
 tag=csv csv [2] as srcip | ip srcip ~ PRIVATE
 ```
+
+### Categorize IP addresses
+
+Assuming CSV-formatted data in which the 3rd field describes the source IP address of a connection, we can use the ip module to assign a network category for each IP address:
+
+```
+tag=csv csv [2] as srcip | ip -categorize srcip | table srcip srcip_category
+```
+
+The resulting table will contain two columns: `srcip`, and `srcip_category` which will contain one of "PRIVATE", "PUBLIC", or "MULTICAST".

@@ -12,18 +12,9 @@ Each preprocessor will have the opportunity to modify the entries. The preproces
 
 ## Configuring Preprocessors
 
-Preprocessors can be used with the following ingesters:
+Preprocessors are supported on all packaged ingesters.  One-off and unsupported ingesters may not support preprocessors.
 
-* Simple Relay
-* Kinesis
-* Kafka
-* Google Pub/Sub
-* Office 365
-* HTTP
-
-The other Gravwell ingesters will receive preprocessor support soon.
-
-Preprocessors are configured in the ingester's config file. Consider the following example for the Simple Relay ingester:
+Preprocessors are configured in the ingester's config file using the `preprocessor` configuration stanza.  Each Preprocessor stanza must declare the preprocessor module in use via the `Type` configuration parameter, followed by the preprocessor's specific configuration parameters. Consider the following example for the Simple Relay ingester:
 
 ```
 [Global]
@@ -35,16 +26,16 @@ Cleartext-Backend-target=127.0.0.1:4023 #example of adding a cleartext connectio
 Log-Level=INFO
 
 [Listener "default"]
-        Bind-String="0.0.0.0:7777" #we are binding to all interfaces, with TCP implied
-        Tag-Name=default
-        Preprocessor=timestamp
+	Bind-String="0.0.0.0:7777" #we are binding to all interfaces, with TCP implied
+	Tag-Name=default
+	Preprocessor=timestamp
 
 [Listener "syslog"]
 	Bind-String="0.0.0.0:601" # TCP syslog
 	Tag-Name=syslog
 
 [preprocessor "timestamp"]
-        type = regextimestamp
+	Type = regextimestamp
 	Regex ="(?P<badtimestamp>.+) MSG (?P<goodtimestamp>.+) END"
 	TS-Match-Name=goodtimestamp
 	Timezone-Override=US/Pacific
@@ -55,6 +46,8 @@ This configuration defines two data consumers (Simple Relay calls them "Listener
 ## gzip Preprocessor
 
 The gzip preprocessor can uncompress entries which have been compressed with the GNU 'gzip' algorithm.
+
+The GZIP preprocessor Type is `gzip`.
 
 ### Supported Options
 
@@ -80,6 +73,8 @@ Example config:
 The JSON extraction preprocessor can parse the contents of an entry as JSON, extract one or more fields from the JSON, and replace the entry contents with those fields. This is a useful way to simplify overly-complex messages into more concise entries containing only the information of interest.
 
 If only a single field extraction is specified, the result will contain purely the contents of that field; if multiple fields are specified, the preprocessor will generate valid JSON containing those fields.
+
+The JSON Extraction preprocessor Type is `jsonextract`.
 
 ### Supported Options
 
@@ -111,9 +106,11 @@ This preprocessor can split an array in a JSON object into individual entries. F
 
 Becomes two entries, one containing "bob" and one containing "alice".
 
+The JSON Array Split preprocessor Type is `jsonarraysplit`.
+
 ### Supported Options
 
-* `Extraction` (string, required): specifies the JSON field containing a struct which should be split, e.g. `Extraction=Users`, `Extraction=foo.bar`.
+* `Extraction` (string): specifies the JSON field containing a struct which should be split, e.g. `Extraction=Users`, `Extraction=foo.bar`. If you do not set `Extraction`, the preprocessor will attempt to treat the entire object as an array to split.
 * `Passthrough-Misses` (boolean, optional): If set to true, the preprocessor will pass along entries for which it was unable to extract the requested field. By default, these entries are dropped.
 * `Force-JSON-Object` (boolean, optional): By default, the preprocessor will emit entries with each containing one item in the list and nothing else; thus extracting `foo` from `{"foo": ["a", "b"]}` would result in two entries containing "a" and "b" respectively. If this option is set, that same entry would result in two entries containing `{"foo": "a"}` and `{"foo": "b"}`.
 * `Additional-Fields` (string, optional): A comma delimited list of additional fields outside the array to be split that will be extracted and included in each entry, e.g. `Additional-Fields="foo,bar, foo.bar.baz"`
@@ -125,6 +122,8 @@ Many data providers may pack multiple events into a single entry which can degra
 
 ### Example: Splitting Multiple Messages In a Single Record
 
+To split entries which consist of JSON records with an array named "Alerts":
+
 ```
 [preprocessor "json"]
 	Type=jsonarraysplit
@@ -132,6 +131,46 @@ Many data providers may pack multiple events into a single entry which can degra
 	Force-JSON-Object=true
 ```
 
+Input data:
+
+```
+{ "Alerts": [ "alert1", "alert2" ] }
+```
+
+Output:
+
+```
+{ "Alerts": "alert1" }
+```
+
+```
+{ "Alerts": "alert2" }
+```
+
+### Example: Splitting a Top-Level Array
+
+Sometimes the entire entry is an array:
+
+```
+[ {"foo": "bar"}, {"x": "y"} ]
+```
+
+To split this, use the following definition:
+
+```
+[preprocessor "json"]
+	Type=jsonarraysplit
+```
+
+Leaving the Extraction parameter un-set tells the module to treat the entire entry as an array, giving the following two output entries:
+
+```
+{"foo": "bar"}
+```
+
+```
+{"x": "y"}
+```
 
 ## JSON Field Filtering Preprocessor
 
@@ -140,6 +179,8 @@ This preprocessor will parse entry data as a JSON object, then extract specified
 It can be configured to either *pass* only those entries whose fields match the lists, or to *drop* those entries which match the lists--whitelisting, or blacklisting. It can be set up to filter against multiple fields, requiring either that *all* fields must match (logical AND) or that *at least one* field must match (logical OR).
 
 This preprocessor is particularly useful to narrow down a firehose of general data before sending it across a slow network link.
+
+The JSON Field Filtering preprocessor Type is `jsonfilter`.
 
 ### Supported Options
 
@@ -153,7 +194,7 @@ Note: If a field is specified in the configuration but is not present on an entr
 
 ### Common Use Cases
 
-The json field filtering preprocessor can downselect entries based on fields within the entries.  This allows for building blacklists and whitelists on data flows to ensure that data either does or does not make it to storage.
+The json field filtering preprocessor can down select entries based on fields within the entries.  This allows for building blacklists and whitelists on data flows to ensure that data either does or does not make it to storage.
 
 ### Example: Simple Whitelisting
 
@@ -236,6 +277,8 @@ This new preprocessor extracts the `EventID` and `System` fields from every entr
 
 The regex router preprocessor is a flexible tool for routing entries to different tags based on the contents of the entries. The configuration specifies a regular expression containing a [named capturing group](https://www.regular-expressions.info/named.html), the contents of which are then tested against user-defined routing rules.
 
+The Regex Router preprocessor Type is `regexrouter`.
+
 ### Supported Options
 
 * `Regex` (string, required): This parameter specifies the regular expression to be applied to the incoming entries. It must contain at least one [named capturing group](https://www.regular-expressions.info/named.html), e.g. `(?P<app>.+)` which will be used with the `Route-Extraction` parameter.
@@ -312,9 +355,69 @@ The regular expression we already have won't extract the application name ("webs
 
 Note that this new preprocessor definition defines routes for the applications named "webservice" and "apache", sending both to the "weblog" tag. Note also that it specifies that logs from the "postfix" application should be *dropped*, perhaps because those logs are already being ingested from another source.
 
+## Source Router Preprocessor
+
+The source router preprocessor can route entries to different tags based on the SRC field of the entry. Typically the SRC field will be the IP address of the entry's origination point, e.g. the system which created the syslog message sent to Simple Relay.
+
+The source router preprocessor Type is `srcrouter`.
+
+### Supported Options
+
+* `Route` (string, optional): `Route` defines a mapping of SRC field value to tag, separated by a colon. For instance, `Route=192.168.0.1:server-logs` will send all entries with SRC=192.168.0.1 to the "server-logs" tag. Multiple `Route` parameters can be specified. Leaving the tag blank (`Route=192.168.0.1:`) tells the preprocessor to drop all matching entries instead.
+* `Route-File` (string, optional): `Route-File` should contain a path to a file containing newline-separated route specifications, e.g. `192.168.0.1:server-logs`.
+* `Drop-Misses` (boolean, optional): By default, entries which do not match any of the defined routes will be passed through unmodified. Setting `Drop-Misses` to true will instead drop any entries which do not explicitly match a route definition.
+
+At least one `Route` definition is required, unless `Route-File` is used.
+
+A route can be either a single IP address or a properly formed CIDR specification, both IPv4 and IPv6 are supported.
+
+### Example: Inline Route Definitions
+
+The snippet below shows part of a Simple Relay ingester configuration that uses the source router preprocessor with routes defined inline. Entries originating from 10.0.0.1 will be tagged "internal-syslog", entries originating from 7.82.33.4 will be tagged "external-syslog", and all other entries will retain the default tag "syslog". Any entries with SRC=3.3.3.3 will be dropped.
+
+```
+[Listener "syslog"]
+        Bind-String="0.0.0.0:2601" #we are binding to all interfaces, with TCP implied
+        Tag-Name=syslog
+        Preprocessor=srcroute
+
+[preprocessor "srcroute"]
+        Type = srcrouter
+        Route=10.0.0.0/24:internal-syslog
+        Route=7.82.33.4:external-syslog
+        Route=3.3.3.3:
+        Route=DEAD::BEEF:external-syslog
+        Route=FEED:FEBE::0/64:external-syslog
+```
+
+### Example: File-based Definitions
+
+The snippet below shows part of a Simple Relay ingester configuration that uses the source router preprocessor with routes defined in a file.
+
+```
+[Listener "syslog"]
+        Bind-String="0.0.0.0:2601" #we are binding to all interfaces, with TCP implied
+        Tag-Name=syslog
+        Preprocessor=srcroute
+
+[preprocessor "srcroute"]
+        Type = srcrouter
+        Route-File=/opt/gravwell/etc/syslog-routes
+```
+
+The following is written to `/opt/gravwell/etc/syslog-routes`:
+
+```
+10.0.0.0/24:internal-syslog
+7.82.33.4:external-syslog
+3.3.3.3:
+```
+
 ## Regex Timestamp Extraction Preprocessor
 
 Ingesters will typically attempt to extract a timestamp from an entry by looking for the first thing which appears to be a valid timestamp and parsing it. In combination with additional ingester configuration rules for parsing timestamps (specifying a specific timestamp format to look for, etc.) this is usually sufficient to properly extract the appropriate timestamp, but some data sources may defy these straightforward methods. Consider a situation where a network device may send CSV-formatted event logs wrapped in syslog--a situation we have seen at Gravwell!
+
+The Regex Timestamp Extraction preprocessor Type is `regextimestamp`.
 
 ### Supported Options
 
@@ -384,14 +487,19 @@ It is highly common for transport buses to wrap data streams with additional met
 
 The regexextraction preprocessor uses named regular expression extraction fields and a template to extract data and then reform it into an output record.  Output templates can contain static values and completely reform the output data if needed.
 
-Templates reference extracted values by name using field definitions similar to bash.  For example, if your regex extracted a field named `foo` you could insert that extraction in the template with `${foo}`.
+Templates reference extracted values by name using field definitions similar to bash.  For example, if your regex extracted a field named `foo` you could insert that extraction in the template with `${foo}`. The templates also support the following special keys:
+
+* `${_SRC_}`, which will be replaced by the SRC field of the current entry.
+* `${_DATA_}`, which will be replaced by the string-formatted Data field of the current entry.
+* `${_TS_}`, which will be replaced by the string-formatted TS (timestamp) field of the current entry.
+
+The Regex Extraction preprocessor Type is `regexextract`.
 
 ### Supported Options
 
 * Passthrough-Misses (boolean, optional): This parameter specifies whether the preprocessor should pass the record through unchanged if the regular expression does not match.
 * Regex (string, required): This parameter defines the regular expression for extraction
 * Template (string, required): This parameter defines the output form of the record.
-
 
 ### Common Use Cases
 
@@ -440,6 +548,8 @@ By default the forwarding preprocessor is blocking, this means that if you speci
 The forwarding preprocessor also supports several filter mechanisms to cut down or specify exactly which data streams are forwarded.  Streams can be filtered using entry tags, sources, or regular expressions which operation on the actual log data.  Each filter specification can be specified multiple times to create an OR pattern.
 
 Multiple forwarding preprocessors can be specified, allowing for a specific log stream to be forwarded to multiple endpoints.
+
+The Forwarding preprocessor Type is `forwarder`.
 
 ### Supported Options
 
@@ -544,4 +654,218 @@ For this example we are using the Gravwell Federator to forward subsets of logs 
 	Non-Blocking=false
 
 
+```
+
+## Gravwell Forwarding Preprocessor
+
+The Gravwell forwarding processor allows for creating a complete Gravwell muxer which can duplicate entries to multiple instances of Gravwell.  This preprocessor can be useful for testing or situations where a specific Gravwell data stream needs to be duplicated to an alternate set of indexers.  The Gravwell forwarding preprocessor utilizes the same configuration structure to specify indexers, ingest secrets, and even cache controls as the packaged ingesters.  The Gravwell forwarding preprocessor is a blocking preprocessor, this means that if you do not enable a local cache it can block the ingest pipeline if the preprocessor cannot forward entries to the specified indexers.
+
+The Gravwell Forwarding preprocessor Type is `gravwellforwarder`.
+
+### Supported Options
+
+See the [Global Configuration Parameters](#!ingesters/ingesters.md#Global_Configuration_Parameters) section for full details on all the Gravwell ingester options.  Most global ingester configuration options are supported by the Gravwell Forwarder preprocessor.
+
+### Example: Duplicating Data In a Federator
+
+For this example we are going to specify a complete Federator configuration that will duplicate all entries to a second cluster.
+
+NOTE: We are enabling an `always` cache on the forwarding preprocessor so that it won't ever block the normal ingest path.
+
+```
+[Global]
+Ingest-Secret = IngestSecrets
+Connection-Timeout = 0
+Verify-Remote-Certificates = true
+Cleartext-Backend-Target=172.19.0.2:4023 #example of adding a cleartext connection
+Log-Level=INFO
+
+[IngestListener "enclaveA"]
+	Ingest-Secret = CustomSecrets
+	Cleartext-Bind = 0.0.0.0:4423
+	Tags=windows
+	Tags=syslog-*
+	Preprocessor=dup
+
+[Preprocessor "dup"]
+	Type=GravwellForwarder
+	Ingest-Secret = IngestSecrets
+	Connection-Timeout = 0
+	Cleartext-Backend-Target=172.19.0.4:4023 #indexer1
+	Cleartext-Backend-Target=172.19.0.5:4023 #indexer2 (cluster config)
+	Ingest-Cache-Path=/opt/gravwell/cache/federator_dup.cache # must be a unique path
+	Max-Ingest-Cache=1024 #Limit forwarder disk usage
+```
+
+### Example: Stacking Duplicate Forwarders
+
+For this example we are going to specify a complete Federator configuration and multiple Gravwell preprocessors so that we can duplicate our single stream of entries to multiple Gravwell clusters.
+
+NOTE: The preprocessor control logic does NOT check that you are not forwarding to the same cluster multiple times.
+
+```
+[Global]
+Ingest-Secret = IngestSecrets
+Connection-Timeout = 0
+Verify-Remote-Certificates = true
+Cleartext-Backend-Target=172.19.0.2:4023 #example of adding a cleartext connection
+Log-Level=INFO
+
+[IngestListener "enclaveA"]
+	Ingest-Secret = CustomSecrets
+	Cleartext-Bind = 0.0.0.0:4423
+	Tags=windows
+	Tags=syslog-*
+	Preprocessor=dup1
+	Preprocessor=dup2
+	Preprocessor=dup3
+
+[Preprocessor "dup1"]
+	Type=GravwellForwarder
+	Ingest-Secret = IngestSecrets1
+	Cleartext-Backend-Target=172.19.0.101:4023
+	Ingest-Cache-Path=/opt/gravwell/cache/federator_dup1.cache
+	Max-Ingest-Cache=1024
+
+[Preprocessor "dup2"]
+	Type=GravwellForwarder
+	Ingest-Secret = IngestSecrets2
+	Cleartext-Backend-Target=172.19.0.102:4023
+	Ingest-Cache-Path=/opt/gravwell/cache/federator_dup2.cache
+	Max-Ingest-Cache=1024
+
+[Preprocessor "dup3"]
+	Type=GravwellForwarder
+	Ingest-Secret = IngestSecrets3
+	Cleartext-Backend-Target=172.19.0.103:4023
+	Ingest-Cache-Path=/opt/gravwell/cache/federator_dup3.cache
+	Max-Ingest-Cache=1024
+```
+
+## Drop Preprocessor
+
+The drop preprocessor does exactly what the name implies, it simple drops entries from the ingest pipeline, effectively throwing them away.
+
+This processor can be useful if an ingest stream is to be primarily handled by another set of preprocessors.  For example, if you want to send data to a remote system using the forwarder preprocessor but NOT ingest it upstream into a Gravwell indexer, you could add a final `drop` preprocessor which will simply discard all entries that it sees.
+
+### Supported Options
+
+None.
+
+### Example: Just Drop Everything
+
+This example has a single preprocessor `drop` which just discards all entries on a Simple Relay listener.
+
+```
+[Listener "default"]              
+	Bind-String="0.0.0.0:601"
+	Reader-Type=rfc5424
+	Tag-Name=syslog
+	Preprocessor=dropit
+
+[Preprocessor "dropit"]
+	Type=Drop               
+```
+
+### Example: Forward Entries and Drop
+
+This example forwards entries via a TCP forwarder then drops them.
+
+```
+[Listener "default"]              
+	Bind-String="0.0.0.0:601"
+	Reader-Type=rfc5424
+	Tag-Name=syslog
+	Preprocessor=forwardprivnet
+	Preprocessor=dropit
+
+[Preprocessor "forwardprivnet"]
+	Type=Forwarder               
+	Protocol=tcp
+	Target="172.17.0.3:601"
+	Format="raw"
+	Delimiter="\n"
+	Buffer=128
+	Source=192.168.0.1
+	Source=192.168.1.0/24
+	Non-Blocking=false
+
+[Preprocessor "dropit"]
+	Type=Drop               
+```
+
+## Cisco ISE Preprocessor
+
+The Cisco ISE preprocessor is designed to parse and accomodate the format and transport of Cisco ISE logs.  See the [Cisco Introduction to ISE Syslogs](https://www.cisco.com/c/en/us/td/docs/security/ise/syslog/Cisco_ISE_Syslogs/m_IntrotoSyslogs.pdf) for more information.
+
+The Cisco ISE preprocessor is named `cisco_ise` and supports the ability to reassemble multipart messages, reformat the messages into a format more appropriate for Gravwell and modern syslog systems, filter unwanted message pairs, and remove redundant message headers.
+
+### Attribute Filtering and Formatting
+
+The Cisco ISE logging system is designed to split a single message across multiple syslog messages.  Gravwell will accept messages that far exceed the maximum message size of syslog, however if you are supporting multiple targets for Cisco ISE messages it may be necessary to enable multipart messages.  Disabling multipart messages in your cisco device and letting Gravwell handle large payloads will be far more efficient.
+
+### Supported Options
+
+* `Passthrough-Misses` (boolean, optional): If set to true, the preprocessor will pass along entries for which it was unable to extract a valid ISE message. By default, these entries are dropped.
+* `Enable-Multipart-Reassembly` (boolean, optional): If set to true the preprocessor will attempt to reassemble messages that contain a Cisco remote message header.
+* `Max-Multipart-Buffer` (uint64, optional): Specifies a maximum in-memory buffer to use when reassembling multipart messages, when the buffer is exceeded the oldest partially reassembled message will be sent to Gravwell.  The default buffer size is 8MB.
+* `Max-Multipart-Latency` (string, optional): Specifies a maximum time duration that a partially reassembled multipart message will be held before it is sent.  Time spans should be specified in `ms` and `s` values.
+* `Output-Format` (string, optional): Specifies the output format for sending ISE messages, the default format is `raw`, other options are `json` and `cef`.
+* `Attribute-Drop-Filter` (string array, optional): Specifies globbing patterns that can be used to match against attributes within a message which will be removed from the output.  The arguments must be [Unix Glob patterns](https://en.wikipedia.org/wiki/Glob_(programming)), many patterns can be specified.  Attribute drop filters are not compatible with the `raw` output format.
+* `Attribute-Strip-Header` (boolean, optional): Specifies that attributes with nested names and/or type information should have the header values stripped.  This is extremely useful for cleaning up poorly formed attribute values.
+
+
+### Example Configuration
+
+The following `cisco_ise` preprocessor configuration is designed to re-assemble multipart messages, remove unwanted `Step` attributes, and reform the output messages in the CEF format.  It also strips the cisco attribute headers.
+
+```
+[preprocessor "iseCEF"]
+    Type=cisco_ise
+    Passthrough-Misses=false #if its malformed just drop it
+    Enable-Multipart-Reassembly=true
+    Attribute-Drop-Filters="Step*"
+    Attribute-Strip-Header=true
+    Output-Format=cef
+```
+
+An example output message using this configuration is:
+
+```
+CEF:0|CISCO|ISE_DEVICE|||Passed-Authentication|NOTICE| sequence=1 ode=5200 class=Passed-Authentication text=Authentication succeeded ConfigVersionId=44 DeviceIPAddress=8.8.8.8 DestinationIPAddress=1.2.3.4 DestinationPort=1645 UserName=user@company.com Protocol=Radius RequestLatency=10301 audit-session-id=0a700e191cff70005fbbf63f
+```
+
+The following `cisco_ise` preprocessor configuration is achieves a similar result, but it contains two attribute filters and re-formats the output message into JSON 
+
+```
+[preprocessor "iseCEF"]
+    Type=cisco_ise
+    Passthrough-Misses=false #if its malformed just drop it
+    Enable-Multipart-Reassembly=true
+    Attribute-Drop-Filters="Step*"
+    Attribute-Strip-Header=true
+    Output-Format=json
+```
+
+An example output message using this configuration is:
+
+```
+{
+  "TS":"2020-11-23T12:50:01.926-05:00",
+  "Sequence":1,
+  "ODE":"5200",
+  "Severity":"NOTICE",
+  "Class":"Passed-Authentication",
+   "Text":"Authentication succeeded",
+   "Attributes":{
+     "AcsSessionID":"ISE_DEVICE/384429556/212087299",
+     "AuthenticationIdentityStore":"AzureBackup",
+     "AuthenticationMethod":"PAP_ASCII",
+     "AuthenticationStatus":"AuthenticationPassed",
+     "audit-session-id":"0a700e191cff70005fbbf63f",
+     "device-mac":"00-0c-29-74-9d-e8",
+     "device-platform":"win",
+     "device-platform-version":"10.0.17134",
+  }
+}
 ```

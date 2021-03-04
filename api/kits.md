@@ -29,18 +29,25 @@ type KitBuildRequest struct {
 	Name              string
 	Description       string
 	Version           uint
-	Dashboards        []uint64    
+	MinVersion        CanonicalVersion 
+	MaxVersion        CanonicalVersion 
+	Dashboards        []uint64 
 	Templates         []uuid.UUID 
 	Pivots            []uuid.UUID 
+	Resources         []string 
+	ScheduledSearches []int32 
+	Macros            []uint64 
+	Extractors        []uuid.UUID 
 	Files             []uuid.UUID 
-	Resources         []string    
-	ScheduledSearches []int32     
-	Macros            []uint64
-	SearchLibraries   []uuid.UUID    
-	Extractors        []uuid.UUID
-	Icon              string    
-	Dependencies      []KitDependency
-	ConfigMacros	  []KitConfigMacro
+	SearchLibraries   []uuid.UUID 
+	Playbooks         []uuid.UUID 
+	EmbeddedItems     []KitEmbeddedItem 
+	Icon              string 
+	Banner            string 
+	Cover             string 
+	Dependencies      []KitDependency 
+	ConfigMacros      []KitConfigMacro
+	ScriptDeployRules map[int32]ScriptDeployConfig
 }
 ```
 
@@ -48,34 +55,60 @@ Note that while the ID, Name, Description, and Version fields are required, the 
 
 ```
 {
-	"ID": "io.gravwell.test",
-	"Name": "test-gravwell",
-	"Description": "Test Gravwell kit",
-	"Version": 1,
-	"ConfigMacros": [
-		{
-			"MacroName": "KIT_WINDOWS_TAG",
-			"Description": "Tag or tags containing Windows event entries",
-			"DefaultValue": "windows"
-		}
-	],
-	"Dashboards": [
-		7,
-		10
-	],
-	"Pivots": [
-		"ae9f2598-598f-4859-a3d4-832a512b6104"
-	],
-	"Resources": [
-		"84270dbd-1905-418e-b756-834c15661a54"
-	],
-	"ScheduledSearches": [
-		1439174790
-	]
+    "ConfigMacros": [
+        {
+            "DefaultValue": "windows",
+            "Description": "Tag or tags containing Windows event entries",
+            "MacroName": "KIT_WINDOWS_TAG"
+        }
+    ],
+    "Dashboards": [
+        7,
+        10
+    ],
+    "Description": "Test Gravwell kit",
+    "ID": "io.gravwell.test",
+    "Name": "test-gravwell",
+    "Description":"testing\n\n## TESTING",
+    "Pivots": [
+        "ae9f2598-598f-4859-a3d4-832a512b6104"
+    ],
+    "Resources": [
+        "84270dbd-1905-418e-b756-834c15661a54"
+    ],
+    "ScheduledSearches": [
+        1439174790
+    ],
+    "EmbeddedItems":[
+        {
+           "Name":"TEST",
+           "Type":"license",
+           "Content":"VGVzdCBsaWNlbnNlIHRoYXQgYWxsb3dzIEdyYXZ3ZWxsIHRvIGdpdmUgeW91ciBmaXJzdCBib3JuIHNvbiBhIHN0ZXJuIHRhbGtpbmcgdG8h"
+        }
+    ],
+    "Files":[
+        "810a014d-1373-4d57-95b6-0638a7a01442",
+        "09a26a2e-e449-4857-88d1-56cede1b8d95",
+        "92bcfe5e-2c9a-4f39-9083-dd3f7a6f9738"
+    ],
+    "MinVersion":{"Major":4,"Minor":0,"Point":0},
+    "MaxVersion":{"Major":4,"Minor":2,"Point":0},
+    "Icon":"810a014d-1373-4d57-95b6-0638a7a01442",
+    "Banner":"09a26a2e-e449-4857-88d1-56cede1b8d95",
+    "Cover":"92bcfe5e-2c9a-4f39-9083-dd3f7a6f9738",
+    "ScriptDeployRules": {
+        "1439174790": {
+            "Disabled": true,
+            "RunImmediately": false
+        }
+    },
+    "Version": 1
 }
 ```
 
 Attention: The UUIDs specified for templates, pivots, and userfiles should be the *GUIDs* associated with those structures, not the *ThingUUID* field which is also reported in a listing of items.
+
+Attention: The UUIDs specified for Banner, Cover, and Icon must be included in the list of Files for the build request.  If the build request contains references to file UUIDs that are NOT included in the main file request the API server will reject the request.
 
 The system will respond with a structure describing the newly-built kit:
 
@@ -112,11 +145,37 @@ A kit may define "config macros", which are special macros which will be created
 	"Description": "Tag or tags containing Windows event entries",
 	"DefaultValue": "windows",
 	"Value": "",
+	"Type": "TAG"
 }
 ```
 
 The UI should prompt for the desired value of the macro at installation time and include the user's response in the KitConfig structure.
 
+Config macro definitions can include a Type field, which give a hint about the sort of value that the macro expects. The following options are currently defined:
+
+	* "TAG": the value should be a valid tag. This tag does not necessarily have to exist on the current system, but it may be useful to check and alert the user if they enter a non-existent tag.
+	* "STRING": the value can be a free-form string.
+
+If no Type is specified, assume "STRING" (free-form entry).
+
+### Script Deploy Configs
+
+By default, scripts included in a kit will be set enabled at installation. This behavior can be controlled through the script deploy config structures:
+
+```
+{
+	"Disabled": false,
+	"RunImmediately": true,
+}
+```
+
+The structure contains two fields, "Disabled" and "RunImmediately". If Disabled is set to true, the script will be installed in a disabled state. If RunImmediately is set to true, the script will be executed as soon as possible after installation, *even if the script is otherwise disabled*.
+
+Script deploy options can be set at *kit build time*, or at *kit deploy time* to override the kit's built-in options. 
+
+When building a kit, the `ScriptDeployRules` field should contain mappings from scheduled script ID numbers (as listed in the `ScheduledSearches` field) to script deploy config structures.
+
+When installing a kit, the `ScriptDeployRules` field should contain mappings from scheduled script *names* to configurations. Note that deployment options only need to be specified at installation time if you wish to override the defaults.
 
 ## Uploading a Kit
 
@@ -127,131 +186,146 @@ You can also add a field named `metadata` to the request. The contents of this f
 The server will respond with a description of the kit which has been uploaded, e.g.:
 
 ```
-	{
-		"UUID": "549c0805-a693-40bd-abb5-bfb29fc98ef1",
-		"UID": 7,
-		"GID": 0,
-		"ID": "io.gravwell.test",
-		"Name": "test-gravwell",
-		"Description": "Test Gravwell kit",
-		"Version": 2,
-		"Installed": false,
-		"Signed": false,
-		"AdminRequired": false,
-		"ConfigMacros": [
-			{
-				"MacroName": "KIT_WINDOWS_TAG",
-				"Description": "Tag or tags containing Windows event entries",
-				"DefaultValue": "windows",
-				"Value": "winlog",
-			}
-		],
-		"Items": [
-			{
-				"Name": "84270dbd-1905-418e-b756-834c15661a54",
-				"Type": "resource",
-				"AdditionalInfo": {
-					"VersionNumber": 1,
-					"ResourceName": "maxmind_asn",
-					"Description": "ASN database",
-					"Size": 6196221
-				}
-			},
-			{
-				"Name": "a",
-				"Type": "dashboard",
-				"AdditionalInfo": {
-					"UUID": "5567707c-8508-4250-9121-0d1a9d5ebe32",
-					"Name": "Foo",
-					"Description": "My dashboard"
-				}
-			}
-		],
-		"ModifiedItems": [
-			{
-				"Name": "a",
-				"Type": "dashboard",
-				"AdditionalInfo": {
-					"UUID": "5567707c-8508-4250-9121-0d1a9d5ebe32",
-					"Name": "Foo",
-					"Description": "My dashboard"
-				}
-			}
-		],
-		"ConflictingItems": [
-			{
-				"Name": "84270dbd-1905-418e-b756-834c15661a54",
-				"Type": "resource",
-				"AdditionalInfo": {
-					"VersionNumber": 1,
-					"ResourceName": "maxmind_asn",
-					"Description": "ASN database",
-					"Size": 6196221
-				}
-			}
-		],
-        "RequiredDependencies": [
-            {
-                "AdminRequired": false,
-                "Assets": [
-                    {
-                        "Featured": true,
-                        "Legend": "Littering AAAAAAND",
-                        "Source": "cover.jpg",
-                        "Type": "image"
-                    },
-                    {
-                        "Featured": false,
-                        "Legend": "",
-                        "Source": "readme.md",
-                        "Type": "readme"
-                    }
-                ],
-                "Created": "2020-03-23T15:36:00.294625802-06:00",
-                "Dependencies": null,
-                "Description": "A simple test kit that just provides a resource",
-                "ID": "io.gravwell.testresource",
-                "Ingesters": [
-                    "simplerelay"
-                ],
-                "Items": [
-                    {
-                        "AdditionalInfo": {
-                            "Description": "hosts",
-                            "ResourceName": "devlookup",
-                            "Size": 610,
-                            "VersionNumber": 1
-                        },
-                       "Name": "devlookup",
-                        "Type": "resource"
-                    },
-                    {
-                        "AdditionalInfo": "Testkit resource\n\nThis really has no restrictions, go nuts!\n",
-                        "Name": "LICENSE",
-                        "Type": "license"
-                    }
-                ],
-                "MaxVersion": {
-                    "Major": 0,
-                    "Minor": 0,
-                    "Point": 0
+{
+    "AdminRequired": false,
+    "ConfigMacros": [
+        {
+            "DefaultValue": "windows",
+            "Description": "Tag or tags containing Windows event entries",
+            "MacroName": "KIT_WINDOWS_TAG",
+            "Type": "TAG",
+            "Value": "winlog"
+        }
+    ],
+    "ConflictingItems": [
+        {
+            "AdditionalInfo": {
+                "Description": "ASN database",
+                "ResourceName": "maxmind_asn",
+                "Size": 6196221,
+                "VersionNumber": 1
+            },
+            "Name": "84270dbd-1905-418e-b756-834c15661a54",
+            "Type": "resource"
+        }
+    ],
+    "Description": "Test Gravwell kit",
+    "GID": 0,
+    "ID": "io.gravwell.test",
+    "Installed": false,
+    "Items": [
+        {
+            "AdditionalInfo": {
+                "Description": "ASN database",
+                "ResourceName": "maxmind_asn",
+                "Size": 6196221,
+                "VersionNumber": 1
+            },
+            "Name": "84270dbd-1905-418e-b756-834c15661a54",
+            "Type": "resource"
+        },
+        {
+            "AdditionalInfo": {
+                "Description": "My dashboard",
+                "Name": "Foo",
+                "UUID": "5567707c-8508-4250-9121-0d1a9d5ebe32"
+            },
+            "Name": "a",
+            "Type": "dashboard"
+        },
+        {
+            "AdditionalInfo": {
+                "DefaultDeploymentRules": {
+                    "Disabled": false,
+                    "RunImmediately": true
                 },
-                "MinVersion": {
-                    "Major": 0,
-                    "Minor": 0,
-                    "Point": 0
+                "Description": "A script",
+                "Name": "myScript",
+                "Schedule": "* * * * *",
+                "Script": "println(\"hi\")"
+            },
+            "Name": "5aacd602-e6ed-11ea-94d9-c771bfc07a39",
+            "Type": "scheduled search"
+        }
+    ],
+    "ModifiedItems": [
+        {
+            "AdditionalInfo": {
+                "Description": "My dashboard",
+                "Name": "Foo",
+                "UUID": "5567707c-8508-4250-9121-0d1a9d5ebe32"
+            },
+            "Name": "a",
+            "Type": "dashboard"
+        }
+    ],
+    "Name": "test-gravwell",
+    "RequiredDependencies": [
+        {
+            "AdminRequired": false,
+            "Assets": [
+                {
+                    "Featured": true,
+                    "Legend": "Littering AAAAAAND",
+                    "Source": "cover.jpg",
+                    "Type": "image"
                 },
-                "Name": "Testing resource kit",
-                "Signed": true,
-                "Size": 10240,
-                "Tags": [
-                    "syslog"
-                ],
-                "UUID": "d2a0cb10-ff25-4426-8b87-0dd0409cae48",
-                "Version": 1
-            }
-        ]
-	}
+                {
+                    "Featured": false,
+                    "Legend": "",
+                    "Source": "readme.md",
+                    "Type": "readme"
+                }
+            ],
+            "Created": "2020-03-23T15:36:00.294625802-06:00",
+            "Dependencies": null,
+            "Description": "A simple test kit that just provides a resource",
+            "ID": "io.gravwell.testresource",
+            "Ingesters": [
+                "simplerelay"
+            ],
+            "Items": [
+                {
+                    "AdditionalInfo": {
+                        "Description": "hosts",
+                        "ResourceName": "devlookup",
+                        "Size": 610,
+                        "VersionNumber": 1
+                    },
+                    "Name": "devlookup",
+                    "Type": "resource"
+                },
+                {
+                    "AdditionalInfo": "Testkit resource\n\nThis really has no restrictions, go nuts!\n",
+                    "Name": "LICENSE",
+                    "Type": "license"
+                }
+            ],
+            "MaxVersion": {
+                "Major": 0,
+                "Minor": 0,
+                "Point": 0
+            },
+            "MinVersion": {
+                "Major": 0,
+                "Minor": 0,
+                "Point": 0
+            },
+            "Name": "Testing resource kit",
+            "Signed": true,
+            "Size": 10240,
+            "Tags": [
+                "syslog"
+            ],
+            "UUID": "d2a0cb10-ff25-4426-8b87-0dd0409cae48",
+            "Version": 1
+        }
+    ],
+    "Signed": false,
+    "UID": 7,
+    "UUID": "549c0805-a693-40bd-abb5-bfb29fc98ef1",
+    "Version": 2
+}
 ```
 
 Note the "ModifiedItems" field. If an earlier version of this kit is already installed, this field will contain a list of items which *the user has modified*. Installing the staged kit will overwrite these items, so users should be notified and given a chance to save their changes.
@@ -262,65 +336,71 @@ The "RequiredDependencies" field contains a list of metadata structures for any 
 
 The ConfigMacros field contains a list of configuration macros (see previous section) which will be installed by this kit. If a previous version of this kit (or another kit altogether) has already installed a macro with the same name, the webserver will pre-populate the "Value" field with the current value in the macro. If a *user* has previously installed a macro with the same name, the webserver will return an error.
 
+Take note of the scheduled search named "myScript", particularly the `DefaultDeploymentRules` field. This describes how the script will be installed: it will be marked enabled, and it will run as soon as possible.
+
 ## Listing Kits
 
 A GET request on `/api/kits` will return a list of all known kits. Here is an example showing the result when the system has one kit uploaded but not yet installed:
 
 ```
 [
-	{
-		"UUID": "549c0805-a693-40bd-abb5-bfb29fc98ef1",
-		"UID": 7,
-		"GID": 0,
-		"ID": "io.gravwell.test",
-		"Name": "test-gravwell",
-		"Description": "Test Gravwell kit",
-		"Version": 1,
-		"Installed": false,
-		"Signed": false,
-		"AdminRequired": false,
-		"Items": [
-			{
-				"Name": "84270dbd-1905-418e-b756-834c15661a54",
-				"Type": "resource",
-				"AdditionalInfo": {
-					"VersionNumber": 1,
-					"ResourceName": "maxmind_asn",
-					"Description": "ASN database",
-					"Size": 6196221
-				}
-			},
-			{
-				"Name": "55c81086",
-				"Type": "scheduled search",
-				"AdditionalInfo": {
-					"Name": "count",
-					"Description": "count all entries",
-					"Schedule": "* * * * *",
-					"Duration": -3600,
-					"Script": "var time = import(\"time\")\n\naddSelfTargetedNotification(7, \"hello\", \"/#/search/486574780\", time.Now().Add(30 * time.Second))"
-				}
-			},
-			{
-				"Name": "a",
-				"Type": "dashboard",
-				"AdditionalInfo": {
-					"UUID": "5567707c-8508-4250-9121-0d1a9d5ebe32",
-					"Name": "Foo",
-					"Description": "My dashboard"
-				}
-			},
-			{
-				"Name": "ae9f2598-598f-4859-a3d4-832a512b6104",
-				"Type": "pivot",
-				"AdditionalInfo": {
-					"UUID": "ae9f2598-598f-4859-a3d4-832a512b6104",
-					"Name": "foo",
-					"Description": "foobar"
-				}
-			}
-		]
-	}
+    {
+        "AdminRequired": false,
+        "Description": "Test Gravwell kit",
+        "GID": 0,
+        "ID": "io.gravwell.test",
+        "Installed": false,
+        "Items": [
+            {
+                "AdditionalInfo": {
+                    "Description": "ASN database",
+                    "ResourceName": "maxmind_asn",
+                    "Size": 6196221,
+                    "VersionNumber": 1
+                },
+                "Name": "84270dbd-1905-418e-b756-834c15661a54",
+                "Type": "resource"
+            },
+            {
+                "AdditionalInfo": {
+                    "DefaultDeploymentRules": {
+                        "Disabled": false,
+                        "RunImmediately": true
+                    },
+                    "Description": "count all entries",
+                    "Duration": -3600,
+                    "Name": "count",
+                    "Schedule": "* * * * *",
+                    "Script": "var time = import(\"time\")\n\naddSelfTargetedNotification(7, \"hello\", \"/#/search/486574780\", time.Now().Add(30 * time.Second))"
+                },
+                "Name": "55c81086",
+                "Type": "scheduled search"
+            },
+            {
+                "AdditionalInfo": {
+                    "Description": "My dashboard",
+                    "Name": "Foo",
+                    "UUID": "5567707c-8508-4250-9121-0d1a9d5ebe32"
+                },
+                "Name": "a",
+                "Type": "dashboard"
+            },
+            {
+                "AdditionalInfo": {
+                    "Description": "foobar",
+                    "Name": "foo",
+                    "UUID": "ae9f2598-598f-4859-a3d4-832a512b6104"
+                },
+                "Name": "ae9f2598-598f-4859-a3d4-832a512b6104",
+                "Type": "pivot"
+            }
+        ],
+        "Name": "test-gravwell",
+        "Signed": false,
+        "UID": 7,
+        "UUID": "549c0805-a693-40bd-abb5-bfb29fc98ef1",
+        "Version": 1
+    }
 ]
 ```
 
@@ -334,57 +414,61 @@ For example, a GET request on `/api/kits/549c0805-a693-40bd-abb5-bfb29fc98ef1` w
 
 ```
 {
-	"UUID": "549c0805-a693-40bd-abb5-bfb29fc98ef1",
-	"UID": 7,
-	"GID": 0,
-	"ID": "io.gravwell.test",
-	"Name": "test-gravwell",
-	"Description": "Test Gravwell kit",
-	"Version": 1,
-	"Installed": false,
-	"Signed": false,
-	"AdminRequired": false,
-	"Items": [
-		{
-			"Name": "84270dbd-1905-418e-b756-834c15661a54",
-			"Type": "resource",
-			"AdditionalInfo": {
-				"VersionNumber": 1,
-				"ResourceName": "maxmind_asn",
-				"Description": "ASN database",
-				"Size": 6196221
-			}
-		},
-		{
-			"Name": "55c81086",
-			"Type": "scheduled search",
-			"AdditionalInfo": {
-				"Name": "count",
-				"Description": "count all entries",
-				"Schedule": "* * * * *",
-				"Duration": -3600,
-				"Script": "var time = import(\"time\")\n\naddSelfTargetedNotification(7, \"hello\", \"/#/search/486574780\", time.Now().Add(30 * time.Second))"
-			}
-		},
-		{
-			"Name": "a",
-			"Type": "dashboard",
-			"AdditionalInfo": {
-				"UUID": "5567707c-8508-4250-9121-0d1a9d5ebe32",
-				"Name": "Foo",
-				"Description": "My dashboard"
-			}
-		},
-		{
-			"Name": "ae9f2598-598f-4859-a3d4-832a512b6104",
-			"Type": "pivot",
-			"AdditionalInfo": {
-				"UUID": "ae9f2598-598f-4859-a3d4-832a512b6104",
-				"Name": "foo",
-				"Description": "foobar"
-			}
-		}
-	]
+    "AdminRequired": false,
+    "Description": "Test Gravwell kit",
+    "GID": 0,
+    "ID": "io.gravwell.test",
+    "Installed": false,
+    "Items": [
+        {
+            "AdditionalInfo": {
+                "Description": "ASN database",
+                "ResourceName": "maxmind_asn",
+                "Size": 6196221,
+                "VersionNumber": 1
+            },
+            "Name": "84270dbd-1905-418e-b756-834c15661a54",
+            "Type": "resource"
+        },
+        {
+            "AdditionalInfo": {
+                "DefaultDeploymentRules": {
+                    "Disabled": false,
+                    "RunImmediately": true
+                },
+                "Description": "count all entries",
+                "Duration": -3600,
+                "Name": "count",
+                "Schedule": "* * * * *",
+                "Script": "var time = import(\"time\")\n\naddSelfTargetedNotification(7, \"hello\", \"/#/search/486574780\", time.Now().Add(30 * time.Second))"
+            },
+            "Name": "55c81086",
+            "Type": "scheduled search"
+        },
+        {
+            "AdditionalInfo": {
+                "Description": "My dashboard",
+                "Name": "Foo",
+                "UUID": "5567707c-8508-4250-9121-0d1a9d5ebe32"
+            },
+            "Name": "a",
+            "Type": "dashboard"
+        },
+        {
+            "AdditionalInfo": {
+                "Description": "foobar",
+                "Name": "foo",
+                "UUID": "ae9f2598-598f-4859-a3d4-832a512b6104"
+            },
+            "Name": "ae9f2598-598f-4859-a3d4-832a512b6104",
+            "Type": "pivot"
+        }
+    ],
+    "Name": "test-gravwell",
+    "Signed": false,
+    "UID": 7,
+    "UUID": "549c0805-a693-40bd-abb5-bfb29fc98ef1",
+    "Version": 1
 }
 
 ```
@@ -401,19 +485,28 @@ Additional kit installation options may be specified by passing a configuration 
 
 ```
 {
-	"OverwriteExisting": true,
-	"Global": true,
-	"AllowUnsigned": false,
-	"InstallationGroup": 3,
-	"Labels": ["foo", "bar"],
-		"ConfigMacros": [
-			{
-				"MacroName": "KIT_WINDOWS_TAG",
-				"Description": "Tag or tags containing Windows event entries",
-				"DefaultValue": "windows",
-				"Value": "winlog",
-			}
-		]
+    "AllowUnsigned": false,
+    "ConfigMacros": [
+        {
+            "DefaultValue": "windows",
+            "Description": "Tag or tags containing Windows event entries",
+            "MacroName": "KIT_WINDOWS_TAG",
+            "Value": "winlog"
+        }
+    ],
+    "Global": true,
+    "InstallationGroup": 3,
+    "Labels": [
+        "foo",
+        "bar"
+    ],
+    "OverwriteExisting": true,
+    "ScriptDeployRules": {
+        "myScript": {
+            "Disabled": true,
+            "RunImmediately": false
+        }
+    }
 }
 ```
 
@@ -430,6 +523,8 @@ Regular users can only install properly-signed kits from Gravwell. If `AllowUnsi
 `Labels` is a list of additional labels which should be applied to all label-able items in the kit upon installation. Note that Gravwell automatically labels kit-installed items with "kit" and the ID of the kit (e.g. "io.gravwell.coredns").
 
 `ConfigMacros` is the list of ConfigMacros found in the kit information structure, with the "Value" fields optionally set to whatever the user wishes. If the "Value" field is blank, the webserver will use the "DefaultValue".
+
+`ScriptDeployRules` should contain overrides for any scheduled scripts in the kit whose deployment rules you wish to override. In this example, a script named "myScript" will be installed in a disabled state. If the default deployment options are acceptable, this field can be left empty.
 
 ### Installation Status API
 
@@ -650,12 +745,13 @@ Resources:
 		Size          uint64
 
 Scheduled Search:
-		Name         string
-		Description  string
-		Schedule     string
-		SearchString string 
-		Duration     int64  
-		Script       string 
+		Name                    string
+		Description             string
+		Schedule                string
+		SearchString            string 
+		Duration                int64  
+		Script                  string 
+		DefaultDeploymentRules  ScriptDeployConfig
 
 Dashboard:
 		UUID        string

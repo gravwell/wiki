@@ -10,6 +10,18 @@ The Gravwell administrator has three options for certificates:
 * Install a properly-signed TLS certificate. This is the ideal configuration, but typically requires the Gravwell instance to have a publicly-accessible hostname.
 * Install a self-signed certificate. This makes sense when you want to encrypt traffic to Gravwell but for one reason or another cannot get a properly signed certificate.
 
+## Allowed TLS Ciphers
+
+A number of TLS ciphers are considered cryptographically insecure, so Gravwell only supports the following TLS ciphers:
+
+- RSA-WITH-AES-256-CBC-SHA
+- ECDHE-ECDSA-WITH-AES-256-CBC-SHA
+- ECDHE-RSA-WITH-AES-256-CBC-SHA
+- ECDHE-ECDSA-WITH-AES-256-GCM-SHA384
+- AES-128-GCM-SHA256
+- AES-256-GCM-SHA384
+- CHACHA20-POLY1305-SHA256
+
 ## Using HTTP only
 
 This is the default configuration for Gravwell, and no changes are needed to use it. It is suitable for someone experimenting with Gravwell on a home network, or evaluating it on an experimental network for work. It is also an acceptable configuration when the Gravwell webserver will be accessed through a load balancer/reverse proxy such as nginx; this allows the proxy to perform HTTPS encryption/decryption, taking load off the Gravwell system.

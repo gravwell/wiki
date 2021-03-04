@@ -6,10 +6,12 @@ Specifying no column arguments causes table to display all enumerated values as 
 
 ## Supported options
 
-* `-save <destination>`: save the resulting table as a resource for the [lookup module](#!search/lookup/lookup.md). This is a useful way to save the results of one search (say, extracting a MAC->IP mapping from DHCP logs) and use it in later searches.
 * `-csv`: In conjunction with the -save flag, save the table in CSV format rather than the native Gravwell format (CSV is also compatible with the lookup module). Useful when exporting data.
-* `-update <key>`: in conjunction with the `-save` flag, updates an existing table rather than overwriting it. This can be useful when using a scheduled search to maintain e.g. a list of all MAC addresses ever seen on the network. The columns of the existing lookup table must match the columns given as arguments. The "key" option is the name of one of the columns; when merging the old and new lookup tables, a row from the old table will only be included if the value in its keyed column does not exist in the new table.
+* `-delete <key>`: When combined with the `-save` option, remove any records from the resource that match the given key. The "key" is the name of one of the columns in the resource; when deleting from the resource, a row from the resource will be removed if the value in its keyed column matches that the value in the table output. Cannot be combined with `-update`.
+* `-format`: When using the `-save` option, specify the format of the destination resource. Options include `lookupdata`, `csv`, and `ipexist`. 
 * `-nt`: Put the table into non-temporal mode. This causes upstream math modules to condense results rather than having table do it. This can seriously speed up searches over large quantities of data when temporal sub-selection is not needed. It is also currently required when using the [stats module](#!search/stats/stats.md)
+* `-save <destination>`: save the resulting table as a resource for the [lookup module](#!search/lookup/lookup.md). This is a useful way to save the results of one search (say, extracting a MAC->IP mapping from DHCP logs) and use it in later searches.
+* `-update <key>`: in conjunction with the `-save` flag, updates an existing table rather than overwriting it. This can be useful when using a scheduled search to maintain e.g. a list of all MAC addresses ever seen on the network. The columns of the existing lookup table must match the columns given as arguments. The "key" option is the name of one of the columns; when merging the old and new lookup tables, a row from the old table will only be included if the value in its keyed column does not exist in the new table. Cannot be combined with `-delete`.
 
 Note: When using the `-save` option, tables will by default be saved in Gravwell's native packed binary format. If you prefer to use CSV, specify the `-csv` flag. Be aware that the `-update` flag will happily overwrite a CSV resource with a binary table unless you specify `-csv`!
 
@@ -54,6 +56,14 @@ tag=syslog grep sshd | regex "Accepted .* for (?P<user>\S+) from (?P<ip>\S+)" | 
 ```
 
 ![](table-ipmac.png)
+
+### Using -format with -save
+
+When using the `-save` flag, you can optionally specify the format of the destination resource, detailed below.
+
+- `lookupdata`: The default resource format. A JSON-encoded format with column names and row entries. Compatible with the `lookup` module.
+- `csv`: A simple CSV resource format.
+- `ipexist`: A custom binary format for the `ipexist` module that optimizes the performance of lookups. 
 
 ### Using the -update option
 

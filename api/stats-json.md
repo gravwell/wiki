@@ -242,3 +242,548 @@ Sending a GET request to `/api/stats/sysDesc` will return a structure giving add
     }
 }
 ```
+
+
+## Shard Storage and Replication Stats
+
+Indexers maintain a list of all shards and wells and can produce a shard level view into the total stored data within Gravwell.  This view can provide a very quick order of magnitude observation of wells and data volumes over long periods of time.
+
+When in high availability mode, the indexers also maintain a mapping of replicated data and can resolve where data is replicated too, enabling a quick overview of which indexers are replicating for other indexers.
+
+The shard level view is accessed via a `GET` request to `/api/indexers/info` and will return a JSON map of each indexer. The returned data set has extensive information about the configuration of the well, what tags have been assigned to it, and the shards populated within the well.
+
+### Example JSON Response
+Here is an example response from a cluster of 4 Gravwell indexers with 2 wells each and replication enabled.  Only a single shard is populated in the syslog well.
+
+<details><summary>Expand JSON Response</summary>
+<pre>
+```
+{
+  "172.19.0.4:9404": {
+    "UUID": "f71ae8ea-5659-4ed2-8e4e-d7ebad4853c6",
+    "Wells": [
+      {
+        "Name": "default",
+        "Accelerator": "fulltext",
+        "Engine": "index",
+        "Tags": [
+          "default",
+          "gravwell"
+        ],
+        "Shards": []
+      },
+      {
+        "Name": "syslog",
+        "Accelerator": "fulltext",
+        "Engine": "index",
+        "Tags": [
+          "syslog",
+          "kernel",
+          "dmesg"
+        ],
+        "Shards": [
+          {
+            "Name": "76ba7",
+            "Start": "2020-11-23T19:09:52Z",
+            "End": "2020-11-25T07:34:24Z",
+            "Entries": 25794,
+            "Size": 13163774,
+            "RemoteState": {
+              "UUID": "f71ae8ea-5659-4ed2-8e4e-d7ebad4853c6",
+              "Entries": 25794,
+              "Size": 13163262
+            }
+          }
+        ]
+      }
+    ],
+    "Replicated": {
+      "5e20794b-0b73-4eb0-b49b-ece17089bf28": [
+        {
+          "Name": "default",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "default",
+            "gravwell"
+          ],
+          "Shards": []
+        },
+        {
+          "Name": "syslog",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "syslog",
+            "kernel",
+            "dmesg"
+          ],
+          "Shards": []
+        }
+      ],
+      "9a779454-95d8-457b-9841-aab9b93661fe": [
+        {
+          "Name": "default",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "default",
+            "gravwell"
+          ],
+          "Shards": []
+        },
+        {
+          "Name": "syslog",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "syslog",
+            "kernel",
+            "dmesg"
+          ],
+          "Shards": []
+        }
+      ],
+      "bc5ff11f-34a1-460c-adeb-4adc8c031777": [
+        {
+          "Name": "default",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "default",
+            "gravwell"
+          ],
+          "Shards": []
+        },
+        {
+          "Name": "syslog",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "syslog",
+            "kernel",
+            "dmesg"
+          ],
+          "Shards": [
+            {
+              "Name": "76ba7",
+              "Start": "2020-11-23T19:09:52Z",
+              "End": "2020-11-25T07:34:24Z",
+              "Entries": 24092,
+              "Size": 12261276,
+              "RemoteState": {
+                "UUID": "00000000-0000-0000-0000-000000000000",
+                "Entries": 0,
+                "Size": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "172.19.0.5:9404": {
+    "UUID": "5e20794b-0b73-4eb0-b49b-ece17089bf28",
+    "Wells": [
+      {
+        "Name": "default",
+        "Accelerator": "fulltext",
+        "Engine": "index",
+        "Tags": [
+          "default",
+          "gravwell"
+        ],
+        "Shards": []
+      },
+      {
+        "Name": "syslog",
+        "Accelerator": "fulltext",
+        "Engine": "index",
+        "Tags": [
+          "syslog",
+          "kernel",
+          "dmesg"
+        ],
+        "Shards": [
+          {
+            "Name": "76ba7",
+            "Start": "2020-11-23T19:09:52Z",
+            "End": "2020-11-25T07:34:24Z",
+            "Entries": 25861,
+            "Size": 13182056,
+            "RemoteState": {
+              "UUID": "5e20794b-0b73-4eb0-b49b-ece17089bf28",
+              "Entries": 25861,
+              "Size": 13181768
+            }
+          }
+        ]
+      }
+    ],
+    "Replicated": {
+      "9a779454-95d8-457b-9841-aab9b93661fe": [
+        {
+          "Name": "default",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "default",
+            "gravwell"
+          ],
+          "Shards": []
+        },
+        {
+          "Name": "syslog",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "syslog",
+            "kernel",
+            "dmesg"
+          ],
+          "Shards": []
+        }
+      ],
+      "bc5ff11f-34a1-460c-adeb-4adc8c031777": [
+        {
+          "Name": "default",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "default",
+            "gravwell"
+          ],
+          "Shards": []
+        },
+        {
+          "Name": "syslog",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "syslog",
+            "kernel",
+            "dmesg"
+          ],
+          "Shards": []
+        }
+      ],
+      "f71ae8ea-5659-4ed2-8e4e-d7ebad4853c6": [
+        {
+          "Name": "default",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "default",
+            "gravwell"
+          ],
+          "Shards": []
+        },
+        {
+          "Name": "syslog",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "syslog",
+            "kernel",
+            "dmesg"
+          ],
+          "Shards": []
+        }
+      ]
+    }
+  },
+  "172.19.0.6:9404": {
+    "UUID": "bc5ff11f-34a1-460c-adeb-4adc8c031777",
+    "Wells": [
+      {
+        "Name": "default",
+        "Accelerator": "fulltext",
+        "Engine": "index",
+        "Tags": [
+          "default",
+          "gravwell"
+        ],
+        "Shards": []
+      },
+      {
+        "Name": "syslog",
+        "Accelerator": "fulltext",
+        "Engine": "index",
+        "Tags": [
+          "syslog",
+          "kernel",
+          "dmesg"
+        ],
+        "Shards": [
+          {
+            "Name": "76ba7",
+            "Start": "2020-11-23T19:09:52Z",
+            "End": "2020-11-25T07:34:24Z",
+            "Entries": 24092,
+            "Size": 12261596,
+            "RemoteState": {
+              "UUID": "bc5ff11f-34a1-460c-adeb-4adc8c031777",
+              "Entries": 24092,
+              "Size": 12261276
+            }
+          }
+        ]
+      }
+    ],
+    "Replicated": {
+      "5e20794b-0b73-4eb0-b49b-ece17089bf28": [
+        {
+          "Name": "default",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "default",
+            "gravwell"
+          ],
+          "Shards": []
+        },
+        {
+          "Name": "syslog",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "syslog",
+            "kernel",
+            "dmesg"
+          ],
+          "Shards": []
+        }
+      ],
+      "9a779454-95d8-457b-9841-aab9b93661fe": [
+        {
+          "Name": "default",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "default",
+            "gravwell"
+          ],
+          "Shards": []
+        },
+        {
+          "Name": "syslog",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "syslog",
+            "kernel",
+            "dmesg"
+          ],
+          "Shards": [
+            {
+              "Name": "76ba7",
+              "Start": "2020-11-23T19:09:52Z",
+              "End": "2020-11-25T07:34:24Z",
+              "Entries": 24253,
+              "Size": 12359413,
+              "RemoteState": {
+                "UUID": "00000000-0000-0000-0000-000000000000",
+                "Entries": 0,
+                "Size": 0
+              }
+            }
+          ]
+        }
+      ],
+      "f71ae8ea-5659-4ed2-8e4e-d7ebad4853c6": [
+        {
+          "Name": "default",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "default",
+            "gravwell"
+          ],
+          "Shards": []
+        },
+        {
+          "Name": "raw",
+          "Tags": [
+            "raw"
+          ],
+          "Shards": [
+            {
+              "Name": "76ba7",
+              "Start": "2020-11-23T19:09:52Z",
+              "End": "2020-11-25T07:34:24Z",
+              "Entries": 0,
+              "Size": 4112,
+              "RemoteState": {
+                "UUID": "00000000-0000-0000-0000-000000000000",
+                "Entries": 0,
+                "Size": 0
+              }
+            }
+          ]
+        },
+        {
+          "Name": "syslog",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "syslog",
+            "kernel",
+            "dmesg"
+          ],
+          "Shards": [
+            {
+              "Name": "76ba7",
+              "Start": "2020-11-23T19:09:52Z",
+              "End": "2020-11-25T07:34:24Z",
+              "Entries": 25794,
+              "Size": 13163262,
+              "RemoteState": {
+                "UUID": "00000000-0000-0000-0000-000000000000",
+                "Entries": 0,
+                "Size": 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "172.19.0.7:9404": {
+    "UUID": "9a779454-95d8-457b-9841-aab9b93661fe",
+    "Wells": [
+      {
+        "Name": "default",
+        "Accelerator": "fulltext",
+        "Engine": "index",
+        "Tags": [
+          "default",
+          "gravwell"
+        ],
+        "Shards": [
+          {
+            "Name": "76ba7",
+            "Start": "2020-11-23T19:09:52Z",
+            "End": "2020-11-25T07:34:24Z",
+            "Entries": 0,
+            "Size": 4112,
+            "RemoteState": {
+              "UUID": "9a779454-95d8-457b-9841-aab9b93661fe",
+              "Entries": 0,
+              "Size": 4112
+            }
+          }
+        ]
+      },
+      {
+        "Name": "syslog",
+        "Accelerator": "fulltext",
+        "Engine": "index",
+        "Tags": [
+          "syslog",
+          "kernel",
+          "dmesg"
+        ],
+        "Shards": [
+          {
+            "Name": "76ba7",
+            "Start": "2020-11-23T19:09:52Z",
+            "End": "2020-11-25T07:34:24Z",
+            "Entries": 24253,
+            "Size": 12359637,
+            "RemoteState": {
+              "UUID": "9a779454-95d8-457b-9841-aab9b93661fe",
+              "Entries": 24253,
+              "Size": 12359413
+            }
+          }
+        ]
+      }
+    ],
+    "Replicated": {
+      "5e20794b-0b73-4eb0-b49b-ece17089bf28": [
+        {
+          "Name": "default",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "default",
+            "gravwell"
+          ],
+          "Shards": []
+        },
+        {
+          "Name": "syslog",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "syslog",
+            "kernel",
+            "dmesg"
+          ],
+          "Shards": [
+            {
+              "Name": "76ba7",
+              "Start": "2020-11-23T19:09:52Z",
+              "End": "2020-11-25T07:34:24Z",
+              "Entries": 25861,
+              "Size": 13181768,
+              "RemoteState": {
+                "UUID": "00000000-0000-0000-0000-000000000000",
+                "Entries": 0,
+                "Size": 0
+              }
+            }
+          ]
+        }
+      ],
+      "bc5ff11f-34a1-460c-adeb-4adc8c031777": [
+        {
+          "Name": "default",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "default",
+            "gravwell"
+          ],
+          "Shards": []
+        },
+        {
+          "Name": "syslog",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "syslog",
+            "kernel",
+            "dmesg"
+          ],
+          "Shards": []
+        }
+      ],
+      "f71ae8ea-5659-4ed2-8e4e-d7ebad4853c6": [
+        {
+          "Name": "default",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "default",
+            "gravwell"
+          ],
+          "Shards": []
+        },
+          "Name": "syslog",
+          "Accelerator": "fulltext",
+          "Engine": "index",
+          "Tags": [
+            "syslog",
+            "kernel",
+            "dmesg"
+          ],
+          "Shards": []
+        }
+      ]
+    }
+  }
+}
+```
+</pre>
+</details>

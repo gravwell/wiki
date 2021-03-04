@@ -2,11 +2,11 @@
 
 Gravwell provides a robust scripting engine in which you can run searches, update resources, send alerts, or take action.  The engine can run searches and examine data automatically, taking action based on search results without the need to involve a human.  
 
-Automation scripts can be run [on a schedule](scheduledsearch.md) or by hand from the [command line client](#!cli/cli.md). Because the CLI allows the script to be re-executed interactively, we recommend developing and testing scripts in the CLI before creating a scheduled search.
+Automation scripts can be run [on a schedule](scheduledsearch.md) or by hand from the [command line client](#!cli/cli.md). Because the CLI allows the script to be re-executed interactively, we recommend developing and testing scripts in the CLI before creating a scheduled search. See the [Client](#!scripting/scriptingsearch.md#Gravwell_Client_Usage) example script below.
 
 ## Built-in functions
 
-Scripts can use built-in functions that mostly match those available for the [anko](#!scripting/anko.md) module, with some additions for launching and managing searches. The functions are listed below in the format `functionName(<functionArgs>) <returnValues>`.
+Scripts can use built-in functions that mostly match those available for the [anko](#!scripting/anko.md) module, with some additions for launching and managing searches. The functions are listed below in the format `functionName(<functionArgs>) <returnValues>`.  These functions are provided as convenience wrappers for specific functionality, however the complete [Gravwell client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) is available using the `getClient` wrapper.  The `getClient` wrapper will return a client object that is signed in as the user executing the script. 
 
 ## Controlling Versions
 
@@ -69,6 +69,7 @@ require(`alerts/email.ank`, cfg.email_lib_revision)
 * `getPersistentMap(mapname, key) value` returns the value associated with the given key from the named persistent map.
 * `delPersistentMap(mapname, key)` deletes the specified key/value pair from the given map.
 * `persistentMap(mapname)` returns the entire named map, changes to the returned map will persist automatically on successful execution.
+* `getMacro(name) string, error` returns the value of the given macro or an error if it does not exist. Note that this function does not perform macro expansion.
 
 ## Search entry manipulation
 
@@ -99,6 +100,7 @@ Search structs are used to actively read entries from a search, while search IDs
 * `startBackgroundSearch(query, start, end) (search, err)` creates a backgrounded search with the given query string, executed over the time range specified by 'start' and 'end'. The return value is a Search struct. These time values should be specified using the time library; see the examples for a demonstration.
 * `startSearch(query, start, end) (search, err)` acts exactly like `startBackgroundSearch`, but does not background the search.
 * `detachSearch(search)` detaches the given search (a Search struct). This will allow non-backgrounded searches to be automatically cleaned up and should be called whenever you're done with a search.
+* `waitForSearch(search) error` waits for the given search to complete execution and returns an error if there is one.
 * `attachSearch(searchID) (search, error)` attaches to the search with the given ID and returns a Search struct which can be used to read entries etc.
 * `getSearchStatus(searchID) (string, error)` returns the status of the specified search, e.g. "SAVED".
 * `getAvailableEntryCount(search) (uint64, bool, error)` returns the number of entries that can be read from the given search, a boolean specifying if the search is complete, and an error if anything went wrong.
@@ -107,6 +109,7 @@ Search structs are used to actively read entries from a search, while search IDs
 * `executeSearch(query, start, end) ([]SearchEntry, error)` starts a search, waits for it to complete, retrieves up to ten thousand entries, detatches from search and returns the entries.
 * `deleteSearch(searchID) error` deletes the search with the specified ID
 * `backgroundSearch(searchID) error` sends the specified search to the background; this is useful for "keeping" a search for later manual inspection.
+* `saveSearch(searchID) error` Marks a given search results for long term storage.  This call does not wait for the query to complete and only returns an error if the request to mark it as saved fails.
 * `downloadSearch(searchID, format, start, end) ([]byte, error)` downloads the given search as if a user had clicked the 'Download' button in the web UI. `format` should be a string containing either "json", "csv", "text", "pcap", or "lookupdata" as appropriate. `start` and `end` are time values.
 * `getDownloadHandle(searchID, format, start, end) (io.Reader, error)` returns a streaming handle to the results of the given search as if the user had clicked the 'Download' button in the web UI. The handle returned is suitable for use with the HTTP library functions shown later in this document.
 
@@ -172,10 +175,10 @@ More elaborate HTTP operations are possible with the "net/http" library. See the
 
 If the user has configured their personal email settings within Gravwell, the `email` function is a very simple way to send an email:
 
-* `email(from, to, subject, message) error` sends an email via SMTP. The `from` field is simply a string, while `to` should be a slice of strings containing email addresses. The `subject` and `message` fields are also strings which should contain the subject line and body of the email.
-  * The email function also takes an optional list of attachments.
+* `email(from, to, subject, message, attachments...) error` sends an email via SMTP. The `from` field is simply a string, while `to` should be a slice of strings containing email addresses or a single string containing one email address. The `subject` and `message` fields are also strings which should contain the subject line and body of the email. The attachments parameter is optional.
   * Attachments can be sent as a byte array, and they will be given an automatic file name
   * If the attachment parameter is a map, the key is the file name and the value is the attachment
+* `emailWithCC(from, to, cc, bcc, subject, message, attachments...) error` sends an email via SMTP. It behaves exactly like the `email` function, but it lets you specify CC and BCC recipients as well. These can be either single strings (`"foo@example.com"`) or arrays of strings (`["foo@example.com", "bar@example.com"]`).
 
 Example sending an email with attachments:
 ```
@@ -391,6 +394,36 @@ if err != nil {
 
 c.Write("foo")
 c.Close()
+```
+
+## Management Functions
+
+The scripting system also has access to management functions that can be used to automatically interact with various Gravwell APIs.
+
+### Performing a system backup
+
+The helper function `backup` is provided to make it easy to perform a system backup and gain a handle on a `io.ReadCloser`.  The `backup` function has the following definition:
+```
+backup(io.Writer, bool) error
+```
+The backup function will write the entire backup package to the provided writer and return and error on failure.  The second argument to the backup function indicates whether you want to include saved searches in the backup.  Be aware that saved searches can be very large, which can make backup packages very large.
+
+#### An example backup script
+
+This example backup script will execute a backup and send the resulting package to an TCP network socket, essentially streaming a backup to a remote TCP listener:
+
+```
+var net = import("net")
+c, err = net.Dial("tcp", "127.0.0.1:9876")
+if err != nil {
+	return err
+}
+err = backup(c, true)
+if err != nil {
+	c.Close()
+	return err
+}
+return c.Close()
 ```
 
 ## An example search script
@@ -677,3 +710,48 @@ buff = bb.Bytes()
 println("buffer", len(buff))
 return setResource("sshusers", buff)
 ```
+
+## Gravwell Client Usage
+
+The `getClient` function will hand back a pointer to a new [Client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) object that is logged in and synchronized as the current user. Under normal operating conditions, the new client should be ready for immediate use.  However, it is possible for Gravwell webservers to become unavailable during script operations due to network failures or system upgrades.  We therefore recommend that scripts test the status of the client connection using the [TestLogin()](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client.TestLogin) method.
+
+This example script gets a client, makes a TCP connection to a remote server, and performs a [backup](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client.Backup) of the Gravwell system, sending the backup file out over the remote TCP connection:
+
+```
+net = import("net")
+time = import("time")
+
+BACKUP_SERVER=`10.0.0.1:5555`
+
+cli = getClient()
+if cli == nil {
+	return "Failed to get client"
+}
+err = cli.TestLogin()
+if err != nil {
+	return err
+}
+// Backup requests can take some time, increase the client request timeout
+err = cli.SetRequestTimeout(10*time.Minute)
+if err != nil {
+	return err
+}
+
+conn, err = net.Dial("tcp", BACKUP_SERVER)
+if err != nil {
+	return err
+}
+
+err = cli.Backup(conn, false)
+if err != nil {
+	return err
+}
+err = conn.Close()
+if err != nil {
+	return err
+}
+
+return cli.Close()
+``` 
+
+Note: The Gravwell client has a default request timeout of 5 seconds. For long running requests like system backups you should increase that timeout, but note that it is best practice to restore the original timeout when you've completed the long-running request; we have omitted that above for brevity.

@@ -2,7 +2,7 @@
 
 The user files API is designed so kits can store small files for use as e.g. icons.
 
-User files are referred to by GUID. GUIDs are not necessarily unique across a system; this allows users to have e.g. a dashboard referring to a particular file by GUID, but with each user installing their own preferred file. If multiple templates or pivots exist with the same GUID, they are prioritized in the following order:
+User files are referred to by GUID. GUIDs are not necessarily unique across a system; this allows users to have e.g. a dashboard referring to a particular file by GUID, but with each user installing their own preferred file. If multiple files exist with the same GUID, they are prioritized in the following order:
 
 * Owned by the user
 * Shared with a group the user is a member of
@@ -12,12 +12,39 @@ User files are referred to by GUID. GUIDs are not necessarily unique across a sy
 
 ## Create a user file
 
-User files can be created by POST request to `/api/files`. The request should be a multipart request with the following fields:
+User files can be created by POST request to `/api/files`. The request should be a multipart request in one of two formats.
+
+### Simple file creation request format
+
+Submit a POST request to `/api/files` with the following fields:
 
 * `file`: the body of the file
 * `name`: the name of the file
 * `desc`: the description of the file
 * `guid`: (optional) the desired GUID for this file. If not set, one will be generated.
+
+### Detailed file creation request format
+
+Submit a POST request to `/api/files` with the following fields:
+
+* `file`: the body of the file
+* `meta`: a JSON-encoded structure describing desired ownership / sharing details as shown below.
+
+The "meta" field should be a JSON-encoded string describing sharing and ownership:
+
+```
+{
+	"UID": 1,
+	"GIDs": [2],
+	"Global": false,
+	"Name": "blah",
+	"Desc": "bar",
+	"Labels": ["foo"],
+}
+```
+
+Note: only administrators can set the UID field to another user's UID, or set the Global field to true.
+
 
 ## Listing files
 
@@ -47,7 +74,7 @@ The contents of a file may be read by a GET request on `/api/files/<uuid>`, e.g.
 
 ## Updating a file
 
-A file's name, description, and contents can be changed via a POST request to `/api/files/<uuid>`. The request should be identical to one used to create a new file, with the `file`, `name`, and `desc` fields set to the desired values. Note that the `guid` field will be ignored.
+A file's contents can be changed via a POST request to `/api/files/<uuid>`. The request should be identical to one used to create a new file, but only the `file` field will be honored. To change other fields, see below.
 
 ## Updating file metadata
 
@@ -76,6 +103,6 @@ User files may be removed via a DELETE on `/api/files/<uuid>`
 
 Admin users may occasionally need to view all user files on the system, modify them, or delete them. Because GUIDs are not necessarily unique, the admin API must refer instead to the unique UUID Gravwell uses internally to store the items. Note that the example file listings above include a field named "ThingUUID". This is the internal, unique identifier for that user file.
 
-An administrator user may obtain a global listing of all user files in the system with a GET request on `/api/templates?admin=true`.
+An administrator user may obtain a global listing of all user files in the system with a GET request on `/api/files?admin=true`.
 
 The administrator may then delete a particular file with a DELETE message to `/api/files/<ThingUUID>?admin=true`, substituting in the ThingUUID value for the desired file. The same pattern applies to updating.
