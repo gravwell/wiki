@@ -206,6 +206,8 @@ The response contains stats information and information about the search itself:
 	"EntryCount": 1575,
 	"AdditionalEntries": false,
 	"Finished": true
+	"OverLimit":false,
+	"LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
 }
 ```
 
@@ -257,6 +259,8 @@ The server responds with an array of entries and additional information.
 	"EntryCount": 1575,
 	"AdditionalEntries": false,
 	"Finished": true,
+	"OverLimit":false,
+	"LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
 	"Entries": {
 		"Rows": [
 			{
@@ -305,6 +309,8 @@ The renderer will begin send large blocks of entries as quickly as it can:
 	"EntryCount": 1000,
 	"AdditionalEntries": false,
 	"Finished": false,
+	"OverLimit":false,
+	"LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
 	"Entries": [
 <1000 entries elided>
 	]
@@ -315,6 +321,8 @@ The renderer will begin send large blocks of entries as quickly as it can:
 	"EntryCount": 861,
 	"AdditionalEntries": false,
 	"Finished": false,
+	"OverLimit":false,
+	"LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
 	"Entries": [
 <861 entries elided>
 	]
@@ -324,6 +332,8 @@ The renderer will begin send large blocks of entries as quickly as it can:
 	"EntryCount": 0,
 	"AdditionalEntries": false,
 	"Finished": true,
+	"OverLimit":false,
+	"LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
 	"Entries": []
 }
 ```
@@ -356,6 +366,8 @@ The server responds with entries which fall within the requested time:
 	"EntryCount":1575,
 	"AdditionalEntries":false,
 	"Finished":true,
+	"OverLimit":false,
+	"LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
 	"Entries": {
 		"Rows": [
 			{
@@ -476,6 +488,8 @@ The response contains only a single Stats entry:
                 ],
                 "Size": 2
         },
+        "OverLimit":false,
+        "LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
         "EntryCount": 510000
 }
 ```
@@ -530,6 +544,8 @@ Response:
                 ],
                 "Size": 100
         },
+        "OverLimit":false,
+        "LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
         "EntryCount": 500000
 }
 ```
@@ -551,6 +567,8 @@ Response:
     "AdditionalEntries": false,
     "EntryCount": 1575,
     "Finished": true,
+    "OverLimit":false,
+    "LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
     "ID": 2130706437,
     "Stats": {
         "Set": [
@@ -609,6 +627,8 @@ Response:
 	"EntryCount": 1575,
 	"AdditionalEntries": false,
 	"Finished": true,
+    "OverLimit":false,
+    "LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
 	"Metadata": {
 		"ValueStats": [
 			{
