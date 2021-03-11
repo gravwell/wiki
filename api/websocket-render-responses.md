@@ -1,6 +1,26 @@
 # Response formats
 
-Although all modules respond to the same commands, the format in which they return entries differs due to the differing nature of the data types involved. The responses described here are common to RESP_GET_ENTRIES, RESP_STREAMING, and RESP_TS_RANGE; we use these request/response IDs indiscriminately through the examples in this section.
+Although all modules respond to the same commands, the format in which they return entries differs due to the differing nature of the data types involved. The responses described here are common to RESP_GET_ENTRIES, RESP_STREAMING, and RESP_TS_RANGE; we use these request/response IDs through the examples in this section.
+
+## Render Store Limits
+
+Note that Gravwell has limits in place to prevent users from consuming too much disk space with query results. By default, searches can generate a maximum 1GB of output; this is configurable through the `Render-Store-Limit` parameter in `gravwell.conf`. Once the limit is exceeded, the renderer will stop storing results, but will otherwise allow the search to complete.
+
+All search socket response messages may contain the fields `OverLimit` and `LimitDroppedRange`. OverLimit is a boolean, set to true if the search results exceeded the limits. LimitDroppedRange indicates what, if any, time range of results has been dropped.
+
+Here is an example from a search which exceeded the limits:
+
+```
+"OverLimit":true,
+"LimitDroppedRange":{"StartTS":"2021-03-11T09:10:54.199-08:00","EndTS":"2021-03-11T09:36:00-08:00"},
+```
+
+Here is an example of what you might see for a search which does *not* exceed the limits:
+
+```
+"OverLimit":false,
+"LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
+```
 
 ## Text & raw module responses
 
@@ -12,6 +32,8 @@ The 'text' and 'raw' render modules return their entries as an array in a field 
 	"EntryCount": 1575,
 	"AdditionalEntries": false,
 	"Finished": true,
+	"OverLimit":false,
+	"LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
 	"Entries": [
 		{
 			"TS":"2018-04-02T16:16:39-06:00",
@@ -47,6 +69,8 @@ The table module returns the entries in a field called "Entries", containing a s
 	"EntryCount": 1575,
 	"AdditionalEntries": false,
 	"Finished": true,
+	"OverLimit":false,
+	"LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
 	"Entries": {
 		"Rows": [
 			{
@@ -83,6 +107,8 @@ The gauge module returns entries as an array of structures containing the gauge'
 	"EntryCount": 1,
 	"AdditionalEntries": true,
 	"Finished": true,
+	"OverLimit":false,
+	"LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
 	"Entries": [
 		{
 			"Name": "mean",
@@ -108,53 +134,58 @@ should produce a result like this:
 
 ```
 {
-    "AdditionalEntries": true,
-    "Entries": [
-        {
-            "DstLocation": "33.381516 -108.391164",
-            "Magnitude": 420471,
-            "SrcLocation": "34.054400 -118.244000",
-            "Values": [
-                "151.11.24.133",
-                "192.168.2.60"
-            ]
-        },
-        {
-            "DstLocation": "33.381516 -108.391164",
-            "Magnitude": 373204,
-            "SrcLocation": "52.382400 5.899500",
-            "Values": [
-                "185.19.10.154",
-                "192.168.2.60"
-            ]
-        },
-        {
-            "DstLocation": "33.381516 -108.391164",
-            "Magnitude": 246593,
-            "SrcLocation": "39.048100 -76.472800",
-            "Values": [
-                "53.1.11.28",
-                "192.168.2.60"
-            ]
-        },
+  "AdditionalEntries": true,
+  "Entries": [
+    {
+      "DstLocation": "33.381516 -108.391164",
+      "Magnitude": 420471,
+      "SrcLocation": "34.054400 -118.244000",
+      "Values": [
+        "151.11.24.133",
+        "192.168.2.60"
+      ]
+    },
+    {
+      "DstLocation": "33.381516 -108.391164",
+      "Magnitude": 373204,
+      "SrcLocation": "52.382400 5.899500",
+      "Values": [
+        "185.19.10.154",
+        "192.168.2.60"
+      ]
+    },
+    {
+      "DstLocation": "33.381516 -108.391164",
+      "Magnitude": 246593,
+      "SrcLocation": "39.048100 -76.472800",
+      "Values": [
+        "53.1.11.28",
+        "192.168.2.60"
+      ]
+    },
 [...]
-        {
-            "DstLocation": "32.769700 -122.393300",
-            "Magnitude": 8662,
-            "SrcLocation": "33.381516 -108.391164",
-            "Values": [
-                "192.168.2.60",
-                "192.33.23.124"
-            ]
-        }
-    ],
-    "EntryCount": 16,
-    "Finished": true,
-    "ID": 18,
-    "ValueNames": [
-        "SrcIP",
-        "DstIP"
-    ]
+    {
+      "DstLocation": "32.769700 -122.393300",
+      "Magnitude": 8662,
+      "SrcLocation": "33.381516 -108.391164",
+      "Values": [
+        "192.168.2.60",
+        "192.33.23.124"
+      ]
+    }
+  ],
+  "OverLimit": false,
+  "LimitDroppedRange": {
+    "StartTS": "0000-12-31T16:07:02-07:52",
+    "EndTS": "0000-12-31T16:07:02-07:52"
+  },
+  "EntryCount": 16,
+  "Finished": true,
+  "ID": 18,
+  "ValueNames": [
+    "SrcIP",
+    "DstIP"
+  ]
 }
 ```
 
@@ -168,9 +199,14 @@ The chart module returns entries in a field called "Entries", containing a struc
 {
     "EntryCount": 5,
     "Finished": true,
-    "ID": 18
+    "ID": 18,
     "AdditionalEntries": false,
-    "Entries": {
+    "OverLimit": false,
+    "LimitDroppedRange": {
+        "StartTS": "0000-12-31T16:07:02-07:52",
+        "EndTS": "0000-12-31T16:07:02-07:52"
+    },
+   "Entries": {
         "Names": [
             "10.177.98.189",
             "192.168.1.101",
@@ -230,195 +266,201 @@ Groups are defined in the search and are used to color nodes in the fdg display.
 
 ```
 {
-    "AdditionalEntries": false,
-    "Entries": {
-        "groups": [
-            "",
-            "operations",
-            "IT"
-        ],
-        "links": [
-            {
-                "source": 0,
-                "target": 1,
-                "value": 1
-            },
-            {
-                "source": 2,
-                "target": 1,
-                "value": 1
-            },
-            {
-                "source": 3,
-                "target": 1,
-                "value": 1
-            },
-            {
-                "source": 2,
-                "target": 4,
-                "value": 1
-            },
-            {
-                "source": 4,
-                "target": 5,
-                "value": 1
-            },
-            {
-                "source": 0,
-                "target": 6,
-                "value": 1
-            },
-            {
-                "source": 2,
-                "target": 7,
-                "value": 1
-            },
-            {
-                "source": 2,
-                "target": 8,
-                "value": 1
-            },
-            {
-                "source": 9,
-                "target": 8,
-                "value": 1
-            },
-            {
-                "source": 10,
-                "target": 5,
-                "value": 1
-            },
-            {
-                "source": 11,
-                "target": 8,
-                "value": 1
-            },
-            {
-                "source": 2,
-                "target": 12,
-                "value": 1
-            },
-            {
-                "source": 2,
-                "target": 13,
-                "value": 1
-            },
-            {
-                "source": 14,
-                "target": 12,
-                "value": 1
-            },
-            {
-                "source": 15,
-                "target": 12,
-                "value": 1
-            },
-            {
-                "source": 16,
-                "target": 12,
-                "value": 1
-            },
-            {
-                "source": 17,
-                "target": 13,
-                "value": 1
-            },
-            {
-                "source": 18,
-                "target": 13,
-                "value": 1
-            },
-            {
-                "source": 13,
-                "target": 19,
-                "value": 1
-            }
-        ],
-        "nodes": [
-            {
-                "group": 0,
-                "name": "bbd307455de9"
-            },
-            {
-                "group": 1,
-                "name": "operations-5 OPERATIONS-5$"
-            },
-            {
-                "group": 0,
-                "name": "9b10deadbeef"
-            },
-            {
-                "group": 0,
-                "name": "db48a5920a82"
-            },
-            {
-                "group": 2,
-                "name": "desktop-2 DESKTOP-2$"
-            },
-            {
-                "group": 2,
-                "name": "e758bb7d2630"
-            },
-            {
-                "group": 1,
-                "name": "operations-2 OPERATIONS-2$"
-            },
-            {
-                "group": 2,
-                "name": "desktop-3 DESKTOP-3$"
-            },
-            {
-                "group": 2,
-                "name": "desktop-4 DESKTOP-4$"
-            },
-            {
-                "group": 0,
-                "name": "4f194d5cf71a"
-            },
-            {
-                "group": 0,
-                "name": "desktop-1 DESKTOP-1$"
-            },
-            {
-                "group": 0,
-                "name": "6"
-            },
-            {
-                "group": 1,
-                "name": "operation-desktop OPERATION-DESKT$"
-            },
-            {
-                "group": 2,
-                "name": "DESKTOP-67T38GD DESKTOP-67T38GD$"
-            },
-            {
-                "group": 0,
-                "name": "2fd6276575c7"
-            },
-            {
-                "group": 0,
-                "name": "dfc56224743c"
-            },
-            {
-                "group": 0,
-                "name": "cb7b71a72272"
-            },
-            {
-                "group": 0,
-                "name": "2f01fbc81c46"
-            },
-            {
-                "group": 0,
-                "name": "379bd32ecec6"
-            },
-            {
-                "group": 2,
-                "name": "foobar"
-            }
-        ]
-    },
-    "EntryCount": 19,
-    "Finished": true,
-    "ID": 18
+  "AdditionalEntries": false,
+  "OverLimit": false,
+  "LimitDroppedRange": {
+    "StartTS": "0000-12-31T16:07:02-07:52",
+    "EndTS": "0000-12-31T16:07:02-07:52"
+  },
+  "Entries": {
+    "groups": [
+      "",
+      "operations",
+      "IT"
+    ],
+    "links": [
+      {
+        "source": 0,
+        "target": 1,
+        "value": 1
+      },
+      {
+        "source": 2,
+        "target": 1,
+        "value": 1
+      },
+      {
+        "source": 3,
+        "target": 1,
+        "value": 1
+      },
+      {
+        "source": 2,
+        "target": 4,
+        "value": 1
+      },
+      {
+        "source": 4,
+        "target": 5,
+        "value": 1
+      },
+      {
+        "source": 0,
+        "target": 6,
+        "value": 1
+      },
+      {
+        "source": 2,
+        "target": 7,
+        "value": 1
+      },
+      {
+        "source": 2,
+        "target": 8,
+        "value": 1
+      },
+      {
+        "source": 9,
+        "target": 8,
+        "value": 1
+      },
+      {
+        "source": 10,
+        "target": 5,
+        "value": 1
+      },
+      {
+        "source": 11,
+        "target": 8,
+        "value": 1
+      },
+      {
+        "source": 2,
+        "target": 12,
+        "value": 1
+      },
+      {
+        "source": 2,
+        "target": 13,
+        "value": 1
+      },
+      {
+        "source": 14,
+        "target": 12,
+        "value": 1
+      },
+      {
+        "source": 15,
+        "target": 12,
+        "value": 1
+      },
+      {
+        "source": 16,
+        "target": 12,
+        "value": 1
+      },
+      {
+        "source": 17,
+        "target": 13,
+        "value": 1
+      },
+      {
+        "source": 18,
+        "target": 13,
+        "value": 1
+      },
+      {
+        "source": 13,
+        "target": 19,
+        "value": 1
+      }
+    ],
+    "nodes": [
+      {
+        "group": 0,
+        "name": "bbd307455de9"
+      },
+      {
+        "group": 1,
+        "name": "operations-5 OPERATIONS-5$"
+      },
+      {
+        "group": 0,
+        "name": "9b10deadbeef"
+      },
+      {
+        "group": 0,
+        "name": "db48a5920a82"
+      },
+      {
+        "group": 2,
+        "name": "desktop-2 DESKTOP-2$"
+      },
+      {
+        "group": 2,
+        "name": "e758bb7d2630"
+      },
+      {
+        "group": 1,
+        "name": "operations-2 OPERATIONS-2$"
+      },
+      {
+        "group": 2,
+        "name": "desktop-3 DESKTOP-3$"
+      },
+      {
+        "group": 2,
+        "name": "desktop-4 DESKTOP-4$"
+      },
+      {
+        "group": 0,
+        "name": "4f194d5cf71a"
+      },
+      {
+        "group": 0,
+        "name": "desktop-1 DESKTOP-1$"
+      },
+      {
+        "group": 0,
+        "name": "6"
+      },
+      {
+        "group": 1,
+        "name": "operation-desktop OPERATION-DESKT$"
+      },
+      {
+        "group": 2,
+        "name": "DESKTOP-67T38GD DESKTOP-67T38GD$"
+      },
+      {
+        "group": 0,
+        "name": "2fd6276575c7"
+      },
+      {
+        "group": 0,
+        "name": "dfc56224743c"
+      },
+      {
+        "group": 0,
+        "name": "cb7b71a72272"
+      },
+      {
+        "group": 0,
+        "name": "2f01fbc81c46"
+      },
+      {
+        "group": 0,
+        "name": "379bd32ecec6"
+      },
+      {
+        "group": 2,
+        "name": "foobar"
+      }
+    ]
+  },
+  "EntryCount": 19,
+  "Finished": true,
+  "ID": 18
 }
+
 ```
