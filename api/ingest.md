@@ -24,6 +24,7 @@ To ingest user-provided data, the line-delimited file API is the simplest option
 
 * A file part named `file` containing the user-provided file
 * A field named `tag` containing the desired ingest tag
+* An optional field `source`; setting this will override the source value on entries.  This field must be a properly formed IPv4 or IPv6 address.
 * An optional field `noparsetimestamp`; setting this to "true" will force entries to be ingested with the current timestamp rather than attempting to parse one from each entry.
 * An optional field `assumelocaltimezone`; setting this to "true" means timestamps extracted from entries will assume to be in the local timezone (instead of UTC) if the timezone is not explicitly specified.
 

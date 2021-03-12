@@ -355,6 +355,64 @@ The regular expression we already have won't extract the application name ("webs
 
 Note that this new preprocessor definition defines routes for the applications named "webservice" and "apache", sending both to the "weblog" tag. Note also that it specifies that logs from the "postfix" application should be *dropped*, perhaps because those logs are already being ingested from another source.
 
+## Source Router Preprocessor
+
+The source router preprocessor can route entries to different tags based on the SRC field of the entry. Typically the SRC field will be the IP address of the entry's origination point, e.g. the system which created the syslog message sent to Simple Relay.
+
+The source router preprocessor Type is `srcrouter`.
+
+### Supported Options
+
+* `Route` (string, optional): `Route` defines a mapping of SRC field value to tag, separated by a colon. For instance, `Route=192.168.0.1:server-logs` will send all entries with SRC=192.168.0.1 to the "server-logs" tag. Multiple `Route` parameters can be specified. Leaving the tag blank (`Route=192.168.0.1:`) tells the preprocessor to drop all matching entries instead.
+* `Route-File` (string, optional): `Route-File` should contain a path to a file containing newline-separated route specifications, e.g. `192.168.0.1:server-logs`.
+* `Drop-Misses` (boolean, optional): By default, entries which do not match any of the defined routes will be passed through unmodified. Setting `Drop-Misses` to true will instead drop any entries which do not explicitly match a route definition.
+
+At least one `Route` definition is required, unless `Route-File` is used.
+
+A route can be either a single IP address or a properly formed CIDR specification, both IPv4 and IPv6 are supported.
+
+### Example: Inline Route Definitions
+
+The snippet below shows part of a Simple Relay ingester configuration that uses the source router preprocessor with routes defined inline. Entries originating from 10.0.0.1 will be tagged "internal-syslog", entries originating from 7.82.33.4 will be tagged "external-syslog", and all other entries will retain the default tag "syslog". Any entries with SRC=3.3.3.3 will be dropped.
+
+```
+[Listener "syslog"]
+        Bind-String="0.0.0.0:2601" #we are binding to all interfaces, with TCP implied
+        Tag-Name=syslog
+        Preprocessor=srcroute
+
+[preprocessor "srcroute"]
+        Type = srcrouter
+        Route=10.0.0.0/24:internal-syslog
+        Route=7.82.33.4:external-syslog
+        Route=3.3.3.3:
+        Route=DEAD::BEEF:external-syslog
+        Route=FEED:FEBE::0/64:external-syslog
+```
+
+### Example: File-based Definitions
+
+The snippet below shows part of a Simple Relay ingester configuration that uses the source router preprocessor with routes defined in a file.
+
+```
+[Listener "syslog"]
+        Bind-String="0.0.0.0:2601" #we are binding to all interfaces, with TCP implied
+        Tag-Name=syslog
+        Preprocessor=srcroute
+
+[preprocessor "srcroute"]
+        Type = srcrouter
+        Route-File=/opt/gravwell/etc/syslog-routes
+```
+
+The following is written to `/opt/gravwell/etc/syslog-routes`:
+
+```
+10.0.0.0/24:internal-syslog
+7.82.33.4:external-syslog
+3.3.3.3:
+```
+
 ## Regex Timestamp Extraction Preprocessor
 
 Ingesters will typically attempt to extract a timestamp from an entry by looking for the first thing which appears to be a valid timestamp and parsing it. In combination with additional ingester configuration rules for parsing timestamps (specifying a specific timestamp format to look for, etc.) this is usually sufficient to properly extract the appropriate timestamp, but some data sources may defy these straightforward methods. Consider a situation where a network device may send CSV-formatted event logs wrapped in syslog--a situation we have seen at Gravwell!
@@ -734,4 +792,80 @@ This example forwards entries via a TCP forwarder then drops them.
 
 [Preprocessor "dropit"]
 	Type=Drop               
+```
+
+## Cisco ISE Preprocessor
+
+The Cisco ISE preprocessor is designed to parse and accomodate the format and transport of Cisco ISE logs.  See the [Cisco Introduction to ISE Syslogs](https://www.cisco.com/c/en/us/td/docs/security/ise/syslog/Cisco_ISE_Syslogs/m_IntrotoSyslogs.pdf) for more information.
+
+The Cisco ISE preprocessor is named `cisco_ise` and supports the ability to reassemble multipart messages, reformat the messages into a format more appropriate for Gravwell and modern syslog systems, filter unwanted message pairs, and remove redundant message headers.
+
+### Attribute Filtering and Formatting
+
+The Cisco ISE logging system is designed to split a single message across multiple syslog messages.  Gravwell will accept messages that far exceed the maximum message size of syslog, however if you are supporting multiple targets for Cisco ISE messages it may be necessary to enable multipart messages.  Disabling multipart messages in your cisco device and letting Gravwell handle large payloads will be far more efficient.
+
+### Supported Options
+
+* `Passthrough-Misses` (boolean, optional): If set to true, the preprocessor will pass along entries for which it was unable to extract a valid ISE message. By default, these entries are dropped.
+* `Enable-Multipart-Reassembly` (boolean, optional): If set to true the preprocessor will attempt to reassemble messages that contain a Cisco remote message header.
+* `Max-Multipart-Buffer` (uint64, optional): Specifies a maximum in-memory buffer to use when reassembling multipart messages, when the buffer is exceeded the oldest partially reassembled message will be sent to Gravwell.  The default buffer size is 8MB.
+* `Max-Multipart-Latency` (string, optional): Specifies a maximum time duration that a partially reassembled multipart message will be held before it is sent.  Time spans should be specified in `ms` and `s` values.
+* `Output-Format` (string, optional): Specifies the output format for sending ISE messages, the default format is `raw`, other options are `json` and `cef`.
+* `Attribute-Drop-Filter` (string array, optional): Specifies globbing patterns that can be used to match against attributes within a message which will be removed from the output.  The arguments must be [Unix Glob patterns](https://en.wikipedia.org/wiki/Glob_(programming)), many patterns can be specified.  Attribute drop filters are not compatible with the `raw` output format.
+* `Attribute-Strip-Header` (boolean, optional): Specifies that attributes with nested names and/or type information should have the header values stripped.  This is extremely useful for cleaning up poorly formed attribute values.
+
+
+### Example Configuration
+
+The following `cisco_ise` preprocessor configuration is designed to re-assemble multipart messages, remove unwanted `Step` attributes, and reform the output messages in the CEF format.  It also strips the cisco attribute headers.
+
+```
+[preprocessor "iseCEF"]
+    Type=cisco_ise
+    Passthrough-Misses=false #if its malformed just drop it
+    Enable-Multipart-Reassembly=true
+    Attribute-Drop-Filters="Step*"
+    Attribute-Strip-Header=true
+    Output-Format=cef
+```
+
+An example output message using this configuration is:
+
+```
+CEF:0|CISCO|ISE_DEVICE|||Passed-Authentication|NOTICE| sequence=1 ode=5200 class=Passed-Authentication text=Authentication succeeded ConfigVersionId=44 DeviceIPAddress=8.8.8.8 DestinationIPAddress=1.2.3.4 DestinationPort=1645 UserName=user@company.com Protocol=Radius RequestLatency=10301 audit-session-id=0a700e191cff70005fbbf63f
+```
+
+The following `cisco_ise` preprocessor configuration is achieves a similar result, but it contains two attribute filters and re-formats the output message into JSON 
+
+```
+[preprocessor "iseCEF"]
+    Type=cisco_ise
+    Passthrough-Misses=false #if its malformed just drop it
+    Enable-Multipart-Reassembly=true
+    Attribute-Drop-Filters="Step*"
+    Attribute-Strip-Header=true
+    Output-Format=json
+```
+
+An example output message using this configuration is:
+
+```
+{
+  "TS":"2020-11-23T12:50:01.926-05:00",
+  "Sequence":1,
+  "ODE":"5200",
+  "Severity":"NOTICE",
+  "Class":"Passed-Authentication",
+   "Text":"Authentication succeeded",
+   "Attributes":{
+     "AcsSessionID":"ISE_DEVICE/384429556/212087299",
+     "AuthenticationIdentityStore":"AzureBackup",
+     "AuthenticationMethod":"PAP_ASCII",
+     "AuthenticationStatus":"AuthenticationPassed",
+     "audit-session-id":"0a700e191cff70005fbbf63f",
+     "device-mac":"00-0c-29-74-9d-e8",
+     "device-platform":"win",
+     "device-platform-version":"10.0.17134",
+  }
+}
 ```

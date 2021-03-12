@@ -5,7 +5,7 @@ The following example code that logs in, grabs auth headers, sets up a websocket
 ```javascript
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 var q = require('q');
-var https = require('https');
+var http = require('http');
 var WebSocket = require('ws');
 var ws;
 
@@ -15,27 +15,23 @@ var auth = {
 };
 
 
-var cookie = {};
-var csrf = {};
+var jwt = "";
 
 function login(newuser) {
 	console.log("Logging in");
 	const options = {
-		hostname: '127.0.0.1',
-		port: 8080,
+		hostname: '172.19.0.2',
+		port: 80,
 		path: '/api/login',
 		method: 'POST'
 	};
 
 	var def = q.defer();
 
-	var req = https.request(options, (res) => {
+	var req = http.request(options, (res) => {
 		res.on('data', (d) => {
 			d = JSON.parse(d);
-			cookie.name = d.CookieName;
-			cookie.value = d.Cookie;
-			csrf.name = d.CSRFName;
-			csrf.value = d.CSRFToken;
+			jwt = d.JWT;
 			def.resolve();
 		});
 	});
@@ -54,15 +50,15 @@ function logout(msg) {
 	console.log("Logging out");
 	var def = q.defer();
 	const options = {
-		hostname: '127.0.0.1',
-		port: 8080,
+		hostname: '172.19.0.2',
+		port: 80,
 		path: '/api/logout',
 		method: 'PUT'
 	};
 
 	ws.terminate();
 
-	var req = https.request(options, (res) => {
+	var req = http.request(options, (res) => {
 		res.on('end', () => {
 			console.log('logged out', res.statusCode);
 			def.resolve(msg);
@@ -74,8 +70,7 @@ function logout(msg) {
 	});
 
 	//set auth headers
-	req.setHeader('Cookie', cookie.name + '=' + cookie.value);
-	req.setHeader(csrf.name, csrf.value);
+	req.setHeader("Authorization", "Bearer "+jwt);
 	req.end();
 	return def.promise;
 }
@@ -84,20 +79,12 @@ function upgrade() {
 	console.log("Upgrading to websocket");
 	var def = q.defer();
 	//set auth headers
-	var headers = {
-		'Cookie': cookie.name + '=' + cookie.value
-	};
-	headers[csrf.name] = csrf.value;
-
-	ws = new WebSocket("wss://localhost:8080/api/ws/search", {
-		headers: headers
-	});
+	ws = new WebSocket("ws://172.19.0.2:80/api/ws/search", jwt)
 
 	ws.on('open', () => {
 		ws.send(JSON.stringify({
 			Subs: ["PONG", "parse", "search", "attach"]
 		}));
-		// console.log("open");
 	});
 
 	ws.on('message', function(message) {
@@ -106,23 +93,20 @@ function upgrade() {
 			def.resolve();
 			return;
 		}
-		// console.log('Received: ' + message);
 	});
 
 	ws.on('close', function(code) {
-		// console.log('Disconnected: ' + code);
+		console.log('Disconnected: ' + code);
 		def.resolve();
 	});
 
 	ws.on('error', function(error) {
-		// console.log('Error: ' + error);
+		console.log('Error: ' + error);
 		def.reject();
 	});
 
 	return def.promise;
 }
-
-
 
 function parse() {
 	var searchString = "grep foo";
@@ -153,5 +137,5 @@ function parse() {
 	return def.promise;
 }
 
-login().then(upgrade).then(parse).finally(logout);
+login().then(upgrade).then(parse).catch(console.log).finally(logout);
 ```

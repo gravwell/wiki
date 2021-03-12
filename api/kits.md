@@ -29,18 +29,24 @@ type KitBuildRequest struct {
 	Name              string
 	Description       string
 	Version           uint
-	Dashboards        []uint64    
+	MinVersion        CanonicalVersion 
+	MaxVersion        CanonicalVersion 
+	Dashboards        []uint64 
 	Templates         []uuid.UUID 
 	Pivots            []uuid.UUID 
+	Resources         []string 
+	ScheduledSearches []int32 
+	Macros            []uint64 
+	Extractors        []uuid.UUID 
 	Files             []uuid.UUID 
-	Resources         []string    
-	ScheduledSearches []int32     
-	Macros            []uint64
-	SearchLibraries   []uuid.UUID    
-	Extractors        []uuid.UUID
-	Icon              string    
-	Dependencies      []KitDependency
-	ConfigMacros	  []KitConfigMacro
+	SearchLibraries   []uuid.UUID 
+	Playbooks         []uuid.UUID 
+	EmbeddedItems     []KitEmbeddedItem 
+	Icon              string 
+	Banner            string 
+	Cover             string 
+	Dependencies      []KitDependency 
+	ConfigMacros      []KitConfigMacro
 	ScriptDeployRules map[int32]ScriptDeployConfig
 }
 ```
@@ -63,6 +69,7 @@ Note that while the ID, Name, Description, and Version fields are required, the 
     "Description": "Test Gravwell kit",
     "ID": "io.gravwell.test",
     "Name": "test-gravwell",
+    "Description":"testing\n\n## TESTING",
     "Pivots": [
         "ae9f2598-598f-4859-a3d4-832a512b6104"
     ],
@@ -72,6 +79,23 @@ Note that while the ID, Name, Description, and Version fields are required, the 
     "ScheduledSearches": [
         1439174790
     ],
+    "EmbeddedItems":[
+        {
+           "Name":"TEST",
+           "Type":"license",
+           "Content":"VGVzdCBsaWNlbnNlIHRoYXQgYWxsb3dzIEdyYXZ3ZWxsIHRvIGdpdmUgeW91ciBmaXJzdCBib3JuIHNvbiBhIHN0ZXJuIHRhbGtpbmcgdG8h"
+        }
+    ],
+    "Files":[
+        "810a014d-1373-4d57-95b6-0638a7a01442",
+        "09a26a2e-e449-4857-88d1-56cede1b8d95",
+        "92bcfe5e-2c9a-4f39-9083-dd3f7a6f9738"
+    ],
+    "MinVersion":{"Major":4,"Minor":0,"Point":0},
+    "MaxVersion":{"Major":4,"Minor":2,"Point":0},
+    "Icon":"810a014d-1373-4d57-95b6-0638a7a01442",
+    "Banner":"09a26a2e-e449-4857-88d1-56cede1b8d95",
+    "Cover":"92bcfe5e-2c9a-4f39-9083-dd3f7a6f9738",
     "ScriptDeployRules": {
         "1439174790": {
             "Disabled": true,
@@ -80,10 +104,11 @@ Note that while the ID, Name, Description, and Version fields are required, the 
     },
     "Version": 1
 }
-
 ```
 
 Attention: The UUIDs specified for templates, pivots, and userfiles should be the *GUIDs* associated with those structures, not the *ThingUUID* field which is also reported in a listing of items.
+
+Attention: The UUIDs specified for Banner, Cover, and Icon must be included in the list of Files for the build request.  If the build request contains references to file UUIDs that are NOT included in the main file request the API server will reject the request.
 
 The system will respond with a structure describing the newly-built kit:
 
