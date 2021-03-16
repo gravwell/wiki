@@ -21,7 +21,7 @@ All flags are optional.
 The `transaction` module groups entries into single entries based on a provided set of keys. For example, given a dataset with enumerated values "host", "message", and "action", the query:
 
 ```
-tag=data json host action message | transaction -fsep " -- " host | table
+tag=data kv host action message | transaction -fsep " -- " host | table
 ```
 
 Will collapse all entries with the same value for the EV "host" into a single entry. By default, `transaction` will group all EVs that are *not* part of the key into the output. In the example above, the EVs "host" and "message" will be grouped, using `-fsep` as a separator, and all entries that match this key will be further grouped by `-rsep`. To illustrate the example above, given the following entries:
@@ -45,7 +45,7 @@ Entry 2: transaction="login -- Host bar login"
 To specify exactly which EVs to group, you can use one or more `-e` flags in the query. EVs will be grouped in the order provided. For example:
 
 ```
-tag=data json host action message user group | transaction -e action -e message host | table
+tag=data kv host action message user group | transaction -e action -e message host | table
 ```
 
 Will only group EVs "action" and "message", ignoring "user" and "group". 
@@ -53,7 +53,7 @@ Will only group EVs "action" and "message", ignoring "user" and "group".
 Multiple keys can be provided, and records will be created based on the grouping of all provided keys. For example:
 
 ```
-tag=data json host action message user group | transaction host action user | table
+tag=data kv host action message user group | transaction host action user | table
 ```
 
 Will group records with the same host, action, and user. 
