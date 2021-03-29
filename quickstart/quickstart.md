@@ -103,6 +103,7 @@ gravwell-datastore - Gravwell datastore service
 gravwell-federator - Gravwell ingest federator
 gravwell-file-follow - Gravwell file follow ingester
 gravwell-http-ingester - Gravwell HTTP ingester
+gravwell-ipmi - Gravwell IPMI ingester
 gravwell-kafka - Gravwell Kafka ingester
 gravwell-kafka-federator - Gravwell Kafka federator
 gravwell-kinesis - Gravwell Kinesis ingester

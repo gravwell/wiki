@@ -1867,6 +1867,67 @@ precendence and evaluate left-to-right.  Parens can also be used to group.
 
 **Note**: This section sourced from [Google Stenographer](https://github.com/google/stenographer/blob/master/README.md)
 
+## IPMI Ingester
+
+The IPMI Ingester collects Sensor Data Record (SDR) and System Event Log (SEL) records from any number of IPMI devices. 
+
+The configuration file provides a simple host/port, username, and password field for connecting to each IPMI device. SEL and SDR records are ingested in a JSON-encoded schema. For example:
+
+```
+{
+    "Type": "SDR",
+    "Target": "10.10.10.10:623",
+    "Data": {
+        "+3.3VSB": {
+            "Type": "Voltage",
+            "Reading": "3.26",
+            "Units": "Volts",
+            "Status": "ok"
+        },
+        "+5VSB": {...},
+        "12V": {...}
+    }
+}
+
+{
+    "Target": "10.10.10.10:623",
+    "Type": "SEL",
+    "Data": {
+        "RecordID": 25,
+        "RecordType": 2,
+        "Timestamp": {
+            "Value": 1506550240
+        },
+        "GeneratorID": 32,
+        "EvMRev": 4,
+        "SensorType": 5,
+        "SensorNumber": 81,
+        "EventType": 111,
+        "EventDir": 0,
+        "EventData1": 240,
+        "EventData2": 255,
+        "EventData3": 255
+    }
+}
+```
+
+### Configuration Options ###
+
+IPMI uses the default set of Global configuration options. Individual IPMI devices are configured with an "IPMI" stanza. For example:
+
+```
+[IPMI "Server 1"]
+	Target="127.0.0.1:623"
+	Username="user"
+	Password="pass"
+	Tag-Name=ipmi
+	Source-Override="DEAD::BEEF" 
+```
+
+The IPMI stanza is simple, only taking a Target (the IP:PORT of the IPMI device), username, password, and tag. Optionally, you can set a source override to force the SRC field on all ingested entries to another IP. By default, the SRC field is set to the IP of the IPMI device. 
+
+Additionally, all IPMI stanzas can use the "Preprocessor" options, as described [here](https://docs.gravwell.io/#!ingesters/preprocessors/preprocessors.md).
+
 ## The Gravwell Federator
 
 The Federator is an entry relay: ingesters connect to the Federator and send it entries, then the Federator passes those entries to an indexer.  The Federator can act as a trust boundary, securely relaying entries across network segments without exposing ingest secrets or allowing untrusted nodes to send data for disallowed tags.  The Federator upstream connections are configured like any other ingester, allowing multiplexing, local caching, encryption, etc.

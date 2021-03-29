@@ -89,11 +89,7 @@ We can then run a quick search over the last hour to verify that the data made i
 
 ## Set up ingesters
 
-Besides the Simple Relay ingester that ships with the gravwell/gravwell image, we currently provide three pre-built standalone ingester images:
-
-* [gravwell/netflow_capture](https://hub.docker.com/r/gravwell/netflow_capture/) is a Netflow collector, configured to receive Netflow v5 records on port 2055 and and IPFIX records on port 6343
-* [gravwell/collectd](https://hub.docker.com/r/gravwell/collectd/) receives hardware stats from collectd acquisition points on port 25826
-* [gravwell/simple_relay](https://hub.docker.com/r/gravwell/simple_relay/) is the Simple Relay ingester as pre-installed on the core image, in case you want to deploy it separately too.
+Besides the Simple Relay ingester that ships with the gravwell/gravwell image, we provide a number of pre-build images for our ingesters. More information can be found at the [Gravwell Docker Hub](https://hub.docker.com/u/gravwell) page.
 
 We'll launch the Netflow ingester here, but the same command (with names and ports changed) can be used for the other ingesters too:
 
