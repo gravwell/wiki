@@ -115,7 +115,7 @@ Rate-Limit=3MBps
 
 ### Enable-Compression
 
-The ingest system supports a transparent compression system that will compression data as it flows between ingesters and indexers.  This transparent compression is extremely fast and can help reduce load on slower links.  Each ingester can request a compressed uplink for all connections by setting the `Enable-Compression` parameter to `true` in the global configuration block.
+The ingest system supports a transparent compression system that will compress data as it flows between ingesters and indexers.  This transparent compression is extremely fast and can help reduce load on slower links.  Each ingester can request a compressed uplink for all connections by setting the `Enable-Compression` parameter to `true` in the global configuration block.
 
 The compression system is opportunistic in that the ingester requests compression but the upstream link gets the final say on whether compression is enabled; if the upstream endpoint does not support compression or has been configured to disallow it the link will not be compressed.
 
