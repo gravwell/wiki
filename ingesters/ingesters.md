@@ -22,11 +22,11 @@ From the user's point of view, tags are strings such as "syslog", "pcap-router",
 !@#$%^&*()=+<>,.:;"'{}[]|\
 ```
 
-You should also refrain from using nonprinting or difficult-to-type characters when selecting tag names, as this will make querying a challenge for users. Although you *could* ingest into a tag named ☺, that doesn't mean it's a good idea!
+You should also refrain from using non-printing or difficult-to-type characters when selecting tag names, as this will make querying a challenge for users. Although you *could* ingest into a tag named ☺, that doesn't mean it's a good idea!
 
 ### Tag Wildcards
 
-When chosing tag names, keep in mind that Gravwell allows wildcards when specifying tag names to query. By selecting your tag names carefully, you can make later querying easier.
+When choosing tag names, keep in mind that Gravwell allows wildcards when specifying tag names to query. By selecting your tag names carefully, you can make later querying easier.
 
 For instance, if you are collecting system logs from five servers, of which two are HTTP servers, two are file servers, and one is an email server, you may chose to use the following tags:
 
@@ -48,11 +48,12 @@ When an *ingester* connects to an indexer, it sends a list of tag names it inten
 
 ## Global Configuration Parameters
 
-Most of the core ingesters support a common set of global configuration parameters.  The shared Global configuration parameters are implemented using the [ingest config](https://godoc.org/github.com/gravwell/ingest/config#IngestConfig) package.  Global configuration parameters should be specified in the Global section of each Gravwell ingester config file.  The following Global ingester paramters are available:
+Most of the core ingesters support a common set of global configuration parameters.  The shared Global configuration parameters are implemented using the [ingest config](https://godoc.org/github.com/gravwell/ingest/config#IngestConfig) package.  Global configuration parameters should be specified in the Global section of each Gravwell ingester config file.  The following Global ingester parameters are available:
 
 * Ingest-Secret
 * Connection-Timeout
 * Rate-Limit
+* Enable-Compression
 * Insecure-Skip-TLS-Verify
 * Cleartext-Backend-Target
 * Encrypted-Backend-Target
@@ -72,7 +73,7 @@ The Ingest-Secret parameter specifies the token to be used for ingest authentica
 
 ### Connection-Timeout
 
-The Connection-Timeout parameter specifies how long we want to wait to connect to an indexer before giving up.  An empty timeout means that the ingester will wait forever to start.  Timeouts should be specified in durations of minutes, seconds, or hours.
+The Connection-Timeout parameter specifies how long we want to wait to connect to an indexer before giving up.  An empty timeout means that the ingester will wait forever to start.  Timeouts should be specified in duration of minutes, seconds, or hours.
 
 #### Examples
 ```
@@ -110,6 +111,20 @@ The argument should be a number followed by an optional rate suffix, e.g. `10485
 Rate-Limit=1Mbit
 Rate-Limit=2048Kbps
 Rate-Limit=3MBps
+```
+
+### Enable-Compression
+
+The ingest system supports a transparent compression system that will compress data as it flows between ingesters and indexers.  This transparent compression is extremely fast and can help reduce load on slower links.  Each ingester can request a compressed uplink for all connections by setting the `Enable-Compression` parameter to `true` in the global configuration block.
+
+The compression system is opportunistic in that the ingester requests compression but the upstream link gets the final say on whether compression is enabled; if the upstream endpoint does not support compression or has been configured to disallow it the link will not be compressed.
+
+Compression will increase the CPU and memory requirements of an ingester, if the ingester is running on an endpoint with minimal CPU and/or memory compression may reduce throughput.  Compression is best suited for WAN connections, enabling compression on a Unix named pipe just incurs CPU and memory overhead with no added benefit.
+
+#### Example
+
+```
+Enable-Compression=true
 ```
 
 ### Cleartext-Backend-Target
