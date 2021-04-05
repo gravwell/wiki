@@ -1922,10 +1922,11 @@ IPMI uses the default set of Global configuration options. IPMI devices are conf
 	Username="user"
 	Password="pass"
 	Tag-Name=ipmi
+	Rate=60
 	Source-Override="DEAD::BEEF" 
 ```
 
-The IPMI stanza is simple, only taking one or more Targets (the IP:PORT of the IPMI device), username, password, and tag. Optionally, you can set a source override to force the SRC field on all ingested entries to another IP. By default, the SRC field is set to the IP of the IPMI device. 
+The IPMI stanza is simple, only taking one or more Targets (the IP:PORT of the IPMI device), username, password, tag, and a poll rate, in seconds. The default poll rate is 60 seconds. Optionally, you can set a source override to force the SRC field on all ingested entries to another IP. By default, the SRC field is set to the IP of the IPMI device. 
 
 Additionally, all IPMI stanzas can use the "Preprocessor" options, as described [here](https://docs.gravwell.io/#!ingesters/preprocessors/preprocessors.md).
 
