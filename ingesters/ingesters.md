@@ -1913,18 +1913,19 @@ The configuration file provides a simple host/port, username, and password field
 
 ### Configuration Options ###
 
-IPMI uses the default set of Global configuration options. Individual IPMI devices are configured with an "IPMI" stanza. For example:
+IPMI uses the default set of Global configuration options. IPMI devices are configured with an "IPMI" stanza and each stanza can support multiple IPMI devices that share the same credentials. For example:
 
 ```
 [IPMI "Server 1"]
 	Target="127.0.0.1:623"
+	Target="1.2.3.4:623"
 	Username="user"
 	Password="pass"
 	Tag-Name=ipmi
 	Source-Override="DEAD::BEEF" 
 ```
 
-The IPMI stanza is simple, only taking a Target (the IP:PORT of the IPMI device), username, password, and tag. Optionally, you can set a source override to force the SRC field on all ingested entries to another IP. By default, the SRC field is set to the IP of the IPMI device. 
+The IPMI stanza is simple, only taking one or more Targets (the IP:PORT of the IPMI device), username, password, and tag. Optionally, you can set a source override to force the SRC field on all ingested entries to another IP. By default, the SRC field is set to the IP of the IPMI device. 
 
 Additionally, all IPMI stanzas can use the "Preprocessor" options, as described [here](https://docs.gravwell.io/#!ingesters/preprocessors/preprocessors.md).
 
