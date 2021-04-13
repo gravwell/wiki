@@ -84,6 +84,10 @@ Issuing a GET on `/api/autoextractors` will return a list of JSON structures tha
 
 Performing a GET request with the admin flag set (`/api/autoextractors?admin=true`) will return a list of *all* extractors on the system.
 
+## Finding Extractor for Tag
+
+To see which extractor the system would use for a given tag, issue a GET request on `/api/autoextractors/find/{tag}`, where "{tag}" is replaced by the tag in question. For example, to check for the tag "syslog", issue a GET on `/api/autoextractors/find/syslog`. The server will respond with a single autoextractor definition for that tag, or a 404 if no matching definition exists.
+
 ## Adding
 
 Adding an autoextractor is performed by issuing a POST to `/api/autoextractors` with a valid definition in the request body.  The structure must be valid and the user cannot have an existing autoextractor defined for the same tag.  An example POST JSON structure that adds a new auto-extractor:
