@@ -657,6 +657,91 @@ if err != nil {
 return setResource("csv", buff)
 ```
 
+## SQL Usage
+
+The Gravwell scripting system exposes SQL database packages so that automation scripts can interact with external SQL databases.  The SQL library requires Gravwell version 4.1.6 or newer.
+
+The scripting system currently supports the following database drivers:
+
+* MySQL/MariaDB
+* Postgresql
+* MSSQL
+* OracleDB
+
+Using the SQL interfaces is done through the `database/sql` package which is a direct import of the Go [database/sql](https://golang.org/pkg/database/sql/) package.
+
+The Gravwell `database/sql` package also includes a helper function that is not part of the Go sql package called `ExtractRows`.  The `ExtractRows` helper function makes it easier to transform the an SQL result row into a slice of strings for later manipulation.  The `ExtractRows` function has the following interface:
+
+`ExtractRows(*sql.Row, columnCount) ([]string, error)`
+
+Using SQL resources in search scripts can be a powerful tool.  However, the SQL interface is verbose and requires some care to use properly.
+
+For in-depth documentation on specific API usage see the official Go documentation.
+
+### SQL Example Script
+
+The following example is a script which queries a remote MariaDB SQL database and turns the result into a CSV resource:
+
+```
+var sql = import("database/sql")
+var csv = import("encoding/csv")
+
+MinVer(4, 1, 6)
+
+csvbldr = csv.NewBuilder()
+
+// connect to the DB
+db, err = sql.Open("mysql", "root:password@tcp(172.19.0.2)/foo")
+if err != nil {
+	return err
+}
+
+// Query example
+rows, err = db.Query("SELECT * FROM bar WHERE name!=?", "stuff")
+if err != nil {
+	return err
+}
+
+// Get Headers
+headers, err = rows.Columns()
+if err != nil {
+	return err
+}
+csvbldr.WriteHeaders(headers)
+
+for rows.Next() {
+	vals, err = sql.ExtractRows(rows, len(headers)) //pass in the number of columns
+	if err != nil {
+		return err
+	}
+	err = csvbldr.Write(vals)
+	if err != nil {
+		return err
+	}
+}
+
+err = rows.Err()
+if err != nil {
+	return err
+}
+err = rows.Close()
+if err != nil {
+	return err
+}
+
+err = db.Close()
+if err != nil {
+	return err
+}
+
+data, err = csvbldr.Flush()
+if err != nil {
+	return err
+}
+
+return setResource("foobar", data)
+```
+
 
 ## IPExist Datasets
 

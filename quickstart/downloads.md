@@ -10,12 +10,12 @@ The Gravwell core installer contains the indexer and webserver frontend. You'll 
 
 ## Ingesters
 
-The core suite of ingesters are available for download as an installable packages.  Ingesters designed to operate on Linux machines are typically self contained, statically linked executables that are agnostic to the hosts package management system (with the exception of the NetworkCapture ingester).  Windows based ingesters are distributed as executable MSI packages.  Source code for many ingesters can be found at [Github](https://github.com/gravwell/ingesters).
+The core suite of ingesters are available for download as an installable packages.  Ingesters designed to operate on Linux machines are typically self contained, statically linked executables that are agnostic to the hosts package management system (with the exception of the NetworkCapture ingester).  Windows based ingesters are distributed as executable MSI packages.  Source code for many ingesters can be found at [Github](https://github.com/gravwell/gravwell/tree/master/ingesters).
 
 ### Current Ingester Releases
 | Ingester | Description | SHA256 | More Info |
 |:--------:|-------------|:------:|----------:|
-| [Simple Relay](#!ingesters/ingesters.md#Simple_Relay) | An ingester capable of accepting syslog or line brokend data sent over the network. |576b7795ef28889399ec4a011850033abb9d6f5452f1a199d60794feffe5211e| [Download](https://update.gravwell.io/archive/4.1.5/installers/gravwell_simple_relay_installer_4.1.5.sh)|
+| [Simple Relay](#!ingesters/ingesters.md#Simple_Relay) | An ingester capable of accepting syslog or line broken data sent over the network. |576b7795ef28889399ec4a011850033abb9d6f5452f1a199d60794feffe5211e| [Download](https://update.gravwell.io/archive/4.1.5/installers/gravwell_simple_relay_installer_4.1.5.sh)|
 | [File Follower](#!ingesters/ingesters.md#File_Follower) | The standard file following ingester designed to look for line broken log entries in files.  Useful for ingesting logs from systems that can only log to files. |d6dc45038bb7f39306c0a4d6b54617277ff42558586810d53c0f0fa0c56fe4dc| [Download](https://update.gravwell.io/archive/4.1.5/installers/gravwell_file_follow_installer_4.1.5.sh) |
 | [HTTP Ingester](#!ingesters/ingesters.md#HTTP_POST) | The HTTP ingester allows for hosting a simple webserver that takes HTTP requests in as events.  SOHO and IOT devices often support webhook functionality which the HTTP ingester is perfectly suited to support. |dd0df3ca1dd7dcca07f7e642f65c5150ee0a2f0cb816a5fab6eb4f0643b63614| [Download](https://update.gravwell.io/archive/4.1.5/installers/gravwell_http_ingester_installer_4.1.5.sh) |
 | [IPMI Ingester](#!ingesters/ingesters.md#IPMI_Ingester) | Collect SDR and SEL records from IPMI endpoints. |9d8de23c0e7ca8358533a0da1d6192a22ef5352ca71b6569a81eb9ce356cc518| [Download](https://update.gravwell.io/archive/4.1.5/installers/gravwell_ipmi_installer_4.1.5.sh)|
