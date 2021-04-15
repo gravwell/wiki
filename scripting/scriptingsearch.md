@@ -672,11 +672,11 @@ Using the SQL interfaces is done through the `database/sql` package which is a d
 
 The Gravwell `database/sql` package also includes a helper function that is not part of the Go sql package called `ExtractRows`.  The `ExtractRows` helper function makes it easier to transform the an SQL result row into a slice of strings for later manipulation.  The `ExtractRows` function has the following interface:
 
-`ExtractRows(*sql.Row, columnCount) ([]string, error}`
+`ExtractRows(*sql.Row, columnCount) ([]string, error)`
 
 Using SQL resources in search scripts can be a powerful tool.  However, the SQL interface is verbose and requires some care to use properly.
 
-For in depth documentation on specific API usage see the official Go documentation.
+For in-depth documentation on specific API usage see the official Go documentation.
 
 ### SQL Example Script
 
