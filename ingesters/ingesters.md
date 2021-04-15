@@ -352,7 +352,7 @@ If the Gravwell services are present on the same machine, the installation scrip
 
 ## File Follower
 
-The File Follower ingester is designed to watch files on the local system, capturing logs from sources that cannot natively integrate with Gravwell or are incapable of sending logs via a network connection.  The File Follower comes in both Linux and Windows flavors and can follow any line-delimited text file.  It is compatible with file rotation and employs a powerful pattern matching system to deal with applications that may name their logfiles inconsistently.
+The File Follower ingester is designed to watch files on the local system, capturing logs from sources that cannot natively integrate with Gravwell or are incapable of sending logs via a network connection.  The File Follower comes in both Linux and Windows flavors and can follow any line-delimited text file.  It is compatible with file rotation and employs a powerful pattern matching system to deal with applications that may name their log files inconsistently.
 
 ### Follower Examples
 
@@ -426,7 +426,7 @@ Log-Level=ERROR #options are OFF INFO WARN ERROR
 
 #### Linux
 
-The linux configuration file is located at `/opt/gravwell/etc/file_follow.conf` by default.  An example configuration which watches kernel, dmesg, and debian installation logs might look like the following:
+The Linux configuration file is located at `/opt/gravwell/etc/file_follow.conf` by default.  An example configuration which watches kernel, dmesg, and debian installation logs might look like the following:
 
 ```
 [Global]
@@ -523,6 +523,22 @@ Multiple "Listener" definitions can be defined allowing specific URLs to send en
 	TokenName=Gravwell
 	TokenValue=Secret
 ```
+
+### Splunk HEC Compatability
+
+The HTTP ingester supports a listener block that is API compatible with the Splunk HTTP Event Collector.  This special listener block enables a simplified configuration so that any endpoint that can send data to the Splunk HEC can also send to the Gravwell HTTP Ingester.  The HEC compatible configuration block looks like so:
+
+```
+[HEC-Compatible-Listener "testing"]
+	URL="/services/collector/event"
+	TokenValue="thisisyourtoken"
+	Tag-Name=HECStuff
+
+```
+
+The `HEC-Comptabile-Listener` block requires the `TokenValue` and `Tag-Name` configuration items, if the `URL` configuration item is omitted it will default to `/services/collector/event`.
+
+Both `Listener` and `HEC-Compatible-Listener` configuration blocks can be specified on the same HTTP ingester.
 
 ### Health Checks
 
