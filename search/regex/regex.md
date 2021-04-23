@@ -36,7 +36,7 @@ The regex module supports inline filtering to allow for downselecting data direc
 #### Filtering Examples
 
 ```
-tag=syslog regex *shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" user==root ip ~ "192.168"
+tag=syslog regex "shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" user==root ip ~ "192.168"
 ```
 
 ### Parameter Structure
