@@ -16,7 +16,8 @@ A given kit will also have the following attributes, specified at build time:
 
 * ID: A unique identifier for this kit. We recommend following Android naming practice, e.g. "com.example.my-kit".
 * Name: A human-friendly name for the kit, e.g. "My Kit".
-* Description: A description of the kit.
+* Description: A short, plain-text description of the kit, e.g. "This kit processes JSON logs from Product XYZ".
+* Readme: A longer, Markdown-formatted description of exactly what is in the kit and what it can do.
 * Version: An integer version of the kit.
 
 ## Building a kit
@@ -28,6 +29,7 @@ type KitBuildRequest struct {
 	ID                string
 	Name              string
 	Description       string
+	Readme            string
 	Version           uint
 	MinVersion        CanonicalVersion 
 	MaxVersion        CanonicalVersion 
