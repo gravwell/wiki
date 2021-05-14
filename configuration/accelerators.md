@@ -10,7 +10,7 @@ Gravwell accelerators use a filtering technique that works best when data is rel
 
 Tags are always included in the acceleration, regardless of the extraction module in use.  Even when the query does not specify inline filters, the acceleration system can help narrow down and accelerate queries when there are multiple tags in a single well.
 
-Most acceleration modules incur about a 1-1.5% storage overhead when using the bloom engine, but extremely low-throughput wells may consume more storage.  If a well typically sees about 1-10 entries per second, acceleration may incur a 5-10% storage penalty, where a well with 10-15 thousand entries per second may see as little as 0.5% storage overhead.  Gravwell accelerators also allow for user specified collision rate adjustments.  If you can spare the storage, a lower collision rate may increase accuracy and speed up queries while increasing storage overhead.  Reducing the accuracy reduces the storage penaly but decreases accuracy and reduces the effectiveness of the accelerator.  The index engine will consume significantly more space depending on the number of fields extracted and the variability of the extracted data.  For example, full text indexing may cause the accelerator files to consume as much space as the stored data files.
+Most acceleration modules incur about a 1-1.5% storage overhead when using the bloom engine, but extremely low-throughput wells may consume more storage.  If a well typically sees about 1-10 entries per second, acceleration may incur a 5-10% storage penalty, where a well with 10-15 thousand entries per second may see as little as 0.5% storage overhead.  Gravwell accelerators also allow for user specified collision rate adjustments.  If you can spare the storage, a lower collision rate may increase accuracy and speed up queries while increasing storage overhead.  Reducing the accuracy reduces the storage penalty but decreases accuracy and reduces the effectiveness of the accelerator.  The index engine will consume significantly more space depending on the number of fields extracted and the variability of the extracted data.  For example, full text indexing may cause the accelerator files to consume as much space as the stored data files.
 
 Accelerators must operate on the direct data portion of an entry (with the exception of the src accelerator which directly operates on the SRC field).
 
@@ -25,7 +25,7 @@ The bloom engine uses bloom filters to indicate whether or not a piece of data e
 
 ### Optimizing the Index Engine
 
-The "index" uses a file-backed data structure to store and query key data. The file backing is performed using memory maps, which can be pretty abusive when the kernel is too eager to write back dirty pages.  It is highly reccomended that you tune the kernel's dirty page parameters to reduce the frequency that the kernel writes back dirty pages.  This is done via the "/proc" interface and can be made permanent using the "/etc/sysctl.conf" configuration file.  The following script will set some efficient parameters and ensure they stick across reboots.
+The "index" uses a file-backed data structure to store and query key data. The file backing is performed using memory maps, which can be pretty abusive when the kernel is too eager to write back dirty pages.  It is highly recommended that you tune the kernel's dirty page parameters to reduce the frequency that the kernel writes back dirty pages.  This is done via the "/proc" interface and can be made permanent using the "/etc/sysctl.conf" configuration file.  The following script will set some efficient parameters and ensure they stick across reboots.
 
 ```
 #!/bin/bash
@@ -109,9 +109,149 @@ tag=app json username==admin app.field1=="login event" app.field2 != "failure" |
 
 The json search module will transparently invoke the acceleration framework and provide a first-level filter on the "username" and "app.field1" extracted values.  The "app.field2" field is NOT accelerated in this query because it does not use a direct equality filter.  Filters that exclude, compare, or check for subsets are not eligible for acceleration.
 
+### Accelerating Specific Tags
+
+The acceleration system allows for acceleration at the well or tag levels, this allows you to specify a basic acceleration scheme on a well then specify specific accelerator configurations for specific tags or groups of tags.
+
+Per tag acceleration is enabled by including one or more `Tag-Accelerator-Definitions` in the `[global]` configuration block in your `gravwell.conf`.  The `Tag-Accelerator-Definitions` configuration parameter should point to a file containing `Tag-Accelerator` blocks.  The `Tag-Accelerator` blocks allow for specifying a set of tags and an accelerator configuration for those specific tags.
+
+For example, lets look at a definition where a well has a default Acceleration schema (or none at all) and several tags are singled out.  In this example we are going to define two wells in addition to the default well.  We will then include an accelerator definition file that will specify specific accelerators for tags.
+
+Note - Multiple `Tag-Accelerator-Definitions` may be specified to include multiple files.
+
+##### gravwell.conf
+
+```
+[global]
+	Ingest-Auth=foo
+	Control-Auth=bar
+	Ingest-Port=4023
+	TLS-Ingest-Port=0
+	Log-Level=ERROR
+
+	Tag-Accelerator-Definitions="/opt/gravwell/etc/accel.defs"
+
+[Default-Well]
+	Location="/opt/gravwell/storage/default"
+
+[Storage-Well "test"]
+	Location="/opt/gravwell/storage/test"
+	Tags=test*
+	Accelerator-Name="fulltext"
+	Accelerator-Args="-ignoreTS -ignoreUUID"
+
+[Storage-Well "raw"]
+	Location="/opt/gravwell/storage/raw"
+	tags=raw*
+	tags=pcap*
+```
+
+##### accel.defs
+
+```
+[Tag-Accelerator "csv things"]
+	Accelerator-Name=csv
+	Accelerator-Args="[0] [1] [2] [3] [4] [5] [6]"
+	Tags=test1
+	Tags=testspecial*
+	Tags=firewall
+
+[Tag-Accelerator "packet stuff"]
+	Accelerator-Name=packet
+	Accelerator-Args="ipv4.SrcIP ipv4.DstIP tcp.SrcPort tcp.DstPort"
+	Tags=pcap
+```
+
+The `Tag-Accelerator` definitions support tag wildcards in the same way as a well, but a `Tag-Accelerator` specification does NOT have be the same as a well specification.
+
+Lets build out a table to see how specific tags would be mapped to specific wells and accelerators:
+
+| Tag      | Well Assignment | Accelerator                   |
+|----------|-----------------|-------------------------------|
+| default  | `default`       | NONE                          |
+| firewall | `default`       | `csv`                         |
+| test1    | `test`          | `csv`                         |
+| testfoo  | `test`          | `fulltext`                    |
+| pcap     | `raw`           | `packet`                      |
+
+
+#### Accelerator Tag Match Rules
+
+Accelerator tag definitions CAN overlap with some specific rules.  This is in contrast to the well assignment rules where a single tag may not match two different specifications.  Tags are matched against an accelerator definition using either a `hard` match or a `soft` match.  A `hard` match occurs when the tag is directly specified without any wildcards, a `soft` match occurs when a tag is matched using a wildcard globbing pattern.  For example the tag `foobar` would match the tag specification `foo*` via a soft match, if we directly specified the tag `foobar` then it would be a hard match.
+
+The rules for matching tags are that a tag may not match multiple `soft` specifications or have multiple `hard` matches.  Let's look at a specification which would violate these matching rules and cause undefined behavior:
+
+```
+[Tag-Accelerator "csv things"]
+	Accelerator-Name=csv
+	Accelerator-Args="[0] [1] [2] [3] [4] [5] [6]"
+	Tags=test1
+	Tags=foobar*
+
+[Tag-Accelerator "packet stuff"]
+	Accelerator-Name=packet
+	Accelerator-Args="ipv4.SrcIP ipv4.DstIP tcp.SrcPort tcp.DstPort"
+	Tags=foo*
+```
+
+Notice that the two accelerator definitions have both a `foobar*` and a `foo*` tag matching pattern, this means that if we established the tag `foobarbaz` it could match both specifications (two `soft` matches).  Gravwell will send a notification indicating that the tag matches overlap.
+
+Now lets look at a specification where there is an allowed overlap:
+
+```
+#zeekconn is by far the most noisy, set a special accelerator for it
+[Tag-Accelerator "zeek conn"]
+	Accelerator-Name=fields
+	Accelerator-Args=`-d "\t" [1] [2] [3] [4] [5] [6] [7] [11] [15]`
+	Tags=zeekconn
+
+# All other zeek logs can use a tuned fulltext accelerator
+[Tag-Accelerator "zeek"]
+	Accelerator-Name=fulltext
+	Accelerator-Args=`-ignoreFloat -min 2`
+	Tags=zeek* #apply to all zeek prefixed tags
+```
+
+Note that the tag `zeekconn` can be matched against both accelerators, however the accelerator definition `zeek conn` has a specific `hard` match where the more generic `zeek` definition would match with a `soft` match.  Because the tag has a hard and soft match, the specifications are legal and the `zeekconn` tag will be assigned the appropriate accelerator.  The `hard` and `soft` matching rules make it convenient to specify and acceleration for subset of tags and then tailor accelerators for specific high volume tags as is the case for Zeek data.
+
+
+`Tag-Accelerator` definitions can be included as external files or directly in the `gravwell.conf` file.  Here is a valid `gravwell.conf` that specifies a few accelerator deviations as well as two external definition files:
+
+```
+[global]
+	Ingest-Auth=foo
+	Control-Auth=bar
+	Ingest-Port=4023
+	TLS-Ingest-Port=0
+	Log-Level=ERROR
+
+	Tag-Accelerator-Definitions="/opt/gravwell/etc/syslog.defs"
+	Tag-Accelerator-Definitions="/opt/gravwell/etc/zeek.defs"
+
+[Default-Well]
+	Location="/opt/gravwell/storage/default"
+
+[Storage-Well "test"]
+	Location="/opt/gravwell/storage/test"
+	Tags=test*
+	Accelerator-Name="fulltext"
+	Accelerator-Args="-ignoreTS -ignoreUUID"
+
+[Tag-Accelerator "csv things"]
+	Accelerator-Name=csv
+	Accelerator-Args="[0] [1] [2] [3] [4] [5] [6]"
+	Tags=test1
+	Tags=foobar*
+
+[Tag-Accelerator "packet stuff"]
+	Accelerator-Name=packet
+	Accelerator-Args="ipv4.SrcIP ipv4.DstIP tcp.SrcPort tcp.DstPort"
+	Tags=foo*
+```
+
 ## Fulltext
 
-The fulltext accelerator is designed to index words within text logs and is considered the most flexible acceleration option.  Many of the other search modules support invoking the fulltext accelerator when executing queries.  However, the primary search module for engaging with the fulltext accelerator is the [grep](/search/grep/grep.md) module with the `-w` flag.  Much like the unix grep utility, `grep -w` specifies that the provided filter is expected to a word, rather than a subset of bytes.  Running a search with `words foo bar baz` will look for the words foo, bar, and baz and engage the fulltext accelerator.
+The fulltext accelerator is designed to index words within text logs and is considered the most flexible acceleration option.  Many of the other search modules support invoking the fulltext accelerator when executing queries.  However, the primary search module for engaging with the fulltext accelerator is the [grep](/search/grep/grep.md) module with the `-w` flag.  Much like the Unix grep utility, `grep -w` specifies that the provided filter is expected to a word, rather than a subset of bytes.  Running a search with `words foo bar baz` will look for the words foo, bar, and baz and engage the fulltext accelerator.
 
 While the fulltext accelerator may be the most flexible, it is also the most costly.  Using the fulltext accelerator can significantly reduce the ingest performance of Gravwell and can consume significant storage space, this is due to the fact that the fulltext accelerator is indexing on virtually every component of every entry.
 
