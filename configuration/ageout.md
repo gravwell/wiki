@@ -1,8 +1,8 @@
 # Data Ageout
 
-Gravwell supports an ageout system whereby data management policies can be applied to individual wells.  The ageout policies control data retention, storage well utilization, and compression.  Each well supports a hot and cold storage location with a set of parameters which determine how data is moved from one storage system to the other.  An ideal Gravwell storage architecture is comprised of relatively small pools of high-speed storage that is tolerant to random accesses and a high volume/low cost storage pool to be used for longer term storage.  NVME-based flash and/or XPoint drives make a great hot well while magnetic RAID arrays, NAS, or SAN pools work well for cold pools.  Searching is not impeded during ageout, nor is ingestion.
+By default, Gravwell will never delete data. It demands that the user specify policies for each storage well describing how data may be migrated and/or deleted, a process we refer to as "ageout". The ageout policies control data retention, storage well utilization, and compression.  Each well supports a hot location and an optional cold storage location with a set of parameters which determine how data is moved from one storage system to the other. An ideal Gravwell storage architecture is comprised of relatively small pools of high-speed storage for "hot" stores and a high volume/low cost storage pool to be used for longer term "cold" storage.  NVME-based flash and/or XPoint drives make a great hot well, while magnetic RAID arrays, NAS, or SAN pools work well for cold pools.
 
-The unit of storage within a well is the **shard**, representing approximately 1.5 days (2<sup>17</sup> seconds) of data. The **active shard** is the shard which is receiving entries for the current time. Every 2<sup>17</sup> seconds, a new active shard is created and the previous active shard becomes eligible for ageout. Ageout always affects an entire shard. Because of this, even with the most strict ageout policies each well must have enough space for about 1.5 days of data--keep this in mind when planning! If you specify a storage limit of 1GB but then ingest 10GB of data into one shard in an hour, your well will occupy 10GB until the active shard can be aged out!
+The unit of storage within a well is the **shard**, representing approximately 1.5 days (2<sup>17</sup> seconds) of data. The **active shard** is the shard which is receiving entries for the current time. Every 2<sup>17</sup> seconds, a new active shard is created and the previous active shard becomes eligible for ageout. Ageout always affects an entire shard. Because of this, even with the most strict ageout policies each well must have enough space for about 1.5 days of data--keep this in mind when planning! If you specify a storage limit of 1GB but then ingest 10GB of data into one shard in an hour, your well will occupy 10GB until the active shard can be aged out! Searching is not impeded during ageout, nor is ingestion.
 
 Ageout policies can be defined via three parameters:
 
@@ -10,7 +10,7 @@ Ageout policies can be defined via three parameters:
 * Total Storage
 * Storage Availability
 
-The time component of storage you to specify data retention policies to adhere to policies, contractual agreements, or legal requirements. For instance, corporate policy may state that web proxy logs should be stored for no more than 30 days.
+The time-based parameter allows you to specify data retention policies to adhere to policies, contractual agreements, or legal requirements. For instance, corporate policy may state that web proxy logs should be stored for no more than 30 days.
 
  The total storage parameter specifies an upper storage bound for a well, instructing Gravwell to only ageout or discard data when the amount of stored data exceeds the storage bounds.
 
