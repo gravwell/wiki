@@ -21,7 +21,7 @@ This checklist gives a general order of operation for configuring a single-node,
 □ [Configure ingesters](#!ingesters/ingesters.md) to bring data into Gravwell.
 
 
-<!-- TODO: this is a complex process and 
+<!-- TODO: this is a complex process that's difficult to capture in a linear checklist, because there are lots of options you may or may not be using. Leaving this here because it collects at least some of the steps.
 ## Cluster Checklist
 
 ### Preparation

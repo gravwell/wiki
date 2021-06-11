@@ -10,7 +10,7 @@ Ageout policies can be defined via three parameters:
 * Total Storage
 * Storage Availability
 
-The time-based parameter allow you to specify data retention policies to adhere to policies, contractual agreements, or legal requirements. For instance, corporate policy may state that web proxy logs should be stored for no more than 30 days.
+The time-based parameter allows you to specify data retention policies to adhere to policies, contractual agreements, or legal requirements. For instance, corporate policy may state that web proxy logs should be stored for no more than 30 days.
 
  The total storage parameter specifies an upper storage bound for a well, instructing Gravwell to only ageout or discard data when the amount of stored data exceeds the storage bounds.
 
