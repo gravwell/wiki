@@ -4,12 +4,16 @@ This section contains basic “quick start” instructions for getting Gravwell 
 
 This guide is suitable for Community Edition users as well as users with a paid single-node Gravwell subscription.
 
+You may find the [installation checklist](checklist.md) a useful companion to this document.
+
 Note: Community Edition users will need to obtain their own license from [https://www.gravwell.io/download](https://www.gravwell.io/download) before beginning installation. Paid users should already have received a license file via email.
 
 ## Installation
 Installing Gravwell on a single machine is quite simple--just follow the instructions in this section. For more advanced environments involving multiple systems, review the Advanced Topics section.
 
 Gravwell is distributed in four ways: via a Docker container, via a distribution-agnostic self-extracting installer, via a Debian package repository, and via a Redhat package repository. We recommend using the Debian repository if your system runs Debian or Ubuntu, the Redhat packages if your system runs RHEL, CentOS, or SuSE, and the self-extracting installer otherwise. The Docker distribution is also useful for those familiar with Docker. Gravwell has been tested on all of the major Linux distributions and runs well, but Ubuntu Server LTS is preferred. Help installing Ubuntu can be found at https://tutorials.ubuntu.com/tutorial/tutorial-install-ubuntu-server.
+
+Warning: By default, Gravwell will never delete old data. This means that your disk may eventually fill up and prevent intake of any *new* data. To set up cold storage & automatic deletion rules, refer to the [ageout configuration](#!configuration/ageout.md) documentation.
 
 ### Debian repository
 
