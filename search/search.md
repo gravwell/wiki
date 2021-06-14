@@ -214,7 +214,7 @@ This gives us a table of just connections that didn't have a corresponding DNS q
 
 ## Comments
 
-Queries support C-Style comments anywhere in the query text. Comments are saved in the search histroy, and are useful for debugging queries and adding inline notes. For example:
+Queries support C-Style comments anywhere in the query text. Comments are saved in the search history, and are useful for debugging queries and adding inline notes. For example:
 
 ```
 tag=foo json foo.bar /* a c-style comment that has no impact on the search */ baz | table

@@ -55,7 +55,7 @@ Within the Gravwell search pipeline, enumerated values can be a variety of diffe
 | ~ | Subset |
 | !~ | Not subset |
 
-Most of these operations are self-explanatory, but the subset operations deserve special mention. The subset operation (~) applies to strings and IP addresses; for strings, it means "the enumerated value contaings the argument", while for IP addresses it means "the IP address is within the specified subnet. Thus, `json domainName ~ "gravwell.io"` would pass only those entries which have a JSON field named 'domainName' that contains the string "gravwell.io". Similarly, `packet ipv4.DstIP ~ 10.0.0.0/8` would pass only those entries whose IPv4 destination IP address is in the 10.0.0.0/8 subnet.
+Most of these operations are self-explanatory, but the subset operations deserve special mention. The subset operation (~) applies to strings and IP addresses; for strings, it means "the enumerated value contains the argument", while for IP addresses it means "the IP address is within the specified subnet. Thus, `json domainName ~ "gravwell.io"` would pass only those entries which have a JSON field named 'domainName' that contains the string "gravwell.io". Similarly, `packet ipv4.DstIP ~ 10.0.0.0/8` would pass only those entries whose IPv4 destination IP address is in the 10.0.0.0/8 subnet.
 
 Each enumerated value type is compatible with some filters but not others:
 
