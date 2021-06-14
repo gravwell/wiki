@@ -426,7 +426,7 @@ Log-Level=ERROR #options are OFF INFO WARN ERROR
 
 #### Linux
 
-The Linux configuration file is located at `/opt/gravwell/etc/file_follow.conf` by default.  An example configuration which watches kernel, dmesg, and debian installation logs might look like the following:
+The Linux configuration file is located at `/opt/gravwell/etc/file_follow.conf` by default.  An example configuration which watches kernel, dmesg, and Debian installation logs might look like the following:
 
 ```
 [Global]
@@ -524,7 +524,7 @@ Multiple "Listener" definitions can be defined allowing specific URLs to send en
 	TokenValue=Secret
 ```
 
-### Splunk HEC Compatability
+### Splunk HEC Compatibility
 
 The HTTP ingester supports a listener block that is API compatible with the Splunk HTTP Event Collector.  This special listener block enables a simplified configuration so that any endpoint that can send data to the Splunk HEC can also send to the Gravwell HTTP Ingester.  The HEC compatible configuration block looks like so:
 
@@ -536,7 +536,7 @@ The HTTP ingester supports a listener block that is API compatible with the Splu
 
 ```
 
-The `HEC-Comptabile-Listener` block requires the `TokenValue` and `Tag-Name` configuration items, if the `URL` configuration item is omitted it will default to `/services/collector/event`.
+The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items, if the `URL` configuration item is omitted it will default to `/services/collector/event`.
 
 Both `Listener` and `HEC-Compatible-Listener` configuration blocks can be specified on the same HTTP ingester.
 
@@ -598,7 +598,7 @@ Each HTTP Ingester listener can be configured to enforce authentication.  The su
 * preshared-token
 * preshared-parameter
 
-When specifying an authentication system other than none crendentials must be provided.  The `jwt` and `cookie` and cookie authentication systems require a username and password while the `preshared-token` and `preshared-parameter` must provide a token value and optional token name.
+When specifying an authentication system other than none credentials must be provided.  The `jwt` and `cookie` and cookie authentication systems require a username and password while the `preshared-token` and `preshared-parameter` must provide a token value and optional token name.
 
 Warning: Like any other webpage, authentication is NOT SECURE over cleartext connections and attackers that can sniff traffic can capture tokens and cookies.
 
@@ -625,7 +625,7 @@ curl -d "only i can say hi" --user secretuser:secretpassword -X POST http://10.0
 
 #### JWT Authentication
 
-The JWT authentication system uses a cryptographically signed token for authentication.  When using jwt authentication you must specify an Login URL where clients will authenticate and recieve a token which must then be sent with each request.  The jwt tokens expire after 48 hours.  Authentication is performed by sending a `POST` request to the login URL with the `username` and `password` form fields populated.
+The JWT authentication system uses a cryptographically signed token for authentication.  When using jwt authentication you must specify an Login URL where clients will authenticate and receive a token which must then be sent with each request.  The jwt tokens expire after 48 hours.  Authentication is performed by sending a `POST` request to the login URL with the `username` and `password` form fields populated.
 
 Authenticating with the HTTP ingester using jwt authentication is a two step process and requires an additional configuration parameter.  Here is an example configuration:
 
@@ -762,7 +762,7 @@ The mass file ingester is driven via command line parameters and is not designed
 ```
 Usage of ./massFile:
   -clear-conns string
-        comma seperated server:port list of cleartext targets
+        comma separated server:port list of cleartext targets
   -ingest-secret string
         Ingest key (default "IngestSecrets")
   -no-ingest
@@ -778,7 +778,7 @@ Usage of ./massFile:
   -timeout int
         Connection timeout in seconds (default 1)
   -tls-conns string
-        comma seperated server:port list of TLS connections
+        comma separated server:port list of TLS connections
   -tls-private-key string
         Path to TLS private key
   -tls-public-key string
@@ -837,7 +837,7 @@ Run the .msi installation wizard to install the Gravwell events service.  On fir
 
 The ingester is configured with the `config.cfg` file located at `%PROGRAMDATA%\gravwell\eventlog\config.cfg`.  The configuration file follows the same form as other Gravwell ingesters with a `[Global]` section configuring the indexer connections and multiple `EventChannel` definitions.
 
-To modify the indexer connection or specify multiple indexers, change the connection ip address to the IP of your Gravwell server and set the Ingest-Secret value.  This example shows configuring an encrypted transport:
+To modify the indexer connection or specify multiple indexers, change the connection IP address to the IP of your Gravwell server and set the Ingest-Secret value.  This example shows configuring an encrypted transport:
 
 ```
 Ingest-Secret=YourSecretGoesHere
@@ -970,7 +970,7 @@ chart count by TargetFilename
 
 ## Netflow Ingester
 
-The Netflow ingester acts as a Netflow collector (see [the wikipedia article](https://en.wikipedia.org/wiki/NetFlow) for a full description of Netflow roles), gathering records created by Netflow exporters and capturing them as Gravwell entries for later analysis. These entries can then be analyzed using the [netflow](#!search/netflow/netflow.md) search module.
+The Netflow ingester acts as a Netflow collector (see [the Wikipedia article](https://en.wikipedia.org/wiki/NetFlow) for a full description of Netflow roles), gathering records created by Netflow exporters and capturing them as Gravwell entries for later analysis. These entries can then be analyzed using the [netflow](#!search/netflow/netflow.md) search module.
 
 ### Collector Examples
 
@@ -1031,7 +1031,7 @@ A primary strength of Gravwell is the ability to ingest binary data. The network
 ```
 [Sniffer "spy1"]
 	Interface="p1p1" #sniffing from interface p1p1
-	Tag-Name="pcap"  #assigning tag  fo pcap
+	Tag-Name="pcap"  #assigning tag  of pcap
 	Snap-Len=0xffff  #maximum capture size
 	BPF-Filter="not port 4023" #do not sniff any traffic on our backend connection
 	Promisc=true
@@ -1076,7 +1076,7 @@ Ingest-Cache-Path=/opt/gravwell/cache/network_capture.cache
 #no Tag-Name means use the default tag
 [Sniffer "spy1"]
 	Interface="eth0" #sniffing from interface eth0
-	Tag-Name="pcap"  #assigning tag  fo pcap
+	Tag-Name="pcap"  #assigning tag  of pcap
 	Snap-Len=0xffff  #maximum capture size
 	#BPF-Filter="not port 4023" #do not sniff any traffic on our backend connection
 	#Promisc=true
@@ -1136,7 +1136,7 @@ A similar query can identify chatty devices via packet counts. For example, a de
 tag=pcap packet eth.DstMAC eth.Length > 0 | count by DstMAC | sort by count desc | table DstMAC count
 ```
 
-It may be desirable to identify HTTP traffic operating on non-standard HTTP ports.  This can be achieved by exercising the filtering options and passing payloads to other modules.  For example, looking for outbound traffic that is not TCP port 80 and is originating from a specific subnet and then looking for HTTP requests in the ppacket payload allows us to identify abnormal HTTP traffic:
+It may be desirable to identify HTTP traffic operating on non-standard HTTP ports.  This can be achieved by exercising the filtering options and passing payloads to other modules.  For example, looking for outbound traffic that is not TCP port 80 and is originating from a specific subnet and then looking for HTTP requests in the packet payload allows us to identify abnormal HTTP traffic:
 
 ```
 tag=pcap packet ipv4.SrcIP ipv4.DstIP tcp.DstPort !=80 ipv4.SrcIP ~ 10.0.0.0/24 tcp.Payload | regex -e Payload "(?P<method>[A-Z]+)\s+(?P<url>[^\s]+)\s+HTTP/\d.\d" | table method url SrcIP DstIP DstPort
@@ -1146,11 +1146,11 @@ tag=pcap packet ipv4.SrcIP ipv4.DstIP tcp.DstPort !=80 ipv4.SrcIP ~ 10.0.0.0/24 
 
 ## Kafka
 
-The Kafka ingester designed to act as a consumer for [Apache Kafka](https://kafka.apache.org/) so that data Gravwell can attach to a Kafka cluster and consume data.  Kafka can act as a high availabilty [data broker](https://kafka.apache.org/uses#uses_logs) to Gravwell.  Kafka can take on some of the roles provided by the Gravwell federator, or ease the burden of integrating Gravwell into an existing data flow.  If your data is already flowing to Kafka, integrating Gravwell is just an `apt-get` away.
+The Kafka ingester designed to act as a consumer for [Apache Kafka](https://kafka.apache.org/) so that data Gravwell can attach to a Kafka cluster and consume data.  Kafka can act as a high availability [data broker](https://kafka.apache.org/uses#uses_logs) to Gravwell.  Kafka can take on some of the roles provided by the Gravwell Federator, or ease the burden of integrating Gravwell into an existing data flow.  If your data is already flowing to Kafka, integrating Gravwell is just an `apt-get` away.
 
-The Gravwell Kafka ingester is best suited as a colocated ingest point for a single indexer.  If you are operating a Kafka cluster and a Gravwell cluster, it is best not to duplicate the load balancing characteristcs of Kafka at the Gravwell ingest layer.  Install the Kafka ingester on the same machinea as the Gravwell indexer and use the Unix named pipe connection.  Each indexer should be configured with its own Kafka ingester, this way the Kafka cluster can manage load balancing.
+The Gravwell Kafka ingester is best suited as a co-located ingest point for a single indexer.  If you are operating a Kafka cluster and a Gravwell cluster, it is best not to duplicate the load balancing characteristics of Kafka at the Gravwell ingest layer.  Install the Kafka ingester on the same machine as the Gravwell indexer and use the Unix named pipe connection.  Each indexer should be configured with its own Kafka ingester, this way the Kafka cluster can manage load balancing.
 
-Most Kafka configurations enforce a data durability garuntee, which means data is stored in non-volitile storage when consumers are not available to consume it.  As a result we do not reccomend that the Gravwell ingest cache be enabled on Kafka ingester, instead let Kafka provide the data durability.
+Most Kafka configurations enforce a data durability guarantee, which means data is stored in non-volatile storage when consumers are not available to consume it.  As a result we do not recommend that the Gravwell ingest cache be enabled on Kafka ingester, instead let Kafka provide the data durability.
 
 ### Consumer Examples
 
@@ -1160,8 +1160,8 @@ Most Kafka configurations enforce a data durability garuntee, which means data i
 	Default-Tag=default   #send bad tag names to default tag
 	Tags=*                #allow all tags
 	Topic=default
-	Tag-Header=TAG        #look for the tag in the kafka TAG header
-	Source-Header=SRC     #look for the source in the kafka SRC header
+	Tag-Header=TAG        #look for the tag in the Kafka TAG header
+	Source-Header=SRC     #look for the source in the Kafka SRC header
 
 [Consumer "test"]
 	Leader="127.0.0.1:9092"
@@ -1178,7 +1178,7 @@ Most Kafka configurations enforce a data durability garuntee, which means data i
 
 ### Installation
 
-The Kafka ingester is avilable in the Gravwell debian repository as a debian package as well as a shell installer on our [Downloads page](#!quickstart/downloads.md).  Installation via the repository is performed using `apt`:
+The Kafka ingester is available in the Gravwell Debian repository as a Debian package as well as a shell installer on our [Downloads page](#!quickstart/downloads.md).  Installation via the repository is performed using `apt`:
 
 ```
 apt-get install gravwell-kafka
@@ -1202,9 +1202,9 @@ The Gravwell Kafka ingester can subscribe to multiple topics and even multiple K
 | Topic     | string | The Kafka topic this consumer will read from | YES |
 | Consumer-Group | string | The Kafka consumer group this ingester is a member of | NO - default is `gravwell` |
 | Source-Override | IPv4 or IPv6 | An IP address to use as the SRC for all entries | NO |
-| Rebalance-Strategy | string | The rebalancing strategy to use when reading from Kafka | NO - default is `roundrobin`.  `sticky`, and `range` are also options |
+| Rebalance-Strategy | string | The re-balancing strategy to use when reading from Kafka | NO - default is `roundrobin`.  `sticky`, and `range` are also options |
 | Key-As-Source | boolean | Gravwell producers will often put the data source address in a message key, if set the ingester will attempt to interpret the message key as a Source address.  If the key structure is not correct the ingester will apply the override (if set) or the default source. | NO - default is false |
-| Synchronous | boolean | The ingester will perform a sync on the ingest connection every time a kafka batch is written. | NO - default is false |
+| Synchronous | boolean | The ingester will perform a sync on the ingest connection every time a Kafka batch is written. | NO - default is false |
 | Batch-Size | integer | The number of entries to read from Kafka before forcing a write to the ingest connection | NO - default is 512 |
 
 Warning: Setting any consumer as synchronous causes that consumer to continually Sync the ingest pipeline.  It will have significant performance implications for ALL consumers.
@@ -1283,7 +1283,7 @@ If the Gravwell services are present on the same machine, the installation scrip
 
 The collectd ingester relies on the same Global configuration system as all other ingesters.  The Global section is used for defining indexer connections, authentication, and local cache controls.
 
-Collector configuration blocks are used to define listening collectors which can accept collectd samples.  Each collector configuration can have a unique Security-Level, authentication, tag, source override, network bind, and tag overrides.  Using multiple collector configurations, a single collectd ingester can listen on multiple interfaces and apply unique tags to collectd samples coming in from mutiple network enclaves.
+Collector configuration blocks are used to define listening collectors which can accept collectd samples.  Each collector configuration can have a unique Security-Level, authentication, tag, source override, network bind, and tag overrides.  Using multiple collector configurations, a single collectd ingester can listen on multiple interfaces and apply unique tags to collectd samples coming in from multiple network enclaves.
 
 By default the collectd ingester reads a configuration file located at _/opt/gravwell/etc/collectd.conf_.
 
@@ -1355,7 +1355,7 @@ Security-Level = SIGN
 
 ##### User and Password
 
-When the Security-Level is set as "sign" or "encrypt" a username and password must be provided that match the values set in endpoints.  The default values are "user" and "secret" to match the default values shipped with collectd.  These values should be changed when collectd data might contain sensative information.
+When the Security-Level is set as "sign" or "encrypt" a username and password must be provided that match the values set in endpoints.  The default values are "user" and "secret" to match the default values shipped with collectd.  These values should be changed when collectd data might contain sensitive information.
 
 ###### User and Password Examples
 ```
@@ -1379,7 +1379,7 @@ An example entry using the JSON encoder:
 
 Each Collector block supports N number of Tag-Plugin-Override declarations which are used to apply a unique tag to a collectd sample based on the plugin that generated it.  Tag-Plugin-Overrides can be useful when you want to store data coming from different plugins in different wells and apply different ageout rules.  For example, it may be valuable to store collectd records about disk usage for 9 months, but CPU usage records can expire out at 14 days.  The Tag-Plugin-Override system makes this easy.
 
-The Tag-Plugin-Override format is comprised of two strings seperated by the ":" character.  The string on the left represents the name of the plugin and the string on the right represents the name of the desired tag.  All the usual rules about tags apply.  A single plugin cannot be mapped to mutiple tags, but multiple plugins CAN be mapped to the same tag.
+The Tag-Plugin-Override format is comprised of two strings separated by the ":" character.  The string on the left represents the name of the plugin and the string on the right represents the name of the desired tag.  All the usual rules about tags apply.  A single plugin cannot be mapped to multiple tags, but multiple plugins CAN be mapped to the same tag.
 
 #### Example Tag Plugin Overrides
 ```
@@ -1469,7 +1469,7 @@ You can configure multiple `KinesisStream` sections to support multiple differen
 
 You can test the config by running `/opt/gravwell/bin/gravwell_kinesis_ingester -v` by hand; if it does not print out errors, the configuration is probably acceptable.
 
-Most of the fields are self-explanatory, but the `Iterator-Type` setting deserves a note. This setting selects where the ingester starts reading data **if it does not have a state file entry** for the stream/shard. The default is "LATEST", which means the ingester will ignore all existing records and only read records created after the ingester starts. By setting it to TRIM_HORIZON, the ingester will start reading records from the oldest available. In most situations we recommend settting it to TRIM_HORIZON so you can fetch older data; on further runs of the ingester, the state file will maintain the sequence number and prevent duplicate ingestion.
+Most of the fields are self-explanatory, but the `Iterator-Type` setting deserves a note. This setting selects where the ingester starts reading data **if it does not have a state file entry** for the stream/shard. The default is "LATEST", which means the ingester will ignore all existing records and only read records created after the ingester starts. By setting it to TRIM_HORIZON, the ingester will start reading records from the oldest available. In most situations we recommend setting it to TRIM_HORIZON so you can fetch older data; on further runs of the ingester, the state file will maintain the sequence number and prevent duplicate ingestion.
 
 The Kinesis ingester does not provide the `Ignore-Timestamps` option found in many other ingesters. Kinesis messages include an arrival timestamp; by default, the ingester will use that as the Gravwell timestamp. If `Parse-Time=true` is specified in the data consumer definition, the ingester will instead attempt to extract a timestamp from the message body.
 
@@ -1710,19 +1710,19 @@ Usage of ./session:
   -bind string
         Bind string specifying optional IP and port to listen on (default "0.0.0.0:7777")
   -clear-conns string
-        comma seperated server:port list of cleartext targets
+        comma separated server:port list of cleartext targets
   -ingest-secret string
         Ingest key (default "IngestSecrets")
   -max-session-mb int
         Maximum MBs a single session will accept (default 8)
   -pipe-conns string
-        comma seperated list of paths for named pie connection
+        comma separated list of paths for named pie connection
   -tag-name string
         Tag name for ingested data (default "default")
   -timeout int
         Connection timeout in seconds (default 1)
   -tls-conns string
-        comma seperated server:port list of TLS connections
+        comma separated server:port list of TLS connections
   -tls-private-key string
         Path to TLS private key
   -tls-public-key string
@@ -1804,7 +1804,7 @@ You can configure any number of `Queue` entries, one for each SQS queue, and pro
 
 The Packet Fleet Ingester provides a mechanism to query Google Stenographer instances and have results ingested per-packet into Gravwell. 
 
-Each Stenographer ingester listens on a given port (```Listen-Address```) and accepts Stenographer queries (see query syntax below) as an HTTP POST. On receiving a query, the ingester returns an integer job ID, and asyncrhonously queries the Stenographer instance and begins to ingest the returned PCAP. Multiple in-flight queries can be ran concurrently. Job status can be viewed by issuing an HTTP GET on "/status", which returns a JSON-encoded array of in-flight job IDs. 
+Each Stenographer ingester listens on a given port (```Listen-Address```) and accepts Stenographer queries (see query syntax below) as an HTTP POST. On receiving a query, the ingester returns an integer job ID, and asynchronously queries the Stenographer instance and begins to ingest the returned PCAP. Multiple in-flight queries can be ran concurrently. Job status can be viewed by issuing an HTTP GET on "/status", which returns a JSON-encoded array of in-flight job IDs. 
 
 A simple web interface to submit and view job status is also available by browsing to the specified ingester port.
 
@@ -1877,7 +1877,7 @@ primitives:
 as demonstrated above.
 
 Primitives can be combined with and/&& and with or/||, which have equal
-precendence and evaluate left-to-right.  Parens can also be used to group.
+precedence and evaluate left-to-right.  Parens can also be used to group.
 
     (udp and port 514) or (tcp and port 8080)
 
@@ -1986,7 +1986,7 @@ If you're using the Gravwell Debian repository, installation is just a single ap
 apt-get install gravwell-federator
 ```
 
-Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the federator:
+Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the Federator:
 
 ```
 root@gravserver ~ # bash gravwell_federator_installer.sh
@@ -2033,7 +2033,7 @@ Common configuration errors for the Federator include:
 * Incorrect Ingest-Secret in the Global configuration
 * Incorrect Backend-Target specification(s)
 * Invalid or already-taken Bind specifications
-* Enforcing certification validation when upstream indexers or federators do not have certificates signed by a trusted certificate authority (see the `Insecure-Skip-TLS-Verify` option)
+* Enforcing certification validation when upstream indexers or Federators do not have certificates signed by a trusted certificate authority (see the `Insecure-Skip-TLS-Verify` option)
 * Mismatched Ingest-Secret for downstream ingesters
 
 ## Ingest API
@@ -2046,4 +2046,4 @@ The Gravwell ingest API and core ingesters are fully open source under the BSD 2
 
 A very basic ingester example (less than 100 lines of code) that watches a file and sends any lines written to it up to a Gravwell cluster [can be seen here](https://www.godoc.org/github.com/gravwell/ingest#example-package)
 
-Keep checking back with the Gravwell Github page, as the team is continually improving the ingest API and porting it to additional languages. Community development is fully supported, so if you have a merge request, language port, or a great new ingester that you have open sourced, let Gravwell know!  The Gravwell team would love to feature your hard work in the ingestor highlight series.
+Keep checking back with the Gravwell GitHub page, as the team is continually improving the ingest API and porting it to additional languages. Community development is fully supported, so if you have a merge request, language port, or a great new ingester that you have open sourced, let Gravwell know!  The Gravwell team would love to feature your hard work in the ingester highlight series.
