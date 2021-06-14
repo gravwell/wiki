@@ -49,7 +49,7 @@ Web-Store-Path=/opt/gravwell/etc/webstore.db
 
 [Default-Well]
 	Location=/opt/gravwell/storage/default/
-	Accelerator-Name=fulltext #fulltext is the most resilent to varying data types
+	Accelerator-Name=fulltext #fulltext is the most resilient to varying data types
 	Accelerator-Engine-Override=bloom #The bloom engine is effective and fast with minimal disk overhead
 	Disable-Compression=true
 
@@ -58,7 +58,7 @@ Web-Store-Path=/opt/gravwell/etc/webstore.db
 	Tags=syslog
 	Tags=kernel
 	Tags=dmesg
-	Accelerator-Name=fulltext #fulltext is the most resilent to varying data types
+	Accelerator-Name=fulltext #fulltext is the most resilient to varying data types
 	Accelerator-Args="-ignoreTS" #tell the fulltext accelerator to not index timestamps, syslog entries are easy to ID
 ```
 
@@ -348,7 +348,7 @@ Description:        The Saved-Store parameter specifies where saved searches wil
 Applies to:        Indexer and Webserver
 Default Value:        `2`
 Example:        `Search-Pipeline-Buffer-Size=8`
-Description:        The Search-Pipeline-Buffer-Size specifies how many blocks can be in transit between each module during a search.  Larger sizes allow for better buffering and potentially higher throughput searches at the expense of resident memory usage.  Indexers are more sensitive to the pipeline size, but also use a shared memory technique whereby the system can evict and reinstantiate memory at will; the webserver typically keeps all entries resident when moving through the pipeline and relies on condensing modules to reduce the memory load.  If your system uses higher latency storage systems like spinning disks, it can be advantageous to increase this buffer size.
+Description:        The Search-Pipeline-Buffer-Size specifies how many blocks can be in transit between each module during a search.  Larger sizes allow for better buffering and potentially higher throughput searches at the expense of resident memory usage.  Indexers are more sensitive to the pipeline size, but also use a shared memory technique whereby the system can evict and re-instantiate memory at will; the webserver typically keeps all entries resident when moving through the pipeline and relies on condensing modules to reduce the memory load.  If your system uses higher latency storage systems like spinning disks, it can be advantageous to increase this buffer size.
 Increasing this parameter may make searches perform better, but it will directly impact the number of running searches the system can handle at once!  If you know you are storing extremely large entries like video frames, PE executables, or audio files you may need to reduce the buffer size to limit resident memory usage. If you see your host kernel invoking the Out Of Memory (OOM) firing and killing the Gravwell process, this is the first knob to turn.
 
 **Search-Relay-Buffer-Size**
@@ -932,7 +932,7 @@ Description:	Defines the SAML attribute which will contain the user's email addr
 **Groups-Attribute**
 Default Value:	"http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"
 Example:		`Groups-Attribute="groups"`
-Description:	Defines the SAML attribute which contain's the list of groups to which the user belongs. You will typically have to explicitly configure the SSO provider to send the group list.
+Description:	Defines the SAML attribute which contains the list of groups to which the user belongs. You will typically have to explicitly configure the SSO provider to send the group list.
 
 **Group-Mapping**
 Default Value:	

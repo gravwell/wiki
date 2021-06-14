@@ -274,7 +274,7 @@ NOTE: Make sure you understand your data before enabling the `-acceptTS` and `-a
 
 ### Example Well Configuration
 
-The following well configuraiton performs fulltext acceleration using the `index` engine.  We are attempting to identify and ignore timestamps, UUIDs, and require that all tokens be at least 2 bytes in length.
+The following well configuration performs fulltext acceleration using the `index` engine.  We are attempting to identify and ignore timestamps, UUIDs, and require that all tokens be at least 2 bytes in length.
 
 ```
 [Default-Well]
@@ -299,7 +299,7 @@ The JSON accelerator module is specified using the accelerator name "json" and u
 
 ## Syslog
 
-The syslog accelerator is designed to operate on conformant RFC5424 syslog messages.  See the [syslog search module](#!search/syslog/syslog.md) section for more information on field extraction.
+The syslog accelerator is designed to operate on conforming RFC5424 syslog messages.  See the [syslog search module](#!search/syslog/syslog.md) section for more information on field extraction.
 
 ### Example Well Configuration
 
@@ -327,7 +327,7 @@ The CEF accelerator is designed to operate on CEF log messages and is just as fl
 
 ## Fields
 
-The fields accelerator can operate on any delimited data format, whether it be CSV, TSV, or some other delimiter.  The fields accelerator allows you to specify the delimiter the same way as the search module.  See the [fields search module](#!search/fields/fields.md) secion for more information on field extraction.
+The fields accelerator can operate on any delimited data format, whether it be CSV, TSV, or some other delimiter.  The fields accelerator allows you to specify the delimiter the same way as the search module.  See the [fields search module](#!search/fields/fields.md) section for more information on field extraction.
 
 ### Example Well Configuration
 
@@ -343,7 +343,7 @@ This configuration extracts four fields from a comma-separated entry. Note the u
 
 ## CSV
 
-The CSV accelerator is designed to operate on comma-separated value data, automatically removing surrounding whitespace and double quotes from data.  See the [CSV search module](#!search/csv/csv.md) section for more informaton on column extraction.
+The CSV accelerator is designed to operate on comma-separated value data, automatically removing surrounding whitespace and double quotes from data.  See the [CSV search module](#!search/csv/csv.md) section for more information on column extraction.
 
 ### Example Well Configuration
 
@@ -473,7 +473,7 @@ tag=app src dead::beef | fields -d "," [1]=="security" [2]="process" [5]="domain
 
 ## Acceleration Performance and Benchmarking
 
-To understand the benefits and drawbacks of acceleration it is best to see how it impacts storage use, ingest performance, and query performance.  We will use some apache combined access logs that are generated using a generator available on [github](https://github.com/kiritbasu/Fake-Apache-Log-Generator).  Our dataset is 10 million appache combined access logs that are spread out over approximately 24 hours; the total data is 2.1GB.  We will define 4 wells with 4 different configurations.  We will be taking a fairly naive approach to indexing this data, as there are many parameters that don't make a lot of sense to index on, such as the number of returned bytes.
+To understand the benefits and drawbacks of acceleration it is best to see how it impacts storage use, ingest performance, and query performance.  We will use some apache combined access logs that are generated using a generator available on [github](https://github.com/kiritbasu/Fake-Apache-Log-Generator).  Our dataset is 10 million Apache combined access logs that are spread out over approximately 24 hours; the total data is 2.1GB.  We will define 4 wells with 4 different configurations.  We will be taking a fairly naive approach to indexing this data, as there are many parameters that don't make a lot of sense to index on, such as the number of returned bytes.
 
 
 
@@ -531,7 +531,7 @@ These tests were conducted using Gravwell version `3.1.5`
 
 ### Ingest Performance
 
-For ingest we will use the singleFile ingester.  The singleFile ingester is designed to ingest a single newline delimited file, deriving timestamps as it goes.  Because the ingester is deriving timestamps, it requires some CPU resources.  The singleFile ingester is available on our [github page](https://github.com/gravwell/ingesters/). The exact invocation of the singleFile ingester is:
+For ingest we will use the singleFile ingester.  The singleFile ingester is designed to ingest a single newline delimited file, deriving timestamps as it goes.  Because the ingester is deriving timestamps, it requires some CPU resources.  The singleFile ingester is available on our [GitHub page](https://github.com/gravwell/ingesters/). The exact invocation of the singleFile ingester is:
 
 ```
 ./singleFile -i apache_fake_access_10M.log -clear-conns 172.17.0.3 -block-size 1024 -timeout=10 -tag-name=fulltext
@@ -544,11 +544,11 @@ For ingest we will use the singleFile ingester.  The singleFile ingester is desi
 | regexindex | 57.58  KE/s        | 12.11 MB/s |
 | fulltext   | 26.37  KE/s        |  5.55 MB/s |
 
-We can see from the ingest performance that the fulltext acceleration system dramtically reduces the ingest performance.  While 5.55MB/s seems like poor ingest performance, it is worth mentioning that this is still about 480GB of data and 2.3 billion entries per day.
+We can see from the ingest performance that the fulltext acceleration system dramatically reduces the ingest performance.  While 5.55MB/s seems like poor ingest performance, it is worth mentioning that this is still about 480GB of data and 2.3 billion entries per day.
 
 ### Storage Usage
 
-Outside of ingest performance and some additional memory requirements, the main penalty to enabling acceleration is usage.  We can see that the index engine for each extraction methdology consumed over 50% more storage, while the bloom engine consumed an additional 4%.  The storage usage is very dependent on data consumed, but on average the indexing system will consume significantly more storage.
+Outside of ingest performance and some additional memory requirements, the main penalty to enabling acceleration is usage.  We can see that the index engine for each extraction methodology consumed over 50% more storage, while the bloom engine consumed an additional 4%.  The storage usage is very dependent on data consumed, but on average the indexing system will consume significantly more storage.
 
 |  Well      | Used Storage | Diff From Raw |
 |------------|--------------|---------------|
@@ -559,7 +559,7 @@ Outside of ingest performance and some additional memory requirements, the main 
 
 ### Query Performance
 
-To demonstrate the differences in query performance we will execute two queries which can be categorized as sparse and dense.  The sparse query will look for a specific IP in the data set, returning just a handfull of entries.  The dense query will look for a specific url that is reasonably common in the data set.  To simplify the queries we will install an ax module for the regexindex and regexbloom tags that matches the acceleration system.  The dense query will retrieve roughly 12% of the entries in the data set, while the sparse query will retrieve approximately 0.01%
+To demonstrate the differences in query performance we will execute two queries which can be categorized as sparse and dense.  The sparse query will look for a specific IP in the data set, returning just a handful of entries.  The dense query will look for a specific url that is reasonably common in the data set.  To simplify the queries we will install an ax module for the regexindex and regexbloom tags that matches the acceleration system.  The dense query will retrieve roughly 12% of the entries in the data set, while the sparse query will retrieve approximately 0.01%
 
 The sparse and dense queries are:
 
@@ -589,9 +589,9 @@ Note: The regex search module/autoextractor is not fully compatible with the ful
 
 #### Fulltext
 
-The above benchmarks make it very apparent that the fulltext accelerator has significant ingest and storage penalties and the example queries don't appear to justify those expenses.  If your dat is entirely token based such as tab delimited, csv, or json and every token is entirely descreet (single words, numbers, IPs, values, etc...) the fulltext accelerator doesn't make much sense.  However, if your data has complex components the fulltext accelerator can do things the other accelerators cannot.  We have been using Apache combined access logs, lets look at a query that allows the fulltext accelerator to really shine.
+The above benchmarks make it very apparent that the fulltext accelerator has significant ingest and storage penalties and the example queries don't appear to justify those expenses.  If your data is entirely token based such as tab delimited, csv, or json and every token is entirely discreet (single words, numbers, IPs, values, etc...) the fulltext accelerator doesn't make much sense.  However, if your data has complex components the fulltext accelerator can do things the other accelerators cannot.  We have been using Apache combined access logs, lets look at a query that allows the fulltext accelerator to really shine.
 
-We are going to look at subcomponents of the URL and get a chart of users that are browsing our the `/apps` subdirectory using a PowerPC Macintosh computer.  The regular expressions in the above examples index on full fields within the Apache log.  They cannot drill down and use parts of those fields for acceleration, fulltext can.
+We are going to look at sub-components of the URL and get a chart of users that are browsing our the `/apps` subdirectory using a PowerPC Macintosh computer.  The regular expressions in the above examples index on full fields within the Apache log.  They cannot drill down and use parts of those fields for acceleration, fulltext can.
 
 We will optimized the query for both the fulltext indexer and the others so that we can be fair, however both queries will work on either of the datasets.
 

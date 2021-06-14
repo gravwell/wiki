@@ -1,6 +1,6 @@
 # Environment Variables
 
-The indexer, webserver, and ingester components support configuring some parameters via environment variables rather than config files. This helps make more generic configuration files for bigger deployments. Configuration variables that can contain multiple directives are configured in environment variables using a comma separated list. For instance, to specify the ingest secret when launching the federator:
+The indexer, webserver, and ingester components support configuring some parameters via environment variables rather than config files. This helps make more generic configuration files for bigger deployments. Configuration variables that can contain multiple directives are configured in environment variables using a comma separated list. For instance, to specify the ingest secret when launching the Federator:
 
 ```
 GRAVWELL_INGEST_SECRET=MyIngestSecret /opt/gravwell/bin/gravwell_federator
