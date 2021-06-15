@@ -210,7 +210,7 @@ A user can get all dashboards to which they have access (via ownership or group)
 ```
 
 ### Getting all dashboards owned by a user
-To get dashboards explictly owned by a user, issue a GET request on `/api/users/{uid}/dashboards`, replacing {uid} with the desired user ID. The webserver will return ONLY those dashboards specifically owned by that UID.  This WILL NOT include dashboards the user has access to through group memberships.
+To get dashboards explicitly owned by a user, issue a GET request on `/api/users/{uid}/dashboards`, replacing {uid} with the desired user ID. The webserver will return ONLY those dashboards specifically owned by that UID.  This WILL NOT include dashboards the user has access to through group memberships.
 
 ```
 WEB GET /api/users/1/dashboards:

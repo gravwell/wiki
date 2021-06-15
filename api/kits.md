@@ -126,7 +126,7 @@ This kit can be downloaded by doing a GET on `/api/kits/build/<uuid>`; given the
 
 ### Dependencies
 
-A kit may depend on other kits. List these dependencies in the Dependencies array using the following sturcture:
+A kit may depend on other kits. List these dependencies in the Dependencies array using the following structure:
 
 ```
 {
@@ -410,7 +410,7 @@ See the listing at the end of this page for a list of what "AdditionalInfo" fiel
 
 ## Kit Info
 
-A GET request on `/api/kits/<GUID>` where `<GUID>` is a guid of a specifically installed or staged kit will provide info about that specific kit.
+A GET request on `/api/kits/<GUID>` where `<GUID>` is a GUID of a specifically installed or staged kit will provide info about that specific kit.
 
 For example, a GET request on `/api/kits/549c0805-a693-40bd-abb5-bfb29fc98ef1` will yield:
 
@@ -732,7 +732,7 @@ For example if we issue a `GET` on `/api/kits/remote/c2870b48-ff31-4550-bd58-7b2
 
 ### Pulling kit assets from the remote kitserver
 
-Kits also contain assets that can be used to display images, markdown, licenses, and additional files that help explore the purpose of the kit prior to actually downloading/installing a kit.  These assets can be retrieved from the remote system by executing GET requests on `api/kits/remote/<guid>/<asset>`.  For example, if we wanted to pull back the asset of Type "image" and Legend "TEAM RAMROD!" for the kit with the guid `c2870b48-ff31-4550-bd58-7b2c1c10eeb3` you would issue a GET on `/api/kits/remote/c2870b48-ff31-4550-bd58-7b2c1c10eeb3/cover.jpg`.
+Kits also contain assets that can be used to display images, markdown, licenses, and additional files that help explore the purpose of the kit prior to actually downloading/installing a kit.  These assets can be retrieved from the remote system by executing GET requests on `api/kits/remote/<guid>/<asset>`.  For example, if we wanted to pull back the asset of Type "image" and Legend "TEAM RAMROD!" for the kit with the GUID `c2870b48-ff31-4550-bd58-7b2c1c10eeb3` you would issue a GET on `/api/kits/remote/c2870b48-ff31-4550-bd58-7b2c1c10eeb3/cover.jpg`.
 
 
 ## Kit item "Additional Info" fields

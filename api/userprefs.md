@@ -1,5 +1,5 @@
-## user preferences
-user preferences API is used to store GUI preferences to persist across logins and between devices.
+## User Preferences
+The user preferences API is used to store GUI preferences to persist across logins and between devices.
 
 GET the /api/users/{id}/preferences and it will return a chunk of JSON.  Admins can request any users preferences, users can ONLY request their own sessions. If no preferences exist, return null.
 
@@ -12,7 +12,7 @@ GET and PUT are the only relevant methods. Each user should inherently have one 
 DELETE on /api/users/{id}/preferences will delete the preferences (if admin or canning your own)
 
 
-example returned JSON on a GET:
+Example returned JSON on a GET:
 ```json
 {
      "foo": "bar",
@@ -62,16 +62,16 @@ WEB REQ PUT /api/users/5/preferences:
 ```
 ### Pushing to non existent user
 
-will get a 404 not found
+Will get a 404 not found
 
-### Pushing and pulling someone elses as non admin
+### Pushing and pulling someone else's preferences as non-admin
 
-will get a 403 forbidden
+Will get a 403 forbidden
 
 ### Deleting our preferences
 ```
 WEB REQ DELETE /api/users/5/preferences:
 ```
-### Attempting to delete someone elses
+### Attempting to delete someone else's preferences as non-admin
 
-will get a 403 forbidden
+Will get a 403 forbidden
