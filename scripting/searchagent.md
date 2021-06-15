@@ -1,8 +1,8 @@
 # The Search Agent
 
-The aearch agent is the component which runs [automated searches](scheduledsearch.md). The aearch agent is included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the aearch agent. The aearch agent is installed automatically by the Gravwell Debian package.
+The search agent is the component which runs [automated searches](scheduledsearch.md). The search agent is included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the search agent. The search agent is installed automatically by the Gravwell Debian package.
 
-You can verify the aearch agent is running with the following command:
+You can verify the search agent is running with the following command:
 
 ```
 $ ps aux | grep gravwell_searchagent
@@ -10,7 +10,7 @@ $ ps aux | grep gravwell_searchagent
 
 ## Disabling the search agent
 
-The aearch agent is installed by default but can be disabled if desired by running the following:
+The search agent is installed by default but can be disabled if desired by running the following:
 
 ```
 systemctl stop gravwell_searchagent.service
@@ -19,7 +19,7 @@ systemctl disable gravwell_searchagent.service
 
 ## Configuring the search agent
 
-The aearch agent is configured in `/opt/gravwell/etc/searchagent.conf`. An example configuration is shown below:
+The search agent is configured in `/opt/gravwell/etc/searchagent.conf`. An example configuration is shown below:
 
 ```
 [global]

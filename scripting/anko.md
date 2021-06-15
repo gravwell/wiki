@@ -2,7 +2,7 @@
 
 As introduced in [the search modules documentation](#!search/searchmodules.md#Anko), Gravwell's anko module is a general-purpose scripting tool within the search pipeline. It allows extremely flexible manipulations of search entries, at the cost of complexity for the script creator. Once a script is created, though, it can be easily shared with other users.
 
-See the generic description of the scripting languaged used in [the Anko scripting language documentation](scripting.md) for more details about the language itself.
+See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting.md) for more details about the language itself.
 
 ### Disabling network functions in anko scripts
 
@@ -247,7 +247,7 @@ For security reasons, the anko module does not allow access to *all* packages in
 * [fmt](https://golang.org/pkg/fmt): printing & formatting strings
 * [github.com/google/uuid](https://github.com/google/uuid): generate and inspect UUIDs
 * [github.com/gravwell/ipexist](https://github.com/gravwell/ipexist): Gravwell IP helper functions
-* [github.com/RackSec/srslog](https://github.com/RackSec/srslog): alternate syslog package to golang's standard library
+* [github.com/RackSec/srslog](https://github.com/RackSec/srslog): alternate syslog package to Go's standard library
 * [io](https://golang.org/pkg/io): basic I/O primitives
 * [io/util](https://golang.org/pkg/io/util): just the `ioutil.ReadAll` function (see below)
 * [math](https://golang.org/pkg/math): mathematical functions
@@ -349,7 +349,7 @@ This module is only available if `Disable-Network-Script-Functions` is set to `f
 
 ### encoding/xml
 
-`encoding/exml` exports a subset of initializers, wrappers, and encoding options:
+`encoding/xml` exports a subset of initializers, wrappers, and encoding options:
 
 - `xml.Escape`
 - `xml.EscapeText`

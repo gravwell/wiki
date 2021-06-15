@@ -4,12 +4,12 @@ The File Follower ingester is the best way to ingest files on the local filesyst
 
 The most common use case for File Follower is monitoring a directory containing log files which are actively being updated, such as /var/log. It intelligently handles log rotation, detecting when `logfile` has been moved to `logfile.1` and so on. It can be configured to ingest files matching a specific pattern in a directory, optionally recursively descending into the subdirectories of that top-level directory.
 
-Attention: On RHEL/Centos, `/var/log` belongs to the "root" group, not "adm" as we assume. File Follower runs in the adm group by default, so if you want it to read `/var/log` you need to `chgrp -R adm /var/log` OR change the group in the systemd unit file.
+Attention: On RHEL/CentOS, `/var/log` belongs to the "root" group, not "adm" as we assume. File Follower runs in the adm group by default, so if you want it to read `/var/log` you need to `chgrp -R adm /var/log` OR change the group in the SystemD unit file.
 
 
 ## Basic Configuration
 
-The File Follower configuration file is by default located in `/opt/gravwell/etc/file_follow.conf` on Linux and `C:\Program Files\gravwel\file_follow.cfg` on Windows.
+The File Follower configuration file is by default located in `/opt/gravwell/etc/file_follow.conf` on Linux and `C:\Program Files\gravwell\file_follow.cfg` on Windows.
 
 The File Follower ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, File Follower supports multiple upstream indexers, TLS, cleartext, and named pipe connections, and local logging.
 
@@ -129,7 +129,7 @@ File-Filter="foo.log"
 Recursive=false
 ```
 
-By setting Recusive=true, the configuration will ingest **any** file named foo.log at any directory depth under `/tmp/incoming`.
+By setting Recursive=true, the configuration will ingest **any** file named foo.log at any directory depth under `/tmp/incoming`.
 
 ### Tag-Name
 

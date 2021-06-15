@@ -26,7 +26,7 @@ Testing desires for this sprint (in order of priority)
 
 ## Installation and Upgrade
 
-We're very excited to say this build is now available for your use and testing. We have created a new ubuntu repository and Docker images. Switching from Stable to Beta is done by modifying your apt source respository (or our quick start instructions if installing from scratch).
+We're very excited to say this build is now available for your use and testing. We have created a new Ubuntu repository and Docker images. Switching from Stable to Beta is done by modifying your apt source repository (or our quick start instructions if installing from scratch).
 
 ### Upgrading:
 Edit your `/etc/apt/sources.list.d/gravwell.list` file and substitute `https://update.gravwell.io/debian/` for `https://update.gravwell.io/debianbeta/`. Then `apt update` and `apt upgrade` and you should be on the new release.
@@ -43,7 +43,7 @@ sudo apt-get install gravwell
 
 ### Docker
 
-The Docker images is available at [gravwell/beta](https://hub.docker.com/r/gravwell/beta). You can substitue `gravwell/gravwell` with `gravwell/beta` in any of the docker documentation and it should "just work."
+The Docker images is available at [gravwell/beta](https://hub.docker.com/r/gravwell/beta). You can substitute `gravwell/gravwell` with `gravwell/beta` in any of the docker documentation and it should "just work."
 
 
 
