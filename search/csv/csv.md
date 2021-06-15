@@ -1,6 +1,6 @@
 ## CSV
 
-The csv module is designed to extract and filter data from comma seperated values.  The csv module can be thought of as an enhanced fields module that is designed to accomodate some additional rules related to csv values such as the ability to quote columns that may contain commas, or escape commas, or surround columns with white space.
+The csv module is designed to extract and filter data from comma separated values.  The csv module can be thought of as an enhanced fields module that is designed to accommodate some additional rules related to csv values such as the ability to quote columns that may contain commas, or escape commas, or surround columns with white space.
 
 Because specifying numeric field offsets can be cumbersome when used frequently, the [namedfields](#!search/namedfields/namedfields.md) module uses user-uploaded resources to assign friendly names to field indexes.
 
@@ -17,7 +17,7 @@ Attention: To specify filter values and or extraction names which contain specia
 ### Supported Options
 
 * `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
-* `-s` : The “-s” option speciies that the csv module operate in a strict mode.  If any column specification cannot be met, the entry is dropped.  For example if you want the 0th, 1st, and 2nd field but an entry only has 2 columns the strict flag will cause the entry to be dropped.
+* `-s` : The “-s” option specifies that the csv module operate in a strict mode.  If any column specification cannot be met, the entry is dropped.  For example if you want the 0th, 1st, and 2nd field but an entry only has 2 columns the strict flag will cause the entry to be dropped.
 
 ### Filtering Operators
 
@@ -51,7 +51,7 @@ The 3rd, 4th, and 5th columns contain surrounding whitespace, and the 5th column
 csv [2] [3] [4] | table 2 3 4
 ```
 
-The output would look as follows (notice the lack of quotes or surronding whitespace:
+The output would look as follows (notice the lack of quotes or surrounding whitespace:
 
 | 2 | 3 | 4 |
 |----------|------|-------------|
@@ -67,7 +67,7 @@ tag=brohttp csv [9] as url
 ```
 
 
-Extract the URL and requester field from a CSV bro http.log feed and filter for only entries where the URL contains a space and outputing the results in a table.
+Extract the URL and requester field from a CSV bro http.log feed and filter for only entries where the URL contains a space and outputting the results in a table.
 
 ```
 tag=brohttp csv [9] ~ " " as url [2] as requester | table url requester

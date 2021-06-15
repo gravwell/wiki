@@ -6,7 +6,7 @@ By default, grok passes through any entry which matches the pattern and drops an
 
 Grok is a filtering module; after specifying the desired pattern, you may also specify a list of filters to apply to the extracted fields.
 
-Note: Because some filters incorporate extremely strict and complext patterns, they can be relatively slow when processing large numbers of entries. Use modules such as [grep](#!search/grep/grep.md), [regex](#!search/regex/regex.md), and [words](#!search/words/words.md) to pre-filter as much as possible.
+Note: Because some filters incorporate extremely strict and complex patterns, they can be relatively slow when processing large numbers of entries. Use modules such as [grep](#!search/grep/grep.md), [regex](#!search/regex/regex.md), and [words](#!search/words/words.md) to pre-filter as much as possible.
 
 ## Supported Options
 
@@ -51,7 +51,7 @@ For example, let's look at two queries that compile response code counts for eac
 tag=apache grok "%{COMBINEDAPACHELOG}" | stats count by verb response | stackgraph verb response count
 ```
 
-The second query uses grok primitives to extract only the fields that are explicitely needed:
+The second query uses grok primitives to extract only the fields that are explicitly needed:
 
 ```
 tag=apache grok "] \"%{WORD:verb}\s\S+\s\S+\s%{POSINT:response}" | stats count by verb response | stackgraph verb response count

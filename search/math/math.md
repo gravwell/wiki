@@ -25,13 +25,13 @@ tag=CAN canbus ID=0x2C4 | slice uint16BE(data[0:2]) as RPM | mean RPM | chart me
 
 The count module counts instances of records. It does not conduct any arithmetic on the data within a record.
 
-Example search counting sudo commands from a linux machine:
+Example search counting sudo commands from a Linux machine:
 
 ```
 grep sudo | regex "COMMAND=(?P<command>\S+)" | count by command | chart count by command
 ```
 
-This is an example search showing how many packets were sent by a MAC address over the network (which is different than the size of each packet as shownin the sum module example):
+This is an example search showing how many packets were sent by a MAC address over the network (which is different than the size of each packet as shown in the sum module example):
 
 ```
 tag=pcap eth.SrcMAC eth.Length | sum Length by SrcMAC | chart sum by SrcMAC

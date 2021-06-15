@@ -14,7 +14,7 @@ Multiple lookup operations can be specified in a single invocation of the lookup
 lookup -r mytable A B C as foo D E F
 ```
 
-You can also extract multiple columns for each match. The following example matches the contents of enumerated value A against the values in column B; when a match is found, it extracts both columsn C and D:
+You can also extract multiple columns for each match. The following example matches the contents of enumerated value A against the values in column B; when a match is found, it extracts both columns C and D:
 
 ```
 lookup -r mytable A B (C as foo D as bar)
@@ -33,7 +33,7 @@ lookup -r mytable [A B] [A B] (C as foo D as bar)
 
 Note: When using the `-s` or `-v` flags it is legal to specify that no extractions are to take place.  This operation can be useful when performing whitelisting or blacklisting.
 
-Here is an example that ensures that enumerated values `A` and `B` exist in the columns `X` and `Y` but does not enchrich data.
+Here is an example that ensures that enumerated values `A` and `B` exist in the columns `X` and `Y` but does not enrich data.
 
 ```
 lookup -v -r mytable [A B] [X Y] ()

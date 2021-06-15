@@ -55,6 +55,6 @@ Running the exact same heatmap query, but rendered using the Globe system shows 
 
 ![](map5.png)
 
-But there is one more super nifty trick, we can add rotation so that all your bosses know you are definitely thinking in realtime about all the global threats.
+But there is one more super nifty trick, we can add rotation so that all your bosses know you are definitely thinking in real-time about all the global threats.
 
 ![](rotation.gif)
