@@ -16,8 +16,8 @@ We're preparing for the release of Gravwell 4.2.0. The primary new feature of th
 
 Testing desires for this sprint (in order of priority)
 
-* Data Explorer! Try it with as many different data sources as you can. Add filters, remove filters, try to get it into weird or confusing states.
-* Query Studio - Make sure the query editing box is usable and robust, confirm that renderers work right, and just generally bang on the tool.
+* Data Explorer! Try it with as many different data sources as you can. Add filters, remove filters, pivot into other query modes.
+* Query Studio - Make sure the query editing box is usable and robust, move between many queries and tags, check the new formatting with other renderers.
 
 ## Installation and Upgrade
 
