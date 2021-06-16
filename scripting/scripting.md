@@ -33,7 +33,7 @@ The [automation script](scriptingsearch.md) documentation provides more informat
 
 ## Anko overview
 
-Briefly, Anko is a dynamically-typed scripting language which largely resembles Go in syntax but is interpreted rather than compiled. The Anko github page provides this example to give an idea of how Anko looks and operates:
+Briefly, Anko is a dynamically-typed scripting language which largely resembles Go in syntax but is interpreted rather than compiled. The Anko GitHub page provides this example to give an idea of how Anko looks and operates:
 
 ```
 # declare function

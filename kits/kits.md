@@ -1,6 +1,6 @@
 # Kits
 
-Kits are Gravwell's way of bundling up a lot of related items (dashboards, queries, scheduled searches, autoextractors) for easy installation on other systems. A kit might contain tools for analyzing Netflow data, or for monitoring a homebrewing setup. Gravwell Inc. provides pre-built kits for common usecases, but users can also build their own kits from within the Gravwell UI.
+Kits are Gravwell's way of bundling up a lot of related items (dashboards, queries, scheduled searches, autoextractors) for easy installation on other systems. A kit might contain tools for analyzing Netflow data, or for monitoring a homebrewing setup. Gravwell Inc. provides pre-built kits for common use cases, but users can also build their own kits from within the Gravwell UI.
 
 ## What's in a Kit
 

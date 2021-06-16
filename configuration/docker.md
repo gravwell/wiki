@@ -39,7 +39,7 @@ The default Gravwell docker deployment uses the base container for all storage, 
 
 #### Indexer Persistent Storage
 
-The Gravwell indexer keeps two critical sets of data, the stored data shards and the `tags.dat` file.  Almost every other component of an indexer can be recovered without data loss, but under normal operation several directories should be bound to persistent storage.  Important data exists in the `storage`, `resources`, `log`, and `etc` directories.  Each of the directories can be mounted to individual volumes or configured in the `gravwell.conf` file to point to a single persitent storage directory.  An example `gravwell.conf` designed for docker deployment with persistent storage within docker might modify the storage paths for each of the data directories to point to alternate paths within `/opt/gravwell/persistent` rather than just `/opt/gravwell`.  Complete documentation on all `gravwell.conf` configuration parameters can be found on the [Detailed Configuration](parameters.md) page.
+The Gravwell indexer keeps two critical sets of data, the stored data shards and the `tags.dat` file.  Almost every other component of an indexer can be recovered without data loss, but under normal operation several directories should be bound to persistent storage.  Important data exists in the `storage`, `resources`, `log`, and `etc` directories.  Each of the directories can be mounted to individual volumes or configured in the `gravwell.conf` file to point to a single persistent storage directory.  An example `gravwell.conf` designed for docker deployment with persistent storage within docker might modify the storage paths for each of the data directories to point to alternate paths within `/opt/gravwell/persistent` rather than just `/opt/gravwell`.  Complete documentation on all `gravwell.conf` configuration parameters can be found on the [Detailed Configuration](parameters.md) page.
 
 #### Webserver Persistent Storage
 
@@ -109,7 +109,7 @@ Now we can configure our Netflow generators to send records to port 2055 of the 
 
 ## Customizing services
 
-The official Gravwell docker container contains a service management system that makes launching and controlling multiple services within the container very easy.  The manager controls service restarts, error reporting, and back off controls.  Gravwell has opensourced the [manager](https://github.com/gravwell/manager) application on [github](https://github.com/gravwell) under the BSD 3-Clause license.  So if you want a very small and easily configured SystemD like service manager for your docker containers, have at it.
+The official Gravwell docker container contains a service management system that makes launching and controlling multiple services within the container very easy.  The manager controls service restarts, error reporting, and back off controls.  Gravwell has open-sourced the [manager](https://github.com/gravwell/manager) application on [github](https://github.com/gravwell) under the BSD 3-Clause license.  So if you want a very small and easily configured SystemD like service manager for your docker containers, have at it.
 
 The official gravwell Docker image contains the full Gravwell stack (indexer and webserver) as well as the Simple Relay ingester.  The default manager configuration is:
 
@@ -152,7 +152,7 @@ The official gravwell Docker image contains the full Gravwell stack (indexer and
 
 This default configuration for the manager application enables the error reporting system which helps us identify and correct bugs.  If a service exits with a non-zero exit code, we get an error report.  To disable the error reporting system you can either remove the "[Error-Handler]" section or pass in the environment variable "DISABLE_ERROR_REPORTING" with a value of "TRUE".
 
-Individual services can be disabled at the time of launch by passing in an environment variable with the service name in all caps and prefixed with "DISABLE_" assined to "TRUE".
+Individual services can be disabled at the time of launch by passing in an environment variable with the service name in all caps and prefixed with "DISABLE_" assigned to "TRUE".
 
 For example, to launch the gravwell docker container without error reporting, launch with the "-e DISABLE_ERROR_REPORTING=true" option.
 
@@ -162,7 +162,7 @@ If you would like to disable the integrated SimpleRelay ingester, add "-e DISABL
 docker run --name gravwell -e GRAVWELL_INGEST_SECRET=MyIngestSecret -e DISABLE_SIMPLE_RELAY=TRUE -e DISABLE_WEBSERVER=TRUE -e DISABLE_SEARCHAGENT=TRUE gravwell/gravwell:latest
 ```
 
-For more information about the service manager visit the [github page](https://github.com/gravwell/manager).
+For more information about the service manager visit the [GitHub page](https://github.com/gravwell/manager).
 
 ### Customizing ingester containers
 

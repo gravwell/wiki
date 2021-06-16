@@ -13,7 +13,7 @@ For full documentation on the configuration of AX extractors, see the [autoextra
 
 ### Filtering
 
-The ax module supports inline filtering on extracted values using the same filtering semantics as the underlying procesessor.  Each processor may support a specific subset of filter operators.
+The ax module supports inline filtering on extracted values using the same filtering semantics as the underlying processor.  Each processor may support a specific subset of filter operators.
 
 For example the CSV, fields, and regex processors support limited equality filters (== != ~ !~) where the slice processor supports specific filters depending on the type cast.
 

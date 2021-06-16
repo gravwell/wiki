@@ -10,7 +10,7 @@ The image above shows an example Overwatch configuration. Customers A and B each
 
 ## Security notes
 
-We recommend the following when running multiple Gravwell clusters for external clients, expecially when using Overwatch:
+We recommend the following when running multiple Gravwell clusters for external clients, especially when using Overwatch:
 
 * Clients should not be allowed to SSH into their webserver or indexer systems. This could allow them to break their configurations.
 * For extra security, *client* Gravwell clusters should not be able to route to each other. The Overwatch server must be allowed to route to each cluster, but they should not be allowed to communicate with each other.
@@ -33,9 +33,9 @@ Those are the only essential configurations for the Overwatch webserver. You may
 
 ### Configuring Multiple Overwatch Servers
 
-It may be advantagous to configure multiple overwatch systems that are tied to either all or some subset of client indexers.  MSSPs may want the ability to segment their customer base such that specific analysts operate on some subset of clients.  Enterprises may wish to provide fully independent overwatch webservers to multiple organizations.  Because overwatch systems operate on the domain configuration parameter, multiple overwatch webservers can be configured on multiple domains.
+It may be advantageous to configure multiple overwatch systems that are tied to either all or some subset of client indexers.  MSSPs may want the ability to segment their customer base such that specific analysts operate on some subset of clients.  Enterprises may wish to provide fully independent overwatch webservers to multiple organizations.  Because overwatch systems operate on the domain configuration parameter, multiple overwatch webservers can be configured on multiple domains.
 
-Warning: Multiple Overwatch webservers *MUST* be on seperate domains unless they are configured to operate in distributed mode. If multiple Overwatch webservers are configured on the same domain, resources will be improperly mananged on the indexers, leading to query errors.
+Warning: Multiple Overwatch webservers *MUST* be on separate domains unless they are configured to operate in distributed mode. If multiple Overwatch webservers are configured on the same domain, resources will be improperly managed on the indexers, leading to query errors.
 
 ![](OverwatchMutiple.png)
 

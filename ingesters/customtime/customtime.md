@@ -72,11 +72,11 @@ The `Format` component uses the [Go standard time format specification](https://
 
 Time formats can omit the date component.  When the custom format system identifies that a custom time format does not include a date component, it will automatically update the extracted timestamp's date to `today`.
 
-### Timezones
+### Time Zones
 
 All custom time formats will attempt to operate in UTC unless otherwise indicated using the `Format` directive.  This means that if you have a time format without a date component you must pay special attention to the timezone.  If an application emits a timestamp of `12:00:00` in MST and there is no timezone component or timezone overrides, timegrinder will interpret the timestamp as UTC and the extracted date will be 7 hours in the past.
 
-If your timestamp does contain a timezone you must include that in your `Format` directive so that the timegrinder system knows to interpret the timstamp in the correct time zone.  For example here is the previously described "foo" custom format but with a timezone component:
+If your timestamp does contain a timezone you must include that in your `Format` directive so that the timegrinder system knows to interpret the timestamp in the correct time zone.  For example here is the previously described "foo" custom format but with a timezone component:
 
 ```
 [TimeFormat "foo"]
@@ -84,7 +84,7 @@ If your timestamp does contain a timezone you must include that in your `Format`
 	Regex=`\d{4}_\d{1,2}_\d{1,2}_\d{1,2}_\d{1,2}_\d{1,2}_\S+`
 ```
 
-This example will properly handle timestamps in their respective timezones and apply the correct timestamp on extraction.
+This example will properly handle timestamps in their respective time zones and apply the correct timestamp on extraction.
 
 ## Examples
 

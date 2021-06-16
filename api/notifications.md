@@ -3,7 +3,7 @@ A notification is a message to be displayed to one or more users. It contains a 
 
 A notification can also include a Type. The type is used so that something can continually send notifications without duplicating it. For example, the webserver can keep adding the notification `Indexer X is down` with Type==0xDEADBEEF.  The notification engine will just keep updating the old notification, since the type is the same.
 
-Notifications can come in two forms, targeted and broadcast.  Broadcast notifications go to everyone, targeted notifications only go to users with the appropriate UID or GID.  Broadcast notificatons inherently have no UID/GID (they will always be zero).
+Notifications can come in two forms, targeted and broadcast.  Broadcast notifications go to everyone, targeted notifications only go to users with the appropriate UID or GID.  Broadcast notifications inherently have no UID/GID (they will always be zero).
 
 Note: Only admin users can create notifications visible to other users. Regular users can only create notifications visible to themselves.
 

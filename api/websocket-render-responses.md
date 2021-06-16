@@ -99,7 +99,7 @@ The table module returns the entries in a field called "Entries", containing a s
 
 ## Gauge module responses
 
-The gauge module returns entries as an array of structures containing the gauge's name, the magnitude, and (optionally) the minumum and maximum values defined for this gauge:
+The gauge module returns entries as an array of structures containing the gauge's name, the magnitude, and (optionally) the minimum and maximum values defined for this gauge:
 
 ```
 {
@@ -256,7 +256,7 @@ The chart module returns entries in a field called "Entries", containing a struc
 }
 ```
 
-## Force Directed Graph reponses
+## Force Directed Graph responses
 
 The fdg module's responses are the most complex. There are three sections to the data returned: groups, links, and nodes.
 

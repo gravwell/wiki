@@ -1,6 +1,6 @@
 ## maclookup 
 
-The maclookup module uses a custom MAC prefix databse to extract Manufacturer, Address, and Country information about the owner of a block of MAC addresses. 
+The maclookup module uses a custom MAC prefix database to extract Manufacturer, Address, and Country information about the owner of a block of MAC addresses. 
 
 ### Setting Up Databases
 

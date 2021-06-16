@@ -1,6 +1,6 @@
 # IPFIX and Netflow V9
 
-The ipfix processor is designed to extract and filter raw IPFIX and Netflow V9 data frames, allowing you to quickly identfy network flows, filter on ports, or generally monitor the behavior of aggregate flows.  Gravwell has a native IPFIX + Netflow ingester which is open source and avialable at https://github.com/gravwell/ingesters or as an installer in the [quickstart section](/#!quickstart/downloads.md).
+The ipfix processor is designed to extract and filter raw IPFIX and Netflow V9 data frames, allowing you to quickly identify network flows, filter on ports, or generally monitor the behavior of aggregate flows.  Gravwell has a native IPFIX + Netflow ingester which is open source and available at https://github.com/gravwell/ingesters or as an installer in the [quickstart section](/#!quickstart/downloads.md).
 
 ## A Note About Templates
 
@@ -8,7 +8,7 @@ Gravwell is flexible with regards to entry order. You can run queries from oldes
 
 Unfortunately, this flexibility does not interact well with IPFIX and Netflow V9. These protocols define *templates*, which describe the format of data records. Templates are transmitted infrequently; any given IPFIX message is unlikely to contain a template record, but it will have data records referring to previously-defined templates. Without access to the appropriate template, a data record is meaningless. This means that parsing IPFIX messages from newest to oldest (or sorted in some other fashion) cannot work properly **unless** additional steps are taken.
 
-We determined that the most straight-forward course of action was to have the *ingester* repack every incoming IPFIX/Netflow V9 message with the appropriate templates for its data records. This increases the size of each messsage stored, but because messages typically include tens of data records, the increase is not large. It also means that every single message (entry) stands completely on its own and does not depend on any previous messages for parsing.
+We determined that the most straight-forward course of action was to have the *ingester* repack every incoming IPFIX/Netflow V9 message with the appropriate templates for its data records. This increases the size of each message stored, but because messages typically include tens of data records, the increase is not large. It also means that every single message (entry) stands completely on its own and does not depend on any previous messages for parsing.
 
 ## Supported Options
 

@@ -2,7 +2,7 @@
 
 The chart renderer is used display aggregate results such as trends, quantities, counts, and other numerical data. Charting will plot an enumerated value with an optional “by” parameter. For example, if there are counts associated with names, `chart count by name` will chart a line for each name showing the counts over time.
 
-The `chart` render module is a condensing module that collapses and recalculates data in order to show an accurate representation of data for a given timespan.  As you dig into data and zoom in, the chart renderer is constantly recondensing the results of a search without rerunning the query.
+The `chart` render module is a condensing module that collapses and recalculates data in order to show an accurate representation of data for a given timespan.  As you dig into data and zoom in, the chart renderer is constantly re-condensing the results of a search without rerunning the query.
 ## Sample Query
 
 The following query generates a chart showing which usernames most commonly fail ssh authentication; due to online brute-forcing attacks, we can expect "root" to be the most common.
@@ -28,13 +28,13 @@ tag=pcap packet ipv4.IP ~ 10.10.10.0/24 tcp.Port | length | stats sum(length) by
 ![Chart with multiple keys](multikey.png)
 
 
-Notice that chart generated a legend with the IP and Port concatinated, the key for each sum is the intersection of the IP and Port.
+Notice that chart generated a legend with the IP and Port concatenated, the key for each sum is the intersection of the IP and Port.
 
 ## Multiple Chart Categories
 
 The `chart` renderer can also plot multiple independent data sources.  We might want to plot the min, max, and mean of a stream of data.  Chart allows for specifying multiple groups of data.
 
-The following query generates the `min`, `max`, and `mean` of packet lengths over time and diplays the results on a single chart:
+The following query generates the `min`, `max`, and `mean` of packet lengths over time and displays the results on a single chart:
 
 ```
 tag=pcap packet ipv4.IP ~ 10.10.10.0/24 tcp.Port | length | stats min(length) max(length) mean(length)| chart min max mean
@@ -63,7 +63,7 @@ tag=pcap packet ipv4.IP ~ 10.10.10.0/24 tcp.Port | length | stats mean(length) b
 
 ![Chart with complex keying](complexkeys1.png)
 
-Chart can handle even more complex category and key interactions, here is a query that plogs the mean of packet lengths by IP, and the max packet for each IP Port, and the standard deviation of all packet lengths.
+Chart can handle even more complex category and key interactions, here is a query that plots the mean of packet lengths by IP, and the max packet for each IP Port, and the standard deviation of all packet lengths.
 
 Note: Notice that we provide all the categories and a single set of keys that covers all keys used for the categories.  Chart will figure out which keys go to which category and *do the right thing*.
 

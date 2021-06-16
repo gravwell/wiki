@@ -2,7 +2,7 @@
 
 The source module is used for filtering entries based on source, which is a universal metadata item that all entries have.  The module is useful for looking at entries emanating from a specific location.  Src can filter on IP and subnet.
 
-The source module can translate/handle values specified as IPs, subnets, integers, base 16 integers, and 16 byte hashes.  The entry source field is meant to be extremely flexable.
+The source module can translate/handle values specified as IPs, subnets, integers, base 16 integers, and 16 byte hashes.  The entry source field is meant to be extremely flexible.
 
 Note: The source field can be used by the acceleration/indexing system to help speed up queries.  However, only direct equality matches invoke the acceleration system.  Filtering by subnet or using negation does not engage the accelerator.
 

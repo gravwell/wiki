@@ -30,7 +30,7 @@ The following are more advanced parameters which may need to be adjusted based o
 
 Gravwell can be configured to receive a list of group memberships with the user's login response, auto-generate any required groups, and add the user to those groups. To enable this, you must set `Groups-Attribute` and define at least one `Group-Mapping`:
 
-* `Groups-Attribute` [default: "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"]: defines the SAML attribute which contain's the list of groups to which the user belongs. You will typically have to explicitly configure the SSO provider to send the group list.
+* `Groups-Attribute` [default: "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"]: defines the SAML attribute which contains the list of groups to which the user belongs. You will typically have to explicitly configure the SSO provider to send the group list.
 * `Group-Mapping`: Defines one of the groups which may be automatically created if listed in the user's group memberships. This may be specified multiple times to allow multiple groups. The argument should consist of two names separated by a colon; the first is the SSO server-side name for the group (typically a name for AD FS, a UUID for Azure, etc.) and the second is the name Gravwell should use. Thus, if we define `Group-Mapping=Gravwell Users:gravwell-users`, if we receive a login token for a user who is a member of the group "Gravwell Users", we will create a local group named "gravwell-users" and add the user to it.
 
 ## Example: Setting up Azure Active Directory

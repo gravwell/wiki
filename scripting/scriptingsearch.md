@@ -22,9 +22,9 @@ Version 3.3.1 of Gravwell now allows automation scripts to include external scri
 * `include(path, commitid, repo) error` Includes a library file. The repo and commitid arguments are optional.  If the include fails, the failure reason is returned.
 * `require(path, commitid, repo)` Identical behavior to `include`, but if it fails the script is halted and the failure reason is attached to the script's results.
 
-Both `include` and `require` can optionally specify an exact repository or commitid.  If the `repo` argument is ommitted the Gravwell default library repo of `https://github.com/gravwell/libs` is used.  If the `commitid` is ommitted then the `HEAD` commit is used.  Repos should be accessible by the Gravwell webserver via the schema defined (either `http://`, `https://`, or `git://`) in the repo path.  The scripting system will automatically go get repos as needed: if a commit id is requested that isn't currently known Gravwell will attempt to update the repo.
+Both `include` and `require` can optionally specify an exact repository or commitid.  If the `repo` argument is omitted the Gravwell default library repo of `https://github.com/gravwell/libs` is used.  If the `commitid` is omitted then the `HEAD` commit is used.  Repos should be accessible by the Gravwell webserver via the schema defined (either `http://`, `https://`, or `git://`) in the repo path.  The scripting system will automatically go get repos as needed: if a commit id is requested that isn't currently known Gravwell will attempt to update the repo.
 
-If you are in an airgapped system, or otherwise do not want Gravwell to have access to github, you can specify an internal mirror and/or default commit in the `gravwell.conf` file using the `Library-Repository` and `Library-Commit` configuration variables.  For example:
+If you are in an airgapped system, or otherwise do not want Gravwell to have access to GitHub, you can specify an internal mirror and/or default commit in the `gravwell.conf` file using the `Library-Repository` and `Library-Commit` configuration variables.  For example:
 
 ```
 Library-Repository="https://github.com/foobar/baz" #override the default library
@@ -106,7 +106,7 @@ Search structs are used to actively read entries from a search, while search IDs
 * `getAvailableEntryCount(search) (uint64, bool, error)` returns the number of entries that can be read from the given search, a boolean specifying if the search is complete, and an error if anything went wrong.
 * `getEntries(search, start, end) ([]SearchEntry, error)` pulls the specified entries from the given search. The bounds for `start` and `end` can be found with the `getAvailableEntryCount` function.
 * `isSearchFinished(search) (bool, error)` returns true if the given search is complete
-* `executeSearch(query, start, end) ([]SearchEntry, error)` starts a search, waits for it to complete, retrieves up to ten thousand entries, detatches from search and returns the entries.
+* `executeSearch(query, start, end) ([]SearchEntry, error)` starts a search, waits for it to complete, retrieves up to ten thousand entries, detaches from search and returns the entries.
 * `deleteSearch(searchID) error` deletes the search with the specified ID
 * `backgroundSearch(searchID) error` sends the specified search to the background; this is useful for "keeping" a search for later manual inspection.
 * `saveSearch(searchID) error` Marks a given search results for long term storage.  This call does not wait for the query to complete and only returns an error if the request to mark it as saved fails.
@@ -183,7 +183,7 @@ If the user has configured their personal email settings within Gravwell, the `e
 Example sending an email with attachments:
 ```
 #easy way just throwing text into an attachment named "attachment1"
-email(`user@example.com`, `bob@accounting.org`, "Hey bob", "We need to talk", "A random attachement")
+email(`user@example.com`, `bob@accounting.org`, "Hey bob", "We need to talk", "A random attachment")
 
 #Adding a list of attached files with specific names
 mp = map[interface]interface{}
@@ -608,7 +608,7 @@ return err
 
 ## CSV Helpers
 
-CSV is a pretty common export format for resources and just generatlly getting data out of Gravwell.  The CSV library provided by `encoding/csv` is robust and flexible but a little verbose.  We have wrapped the CSV writer to provide a simpler interface for use within the Gravwell scripting system.  To create a simplified CSV builder, import the `encoding/csv` package and instead of invoking `NewWriter` call `NewBuilder` without any arguments.
+CSV is a pretty common export format for resources and just generally getting data out of Gravwell.  The CSV library provided by `encoding/csv` is robust and flexible but a little verbose.  We have wrapped the CSV writer to provide a simpler interface for use within the Gravwell scripting system.  To create a simplified CSV builder, import the `encoding/csv` package and instead of invoking `NewWriter` call `NewBuilder` without any arguments.
 
 The CSV builder manages its own internal buffers and returns a byte array upon executing `Flush`.  This can simplify the process of building up CSVs for exporting or saving.  Here is an example script that uses the simplified csv Builder to create a resource comprised of two table columns:
 
@@ -664,7 +664,7 @@ The Gravwell scripting system exposes SQL database packages so that automation s
 The scripting system currently supports the following database drivers:
 
 * MySQL/MariaDB
-* Postgresql
+* PostgreSQL
 * MSSQL
 * OracleDB
 
@@ -745,7 +745,7 @@ return setResource("foobar", data)
 
 ## IPExist Datasets
 
-The [ipexist](#!search/ipexist/ipexist.md) search module is designed to test whether an IPv4 address exists in a set, this module is a simple filtering module that is designed for one thing and one thing only: speed.  Under the hood, `ipexist` uses a highly optimized bitmap system so that its possible for a modest machine to represent the entirety of the IPv4 address space in it's filter system.  IPExist is a great tool for holding threatlists and performing initial filtering operations on very large sets of data before performing more expensive lookups using the [iplookup](#!search/iplookup/iplookup.md) module.
+The [ipexist](#!search/ipexist/ipexist.md) search module is designed to test whether an IPv4 address exists in a set, this module is a simple filtering module that is designed for one thing and one thing only: speed.  Under the hood, `ipexist` uses a highly optimized bitmap system so that its possible for a modest machine to represent the entirety of the IPv4 address space in it's filter system.  IPExist is a great tool for holding threat lists and performing initial filtering operations on very large sets of data before performing more expensive lookups using the [iplookup](#!search/iplookup/iplookup.md) module.
 
 The Gravwell scripting system has access to the ipexist builder functions, enabling you to generate high speed ip membership tables from existing data.  The ipexist builder functions are open source and available on [github](https://github.com/gravwell/ipexist).  Below is a basic script which generates an ip membership resource using a query:
 

@@ -5,7 +5,7 @@ Simple Relay is the go-to ingester for text based data sources that can be deliv
 Some common use cases for Simple Relay are:
 
 * Remote syslog collection
-* Devop log collection over a network
+* Devops log collection over a network
 * Bro sensor log collection
 * Simple integration with any text source capable of delivering over a network
 
@@ -33,7 +33,7 @@ Log-File=/opt/gravwell/log/simple_relay.log
 #no Tag-Name means use the default tag
 [Listener "default"]
 	Bind-String="0.0.0.0:7777" #bind to all interfaces, with TCP implied
-	#Lack of "Reader-Type" implines line break delimited logs
+	#Lack of "Reader-Type" implies line break delimited logs
 	#Lack of "Tag-Name" implies the "default" tag
 	#Assume-Local-Timezone=false #Default for assume localtime is false
 	#Source-Override="DEAD::BEEF" #override the source for just this listener
@@ -106,7 +106,7 @@ The "Ignore-Timestamps" parameter instructs the listener to not attempt to deriv
 
 #### Assume-Local-Timezone and Timezone-Override
 
-Most timestamp formats have a timezone attached which indicates an offset to Universal Cordinated Time (UTC).  However, some systems do not specify the timezone leaving it up to the receiver to determine what timezone a log entry may be in.  Assume-Local-Timezone causes the reader to assume that the timestamp is in the same timezone as the Simple Relay reader when the timzeone is omitted. Timezone-Override takes a string in the IANA timezone database format (e.g. "America/Chicago") and applies that timezone to timestamps which do not specify a timezone.
+Most timestamp formats have a timezone attached which indicates an offset to Universal Coordinated Time (UTC).  However, some systems do not specify the timezone leaving it up to the receiver to determine what timezone a log entry may be in.  Assume-Local-Timezone causes the reader to assume that the timestamp is in the same timezone as the Simple Relay reader when the timezone is omitted. Timezone-Override takes a string in the IANA timezone database format (e.g. "America/Chicago") and applies that timezone to timestamps which do not specify a timezone.
 
 Assume-Local-Timezone and Timezone-Override are mutually exclusive.
 
@@ -122,7 +122,7 @@ Source-Override=[fe80::899:b3ff:feb7:2dc6]
 
 #### Timestamp-Format-Override
 
-Data values may contain multiple timestamps which can cause some confusion when attempting to derive timestamps out of the data.  Normally, the Listeners will grab the left most timestamp that can be derived, but it may be desirable to only look for a timestamp in a very specific format.  "Timestamp-Format-Override" tells the listener to only respect timestamps in a specific format.  The following timstamp formats are available:
+Data values may contain multiple timestamps which can cause some confusion when attempting to derive timestamps out of the data.  Normally, the Listeners will grab the left most timestamp that can be derived, but it may be desirable to only look for a timestamp in a very specific format.  "Timestamp-Format-Override" tells the listener to only respect timestamps in a specific format.  The following timestamp formats are available:
 
 * AnsiC
 * Unix
@@ -219,7 +219,7 @@ An example listener specification which removes the priority tag from entries:
 	Keep-Priority=false
 ```
 
-Note: The priority portion of a syslog message is codified in the RFC specification.  Removing the priority means that the Gravwell [syslog](#!search/syslog/syslog.md) search module will be unable to properly parse the values.  Paid Gravwell licenses are all unlimited and we reccomend that the priority field is left in syslog messages.  The syslog search module is also dramatically faster than attempting to hand parse syslog messages with regular expressions.
+Note: The priority portion of a syslog message is codified in the RFC specification.  Removing the priority means that the Gravwell [syslog](#!search/syslog/syslog.md) search module will be unable to properly parse the values.  Paid Gravwell licenses are all unlimited and we recommend that the priority field is left in syslog messages.  The syslog search module is also dramatically faster than attempting to hand parse syslog messages with regular expressions.
 
 ### JSON Listeners
 
@@ -229,7 +229,7 @@ A great example use case is the JSON over TCP data export functionality found in
 
 #### JSON Listener Configuration Parameters
 
-The JSON Listener blocks implement the universion listener types as documented above.  Additional parameters allow for specifying which field we wish to pivot on to define a tag.
+The JSON Listener blocks implement the universal listener types as documented above.  Additional parameters allow for specifying which field we wish to pivot on to define a tag.
 
 ##### Extractor Parameter
 
@@ -267,7 +267,7 @@ Extractor=location.state
 
 **Tag-Match**
 
-Each JSONListener supports multiple field value to tag match specifications.  The value to tag assignment is specified as an argument to the "Tag-Match" paramter in the form <field value>:<tag name>.
+Each JSONListener supports multiple field value to tag match specifications.  The value to tag assignment is specified as an argument to the "Tag-Match" parameter in the form <field value>:<tag name>.
 
 For example, if we extracted a field with the value "foo" and wanted to assign it to the tag "bar" we would add the following to the JSONListener configuration block:
 

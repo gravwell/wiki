@@ -496,7 +496,7 @@ The response contains only a single Stats entry:
 
 ## Asking for stats sets over a specific time range (request 0x7F000006)
 
-In this example we ask for a set of size 1 (summarize all modules) between 2016-09-09T06:02:14Z and 2016-09-09T06:02:16Z.  It is important to note that the SetCount number is used to generate a "ChunkSize" that is uniform across the requested range.  For example if your search has data from 2016-01-09T06:02:16Z to 2016-12-09T06:02:16Z (11ish months) but you gave a range of 1901-01-01T06:02:16Z to 2016-01-01T06:02:16Z and a SetSize of 100, you will only get one stats size, because the "ChunkSize" for that range and size is much larger than the span of time you actually have data for.
+In this example we ask for a set of size 1 (summarize all modules) between 2016-09-09T06:02:14Z and 2016-09-09T06:02:16Z.  It is important to note that the SetCount number is used to generate a "ChunkSize" that is uniform across the requested range.  For example if your search has data from 2016-01-09T06:02:16Z to 2016-12-09T06:02:16Z (11-ish months) but you gave a range of 1901-01-01T06:02:16Z to 2016-01-01T06:02:16Z and a SetSize of 100, you will only get one stats size, because the "ChunkSize" for that range and size is much larger than the span of time you actually have data for.
 
 ```
 {

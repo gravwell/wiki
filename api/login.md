@@ -43,7 +43,7 @@ The JWT received from the login API must be included as an Authorization Bearer 
 
 ### Websocket Authentication
 
-As a convienence, the websocket API endpoints will also look for the JWT token in the `Sec-Websocket-Protocol` header value.  Many websocket implementations do not properly support passing header values, so we overload the websocket subprotocol negotiation header.  The API endpoints will still look for the standard `Authentication` header values as well.
+As a convenience, the websocket API endpoints will also look for the JWT token in the `Sec-Websocket-Protocol` header value.  Many websocket implementations do not properly support passing header values, so we overload the websocket subprotocol negotiation header.  The API endpoints will still look for the standard `Authentication` header values as well.
 
 ## View active sessions
 Send a GET to `/api/users/{id}/sessions` and it will return a chunk of JSON.  Admins can request any users sessions, users can ONLY request their own sessions.

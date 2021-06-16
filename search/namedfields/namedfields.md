@@ -27,7 +27,7 @@ One or more groups are then gathered into a Gravwell resource in a format specif
 * `-r <arg>`: The "-r" option is required; it specified the name or GUID of a resource which contains index-to-name mappings.
 * `-g <arg>`: The "-g" option is required; it specifies which group to use within the specified resource.
 * `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
-* `-s` : The “-s” option speciies that the namedfields module operate in a strict mode.  If any filed specification cannot be met, the entry is dropped.  For example if you want the 0th, 1st, and 2nd field but an entry only has 2 fields, the strict flag will cause the entry to be dropped.
+* `-s` : The “-s” option specifies that the namedfields module operate in a strict mode.  If any filed specification cannot be met, the entry is dropped.  For example if you want the 0th, 1st, and 2nd field but an entry only has 2 fields, the strict flag will cause the entry to be dropped.
 
 ## Filtering Operators
 
@@ -58,7 +58,7 @@ tag=brointel namedfields -r brofields -g Intel source | count source | table sou
 
 Before the namedfields module can be used, a resource must be created to map names to indexes within a field. The resource is structured with JSON. Each resource can contain multiple groups, one of which is selected when running the module.
 
- The example below gives names to entries in Bro's `intel.log` file as well as a custom application log formated as a CSV:
+ The example below gives names to entries in Bro's `intel.log` file as well as a custom application log formatted as a CSV:
 
 ```
 {
@@ -116,7 +116,7 @@ The Gravwell-distributed [namedfields.json](https://github.com/gravwell/resource
 
 ### Namedfields Resource Generation
 
-Gravwell has provided a simple golang library to aid in the generation of namedfields resources.  The library can be used to programatically generate a resource which can the be used by the namedfields module.  The library is available in the tools Gravwell repository on github within the "nfgen" directory.
+Gravwell has provided a simple Go library to aid in the generation of namedfields resources.  The library can be used to programmatically generate a resource which can the be used by the namedfields module.  The library is available in the tools Gravwell repository on GitHub within the "nfgen" directory.
 
 The simplest usage of the named fields to generate two groups within a single resource would appear as:
 
@@ -172,7 +172,7 @@ func main() {
 }
 ```
 
-Building and executing the afformentioned generator is simple if you have the golang buildchain installed:
+Building and executing the aforementioned generator is simple if you have the Go toolchain installed:
 
 ```
 go get -u github.com/gravwell/tools/nfgen

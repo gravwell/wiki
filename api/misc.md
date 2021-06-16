@@ -152,7 +152,7 @@ This API provides some basic information for the user interface. A GET on `/api/
 
 ## Scripting Libraries
 
-This API allows automation scripts to import libraries from github repositories using the `require` function. There is also an endpoint which will trigger a git pull on all the user's repositories.
+This API allows automation scripts to import libraries from GitHub repositories using the `require` function. There is also an endpoint which will trigger a git pull on all the user's repositories.
 
 ### Fetching a library
 

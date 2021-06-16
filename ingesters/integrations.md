@@ -14,7 +14,7 @@ The plugin provides a complete ingest system which supports all the usual featur
 
 #### Building CoreDNS with Gravwell
 
-Building CoreDNS with the Gravwell plugin requires that the Golang toolchain and compiler is installed, more information is available [here](https://golang.org/).
+Building CoreDNS with the Gravwell plugin requires that the Go toolchain and compiler is installed, more information is available [here](https://golang.org/).
 
 ```
 go get github.com/coredns/coredns
@@ -33,7 +33,7 @@ setcap 'cap_net_bind_service=+ep' /tmp/coredns
 
 #### Configuring Gravwell Plugin
 
-Configuration is performed via the CoreDNS Corefile which has the basic syntax of **directive** **value**.  Comments are preceeded by the "#" character.
+Configuration is performed via the CoreDNS Corefile which has the basic syntax of **directive** **value**.  Comments are preceded by the "#" character.
 
 The following configuration parameters are available:
 
@@ -41,11 +41,11 @@ The following configuration parameters are available:
 * **Cleartext-Target** defines the address and port for a remote indexer using a TCP connection.  IPv4 and IPv6 addresses as well as host names are supported.
 * **Ciphertext-Target** defines the address and port for a remote indexer using a TLS connection.  IPv4 and IPv6 addresses as well as host names are supported.
 * **Tag** specifies the tag that DNS audit logs are assigned.  Can be any alphanumeric value without special characters or spaces.  A valid Tag value is required.
-* **Encoding** specifies the format of transported DNS audit logs.  Options are _json_ or _text_.  Deafult is _json_.
+* **Encoding** specifies the format of transported DNS audit logs.  Options are _json_ or _text_.  Default is _json_.
 * **Insecure-Novalidate-TLS** toggles certificate validation on TLS connections.  Validation is on by default.
 * **Log-Level** specifies the logging verbosity over the integrated gravwell tag.  Options are _OFF_ _INFO_ _WARN_ _ERROR_.  Default is _ERROR_.
 * **Ingest-Cache-Path** specifies a file path for the cache system which engages when indexer connectivity is lost.  Path must be an absolute path to a writable file.
-* **Max-Cache-Size-MB** specifies in megabytes the maximum size of the cache file.  This is used as a safty net.  Zero value is the default and represents unlimited.
+* **Max-Cache-Size-MB** specifies in megabytes the maximum size of the cache file.  This is used as a safety net.  Zero value is the default and represents unlimited.
 * **Cache-Depth** specifies the size of the in-memory ingest buffer, in entries. The default is 128.
 * **Cache-Mode** specifies the behavior of the backing cache based on the state of indexer connections. The default mode is "always".
 
