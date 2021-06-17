@@ -16,8 +16,9 @@ We're preparing for the release of Gravwell 4.2.0. The primary new feature of th
 
 Testing desires for this sprint (in order of priority)
 
-* Data Explorer! Try it with as many different data sources as you can. Add filters, remove filters, pivot into other query modes.
+* Data Explorer - Try it with as many different data sources as you can. Add filters, remove filters, pivot into other query modes.
 * Query Studio - Make sure the query editing box is usable and robust, move between many queries and tags, check the new formatting with other renderers.
+* Per Tag Accelerators - Add some [tag specific accelerator definitions](#!configuration/accelerators.md#Accelerating_Specific_Tags).
 
 ## Installation and Upgrade
 
