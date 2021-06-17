@@ -29,9 +29,7 @@ x:1|y:2|z:3|foo:bar
 * `-d <delimiters>`: The "-d" flag specifies the delimiters to use. You can specify multiple delimiters characters; for example, to use double-quote, tab, and space as delimiters, set `-d "\" \t"`.
 * `-s`: The "-s" option puts the module into strict mode. In strict mode, an entry will be dropped unless *all* specified extractions succeed.
 * `-q`: The "-q" option enables quoted values. This allows values to contain the delimiter characters, e.g. `key="this is the value"`
-* `-ld`: The "-ld" option enables handling strangely delimited values such as `foo ==	bar`.  See the note below.
-
-Note that a key-value pair which contains delimiters between key, separator, and value can be properly handled with the `-ld` flag.  However, empty values will not be properly handled. The following entries will produce equivalent enumerated values when using the `-ld` flag:
+* `-noclean`: The "-noclean" option will disable trimming left whitespace on extracted tokens, even if the whitespace is contained in the delimiters field. For example `key=   value` would be extracted with the leading 3 spaces intact.
 
 ```
 x= 1 y = 2 z=3 foo    =  bar
