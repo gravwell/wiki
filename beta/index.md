@@ -4,32 +4,28 @@ Greetings and salutations!
 
 You are reading this message because you are in the early access group for Gravwell Beta!  We sincerely thank you for your participation and look forward to feedback and bug reports.
 
-Please submit any bugs or feedback:
-
-* https://www.gravwell.io/beta
-* Email to beta@gravwell.io
+Please submit any bugs or feedback to [beta@gravwell.io](mailto:beta@gravwell.io)
 
 Thank you!
 
 ## Current "State of the Beta"
 
+We're preparing for the release of Gravwell 4.2.0. The primary new feature of this release is the Data Explorer, which makes it easier to play with your data in a point-and-click manner.
+
 ### Desired Testing
 
 Testing desires for this sprint (in order of priority)
 
-* Browsing, installing, and managing kits
-* Search template creation and use to create "investigative" dashboards
-* Playbooks - New features are coming to enrich playbooks a bit more, but testing of creating and using them as markdown READMEs is the desire for this phase
-* Macros
-* Templates
-
+* Data Explorer - Try it with as many different data sources as you can. Add filters, remove filters, pivot into other query modes.
+* Query Studio - Make sure the query editing box is usable and robust, move between many queries and tags, check the new formatting with other renderers.
+* Per Tag Accelerators - Add some [tag specific accelerator definitions](#!configuration/accelerators.md#Accelerating_Specific_Tags).
 
 ## Installation and Upgrade
 
 We're very excited to say this build is now available for your use and testing. We have created a new Ubuntu repository and Docker images. Switching from Stable to Beta is done by modifying your apt source repository (or our quick start instructions if installing from scratch).
 
 ### Upgrading:
-Edit your `/etc/apt/sources.list.d/gravwell.list` file and substitute `https://update.gravwell.io/debian/` for `https://update.gravwell.io/debianbeta/`. Then `apt update` and `apt upgrade` and you should be on the new release.
+Edit your `/etc/apt/sources.list.d/gravwell.list` file and replace `https://update.gravwell.io/debian/` with `https://update.gravwell.io/debianbeta/`. Then `apt update` and `apt upgrade` and you should be on the new release.
 
 ### Installing from scratch:
 
@@ -43,9 +39,7 @@ sudo apt-get install gravwell
 
 ### Docker
 
-The Docker images is available at [gravwell/beta](https://hub.docker.com/r/gravwell/beta). You can substitute `gravwell/gravwell` with `gravwell/beta` in any of the docker documentation and it should "just work."
-
-
+The Docker image is available at [gravwell/beta](https://hub.docker.com/r/gravwell/beta). You can change `gravwell/gravwell` to `gravwell/beta` in any of our Docker commands in the documentation and it should "just work."
 
 
 ## Thank You
