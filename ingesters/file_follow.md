@@ -6,7 +6,6 @@ The most common use case for File Follower is monitoring a directory containing 
 
 Attention: On RHEL/CentOS, `/var/log` belongs to the "root" group, not "adm" as we assume. File Follower runs in the adm group by default, so if you want it to read `/var/log` you need to `chgrp -R adm /var/log` OR change the group in the SystemD unit file.
 
-
 ## Basic Configuration
 
 The File Follower configuration file is by default located in `/opt/gravwell/etc/file_follow.conf` on Linux and `C:\Program Files\gravwell\file_follow.cfg` on Windows.
