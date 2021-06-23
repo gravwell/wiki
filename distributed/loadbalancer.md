@@ -18,7 +18,7 @@ The load balancer component is distributed through all the same channels as the 
 * In the Debian and RedHat repositories as a package named `gravwell-loadbalancer`.
 * On DockerHub as [gravwell/loadbalancer](https://hub.docker.com/r/gravwell/loadbalancer)
 
-The Debian installer will prompt for basic configuration options and should need no further setup after you've installed. For other installation methods, though, you'll need to edit `/opt/gravwell/etc/loadbalancer.conf` as detailed below. If you are using Docker, you can also configure the container purely through environment variables, as described in the "Docker Environment Variables" section below.
+The Debian installer will prompt for basic configuration options and should need no further setup after you've installed. For other installation methods, you will need to edit `/opt/gravwell/etc/loadbalancer.conf` as detailed below. If you are using Docker, you can also configure the container purely through environment variables, as described in the "Docker Environment Variables" section below.
 
 ## Config File Settings
 
