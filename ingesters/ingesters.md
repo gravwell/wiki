@@ -17,6 +17,7 @@ Attention: The [replication system](#!configuration/replication.md) does not rep
 | Ingester | Description |
 |----------|-------------|
 | [Amazon SQS](#!ingesters/sqs.md) | Subscribe and ingest from Amazon SQS queues. |
+| [collectd](#!ingesters/collectd.md) | Ingest collectd samples. |
 | [Disk Monitor](#!ingesters/disk.md) | Periodically sample disk activity. |
 | [File Follower](#!ingesters/file_follow.md) | Watch and ingest files on disk, such as logs. |
 | [GCP PubSub](#!ingesters/pubsub.md) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
@@ -33,7 +34,6 @@ Attention: The [replication system](#!configuration/replication.md) does not rep
 | [Session](#!ingesters/session.md) | Ingest large records into a single entry. |
 | [Simple Relay](#!ingesters/simple_relay.md) | Ingest any text over TCP/UDP, syslog, and more. |
 | [Windows Events](#!ingesters/winevent.md) | Collect Windows events. |
-| [collectd](#!ingesters/collectd.md) | Ingest collectd samples. |
 
 ## Tags
 
