@@ -11,7 +11,7 @@ The following are all valid Gravwell configurations:
 * One webserver and multiple indexers, each on their own servers.
 * [Multiple webservers](#!distributed/frontend.md) and multiple indexers.
 
-We will discuss configuring a cluster with a single webserver and one or more indexers. If you want multiple webservers, we recommend following the steps outlined here to first configure a single-webserver cluster, then using the information in [this document](#!distributed/frontend.md) to add additional webservers later.
+We will discuss configuring a cluster with a single webserver and one or more indexers. If you want multiple webservers, we recommend following the steps outlined here to first configure a single-webserver cluster, then using the information in [this document](#!distributed/frontend.md) to add additional webservers later. You will likely also want to set up [load balancing](loadbalancer.md) to most effectively utilize all webservers.
 
 ## Planning Your Cluster
 
