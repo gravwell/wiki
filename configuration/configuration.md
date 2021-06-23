@@ -163,3 +163,15 @@ Here is an example configuration block that requires complex passwords that are 
 ```
 
 Note that Gravwell fully supports UTF-8 character sets and that many languages do not have the concept of case.  So while the password `パスワードを推測することはできません!#$@42` may look very complex, it doesn't meet the requirements above due to the lack of upper and lower case values.
+
+## Version Compatibility 
+
+Certain versions of the indexer and webserver are only compatible with specific versions of other indexers and webservers. The table below details version compatibility restrictions. Mismatched webservers and indexers will not run.
+
+| API Version | Indexer/Webserver Version Compatibility |
+|-------------|---------------|
+| 1 | Any version between 1.0-3.3 |
+| 2 | 4.0 and 4.1 |
+| 3 | 4.2 |
+
+Ingesters are always backwards compatible with older versions of indexers as they negotiate the ingest protocol version when they connect. However, some new features may be disabled if there is a significant version mismatch. We recommend using the ingester version that matches your indexer version.
