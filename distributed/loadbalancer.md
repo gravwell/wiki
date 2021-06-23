@@ -6,7 +6,7 @@ To make setting up your environment as easy as possible, Gravwell provides a cus
 
 The load balancer is an HTTP(S) proxy which automatically directs clients to one of the Gravwell webservers. It sets a cookie on the user's browser to maintain a level of "stickiness", so one session's requests all go to the same webserver.
 
-The load balancer discovers Gravwell webservers by communicating with the Gravwell  (see [the distributed webserver documentation](frontend.md) for more info about the datastore).
+The load balancer discovers Gravwell webservers by communicating with the Gravwell datastore, which provides a list of active webservers. See [the distributed webserver documentation](frontend.md) for more info about the datastore.
 
 Once installed and configured, users should access Gravwell through the load balancer. We recommend setting a hostname such as `gravwell.example.org` to point at the load balancer while naming webservers something like `web1.example.org`; encourage users to visit `gravwell.example.org` instead of accessing the webservers directly.  Users do not need direct access to Gravwell webservers when using the load balancer--the webservers may be privately addressed or otherwise inaccessible to the wider world.
 
