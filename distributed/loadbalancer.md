@@ -8,7 +8,7 @@ The load balancer is an HTTP(S) proxy which automatically directs clients to one
 
 The load balancer discovers Gravwell webservers by communicating with the Gravwell  (see [the distributed webserver documentation](frontend.md) for more info about the datastore).
 
-Once installed and configured, users should access Gravwell through the load balancer. We recommend setting a hostname such as `gravwell.example.org` to point at the load balancer while naming webservers something like `web1.example.org`; encourage users to visit `gravwell.example.org` instead of accessing the webservers directly.
+Once installed and configured, users should access Gravwell through the load balancer. We recommend setting a hostname such as `gravwell.example.org` to point at the load balancer while naming webservers something like `web1.example.org`; encourage users to visit `gravwell.example.org` instead of accessing the webservers directly.  Users do not need direct access to Gravwell webservers when using the load balancer, the webserves my be privately addressed.
 
 ## Deploying the Load Balancer
 
@@ -18,7 +18,7 @@ The load balancer component is distributed through all the same channels as the 
 * In the Debian and RedHat repositories as a package named `gravwell-loadbalancer`.
 * On DockerHub as [gravwell/loadbalancer](https://hub.docker.com/r/gravwell/loadbalancer)
 
-The Debian installer will prompt for basic configuration options and should need no further setup after you've installed. For other installation methods, though, you'll need to edit `/opt/gravwell/etc/loadbalancer.conf` as detailed below. If you're using Docker, you can also configure the container purely through environment variables, as described in the "Docker Environment Variables" section below.
+The Debian installer will prompt for basic configuration options and should need no further setup after you've installed. For other installation methods, though, you'll need to edit `/opt/gravwell/etc/loadbalancer.conf` as detailed below. If you are using Docker, you can also configure the container purely through environment variables, as described in the "Docker Environment Variables" section below.
 
 ## Config File Settings
 
