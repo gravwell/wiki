@@ -32,7 +32,7 @@ There are a variety of "things" which users may create and modify. Their APIs ar
 * [Scheduled Searches](scheduledsearches.md)
 * [Search Library](searchlibrary.md)
 * [Templates](templates.md)
-* [Actionables](pivots.md)
+* [Actionables](actionables.md)
 * [User Files](userfiles.md)
 
 ## Searching and Search Stats
