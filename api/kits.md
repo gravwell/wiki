@@ -7,7 +7,7 @@ This API implements the creation, installation, and deletion of Gravwell kits. K
 * Dashboards
 * Auto-extractor definitions
 * Templates
-* Pivots
+* Actionables
 * User files
 * Macros
 * Search library entries
@@ -53,7 +53,7 @@ type KitBuildRequest struct {
 }
 ```
 
-Note that while the ID, Name, Description, and Version fields are required, the arrays of templates/pivots/dashboards etc. are optional. For example, here is a request to build a kit containing two dashboards, a pivot, a resource, and a scheduled search:
+Note that while the ID, Name, Description, and Version fields are required, the arrays of templates/actionables/dashboards etc. are optional. For example, here is a request to build a kit containing two dashboards, an actionable, a resource, and a scheduled search:
 
 ```
 {
@@ -108,7 +108,7 @@ Note that while the ID, Name, Description, and Version fields are required, the 
 }
 ```
 
-Attention: The UUIDs specified for templates, pivots, and userfiles should be the *GUIDs* associated with those structures, not the *ThingUUID* field which is also reported in a listing of items.
+Attention: The UUIDs specified for templates, actionables, and userfiles should be the *GUIDs* associated with those structures, not the *ThingUUID* field which is also reported in a listing of items.
 
 Attention: The UUIDs specified for Banner, Cover, and Icon must be included in the list of Files for the build request.  If the build request contains references to file UUIDs that are NOT included in the main file request the API server will reject the request.
 

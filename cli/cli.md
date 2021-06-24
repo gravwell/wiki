@@ -57,7 +57,7 @@ OPTIONS:
 	kits: Manage and upload kits
 	userfiles: Manage user files
 	templates: Manage templates
-	pivots: Manage pivots
+	pivots: Manage actionables
 	ingest: Ingest entries directly
 	scheduled_search: Manage scheduled searches
 	script: Run a script
@@ -121,7 +121,7 @@ macro                Manage search macros
 kits                 Manage and upload kits
 userfiles            Manage user files
 templates            Manage templates
-pivots               Manage pivots
+pivots               Manage actionables
 ingest               Ingest entries directly
 scheduled_search     Manage scheduled searches
 script               Run a script
