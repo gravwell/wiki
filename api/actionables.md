@@ -6,17 +6,17 @@ Actionables (previously called "pivots"), are objects stored in Gravwell which t
 
 The actionable structure contains the following fields:
 
-* GUID: A global reference for the template. Persists across kit installation. (see next section)
-* ThingUUID: A unique ID for this particular template instance. (see next section)
-* UID: The numeric ID of the template's owner.
-* GIDs: An array of numeric group IDs with which this template is shared.
-* Global: A boolean, set to true if template should be visible to all users (admin only).
-* Name: The template's name.
-* Description: A more detailed description of the template.
-* Updated: A timestamp representing the last update time for the template.
+* GUID: A global reference for the actionable. Persists across kit installation. (see next section)
+* ThingUUID: A unique ID for this particular actionable instance. (see next section)
+* UID: The numeric ID of the actionable's owner.
+* GIDs: An array of numeric group IDs with which this actionable is shared.
+* Global: A boolean, set to true if the actionable should be visible to all users (admin only).
+* Name: The actionable's name.
+* Description: A more detailed description of the actionable.
+* Updated: A timestamp representing the last update time for the actionable.
 * Labels: An array of strings containing [labels](#!gui/labels/labels.md).
 * Disabled: A boolean value indicating if the actionable has been disabled.
-* Contents: The actual definition of the template itself (see below).
+* Contents: The actual definition of the actionable itself (see below).
 
 Although the webserver does not care what goes into the `Contents` field (except that it should be valid JSON), there is a particular format which the **GUI** uses. Below is a complete Typescript definition of the actionable structure, including the Contents field and descriptions for the various types used.
 
