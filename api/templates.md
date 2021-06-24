@@ -16,6 +16,12 @@ The template structure contains the following fields:
 * Updated: A timestamp representing the last update time for the template.
 * Labels: An array of strings containing [labels](#!gui/labels/labels.md).
 * Contents: The actual definition of the template itself (see below).
+  * Contents.query: The template query.
+  * Contents.variable: Variable name in query.
+  * Contents.variableLabel: Label displayed to the user.
+  * Contents.variableDescription: Hint or additional information displayed to the user.
+  * Contents.required: True if it's required a value from the user when running the template.
+  * Contents.testValue: Default value for preview and validation.
 
 Although the webserver does not care what goes into the `Contents` field (except that it must be valid JSON), there is a particular format which the **GUI** uses. The Contents field should conform to this structure in order to be usable for the GUI:
 

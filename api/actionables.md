@@ -17,6 +17,17 @@ The actionable structure contains the following fields:
 * Labels: An array of strings containing [labels](#!gui/labels/labels.md).
 * Disabled: A boolean value indicating if the actionable has been disabled.
 * Contents: The actual definition of the actionable itself (see below).
+  * Contents.menuLabel: Optional. If not present, the first 20 characters of the name will be used in the dropdown menu.
+  * Contents.actions: Array of actions that can be executed from this actionable.
+    * Contents.actions\[n].name: Action name.
+    * Contents.actions\[n].description: Optional action description.
+    * Contents.actions\[n].placeholder: Placeholder will be replaced with the value of the trigger or cursor highlight. Defaults to "\_VALUE_".
+    * Contents.actions\[n].start: Optional ActionableTimeVariable (see interface below) with definitions to handle the start date variable.
+    * Contents.actions\[n].end: Optional ActionableTimeVariable (see interface below) with definitions to handle the end date variable.
+    * Contents.actions\[n].command: ActionableCommand (see interface below) with definitions for the action execution.
+  * Contents.triggers: Array of triggers for this actionable.
+    * Contents.triggers\[n].pattern: Serialized regular expression pattern for the actionable to match on.
+    * Contents.triggers\[n].hyperlink: True if the actionable can be activated with clicks and text selection. False if it can only be activated with text selection.
 
 Although the webserver does not care what goes into the `Contents` field (except that it should be valid JSON), there is a particular format which the **GUI** uses. Below is a complete Typescript definition of the actionable structure, including the Contents field and descriptions for the various types used.
 
@@ -28,7 +39,7 @@ interface Actionable {
     GIDs: null | Array<NumericID>;
     Global: boolean;
     Name: string;
-    Description: string; // Empty string is null
+    Description: string; // Could be an empty string
     Updated: string; // Timestamp
     Contents: {
         menuLabel: null | string;
@@ -62,7 +73,7 @@ type ActionableTimeVariable =
 
 type ActionableCommand =
     | { type: 'query'; reference: string; options?: {} }
-    | { type: 'template'; reference: UUID; options?: {} }
+    | { type: 'template'; reference: UUID; options?: { variable?: string } }
     | { type: 'savedQuery'; reference: UUID; options?: {} }
     | { type: 'dashboard'; reference: UUID; options?: { variable?: string } }
     | { type: 'url'; reference: string; options: { modal?: boolean; modalWidth?: string } };
