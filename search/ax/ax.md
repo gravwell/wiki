@@ -2,12 +2,18 @@
 
 The ax module is a wrapper module which uses pre-extraction rules to extract fields from data by invoking the functionality of other modules.  It can significantly simplify queries which use data that is not self-describing, standard, or structured.
 
-As of release 3.0.2 the following AX processors are available:
+As of release 4.2.0 the following AX processors are available:
 
 * [CSV](../csv/csv.md)
-* [Fields](../fields/fields.md)
-* [Regex](../regex/regex.md)
-* [Slice](../slice/slice.md)
+* [fields](../fields/fields.md)
+* [ipfix](../ipfix/ipfix.md)
+* [json](../json/json.md)
+* [KV](../kv/kv.md)
+* [netflow](../netflow/netflow.md)
+* [regex](../regex/regex.md)
+* [slice](../slice/slice.md)
+* [syslog](../syslog/syslog.md)
+* [winlog](../winlog/winlog.md)
 
 For full documentation on the configuration of AX extractors, see the [autoextractor section](../../configuration/autoextractors.md).
 

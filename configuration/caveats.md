@@ -50,7 +50,7 @@ Gravwell makes an attempt to properly flag files in `/opt/gravwell` for SELinux 
 
 ## Gravwell Consumes Too Much Memory/CPU
 
-Because Gravwell often has to deal with huge quantities of data, we do not restrict how much memory or CPU time it can consume. If, however, you must run Gravwell on the same system as some other important software, you may wish to restrict its access to resources. In that case, see the "SystemD Unit Files" section of the [system hardening document](hardening.md).
+Because Gravwell often has to deal with huge quantities of data, we do not restrict how much memory or CPU time it can consume. If, however, you must run Gravwell on the same system as some other important software, you may wish to restrict its access to resources. In that case, see the "systemd Unit Files" section of the [system hardening document](hardening.md).
 
 ## Gravwell and Virtual Memory Areas
 

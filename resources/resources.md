@@ -1,6 +1,6 @@
 # Resources
 
-Resources allow users to store persistent data for use in searches. Resources can be manually uploaded by a user or automatically created by search modules. Resources are used by the `lookup` module to store lookup tables and by the `anko` module to store scripts.
+Resources allow users to store persistent data for use in searches. Resources can be manually uploaded by a user or automatically created by search modules. Resources are used by a number of modules for things such as storing lookup tables, scripts, and more. Compound queries also make use of temporary resources to transfer data from one query to the next.
 
 The format of a resource is not restricted; from the point of view of Gravwell, a resource is simply a stream of bytes. Deriving meaning from that stream of bytes is up to the search modules: `lookup` expects data in a particular binary encoding, while `anko` simply treats the resource as a text file. Scripts written for the `anko` module may themselves create and access resources in a variety of formats such as JSON-encoded text.
 

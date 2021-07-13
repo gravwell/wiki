@@ -2,7 +2,7 @@
 
 With pre-built Docker images available in the Docker Hub, it is very easy to deploy Gravwell in Docker for experimentation or long-term use. In this document, we show how to set up a Gravwell environment within Docker.
 
-If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, contact support@gravwell.io for help. We also have some information about deploying a custom Docker instance [on this wiki](#!configuration/custom-docker.md) and [on our blog](https://www.gravwell.io/blog/gravwell-docker-deployment)
+If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, contact support@gravwell.io for help. We also have some information about deploying a custom Docker instance [on this wiki](#!configuration/custom-docker.md) and [on our blog](https://www.gravwell.io/blog/gravwell-docker-deployment).
 
 Once you have set up Gravwell, check out the [quickstart](#!quickstart/quickstart.md) for some starting points on *using* Gravwell.
 
@@ -109,7 +109,7 @@ Now we can configure our Netflow generators to send records to port 2055 of the 
 
 ## Customizing services
 
-The official Gravwell docker container contains a service management system that makes launching and controlling multiple services within the container very easy.  The manager controls service restarts, error reporting, and back off controls.  Gravwell has open-sourced the [manager](https://github.com/gravwell/manager) application on [github](https://github.com/gravwell) under the BSD 3-Clause license.  So if you want a very small and easily configured SystemD like service manager for your docker containers, have at it.
+The official Gravwell docker container contains a service management system that makes launching and controlling multiple services within the container very easy.  The manager controls service restarts, error reporting, and back off controls.  Gravwell has open-sourced the [manager](https://github.com/gravwell/manager) application on [github](https://github.com/gravwell) under the BSD 3-Clause license.  So if you want a very small and easily configured systemd like service manager for your docker containers, have at it.
 
 The official gravwell Docker image contains the full Gravwell stack (indexer and webserver) as well as the Simple Relay ingester.  The default manager configuration is:
 
@@ -191,11 +191,11 @@ If you intend to expose the forwarded container ports to the Internet, it is **c
 
 ## Crash Reporting and Metrics
 
-The Gravwell software has automated crash reporting & metrics reporting built in. For more information about what gets sent back to us at Gravwell, and how to opt out, see the [crash reporting and metrics page](#!metrics.md)
+The Gravwell software has automated crash reporting & metrics reporting built in. For more information about what gets sent back to us at Gravwell, and how to opt out, see the [crash reporting and metrics page](#!metrics.md).
 
 
 ## More Info
 
 With Gravwell running, refer to [the rest of the documentation](#!index.md) for more information on how to use the system.
 
-If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, contact support@gravwell.io for help. We also have some information about deploying a custom Docker instance [on this wiki](#!configuration/custom-docker.md) and [on our blog](https://www.gravwell.io/blog/gravwell-docker-deployment)
+If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, contact support@gravwell.io for help. We also have some information about deploying a custom Docker instance [on this wiki](#!configuration/custom-docker.md) and [on our blog](https://www.gravwell.io/blog/gravwell-docker-deployment).

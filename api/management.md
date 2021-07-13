@@ -4,7 +4,7 @@ This page documents admin-only APIs for managing the Gravwell processes and conf
 
 ## Restarting Gravwell
 
-Two APIs are provided to restart Gravwell processes; one to restart the webserver, and one to restart the indexers. In both cases, "restarting" is accomplished by shutting down the process and allowing SystemD (or whatever init system is in use) to restart it.
+Two APIs are provided to restart Gravwell processes; one to restart the webserver, and one to restart the indexers. In both cases, "restarting" is accomplished by shutting down the process and allowing systemd (or whatever init system is in use) to restart it.
 
 ### Restarting the webserver
 
