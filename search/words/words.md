@@ -10,7 +10,7 @@ The `words` module allows multiple patterns to be specified and defaults to as s
 
 * `-v`: “Inverse” match. For instance, `words -v bar` would drop any records containing the word “bar” and pass on any records that do not contain the word “bar”, if there are multiple words specified all words must not exist in the entry.
 * `-e <arg>`: Operate on an enumerated value instead of on the entire record. For example, a pipeline that showed packets that contain HTTP text but aren’t destined for port 80 would be `tag=pcap packet ipv4.DstPort!=80 tcp.Payload | words -e Payload GET HTTP 1.1"`
-* `-or`: Any match.  If any pattern matches pass the entry on, when combined with the negate flag drop any entry that has a missing word.`
+* `-or`: Any match.  If any pattern matches pass the entry on, when combined with the negate flag drop any entry that has a missing word.
 
 ### Parameter Structure
 ```

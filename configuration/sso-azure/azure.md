@@ -5,7 +5,7 @@ Microsoft's Azure Active Directory service provides cloud-based authentication a
 To set up Azure AD SSO for Gravwell, you'll need the following:
 
 * An Azure Premium License or equivalent which allows the creation of Enterprise Applications & SSO (Contact Microsoft sales to determine your needs).
-* A Gravwell webserver configured with [TLS certificates and HTTPS](#!configuration/certificates.md)
+* A Gravwell webserver configured with [TLS certificates and HTTPS](#!configuration/certificates.md).
 
 Additional Gravwell SSO configuration information can be found [here](#!configuration/sso.md) if needed.
 

@@ -88,13 +88,13 @@ Replication is controlled by the "Replication" configuration group in the gravwe
 | Storage-Location | Storage-Location=/mnt/storage/gravwell/replication | Designates the full path to use for replication storage. |
 | Max-Replicated-Data-GB | Max-Replicated-Data-GB=4096 | Designates the maximum amount of storage the replication system will consume, in this case 4TB. |
 | Replication-Secret-Override | Replication-Secret-Override=replicationsecret | Overrides the authentication token used when establishing connections to replication peers.  By default the "Control-Auth" token from the Global configuration group is used. |
-| Disable-TLS | Disable-TLS=true | Disables TLS communication between replication peers. Defaults to false (TLS enabled) |
+| Disable-TLS | Disable-TLS=true | Disables TLS communication between replication peers. Defaults to false (TLS enabled). |
 | Insecure-Skip-TLS-Verify | Insecure-Skip-TLS-Verify=true | Disables verification and validation of TLS public keys.  TLS is still enabled, but the system will accept any public key presented by a peer. |
 | Key-File | Key-File=/opt/gravwell/etc/replicationkey.pem | Overrides the X509 private key used for negotiating a replication connection.  By default TLS connections use the Global key file. |
 | Certificate-File | Certificate-File=/opt/gravwell/etc/replicationcert.pem | Overrides the X509 public key certificate used for negotiating a replication connection.  By default TLS connections use the Global certificate file. |
 | Connect-Wait-Timeout | Connect-Wait-Timeout=30 | Specifies the number of seconds an Indexer should wait when attempting to connect to replication peers during startup. |
 | Disable-Server | Disable-Server=true | Disable the indexer replication server, it will only act as a client.  This is important when using offline replication. | 
-| Disable-Compression | Disable-Compression=true | Disable compression on the storage for the replicated data |
+| Disable-Compression | Disable-Compression=true | Disable compression on the storage for the replicated data. |
 | Enable-Transparent-Compression | Enable-Transparent-Compression=true | Enable transparent compression on using the host file system for replicated data. |
 
 ## Replication Engine Behavior
@@ -107,7 +107,7 @@ Replication is designed to coordinate with data ageout, migration, and well isol
 
 ### Best Practices
 
-Designing and deploying a high availability Gravwell cluster can be extremely simple as long as a few basic best practices are followed.  The following list calls out some guidelines every Gravwell administrator should strive to follow when deploying and recovering a Gravwell cluster instance.
+Designing and deploying a high availability Gravwell cluster can be simple as long as a few basic best practices are followed.  The following list calls out some guidelines you should follow when deploying and recovering a Gravwell cluster instance.
  
 1. `Indexer-UUID` represents an indexer's global identity.  The identity must be maintained for the lifetime of the node and appropriately restored after a failure.  If a failed indexer comes up with a different UUID than it previously used, it is interpreted as a wholly new member in the replication cluster and its previous data will not be restored. We recommend noting down the indexer UUIDs somewhere safe in case an indexer suffers catastrophic failure.
 2. Changing well configurations can impact replication states.  Adding additional wells or deleting wells is perfectly acceptable but changing the well configurations *after* a failure but *before* restoration will prevent the replication engine from appropriately restoring data.
@@ -117,7 +117,7 @@ Designing and deploying a high availability Gravwell cluster can be extremely si
 
 ## Troubleshooting
 
-Potential problems and solutions when debugging a replication problem
+Below are potential problems and solutions when debugging a replication problem.
 
 #### After a failure, an indexer did not restore its data
 Ensure that the indexer maintained its original `Indexer-UUID` value when coming back online.  If the UUID changed, put it back to the original value and ensure the indexer has adequate time to restore all data.  Restoration after changing the `Indexer-UUID` may require significantly more time as the replication system merges the two disparate data stores.

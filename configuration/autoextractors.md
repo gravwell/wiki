@@ -2,12 +2,7 @@
 
 Gravwell enables per-tag extraction definitions that can ease the complexity of interacting with unstructured data and data formats that are not self-describing.  Unstructured data often requires complicated regular expressions to extract desired data fields, which can be time consuming to produce and prone to errors.
 
-Auto-extractors are simply definitions that can be applied to tags and describe how to correctly extract fields from the data in a given tag. The "ax" module then automatically invokes the appropriate functionality of other modules.  The auto-extractor system supports the following extraction methods:
-
-* [CSV](../search/csv/csv.md)
-* [Fields](../search/fields/fields.md)
-* [Regex](../search/regex/regex.md)
-* [Slice](../search/slice/slice.md)
+Auto-extractors are simply definitions that can be applied to tags and describe how to correctly extract fields from the data in a given tag. The "ax" module then automatically invokes the appropriate functionality of other modules. 
 
 Auto-extractor definitions are used by the [AX](../search/ax/ax.md) module which transparently references the correct extraction based on tags.
 

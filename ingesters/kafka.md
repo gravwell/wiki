@@ -42,7 +42,7 @@ The Kafka ingester is available in the Gravwell Debian repository as a Debian pa
 apt-get install gravwell-kafka
 ```
 
-The shell installer provides support for any non-Debian system that uses SystemD, including Arch, Redhat, Gentoo, and Fedora.
+The shell installer provides support for any non-Debian system that uses systemd, including Arch, Redhat, Gentoo, and Fedora.
 
 ```
 root@gravserver ~ # bash gravwell_kafka_installer.sh

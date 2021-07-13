@@ -2,7 +2,7 @@
 
 The diskmonitor ingester is designed to take periodic samples of disk activity and ship the samples to gravwell.  The disk monitor is extremely useful in identifying storage latency issues, looming disk failures, and other potential storage problems.  We at Gravwell actively monitor our own storage infrastructure with the disk monitor to study how queries are operating and to identify when the storage infrastructure is behaving badly.  We were able to identify a RAID array that transitioned to write-through mode via a latency plot even when the RAID controller failed to mention it in the diagnostic logs.
 
-The disk monitor ingester is available on [github](https://github.com/gravwell/ingesters)
+The disk monitor ingester is available on [github](https://github.com/gravwell/ingesters).
 
 ![diskmonitor](diskmonitor.png)
 

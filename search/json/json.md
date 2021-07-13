@@ -1,6 +1,6 @@
 # JSON
 
-The json module is used to extract and filter data from search entries into enumerated values for later use.  JSON is an excellent data format for dynamic exploration as the data is self-describing.  The JSON module can extract items and rename them, or filter based on the extracted value.  Filtering directly within the JSON module provides a very high speed and intuitive way to select data of a specific format 
+The json module is used to extract and filter data from search entries into enumerated values for later use.  JSON is an excellent data format for dynamic exploration as the data is self-describing.  The JSON module can extract items and rename them, or filter based on the extracted value.  Filtering directly within the JSON module provides a very high speed and intuitive way to select data of a specific format.
 
 ## Supported Options
 

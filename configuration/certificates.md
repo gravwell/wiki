@@ -92,11 +92,11 @@ systemctl restart gravwell_searchagent.service
 
 ### Making browsers trust the self-signed certificate
 
-Browsers will throw up a warning if a certificate is not signed by a recognized root CA. However, we can make the browser trust our certificate by installing it manually.
+Browsers will issue a warning if a certificate is not signed by a recognized root CA. However, you can make the browser trust our certificate by installing it manually.
 
 #### Firefox
 
-Installing the cert in Firefox is quite easy. First, navigate to your Gravwell instance via HTTPS. Firefox should display a screen similar to this:
+Installing the certificate in Firefox is simple. First, navigate to your Gravwell instance via HTTPS. Firefox should display a screen similar to this:
 
 ![](firefox-warning.png)
 

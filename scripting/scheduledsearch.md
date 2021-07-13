@@ -8,7 +8,7 @@ The scheduling feature allows the user to schedule both regular searches and [se
 
 The Gravwell Search Agent is now included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the Search Agent. The Search Agent is installed automatically by the Gravwell Debian package.
 
-For more information about configuring (or disabling) the search agent, see [the search agent documentation](searchagent.md)
+For more information about configuring (or disabling) the search agent, see [the search agent documentation](searchagent.md).
 
 ## Managing Scheduled Searches
 

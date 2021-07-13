@@ -59,6 +59,6 @@ cp -r /opt/gravwell/resources/webserver/* /opt/gravwell/resources/datastore/
 
 If the datastore is on a separate machine, use `scp` or another file transfer method to copy those files from a webserver server.
 
-## Load-balancing
+## Load balancing
 
 Gravwell now offers a custom load balancing component specifically designed to distribute users across multiple webservers with minimal configuration. See [the load balancing configuration page](loadbalancer.md) for information on setting it up.

@@ -121,14 +121,14 @@ Basic Listeners also require that each listener designate the tag the listener w
 
 The line reader listener is designed to read newline broken data streams from either a TCP or UDP stream.  Applications which can deliver simple line broken data over a network can utilize this type of reader to very simply and easily integrate with Gravwell.  The Line Reader listener can also be used for simple log file delivery by simply sending log files to the listening port.
 
-For example, an existing log file can be imported into Gravwell using netcat and Simple Relay
+For example, an existing log file can be imported into Gravwell using netcat and Simple Relay:
 ```
 nc -q 1 10.0.0.1 7777 < /var/log/syslog
 ```
 
 ### Example Line Reader Listener
 
-The most basic Listener requires only one the "Bind-String" argument which tells the listener what port to listen on. 
+The most basic Listener requires only one the "Bind-String" argument which tells the listener what port to listen on:
 
 ```
 [Listener "default"]
