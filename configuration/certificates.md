@@ -92,7 +92,7 @@ systemctl restart gravwell_searchagent.service
 
 ### Making browsers trust the self-signed certificate
 
-Browsers will issue a warning if a certificate is not signed by a recognized root CA. However, you can make the browser trust our certificate by installing it manually.
+Browsers will issue a warning if a certificate is not signed by a recognized root CA. However, we can make the browser trust our certificate by installing it manually.
 
 #### Firefox
 

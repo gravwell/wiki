@@ -1,6 +1,6 @@
 # Downloads
 
-Attention: The Debian and RHEL repositories are more easily maintained than these standalone installers and is the recommended method of installation. See the [quickstart instructions](#!quickstart/quickstart.md).
+Attention: The Debian and RHEL repositories are more easily maintained than these standalone installers and are the recommended methods of installation. See the [quickstart instructions](#!quickstart/quickstart.md).
 
 ## Gravwell Core
 
