@@ -1,8 +1,6 @@
 # 
 
-![](logo-name.png)
-
-# Gravwell
+# Gravwell Docs
 
 This site contains documentation for Gravwell, plus other resources such as Changelogs.
 
