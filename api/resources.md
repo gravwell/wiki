@@ -14,7 +14,7 @@ The resources system keeps a metadata structure for each resource. The web API u
 * ResourceName: the resource's name
 * Description: a verbose description of the resource
 * Size: the size, in bytes, of the resource contents
-* Hash: a sha1 hash of the resource contents
+* Hash: a SHA1 hash of the resource contents
 * Synced: (internal use only)
 
 ## Listing resources
@@ -126,4 +126,4 @@ The server will respond with the metadata for the newly-cloned resource:
 
 Admin users may occasionally need to view all resources on the system. An administrator user may obtain a global listing of all resources in the system with a GET request on `/api/resources?admin=true`.
 
-Because resource GUIDs are unique across the system, the administrator may then modify/delete/retrieve any resource without the need to specify `?admin=true`, although adding the parameter unecessarily will not cause an error.
+Because resource GUIDs are unique across the system, the administrator may then modify/delete/retrieve any resource without the need to specify `?admin=true`, although adding the parameter unnecessarily will not cause an error.

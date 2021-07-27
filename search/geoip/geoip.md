@@ -6,9 +6,9 @@ The geoip module uses [MaxMind](https://maxmind.com/) GeoIP databases to extract
 
 Before using the geoip module, you must install [resources](#!resources/resources.md) containing the MaxMind databases. You can either [download the free, limited databases](https://dev.maxmind.com/geoip/geoip2/geolite2/) or purchase their enterprise versions. We recommend installing both the City and ASN databases. On the website, select the MaxMind DB versions as shown below and unpack the resulting tar files to find the requisite files (GeoLite2-City.mmdb and GeoLite2-ASN.mmdb).
 
-Note: Make sure you download the binary version and extract the .mmdb file from tar.gz file.  Gravwell uses the native MaxmindDB format to ensure great throughput.
+Note: Make sure you download the binary version and extract the .mmdb file from tar.gz file.  Gravwell uses the native MaxMindDB format to ensure great throughput.
 
-[![Maxmind Download](download.png "Example download options")](https://dev.maxmind.com/geoip/geoip2/geolite2/)
+[![MaxMind Download](download.png "Example download options")](https://dev.maxmind.com/geoip/geoip2/geolite2/)
 
 By default, the geoip module expects the MaxMind "city" database (GeoLite2-City.mmdb) to be in a resource named "maxmind". This will allow you to do GeoIP extractions without specifying the resource name explicitly.
 
@@ -20,12 +20,12 @@ While there is no default name for the ASN database, we recommend naming it some
 
 ### Supported Options
 
-* `-r <arg>`: The “-r” option specifies the resource name or UUID which contains a Maxmind geoip database.  If no "-r" is specified the geoip module uses the default "maxmind" resource name.
+* `-r <arg>`: The “-r” option specifies the resource name or UUID which contains a MaxMind geoip database.  If no "-r" is specified the geoip module uses the default "maxmind" resource name.
 * `-s`: The “-s” option specifies that the geoip module should operate in strict mode.  In strict mode, if any of the specified operators cannot resolve an IP, the entry is dropped.
 
 ### Processing Operators
 
-The geoip extractors support direct operators that allow for very fast filtering in the geoip module.  These filters can enable fast filtering of entries based on locations, ISPs, owners, etc.  The filters supported by each operator are determined by the data type of the extracted item.  Strings, such as ISPs, countries, cities, etc. only support equal to (==) and not equal to (!=) where integers and floats support the full numeric comparison operators.  The Location extractor generates a data structure comprised of both the Longitude and Latitude and does not suport any filtering operators.  Multiple operators can be specified in a single invocation of the geoip module, and the output enumerated value names can be modified using the "as" directive.  This allows for getting the country associated with two IP addresses in a single entry and populating two different enumerated values wih the results.
+The geoip extractors support direct operators that allow for very fast filtering in the geoip module.  These filters can enable fast filtering of entries based on locations, ISPs, owners, etc.  The filters supported by each operator are determined by the data type of the extracted item.  Strings, such as ISPs, countries, cities, etc. only support equal to (==) and not equal to (!=) where integers and floats support the full numeric comparison operators.  The Location extractor generates a data structure comprised of both the Longitude and Latitude and does not support any filtering operators.  Multiple operators can be specified in a single invocation of the geoip module, and the output enumerated value names can be modified using the "as" directive.  This allows for getting the country associated with two IP addresses in a single entry and populating two different enumerated values with the results.
 
 | Operator | Name | Description
 |----------|------|-------------

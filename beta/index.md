@@ -22,7 +22,7 @@ Testing desires for this sprint (in order of priority)
 
 ## Installation and Upgrade
 
-We're very excited to say this build is now available for your use and testing. We have created a new ubuntu repository and Docker images. Switching from Stable to Beta is done by modifying your apt source respository (or our quick start instructions if installing from scratch).
+We're very excited to say this build is now available for your use and testing. We have created a new Ubuntu repository and Docker images. Switching from Stable to Beta is done by modifying your apt source repository (or our quick start instructions if installing from scratch).
 
 ### Upgrading:
 Edit your `/etc/apt/sources.list.d/gravwell.list` file and replace `https://update.gravwell.io/debian/` with `https://update.gravwell.io/debianbeta/`. Then `apt update` and `apt upgrade` and you should be on the new release.

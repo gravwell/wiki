@@ -39,17 +39,7 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
 ## Ingester Configuration: Getting Data Into Gravwell
 
-  * [Setting Up Ingesters](ingesters/ingesters.md)
-
-    * [File Follower Ingester](ingesters/file_follow.md)
-
-    * [Simple Relay Ingester](ingesters/simple_relay.md)
-    
-    * [Windows Events Ingester](ingesters/ingesters.md#Windows_Event_Service)
-
-    * [Netflow/IPFIX Ingester](ingesters/ingesters.md#Netflow_Ingester)
-
-    * [Collectd](ingesters/ingesters.md#collectd_Ingester)
+  * [Overview and List of Ingesters](ingesters/ingesters.md)
 
   * [Ingester Preprocessors](ingesters/preprocessors/preprocessors.md)
 
@@ -74,7 +64,7 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Environment Variables](configuration/environment-variables.md)
 
-  * [Detailed configuration parameters](configuration/parameters.md)
+  * [Detailed Configuration Parameters](configuration/parameters.md)
 
   * [Single Sign-On](configuration/sso.md)
 
@@ -135,6 +125,6 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Gravwell EULA](eula.md)
 
-  * [Open-source licenses](open_source.md)
+  * [Open-source Licenses](open_source.md)
 
 Documentation version 2.0

@@ -16,7 +16,7 @@ To restart all indexers to which the webserver is currently connected, send a PO
 
 ### Checking for a Distributed Frontend and deployment info
 
-To check whether the Gravwell cluster is operating in a distributed frontend mode, perform a GET on `/api/deployment`.  The webserver will responde with a JSON object indicating whether the frontend is configured in a distributed mode.
+To check whether the Gravwell cluster is operating in a distributed frontend mode, perform a GET on `/api/deployment`.  The webserver will respond with a JSON object indicating whether the frontend is configured in a distributed mode.
 
 An example response when not in distributed mode:
 

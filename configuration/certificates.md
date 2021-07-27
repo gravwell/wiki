@@ -2,7 +2,7 @@
 
 Gravwell ships without TLS certificates by default, meaning all communications will be unencrypted until you set up certificates. We did this because using auto-generated self-signed certificates tends to both frighten users with the browser's warnings and provide a false sense of security. It is difficult to properly validate a self-signed certificate and there is a real risk of training users to simply accept potentially impersonated certificates.  This is compounded by the extremely fickle behavior of Chromium-based browsers, which timeout certificate exceptions in unpredictable ways (you are often forced to close EVERY Chromium/Chrome zygote process in order to re-accept the certificate).
 
-We strongly reccomend that you acquire fully validated certificates from a trusted provider if you plan to expose the Gravwell system to the Internet.  The folks at [LetsEncrypt](https://letsencrypt.org) are a great resource for learning about proper certificate validation, and they provide free certificates that are trusted by every major browser.
+We strongly recommend that you acquire fully validated certificates from a trusted provider if you plan to expose the Gravwell system to the Internet.  The folks at [LetsEncrypt](https://letsencrypt.org) are a great resource for learning about proper certificate validation, and they provide free certificates that are trusted by every major browser.
 
 The Gravwell administrator has three options for certificates:
 
@@ -92,11 +92,11 @@ systemctl restart gravwell_searchagent.service
 
 ### Making browsers trust the self-signed certificate
 
-Browsers will throw up a warning if a certificate is not signed by a recognized root CA. However, we can make the browser trust our certificate by installing it manually.
+Browsers will issue a warning if a certificate is not signed by a recognized root CA. However, we can make the browser trust our certificate by installing it manually.
 
 #### Firefox
 
-Installing the cert in Firefox is quite easy. First, navigate to your Gravwell instance via HTTPS. Firefox should display a screen similar to this:
+Installing the certificate in Firefox is simple. First, navigate to your Gravwell instance via HTTPS. Firefox should display a screen similar to this:
 
 ![](firefox-warning.png)
 

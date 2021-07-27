@@ -4,7 +4,7 @@ The Packet pipeline module extracts fields from Ethernet, IPv4, IPv6, TCP, and U
 
 The packet module is useful both for filtering traffic down to specific protocols and for extracting specific fields from packets for analysis--see the examples for more.
 
-Some field modules allow for flexible section where it is desirable to filter on a field that may have a source and destination.  To accomdate selection on IPs, Ports, MACs where there are both a source and destination, the special fields Port, IP, MAC are available.  If either source or destination matches an enumerated value with the field will be populated with the component that matched.  For example, tcp.Port==80 will match whenever either tcp.SrcPort or tcp.DstPort are equal to 80; tpc.Port != 80 will ensure that if either the source or destination ports are 80 the packet is filtered.
+Some field modules allow for flexible section where it is desirable to filter on a field that may have a source and destination.  To accommodate selection on IPs, Ports, MACs where there are both a source and destination, the special fields Port, IP, MAC are available.  If either source or destination matches an enumerated value with the field will be populated with the component that matched.  For example, tcp.Port==80 will match whenever either tcp.SrcPort or tcp.DstPort are equal to 80; tcp.Port != 80 will ensure that if either the source or destination ports are 80 the packet is filtered.
 
 ### Supported Options
 
@@ -39,7 +39,7 @@ The packet processor supports submodules which allow for breaking out specific f
 | dot11 | 802.11 Wireless packets |
 | dot11info | 802.11 information elements |
 | modbus | modbus/TCP packets |
-| MPLS | Multiprotocol Label Switching |
+| MPLS | Multi-protocol Label Switching |
 
 ### Renaming Extractions
 
@@ -201,7 +201,7 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | modbus | ReqResp | | modbus.ReqResp
 | modbus | Payload | | modbus.Payload
 
-For example, the following command will find all DNS queries for tumblr:
+For example, the following command will find all DNS queries for Tumblr:
 
 ```
 tag=pcap packet udp.DstPort==53 udp.Payload | grep -e Payload "tumblr" | text

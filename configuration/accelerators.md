@@ -10,7 +10,7 @@ Gravwell accelerators use a filtering technique that works best when data is rel
 
 Tags are always included in the acceleration, regardless of the extraction module in use.  Even when the query does not specify inline filters, the acceleration system can help narrow down and accelerate queries when there are multiple tags in a single well.
 
-Most acceleration modules incur about a 1-1.5% storage overhead when using the bloom engine, but extremely low-throughput wells may consume more storage.  If a well typically sees about 1-10 entries per second, acceleration may incur a 5-10% storage penalty, where a well with 10-15 thousand entries per second may see as little as 0.5% storage overhead.  Gravwell accelerators also allow for user specified collision rate adjustments.  If you can spare the storage, a lower collision rate may increase accuracy and speed up queries while increasing storage overhead.  Reducing the accuracy reduces the storage penaly but decreases accuracy and reduces the effectiveness of the accelerator.  The index engine will consume significantly more space depending on the number of fields extracted and the variability of the extracted data.  For example, full text indexing may cause the accelerator files to consume as much space as the stored data files.
+Most acceleration modules incur about a 1-1.5% storage overhead when using the bloom engine, but extremely low-throughput wells may consume more storage.  If a well typically sees about 1-10 entries per second, acceleration may incur a 5-10% storage penalty, where a well with 10-15 thousand entries per second may see as little as 0.5% storage overhead.  Gravwell accelerators also allow for user specified collision rate adjustments.  If you can spare the storage, a lower collision rate may increase accuracy and speed up queries while increasing storage overhead.  Reducing the accuracy reduces the storage penalty but decreases accuracy and reduces the effectiveness of the accelerator.  The index engine will consume significantly more space depending on the number of fields extracted and the variability of the extracted data.  For example, full text indexing may cause the accelerator files to consume as much space as the stored data files.
 
 Accelerators must operate on the direct data portion of an entry (with the exception of the src accelerator which directly operates on the SRC field).
 
@@ -25,7 +25,7 @@ The bloom engine uses bloom filters to indicate whether or not a piece of data e
 
 ### Optimizing the Index Engine
 
-The "index" uses a file-backed data structure to store and query key data. The file backing is performed using memory maps, which can be pretty abusive when the kernel is too eager to write back dirty pages.  It is highly reccomended that you tune the kernel's dirty page parameters to reduce the frequency that the kernel writes back dirty pages.  This is done via the "/proc" interface and can be made permanent using the "/etc/sysctl.conf" configuration file.  The following script will set some efficient parameters and ensure they stick across reboots.
+The "index" uses a file-backed data structure to store and query key data. The file backing is performed using memory maps, which can be pretty abusive when the kernel is too eager to write back dirty pages.  It is highly recommended that you tune the kernel's dirty page parameters to reduce the frequency that the kernel writes back dirty pages.  This is done via the "/proc" interface and can be made permanent using the "/etc/sysctl.conf" configuration file.  The following script will set some efficient parameters and ensure they stick across reboots.
 
 ```
 #!/bin/bash
@@ -52,8 +52,8 @@ Accelerators are configured on a per-well basis.  Each well can specify an accel
 
 | Acceleration Parameter | Description | Example |
 |----------|------|-------------|
-| Accelerator-Name  | Specifies the field extraction module to use at ingest | Accelerator-Name="json" |
-| Accelerator-Args  | Specifies arguments for the acceleration module, typically the fields to extract | Accelerator-Args="username hostname appname" |
+| Accelerator-Name  | Specifies the field extraction module to use at ingest. | Accelerator-Name="json" |
+| Accelerator-Args  | Specifies arguments for the acceleration module, typically the fields to extract. | Accelerator-Args="username hostname appname" |
 | Collision-Rate | Controls the accuracy for the acceleration modules using the bloom engine.  Must be between 0.1 and 0.000001. Defaults to 0.001. | Collision-Rate=0.01
 | Accelerate-On-Source | Specifies that the SRC field of each module should be included.  This allows combining a module like CEF with SRC. | Accelerate-On-Source=true
 | Accelerator-Engine-Override | Specifies the engine to use for indexing.  By default the index engine is used. | Accelerator-Engine-Override=index
@@ -109,9 +109,149 @@ tag=app json username==admin app.field1=="login event" app.field2 != "failure" |
 
 The json search module will transparently invoke the acceleration framework and provide a first-level filter on the "username" and "app.field1" extracted values.  The "app.field2" field is NOT accelerated in this query because it does not use a direct equality filter.  Filters that exclude, compare, or check for subsets are not eligible for acceleration.
 
+### Accelerating Specific Tags
+
+The acceleration system allows for acceleration at the well or tag levels, this allows you to specify a basic acceleration scheme on a well then specify specific accelerator configurations for specific tags or groups of tags.
+
+Per tag acceleration is enabled by including one or more `Tag-Accelerator-Definitions` in the `[global]` configuration block in your `gravwell.conf`.  The `Tag-Accelerator-Definitions` configuration parameter should point to a file containing `Tag-Accelerator` blocks.  The `Tag-Accelerator` blocks allow for specifying a set of tags and an accelerator configuration for those specific tags.
+
+For example, lets look at a definition where a well has a default Acceleration schema (or none at all) and several tags are singled out.  In this example we are going to define two wells in addition to the default well.  We will then include an accelerator definition file that will specify specific accelerators for tags.
+
+Note - Multiple `Tag-Accelerator-Definitions` may be specified to include multiple files.
+
+##### gravwell.conf
+
+```
+[global]
+	Ingest-Auth=foo
+	Control-Auth=bar
+	Ingest-Port=4023
+	TLS-Ingest-Port=0
+	Log-Level=ERROR
+
+	Tag-Accelerator-Definitions="/opt/gravwell/etc/accel.defs"
+
+[Default-Well]
+	Location="/opt/gravwell/storage/default"
+
+[Storage-Well "test"]
+	Location="/opt/gravwell/storage/test"
+	Tags=test*
+	Accelerator-Name="fulltext"
+	Accelerator-Args="-ignoreTS -ignoreUUID"
+
+[Storage-Well "raw"]
+	Location="/opt/gravwell/storage/raw"
+	tags=raw*
+	tags=pcap*
+```
+
+##### accel.defs
+
+```
+[Tag-Accelerator "csv things"]
+	Accelerator-Name=csv
+	Accelerator-Args="[0] [1] [2] [3] [4] [5] [6]"
+	Tags=test1
+	Tags=testspecial*
+	Tags=firewall
+
+[Tag-Accelerator "packet stuff"]
+	Accelerator-Name=packet
+	Accelerator-Args="ipv4.SrcIP ipv4.DstIP tcp.SrcPort tcp.DstPort"
+	Tags=pcap
+```
+
+The `Tag-Accelerator` definitions support tag wildcards in the same way as a well, but a `Tag-Accelerator` specification does NOT have be the same as a well specification.
+
+Lets build out a table to see how specific tags would be mapped to specific wells and accelerators:
+
+| Tag      | Well Assignment | Accelerator                   |
+|----------|-----------------|-------------------------------|
+| default  | `default`       | NONE                          |
+| firewall | `default`       | `csv`                         |
+| test1    | `test`          | `csv`                         |
+| testfoo  | `test`          | `fulltext`                    |
+| pcap     | `raw`           | `packet`                      |
+
+
+#### Accelerator Tag Match Rules
+
+Accelerator tag definitions CAN overlap with some specific rules.  This is in contrast to the well assignment rules where a single tag may not match two different specifications.  Tags are matched against an accelerator definition using either a `hard` match or a `soft` match.  A `hard` match occurs when the tag is directly specified without any wildcards, a `soft` match occurs when a tag is matched using a wildcard globbing pattern.  For example the tag `foobar` would match the tag specification `foo*` via a soft match, if we directly specified the tag `foobar` then it would be a hard match.
+
+The rules for matching tags are that a tag may not match multiple `soft` specifications or have multiple `hard` matches.  Let's look at a specification which would violate these matching rules and cause undefined behavior:
+
+```
+[Tag-Accelerator "csv things"]
+	Accelerator-Name=csv
+	Accelerator-Args="[0] [1] [2] [3] [4] [5] [6]"
+	Tags=test1
+	Tags=foobar*
+
+[Tag-Accelerator "packet stuff"]
+	Accelerator-Name=packet
+	Accelerator-Args="ipv4.SrcIP ipv4.DstIP tcp.SrcPort tcp.DstPort"
+	Tags=foo*
+```
+
+Notice that the two accelerator definitions have both a `foobar*` and a `foo*` tag matching pattern, this means that if we established the tag `foobarbaz` it could match both specifications (two `soft` matches).  Gravwell will send a notification indicating that the tag matches overlap.
+
+Now lets look at a specification where there is an allowed overlap:
+
+```
+#zeekconn is by far the most noisy, set a special accelerator for it
+[Tag-Accelerator "zeek conn"]
+	Accelerator-Name=fields
+	Accelerator-Args=`-d "\t" [1] [2] [3] [4] [5] [6] [7] [11] [15]`
+	Tags=zeekconn
+
+# All other zeek logs can use a tuned fulltext accelerator
+[Tag-Accelerator "zeek"]
+	Accelerator-Name=fulltext
+	Accelerator-Args=`-ignoreFloat -min 2`
+	Tags=zeek* #apply to all zeek prefixed tags
+```
+
+Note that the tag `zeekconn` can be matched against both accelerators, however the accelerator definition `zeek conn` has a specific `hard` match where the more generic `zeek` definition would match with a `soft` match.  Because the tag has a hard and soft match, the specifications are legal and the `zeekconn` tag will be assigned the appropriate accelerator.  The `hard` and `soft` matching rules make it convenient to specify and acceleration for subset of tags and then tailor accelerators for specific high volume tags as is the case for Zeek data.
+
+
+`Tag-Accelerator` definitions can be included as external files or directly in the `gravwell.conf` file.  Here is a valid `gravwell.conf` that specifies a few accelerator deviations as well as two external definition files:
+
+```
+[global]
+	Ingest-Auth=foo
+	Control-Auth=bar
+	Ingest-Port=4023
+	TLS-Ingest-Port=0
+	Log-Level=ERROR
+
+	Tag-Accelerator-Definitions="/opt/gravwell/etc/syslog.defs"
+	Tag-Accelerator-Definitions="/opt/gravwell/etc/zeek.defs"
+
+[Default-Well]
+	Location="/opt/gravwell/storage/default"
+
+[Storage-Well "test"]
+	Location="/opt/gravwell/storage/test"
+	Tags=test*
+	Accelerator-Name="fulltext"
+	Accelerator-Args="-ignoreTS -ignoreUUID"
+
+[Tag-Accelerator "csv things"]
+	Accelerator-Name=csv
+	Accelerator-Args="[0] [1] [2] [3] [4] [5] [6]"
+	Tags=test1
+	Tags=foobar*
+
+[Tag-Accelerator "packet stuff"]
+	Accelerator-Name=packet
+	Accelerator-Args="ipv4.SrcIP ipv4.DstIP tcp.SrcPort tcp.DstPort"
+	Tags=foo*
+```
+
 ## Fulltext
 
-The fulltext accelerator is designed to index words within text logs and is considered the most flexible acceleration option.  Many of the other search modules support invoking the fulltext accelerator when executing queries.  However, the primary search module for engaging with the fulltext accelerator is the [grep](/search/grep/grep.md) module with the `-w` flag.  Much like the unix grep utility, `grep -w` specifies that the provided filter is expected to a word, rather than a subset of bytes.  Running a search with `words foo bar baz` will look for the words foo, bar, and baz and engage the fulltext accelerator.
+The fulltext accelerator is designed to index words within text logs and is considered the most flexible acceleration option.  Many of the other search modules support invoking the fulltext accelerator when executing queries.  However, the primary search module for engaging with the fulltext accelerator is the [grep](/search/grep/grep.md) module with the `-w` flag.  Much like the Unix grep utility, `grep -w` specifies that the provided filter is expected to a word, rather than a subset of bytes.  Running a search with `words foo bar baz` will look for the words foo, bar, and baz and engage the fulltext accelerator.
 
 While the fulltext accelerator may be the most flexible, it is also the most costly.  Using the fulltext accelerator can significantly reduce the ingest performance of Gravwell and can consume significant storage space, this is due to the fact that the fulltext accelerator is indexing on virtually every component of every entry.
 
@@ -126,7 +266,7 @@ The fulltext accelerator supports a few options which allow for refining the typ
 | -min | Require that extracted tokens be at least X bytes long.  This can help prevent indexing on very small words such as "is" or "I". | `-min 3` | DISABLED |
 | -max | Require that extracted tokens be less than X bytes long.  This can help prevent indexing on very large "blobs" within logs that will never be feasibly queried. | `-max 256` | DISABLED |
 | -ignoreUUID | Enable a filter to ignore UUID/GUID values.  Some logs will generate a UUID for every entry, which incurs significant indexing overhead and provides very little value. | `-ignoreUUID` | DISABLED |
-| -ignoreTS | Identify and ignore timestamps during acceleration. Because timestamps change so frequently, they can be a significant source of bloat. The fulltext accelerator ignores timestamps by default | `-ignoreTS` | ENABLED |
+| -ignoreTS | Identify and ignore timestamps during acceleration. Because timestamps change so frequently, they can be a significant source of bloat. The fulltext accelerator ignores timestamps by default. | `-ignoreTS` | ENABLED |
 | -ignoreFloat | Ignore floating point numbers. Logs where floating point numbers are used for filters can make use of `-accptFloat`. | `-acceptFloat` | ENABLED |
 | -maxInt | Enables a filter that will only index integers below a certain size.  This can be valuable when indexing data that such as HTTP access logs.  You want to index the return codes, but not the response times and data sizes. | `-maxInt 1000` | DISABLED |
 
@@ -134,7 +274,7 @@ NOTE: Make sure you understand your data before enabling the `-acceptTS` and `-a
 
 ### Example Well Configuration
 
-The following well configuraiton performs fulltext acceleration using the `index` engine.  We are attempting to identify and ignore timestamps, UUIDs, and require that all tokens be at least 2 bytes in length.
+The following well configuration performs fulltext acceleration using the `index` engine.  We are attempting to identify and ignore timestamps, UUIDs, and require that all tokens be at least 2 bytes in length.
 
 ```
 [Default-Well]
@@ -159,7 +299,7 @@ The JSON accelerator module is specified using the accelerator name "json" and u
 
 ## Syslog
 
-The syslog accelerator is designed to operate on conformant RFC5424 syslog messages.  See the [syslog search module](#!search/syslog/syslog.md) section for more information on field extraction.
+The syslog accelerator is designed to operate on conforming RFC5424 syslog messages.  See the [syslog search module](#!search/syslog/syslog.md) section for more information on field extraction.
 
 ### Example Well Configuration
 
@@ -187,7 +327,7 @@ The CEF accelerator is designed to operate on CEF log messages and is just as fl
 
 ## Fields
 
-The fields accelerator can operate on any delimited data format, whether it be CSV, TSV, or some other delimiter.  The fields accelerator allows you to specify the delimiter the same way as the search module.  See the [fields search module](#!search/fields/fields.md) secion for more information on field extraction.
+The fields accelerator can operate on any delimited data format, whether it be CSV, TSV, or some other delimiter.  The fields accelerator allows you to specify the delimiter the same way as the search module.  See the [fields search module](#!search/fields/fields.md) section for more information on field extraction.
 
 ### Example Well Configuration
 
@@ -203,7 +343,7 @@ This configuration extracts four fields from a comma-separated entry. Note the u
 
 ## CSV
 
-The CSV accelerator is designed to operate on comma-separated value data, automatically removing surrounding whitespace and double quotes from data.  See the [CSV search module](#!search/csv/csv.md) section for more informaton on column extraction.
+The CSV accelerator is designed to operate on comma-separated value data, automatically removing surrounding whitespace and double quotes from data.  See the [CSV search module](#!search/csv/csv.md) section for more information on column extraction.
 
 ### Example Well Configuration
 
@@ -229,7 +369,7 @@ The regex accelerator allows complicated extractions at ingest time in order to 
 	Accelerator-Args="^\\S+\\s\\[(?P<app>\\w+)\\]\\s<(?P<uuid>[\\dabcdef\\-]+)>\\s(?P<src>\\S+)\\s(?P<srcport>\\d+)\\s(?P<dst>\\S+)\\s(?P<dstport>\\d+)\\s(?P<path>\\S+)\\s"
 ```
 
-Attention: Remember to escape backslashes '\\' when specifying regular expressions in the gravwell.conf file.  The regex argument '\\w' will become '\\\\w'
+Note: Remember to escape backslashes '\\' when specifying regular expressions in the gravwell.conf file.  The regex argument '\\w' will become '\\\\w'.
 
 ## Winlog
 
@@ -333,7 +473,7 @@ tag=app src dead::beef | fields -d "," [1]=="security" [2]="process" [5]="domain
 
 ## Acceleration Performance and Benchmarking
 
-To understand the benefits and drawbacks of acceleration it is best to see how it impacts storage use, ingest performance, and query performance.  We will use some apache combined access logs that are generated using a generator available on [github](https://github.com/kiritbasu/Fake-Apache-Log-Generator).  Our dataset is 10 million appache combined access logs that are spread out over approximately 24 hours; the total data is 2.1GB.  We will define 4 wells with 4 different configurations.  We will be taking a fairly naive approach to indexing this data, as there are many parameters that don't make a lot of sense to index on, such as the number of returned bytes.
+To understand the benefits and drawbacks of acceleration it is best to see how it impacts storage use, ingest performance, and query performance.  We will use some apache combined access logs that are generated using a generator available on [github](https://github.com/kiritbasu/Fake-Apache-Log-Generator).  Our dataset is 10 million Apache combined access logs that are spread out over approximately 24 hours; the total data is 2.1GB.  We will define 4 wells with 4 different configurations.  We will be taking a fairly naive approach to indexing this data, as there are many parameters that don't make a lot of sense to index on, such as the number of returned bytes.
 
 
 
@@ -391,7 +531,7 @@ These tests were conducted using Gravwell version `3.1.5`
 
 ### Ingest Performance
 
-For ingest we will use the singleFile ingester.  The singleFile ingester is designed to ingest a single newline delimited file, deriving timestamps as it goes.  Because the ingester is deriving timestamps, it requires some CPU resources.  The singleFile ingester is available on our [github page](https://github.com/gravwell/ingesters/). The exact invocation of the singleFile ingester is:
+For ingest we will use the singleFile ingester.  The singleFile ingester is designed to ingest a single newline delimited file, deriving timestamps as it goes.  Because the ingester is deriving timestamps, it requires some CPU resources.  The singleFile ingester is available on our [GitHub page](https://github.com/gravwell/ingesters/). The exact invocation of the singleFile ingester is:
 
 ```
 ./singleFile -i apache_fake_access_10M.log -clear-conns 172.17.0.3 -block-size 1024 -timeout=10 -tag-name=fulltext
@@ -404,11 +544,11 @@ For ingest we will use the singleFile ingester.  The singleFile ingester is desi
 | regexindex | 57.58  KE/s        | 12.11 MB/s |
 | fulltext   | 26.37  KE/s        |  5.55 MB/s |
 
-We can see from the ingest performance that the fulltext acceleration system dramtically reduces the ingest performance.  While 5.55MB/s seems like poor ingest performance, it is worth mentioning that this is still about 480GB of data and 2.3 billion entries per day.
+We can see from the ingest performance that the fulltext acceleration system dramatically reduces the ingest performance.  While 5.55MB/s seems like poor ingest performance, it is worth mentioning that this is still about 480GB of data and 2.3 billion entries per day.
 
 ### Storage Usage
 
-Outside of ingest performance and some additional memory requirements, the main penalty to enabling acceleration is usage.  We can see that the index engine for each extraction methdology consumed over 50% more storage, while the bloom engine consumed an additional 4%.  The storage usage is very dependent on data consumed, but on average the indexing system will consume significantly more storage.
+Outside of ingest performance and some additional memory requirements, the main penalty to enabling acceleration is usage.  We can see that the index engine for each extraction methodology consumed over 50% more storage, while the bloom engine consumed an additional 4%.  The storage usage is very dependent on data consumed, but on average the indexing system will consume significantly more storage.
 
 |  Well      | Used Storage | Diff From Raw |
 |------------|--------------|---------------|
@@ -419,7 +559,7 @@ Outside of ingest performance and some additional memory requirements, the main 
 
 ### Query Performance
 
-To demonstrate the differences in query performance we will execute two queries which can be categorized as sparse and dense.  The sparse query will look for a specific IP in the data set, returning just a handfull of entries.  The dense query will look for a specific url that is reasonably common in the data set.  To simplify the queries we will install an ax module for the regexindex and regexbloom tags that matches the acceleration system.  The dense query will retrieve roughly 12% of the entries in the data set, while the sparse query will retrieve approximately 0.01%
+To demonstrate the differences in query performance we will execute two queries which can be categorized as sparse and dense.  The sparse query will look for a specific IP in the data set, returning just a handful of entries.  The dense query will look for a specific url that is reasonably common in the data set.  To simplify the queries we will install an ax module for the regexindex and regexbloom tags that matches the acceleration system.  The dense query will retrieve roughly 12% of the entries in the data set, while the sparse query will retrieve approximately 0.01%.
 
 The sparse and dense queries are:
 
@@ -449,9 +589,9 @@ Note: The regex search module/autoextractor is not fully compatible with the ful
 
 #### Fulltext
 
-The above benchmarks make it very apparent that the fulltext accelerator has significant ingest and storage penalties and the example queries don't appear to justify those expenses.  If your dat is entirely token based such as tab delimited, csv, or json and every token is entirely descreet (single words, numbers, IPs, values, etc...) the fulltext accelerator doesn't make much sense.  However, if your data has complex components the fulltext accelerator can do things the other accelerators cannot.  We have been using Apache combined access logs, lets look at a query that allows the fulltext accelerator to really shine.
+The above benchmarks make it very apparent that the fulltext accelerator has significant ingest and storage penalties and the example queries don't appear to justify those expenses.  If your data is entirely token based such as tab delimited, csv, or json and every token is entirely discreet (single words, numbers, IPs, values, etc...) the fulltext accelerator doesn't make much sense.  However, if your data has complex components the fulltext accelerator can do things the other accelerators cannot.  We have been using Apache combined access logs, lets look at a query that allows the fulltext accelerator to really shine.
 
-We are going to look at subcomponents of the URL and get a chart of users that are browsing our the `/apps` subdirectory using a PowerPC Macintosh computer.  The regular expressions in the above examples index on full fields within the Apache log.  They cannot drill down and use parts of those fields for acceleration, fulltext can.
+We are going to look at sub-components of the URL and get a chart of users that are browsing our the `/apps` subdirectory using a PowerPC Macintosh computer.  The regular expressions in the above examples index on full fields within the Apache log.  They cannot drill down and use parts of those fields for acceleration, fulltext can.
 
 We will optimized the query for both the fulltext indexer and the others so that we can be fair, however both queries will work on either of the datasets.
 

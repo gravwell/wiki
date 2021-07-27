@@ -7,7 +7,7 @@ This API implements the creation, installation, and deletion of Gravwell kits. K
 * Dashboards
 * Auto-extractor definitions
 * Templates
-* Pivots
+* Actionables
 * User files
 * Macros
 * Search library entries
@@ -16,7 +16,8 @@ A given kit will also have the following attributes, specified at build time:
 
 * ID: A unique identifier for this kit. We recommend following Android naming practice, e.g. "com.example.my-kit".
 * Name: A human-friendly name for the kit, e.g. "My Kit".
-* Description: A description of the kit.
+* Description: A short, plain-text description of the kit, e.g. "This kit processes JSON logs from Product XYZ".
+* Readme: A longer, Markdown-formatted description of exactly what is in the kit and what it can do.
 * Version: An integer version of the kit.
 
 ## Building a kit
@@ -28,6 +29,7 @@ type KitBuildRequest struct {
 	ID                string
 	Name              string
 	Description       string
+	Readme            string
 	Version           uint
 	MinVersion        CanonicalVersion 
 	MaxVersion        CanonicalVersion 
@@ -51,7 +53,7 @@ type KitBuildRequest struct {
 }
 ```
 
-Note that while the ID, Name, Description, and Version fields are required, the arrays of templates/pivots/dashboards etc. are optional. For example, here is a request to build a kit containing two dashboards, a pivot, a resource, and a scheduled search:
+Note that while the ID, Name, Description, and Version fields are required, the arrays of templates/actionables/dashboards etc. are optional. For example, here is a request to build a kit containing two dashboards, an actionable, a resource, and a scheduled search:
 
 ```
 {
@@ -106,7 +108,7 @@ Note that while the ID, Name, Description, and Version fields are required, the 
 }
 ```
 
-Attention: The UUIDs specified for templates, pivots, and userfiles should be the *GUIDs* associated with those structures, not the *ThingUUID* field which is also reported in a listing of items.
+Attention: The UUIDs specified for templates, actionables, and userfiles should be the *GUIDs* associated with those structures, not the *ThingUUID* field which is also reported in a listing of items.
 
 Attention: The UUIDs specified for Banner, Cover, and Icon must be included in the list of Files for the build request.  If the build request contains references to file UUIDs that are NOT included in the main file request the API server will reject the request.
 
@@ -124,7 +126,7 @@ This kit can be downloaded by doing a GET on `/api/kits/build/<uuid>`; given the
 
 ### Dependencies
 
-A kit may depend on other kits. List these dependencies in the Dependencies array using the following sturcture:
+A kit may depend on other kits. List these dependencies in the Dependencies array using the following structure:
 
 ```
 {
@@ -408,7 +410,7 @@ See the listing at the end of this page for a list of what "AdditionalInfo" fiel
 
 ## Kit Info
 
-A GET request on `/api/kits/<GUID>` where `<GUID>` is a guid of a specifically installed or staged kit will provide info about that specific kit.
+A GET request on `/api/kits/<GUID>` where `<GUID>` is a GUID of a specifically installed or staged kit will provide info about that specific kit.
 
 For example, a GET request on `/api/kits/549c0805-a693-40bd-abb5-bfb29fc98ef1` will yield:
 
@@ -730,7 +732,7 @@ For example if we issue a `GET` on `/api/kits/remote/c2870b48-ff31-4550-bd58-7b2
 
 ### Pulling kit assets from the remote kitserver
 
-Kits also contain assets that can be used to display images, markdown, licenses, and additional files that help explore the purpose of the kit prior to actually downloading/installing a kit.  These assets can be retrieved from the remote system by executing GET requests on `api/kits/remote/<guid>/<asset>`.  For example, if we wanted to pull back the asset of Type "image" and Legend "TEAM RAMROD!" for the kit with the guid `c2870b48-ff31-4550-bd58-7b2c1c10eeb3` you would issue a GET on `/api/kits/remote/c2870b48-ff31-4550-bd58-7b2c1c10eeb3/cover.jpg`.
+Kits also contain assets that can be used to display images, markdown, licenses, and additional files that help explore the purpose of the kit prior to actually downloading/installing a kit.  These assets can be retrieved from the remote system by executing GET requests on `api/kits/remote/<guid>/<asset>`.  For example, if we wanted to pull back the asset of Type "image" and Legend "TEAM RAMROD!" for the kit with the GUID `c2870b48-ff31-4550-bd58-7b2c1c10eeb3` you would issue a GET on `/api/kits/remote/c2870b48-ff31-4550-bd58-7b2c1c10eeb3/cover.jpg`.
 
 
 ## Kit item "Additional Info" fields

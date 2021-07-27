@@ -1,6 +1,6 @@
 # JSON
 
-The json module is used to extract and filter data from search entries into enumerated values for later use.  JSON is an excellent data format for daynmic exploration as the data is self-describing.  The JSON module can extract items and rename them, or filter based on the extracted value.  Filtering directly within the JSON module provides a very high speed and intuitive way to select data of a specific format 
+The json module is used to extract and filter data from search entries into enumerated values for later use.  JSON is an excellent data format for dynamic exploration as the data is self-describing.  The JSON module can extract items and rename them, or filter based on the extracted value.  Filtering directly within the JSON module provides a very high speed and intuitive way to select data of a specific format.
 
 ## Supported Options
 
@@ -22,7 +22,7 @@ The JSON module allows for a filtering based on equality.  If a filter is enable
 Note: If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped. If you wish to drop the entries which don't contain the field at all, use the `-s` flag.
 
 ## Examples
-To find the most prolific reddit posters, the following search extracts the "Author" field from each reddit post into a new enumerated value, then counts the occurrence of each author and puts it into a table:
+To find the most prolific Reddit posters, the following search extracts the "Author" field from each Reddit post into a new enumerated value, then counts the occurrence of each author and puts it into a table:
 
 ```
 tag=reddit json Author | count by Author | table Author count
@@ -50,7 +50,7 @@ xml System.Data | json -e Data domain
 
 ### Renaming Extractions
 
-Enumerated value names are derived by the last name in a JSON specification, in the earlier example which extracted the region_code field the output is populated in the "region_code" enumerated value.  Output enumerated value names can be overridden with an "as" argument.  The following example extracts the domain member from the Data enumerated value and assignes it into a new enumerated value named "dd":
+Enumerated value names are derived by the last name in a JSON specification, in the earlier example which extracted the region_code field the output is populated in the "region_code" enumerated value.  Output enumerated value names can be overridden with an "as" argument.  The following example extracts the domain member from the Data enumerated value and assigns it into a new enumerated value named "dd":
 
 ```
 json -e Data domain as dd

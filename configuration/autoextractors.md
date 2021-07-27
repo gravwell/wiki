@@ -2,12 +2,7 @@
 
 Gravwell enables per-tag extraction definitions that can ease the complexity of interacting with unstructured data and data formats that are not self-describing.  Unstructured data often requires complicated regular expressions to extract desired data fields, which can be time consuming to produce and prone to errors.
 
-Auto-extractors are simply definitions that can be applied to tags and describe how to correctly extract fields from the data in a given tag. The "ax" module then automatically invokes the appropriate functionality of other modules.  The auto-extractor system supports the following extraction methods:
-
-* [CSV](../search/csv/csv.md)
-* [Fields](../search/fields/fields.md)
-* [Regex](../search/regex/regex.md)
-* [Slice](../search/slice/slice.md)
+Auto-extractors are simply definitions that can be applied to tags and describe how to correctly extract fields from the data in a given tag. The "ax" module then automatically invokes the appropriate functionality of other modules. 
 
 Auto-extractor definitions are used by the [AX](../search/ax/ax.md) module which transparently references the correct extraction based on tags.
 
@@ -28,7 +23,7 @@ The following fields must be populated:
 * Tag - The tag associated with the extraction; the dropdown will list existing tags
 * Module - The processing module used for extraction (regex, slice, csv, fields, etc.)
 * Parameters / Regex - The extraction definition
-* Arguments / Options - Module-specific arguments used to change the behavior of the extracton module (optional)
+* Arguments / Options - Module-specific arguments used to change the behavior of the extraction module (optional)
 
 An extractor may be edited after creation by clicking the pencil (edit) icon on its tile.
 
@@ -48,7 +43,7 @@ Each extractor contains a header and the following parameters:
 * name - A human-friendly name for the extraction
 * desc - A human-friendly string that describes the extraction
 * module - The processing module used for extraction (regex, slice, csv, fields, etc.)
-* args - Module-specific arguments used to change the behavior of the extracton module
+* args - Module-specific arguments used to change the behavior of the extraction module
 * params - The extraction definition
 
 Here is a sample auto-extraction file designed to pull some basic data from an Apache 2.0 access log using the regex module:
@@ -60,7 +55,7 @@ Here is a sample auto-extraction file designed to pull some basic data from an A
 	name="apacheaccess"
 	desc="Apache 2.0 access log extraction to pull requester items"
 	module="regex"
-	args="" #empty values can be completely ommited, the regex processor does not support args
+	args="" #empty values can be completely omitted, the regex processor does not support args
 	params='^(?P<ip>\d+\.\d+\.\d+\.\d+)[^\"]+\"(?P<method>\S+)\s(?P<url>\S+)\s(?P<proto>\S+)\"\s(?P<status>\d+)'
 ```
 
@@ -83,7 +78,7 @@ Multiple extractions can be specified in a single file by simply establishing a 
 	name="apacheaccess"
 	desc="Apache 2.0 access log extraction to pull requester items"
 	module="regex"
-	args="" #empty values can be completely ommited, the regex processor does not support args
+	args="" #empty values can be completely omitted, the regex processor does not support args
 	params='^(?P<ip>\d+\.\d+\.\d+\.\d+)[^\"]+\"(?P<method>\S+)\s(?P<url>\S+)\s(?P<proto>\S+)\"\s(?P<status>\d+)'
 
 #Extraction to apply names to CSV data
@@ -95,7 +90,7 @@ Multiple extractions can be specified in a single file by simply establishing a 
 	params="date, name, country, city, hash, a comma ,\"field with comma,\""
 ```
 
-The second extraction for the "locs" tag demonstrates the ommission of non-essential parameters (here we don't specify args) and using backslashes to allow double quotes in strings.  Extractions only have 3 essential parameters:
+The second extraction for the "locs" tag demonstrates the omission of non-essential parameters (here we don't specify args) and using backslashes to allow double quotes in strings.  Extractions only have 3 essential parameters:
 
 * module
 * params
@@ -103,7 +98,7 @@ The second extraction for the "locs" tag demonstrates the ommission of non-essen
 
 ## Filtering
 
-The AX module supports integrated filtering at time of *search*.  Filtering cannot, however, be applied to any auto-extracton *definition*.
+The AX module supports integrated filtering at time of *search*.  Filtering cannot, however, be applied to any auto-extraction *definition*.
 
 #### Filtering Operators
 
@@ -127,7 +122,7 @@ We will demonstrate a few auto-extraction definitions and compare and contrast q
 
 ### CSV
 
-CSV or "Comma Separated Values" can be a relatively efficient text transport and storage system.  However, CSV data is not self-describing, meaning that if all we have is a bunch of CSV data it can be difficult to tell what columns actually are.  Auto-extractors can be used to predefine column names and make it dramatically easier to work with CSV data.
+CSV or "Comma Separated Values" can be a relatively efficient text transport and storage system.  However, CSV data is not self-describing, meaning that if all we have is a bunch of CSV data it can be difficult to tell what columns actually are.  Auto-extractors can be used to pre-define column names and make it dramatically easier to work with CSV data.
 
 Here is an example data entry that is encoded using CSV:
 
@@ -168,7 +163,7 @@ Note: The position of the names in the `params` variable indicates the field nam
 
 ### Fields
 
-The fields module is an extremely flexible processing module that allows us to define arbitrary delimiters and field rules in order to extract data.  Many popular security applications like Bro/Zeek default to TSV (tab seperated values) for data export.  Other custom applications may use weird separators like "|" or a series of bytes like "//".  With the fields extractor you can handle it all, and when combined with auto-extractors users don't have to worry about the details of the data format.
+The fields module is an extremely flexible processing module that allows us to define arbitrary delimiters and field rules in order to extract data.  Many popular security applications like Bro/Zeek default to TSV (tab separated values) for data export.  Other custom applications may use weird separators like "|" or a series of bytes like "//".  With the fields extractor you can handle it all, and when combined with auto-extractors users don't have to worry about the details of the data format.
 
 Unlike other auto-extractor processors, the fields module has a variety of configuration arguments.  The list of arguments is fully documented in the [fields module documentation](/#!search/fields/fields.md).  Only the "-e" flag is unsupported.
 

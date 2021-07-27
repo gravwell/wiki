@@ -1,6 +1,6 @@
 ## Enrich
 
-The `enrich` module can add enumerated values to each entry in a pipeline; these values can be specified in the module arguments or can come from a resource. `enrich` can be used to annotate data with constant enumerated values, such as "User=admin", in order to simplify visualization and reporting, pivoting within compound queries, and working with nontemporal data. 
+The `enrich` module can add enumerated values to each entry in a pipeline; these values can be specified in the module arguments or can come from a resource. `enrich` can be used to annotate data with constant enumerated values, such as "User=admin", in order to simplify visualization and reporting, pivoting within compound queries, and working with non-temporal data. 
 
 ### Supported Options
 
@@ -9,7 +9,7 @@ The `enrich` module can add enumerated values to each entry in a pipeline; these
 
 ### Enriching with string constants
 
-The simplest use of `enrich` is to specify enumerated values and data within the query. For example, to add an enumerated value "foo" with the value "bar" to every entry, simply specify the name and content of the enumerated value, seperated by whitespace:
+The simplest use of `enrich` is to specify enumerated values and data within the query. For example, to add an enumerated value "foo" with the value "bar" to every entry, simply specify the name and content of the enumerated value, separated by whitespace:
 
 ```
 tag=jsondata json val | enrich foo bar | table val foo

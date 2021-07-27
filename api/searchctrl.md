@@ -91,7 +91,7 @@ null
 
 ## Deleting/terminating a search
 
-Deleting a search terminates the search (and kicks off any active users) and immediately removes any storage associated with the search results.  A search may be deleted while in any state.  To delete a search peroform a DELETE request to /api/searchctrl/:ID with the correct ID.  The server will return 200 on success, 5XX on error, and 403 if the user is not authorized to modify the search.
+Deleting a search terminates the search (and kicks off any active users) and immediately removes any storage associated with the search results.  A search may be deleted while in any state.  To delete a search perform a DELETE request to /api/searchctrl/:ID with the correct ID.  The server will return 200 on success, 5XX on error, and 403 if the user is not authorized to modify the search.
 
 ```
 WEB DELETE /api/searchctrl/010985768:
@@ -111,7 +111,7 @@ null
 
 An optional download format for a search is an `archive`.  An archive represents a fully self-contained search that can be imported into another Gravwell instance.  The import API accepts the saved search archives as an upload and unpacks the search into the saved search system.  Users can then attach to the search as if it were saved on the local system.
 
-When a search archive is reimported, the imported search is owned by the user that *imported* it, regardless of which user *downloaded* it.  An optional `GID` form field may be supplied in the import request to share the imported search with a group.
+When a search archive is re-imported, the imported search is owned by the user that *imported* it, regardless of which user *downloaded* it.  An optional `GID` form field may be supplied in the import request to share the imported search with a group.
 
 Searches are imported by performing a multipart form `POST` to the `/api/searchctrl/import` URL.
 

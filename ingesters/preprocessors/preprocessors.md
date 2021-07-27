@@ -85,7 +85,7 @@ The JSON Extraction preprocessor Type is `jsonextract`.
 
 ### Common Use Cases
 
-Many data sources may provide additional metadata related to transport and/or storage that are not part of the actual log stream.  The jsonextract preprocessor can downselect fields to reduce storage costs.
+Many data sources may provide additional metadata related to transport and/or storage that are not part of the actual log stream.  The jsonextract preprocessor can down-select fields to reduce storage costs.
 
 ### Example: Condensing JSON Data Records
 
@@ -113,7 +113,7 @@ The JSON Array Split preprocessor Type is `jsonarraysplit`.
 * `Extraction` (string): specifies the JSON field containing a struct which should be split, e.g. `Extraction=Users`, `Extraction=foo.bar`. If you do not set `Extraction`, the preprocessor will attempt to treat the entire object as an array to split.
 * `Passthrough-Misses` (boolean, optional): If set to true, the preprocessor will pass along entries for which it was unable to extract the requested field. By default, these entries are dropped.
 * `Force-JSON-Object` (boolean, optional): By default, the preprocessor will emit entries with each containing one item in the list and nothing else; thus extracting `foo` from `{"foo": ["a", "b"]}` would result in two entries containing "a" and "b" respectively. If this option is set, that same entry would result in two entries containing `{"foo": "a"}` and `{"foo": "b"}`.
-* `Additional-Fields` (string, optional): A comma delimited list of additional fields outside the array to be split that will be extracted and included in each entry, e.g. `Additional-Fields="foo,bar, foo.bar.baz"`
+* `Additional-Fields` (string, optional): A comma delimited list of additional fields outside the array to be split that will be extracted and included in each entry, e.g. `Additional-Fields="foo,bar, foo.bar.baz"`.
 
 ### Common Use Cases
 
@@ -469,7 +469,7 @@ Many data streams may have multiple timestamps or values that can easily be inte
 Nov 25 15:09:17 webserver alerts[1923]: Nov 25 14:55:34,GET,10.1.3.4,/info.php
 ```
 
-We would like to extract the inner timestamp, "Nov 25 14:55:34", for the TS field on the ingested entry. Because it uses the same format as the syslog timestamp at the beginning of the line, we cannot extract it with clever timestamp format rules. However, the regex timestamp preprocessor can be used to extract it. By specifying a regular expression which captures the desired timestamp in a named submatch, we can extract timestamps from anywhere in an entry. For this entry, the regex `\S+\s+\S+\[\d+\]: (?<timestamp>.+),` should be sufficient to properly extract the desired timestamp.
+We would like to extract the inner timestamp, "Nov 25 14:55:34", for the TS field on the ingested entry. Because it uses the same format as the syslog timestamp at the beginning of the line, we cannot extract it with clever timestamp format rules. However, the regex timestamp preprocessor can be used to extract it. By specifying a regular expression which captures the desired timestamp in a named sub-match, we can extract timestamps from anywhere in an entry. For this entry, the regex `\S+\s+\S+\[\d+\]: (?<timestamp>.+),` should be sufficient to properly extract the desired timestamp.
 
 This config could be used to extract the timestamp shown in the example above:
 
@@ -796,7 +796,7 @@ This example forwards entries via a TCP forwarder then drops them.
 
 ## Cisco ISE Preprocessor
 
-The Cisco ISE preprocessor is designed to parse and accomodate the format and transport of Cisco ISE logs.  See the [Cisco Introduction to ISE Syslogs](https://www.cisco.com/c/en/us/td/docs/security/ise/syslog/Cisco_ISE_Syslogs/m_IntrotoSyslogs.pdf) for more information.
+The Cisco ISE preprocessor is designed to parse and accommodate the format and transport of Cisco ISE logs.  See the [Cisco Introduction to ISE Syslogs](https://www.cisco.com/c/en/us/td/docs/security/ise/syslog/Cisco_ISE_Syslogs/m_IntrotoSyslogs.pdf) for more information.
 
 The Cisco ISE preprocessor is named `cisco_ise` and supports the ability to reassemble multipart messages, reformat the messages into a format more appropriate for Gravwell and modern syslog systems, filter unwanted message pairs, and remove redundant message headers.
 

@@ -1,6 +1,6 @@
 # Downloading search results
 
-Each renderer supports downloading search results in a variety of formats.  For example, if a query is rendered via a table we can directly download the results as csv, json, or the native lookup format.  Performing a download may require an extra step if the download request is coming from a browser.  Clients must be authenticated against the webserver with a valid JWT and the user must have access to the search in order to download it.  Download links are guarded using the standard JWT token scheme as all other api urls.
+Each renderer supports downloading search results in a variety of formats.  For example, if a query is rendered via a table we can directly download the results as csv, json, or the native lookup format.  Performing a download may require an extra step if the download request is coming from a browser.  Clients must be authenticated against the webserver with a valid JWT and the user must have access to the search in order to download it.  Download links are guarded using the standard JWT token scheme as all other api URLs.
 
 ## Downloading Search Results
 Downloading the search with id 150460229 in the form of a CSV
@@ -10,7 +10,7 @@ GET /api/searchctrl/150460229/download/csv
 ```
 ## Accessing a download via temporary JWT token
 
-Because web browsers cannot perform file downloads via javascript (and therefor cannot deliver the JWT via a request header) search result downloads can also authenticate using a temporary JWT stored in a cookie named "token".  Clients **SHOULD NOT** store the normal JWT token in a cookie, instead clients should ask for a temporary JWT that can **ONLY** be used to download search results.  These temporary JWT tokens only grant access to download API urls and cannot be used on any other apis (as a header or cookie).  Temporary JWT tokens are valid for 3 seconds.
+Because web browsers cannot perform file downloads via Javascript (and therefor cannot deliver the JWT via a request header) search result downloads can also authenticate using a temporary JWT stored in a cookie named "token".  Clients **SHOULD NOT** store the normal JWT token in a cookie, instead clients should ask for a temporary JWT that can **ONLY** be used to download search results.  These temporary JWT tokens only grant access to download API URLs and cannot be used on any other APIs (as a header or cookie).  Temporary JWT tokens are valid for 3 seconds.
 
 Non-browser based clients that can deliver additional headers as part of a download request can ignore the temporary JWT token and cookie business and just send the normal JWT token in the appropriate request header.  If the server sees a valid JWT token in the standard header it will use that for authentication.
 

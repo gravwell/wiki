@@ -1,12 +1,12 @@
 # Custom Docker Deployments
 
-Most Gravwell components are deployed as statically compiled executables which are suitable for execution on most modern Linux hosts, which also enables easy Docker deployment.  Gravwell engineers use docker extensively for developement, testing, and internal deployment.  Docker also enables customers to rapidly standup, teardown, and otherwise manage a large Gravwell deployment.  To enable customers to get running quickly in a Docker deployment, we have provided sample Dockerfiles for both cluster and single edition SKUs.
+Most Gravwell components are deployed as statically compiled executables which are suitable for execution on most modern Linux hosts, which also enables easy Docker deployment.  Gravwell engineers use docker extensively for development, testing, and internal deployment.  Docker also enables customers to rapidly standup, teardown, and otherwise manage a large Gravwell deployment.  To enable customers to get running quickly in a Docker deployment, we have provided sample Dockerfiles for both cluster and single edition SKUs.
 
 The complete set of Dockerfiles can be found [here](https://update.gravwell.io/files/docker_buildfiles_ad05723a547d31ee57ed8880bb5ef4e9.tar.bz2) with an MD5 checksum of ad05723a547d31ee57ed8880bb5ef4e9.
 
 ## Building Docker Containers
 
-Building Docker containers using the provided Dockerfiles is extremely easy.  Gravwell docker deployments utilize the extremely small busybox base container, enabling very small continers.
+Building Docker containers using the provided Dockerfiles is extremely easy.  Gravwell docker deployments utilize the extremely small busybox base container, enabling very small containers.
 
 ### Dockerfile
 

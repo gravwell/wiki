@@ -12,15 +12,15 @@ This port is how Gravwell users access the Gravwell webserver. The default confi
 
 ## Cleartext Ingest Port: TCP 4023
 
-This port is used by ingesters to connect to indexers and upload entries via unencrypted communications. The default port is TCP 4023, but it can be changed using the `Ingest-Port` option in gravwell.conf. Because ingesters and indexers are often on entirely different networks, it is essential that firewalls are configured such that the *ingesters* are allowed to connect to this port on the *indexers*
+This port is used by ingesters to connect to indexers and upload entries via unencrypted communications. The default port is TCP 4023, but it can be changed using the `Ingest-Port` option in gravwell.conf. Because ingesters and indexers are often on entirely different networks, it is essential that firewalls are configured such that the *ingesters* are allowed to connect to this port on the *indexers*.
 
 ## TLS Ingest Port: TCP 4024
 
-This port is used by ingesters to connect to indexers and upload entries via TLS-encrypted communications. The default port is TCP 4024, but it can be changed using the `TLS-Ingest-Port` option in gravwell.conf. Because ingesters and indexers are often on entirely different networks, it is essential that firewalls are configured such that the *ingesters* are allowed to connect to this port on the *indexers*
+This port is used by ingesters to connect to indexers and upload entries via TLS-encrypted communications. The default port is TCP 4024, but it can be changed using the `TLS-Ingest-Port` option in gravwell.conf. Because ingesters and indexers are often on entirely different networks, it is essential that firewalls are configured such that the *ingesters* are allowed to connect to this port on the *indexers*.
 
 ## Indexer Replication Port: TCP 9606
 
-This port is used by indexers to communicate with each other for [replication](#!configuration/replication.md). The default port is 9606, if not otherwise specified in the `Peer` and `Listen-Address` options of the Replication portion of gravwell.conf. Only indexers use this port.
+This port is used by indexers to communicate with each other for [replication](#!configuration/replication.md). The default port is 9606 if not otherwise specified in the `Peer` and `Listen-Address` options of the Replication portion of gravwell.conf. Only indexers use this port.
 
 ## Datastore Port: TCP 9405
 

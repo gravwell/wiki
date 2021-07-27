@@ -16,30 +16,6 @@ tag=pcap packet ipv4.DstIP ~ 10.0.0.0/8 tcp.DstPort == 22
 
 Any entry whose DstIP and DstPort do not match the specified filters will be **dropped**.
 
-The following modules support filtering:
-
-* [ax](ax/ax.md)
-* [canbus](canbus/canbus.md)
-* [cef](cef/cef.md)
-* [csv](csv/csv.md)
-* [fields](fields/fields.md)
-* [grok](grok/grok.md)
-* [ip](ip/ip.md)
-* [ipfix](ipfix/ipfix.md)
-* [j1939](j1939/j1939.md)
-* [json](json/json.md)
-* [kv](kv/kv.md)
-* [namedfields](namedfields/namedfields.md)
-* [netflow](netflow/netflow.md)
-* [packet](packet/packet.md)
-* [packetlayer](packetlayer/packetlayer.md)
-* [regex](regex/regex.md)
-* [slice](slice/slice.md)
-* [subnet](subnet/subnet.md)
-* [syslog](syslog/syslog.md)
-* [winlog](winlog/winlog.md)
-* [xml](xml/xml.md)
-
 ## Filtering Operations & Data Types
 
 Within the Gravwell search pipeline, enumerated values can be a variety of different *types*, for example strings, integers, or IP addresses. Some types cannot be filtered in certain ways--it is not particularly useful to ask if an IP address is "less than" another IP address! The filtering operations supported by Gravwell are below:
@@ -55,7 +31,7 @@ Within the Gravwell search pipeline, enumerated values can be a variety of diffe
 | ~ | Subset |
 | !~ | Not subset |
 
-Most of these operations are self-explanatory, but the subset operations deserve special mention. The subset operation (~) applies to strings and IP addresses; for strings, it means "the enumerated value contaings the argument", while for IP addresses it means "the IP address is within the specified subnet. Thus, `json domainName ~ "gravwell.io"` would pass only those entries which have a JSON field named 'domainName' that contains the string "gravwell.io". Similarly, `packet ipv4.DstIP ~ 10.0.0.0/8` would pass only those entries whose IPv4 destination IP address is in the 10.0.0.0/8 subnet.
+Most of these operations are self-explanatory, but the subset operations deserve special mention. The subset operation (~) applies to strings and IP addresses; for strings, it means "the enumerated value contains the argument", while for IP addresses it means "the IP address is within the specified subnet. Thus, `json domainName ~ "gravwell.io"` would pass only those entries which have a JSON field named 'domainName' that contains the string "gravwell.io". Similarly, `packet ipv4.DstIP ~ 10.0.0.0/8` would pass only those entries whose IPv4 destination IP address is in the 10.0.0.0/8 subnet.
 
 Each enumerated value type is compatible with some filters but not others:
 

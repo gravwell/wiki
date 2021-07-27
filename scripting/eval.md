@@ -11,7 +11,7 @@ The eval module has several important restrictions:
 
 Note: To make the structure of your eval expression more clear, hit Ctrl-Enter while typing the query to insert newlines if needed.
 
-See the generic description of the scripting languaged used in [the Anko scripting language documentation](scripting.md) for more details about the language itself.
+See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting.md) for more details about the language itself.
 
 ## Filtering: Expressions vs. Statements
 
@@ -31,7 +31,7 @@ The `if` form is a statement; all entries continue down the pipeline regardless 
 
 An expression is something which evaluates to a value, like the string `“foo”` or the number `1.5`. This also includes function calls, like `DoStuff(15)`, and boolean expressions such as `myVariable == 42`. Basically, anything which you could assign to a variable or pass as an argument to a function can be considered an expression.
 
-A statement controls the flow and structure of the script, like `if` and `switch` statements, variable creation/assignment, a return, etc. A statement might itself contain multiple sub-statements; for example, an `if` statement contains an expression and several lists of statements. If the expression evaluates to true, one list of statements is executed. If the expression evalutes to false, a different list is executed.
+A statement controls the flow and structure of the script, like `if` and `switch` statements, variable creation/assignment, a return, etc. A statement might itself contain multiple sub-statements; for example, an `if` statement contains an expression and several lists of statements. If the expression evaluates to true, one list of statements is executed. If the expression evaluates to false, a different list is executed.
 
 ## Enumerated Values
 

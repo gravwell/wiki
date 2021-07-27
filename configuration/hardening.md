@@ -46,7 +46,7 @@ User and group management is the sole responsibility of admin users. Non-admins 
 
 Default Gravwell installations have a single user named `admin` with the password `changeme`.  This default account uses the coveted UID of 1.  Gravwell treats UID 1 in the same way that Unix treats UID 0.  It is special and cannot be deleted, locked, or otherwise disabled.  You should protect this account carefully!
 
-While you cannot delete the `admin` user with the special UID of 1, you can change the username; which we **HIGHLY** reccomend you do.  This makes it much harder for an unauthorized user to guess credentials.  To try and further drive home the point that this default account requires your attention, we set the accounts 'real name' to "Sir changeme of change my password the third".  Seriously, the first thing you should do is lock down this account.
+While you cannot delete the `admin` user with the special UID of 1, you can change the username; which we **HIGHLY** recommend you do.  This makes it much harder for an unauthorized user to guess credentials.  To try and further drive home the point that this default account requires your attention, we set the accounts 'real name' to "Sir changeme of change my password the third".  Seriously, the first thing you should do is lock down this account.
 
 A default installation also contains a basic `users` group.  This group is just a starting point and does not have any special privileges.
 
@@ -78,15 +78,15 @@ By default, Gravwell is installed in `/opt/gravwell`.  The installers create the
 
 The notable exception is the File Follower ingester which executes under the `admin` group so that it can tail log files in `/var/log`.  If you do not want *any* Gravwell component executing with elevated privileges we recommend not using the [File Follower](#!ingesters/ingesters.md#File_Follower) and instead configure syslog to send data to the [Simple Relay](#!ingesters/ingesters.md#Simple_Relay) ingester via TCP.  You may also alter the File Follower systemd unit file to execute using the `gravwell` group if you do not need to follow any controlled system log files.  Check out the system unit file section below for more info.
 
-Gravwell installers come in two forms: respository installation packages (either Debian `.deb` or RedHat `.rpm`) and shell-based self-extracting installers.  The repository installation packages are all signed using the published Gravwell [respository key](https://update.gravwell.io/debian/update.gravwell.io.gpg.key).  The self-extracting shell installers are always accompanied by MD5 hashes. Always validate the MD5 hashes and/or repository signatures before installing any package (Gravwell or otherwise).
+Gravwell installers come in two forms: repository installation packages (either Debian `.deb` or RedHat `.rpm`) and shell-based self-extracting installers.  The repository installation packages are all signed using the published Gravwell [repository key](https://update.gravwell.io/debian/update.gravwell.io.gpg.key).  The self-extracting shell installers are always accompanied by MD5 hashes. Always validate the MD5 hashes and/or repository signatures before installing any package (Gravwell or otherwise).
 
 ## Installation Configuration Files
 
-Gravwell configuration files are stored in `/opt/gravwell/etc` and are used to control how webservers, search agents, indexers, and ingesters behave.  The Gravwell configuration files usually contain shared secret tokens that are used for authentication.  The shared secrets allow allow varying levels of control over Gravwell components.  For instance, if the `Ingest-Secret` is compromised attackers could send supurfluous entries into the index, consuming storage but not leaking any sensitive information, while compromising the `Control-Secret` would allow an attacker to search across the data in the indexers. Take care to avoid leaking secrets; aside from the ingest secret, most will never need to leave the indexer & webserver nodes.
+Gravwell configuration files are stored in `/opt/gravwell/etc` and are used to control how webservers, search agents, indexers, and ingesters behave.  The Gravwell configuration files usually contain shared secret tokens that are used for authentication.  The shared secrets allow allow varying levels of control over Gravwell components.  For instance, if the `Ingest-Secret` is compromised attackers could send superfluous entries into the index, consuming storage but not leaking any sensitive information, while compromising the `Control-Secret` would allow an attacker to search across the data in the indexers. Take care to avoid leaking secrets; aside from the ingest secret, most will never need to leave the indexer & webserver nodes.
 
-## Systemd Unit Files
+## systemd Unit Files
 
-Gravwell relies on the [systemd](https://www.freedesktop.org/wiki/Software/systemd/) init manager to get Gravwell up and running, as well as manage crash reports.  The installers register and install [SystemD unit files](https://www.freedesktop.org/software/systemd/man/systemd.unit.html) into `/etc/systemd/system`.  These unit files are responsible for starting the Gravwell processes and applying cgroup restrictions to ensure that Gravwell processes behave.
+Gravwell relies on the [systemd](https://www.freedesktop.org/wiki/Software/systemd/) init manager to get Gravwell up and running, as well as manage crash reports.  The installers register and install [systemd unit files](https://www.freedesktop.org/software/systemd/man/systemd.unit.html) into `/etc/systemd/system`.  These unit files are responsible for starting the Gravwell processes and applying cgroup restrictions to ensure that Gravwell processes behave.
 
 Most users do not need to change the systemd unit files, but if you need to allow an ingester to touch specific resources or want to run as an alternate user or group, you may want to tweak the `User` or `Group` parameters under the `[Service]` section.
 
@@ -145,7 +145,7 @@ The `CAP_NET_BIND_SERVICE` capability is used by the [Simple Relay](/#!ingesters
 
 ## Search Scripting and Automation
 
-The Gravwell automation system is extremely powerful. It can execute queries, update resources, and reach out to external systems.  The automation scripting system is underpinned by a [Turing Complete](https://simple.wikipedia.org/wiki/Turing_complete) language and can essentially do *anything*.  But with great power comes great responsibility.  Depending on your userbase, you may wish to disable "risky" API access in scripts to limit what a user can do.  APIs that are deemed "risky" are those that can establish external connectivity outside of Gravwell, including HTTP, network, SSH, FTP, SFTP, etc.
+The Gravwell automation system is extremely powerful. It can execute queries, update resources, and reach out to external systems.  The automation scripting system is underpinned by a [Turing Complete](https://simple.wikipedia.org/wiki/Turing_complete) language and can essentially do *anything*.  But with great power comes great responsibility.  Depending on your user base, you may wish to disable "risky" API access in scripts to limit what a user can do.  APIs that are deemed "risky" are those that can establish external connectivity outside of Gravwell, including HTTP, network, SSH, FTP, SFTP, etc.
 
 Disabling the risky APIs can reduce the chances that users export sensitive data.  Disable these APIs by setting the following in your Gravwell.conf file:
 

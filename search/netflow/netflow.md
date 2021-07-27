@@ -1,6 +1,6 @@
 ## Netflow
 
-The netflow processor is designed to extract and filter raw netflow data frames, allowing for quickly identfying network flows, filtering on ports, or generally monitoring the behavior of aggregate flows.  Gravwell has a native netflow ingester which is open source and avialable at https://github.com/gravwell/ingesters or as an installer in the [quickstart section](#!quickstart/downloads.md).
+The netflow processor is designed to extract and filter raw netflow data frames, allowing for quickly identifying network flows, filtering on ports, or generally monitoring the behavior of aggregate flows.  Gravwell has a native netflow ingester which is open source and available at https://github.com/gravwell/ingesters or as an installer in the [quickstart section](#!quickstart/downloads.md).
 
 ### Supported Options
 
@@ -33,13 +33,13 @@ The netflow search module is designed to process raw netflow frames.  A single n
 | Count | The number of records in the netflow frame | > < <= >= == != | Count >= 10
 | Version | The Netflow frame version | > < <= >= == != | Version == 5
 | Uptime | Total number of seconds the netflow sensor has been active | > < <= >= == != | Uptime > 0x100000
-| Sec | Current Unix timestampe of the sensing device | > < <= >= == != | Sec == 1526511023
+| Sec | Current Unix timestamp of the sensing device | > < <= >= == != | Sec == 1526511023
 | NSec | Residual nanoseconds for the current time of the sensing device | > < <= >= == != | Nsec > 0x100101
 | Sequence | Sequence counter of total flows on the sensing device | > < <= >= == != | Sequence == 1
 | EngineType | The type of flow-switching engine | > < <= >= == != | EngineType == 0x1A
 | EngineID | The ID for the flow sensing engine | > < <= >= == != | EngineID == 0x00
 | SampleMode | 2 bit ID for the Sampling mode of the sensing engine | > < <= >= == != | SampleMode == 0x01
-| SampleInterval | 14 bit value represening the sampling interval of the sensing engine | > < <= >= == != | SampleInterval > 0x100
+| SampleInterval | 14 bit value representing the sampling interval of the sensing engine | > < <= >= == != | SampleInterval > 0x100
 | Timestamp | Helper extractor that converts Sec and NSec to a friendly timestamp value. Filtering is NOT supported. | |
 
 #### Netflow v5 Record Data Items
@@ -63,7 +63,7 @@ The netflow search module is designed to process raw netflow frames.  A single n
 | Protocol | Protocol number of the flow (TCP = 6, UDP = 17 | > < <= >= == != | Protocol == 17
 | ToS | IP type of the flow | > < <= >= == != | ToS == 19
 | SrcAs | Source Autonomous System Number of the flow | > < <= >= == != | SrcAS == 15169
-| DstAs | Source Autonomous System Numer of the flow | > < <= >= == != | DstAs != 15169
+| DstAs | Source Autonomous System Number of the flow | > < <= >= == != | DstAs != 15169
 | SrcMask | Source IPv4 address mask bits | > < <= >= == != | SrcMask > 24
 | DstMask | Destination IPv4 address mask bits | > < <= >= == != | DstMask <= 16
 | Duration | Helper value that converts UptimeFirst and UptimeLast into a duration | > < <= >= == != | Duration > 100ms

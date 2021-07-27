@@ -1,6 +1,6 @@
 # Search Processing Modules
 
-Search modules are modules that operate on data in a passthrough mode, meaning that they perform some action (filter, modify, sort, etc.) and pass the entries down the pipeline. There can be many search modules and each operates in its own lightweight thread.  This means that if there are 10 modules in a search, the pipeline will spread out and use 10 threads.  Documentation for each module will indicate if the module causes distributed searches to collapse and/or sort.  Modules that collapse force the distributed pipelines to collapse, meaning that the module as well as all downstream modules execute on the frontend.  When starting a search it's best to put as many parallel modules as possible upstream of the first collapsing module, decreasing pressure on the communication pipe and allowing for greater parallelism.
+Search modules are modules that operate on data in a pass-through mode, meaning that they perform some action (filter, modify, sort, etc.) and pass the entries down the pipeline. There can be many search modules and each operates in its own lightweight thread.  This means that if there are 10 modules in a search, the pipeline will spread out and use 10 threads.  Documentation for each module will indicate if the module causes distributed searches to collapse and/or sort.  Modules that collapse force the distributed pipelines to collapse, meaning that the module as well as all downstream modules execute on the frontend.  When starting a search it's best to put as many parallel modules as possible upstream of the first collapsing module, decreasing pressure on the communication pipe and allowing for greater parallelism.
 
 Some modules significantly transform or collapse data, such as `count`. Pipeline modules following these collapsing modules may not be dealing with Raw data or previously created Enumerated Values. In short, things like `count by Src` turn data into the collapsed results with entries such as `10.0.0.1  3`. To illustrate, run the search `tag=* limit 10 | count by TAG | raw` to see the raw output from the count module or `tag=* limit 10 | count by TAG | table TAG count DATA` to observe the raw data has been condensed as seen by the table module.
 
@@ -31,9 +31,11 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [abs](abs/abs.md)
 * [alias](alias/alias.md)
 * [anko](anko/anko.md)
+* [anonymize](anonymize/anonymize.md)
 * [base64](base64/base64.md)
 * [count](math/math.md#Count)
 * [diff](diff/diff.md)
+* [dns](dns/dns.md)
 * [enrich](enrich/enrich.md)
 * [entropy](math/math.md#Entropy)
 * [eval](eval/eval.md)

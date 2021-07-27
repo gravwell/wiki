@@ -8,7 +8,7 @@ The scheduling feature allows the user to schedule both regular searches and [se
 
 The Gravwell Search Agent is now included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the Search Agent. The Search Agent is installed automatically by the Gravwell Debian package.
 
-For more information about configuring (or disabling) the search agent, see [the search agent documentation](searchagent.md)
+For more information about configuring (or disabling) the search agent, see [the search agent documentation](searchagent.md).
 
 ## Managing Scheduled Searches
 
@@ -50,7 +50,7 @@ Once you have entered the script, a name, a description, and a schedule, click "
 
 ### Debugging Scripts
 
-By default, the right-hand side of the script editing page will show the "Info" tab, but note the column of icons at the far right. Clicking the checkmark will open the Debugging tab, which can be used to test your scripts. When you click the "Debug" button, the Search Agent will execute your script as soon as possible, *with printing functions enabled*. This can be very helpful when attempting to debug a problematic script. The example below shows a very simple script and the debug output.
+By default, the right-hand side of the script editing page will show the "Info" tab, but note the column of icons at the far right. Clicking the check mark will open the Debugging tab, which can be used to test your scripts. When you click the "Debug" button, the Search Agent will execute your script as soon as possible, *with printing functions enabled*. This can be very helpful when attempting to debug a problematic script. The example below shows a very simple script and the debug output.
 
 ![](debugscript.png)
 

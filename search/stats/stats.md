@@ -114,4 +114,4 @@ stats mean(Bytes) stddev(Bytes) by SrcIP over 5m
 
 When sent to the chart module, the results will be calculated over a 5 minute window rather than the standard 1 second.
 
-Note: Only one time window can be specified, and the time window is applied to all operations.  The timewindow must also be the LAST argument to stats
+Note: Only one time window can be specified, and the time window is applied to all operations.  The time window must also be the LAST argument to stats

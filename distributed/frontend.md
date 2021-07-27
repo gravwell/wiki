@@ -59,67 +59,6 @@ cp -r /opt/gravwell/resources/webserver/* /opt/gravwell/resources/datastore/
 
 If the datastore is on a separate machine, use `scp` or another file transfer method to copy those files from a webserver server.
 
-## Load-balancing
+## Load balancing
 
-Although distributed webservers *allow* load-balancing for users, we require the use of an external tool to perform the actual load-balancing / reverse proxy. If your network already uses Nginx+, Apache, or another tool for load-balancing, simply configure it to load balance between your webservers, being sure to enable persistent or "sticky" sessions.
-
-If on the other hand you do not already have a reverse proxy configured for load balancing, it is easy to set up [Træfik](https://traefik.io) as a standalone load balancer for Gravwell webservers.
-
-We recommend putting Traefik on its own machine, or at least not on the same server as a webserver.
-
-First, grab the latest release of Traefik from [the Traefik releases page](https://github.com/containous/traefik/releases) or compile it yourself.
-
-You'll also need a certificate for SSL. Either import a valid cert, or generate a self-signed certificate with the following command:
-
-```
-openssl req -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out traefik.crt -keyout traefik.key
-```
-
-Next, save the following config file as `traefik.toml`:
-
-```
-defaultEntryPoints = ["http", "https"]
-
-InsecureSkipVerify = true
-
-[file]
-
-[entryPoints]
-        [entryPoints.http]
-        address = ":80"
-        [entryPoints.https]
-        address = ":443"
-                [entryPoints.https.tls]
-                        [[entryPoints.https.tls.certificates]]
-                        certFile = "traefik.crt"
-                        keyFile = "traefik.key"
-
-[webservers]
-        [webservers.webserver1]
-                backend = "backend1"
-        [webservers.webserver1.headers]
-                SSLRedirect = true
-                SSLTemporaryRedirect = true
-
-[backends]
-        [backends.backend1]
-                [backends.backend1.loadbalancer.stickiness]
-                [backends.backend1.servers.server1]
-                        url="https://10.0.0.1"
-                [backends.backend1.servers.server2]
-                        url="https://10.0.0.2"
-```
-
-Note: Traefik has its own concept of "webservers" and "backends" which do not correspond to Gravwell webservers. In this config file, a Traefik "backend" points to Gravwell webserver servers.
-
-Modify the configuration file as needed; note especially the `[backends]` section where we define two servers, 10.0.0.1 and 10.0.0.2. These should be the IPs of your webservers; add more server sections if you have more than two Gravwell webservers.
-
-If your webserver servers use valid SSL certificates, you can remove the line `InsecureSkipVerify = true`.
-
-After modifying the config file, run the following command to start the reverse proxy:
-
-```
-./traefik -c traefik.toml -file traefik.toml
-```
-
-You can then use a web browser to access the Traefik server's hostname or IP; Traefik will select one of the Gravwell webservers and direct your traffic there, setting a cookie in the browser to ensure all traffic for that session goes to the same server.
+Gravwell now offers a custom load balancing component specifically designed to distribute users across multiple webservers with minimal configuration. See [the load balancing configuration page](loadbalancer.md) for information on setting it up.

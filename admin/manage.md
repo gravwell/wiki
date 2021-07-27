@@ -59,7 +59,7 @@ sync_extractions    Force a sync of installed autoextractors to indexers
 resource            Create and manage resources
 scheduled_search    Manage scheduled searches
 templates           Manage templates
-pivots              Manage pivots
+pivots              Manage actionables
 userfiles           Manage user files
 kits                Manage and upload kits
 admin>
@@ -112,9 +112,9 @@ delete              	Delete a scheduled search
 
 From this menu, the administrator can manage *all* scheduled searches on the system, not just his/her own.
 
-## Managing templates/pivots
+## Managing templates/actionables
 
-Templates and pivots each have a sub-menu within the admin menu (`templates` and `pivots`) with an identical set of commands for administrators:
+Templates and actionables (called "pivots" here) each have a sub-menu within the admin menu (`templates` and `pivots`) with an identical set of commands for administrators:
 
 ```
 admin>  templates
@@ -128,16 +128,16 @@ updatemeta          	Update template metadata
 template>  quit
 admin>  pivots
 pivot>  help
-list                	List pivots
-create              	Create a new pivot
-update              	Upload new contents to a pivot
-delete              	Delete a pivot
-print               	Print pivot contents
-updatemeta          	Update pivot metadata
+list                	List actionables
+create              	Create a new actionable
+update              	Upload new contents to an actionable
+delete              	Delete an actionable
+print               	Print actionable contents
+updatemeta          	Update actionabl metadata
 pivot>
 ```
 
-These commands can be used to affect any template or pivot on the system.
+These commands can be used to affect any template or actionable on the system.
 
 ## Managing User Files
 

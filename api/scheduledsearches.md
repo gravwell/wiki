@@ -8,7 +8,7 @@ A scheduled search contains the following fields of interest:
 
 * ID: the ID of the scheduled search
 * GUID: a unique ID for this particular search. If left blank at creation, a random GUID will be assigned (this should be the standard use case)
-* Owner: the uid of the search's owner
+* Owner: the UID of the search's owner
 * Groups: a list of groups which are allowed to see the results of this search
 * Global: a boolean indicating that the results of the search should be visible to all users (only admins may set this field)
 * Name: the name of this scheduled search
@@ -177,11 +177,11 @@ The following commands are only available to admin users.
 
 Admin users may occasionally need to view all scheduled searches on the system. An administrator user may obtain a global listing of all scheduled searches in the system with a GET request on `/api/scheduledsearches?admin=true`.
 
-Because scheduled search IDs are unique across the system, the administrator may then modify/delete/retrieve any search without the need to specify `?admin=true`, although adding the parameter unecessarily will not cause an error.
+Because scheduled search IDs are unique across the system, the administrator may then modify/delete/retrieve any search without the need to specify `?admin=true`, although adding the parameter unnecessarily will not cause an error.
 
 ### Fetching a specific user's searches
 
-Performing a GET on `/api/scheduledsearches/user/{uid}`, where `uid` is a numeric userid, will fetch an array of all searches belonging to that user.
+Performing a GET on `/api/scheduledsearches/user/{uid}`, where `uid` is a numeric user ID, will fetch an array of all searches belonging to that user.
 
 ### Deleting all of a specific user's searches
 

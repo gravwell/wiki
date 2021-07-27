@@ -5,7 +5,7 @@ Simple Relay is the go-to ingester for text based data sources that can be deliv
 Some common use cases for Simple Relay are:
 
 * Remote syslog collection
-* Devop log collection over a network
+* Devops log collection over a network
 * Bro sensor log collection
 * Simple integration with any text source capable of delivering over a network
 
@@ -33,7 +33,7 @@ Log-File=/opt/gravwell/log/simple_relay.log
 #no Tag-Name means use the default tag
 [Listener "default"]
 	Bind-String="0.0.0.0:7777" #bind to all interfaces, with TCP implied
-	#Lack of "Reader-Type" implines line break delimited logs
+	#Lack of "Reader-Type" implies line break delimited logs
 	#Lack of "Tag-Name" implies the "default" tag
 	#Assume-Local-Timezone=false #Default for assume localtime is false
 	#Source-Override="DEAD::BEEF" #override the source for just this listener
@@ -59,11 +59,11 @@ Note: The `Keep-Priority` field is necessary if you plan to analyze syslog entri
 
 Each listener contains a set of universal configuration values, regardless of whether the listener is a line reader, RFC5424 reader, or JSON Listener.
 
-### Universal Listener Configuration Parameters
+## Universal Listener Configuration Parameters
 
 Listeners support several configuration parameters which allow for specifying protocols, listening interfaces and ports, and fine tuning ingest behavior.
 
-#### Bind-String
+### Bind-String
 
 The Bind-String parameter controls which interface and port the listener will bind to.  The listener can bind to plaintext/encrypted TCP or plaintext UDP ports, specific addresses, and specific ports.  IPv4 and IPv6 are supported.
 
@@ -84,7 +84,7 @@ Bind-String=[2600:1f18:63ef:e802:355f:aede:dbba:2c03]:901
 Bind-String=tls://0.0.0.0:9999
 ```
 
-#### Cert-File
+### Cert-File
 
 If using a TLS `Bind-String`, you must also specify `Cert-File`. The value should be the path to a file containing a valid TLS certificate:
 
@@ -92,62 +92,13 @@ If using a TLS `Bind-String`, you must also specify `Cert-File`. The value shoul
 Cert-File=/opt/gravwell/etc/cert.pem
 ``` 
 
-#### Key-File
+### Key-File
 
 If using a TLS `Bind-String`, you must also specify `Key-File`. The value should be the path to a file containing a valid TLS key:
 
 ```
 Key-File=/opt/gravwell/etc/key.pem
 ``` 
-
-#### Ignore-Timestamps
-
-The "Ignore-Timestamps" parameter instructs the listener to not attempt to derive a timestamp from the read values, instead apply the current timestamp.  This parameter is useful for reading data where there may not be a timestamp present, or the timestamp is wrong on the originating system due to unreliable system clocks.  "Ignore-Timestamps" is false by default, to enable specify ```Ignore-Timestamps=true```
-
-#### Assume-Local-Timezone and Timezone-Override
-
-Most timestamp formats have a timezone attached which indicates an offset to Universal Cordinated Time (UTC).  However, some systems do not specify the timezone leaving it up to the receiver to determine what timezone a log entry may be in.  Assume-Local-Timezone causes the reader to assume that the timestamp is in the same timezone as the Simple Relay reader when the timzeone is omitted. Timezone-Override takes a string in the IANA timezone database format (e.g. "America/Chicago") and applies that timezone to timestamps which do not specify a timezone.
-
-Assume-Local-Timezone and Timezone-Override are mutually exclusive.
-
-#### Source-Override
-
-The "Source-Override" parameter instructs the listener to ignore the source of the data and apply a hard coded value.  It may be desirable to hard code source values for incoming data as a method to organize and/or group data sources.  "Source-Override" values can be IPv4 or IPv6 values.
-
-```
-Source-Override=192.168.1.1
-Source-Override=127.0.0.1
-Source-Override=[fe80::899:b3ff:feb7:2dc6]
-```
-
-#### Timestamp-Format-Override
-
-Data values may contain multiple timestamps which can cause some confusion when attempting to derive timestamps out of the data.  Normally, the Listeners will grab the left most timestamp that can be derived, but it may be desirable to only look for a timestamp in a very specific format.  "Timestamp-Format-Override" tells the listener to only respect timestamps in a specific format.  The following timstamp formats are available:
-
-* AnsiC
-* Unix
-* Ruby
-* RFC822
-* RFC822Z
-* RFC850
-* RFC1123
-* RFC1123Z
-* RFC3339
-* RFC3339Nano
-* Apache
-* ApacheNoTz
-* Syslog
-* SyslogFile
-* SyslogFileTZ
-* DPKG
-* Custom1Milli
-* NGINX
-* UnixMilli
-* ZonelessRFC3339
-* SyslogVariant
-* UnpaddedDateTime
-
-To force the Listener to only look for timestamps that match the RFC3339 specification add ```Timestamp-Format-Override=RFC3339``` to the Listener.
 
 ### Listener Reader Types and configurations
 
@@ -166,25 +117,25 @@ Basic Listeners also require that each listener designate the tag the listener w
 	Tag-Name=testing
 ```
 
-#### Line Reader Listener
+## Line Reader Listener
 
 The line reader listener is designed to read newline broken data streams from either a TCP or UDP stream.  Applications which can deliver simple line broken data over a network can utilize this type of reader to very simply and easily integrate with Gravwell.  The Line Reader listener can also be used for simple log file delivery by simply sending log files to the listening port.
 
-For example, an existing log file can be imported into Gravwell using netcat and Simple Relay
+For example, an existing log file can be imported into Gravwell using netcat and Simple Relay:
 ```
 nc -q 1 10.0.0.1 7777 < /var/log/syslog
 ```
 
-##### Example Line Reader Listener
+### Example Line Reader Listener
 
-The most basic Listener requires only one the "Bind-String" argument which tells the listener what port to listen on. 
+The most basic Listener requires only one the "Bind-String" argument which tells the listener what port to listen on:
 
 ```
 [Listener "default"]
 	Bind-String="0.0.0.0:7777" #bind to all interfaces, with TCP implied
 ```
 
-#### RFC5424 Listener
+## RFC5424 Listener
 
 A listener designed to accept structured syslog messages based on either RFC5424 or RFC3164 enables Simple Relay to act as a syslog aggregation point.  To enable a listener that expects syslog messages using a reliable TCP connection on port 601 set the "Reader-Type" to "RFC5424.
 
@@ -219,19 +170,19 @@ An example listener specification which removes the priority tag from entries:
 	Keep-Priority=false
 ```
 
-Note: The priority portion of a syslog message is codified in the RFC specification.  Removing the priority means that the Gravwell [syslog](#!search/syslog/syslog.md) search module will be unable to properly parse the values.  Paid Gravwell licenses are all unlimited and we reccomend that the priority field is left in syslog messages.  The syslog search module is also dramatically faster than attempting to hand parse syslog messages with regular expressions.
+Note: The priority portion of a syslog message is codified in the RFC specification.  Removing the priority means that the Gravwell [syslog](#!search/syslog/syslog.md) search module will be unable to properly parse the values.  Paid Gravwell licenses are all unlimited and we recommend that the priority field is left in syslog messages.  The syslog search module is also dramatically faster than attempting to hand parse syslog messages with regular expressions.
 
-### JSON Listeners
+## JSON Listeners
 
 The JSON Listener type enables some mild JSON processing at the time of ingest.  The purpose of a JSON reader would be to apply a unique tag to an entry based on the value of a field in a JSON entry.   Many applications export JSON data with a field that indicates the format of the JSON, from a processing efficiency standpoint it can be beneficial to tag the different formats with specific tags.
 
 A great example use case is the JSON over TCP data export functionality found in many Bro sensor appliances.  The appliances export all Bro log data over a single TCP stream, however there are multiple data types within the stream built by different modules.  Using the JSON Listener we can derive the data type from the module field and apply a unique tag.  this allows us to do things like keep the Bro conn logs in one well, the Bro DNS logs in another, and all other Bro logs in yet another.  As a result, we can differentiate the data types with different tags and take advantage of Gravwell Wells when multiple JSON data types are coming in via a single stream.
 
-#### JSON Listener Configuration Parameters
+### JSON Listener Configuration Parameters
 
-The JSON Listener blocks implement the universion listener types as documented above.  Additional parameters allow for specifying which field we wish to pivot on to define a tag.
+The JSON Listener blocks implement the universal listener types as documented above.  Additional parameters allow for specifying which field we wish to pivot on to define a tag.
 
-##### Extractor Parameter
+#### Extractor Parameter
 
 The "Extractor" parameter specifies a JSON extraction string which is used to pull a field from a JSON entry.  The Extraction string follows the same syntax as the Gravwell [json](#!search/json/json.md) search module minus any inline filtering.
 
@@ -267,7 +218,7 @@ Extractor=location.state
 
 **Tag-Match**
 
-Each JSONListener supports multiple field value to tag match specifications.  The value to tag assignment is specified as an argument to the "Tag-Match" paramter in the form <field value>:<tag name>.
+Each JSONListener supports multiple field value to tag match specifications.  The value to tag assignment is specified as an argument to the "Tag-Match" parameter in the form <field value>:<tag name>.
 
 For example, if we extracted a field with the value "foo" and wanted to assign it to the tag "bar" we would add the following to the JSONListener configuration block:
 
@@ -301,7 +252,7 @@ Tag-Match=foo:bar
 
 When extracting fields and applying tags, the JSON Listener will apply a default tag if there is no matching Tag-Match specified.
 
-#### Example JSONListener behaviors
+### Example JSONListener behaviors
 
 Assume the following configured JSONListener:
 
@@ -317,7 +268,7 @@ Assume the following configured JSONListener:
 
 Some example JSON data and resulting tag:
 
-##### Matched field
+#### Matched field
 
 ```
 { "field1": "test1", "field2": "test2" }
@@ -325,7 +276,7 @@ Some example JSON data and resulting tag:
 
 The entry gets the tag "tag1" because the field "field1" matched the "Tag-Match=test1:tag1"
 
-##### Unmatched field
+#### Unmatched field
 
 ```
 { "field1": "foobar", "field2": "test2" }

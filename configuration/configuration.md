@@ -41,9 +41,9 @@ If you choose to randomize passwords, you will need to go back through your inde
 
 Configuration of a Gravwell cluster is designed to be simple and efficient right from the start.  However, there are knobs to twist that can allow the system to better take advantage of extremely large systems or smaller embedded and industrial devices with memory constraints.  The core configuration file is designed to be shared by both the webserver and indexer, and is located by default at `/opt/gravwell/etc/gravwell.conf`
 
-For a detailed listing of configuration options see [this page](parameters.md)
+For a detailed listing of configuration options see [this page](parameters.md).
 
-For a complete example indexer configuration see our [example default config](indexer-default-config.md)
+For a complete example indexer configuration see our [example default config](indexer-default-config.md).
 
 The most important items in the configuration file are the `Ingest-Auth`, `Control-Auth`, and `Search-Agent-Auth` configuration parameters.  The `Control-Auth` parameter is the shared secret that the webserver and indexers use to authenticate each other. If an attacker can communicate with your indexers and has the `Control-Auth` token, he has total access to the data they store.  The `Ingest-Auth` token is used to validate ingesters, and restricts the ability to create tags and push data into Gravwell.  Gravwell prides itself on speed, which means an attacker with access to your `Ingest-Auth` token can push a tremendous amount of data into Gravwell in a very short amount of time.  The `Search-Agent-Auth` token allows Gravwell's Search Agent utility to automatically connect to the webserver and issue searches on the behalf of users. These tokens are important and you should protect them carefully.
 
@@ -51,7 +51,7 @@ Attention: In clustered Gravwell installations, it is essential that all nodes a
 
 ## Webserver Configuration
 
-The webserver acts as the focusing point for all searches, and provides an interactive interface into Gravwell.  While the webserver does not require significant storage, it can benefit from small pools of very fast storage so that even when a search hands back large amounts of data, users can fluidly navigate their results.  The webserver also participates in the search pipeline and often performs some of the filtering, metadata extraction, and rendering of data.  When speccing a webserver, we recommend a reasonably sized solid state disk (NVME if possible), a memory pool of 16GB of RAM or more, and at least 4 physical cores.  Gravwell is built to be extremely concurrent, so more CPU cores and additional memory will only increase its performance.  An Intel E5 or AMD Epyc chip with 32GB of memory or more is a good choice, and more is always better.
+The webserver acts as the focusing point for all searches, and provides an interactive interface into Gravwell.  While the webserver does not require significant storage, it can benefit from small pools of very fast storage so that even when a search hands back large amounts of data, users can quickly navigate their results.  The webserver also participates in the search pipeline and often performs some of the filtering, metadata extraction, and rendering of data.  When deploying a webserver, we recommend a reasonably sized solid state disk (NVME if possible), a memory pool of 16GB of RAM or more, and at least 4 physical cores.  Gravwell is built to be extremely concurrent, so more CPU cores and additional memory can yield significant performance benefits.  An Intel E5 or AMD Epyc chip with 32GB of memory or more is a good choice, and more is always better.
 
 Two configuration options tell the webserver how to communicate with indexers. The `Remote-Indexers` option specifies the IPs or hostnames of the indexers, and the `Control-Auth` option gives a shared key used by the webserver to authenticate to the indexers. A webserver connecting to three indexers might contain the following in its `gravwell.conf`:
 
@@ -118,9 +118,9 @@ The well named "raw" is thus used to store data tagged "pcap" and "video", which
 
 Tag names can only contain alpha numeric values; dashes, underscores, special characters, etc are not allowed in tag names.  Tags should be simple names like "syslog" or "apache" that are easy to type and reflect the type of data in use.
 
-The Default well receives all entries with tags that have not been explicitely assigned to other wells.  For example, if you have one well named Syslog which has been assigned the tags "syslog" and "apache" then all other tags will go to the Default well.  Ingesters can still produce entries with tag names that are not explicitely defined in the gravwell.conf file; the entries will just be co-mingled with all other unassigned tags in the default well.
+The Default well receives all entries with tags that have not been explicitly assigned to other wells.  For example, if you have one well named Syslog which has been assigned the tags "syslog" and "apache" then all other tags will go to the Default well.  Ingesters can still produce entries with tag names that are not explicitly defined in the gravwell.conf file; the entries will just be co-mingled with all other unassigned tags in the default well.
 
-When reassigning tags between wells, the system will NOT move the data.  If you ingest data under the tag "syslog" without pinning the tag to a non-default well, then change the config file to define a new well or assign the syslog tag to an existing well, all data that exists in the default well under the syslog tag is no longer searchable.  Contact support@gravwell.io for access to a standalone tool for well and tag migration that can recover the entries, or for help reingesting old wells into an optimized/alternate configuration.
+When reassigning tags between wells, the system will NOT move the data.  If you ingest data under the tag "syslog" without pinning the tag to a non-default well, then change the config file to define a new well or assign the syslog tag to an existing well, all data that exists in the default well under the syslog tag is no longer searchable.  Contact support@gravwell.io for access to a standalone tool for well and tag migration that can recover the entries, or for help re-ingesting old wells into an optimized/alternate configuration.
 
 ## Data Ageout
 
@@ -132,7 +132,7 @@ A Gravwell cluster with multiple indexer nodes can be configured so that nodes r
 
 ## Query Acceleration
 
-Gravwell supports the notion of "accelerators" for individual wells, which allow you apply parsers to data at ingest to generate optimization blocks.  Accelerators are just as felexible as query modules and are transparently engaged when performing queries.  Accelerators are extremely useful for needle-in-haystack style queries, where you need to zero in on data that has specific field values very quickly.  See the [Accelerators](accelerators.md) section for more information and configuration techniques.
+Gravwell supports the notion of "accelerators" for individual wells, which allow you apply parsers to data at ingest to generate optimization blocks.  Accelerators are just as flexible as query modules and are transparently engaged when performing queries.  Accelerators are extremely useful for needle-in-haystack style queries, where you need to zero in on data that has specific field values very quickly.  See the [Accelerators](accelerators.md) section for more information and configuration techniques.
 
 ## Password Complexity
 
@@ -162,4 +162,16 @@ Here is an example configuration block that requires complex passwords that are 
 
 ```
 
-Note that Gravwell fully supports UTF-8 character sets and that many languages do not have the concept of case.  So while the password `パスワードを推測することはできません!#$@42` may look very complex, it doesn't meet the requirements above due to the lack of uppoer and lower case values.
+Note that Gravwell fully supports UTF-8 character sets and that many languages do not have the concept of case.  So while the password `パスワードを推測することはできません!#$@42` may look very complex, it doesn't meet the requirements above due to the lack of upper and lower case values.
+
+## Version Compatibility 
+
+Certain versions of the indexer and webserver are only compatible with specific versions of other indexers and webservers. The table below details version compatibility restrictions. Mismatched webservers and indexers will not run.
+
+| API Version | Indexer/Webserver Version Compatibility |
+|-------------|---------------|
+| 1 | Any version between 1.0-3.3 |
+| 2 | 4.0 and 4.1 |
+| 3 | 4.2 |
+
+Ingesters are always backwards compatible with older versions of indexers as they negotiate the ingest protocol version when they connect. However, some new features may be disabled if there is a significant version mismatch. We recommend using the ingester version that matches your indexer version.

@@ -12,7 +12,7 @@ A license can be installed via the GUI, the CLI, or by simply copying the licens
 
 ![License Install](install.png)
 
-If you use the CLI or GUI to install a license Gravwell will distribute the license to all connected indexers automatically.  Gravwell will also validate the installed license for each indexer and update if nessasary at each connection.  That means that if you bring a new indexer online it will automatically receive the appropriate license when the webserver connects.
+If you use the CLI or GUI to install a license Gravwell will distribute the license to all connected indexers automatically.  Gravwell will also validate the installed license for each indexer and update if necessary at each connection.  That means that if you bring a new indexer online it will automatically receive the appropriate license when the webserver connects.
 
 ## Updating a License
 

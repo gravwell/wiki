@@ -37,7 +37,7 @@ tag=default split -clean
 
 ### Specifying a delimiter
 
-Some of the entires contain tabs. We can split on that using the `-d` flag:
+Some of the entries contain tabs. We can split on that using the `-d` flag:
 
 ```
 tag=default split -d "\t"

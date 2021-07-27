@@ -10,7 +10,7 @@ The search websocket is used for checking queries, sending searches, and receivi
 
 Note: Message "types" are sometimes referred to as "SubProto" due to legacy naming. This is likely to change in the future but if developing against this API, be aware that "SubProto" refers to the "type" value sent with a message and not the RFC Websocket subprotocol spec.
 
-The PONG type is a keepalive system, and the client should periodically send PINGPONG requests.
+The PONG type is a keepalive system, and the client should periodically send PING/PONG requests.
 
 This could be used so that if a user is sitting at a search prompt or whatever that you can tell the user if the conn to the back is healthy. This may not be necessary at all as we can just probe to see if the websocket itself is alive.
 
@@ -45,7 +45,7 @@ request from frontend:
 }
 ```
 
-respone from backend:
+response from backend:
 ```
 {
         GoodQuery: false,
