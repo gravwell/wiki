@@ -115,7 +115,7 @@ stats mean(Bytes) stddev(Bytes) by SrcIP over 5m
 
 When sent to the chart module, the results will be calculated over a 5 minute window rather than the standard 1 second.
 
-Note: Only one time window can be specified, and the time window is applied to all operations.  The time window must also be the LAST argument to statsa
+Note: Only one time window can be specified, and the time window is applied to all operations.  The time window must also be the LAST argument to stats.
 
 ## sum() vs total()
 
@@ -124,8 +124,8 @@ The `sum` and `total` operators behave exactly the same in every context except 
 The behavior difference is best demonstrated in a screenshot generated using the following query:
 
 ```
-tag=zeekconn fields -d "\t" [8] as dur |
-stats sum(dur) total(dur)
+tag=zeekconn fields -d "\t" [8] as dur
+| stats sum(dur) total(dur)
 | chart sum total
 ```
 
