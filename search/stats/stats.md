@@ -25,6 +25,7 @@ The following operation names are supported:
 
 * count: count entries
 * sum: sum values and return the total
+* total: sum values over a period of time and keep a running total.
 * mean: calculate the average
 * stddev: calculate the standard deviation
 * variance: calculate the variance
@@ -114,4 +115,20 @@ stats mean(Bytes) stddev(Bytes) by SrcIP over 5m
 
 When sent to the chart module, the results will be calculated over a 5 minute window rather than the standard 1 second.
 
-Note: Only one time window can be specified, and the time window is applied to all operations.  The time window must also be the LAST argument to stats
+Note: Only one time window can be specified, and the time window is applied to all operations.  The time window must also be the LAST argument to statsa
+
+## sum() vs total()
+
+The `sum` and `total` operators behave exactly the same in every context except chart.  When using the chart renderer the total module will not "reset" values across time buckets.
+
+The behavior difference is best demonstrated in a screenshot generated using the following query:
+
+```
+tag=zeekconn fields -d "\t" [8] as dur |
+stats sum(dur) total(dur)
+| chart sum total
+```
+
+![Sum vs. Total](SumVsTotal.png)
+
+This query generates two lines based on the sum and total sum of the duration values.  The chart generates a line for the `sum` values by bucketing the data where the line for `total` represents buckets that compound over time.  The underlying operations are the same, but total does not "reset" the bucket each time it transitions to a new time span, where "sum" does.
