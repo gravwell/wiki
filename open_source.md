@@ -1,6 +1,6 @@
-# Open-Source Library Licenses
+# オープンソースライブラリのライセンス
 
-Gravwell incorporates compatibly-licensed open-source code. This page links to compilations of licenses for software used in the backend and the web frontend.
+Gravwellには、互換性のあるライセンスのあるオープンソースのコードが組み込まれています。このページは、バックエンドとウェブフロントエンドで使用されるソフトウェアのライセンスのコンパイルへのリンクです。
 
-[Backend (webserver & indexer) licenses](3rdparty-backend-licenses.txt)
-[Frontend (web GUI) licenses](3rdparty-frontend-licenses.txt)
+[バックエンド（ウェブサーバ＆インデクサー）ライセンス](3rdparty-backend-licenses.txt)
+[フロントエンド（Web GUI）ライセンス](3rdparty-frontend-licenses.txt)

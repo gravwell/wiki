@@ -1,14 +1,14 @@
-# Named Fields
+# 名前付きフィールド
 
-The namedfields module is used to extract and filter data from search entries into enumerated values for later use. Much like the [fields module](#!search/fields/fields.md), it extracts fields from records delimited by sequences of bytes. However, where the fields module uses indexes to refer to elements (e.g. `fields -d "\t" [5] as foo` means "extract the 6th element and call it foo"), namedfields uses specially-formatted [resources](#!resources/resources.md) to give human-friendly names to particular data formats. This is especially useful when attempting to parse things like [Bro](https://www.bro.org) logs or CSV files.
+namedfields モジュールは、検索エントリからデータを抽出し、後で使用するために列挙値にフィルタリングするために使用されます。[fields モジュール](#!search/fields/fields.md) のように、バイト列で区切られたレコードからフィールドを抽出します。しかし、fields モジュールがインデックスを使って要素を参照するのに対して（例えば、`fields -d "\t" [5] as foo` は、「6番目の要素を抽出して、それを foo と呼ぶ」という意味です）、namedfields は特別なフォーマットの [resources](#!resources/resources.md) を使って、特定のデータフォーマットに人間が親しみやすい名前を付けます。これは、[Bro](https://www.bro.org) ログや CSV ファイルのようなものを解析しようとするときに特に有効です。
 
-Because so many people use Bro, we have provided a resource file for decoding Bro fields at [https://github.com/gravwell/resources](https://github.com/gravwell/resources), in the `bro/namedfields` subdirectory. Simply upload `namedfields.json` as a resource in Gravwell; the examples in this document assume it was uploaded to a resource named `brofields`
+多くの人が Bro を使用しているので、Bro のフィールドをデコードするためのリソースファイルを [https://github.com/gravwell/resources](https://github.com/gravwell/resources) の `bro/namedfields` サブディレクトリに用意しました。Gravwell のリソースとして `namedfields.json` をアップロードするだけです。このドキュメントの例では、`brofields` という名前のリソースにアップロードされたと仮定しています。
 
-## Key concepts
+## キーコンセプト
 
-The namedfields module, at its core, maps numeric indexes within a line to user-friendly names. A set of index-to-name mappings is called a group; a group to parse a textual representation of a network flow might have a mapping like this:
+namedfields モジュールは、その中核となるもので、行内の数値インデックスをユーザーフレンドリーな名前にマッピングします。インデックスから名前へのマッピングのセットをグループと呼びます。ネットワークフローのテキスト表現を解析するグループは、次のようなマッピングを持っています。
 
-| Index | Name |
+| インデックス | 名称 |
 |-------|------|
 | 0 | start_time |
 | 1 | duration |
@@ -20,45 +20,45 @@ The namedfields module, at its core, maps numeric indexes within a line to user-
 | 7 | packets |
 | 8 | bytes |
 
-One or more groups are then gathered into a Gravwell resource in a format specified elsewhere in this document. When namedfields is run, the user specified which resource to load and which group within that resource should be used to map user-specified names to indexes.
+その後、1 つまたは複数のグループが、このドキュメントの別の場所で指定されたフォーマットで Gravwell リソースに集められます。namedfields が実行されるとき、ユーザーはどのリソースをロードするか、そしてそのリソース内のどのグループを使ってユーザーが指定した名前をインデックスにマッピングするかを指定します。
 
-## Supported Options
+## サポートされているオプション
 
-* `-r <arg>`: The "-r" option is required; it specified the name or GUID of a resource which contains index-to-name mappings.
-* `-g <arg>`: The "-g" option is required; it specifies which group to use within the specified resource.
-* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
-* `-s` : The “-s” option specifies that the namedfields module operate in a strict mode.  If any filed specification cannot be met, the entry is dropped.  For example if you want the 0th, 1st, and 2nd field but an entry only has 2 fields, the strict flag will cause the entry to be dropped.
+* `-r <arg>`: 「-r」オプションは必須です。インデックスと名前のマッピングを含むリソースの名前または GUID を指定します。
+* `-g <arg>`: 「-g」オプションは必須で、指定したリソース内で使用するグループを指定します。
+* `-e <arg>`: 「-e」オプションは、レコード全体ではなく、列挙値に対して操作を行います。
+* `-s` : 「-s」オプションは、namedfields モジュールがストリクトモードで動作することを指定します。 ファイルされた仕様が満たされない場合、そのエントリーは削除されます。 例えば、0 番目、1 番目、2 番目のフィールドが必要なのに、エントリーには 2 つのフィールドしかない場合、strict フラグを指定すると、そのエントリーはドロップされます。
 
-## Filtering Operators
+## フィルタリング演算子
 
-The namedfields module allows for a filtering based on equality.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
+namedfields モジュールでは、等値性に基づくフィルタリングが可能です。 等価性を指定するフィルタが有効な場合（「等しい」、「等しくない」、「含まれる」、「含まれない」）、フィルタの指定に失敗したエントリは完全に削除されます。 Not equal "!=" と指定されたフィールドが存在しない場合、そのフィールドは抽出されませんが、エントリが完全に削除されることはありません。
 
-| Operator | Name | Description |
+| 演算子 | 名称 | 意味 |
 |----------|------|-------------|
-| == | Equal | Field must be equal
-| != | Not equal | Field must not be equal
-| ~ | Subset | Field contains the value
-| !~ | Not Subset | Field does NOT contain the value
+| == | 等しい | フィールドは等しい
+| != | 等しくない | フィールドは等しくない
+| ~ | 含む | フィールドはその値を含む
+| !~ | 含まない | フィールドはその値を含まない
 
-## Examples
+## 例
 
-Assuming Bro's conn.log file is ingested with the "broconn" flag, the following will extract the "service", "dst", and "resp_bytes" fields from each entry. It will drop all entries whose "service" field does not match the string "dns" and it will rename the extracted "dst" field to "server". It then calculates and graphs the average length of DNS responses for each server. Note that we specify a resource named "brofields" and a group named "Conn", which is defined within the "brofields" resource.
+Bro の conn.log ファイルが broconn フラグで取り込まれたと仮定して、以下は各エントリから service、dst、resp_bytes フィールドを抽出します。service フィールドが dns という文字列と一致しないエントリはすべて削除され、抽出された dst フィールドの名前は server に変更されます。そして、各サーバーの DNS レスポンスの平均長さを計算し、グラフ化します。brofields というリソースと、Conn というグループを指定していますが、これらは brofields リソース内で定義されていることに注意してください。
 
 ```
 tag=broconn namedfields -r brofields -g Conn service==dns dst as server resp_bytes  | mean resp_bytes by server | chart mean by server
 ```
 
-The following example parses a different Bro file, intel.log. Note that while the resource is the same, we specify a different group:
+次の例では、intel.log という異なる Bro ファイルを解析しています。リソースは同じですが、異なるグループを指定していることに注意してください。
 
 ```
 tag=brointel namedfields -r brofields -g Intel source | count source | table source count
 ```
 
-## Named fields resource format
+## 名前付きフィールドのリソースフォーマット
 
-Before the namedfields module can be used, a resource must be created to map names to indexes within a field. The resource is structured with JSON. Each resource can contain multiple groups, one of which is selected when running the module.
+namedfields モジュールを使用する前に、名前をフィールド内のインデックスにマッピングするためのリソースを作成する必要があります。リソースは JSON で構造化されています。各リソースには複数のグループを含めることができ、モジュールの実行時にそのうちの 1 つが選択されます。
 
- The example below gives names to entries in Bro's `intel.log` file as well as a custom application log formatted as a CSV:
+ 以下の例では、Bro の `intel.log` ファイルと、CSV 形式のカスタムアプリケーションログのエントリに名前を付けています。
 
 ```
 {
@@ -104,21 +104,21 @@ Before the namedfields module can be used, a resource must be created to map nam
 }
 ```
 
-Note the essential components:
+必須のコンポーネントに注意してください。
 
-* `Version` specifies which version of the namedfields module this file is meant for. Leave it as 1.
-* `Set` contains an *array* of groups
-* This file's Set contains one group, named "Intel". The delimiter is specified as a tab character ("\t"), and a list of `Subs` are provided.
-* The "Subs" member defines sub-fields within this group. We see that the field at index 0 is named "source", while index 1 is named "desc" and index 2 is named "url".
-* The "Engine" member declares which engine should be used on the group (fields, csv, etc...).
+* `Version` では、このファイルがどのバージョンの namedfields モジュールに対応しているかを指定します。1 のままにしておいてください。
+* `Set` は、グループの配列を含みます。
+* このファイルのセットには、「Intel」という名前の 1 つのグループが含まれています。区切り文字はタブ文字（\t）で、`Subs` のリストが用意されています。
+* Subs メンバーは、このグループ内のサブフィールドを定義します。インデックス 0 のフィールドは source という名前で、インデックス 1 は desc、インデックス 2 は url という名前であることがわかります。
+* Engine メンバーは、グループにどのエンジンを使用するかを宣言します（フィールド、csv など...）。
 
-The Gravwell-distributed [namedfields.json](https://github.com/gravwell/resources/blob/master/bro/namedfields/namedfields.json) file for Bro logs contains many groups; refer to it for more examples.
+Gravwell が配布している Bro Log 用の [namedfields.json](https://github.com/gravwell/resources/blob/master/bro/namedfields/namedfields.json) ファイルには、多くのグループが含まれているので、その例を参照してください。
 
-### Namedfields Resource Generation
+### namedfields のリソース生成
 
-Gravwell has provided a simple Go library to aid in the generation of namedfields resources.  The library can be used to programmatically generate a resource which can the be used by the namedfields module.  The library is available in the tools Gravwell repository on GitHub within the "nfgen" directory.
+Gravwell は、namedfields リソースの生成を支援するシンプルな golang ライブラリを提供しています。 このライブラリを使って、プログラムでリソースを生成し、namedfields モジュールで使用することができます。 このライブラリは、github の tools Gravwell リポジトリの nfgen ディレクトリにあります。
 
-The simplest usage of the named fields to generate two groups within a single resource would appear as:
+名前付きフィールドを使って、1 つのリソースに 2 つのグループを生成する最も簡単な方法は、次のようになります。
 
 ```
 package main
@@ -172,7 +172,7 @@ func main() {
 }
 ```
 
-Building and executing the aforementioned generator is simple if you have the Go toolchain installed:
+golang のビルドチェーンがインストールされていれば、前述のジェネレーターをビルドして実行するのは簡単です。
 
 ```
 go get -u github.com/gravwell/tools/nfgen

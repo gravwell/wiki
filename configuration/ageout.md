@@ -1,57 +1,58 @@
-# Data Ageout
+# データエイジアウト
 
-By default, Gravwell will never delete data. It demands that the user specify policies for each storage well describing how data may be migrated and/or deleted, a process we refer to as "ageout". The ageout policies control data retention, storage well utilization, and compression.  Each well supports a hot location and an optional cold storage location with a set of parameters which determine how data is moved from one storage system to the other. An ideal Gravwell storage architecture is comprised of relatively small pools of high-speed storage for "hot" stores and a high volume/low cost storage pool to be used for longer term "cold" storage.  NVME-based flash and/or XPoint drives make a great hot well, while magnetic RAID arrays, NAS, or SAN pools work well for cold pools.
+Gravwellは、データ管理ポリシーを個々のウェルに適用できるエイジアウトシステムをサポートしています。エイジアウトポリシーは、データの保持、ストレージウェルの利用、および圧縮を制御する。各ウェルは、データが1つのストレージシステムから他のストレージシステムにどのように移動されるかを決定する一連のパラメータを持つホットおよびコールドストレージの場所をサポートしています。理想的なGravwellストレージアーキテクチャは、ランダムアクセスに耐性のある高速ストレージの比較的小さなプールと、長期的なストレージに使用される大容量/低コストのストレージプールで構成されています。NVMEベースのフラッシュおよび/またはXPointドライブは、ホットウェルに最適ですが、磁気RAIDアレイ、NAS、またはSANプールはコールドプールに適しています。エイジアウト中に検索が妨げられることはありませんし、摂取することもありません。
+Gravwellは、デフォルト設定ではデータを削除しないようになっています。従って、ユーザーが、各ストレージウェルについてデータの移行や削除に関するポリシーを指定する必要があります。データの保持、ストレージウェルの利用、圧縮の制御方法を指定するのが「エイジアウト」ポリシーです。 各ウェルには、ホットロケーションとコールドストレージロケーション（オプション）が用意されており、データをストレージシステム間で移動させる方法を決定するパラメータが設定されています。理想的なGravwellストレージアーキテクチャは、比較的小規模な高速ストレージプールを「ホット」ストレージとして使用し、大容量かつ低コストのストレージプールを長期的な「コールド」ストレージとして使用することで構成されます。 NVMEベースのフラッシュやXPointドライブは、ホットウェルに最適であり、磁気RAIDアレイ、NAS、SANプールはコールドプールに適している。
 
-The unit of storage within a well is the **shard**, representing approximately 1.5 days (2<sup>17</sup> seconds) of data. The **active shard** is the shard which is receiving entries for the current time. Every 2<sup>17</sup> seconds, a new active shard is created and the previous active shard becomes eligible for ageout. Ageout always affects an entire shard. Because of this, even with the most strict ageout policies each well must have enough space for about 1.5 days of data--keep this in mind when planning! If you specify a storage limit of 1GB but then ingest 10GB of data into one shard in an hour, your well will occupy 10GB until the active shard can be aged out! Searching is not impeded during ageout, nor is ingestion.
+ウェル内のストレージの単位は**shard**で、約1.5日(2<sup>17</sup>秒)間分のデータ量に相当します。**active shard**は、現時点のエントリを受信しているシャードです。2<sup>17</sup>秒ごとに、新しいアクティブ・シャードが作成され、その時点までアクティブだったシャードはエイジアウトの対象となります。エイジアウトは常に１単位のシャード全体に作用します。このため、最も厳格なエイジアウトポリシーを採用していても、各ウェルには約1.5日分のデータを保存するのに十分な容量が必要となりますので、計画を立てる際にはこの点に注意してください。ストレージの上限を1GBに設定していても、1時間後に1つのシャードに10GBのデータを取り込んだ場合、アクティブなシャードがエイジアウトされるまで、ウェルは10GBを占有することになります。エイジアウトの間も、インジェストの間も、検索は妨げられません。
 
-Ageout policies can be defined via three parameters:
+エイジアウトポリシーは、3つのパラメータで定義できます：
 
-* Time
-* Total Storage
-* Storage Availability
+* 時間
+* 合計ストレージ
+* ストレージの可用性
 
-The time-based parameter allows you to specify data retention policies to adhere to policies, contractual agreements, or legal requirements. For instance, corporate policy may state that web proxy logs should be stored for no more than 30 days.
+時間ベースのパラメータによって、ポリシー、契約上の合意、または法的要件に準拠するためにデータ保持ポリシーを指定することができます。例えば、企業のポリシーでは、Webプロキシのログは30日以内に保存することになっているかもしれません。
 
- The total storage parameter specifies an upper storage bound for a well, instructing Gravwell to only ageout or discard data when the amount of stored data exceeds the storage bounds.
+ 合計ストレージパラメータは、ウェルのストレージ上限を指定し、保存されたデータ量がストレージ上限を超えた場合にのみ、データをエージアウトするか廃棄するようにGravwellに指示します。
 
-The storage availability parameter instructs Gravwell to maintain at least a minimum amount of available storage, aging out data as needed to free up space.  Storage availability constraints are useful for when you want to allow Gravwell to use free storage on a device, but discard data if the device ever drops below some availability threshold.
+ストレージ利用量パラメータは、利用可能なストレージの最低量を維持するように Gravwell に指示し、そのためのスペースを空けるために必要に応じてデータをエージングするようにします。ストレージ利用量の確保は、Gravwellがデバイス上で空きストレージを使用できるようにしている時に、デバイスの空き容量が利用量のしきい値を下回った場合にデータを破棄しようとする場合に便利です。
 
-Multiple constraints can be added to a single well. For instance, you might specify that data should be kept for up to 90 days, unless the total exceeds 100GB.
+1つのウェルに複数の制約を追加することができます。例えば、合計が100GBを超えない限り、データを最大90日間保存するように指定することができます。
 
-The ageout system is designed to optimize data storage as it transfers entries from hot to cold pools.  The optimization localizes entries of the same time range and tag, reducing head movement on traditional spinning disks.  Combined with compression, the optimization phase can significantly improve storage utilization and search performance on cold data.
+エイジアウトシステムは、エントリをホットプールからコールドプールに転送する際に、データストレージを最適化するように設計されています。最適化により、同じ時間範囲とタグのエントリがローカライズされ、従来の回転ディスク上でのヘッドの動きが軽減されます。圧縮と組み合わせることで、最適化フェーズでは、コールドデータのストレージ利用率と検索パフォーマンスを大幅に向上させることができます。
 
-The ageout system can be configured to delete old data, so it is critically important that the configuration be vetted prior to engaging well ageout.
+エイジアウトシステムは古いデータを削除するように構成できるため、十分なエイジアウトを行う前に構成を精査することが非常に重要です。
 
-## Basic Configuration
+## 基本構成
 
-Each well will always have a hot storage location defined via the `Location` directive. It may optionally have a cold storage location defined via `Cold-Location`. Ageout is configured by setting constraints and defining any desired rules for moving or deleting data from hot to cold storage, and from cold storage to either archives or deletion. Be aware that unless deletion rules are *explicitly* provided, Gravwell will *never* delete data. The default configuration *does* include ageout rules, so be sure to review the config file (and maybe set up some custom wells) if you've got particular retention requirements.
+各ウェルは常に `Location` ディレクティブで定義されたホットストレージの位置を持ちます。オプションで `Cold-Location` で定義されたコールドストレージの場所を持つこともできます。エイジアウトは、ホットストレージからコールドストレージへのデータの移動や削除、コールドストレージからアーカイブや削除へのデータの移動や削除のための制約を設定し、必要なルールを定義することで設定されます。削除ルールが*明示的に*提供されていない限り、Gravwellはデータを*削除しないことに注意してください。
 
-Attention: Ageout configurations are on a per well basis.  Each well operates independently and asynchronously from all others.  If two wells are sharing the same volume, enabling ageout directives based on storage reserve can cause one well to aggressively migrate and/or delete data due to the incursion by another.
+重要：エイジアウトの設定は、ウェルごとに行われます。各ウェルは、他のすべてのウェルから独立して非同期に動作します。2つのウェルが同じボリュームを共有している場合、ストレージリザーブに基づいてageoutディレクティブを有効にすると、片方のウェルのデータ量低下に伴い、一方のウェルが積極的に他方に移行したり、データが削除われたりする可能性があります。
 
-Note: If data is actively coming into a storage shard that is marked for ageout or is actively being queried, the ageout system will defer aging out the shard to a later time.
+注：データが、エイジアウトのマークが付けられているストレージシャードにアクティブに入力されている場合、またはアクティブにクエリされている場合、エイジアウトシステムはシャードのエイジアウトを後で延期します。
 
-## Hot/Cold Deletion Rules
+## ホット/コールド削除のルール
 
-When data ages out from the hot well, it is moved to the cold well if a cold well is defined. If no cold well is defined, data will be left in the hot well unless deletion is explicitly authorized via the `Delete-Cold-Data` option.
+データがホットウェルからエイジアウトすると、コールドウェルが定義されていればコールドウェルに移動します。コールドウェルが定義されていない場合、`Delete-Cold-Data`オプションで明示的に削除が許可されない限り、データはホットウェルに残されます。
 
-Similarly, when data ages out of the cold well ("frozen") it will not be deleted unless the `Delete-Frozen-Data` parameter is specified. If you need long-term archives, frozen data can be sent to the [Gravwell archiving service](archive.md) before deletion.
+同様に、コールドウェルからデータが古くなった場合（「凍結」）、`Delete-Frozen-Data`パラメータが指定されない限り、データは削除されません。長期的なアーカイブが必要な場合は、凍結したデータを削除する前に[Gravwell archiving service](archive.md)に送ることができます。
 
-Examples of these rules can be seen in the configuration snippets in the following sections.
+これらのルールの例は、以下のセクションの設定スニペットで見ることができる。
 
-Warning: You *must* specify either `Delete-Cold-Data` (if using only a hot well) or `Delete-Frozen-Data` (if using both hot & cold wells) if you want data to be actually removed from the disk. These settings require explicit authorization from the user, because our general policy is to never delete anything unless asked. If you do not include the appropriate deletion parameter in your well config, data will never be deleted and your disk will eventually fill up!
+警告：ディスクから実際にデータを削除したい場合は、`Delete-Cold-Data` (ホットウェルのみを使用している場合) または`Delete-Frozen-Data` (ホットウェルとコールドウェルの両方を使用している場合)のいずれかを指定する必要があります。これらの設定を行うには、ユーザからの明示的な承認が必要です。適切な削除パラメータをウェル設定に含まない場合、データは削除されず、最終的にはディスクが一杯になってしまいます。
 
-## Time-Based Ageout Rules
+##時間ベースのエイジアウトルール
 
-Time-based ageout manages data based on time retention requirements.  For example, an organization may have requirements that all logs be kept for 90 days.  The time-based ageout constraint is best used on data pools where policy and/or legal requirements dictate log retention times.  Time based ageout durations can be specified in days and weeks using the following case-insensitive abbreviations:
+時間ベースのエイジアウトは、時間保持要件に基づいてデータを管理します。たとえば、組織には、すべてのログを90日間保持するという要件がある場合があります。時間ベースのエージアウト制約は、ポリシーや法的要件によってログの保持時間が決定されるデータプールで最適に使用されます。時間ベースのエイジアウト期間は、大文字と小文字を区別しない次の略語を使用して、日数と週数で指定できます。
 
-* "d"     - days
-* "days"  - days
-* "w"     - weeks
-* "weeks" - weeks
+* "d"     - 日
+* "days"  - 日
+* "w"     - 週
+* "weeks" - 週
 
-Note: A shard will only be aged-out when its *most recent* entries exceed the duration.
+注: シャードは、その*直近*のエントリが期間を超えた場合にのみ、エージアウトされます。
 
-An example well configuration using only a hot pool of data and deleting data that is more than 30 days old:
+データのホットプールのみを使用し、30日以上前のデータを削除するウェル構成の例：
 
 ```
 [Storage-Well "syslog"]
@@ -61,7 +62,7 @@ An example well configuration using only a hot pool of data and deleting data th
 	Delete-Cold-Data=true
 ```
 
-An example configuration in which data is moved from the hot pool to the cold pool after 7 days, and deleted from the cold pool after 90 days:
+データが7日後にホットプールからコールドプールに移動され、90日後にコールドプールから削除される構成の例：
 
 ```
 [Storage-Well "syslog"]
@@ -73,11 +74,12 @@ An example configuration in which data is moved from the hot pool to the cold po
 	Delete-Frozen-Data=true
 ```
 
-Note: In the above configuration, data will be deleted permanently when it is 97 days old, having spent 7 days in the hot pool and 90 days in the cold pool.
+注：上記の構成では、データが97日経過すると、データは完全に削除され、ホットプールで7日間、コールドプールで90日間過ごしました。
 
-The Time based ageout is invoked once per day, sweeping each pool for shards that can be aged out.  By default the sweep happens at midnight UTC, but the execution time can be overridden in the well configuration with the Ageout-Time-Override directive.  The override directive is specified in 24 hour UTC time.
+時間ベースのエイジアウトは1日に1回呼び出され、エイジアウトできるシャードを各プールでスイープします。デフォルトでは、スイープはUTCの深夜に発生しますが、実行時間は、Ageout-Time-Overrideディレクティブを使用してウェル構成でオーバーライドできます。オーバーライドディレクティブは、24時間UTC時間で指定されます。
 
-An example configuration that overrides the ageout time checks to occur at 7PM UTC:
+UTC午後7時に発生するエイジアウト時間チェックを上書きする設定例：
+
 ```
 [Storage-Well "syslog"]
 	Location=/mnt/xpoint/gravwell/syslog
@@ -90,11 +92,11 @@ An example configuration that overrides the ageout time checks to occur at 7PM U
 	Ageout-Time-Override=19:00
 ```
 
-## Total Storage-Based Ageout Rules
+## 合計ストレージベースのエイジアウトルール
 
-Total storage constraints allots a specific amount of storage in a volume regardless of time spans.  Storage constraints allow a Gravwell indexer to make aggressive and full use of high speed storage pools which may be of limited size (such as NVME flash).  The indexer will keep entries in the storage pool, as long as the well isn't consuming more than allowed.  Storage constraints allow for unexpected bursts of ingest without disrupting data storage.  For example, if an indexer has 1TB of high speed flash storage which typically handles 7 days of hot storage but an unexpected data event causes 600GB of ingest in a single day, the indexer can age out the older data to the cold pool without disrupting the hot pool's ability to take in new data.  Shards are prioritized by time; the oldest shards are aged out first for both hot and cold pools.
+合計ストレージ制約は、期間に関係なく、ボリューム内の特定の量のストレージを割り当てます。ストレージ制約を用いると、Gravwellインデクサーは、サイズが限られている高速ストレージプール（NVMEフラッシュなど）を積極的にフル活用できます。インデクサーは、ウェルが許容量を超えて消費されていない限り、ストレージプール内のエントリを保持します。ストレージ制約により、データストレージに障害をもたらすことなく、予期せぬインジェストのバーストを受けることが可能になります。例えば、インデクサーに1TBの高速フラッシュストレージがあり、通常は7日間のホットストレージを処理していたという場合に、予期しないデータイベントによって1日で600 GBのインジェストが発生した場合、インデクサは、ホット・プールの新しいデータを取り込む能力を妨げることなく、古いデータをコールド・プールにエージングすることができます。 シャードは生成時刻によって優先順位が付けられ、ホットプールとコールドプールの両方で、最も古いシャードが最初にエージアウトされます。
 
-An example well configuration that keeps up to 500GB of data in a hot pool, deleting old data when the 500GB limit is exceeded:
+ホットプールに最大500GBのデータを保持し、500GBの制限を超えたときに古いデータを削除するウェル構成の例：
 
 ```
 [Storage-Well "windows"]
@@ -105,7 +107,7 @@ An example well configuration that keeps up to 500GB of data in a hot pool, dele
 	Delete-Cold-Data=true
 ```
 
-An example well configuration where the hot pool keeps approximately 50GB and then ages out into a cold pool which keeps up to 10TB:
+ホットプールが約50GBを維持し、その後、最大10TBを維持するコールドプールにエイジアウトするウェル構成の例：
 
 ```
 [Storage-Well "windows"]
@@ -118,13 +120,13 @@ An example well configuration where the hot pool keeps approximately 50GB and th
 	Delete-Frozen-Data=true
 ```
 
-Attention: Storage-based constraints are not an instant hard limit.  Be sure to leave a little room so that when a storage allotment is exceeded, the indexer can ageout data while still ingesting.  For example, if a hot storage device can hold 512GB and the system typically ingests 100GB per day, setting the storage limit to 490GB should provide enough headroom so that the hot pool won't completely fill up while the indexer is migrating data.
+重要：ストレージベースの制約は、ぎりぎりの厳しい制限をかけるものではありません。ストレージの割り当てを超えた場合に、インデクサーが取り込み中にもデータをエイジアウトできるように、少し余裕を持たせてください。たとえば、ホットストレージデバイスが512GBを保持でき、システムが通常1日あたり100GBを取り込む場合、ストレージ制限を490GBに設定すると、インデクサーがデータを移行している最中にもホットプールが完全に満杯にならないように、十分な余裕を持たせることができます。
 
-## Storage Available-Based Ageout Rules
+## 使用可能なストレージベースのエイジアウトルール
 
-Well storage constraints can also be applied based on availability of storage.  Some wells may be low priority, consuming storage only when it is available.  Using the storage reserve directives allows a well to consume as much space as it wants, so long as some percentage of available storage is maintained on the volume.  A storage availability rule essentially allows the well to act as a "second class" well, consuming disk space only when no one else is.  Specifying `Hot-Storage-Reserve=5` ensures that should the hot storage volume drop below 5% free space the well will begin migrating or deleting its oldest shards.  The reserve directives apply to the underlying volume hosting the storage location, meaning that if the volume is also hosting other wells or other arbitrary file storage, the well can pull back its storage usage as needed.
+ストレージの可用性に基づいて、ストレージの制約を適用することもできます。一部のウェルは優先度が低く、使用可能な場合にのみストレージを消費する場合があります。storage reservedディレクティブを使用すると、使用可能なストレージの一部がボリューム上で維持されている限り、ウェルが必要なだけのスペースを消費できます。ストレージ可用性ルールは、基本的に、ウェルが「セカンドクラス」ウェルとして機能することを許可し、他に誰もいない場合にのみディスクスペースを消費します。`Hot-Storage-Reserve = 5`を指定すると、ホットストレージボリュームが5％の空き領域を下回った場合に、ウェルが最も古いシャードの移行または削除を開始します。予約ディレクティブは、ストレージの場所をホストしている基になるボリュームに適用されます。つまり、ボリュームが他のウェルまたは他の任意のファイルストレージもホストしている場合、ウェルは必要に応じてストレージの使用量を引き戻すことができます。
 
-An example well configuration which will use the hot location as long as there is 30% free space on the volume, and will use the cold volume as long as there is 10% free space:
+ボリュームに30％の空き領域がある限りホットロケーションを使用し、10％の空き領域がある限りコールドボリュームを使用するウェル構成の例：
 
 ```
 [Storage-Well "doorlogs"]
@@ -136,40 +138,40 @@ An example well configuration which will use the hot location as long as there i
 	Delete-Frozen-Data=true
 ```
 
-Attention: The Gravwell ageout system which operates on storage reserves is operating entirely orthogonal to outside influences, if a well is configured to respect a 50% storage ceiling and an outside application fills the volume to 60%, Gravwell will delete all entries outside the active shard.  Wells configured with storage reserved should be treated as expendable.
+重要：ストレージリザーブで動作するGravwellエイジアウトシステムは、外部の影響に対して完全に直交して動作しています。ウェルが50％のストレージ上限を尊重するように構成され、外部アプリケーションがボリュームを60％まで満たす場合、Gravwellはアクティブな外部のすべてのエントリを削除します シャード。ストレージが予約された状態で構成されたウェルは、消耗品として扱う必要があります。
 
-## Caveats and Important Notes
+## 警告と重要な注意事項
 
-Ageout constraints are applied to entire shards, so if a single shard grows beyond the size of a data constraint the shard will age out in its entirety once the shard is idle.
+エイジアウト制約はシャード全体に適用されるため、単一のシャードがデータ制約のサイズを超えて大きくなった場合、シャードがアイドル状態になるとシャード全体がエイジアウトします。
 
-Time-based constraints require that the entire shard fall outside the specified time window.  As such, time constraints that are less than 1 day have no meaning, and hot pools must be able to hold at least 2 days worth of data.
+時間ベースの制約では、シャード全体が指定された時間帯に収まることが必要です。そのため、1日未満の時間の制約には意味がなく、ホットプールは少なくとも2日分のデータを保持できなければなりません。
 
-Take care when combining time-based constraints with total storage constraints. If `Hot-Duration=7D` and `Cold-Duration=90D` are specified, data will be deleted after 97 days. However, if `Max-Hot-Storage-GB=2` and `Cold-Duration=90D` are specified, data will move from the hot well to the cold well when the hot well exceeds 2GB, and **data will be deleted from the cold well when it is 90 days old**.
+時間ベースの制約と全体ストレージの制約を組み合わせる場合は注意が必要です。` Hot-Duration=7D` と` Cold-Duration=90D` を指定すると、97日後にデータは削除されます。ただし、`Max-Hot-Storage-GB=2` と `Cold-Duration=90D` を指定すると、ホットウェルが2GBを超えるとホットウェルからコールドウェルにデータが移動し、90日経過するとコールドウェルからデータが削除されます**。
 
-### Transparent Compression + Docker Caveats
+### 透過的な圧縮＋Dockerの注意点
 
-[Transparent compression](compression.md) has important implications for ageout rules involving total storage. A file with transparent compression enabled takes up less space on disk than the uncompressed version, but it is difficult to find out precisely *how much* disk space it is actually using. Consider a well configured with `Max-Hot-Storage-GB=5`; if transparent compression is enabled, we would prefer to ageout data only when 5GB of *actual disk space* are used, rather than when the size of the uncompressed data reaches 5GB.
+[透過圧縮](compression.md)は、総ストレージを含むエイジアウトルールに重要な意味を持ちます。透過圧縮を有効にしたファイルは、非圧縮版よりもディスク上の容量が少なくなりますが、実際にどのくらいのディスク容量を使っているのかを正確に知ることは困難です。透過圧縮が有効になっている場合、非圧縮データのサイズが5GBに達したときよりも、5GBの*実際のディスク容量*が使用されたときにのみデータをエイジアウトしたいと考えています。
 
-Gravwell attempts to query the actual on-disk size of shards on BTRFS systems with compression enabled. On a typical Linux system, this will work fine. However, **when using Docker containers**, extra care must be taken. If Docker's runtime directory (default `/var/lib/docker`) is on a BTRFS filesystem, wells can use transparent compression, *but* the on-disk size query will fail because certain IOCTL calls are disabled by default. You can enable the appropriate IOCTL calls for your Docker container by passing the `--cap-add=SYS_ADMIN` flag to the command you use to instantiate the indexer container.
+Gravwellは、圧縮が有効になっているBTRFSシステム上のシャードの実際のディスク上のサイズを照会しようとします。一般的なLinuxシステムでは、これは正常に機能します。ただし、** Dockerコンテナを使用する場合**は、特別な注意が必要です。Dockerのランタイムディレクトリ（デフォルトは `/var/lib/docker`）がBTRFSファイルシステム上にある場合、ウェルは透過圧縮を使用できますが、特定のIOCTL呼び出しがデフォルトで無効になっているため、ディスク上のサイズのクエリは失敗します。インデクサーコンテナのインスタンス化に使用するコマンドに`--cap-add=SYS_ADMIN`フラグを渡すことで、Dockerコンテナの適切なIOCTL呼び出しを有効にできます。
 
-### Deletion Safety Nets
+### 削除セーフティネット
 
-Ageout policies can and will **delete data**.  It is critically important that administrators vet configurations and hardware resources to ensure that both hot and cold storage pools can accommodate the requested ageout constraints.  Well configurations require that deletion be explicitly authorized via a "Delete-X-Data" directive (`Delete-Cold-Data` for hot pools and `Delete-Frozen-Data` for cold pools).
+エイジアウトポリシーによって**データを削除**する可能性があります。管理者は、設定とハードウェアリソースを精査して、ホットストレージプールとコールドストレージプールの両方ともが要求されたエイジアウト制約に対応できることを確認することが非常に重要です。ウェルの設定では、"Delete-X-Data"ディレクティブ（ホットプールの場合は`Delete-Cold-Data`、コールドプールの場合は`Delete-Frozen-Data`）によって削除を明示的に許可する必要があります。
 
-The Delete-X-Data directives are used as safety nets to ensure administrators think about data deletion during configuration.  For example, if a well is configured to have a hot pool, no cold pool, and a hot retention of 7 days, Gravwell will attempt to delete data from the hot pool that is older than 7 days.  However, if the well does not have a configuration directive of "Delete-Cold-Data=true" the ageout system WILL NOT delete the data; instead it will complain in the logs and essentially disable ageout.
+Delete-X-Data ディレクティブは、管理者が設定中にデータの削除を考慮するためのセーフティネットとして使用されます。例えば、ホットプールがあり、コールドプールがなく、ホットリテンションが7日のウェルが設定されている場合、Gravwellはホットプールから7日よりも古いデータを削除しようとします。しかし、井戸に "Delete-Cold-Data=true "の設定指令がない場合、ageoutシステムはデータを削除しません。
 
-Cold pools contain the same directive requirement, meaning that Gravwell will not delete data from the cold pool as it ages out of the cold pool unless the "Delete-Frozen-Data=true" directive is set.  Note that if data that is 120 days old is ingested into the hot pool and the cold pool retention configuration is 90 days, **and the Delete-Cold-Data directive is set to true** the ageout system will bypass the cold pool entirely and directly delete the data.
+コールドプールにも同じ指令要件が含まれており、"Delete-Frozen-Data=true "指令が設定されていない限り、Gravwellはコールドプールからエージングされたデータを削除しないことを意味します。120日前のデータがホットプールに取り込まれ、コールドプールの保持設定が90日で、**Delete-Cold-Dataディレクティブがtrueに設定されている場合**、エイジアウトシステムはコールドプールを完全に迂回してデータを直接削除することに注意してください。
 
-Time-based ageout relies on the system clock to determine when data should be aged out, meaning that an improper system clock could cause data to be aged out prematurely.  Administrators must ensure that system clocks are well maintained and if NTP is in use, it is a trusted source.  If an attacker can gain control over the system clock of a Gravwell indexer for reasonable periods of time, they can cause ageouts.  Time is the anchor in Gravwell and it must be protected with the same vigor as the storage pools.
+時間ベースのエイジアウトは、データのエイジアウトのタイミングをシステムクロックに依存していますが、システムクロックが不適切な場合、データが早期にエイジアウトされる可能性があります。管理者は、システムクロックが十分に維持されていることを確認し、NTP を使用している場合は信頼できるソースであることを確認する必要があります。攻撃者が妥当な期間Gravwellインデクサーのシステムクロックを制御することができれば、エイジアウトを引き起こす可能性があります。時間はGravwellのアンカーであり、ストレージプールと同じ勢いで保護されなければならなりません。
 
 
-## Ageout Rule Interactions
+## エイジアウトルールの相互作用
 
-Ageout rules can be stacked and combined to provide robust control over storage resources.  For example, Gravwell highly recommends a small pool of high speed storage for use in the hot pool and a large low cost array of disks for the cold pool.  Storage constraints can be combined to utilize the small high speed pool at will, while still adhering to data retention policies.
+エイジアウトルールを多段にしたり、組み合わせたりして、ストレージリソースを強固に制御することができます。例えば、ホットプールには小規模な高速ストレージを使用し、コールドプールには低コストの大容量ディスクアレイを使用することを強く推奨しています。 ストレージ制約を組み合わせることで、データ保持ポリシーを守りつつ、小さな高速プールを自由に利用することができます。
 
-Data ageout constraints operate independently of one another in a first come first serve basis.  If a time constraint of 7 days is applied to a well in addition to a storage constraint of 100GB, shards will be aged out at 7 days or when the pool exceeds 100GB, whichever comes first.  While useful to combine multiple constraints for a single pool in a well, be aware that an overly aggressive ageout configuration can cause unexpected behavior.  For example if a well has a 7 day retention, but also a Hot-Storage-Reserve of 5% Gravwell will attempt to meet the 5% retention independently of the 7 day retention.  Each ageout directive acts entirely independently, setting a retention size or storage reserve can and will override any time based directives, and vice versa.
+データ・エイジアウトの制約は、互いに独立して先着順に動作します。 100GBのストレージ制約に加えて7日の時間制約がウェルに適用された場合、シャードは7日またはプールが100GBを超えたときのいずれか早い方でエイジアウトされます。ウェル内の単一のプールに対して複数の制約を組み合わせるのは便利ですが、過度にアグレッシブなエイジアウト設定をすると予期しない動作を引き起こす可能性があることに注意してください。例えば、ウェルに7日間の保持設定があり、さらにホットストレージリザーバが5%ある場合、Gravwellは7日間の保持とは別に5%の保持を満たそうとします。各ageoutディレクティブは完全に独立して機能し、保持サイズまたはストレージ予約を設定すると、時間ベースのディレクティブをオーバーライドできます。その逆も同様です。
 
-Example well configuration which uses up to 100GB of hot storage and retains data for 90 days:
+最大100GBのホットストレージを使用し、90日間データを保持するウェル構成の例：
 
 ```
 [Storage-Well "weblogs"]
@@ -183,7 +185,7 @@ Example well configuration which uses up to 100GB of hot storage and retains dat
 	Delete-Frozen-Data=true
 ```
 
-Example well configuration which tries to keep 10% free on the hot storage volume while retaining data for 30 days:
+30日間データを保持しながら、ホットストレージボリュームで10％の空き容量を維持しようとするウェル構成の例：
 
 ```
 [Storage-Well "weblogs"]
@@ -197,7 +199,7 @@ Example well configuration which tries to keep 10% free on the hot storage volum
 	Delete-Frozen-Data=true
 ```
 
-Example well configuration which keeps 7 days or 100GB in the hot pool and keeps all data in the cold pool as long as 20% is available:
+ホットプールに7日または100GBを保持し、20％が使用可能である限りすべてのデータをコールドプールに保持するウェル構成の例：
 
 ```
 [Storage-Well "weblogs"]

@@ -1,26 +1,26 @@
-# Data Replication
+﻿# データレプリケーション（データ複製）
 
-Replication is included with all Gravwell Cluster Edition licenses, allowing for fault-tolerant high availability deployments.  The Gravwell replication engine transparently manages data replication across distributed indexers with automatic failover, load balanced data distribution, and compression.  Gravwell also provides fine tuned control over exactly which wells are included in replication and how the data is distributed across peers.  Customers can rapidly deploy a Gravwell cluster with uniform data distribution, or design a replication scheme that can tolerate entire data center failures using region-aware peer selection.  The online failover system also allows continued access to data even when some indexers are offline.
+レプリケーション機能はすべてのGravwell Cluster Editionライセンスに含まれており、この機能によって耐障害性を持つ可用性の高いデプロイができるようになっています。Gravwellレプリケーションエンジンは、自動フェイルオーバー、負荷分散されたデータ分配、および圧縮により、分散インデクサー間のデータレプリケーションを透過的に管理します。また、Gravwellは、どのウェルをレプリケーションに含めるか、およびデータをピア間でどのように分散させるかという制御についても、きめ細かく調整できるようになっています。お客様は、均一なデータ分布を持つGravwellクラスタを迅速に展開したり、地域を考慮したピア選択を使用してデータセンター全体の障害に耐えられるレプリケーションスキームを設計したりすることができます。また、オンライン・フェイルオーバー・システムは、一部のインデクサーがオフラインの場合でもデータへの継続的なアクセスを可能にします。
 
-Attention: Gravwell's replication system is designed purely to replicate ingested data. It does not back up user accounts, dashboards, search history, resources, etc., which are stored on the webserver rather than the indexers. To add resiliency to a webserver, consider deploying [a datastore](#!distributed/frontend.md) for your webserver; the datastore will store a redundant live copy of your webserver's data.
+注意: Gravwellのレプリケーションシステムは、純粋にインジェストされたデータをレプリケートするために設計されています。ユーザーアカウント、ダッシュボード、検索履歴、リソースなどのインデクサーではなくウェブサーバーに保存されている情報のバックアップは行われせん。ウェブサーバーに復元性を持たせるには、[データストア](#!distributed/frontend.md)をウェブサーバーにデプロイし、ウェブサーバーのデータの冗長化用ライブコピーを保存することを検討してください。
 
-The replication system is logically separated into "Clients" and "Peers", with each indexer potentially acting as both a peer and a client.  A client is responsible for reaching out to known replication peers and driving the replication transactions.  When deploying a Gravwell cluster in a replicating mode, it is important that indexers be able to initiate a TCP connection to any peers acting as replication storage nodes.
+レプリケーションシステムは論理的には「クライアント」と「ピア」に分かれており、各インデクサーはピアとクライアントの両方のどちらの役割を担う可能性もあります。クライアントの役割は、既知のレプリケーションピアにアクセスし、レプリケーショントランザクションを実行することです。レプリケーションモードでGravwellクラスタをデプロイする場合、インデクサーは全て、レプリケーションストレージノードとして動作するどのピアへのTCP接続を開始できるようにすることが重要です。
 
-Replication connections are encrypted by default and require that indexers have functioning X509 certificates.  If the certificates are not signed by a valid certificate authority (CA) then `Insecure-Skip-TLS-Verify=true` must be added to the Replication configuration section.
+レプリケーション接続はデフォルトで暗号化されるので、インデクサーには利用可能な X509 証明書が与えられている必要があります。証明書が有効な証明書局 (CA) によって署名されていない場合は、レプリケーション設定セクションに `Insecure-Skip-TLS-Verify=true` の記述を追加しなければなりません。
 
-Replication storage nodes (nodes which receive replicated data) are allotted a specific amount of storage and will not delete data until that storage is exhausted.  If a remote client node deletes data as part of normal ageout, the data shard is marked as deleted and prioritized for deletion when the replication node hits its storage limit.  The replication system prioritizes deleted shards first, cold shards second, and oldest shards last.  All replicated data is compressed; if a cold storage location is provided it is usually recommended that the replication storage location have the same storage capacity as the cold and hot storage combined.
+レプリケーションストレージノード（レプリケートされたデータを受信するノード）には、特定のストレージ量が割り当てられており、そのストレージを使い切るまでデータ削除されることはありません。通常のエイジアウトの一環としてリモートクライアントノードがデータを削除した場合、データシャードは削除されたものとしてマークされ、レプリケーションノードがストレージの上限に達した際の削除の順位が付けられます。レプリケーションシステムでの削除順位は、最初が削除されたシャード、２番目がコールドシャード、最後が最も古いシャードです。すべてのレプリケーションデータは圧縮されます。コールドストレージの場所が提供されている場合、通常、レプリケーションストレージの場所はコールドストレージとホットストレージを合わせたストレージ容量と同じ容量にすることが推奨されます。
 
-Attention: Entries larger than 999MB will **not** be replicated. They can be ingested and searched as normal, but are omitted from replication.
+注意: 999MBを超えるエントリは、**レプリケートされません**。これらのエントリは通常通りインジェストされ、検索することもできますが、レプリケーションからは除外されます。
 
-## Basic Online Deployment
+## 基本的なオンラインデプロイ
 
-The most basic replication deployment is a uniform distribution where every Indexer can replicate against every other indexer.  A uniform deployment is configured by specifying every other indexer in the Replication Peer fields.
+最も基本的なレプリケーションデプロイは、すべてのインデクサーが他のすべてのインデクサーに対してレプリケートできる対等配置です。対等配置は、各インデクサー設定のReplication Peer フィールドに他のすべてのインデクサーを記述することで設定されます。
 
 ![Basic Replication](replicationOverview.png)
 
-### Example Configuration
+### 設定例
 
-Given three indexers (192.168.100.50, 192.168.100.51, 192.168.100.52), the configuration for the indexer at 192.168.100.50 would look like this:
+3 つのインデクサー (192.168.100.50, 192.168.100.51, 192.168.100.52) がある場合の、192.168.100.50 のインデクサーの設定は以下のようになります:
 
 ```
 [Replication]
@@ -31,19 +31,19 @@ Given three indexers (192.168.100.50, 192.168.100.51, 192.168.100.52), the confi
 	Connect-Wait-Timeout=60
 ```
 
-Each node specifies the other nodes in its `Peer` fields.
+各ノードの設定について、他の全ノードを、`Peer` フィールドに指定してください。
 
-## Region Aware Deployment
+## リージョンを意識したデプロイ
 
-The Replication system can be configured to fine tune which peers an indexer is allowed to replicate data to.  By controlling replication peers, it is possible to set up availability regions where an entire region can be taken offline without losing data so long as no subsequent losses occur in the online availability zone.
+レプリケーションシステムは、インデクサーがどのピアにデータのレプリケーションを許可するかをきめ細かく調整して設定できます。レプリケーション・ピアを管理することによって、アベイラビリティリージョン（可用性リージョン）群を設定し、非停止リージョンにまで連鎖的なデータ喪失が広がることさえなければ、データを失うことなくリージョン単位でオフラインにすることができるようにできます。
 
 ![Region Aware Replication](RegionAwareReplication.png)
 
-### Example Configuration
+### 設定例
 
-An example, an 8 node cluster may be divided into two availability zones (1 and 2).  If availability zone 1 had a subnet of 172.16.2.0/24 and availability zone 2 had a subnet of 172.20.1.0/24.
+例えば、8ノードのクラスタを2つのアベイラビリティゾーン(1と2)に分割することにしたとします。そして、アベイラビリティゾーン1には172.16.2.0/24のサブネットを与え、アベイラビリティゾーン2が172.20.1.0/24のサブネットを与えることにします。
 
-Nodes in Region 1 are configured to replicate to Region 2:
+リージョン1のノードは、リージョン2にレプリケートするように設定します:
 
 ```
 [Replication]
@@ -55,7 +55,7 @@ Nodes in Region 1 are configured to replicate to Region 2:
 	Connect-Wait-Timeout=60
 ```
 
-Nodes in Region 2 are configured to replicate to Region 1:
+リージョン2のノードは、リージョン1にレプリケートするように設定します:
 
 ```
 [Replication]
@@ -67,76 +67,77 @@ Nodes in Region 2 are configured to replicate to Region 1:
 	Connect-Wait-Timeout=60
 ```
 
-## Offline Deployment
+## オフラインレプリケーションのデプロイ
 
-Replication is not included with the standard Single Edition Gravwell license.  If your organization does not need a multi-node deployment of Gravwell but would like access to the replication engine for managed backups, contact <sales@gravwell.io> to upgrade a Single Edition license to a replicating Single Edition license.  Single edition replication is entirely offline, meaning that if the indexing goes offline the data cannot be searched until the indexer comes back online and completes recovery.
+レプリケーションは、標準のSingle Edition Gravwellライセンスには含まれていません。お客様の組織がGravwellのマルチノード展開を必要としないが、管理バックアップのためのレプリケーションエンジンへのアクセスを希望する場合は、<sales@gravwell.io>に連絡して、Single EditionライセンスをレプリケーションSingle Editionライセンスにアップグレードしてください。シングルエディションのレプリケーションは完全にオフラインです。つまり、インデクサー機能がオフラインになった場合、インデクサーがオンラインに戻ってリカバリーが完了するまでデータを検索することができません。
 
 ![Single Edition Offline Replication](SingleOfflineReplication.png)
 
-Cluster Edition Gravwell licenses can choose to implement an offline replication configuration using the offline replicator.  The offline replicator acts exclusively as a replication peer, and does not provide automatic failover or act as an indexer.  Offline replication configurations can be useful in cloud environments where storage systems are already backed by a redundant store and loss is extremely unlikely.  By using an offline replication configuration, data can be replicated to a low cost instance that is attached to very low cost storage pools that would not perform well as an indexer.  In the unlikely event that an indexer is entirely lost, the low cost replication peer can restore the higher cost indexer instance.  Contact <sales@gravwell.io> for access to the offline replication package.
+Cluster EditionのGravwellライセンスでは、オフラインレプリケーターを使用してオフラインレプリケーション構成を実装することを選択できます。オフラインレプリケータは、レプリケーションピアとしてのみ機能し、自動フェイルオーバーやインデクサーとしては機能しません。オフラインレプリケーション構成は、ストレージシステムがすでに冗長ストアによってバックアップされていて、データ損失が極めて起こりにくいクラウド環境で有用です。オフラインレプリケーション構成を使用することで、インデクサーとして機能しない非常に低コストのストレージプールに接続された低コストのインスタンスにデータをレプリケートすることができます。万が一、インデクサーが完全に失われた場合でも、低コストのレプリケーション・ピアは、より高コストのインデクサー・インスタンスを復元することができます。オフラインレプリケーションパッケージへのアクセスについては、<sales@gravwell.io>までお問い合わせください。
 
 ![Offline Replication](OfflineReplicationCluster.png)
 
-## Configuration Options
+## 設定オプション
 
-Replication is controlled by the "Replication" configuration group in the gravwell.conf configuration file.  The Replication configuration group has the following configuration parameters.
+レプリケーションは、gravwell.conf設定ファイルの "Replication" 設定グループによって制御されます。レプリケーション設定グループには、以下の設定パラメーターがあります。
 
-| Parameter | Example | Description |
+| パラメーター | 設定例 | 内容 |
 |:----------|:--------|------------:|
-| Peer      | Peer=10.0.0.1:9406 | Designates a remote system acting as a replication storage node.  Multiple Peers can be specified. |
-| Listen-Address | Listen-Address=10.0.0.101:9406 | Designates the address to which the replication system should bind.  Default is to listen on all addresses on TCP port 9406. |
-| Storage-Location | Storage-Location=/mnt/storage/gravwell/replication | Designates the full path to use for replication storage. |
-| Max-Replicated-Data-GB | Max-Replicated-Data-GB=4096 | Designates the maximum amount of storage the replication system will consume, in this case 4TB. |
-| Replication-Secret-Override | Replication-Secret-Override=replicationsecret | Overrides the authentication token used when establishing connections to replication peers.  By default the "Control-Auth" token from the Global configuration group is used. |
-| Disable-TLS | Disable-TLS=true | Disables TLS communication between replication peers. Defaults to false (TLS enabled). |
-| Insecure-Skip-TLS-Verify | Insecure-Skip-TLS-Verify=true | Disables verification and validation of TLS public keys.  TLS is still enabled, but the system will accept any public key presented by a peer. |
-| Key-File | Key-File=/opt/gravwell/etc/replicationkey.pem | Overrides the X509 private key used for negotiating a replication connection.  By default TLS connections use the Global key file. |
-| Certificate-File | Certificate-File=/opt/gravwell/etc/replicationcert.pem | Overrides the X509 public key certificate used for negotiating a replication connection.  By default TLS connections use the Global certificate file. |
-| Connect-Wait-Timeout | Connect-Wait-Timeout=30 | Specifies the number of seconds an Indexer should wait when attempting to connect to replication peers during startup. |
-| Disable-Server | Disable-Server=true | Disable the indexer replication server, it will only act as a client.  This is important when using offline replication. | 
-| Disable-Compression | Disable-Compression=true | Disable compression on the storage for the replicated data. |
-| Enable-Transparent-Compression | Enable-Transparent-Compression=true | Enable transparent compression on using the host file system for replicated data. |
+| Peer      | Peer=10.0.0.1:9406 | レプリケーションストレージノードとして動作するリモートシステムを指定します。複数のピアを指定できます。|
+| Listen-Address | Listen-Address=10.0.0.101:9406 | レプリケーションシステムがバインドするアドレスを指定します。デフォルトでは、すべてのアドレスのTCP ポート 9406 をリッスンします。|
+| Storage-Location | Storage-Location=/mnt/storage/gravwell/replication | レプリケーションストレージに使用するフルパスを指定します。|
+| Max-Replicated-Data-GB | Max-Replicated-Data-GB=4096 | レプリケーションシステムが消費する最大ストレージ量を指定します。例では4GBに設定されています。|
+| Replication-Secret-Override | Replication-Secret-Override=replicationsecret | レプリケーションピアへの接続を確立する際に使用される認証トークンをこの設定値で上書きします。この設定がなされてないデフォルトでは、グローバル設定グループの「Control-Auth」トークンが使用されます。|
+| Disable-TLS | Disable-TLS=true | レプリケーションピア間の TLS 通信を無効にします。デフォルト値は false (TLS 有効) です。|
+| Insecure-Skip-TLS-Verify | Insecure-Skip-TLS-Verify=true | TLS 公開鍵の検証および有効化を無効にします。TLS 通信はまだ有効ですが、システムはピアから提示された公開鍵を無条件に受け入れます。|
+| Key-File | Key-File=/opt/gravwell/etc/replicationkey.pem | レプリケーション接続のネゴシエーションに使用される X509 秘密鍵をこの設定値で上書きします。この設定がなされてないデフォルトでは、TLS 接続はグローバルキーファイルを使用します。|
+| Certificate-File | Certificate-File=/opt/gravwell/etc/replicationcert.pem | レプリケーション接続のネゴシエーションに使用される X509 公開鍵証明書をこの設定値で上書きします。この設定がなされてないデフォルトでは、TLS 接続はグローバル証明書ファイルを使用します。|
+| Connect-Wait-Timeout | Connect-Wait-Timeout=30 | 起動時にレプリケーションピアに接続しようとするときに、インデクサーが待つべき秒数を指定します。|
+| Disable-Server | Disable-Server=true | インデクサーレプリケーションサーバーを無効にし、クライアントとしてのみ動作するようにします。これはオフラインレプリケーションを使用する場合に重要です。| 
+| Disable-Compression | Disable-Compression=true | レプリケートされたデータのストレージの圧縮を無効にします。|
+| Enable-Transparent-Compression | Enable-Transparent-Compression=true | レプリケートされたデータのためにホストファイルシステムを使用する際に透過的な圧縮を有効にします。|
 
-## Replication Engine Behavior
+## レプリケーションエンジンの動作仕様Replication Engine Behavior
 
-The replication engine is a best effort asynchronous replication and restoration system designed to minimize impact on ingest and search.  The replication system attempts a best-effort data distribution but focuses on timely assignment and distribution.  This means that shards are assigned in a distributed first-come, first-serve order with some guidance based on previous distribution.  The system does not attempt a perfectly uniform data distribution and replication peers with higher throughput (either bandwidth, storage, or CPU) may take on a greater replication load than peers with less.  When designing a Gravwell cluster topology intended to support data replication, we recommend over-provisioning the replication storage by 10-15% to allow for unexpected bursts or data distribution that is not perfectly uniform.
+用いられているレプリケーションエンジンは、インジェストと検索への影響を最小限に抑えるように設計されたベストエフォート方式の非同期レプリケーションとリストアシステムです。レプリケーションシステムは、タイムリーな割り当てと配布に重点を置いたベストエフォートなデータ配布を試みます。これは、シャードが先着順に割り当てられることを意味し、以前の配布に基づいたガイダンスがあることを意味します。システムは完全に一様なデータ分散をするわけではなく、高いスループット（帯域幅、ストレージ、CPUのいずれか）を持つレプリケーションピアの方が、スループットの低いピアよりも大きなレプリケーション負荷がかかる可能性があります。データレプリケーションをサポートすることを目的としたGravwellクラスタトポロジーを設計する際には、予期せぬバーストや完全に均一ではないデータ分布になることに対応できるように、レプリケーションストレージを10～15%オーバープロビジョニングすることをお勧めします。
 
-The replication engine ensures backup of two core pieces of data: tags and the actual entries.  The mapping of printable tag names to storage IDs is maintained independently by each indexer and are critical for effective searching.  Because the tag to name maps are relatively small, every indexer replicates its entire map to every other replication peer.  Data on the other hand is only ever replicated once.
+レプリケーションエンジンは、タグと実際のエントリという2つのコアデータのバックアップを保証します。表記可能なタグ名とストレージIDの対応マッピングは、各インデクサーが独立して管理しており、効果的な検索を行うために重要です。タグから名前へのマップは比較的小さいため、各インデクサーはそのマップ全体を他の全てのレプリケーションピアにレプリケートします。一方、データは一度しかレプリケートされません。
 
-Replication is designed to coordinate with data ageout, migration, and well isolation.  When an indexer ages out data to a cold storage pool or deletes it entirely, the data regions are marked as either cold or deleted on remote storage peers.  The remote storage peers use deletion, cold storage, and shard age when determining which data to keep and/or restore on a node failure.  If data has been marked as deleted by an indexer, the data will not be restored should the indexer fail and recover via replication.  Data that has previously been marked as cold will be put directly back into the cold storage pool during restoration.  Indexers should restore themselves to the exact same state they were in pre-failure when recovering using replication.
+レプリケーションは、データのエージアウト、マイグレーション、およびウェル分離と連携するように設計されています。インデクサーがデータをコールドストレージプールにエイジアウトしたり、完全に削除したりすると、リモートストレージピア上でもそのデータ領域についてはコールドストレージにエイジアウト、あるいは、削除されたとしてマークされます。リモートストレージピアは、どのデータを保持するか、あるいはノード障害時にどのデータをリストアするかを決定する際に、削除、コールドストレージ、およびシャードエイジのマークを使用します。データがインデクサーによって削除されたとマークされている場合、インデクサーが故障してレプリケーション経由で回復した場合、データはリストアされません。以前にコールドとマークされていたデータは、復元時にコールドストレージプールに直接戻されます。というのも、レプリケーションを使用して復旧する際には、インデクサーは障害前の状態と全く同じ状態に復元する必要があるからです。
 
-### Best Practices
+### ベストプラクティス
 
-Designing and deploying a high availability Gravwell cluster can be simple as long as a few basic best practices are followed.  The following list calls out some guidelines you should follow when deploying and recovering a Gravwell cluster instance.
+高可用性の Gravwell クラスタの設計とデプロイは、下に示すいくつかの基本的なベストプラクティスを守っていれば、非常にシンプルです。以下のリストは、Gravwellクラスタインスタンスをデプロイして回復する際に、すべてのGravwell管理者が従うべきガイドラインを示しています。
+
+1. `Indexer-UUID` はインデクサーのグローバルIDを表しています。このIDはノードを運用する限り維持され続けられ、障害が発生した後にも適切に復元されなければなりません。障害が発生したインデクサーが、以前に使用していたUUIDとは異なるUUIDを与えられてしまった場合、そのインデクサーはレプリケーションクラスタ内の完全に新しいメンバーとして解釈され、以前のデータはリストアされません。インデクサーが致命的な障害に見舞われた場合に備えて、安全な場所にインデクサーのUUIDを記録しておくことをお勧めします。
+2. ウェルの設定を変更すると、レプリケーションの状態に影響を与える可能性があります。ウェルを追加したり削除したりすることは問題ありませんが、*障害発生後*、かつ、*復旧前*にウェルの設定を変更すると、レプリケーションエンジンが適切にデータを復旧できなくなります。
+3. インデクサーの障害が発生した場合、新しいデータをインジェストするよりも前に、レプリケーションピアとの接続を確立し、第一レベルのタグの同期を実行できるようにすることが極めて重要です。設定パラメーター `Connect-Wait-Timeout` をゼロに設定し、レプリケーション接続を確立してタグの復元が完了するまでは、障害発生したインデクサーが動かないようにするのが良いでしょう。
+4. レプリケーションのStorage Location（ストレージロケーション）は、レプリケーションシステム一つ一つに対して、それぞれ専用に確保されるべきです。例えば、複数のインデクサーの `Storage-Location` に同じネットワークに接続されたストレージロケーションを使用してしまうと、レプリケーションの失敗やデータの破損の原因となります。
+5. レプリケートされたデータとプライマリデータの圧縮方式を一致させてください。インデクサーでホストベースの透過圧縮を使用している場合は、レプリケーションストアでもその圧縮方式を同一にするのが最善です。インデクサーとレプリケーションピアの間で圧縮スキームが一致していれば、復元プロセスは劇的に速くなります。
+
+## トラブルシューティング
+
+Potential problems and solutions when debugging a replication problem
+レプリケーションに起こりがちな問題と、問題の切り分け方法と解決方法
+
+#### 障害が発生した後、インデクサーがデータをリストアしない
+インデクサーが復帰したときに、インデクサーが障害前と同じ `Indexer-UUID` の値を維持していることを確認してください。UUID の値が変わっていた場合は、元の値に戻し、その後インデクサーがすべてのデータをリストアするのに十分な時間をとってください。インデックスアのUUIDを変更した後の復元には、レプリケーションシステムが2つの異なるデータストアをマージするため、通常よりかなり多くの時間が必要となる可能性があります。
+
+#### レプリケーションの保存場所にデータが表われない
+すべてのレプリケーションピアが共通の `Control-Auth` (または `Replication-Secret-Override`) 値を持っていることを確認してください。ピアがお互いに認証できない場合、データの交換は行われません。
+
+X509 証明書が、ホストシステム上の鍵ストアで信頼されている有効な認証局 (CA) によって署名されていることを確認してください。証明書ストアが有効でない場合は、公開鍵をホストマシンの証明書ストアにインストールするか、`Insecure-Skip-TLS-Verify` オプションを使用して TLS の検証を無効にしてください。
+
+注意: `Insecure-Skip-TLS-Verify` を使って TLS 検証を無効にすると、レプリケーションが中間者攻撃に晒されてしまう可能性があります。攻撃者は通信区間に介入してデータを変更したり、ログを破損させたり、レプリケートされたデータにある活動履歴を隠したりする可能性があります。
+
+ファイアウォールルールやルーティングACLをチェックして、インデクサーが指定されたポートで互いに通信できるようにしてください。
+
+#### 障害発生後、タグのマージに失敗してインデクサーが起動しない
+インデクサーが障害後にタグマッピングを復元する前にインデクサーがインジェストを開始した場合、レプリケーションノード上のタグマップがマージできない状態になる可能性があります。タグがマージできないというエラーが発生した場合は、障害が発生したノードを手動で復元するための支援を受けるために、<support@gravwell.io>に連絡してください。
  
-1. `Indexer-UUID` represents an indexer's global identity.  The identity must be maintained for the lifetime of the node and appropriately restored after a failure.  If a failed indexer comes up with a different UUID than it previously used, it is interpreted as a wholly new member in the replication cluster and its previous data will not be restored. We recommend noting down the indexer UUIDs somewhere safe in case an indexer suffers catastrophic failure.
-2. Changing well configurations can impact replication states.  Adding additional wells or deleting wells is perfectly acceptable but changing the well configurations *after* a failure but *before* restoration will prevent the replication engine from appropriately restoring data.
-3. If an indexer fails, it is critically important that it be allowed to establish connections with replication peers and perform a first-level tag synchronization prior to ingesting new data.  It can be a good idea to set the `Connect-Wait-Timeout` config parameter to zero, ensuring the failed indexer will not start until it has established replication connections and performed a tag restoration.
-4. Replication storage locations should be reserved exclusively for a single replication system.  For example, using the same network attached storage location for multiple indexers' `Storage-Location` will cause replication failures and data corruption.
-5. Match the compression scheme for replicated and primary data.  If you are using host based transparent compression on the indexers, it is best to mimic that behavior on the replication stores.  If compression schemes match between indexers and replication peers, the restoration process is dramatically faster.
+#### 障害発生後、インデクサーにデータ全てはリストアされなかった
+ストレージ・パフォーマンスの低下、ネットワーク・パフォーマンスの低下、またはレプリケーション・ノードのストレージ障害により、レプリケーション・ピアのレプリケーション処理がインデクサーでのデータ処理に追いつけなかった可能性があります。レプリケーションピアがインジェストされるデータ処理に追いつくために十分な帯域幅とストレージ容量を確保していることを確認してください。ストレージノードが毎秒数百メガバイトでインジェストしている場合でも、レプリケーションピアは同じ速度でデータを計算、転送、保存することができなければなりません。
 
-## Troubleshooting
+また、レプリケーションピアに十分なストレージがあることを確認してください。ストレージノードが10TBのコールドデータと1TBのホットデータを保存するように構成されている場合、レプリケーションピアは少なくとも11TBのデータを保存することができるようにしなければなりません。レプリケーションノードが過負荷だったり、設定が間違っていたりした場合、古いデータが削除されてしまう可能性があります。
 
-Below are potential problems and solutions when debugging a replication problem.
-
-#### After a failure, an indexer did not restore its data
-Ensure that the indexer maintained its original `Indexer-UUID` value when coming back online.  If the UUID changed, put it back to the original value and ensure the indexer has adequate time to restore all data.  Restoration after changing the `Indexer-UUID` may require significantly more time as the replication system merges the two disparate data stores.
-
-#### Data is not showing up in the replication Storage-Location
-Ensure that all replication peers have a common `Control-Auth` (or `Replication-Secret-Override`) value.  If peers cannot authenticate with each other they will not exchange data.
-
-Ensure that X509 certificates are signed by a valid Certificate Authority (CA) that is respected by the keystore on the host systems.  If the certificate stores are not valid, either install the public keys into the host machines certificate store, or disable TLS validation via the `Insecure-Skip-TLS-Verify` option.
-
-Attention: Disabling TLS verification via `Insecure-Skip-TLS-Verify` opens up replication to man-in-the-middle attacks.  An attacker could modify data in flight, potentially corrupting logs or hiding activity in replicated data.
-
-Check firewall rules and/or routing ACLs to ensure that indexers are allowed to communicate with one another on the specified port.
-
-#### After a failure an indexer is refusing to start due to a failed tag merge
-If an indexer starts ingesting after a failure prior to restoring its tag mapping, it is possible to enter a state where the tag maps on replication nodes cannot be merged.  If you encounter an unmergeable tag error, contact <support@gravwell.io> for assistance in manually restoring the failed node.
- 
-#### After a failure an indexer did not restore all its data
-Replication peers may not have been able to keep up with an indexer due to poor storage performance, poor network performance, or storage failures on the replication node.  Ensure that replication peers have adequate bandwidth and storage capacity to keep up with ingestion.  If a storage node is ingesting at hundreds of megabytes per second, the replication peers must be able to compute, transfer, and store the data at the same rate.
-
-Also ensure that there was adequate storage on replication peers.  If a storage node is configured to keep 10TB of cold data and 1TB of hot data, replication peers should be capable of storing at least 11TB of data.  If a replication node was overloaded or misconfigured it may have been removing old data.
-
-Ensure that the system times on replication nodes and indexers are consistent.  Both systems use the wall-clock time to determine eligibility of data for removal.  If an indexer has an incorrect system time, its data my be prioritized for deletion in the event a replication peer runs out of storage.
+レプリケーションノードと全インデクサーのシステム時刻が一致していることを確認してください。どちらのシステムも自システムの時刻を参照して、データ削除してよいかどうかの判断をします。どれかのインデクサーのシステム時刻が正しくない場合、レプリケーション・ピアがストレージを使い果たした場合に、そのインデクサーのデータが優先的に削除されることになりえます。

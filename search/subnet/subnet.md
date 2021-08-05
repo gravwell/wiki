@@ -1,27 +1,27 @@
 ## Subnet
 
-Subnet is designed to extract a subnet from an IP address.  This is useful for looking at values that only fall within a specific subnet, or for classifying attackers based on points of origin.  By default the subnet module assumes IPv4, but fully supports IPv6 via the `-6` flag. The subnet is by default extracted to an enumerated value named 'subnet', but the "as" flag allows you to specify a different target.
+サブネットは、IPアドレスからサブネットを抽出するように設計されています。  これは、特定のサブネット内にのみ含まれる値を確認したり、発信元に基づいて攻撃者を分類したりするのに役立ちます。  デフォルトでは、サブネットモジュールはIPv4を想定していますが、`-6`フラグを介してIPv6を完全にサポートしています。  サブネットはデフォルトで'subnet'という名前の列挙値に抽出されますが、"as"フラグを使用すると、別のターゲットを指定できます。
 
-### Supported Options
+### サポートされているオプション
 
-* `-4`: Look for IPv4 subnets and IPs
-* `-6`: Look for IPv6 subnets and IPs
+* `-4`: IPv4サブネットとIPを探す
+* `-6`: IPv6のサブネットとIPを探す
 
-### Example Usage
+### 使用例
 
-Charting failed SSH login attempts by origin subnet
+発信元サブネット別の失敗したSSHログイン試行のグラフ化
 
 ```
 tag=syslog grep sshd | grep "Failed password for" | regex "\sfrom\s(?P<ip>\S+)\s" | subnet ip /16 | count by subnet | chart count by subnet limit 64
 ```
 
-Filtering failed SSH login attempts to only those from a specific subnet
+失敗したSSHログイン試行を特定のサブネットからのものだけにフィルタリング
 
 ```
 tag=syslog grep sshd | grep "Failed password for" | regex "\sfrom\s(?P<ip>\S+)\s" | subnet ip /16 as attackersub | grep -e attackersub “34.22.1.0” | count by ip | sort by count desc | table ip count
 ```
 
-Get the source and destination subnets from packets:
+パケットからソースおよび宛先サブネットを取得:
 
 ```
 tag=pcap packet ipv4.SrcIP ipv4.DstIP | subnet SrcIP /16 as srcsub DstIP /16 as dstsub | table

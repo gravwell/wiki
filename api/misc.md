@@ -1,14 +1,14 @@
-# Miscellaneous APIs
+# その他のAPI
 
-Some APIs don't fit nicely into the main categories. They are listed here.
+いくつかのAPIは、主要なカテゴリにうまく収まらないものがあります。ここではそれらを紹介します。
 
-## Connectivity test
+## 接続性テスト
 
-This API is for validating that the backend is responding to HTTP requests. A GET on `/api/test` should return a 200 status with no body content. No authentication required.
+このAPIは、バックエンドがHTTPリクエストに応答しているかどうかを検証するためのものです。`api/test` への GET は、200 ステータスを返し、ボディコンテンツはありません。認証は必要ありません。
 
-## Version API
+## バージョン認証
 
-Perform a GET on `/api/version` to get version info.  No authentication required.
+`api/version` を GET して、バージョン情報を取得します。 認証は必要ありません。
 
 ```
 {
@@ -27,17 +27,17 @@ Perform a GET on `/api/version` to get version info.  No authentication required
 }
 ```
 
-## Tag List
+## タグリスト
 
-The webserver maintains a list of all tags known to the indexers. This list can be fetched with a GET request on `/api/tags`. This will return a list of tags:
+ウェブサーバは、インデクサが知っているすべてのタグのリストを管理しています。このリストは `/api/tags` への GET リクエストで取得することができます。これはタグのリストを返します。
 
 ```
 ["default", "gravwell", "pcap", "windows"]
 ```
 
-## Search Module List
+## 検索モジュール一覧
 
-To get a list of all available search modules and some info about each one, do a GET on `/api/info/searchmodules`. This will return a list of module info structures:
+利用可能なすべての検索モジュールのリストと、それぞれのモジュールに関する情報を取得するには、`/api/info/searchmodules`をGETしてください。これは、モジュール情報構造のリストを返します。
 
 ```
 [
@@ -91,9 +91,9 @@ To get a list of all available search modules and some info about each one, do a
 ]
 ```
 
-## Render Module List
+## レンダーモジュールリスト
 
-To get a list of all available render modules and some info about each one, do a GET on `/api/info/rendermodules`. This will return a list of module info structures:
+利用可能なすべてのレンダリングモジュールのリストと、各モジュールに関する情報を取得するには、`/api/info/rendermodules`をGETします。これは、モジュール情報構造のリストを返します。
 
 ```
 [
@@ -123,9 +123,9 @@ To get a list of all available render modules and some info about each one, do a
 ]
 ```
 
-## GUI Settings
+## GUIの設定
 
-This API provides some basic information for the user interface. A GET on `/api/settings` will return a structure similar to the following:
+このAPIは、ユーザーインターフェイスの基本的な情報を提供します。`/api/settings` を GET すると、以下のような構造が返されます。
 
 ```
 {
@@ -141,29 +141,29 @@ This API provides some basic information for the user interface. A GET on `/api/
 
 ```
 
-* `DisableMapTileProxy`, if true, tells the UI that it should send map requests directly to OpenStreetMap servers, rather than using the Gravwell proxy.
-* `MapTileUrl` is the URL which the UI should use to fetch map tiles.
-* `DistributedWebservers` will be set to true if there are multiple webservers coordinating via a datastore.
-* `MaxFileSize` is the maximum allowable file size (in bytes) which may be uploaded to the `/api/files` APIs.
-* `MaxResourceSize` is the maximum allowable resource size, in bytes.
-* `ServerTime` is the current time on the webserver.
-* `ServerTimezone` is the webserver's timezone.
-* `ServerTimezoneOffset` is the webservers timezone offset, in seconds from UTC.
+* `DisableMapTileProxy`, trueの場合、UIにマップリクエストをGravwellプロキシを使わずにOpenStreetMapサーバーに直接送信するように指示します。
+* `MapTileUrl` は UI がマップタイルを取得する際に使用する URL です。
+* `DistributedWebservers` は、データストアを介して連携している複数のウェブサーバがある場合、true に設定されます。
+* `MaxFileSize` は `/api/files` API にアップロード可能な最大許容ファイルサイズ (バイト単位) です。
+* `MaxResourceSize` は、許容可能なリソースの最大サイズ（バイト）です。
+* `ServerTime` はウェブサーバの現在の時刻です。
+* `ServerTimezone` はウェブサーバのタイムゾーンである。
+* `ServerTimezoneOffset` はウェブサーバーのタイムゾーンのオフセットで、UTCからの秒数です。
 
-## Scripting Libraries
+## スクリプティングライブラリ
 
-This API allows automation scripts to import libraries from GitHub repositories using the `require` function. There is also an endpoint which will trigger a git pull on all the user's repositories.
+このAPIでは、自動化スクリプトが `require` 関数を使って github リポジトリからライブラリをインポートすることができます。また、ユーザーのすべてのリポジトリに対して git pull を実行するエンドポイントもあります。
 
-### Fetching a library
+### ライブラリの取得
 
-This endpoint is probably only useful for the searchagent to use via library functions but is included for completeness. To fetch a file from a given repository, do a GET with parameters in the URL, e.g.:
+このエンドポイントは、サーチエージェントがライブラリ機能を利用する場合にのみ有用だと思われますが、念のため記載します。指定したリポジトリからファイルを取得するには、URLにパラメータを指定してGETを行います。
 
 ```
 /api/libs?repo=github.com/gravwell/libs&commit=40e98d216bb6e69642df392b255e8edc0f57eb06&path=utils/links.ank
 ```
 
-The "repo" and "commit" values may be omitted. If "repo" is omitted, it defaults to github.com/gravwell/libs. If "commit" is omitted, it defaults to the tip of the master branch.
+"repo"と"commit"の値は省略可能です。"repo"が省略された場合、デフォルトではgithub.com/gravwell/libsとなります。"commit"を省略した場合、デフォルトでは master ブランチの先端になります。
 
-### Updating libraries
+### ライブラリの更新
 
-A set of repositories is maintained for each user. A user may force a `git pull` on their own repository set by sending a GET request to `/api/libs/pull`. Be aware that this may take some time.
+リポジトリはユーザーごとに管理されています。ユーザーは `/api/libs/pull` に GET リクエストを送信することで、自分のリポジトリセットに `git pull` を強制的に適用することができます。これには時間がかかりますのでご注意ください。

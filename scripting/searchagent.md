@@ -1,26 +1,25 @@
-# The Search Agent
+# サーチエージェント
 
-The search agent is the component which runs [automated searches](scheduledsearch.md). The search agent is included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the search agent. The search agent is installed automatically by the Gravwell Debian package.
+サーチエージェントは[自動検索](scheduledsearch.md)を実行するコンポーネントです。サーチエージェントはGravwellのインストールパッケージに含まれており、デフォルトでインストールされます。ウェブサーバコンポーネントを `--no-webserver` フラグで無効にするか、`--no-searchagent` フラグを設定すると、サーチエージェントのインストールが無効になります。サーチエージェントは、Gravwell Debianパッケージによって自動的にインストールされます。
 
-You can verify the search agent is running with the following command:
+サーチエージェントが動作しているかどうかは、以下のコマンドで確認することができます:
 
 ```
 $ ps aux | grep gravwell_searchagent
 ```
 
-## Disabling the search agent
+## サーチエージェントを無効にする
 
-The search agent is installed by default but can be disabled if desired by running the following:
+サーチエージェントはデフォルトでインストールされていますが、必要に応じて以下のように実行することで無効にすることができます:
 
 ```
 systemctl stop gravwell_searchagent.service
 systemctl disable gravwell_searchagent.service
 ```
 
-## Configuring the search agent
+## サーチエージェントの設定
 
-The search agent is configured in `/opt/gravwell/etc/searchagent.conf`. An example configuration is shown below:
-
+サーチエージェントは `/opt/gravwell/etc/searchagent.conf` で設定することができます。設定例は以下:
 ```
 [global]
 Webserver-Address=127.0.0.1:80
@@ -32,49 +31,49 @@ Log-File=/opt/gravwell/log/searchagent.log
 Log-Level=INFO
 ```
 
-This configuration is suitable when running the search agent on the same node as the webserver, provided the webserver is configured to use HTTP rather than HTTPS. Note that the webserver is located on the loopback interface (127.0.0.1) and that HTTP is explicitly enabled.
+この設定は、ウェブサーバがHTTPSではなくHTTPを使用するように設定されている場合に、ウェブサーバと同じノードで検索エージェントを実行する場合に適しています。ウェブサーバはループバックインターフェース（127.0.0.0.1）上にあり、HTTPが明示的に有効になっていることに注意してください。
 
-The individual configuration options available for the Search Agent configuration file are described below.
+サーチエージェント構成ファイルで利用可能な個々の構成オプションを以下に説明します。
 
 **Webserver-Address**
 
-The `Webserver-Address` option gives an IP address or hostname, plus a port, which the search agent should use to connect to a webserver. This option can be specified multiple times; if multiple webservers are defined (as shown below), the search agent will load-balance its searches across them.
+`Webserver-Address`オプションは、検索エージェントがウェブサーバに接続するために使用するIPアドレスまたはホスト名とポートを指定します。このオプションは複数回指定することができます。複数のウェブサーバが定義されている場合(以下に示すように)、検索エージェントはそれらのウェブサーバ間で検索のロードバラン スを行います。
 
 ```
 Webserver-Address=gravwell1.example.org:443
 Webserver-Address=gravwell2.example.org:443
 ```
 
-Attention: Do not specify multiple webservers unless they are all synchronized using the [datastore](#!distributed/frontend.md)
+注: [datastore](#!distributed/frontend.md)を使用して同期している場合を除き、複数のWebサーバを指定しないでください。
 
 **Search-Agent-Auth**
 
-The `Search-Agent-Auth` parameter sets the authentication token used to authenticate with the webserver. This should be set automatically during the installation process. It *must* match the `Search-Agent-Auth` value found in `/opt/gravwell/etc/gravwell.conf` on the target webserver!
+`Search-Agent-Auth`パラメータはウェブサーバとの認証に使われる認証トークンを設定します。これはインストールプロセス中に自動的に設定されます。ターゲットのウェブサーバの `/opt/gravwell/etc/gravwell.conf`にある `Search-Agent-Auth` の値と一致しなければなりません。
 
 **Insecure-Skip-TLS-Verify**
 
-If `Insecure-Skip-TLS-Verify` is set to true, the search agent will *not* verify the validity of TLS certificates when connecting to an HTTPS-enabled Gravwell webserver. Use this option with care and see [the certificates documentation](#!configuration/certificates.md) for more information.
+`Insecure-Skip-TLS-Verify`がtrueに設定されている場合、HTTPS対応のGravwellウェブサーバに接続する際に、検索エージェントはTLS証明書の有効性を*検証しません*。このオプションは注意して使用し、詳細については [certificates documentation](#!configuration/certificates.md) を参照してください。
 
 **Insecure-Use-HTTP**
 
-If `Insecure-Use-HTTP` is set to true, the search agent will attempt to communicate with the Gravwell webserver using plaintext HTTP rather than the default HTTPS. This option is set to true in the default configuration file because [Gravwell requires manual configuration to enable HTTPS](#!configuration/certificates.md)
+`Insecure-Use-HTTP`がtrueに設定されている場合、検索エージェントは、デフォルトのHTTPSではなく、平文のHTTPを使用してGravwellウェブサーバとの通信を試みます。このオプションは、[GravwellはHTTPSを有効にするには手動での設定が必要です](#!configuration/certificates.md)ので、デフォルトの設定ファイルではtrueに設定されています。
 
 **Disable-Network-Script-Functions**
 
-By default, scheduled scripts run by the search agent are allowed to use network utilities such as the http library, sftp, and ssh. Setting the option `Disable-Network-Script-Functions=true' will disable this.
+デフォルトでは、検索エージェントによって実行されるスケジュールされたスクリプトは、httpライブラリ、 sftp、sshなどのネットワークユーティリティの使用を許可されています。オプション `Disable-Network-Script-Functions=true` を設定すると、これを無効にすることができます。
 
 **HTTP-Proxy**
 
-The `HTTP-Proxy` parameter allows you to define an HTTP proxy which will be used *by scheduled scripts*. Thus if you set `HTTP-Proxy=https://proxy.example.com:3128`, any HTTP requests originating in scheduled scripts will be routed through this proxy.
+`HTTP-Proxy`パラメータでは、スケジュールされたスクリプト*が使用するHTTPプロキシを定義する*ことができます。`HTTP-Proxy=https://proxy.example.com:3128`を設定すると、スケジュールされたスクリプトからのHTTPリクエストはすべてこのプロキシを経由してルーティングされます。
 
 **Max-Script-Run-Time**
 
-The `Max-Script-Run-Time` parameter sets, in minutes, the maximum length of wall-clock time a scheduled script may run. If a script goes over the limit, it is immediately terminated. Setting this parameter to 0 gives scripts unlimited time, but we recommend setting *some* maximum time. The default configuration file sets a maximum time of 10 minutes, which is suitable for many purposes.
+`Max-Script-Run-Time` パラメータは、スケジュールされたスクリプトが実行できるウォールクロックの最大時間を分単位で設定します。スクリプトが制限時間を超えた場合、スクリプトは直ちに終了します。このパラメータを0に設定するとスクリプトの実行時間は無制限になりますが、ある程度の最大時間を設定することをお勧めします。デフォルトの設定ファイルでは最大時間を10分に設定していますが、これは多くの目的に適しています。
 
 **Log-File**
 
-The `Log-File` parameter tells the search agent where it should output its logs.
+`Log-File`パラメータは、検索エージェントがログを出力する場所を指定します。
 
 **Log-Level**
 
-The `Log-Level` parameter tells the search agent the minimum level of severity which should be logged. The options are INFO, WARN, ERROR, or OFF. Selecting WARN means that logs of severity WARN or ERROR will be logged. Selecting INFO logs everything. Selecting OFF logs nothing.
+`Log-Level`パラメータは、検索エージェントがログに記録すべき深刻度の最小レベルを指定する。オプションはINFO、WARN、ERROR、またはOFFである。WARNを選択すると、深刻度WARNまたはERRORのログが記録されることを意味する。INFO を選択すると、すべてのログが記録されます。OFF を選択すると何も記録されません。

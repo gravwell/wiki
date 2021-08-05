@@ -1,22 +1,22 @@
 ## Anko
 
-The anko module provides a more complete scripting environment as a supplement to eval. It allows more complex operations on search entries, but it also requires more work to develop, test, and deploy an anko script than a simple eval expression. Scripts are stored as resources in the [resource system](#!resources/resources.md).
+ankoモジュールはevalの補足としてより完全なスクリプト環境を提供します。検索エントリに対してより複雑な操作を可能にしますが、単純なeval式よりもankoスクリプトの開発、テスト、および展開に多くの作業が必要になります。スクリプトは[リソースシステム](#!resources/resources.md)のリソースとして保存されます。
 
-The syntax of anko is identical to that of eval; both derive from [github.com/mattn/anko](https://github.com/mattn/anko), with some additional functions added for Gravwell-specific tasks.
+ankoの構文はevalの構文と同じです。どちらも[github.com/mattn/anko](https://github.com/mattn/anko)から派生しており、Gravwell固有のタスク用にいくつかの追加機能が追加されています。
 
-We recommend using anko in situations where no other modules are capable enough. Typically this means situations where entries need to be compared against previous entries, entries need to be duplicated, complex operations are required to extract data from entries, or a combination of these.
+他のモジュールが十分に機能しない状況ではankoを使用することをお勧めします。通常、これは、エントリを以前のエントリと比較する必要がある、エントリを複製する必要がある、エントリからデータを抽出するのに複雑な操作が必要な、またはこれらの組み合わせの状況を意味します。
 
-This portion of the documentation only briefly describes the usage of the anko module; for a more detailed description, see the [full anko module documentation](#!scripting/anko.md) and the [Anko scripting language documentation](#!scripting/scripting.md).
+ドキュメントのこの部分では、ankoモジュールの使い方について簡単に説明しています。より詳細な説明については、[完全なankoモジュールのドキュメント](#!scripting/anko.md)と[Ankoスクリプト言語のドキュメント](#!scripting/scripting.md)を参照してください。
 
-### Syntax
+### 構文
 
 `anko <script name> [script arguments]`
 
-Anko scripts are stored as resources. The name of the resource must be specified as the first argument to the `anko` module. After the script name, any additional arguments are passed on to the script itself.
+Ankoスクリプトはリソースとして保存されています。リソースの名前は、ankoモジュールへの最初の引数として指定する必要があります。スクリプト名の後に、追加の引数がスクリプト自体に渡されます。
 
-### Example script
+### スクリプト例
 
-The following script is a re-formatted version of an example from the eval module documentation. Note that it is far easier to read than the one-line eval example:
+次のスクリプトは、evalモジュールのドキュメントの例を再フォーマットしたものです。1行のevalの例よりもはるかに読みやすいことに注意してください:
 
 ```
 func Process() {
@@ -31,14 +31,13 @@ func Process() {
 }
 ```
 
-Assuming the script is uploaded to a resource named `CheckPostLen`, the script can be executed like this:
+スクリプトが`CheckPostLen`という名前のリソースにアップロードされていると仮定すると、スクリプトは次のように実行できます:
 
 ```
 tag=reddit json Body | anko CheckPostLen | count by postlen | table postlen count
 ```
+プロセス`関数`は、ankoモジュールに到達する検索項目ごとに1回実行され、列挙された値 `Body` の長さをチェックし、ボディの長さに基づいて新しい列挙値 `postlen` を設定します。
 
-The `Process` function will be executed once for every search entry which reaches the anko module, checking the length of the enumerated value `Body` and setting a new enumerated value `postlen` based on the length of the body.
+注意: プロセス関数の最後の `return true` は重要です。プロセス関数は、エントリを通過させるかフィルタリングするかを示すブール値を返します。 falseを返すと、エントリを削除します。true を返すと、エントリがパイプラインを通過することを意味します。
 
-Note: The `return true` at the end of the process function is critical.  The Process function returns a boolean indicating whether the entry should be passed through or filtered out.  Returning false means drop the entry.  Returning true means allow the entry to continue down the pipeline.
-
-This example is quite simple; it implements only a `Process` function (not the optional `Parse` or `Finalize` functions). For more complex examples, refer to the [full anko module documentation](#!scripting/anko.md)
+この例は非常に単純で、`Process` 関数のみを実装しています (オプションの `Parse` や `Finalize` 関数は実装していません)。より複雑な例については、[完全なankoモジュールのドキュメント](#!scripting/anko.md)を参照してください。

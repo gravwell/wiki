@@ -1,16 +1,16 @@
-# Search History
+# 検索履歴
 
-REST API located at `/api/searchhistory`
+`/api/searchhistory`にあるRESTAPI
 
-The search history API is used to pull back a list of searches that a user, group, or combination thereof have launched. The results provide basic info like who launched the search, what group owns it, when it was launched and the two strings representing the search (what the user actually typed, and what the backend processed).
+検索履歴APIは、ユーザー、グループ、またはそれらの組み合わせが起動した検索のリストをプルバックするために使用されます。 結果には、検索を開始したユーザー、所有しているグループ、開始された日時、検索を表す2つの文字列（ユーザーが実際に入力した内容、バックエンドが処理した内容）などの基本情報が表示されます。
 
-## Basic API Overview
+## 基本的なAPIの概要
 
-The basic action here is to perform a GET on `/api/searchhistory/{cmd}/{id}` with `cmd` representing what set of searches you want and `id` representing the ID related to that search. For example if you wanted all searches owned by the user with the UID 1 you would perform a GET on `/api/searchhistory/user/1` while if you wanted all searches owned by group with GID 4 you would perform a GET on `/api/searchhistory/group/4`. Simply performing a GET on `/api/searchhistory` will return the history for the current user.
+ここでの基本的なアクションは、`/api/searchhistory/{cmd}/{id}`に対してGETを実行することです。ここで、`cmd`は必要な検索のセットを表し、`id`はその検索に関連するIDを表します。 たとえば、UID 1のユーザーが所有するすべての検索が必要な場合は、`/api/searchhistory/user/1`でGETを実行し、GID 4のグループが所有するすべての検索が必要な場合は、`/api/searchhistory/group/4`でGETを実行します。`/api/searchhistory`でGETを実行するだけで、現在のユーザーの履歴が返されます。
 
-You can request ALL searches a specific UID has access to using the "all" cmd. This means give me all searches owned by the UID as well as all searches that are owned by groups he is a member of. For example a GET on `/api/searchhistory/all/1` may return searches owned by group with GIDs 1, 2, 3, and 4 if the user with UID 1 is a member of those groups. The returned results will be a list of SearchLog structures in JSON format.
+「all」コマンドを使用して、特定のUIDがアクセスできるすべての検索を要求できます。 つまり、UIDが所有するすべての検索と、彼がメンバーになっているグループが所有するすべての検索を取得できます。 たとえば、`/api/searchhistory/all/1`のGETは、UID 1のユーザーがこれらのグループのメンバーである場合、GID 1、2、3、および4のグループが所有する検索を返す場合があります。 返される結果は、JSON形式のSearchLog構造のリストになります。
 
-Example JSON:
+JSONの例：
 ```
 [
         {
@@ -30,10 +30,10 @@ Example JSON:
 ]
 ```
 
-### Admin Queries
+### 管理者クエリ
 
-A GET request to `/api/searchhistory?admin=true` as an admin user will return all searches by all users.
+管理者ユーザーとして`/api/searchhistory？admin = true`へのGETリクエストは、すべてのユーザーによるすべての検索を返します。
 
-### Refined Search History
+### 洗練された検索履歴
 
-As a special case to the GET method on `/api/searchhistory`, you can provide a simple substring search term by setting a "refine" value. For example, a GET request to `/api/searchhistory?refine=foo` will return all searches for the current user containing the term "foo" anywhere in the search.
+`/api/searchhistory`のGETメソッドの特殊なケースとして、「refine」値を設定することで単純な部分文字列検索用語を提供できます。 たとえば、`/api/searchhistory？refine = foo`へのGETリクエストは、検索のどこかに「foo」という用語を含む現在のユーザーのすべての検索を返します。

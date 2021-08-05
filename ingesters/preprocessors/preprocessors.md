@@ -1,20 +1,20 @@
-# Ingest Preprocessors
+# インジェスト・プリプロセッサー
 
-Sometimes, ingested data needs some additional massaging before we send it to the indexer. Maybe you're getting JSON data sent over syslog and would like to strip out the syslog headers. Maybe you're getting gzip-compressed data from an Apache Kafka stream. Maybe you'd like to be able to route entries to different tags based on the contents of the entries. Ingest preprocessors make this possible by inserting one or more processing steps before the entry is sent up to the indexer.
+取り込んだデータをインデクサーに送信する前に、さらに加工が必要な場合があります。例えば、syslogで送られてきたJSONデータを受信して、syslogのヘッダーを除去したい場合。Apache Kafkaのストリームからgzipで圧縮されたデータを取得している場合。エントリの内容に基づいて、エントリを異なるタグにルーティングしたい場合もあるでしょう。インジェストのプリプロセッサは、エントリーがインデクサに送られる前に1つ以上の処理ステップを挿入することで、これを可能にします。
 
-## Preprocessor Data Flow
+## プリプロセッサのデータフロー
 
-An ingester reads raw data from some source (a file, a network connection, an Amazon Kinesis stream, etc.) and splits that incoming data stream out into individual entries. Before those entries are sent to a Gravwell indexer, they may optionally be passed through an arbitrary number of preprocessors as shown in the diagram below.
+インゲスターは、何らかのソース（ファイル、ネットワーク接続、Amazon Kinesisストリームなど）から生データを読み込み、その入力データストリームを個々のエントリに分割します。これらのエントリがGravwellのインデクサに送信される前に、任意の数のプリプロセッサを通過させることができます。
 
 ![](arch.png)
 
-Each preprocessor will have the opportunity to modify the entries. The preprocessors will always be applied in the same order, meaning you could e.g. uncompress the entry's data, then modify the entry tag based on the uncompressed data.
+それぞれのプリプロセッサは、エントリーを修正する機会があります。つまり、例えば、エントリーのデータを解凍してから、解凍されたデータに基づいてエントリーのタグを修正することができます。
 
-## Configuring Preprocessors
+## プリプロセッサの設定
 
-Preprocessors are supported on all packaged ingesters.  One-off and unsupported ingesters may not support preprocessors.
+プリプロセッサは、すべてのパッケージ化されたインジェスターでサポートされています。 単発のインジェスターやサポートされていないインジェスターは、プリプロセッサーをサポートしていない場合があります。
 
-Preprocessors are configured in the ingester's config file using the `preprocessor` configuration stanza.  Each Preprocessor stanza must declare the preprocessor module in use via the `Type` configuration parameter, followed by the preprocessor's specific configuration parameters. Consider the following example for the Simple Relay ingester:
+プリプロセッサは、インゲスターの設定ファイルで `preprocessor` 設定スタンザを使用して設定されます。 各プリプロセッサスタンザは、使用するプリプロセッサモジュールを `Type` 設定パラメータで宣言し、続いてプリプロセッサの特定の設定パラメータを宣言しなければなりません。Simple Relay インゲスターの例を以下に示します。
 
 ```
 [Global]
@@ -41,26 +41,26 @@ Log-Level=INFO
 	Timezone-Override=US/Pacific
 ```
 
-This configuration defines two data consumers (Simple Relay calls them "Listeners") named "default" and "syslog". It also defines a preprocessor named "timestamp". Note how the "default" listener includes the option `Preprocessor=timestamp`. This specifies that entries coming from that listener on port 7777 should be sent to the "timestamp" preprocessor. Because the "syslog" listener does not set any `Preprocessor` option, entries coming in on port 601 will not go through any preprocessors.
+この設定では、"default"と "syslog"という2つのデータコンシューマー（Simple Relayでは "Listener"と呼びます）を定義しています。また、"timestamp"という名前のプリプロセッサも定義しています。default "リスナーには、`Preprocessor=timestamp`というオプションが付いていることに注目してください。これは、ポート7777でそのリスナーから送られてくるエントリーが「timestamp」プリプロセッサに送られることを指定しています。syslog "リスナーは`Preprocessor`オプションを設定していないので、ポート601で入ってくるエントリーはどのプリプロセッサも経由しません。
 
-## gzip Preprocessor
+## gzip プリプロセッサ
 
-The gzip preprocessor can uncompress entries which have been compressed with the GNU 'gzip' algorithm.
+gzipプリプロセッサは、GNU 'gzip' アルゴリズムで圧縮されたエントリを解凍することができます。
 
-The GZIP preprocessor Type is `gzip`.
+GZIP プリプロセッサの型は `gzip` です。
 
-### Supported Options
+### サポートされるオプション
 
-* `Passthrough-Non-Gzip` (boolean, optional): if set to true, the preprocessor will pass through any entries whose contents cannot be uncompressed with gzip. By default, the preprocessor will drop any entries which are not gzip-compressed.
+* `Passthrough-Non-Gzip` (boolean, optional): true に設定すると、gzip で解凍できない内容のエントリーはスルーされます。デフォルトでは、プリプロセッサは gzip で圧縮されていないすべてのエントリーを削除します。
 
-### Common Use Cases
+### 一般的な使用例
 
-Many cloud data bus providers will ship entries and/or package in a compressed form.  This preprocessor can decompress the data stream in the ingester rather than routing through a cloud lambda function can incur costs.
+多くのクラウドデータバスプロバイダーは、エントリーやパッケージを圧縮して出荷します。 このプリプロセッサは、クラウドのラムダ関数を経由するのではなく、インゲスターでデータストリームを解凍することができますが、コストがかかります。
 
 
-### Example: Decompressing compressed entries
+### 例：圧縮されたエントリーの解凍
 
-Example config:
+設定例:
 
 ```
 [Preprocessor "gz"]
@@ -68,26 +68,26 @@ Example config:
 	Passthrough-Non-Gzip=true
 ```
 
-## JSON Extraction Preprocessor
+## JSON抽出プリプロセッサ
 
-The JSON extraction preprocessor can parse the contents of an entry as JSON, extract one or more fields from the JSON, and replace the entry contents with those fields. This is a useful way to simplify overly-complex messages into more concise entries containing only the information of interest.
+JSON 抽出プリプロセッサは、エントリの内容を JSON としてパースし、その JSON から 1 つ以上のフィールドを抽出し、エントリの内容をそのフィールドで置き換えることができます。これは、複雑すぎるメッセージを、必要な情報だけを含むより簡潔なエントリーに簡略化するのに便利な方法です。
 
-If only a single field extraction is specified, the result will contain purely the contents of that field; if multiple fields are specified, the preprocessor will generate valid JSON containing those fields.
+複数のフィールドが指定された場合、プリプロセッサはそれらのフィールドを含む有効なJSONを生成します。
 
-The JSON Extraction preprocessor Type is `jsonextract`.
+JSON抽出のプリプロセッサの型は `jsonextract` です。
 
-### Supported Options
+### サポートされるオプション
 
-* `Extractions` (string, required): This specifies the field or fields (comma-separated) to be extracted from the JSON. Given an input of `{"foo":"a", "bar":2, "baz":{"frog": "womble"}}`, you could specify `Extractions=foo`, `Extractions=foo,bar`, `Extractions=baz.frog,foo`, etc.
-* `Force-JSON-Object` (boolean, optional): By default, if a single extraction is specified the preprocessor will replace the entry contents with the contents of that extension; thus selecting `Extraction=foo` will change an entry containing `{"foo":"a", "bar":2, "baz":{"frog": "womble"}}` to simply contain `a`. If this option is set, the preprocessor will always output a full JSON structure, e.g. `{"foo":"a"}`.
-* `Passthrough-Misses` (boolean, optional): If set to true, the preprocessor will pass along entries for which it was unable to extract the requested fields. By default, these entries are dropped.
-* `Strict-Extraction` (boolean, optional): By default, the preprocessor will pass along an entry if at least one of the extractions succeeds. If this parameter is set to true, it will require that all extractions succeed.
+* `Extractions` (文字列、必須)。JSONから抽出するフィールドを指定します（コンマで区切ってください）。入力が `{"foo": "a", "bar":2, "baz":{"frog": "womble"}}` とすると、`Extractions=foo`, `Extractions=foo,bar`, `Extractions=baz.frog,foo` などと指定することができます。
+* `Force-JSON-Object` (boolean, optional): デフォルトでは、単一の抽出が指定された場合、プリプロセッサはエントリーのコンテンツをその拡張子のコンテンツで置き換えます。したがって、`Extraction=foo`を選択すると、`{"foo": "a", "bar":2, "baz":{"frog": "womble"}}` を含むエントリを、単に `a` を含むように変更します。このオプションが設定されていると、プリプロセッサは常に完全なJSON構造を出力します。例えば、`{"foo": "a"}`です。
+* `Passthrough-Misses` (boolean, optional): trueに設定すると、プリプロセッサは要求されたフィールドを抽出できなかったエントリーを通過させます。デフォルトでは、これらのエントリは削除されます。
+* `Strict-Extraction` (boolean, optional): デフォルトでは、少なくとも1つの抽出が成功した場合、プリプロセッサはエントリを渡します。このパラメータがtrueに設定されている場合、すべての抽出が成功することが要求されます。
 
-### Common Use Cases
+### 一般的な使用例
 
-Many data sources may provide additional metadata related to transport and/or storage that are not part of the actual log stream.  The jsonextract preprocessor can down-select fields to reduce storage costs.
+多くのデータソースは、実際のログストリームの一部ではない、輸送や保管に関連する追加のメタデータを提供することがあります。 jsonextract プリプロセッサは、ストレージコストを削減するためにフィールドをダウンセレクトすることができます。
 
-### Example: Condensing JSON Data Records
+### 例：JSONデータレコードの凝縮
 
 ```
 [Preprocessor "json"]
@@ -96,33 +96,33 @@ Many data sources may provide additional metadata related to transport and/or st
 	Passthrough-Misses=true
 ```
 
-## JSON Array Split Preprocessor
+## JSON配列分割プリプロセッサ
 
-This preprocessor can split an array in a JSON object into individual entries. For example, given an entry which contains an array of names, the preprocessor will instead emit one entry for each name. Thus this:
+このプリプロセッサは、JSONオブジェクトの配列を個々のエントリに分割できます。 たとえば、名前の配列を含むエントリが与えられた場合、プリプロセッサは代わりに名前ごとに1つのエントリを発行します。 したがって、これは：
 
 ```
 {"IP": "10.10.4.2", "Users": ["bob", "alice"]}
 ```
 
-Becomes two entries, one containing "bob" and one containing "alice".
+"bob"を含むエントリーと "alice"を含むエントリーの2つになります。
 
-The JSON Array Split preprocessor Type is `jsonarraysplit`.
+JSON Array Splitのプリプロセッサタイプは、`jsonarraysplit`です。
 
-### Supported Options
+### サポートされるオプション
 
-* `Extraction` (string): specifies the JSON field containing a struct which should be split, e.g. `Extraction=Users`, `Extraction=foo.bar`. If you do not set `Extraction`, the preprocessor will attempt to treat the entire object as an array to split.
-* `Passthrough-Misses` (boolean, optional): If set to true, the preprocessor will pass along entries for which it was unable to extract the requested field. By default, these entries are dropped.
-* `Force-JSON-Object` (boolean, optional): By default, the preprocessor will emit entries with each containing one item in the list and nothing else; thus extracting `foo` from `{"foo": ["a", "b"]}` would result in two entries containing "a" and "b" respectively. If this option is set, that same entry would result in two entries containing `{"foo": "a"}` and `{"foo": "b"}`.
-* `Additional-Fields` (string, optional): A comma delimited list of additional fields outside the array to be split that will be extracted and included in each entry, e.g. `Additional-Fields="foo,bar, foo.bar.baz"`.
+* `Extraction` (string): 分割すべき構造体を含む JSON フィールドを指定します。例: `Extraction=Users`, `Extraction=foo.bar`. 例えば、`Extraction=Users`, `Extraction=foo.bar` などです。`Extraction` を設定しない場合、プリプロセッサはオブジェクト全体を分割するための配列として扱おうとします。
+* `Passthrough-Misses` (boolean, optional): trueに設定された場合、プリプロセッサは要求されたフィールドを抽出できなかったエントリーを通過させます。デフォルトでは、これらのエントリーはドロップされます。
+* `Force-JSON-Object` (boolean, optional): デフォルトでは、プリプロセッサはそれぞれがリストの1つのアイテムを含み、それ以外は何も含まないエントリーを出力します。["a", "b"]}` から `foo` を抽出すると、それぞれ "a" と "b" を含む 2 つのエントリになります。このオプションが設定されていると、同じエントリーでも `{"foo": "a"}` と `{"foo": "b"}`.
+* `Additional-Fields` (string, optional): 例えば、`Additional-Fields="foo,bar, foo.bar.baz"`のように、分割される配列の外側にある追加フィールドをカンマ区切りで指定します。
 
-### Common Use Cases
+### 一般的な使用例
 
-Many data providers may pack multiple events into a single entry which can degrade the atomic nature of an event and increase the complexity of analysis.  Splitting a single message that contains multiple events into individual entries can simplify working with the events.
+多くのデータプロバイダーは、複数のイベントを1つのエントリにまとめることがありますが、これはイベントの原子性を低下させ、分析の複雑さを増大させます。 複数のイベントを含む1つのメッセージを個々のエントリに分割することで、イベントの扱いが簡単になります。
 
 
-### Example: Splitting Multiple Messages In a Single Record
+### 例：複数のメッセージを1つのレコードに分割する
 
-To split entries which consist of JSON records with an array named "Alerts":
+「アラート」という名前の配列を持つJSONレコードで構成されるエントリを分割します。
 
 ```
 [preprocessor "json"]
@@ -131,13 +131,13 @@ To split entries which consist of JSON records with an array named "Alerts":
 	Force-JSON-Object=true
 ```
 
-Input data:
+インプットデータ:
 
 ```
 { "Alerts": [ "alert1", "alert2" ] }
 ```
 
-Output:
+アウトプット:
 
 ```
 { "Alerts": "alert1" }
@@ -147,22 +147,22 @@ Output:
 { "Alerts": "alert2" }
 ```
 
-### Example: Splitting a Top-Level Array
+### 例：トップレベルの配列の分割
 
-Sometimes the entire entry is an array:
+エントリー全体が配列になっていることがあります：
 
 ```
 [ {"foo": "bar"}, {"x": "y"} ]
 ```
 
-To split this, use the following definition:
+これを分割するには、次のような定義を用います：
 
 ```
 [preprocessor "json"]
 	Type=jsonarraysplit
 ```
 
-Leaving the Extraction parameter un-set tells the module to treat the entire entry as an array, giving the following two output entries:
+Extractionパラメータを設定しないでおくと、モジュールはエントリ全体を配列として扱い、次の2つの出力エントリが得られます：
 
 ```
 {"foo": "bar"}
@@ -172,39 +172,39 @@ Leaving the Extraction parameter un-set tells the module to treat the entire ent
 {"x": "y"}
 ```
 
-## JSON Field Filtering Preprocessor
+## JSONフィールドフィルタリングプリプロセッサ
 
-This preprocessor will parse entry data as a JSON object, then extract specified fields and compare them against lists of acceptable values. The lists of acceptable values are specified in files on the disk, one value per line.
+このプリプロセッサは、入力データをJSONオブジェクトとして解析し、指定されたフィールドを抽出して、許容値のリストと比較します。許容される値のリストは、ディスク上のファイルで、1行に1つの値を指定します。
 
-It can be configured to either *pass* only those entries whose fields match the lists, or to *drop* those entries which match the lists--whitelisting, or blacklisting. It can be set up to filter against multiple fields, requiring either that *all* fields must match (logical AND) or that *at least one* field must match (logical OR).
+リストに一致するフィールドを持つエントリのみを*通過*させるか、リストに一致するエントリを*ドロップ*するように設定できます（ホワイトリストまたはブラックリスト）。また、複数のフィールドに対してフィルタリングするように設定することもできます。その場合、*すべての*フィールドが一致しなければならない（論理的AND）か、*少なくとも1つの*フィールドが一致しなければならない（論理的OR）かのいずれかを要求します。
 
-This preprocessor is particularly useful to narrow down a firehose of general data before sending it across a slow network link.
+このプリプロセッサは、一般的なデータのファイアーホースを遅いネットワークリンクで送信する前に絞り込むのに特に役立ちます。
 
-The JSON Field Filtering preprocessor Type is `jsonfilter`.
+JSONフィールドフィルタリングプリプロセッサのタイプは `jsonfilter` です。
 
-### Supported Options
+### サポートされるオプション
 
-* `Field-Filter` (string, required): This specifies two things: the name of the JSON field of interest, and the path to a file which contains values to match against. For example, one might specify `Field-Filter=ComputerName,/opt/gravwell/etc/computernames.txt` in order to extract a field named "ComputerName" and compare it against values in `/opt/gravwell/etc/computernames.txt`. The `Field-Filter` option may be specified multiple times in order to filter against multiple fields.
-* `Match-Logic` (string, optional): This parameter specifies the logic operation to use when filtering against multiple fields. If set to "and", an entry is only considered a match when *all* specified fields match against the given lists. If set to "or", an entry is considered a match when *any* field matches.
-* `Match-Action` (string, optional): This specifies the option which should be take for entries whose fields match the provided lists. It may be set to "pass" or "drop"; if omitted, the default is "pass". If set to "pass", entries which match will be allowed to pass to the indexer (whitelisting). If set to "drop", entries which match will be dropped (blacklisting).
+* `Field-Filter` (文字列、必須)。対象となるJSONフィールドの名前と、照合する値を含むファイルのパスの2つを指定します。たとえば、`Field-Filter=ComputerName,/opt/gravwell/etc/computernames.txt` と指定すれば、「ComputerName」というフィールドを抽出して、`/opt/gravwell/etc/computernames.txt` の中の値と比較することができます。Field-Filter`オプションは複数回指定することができ、複数のフィールドに対してフィルタリングを行うことができます。
+* `Match-Logic` (文字列、オプション)。このパラメータは、複数のフィールドに対してフィルタリングする際に使用する論理演算を指定します。and "に設定すると、指定されたリストに対して指定されたフィールドがすべて一致した場合にのみ、エントリーが一致したとみなされます。or "に設定すると、*任意の*フィールドがマッチしたときにエントリーがマッチしたとみなされます。
+* `Match-Action` (文字列、オプション): フィールドが与えられたリストにマッチしたエントリーに対して取るべきオプションを指定します。省略した場合のデフォルトは "pass "です。pass "に設定すると、マッチしたエントリーはインデクサへの通過が許可されます（ホワイトリスト）。drop "に設定すると、マッチしたエントリーはドロップされます（ブラックリスト化）。
 
-The `Match-Logic` parameter is only necessary when more than one `Field-Filter` has been specified.
+Match-Logic "パラメータは、複数の "Field-Filter "が指定されている場合にのみ必要です。
 
-Note: If a field is specified in the configuration but is not present on an entry, the preprocessor will treat the entry *as if the field existed but did not match anything*. Thus, if you have configured the preprocessor to only pass those entries whose fields match your whitelist, an entry which lacks one of the fields will be dropped.
+注意: 設定でフィールドが指定されていても、エントリーに存在しない場合、プリプロセッサは、そのフィールドが存在するが何にもマッチしないかのように*エントリーを扱います。したがって、ホワイトリストにマッチするフィールドを持つエントリのみを通過させるようにプリプロセッサを設定した場合、フィールドの1つを欠くエントリはドロップされます。
 
-### Common Use Cases
+### 一般的な使用例
 
-The json field filtering preprocessor can down select entries based on fields within the entries.  This allows for building blacklists and whitelists on data flows to ensure that data either does or does not make it to storage.
+json フィールドフィルタリングプリプロセッサは、エントリ内のフィールドに基づいてエントリをダウンセレクトすることができます。 これにより、データフローにブラックリストやホワイトリストを作成して、データがストレージに入るか入らないかを確認することができます。
 
-### Example: Simple Whitelisting
+### 例：単純なホワイトリスト化
 
-Suppose we have an endpoint monitoring solution which is sending thousands of events per second detailing things which are occurring across the enterprise. Due to the high event volume, we may decide we only want to index events with a certain severity. Luckily, the events include a Severity field:
+例えば、企業内で発生している事象の詳細を示す毎秒数千のイベントを送信しているエンドポイント監視ソリューションがあるとします。イベントの量が多いため、特定の深刻度のイベントのみをインデックス化したいと考えるかもしれません。幸い、イベントにはSeverityフィールドが含まれています。
 
 ```
 { "EventID": 1337, "Severity": 8, "System": "email-server-01.example.org", [...] }
 ```
 
-We know the Severity field goes from 0 to 9, and we decide we want to only pass events with a severity of 6 or higher. We would therefore add the following to our ingester configuration file:
+Severityフィールドは0から9までありますが、Severityが6以上のイベントのみを通過させたいと考えています。そこで、インゲスターの設定ファイルに次のように追加します：
 
 ```
 [preprocessor "severity"]
@@ -213,7 +213,7 @@ We know the Severity field goes from 0 to 9, and we decide we want to only pass 
 	Field-Filter=Severity,/opt/gravwell/etc/severity-list.txt
 ```
 
-and set `Preprocessor=severity` on the appropriate data input, for instance if we were using Simple Relay:
+を追加し、適切なデータ入力に対して `Preprocessor=severity` を設定します（例：Simple Relay を使用している場合）：
 
 ```
 [Listener "endpoint_monitoring"]
@@ -222,7 +222,7 @@ and set `Preprocessor=severity` on the appropriate data input, for instance if w
 	Preprocessor=severity
 ```
 
-Finally, we create `/opt/gravwell/etc/severity-list.txt` and populate it with a list of acceptable Severity values, one per line:
+最後に、`/opt/gravwell/etc/severity-list.txt`を作成し、許容できるSeverity値のリストを1行ごとに入力します：
 
 ```
 6
@@ -231,11 +231,11 @@ Finally, we create `/opt/gravwell/etc/severity-list.txt` and populate it with a 
 9
 ```
 
-After restarting the ingester, it will extract the `Severity` field from each entry and compare the resulting value against those listed in the file. If the value matches a line in the file, the entry will be sent to the indexer. Otherwise, it will be dropped.
+インジェスターの再起動後、インジェスターは各エントリから `Severity` フィールドを抽出し、その結果得られた値をファイルに記載されている値と比較します。値がファイル内の行と一致した場合、そのエントリはインデクサに送られます。それ以外の場合は、ドロップされます。
 
-### Example: Blacklisting
+### 例：ブラックリスト化
 
-Building on the previous example, we may find that that our endpoint monitoring system is generating a *lot* of high-severity false positives from certain systems. We may determine that events with the `EventID` field set to 219, 220, or 1338 and the `System` field set to "webserver-prod.example.org" and "webserver-dev.example.org" are always false positives. We can define another preprocessor to get rid of these entries before they are sent to the indexer:
+前述の例に基づいて、エンドポイント監視システムが特定のシステムから *ロット* の高感度の誤検出を生成していることに気づくかもしれません。例えば、`EventID` フィールドが 219, 220, 1338 に設定され、`System` フィールドが "webserver-prod.example.org" と "webserver-dev.example.org" に設定されたイベントは、常に誤検出であると判断できます。別のプリプロセッサを定義して、インデクサに送信される前にこれらのエントリを取り除くことができます。
 
 ```
 [preprocessor "falsepositives"]
@@ -246,7 +246,7 @@ Building on the previous example, we may find that that our endpoint monitoring 
 	Field-Filter=System,/opt/gravwell/etc/system-blacklist.txt
 ```
 
-If we now add this preprocessor to the data input configuration *after* the existing one, the ingester will apply the two filters in order:
+このプリプロセッサをデータ入力構成に既存のプリプロセッサの後に追加すると、インゲスターは2つのフィルタを順番に適用します：
 
 ```
 [Listener "endpoint_monitoring"]
@@ -256,7 +256,7 @@ If we now add this preprocessor to the data input configuration *after* the exis
 	Preprocessor=falsepositives
 ```
 
-Last, we create `/opt/gravwell/etc/eventID-blacklist.txt`:
+最後に、`/opt/gravwell/etc/eventID-blacklist.txt`を作成します：
 
 ```
 219
@@ -264,43 +264,43 @@ Last, we create `/opt/gravwell/etc/eventID-blacklist.txt`:
 1338
 ```
 
-and `/opt/gravwell/etc/system-blacklist.txt`:
+と、`/opt/gravwell/etc/system-blacklist.txt`の2つを用意しました：
 
 ```
 webserver-prod.example.org
 webserver-dev.example.org
 ```
 
-This new preprocessor extracts the `EventID` and `System` fields from every entry which makes it past the first filter. It then compares them against the values in the files. Because we set `Match-Logic=and`, it considers an entry a match if *both* field values are found in the files. Because we set `Match-Action=drop`, any entry which matches on both fields will be dropped. Thus, an entry with EventID=220 and System=webserver-dev.example.org is dropped, while one with EventID=220 and System=email-server-01.example.org will *not* be dropped.
+この新しいプリプロセッサは、すべてのエントリから `EventID`フィールドと` System`フィールドを抽出し、最初のフィルタを通過させます。 次に、それらをファイル内の値と比較します。 `Match-Logic = and`を設定したため、エントリと見なされます` Match-Action = drop`を設定したため、両方のフィールドに一致するエントリはすべて削除されます。 したがって、EventID = 220およびSystem = webserver-devのエントリ。 .example.orgは削除されますが、EventID = 220およびSystem = email-server-01.example.orgの1つは削除されません。
 
-## Regex Router Preprocessor
+## 正規表現ルータープリプロセッサ
 
-The regex router preprocessor is a flexible tool for routing entries to different tags based on the contents of the entries. The configuration specifies a regular expression containing a [named capturing group](https://www.regular-expressions.info/named.html), the contents of which are then tested against user-defined routing rules.
+regexルータプリプロセッサは、エントリの内容に基づいて異なるタグにエントリをルーティングするための柔軟なツールです。設定では、[named capturing group](https://www.regular-expressions.info/named.html)を含む正規表現を指定し、その内容をユーザー定義のルーティングルールに対してテストします。
 
-The Regex Router preprocessor Type is `regexrouter`.
+Regex Routerのプリプロセッサタイプは `regexrouter` です。
 
-### Supported Options
+### サポートされるオプション
 
-* `Regex` (string, required): This parameter specifies the regular expression to be applied to the incoming entries. It must contain at least one [named capturing group](https://www.regular-expressions.info/named.html), e.g. `(?P<app>.+)` which will be used with the `Route-Extraction` parameter.
-* `Route-Extraction` (string, required): This parameter specifies the name of the named capturing group from the `Regex` parameter which will contain the string used to compare against routes.
-* `Route` (string, required): At least one `Route` definition is required. This consists of two strings separated by a colon, e.g. `Route=sshd:sshlogtag`. The first string ('sshd') is matched against the value extracted via regex, and the second string defines the name of the tag to which matching entries should be routed. If the second string is left blank, entries matching the first string *will be dropped*.
-* `Drop-Misses` (boolean, optional): By default, entries which do not match the regular expression will be passed through unmodified. Setting `Drop-Misses` to true will make the ingester drop any entries which 1) do not match the regular expression, or 2) match the regular expression but do not match any of the specified routes.
+* `Regex` (文字列、必須)。このパラメータでは、入力されるエントリーに適用する正規表現を指定します。例えば、`(?P<app>.+)` は `Route-Extraction` パラメータと一緒に使用されます。
+* `Route-Extraction` (文字列, 必須): Route-Extraction` (string, required): このパラメータは、`Regex`パラメータで指定したキャプチャグループの名前を指定します。
+* `Route` (文字列、必須)。少なくとも1つの `Route` 定義が必要です。例えば、`Route=sshd:sshlogtag`のように、コロンで区切られた2つの文字列で構成されます。最初の文字列('sshd')は、正規表現で抽出された値と照合され、2番目の文字列は、一致したエントリがルーティングされるべきタグの名前を定義します。2番目の文字列を空白にすると、最初の文字列にマッチしたエントリは *ドロップ* されます。
+* `Drop-Misses` (boolean, optional): デフォルトでは、正規表現にマッチしないエントリーは、そのまま通過します。Drop-Misses`をtrueに設定すると、インゲスターは、1) 正規表現にマッチしない、または、2) 正規表現にマッチするが、指定されたルートのいずれにもマッチしないエントリをドロップします。
 
-### Example: Routing to Tag Based on App Field Value
+### 例：Appフィールドの値に基づくタグへのルーティング
 
-To illustrate the use of this preprocessor, consider a situation where many systems are sending syslog entries to a Simple Relay ingester. We would like to separate out the sshd logs to a separate tag named `sshlog`. Incoming sshd logs are in old-style BSD syslog format (RFC3164):
+このプリプロセッサの使い方を説明するために、多くのシステムがSimple Relayインゲスターにsyslogエントリを送信している状況を考えてみましょう。sshd のログを `sshlog` という名前の別のタグに分離したいとします。受信する sshd のログは、古いスタイルの BSD syslog フォーマット (RFC3164) になっています。
 
 ```
 <29>1 Nov 26 11:26:36 localhost sshd[11358]: Failed password for invalid user administrator from 202.198.122.184 port 49828 ssh2
 ```
 
-By experimenting with regular expressions, we find that the following is a reasonable regular expression to extract the application name (e.g. sshd) from RFC3164 logs into a capturing group named "app":
+正規表現を試してみたところ、RFC3164のログからアプリケーション名（例：sshd）を「app」という名前のキャプチャーグループに抽出するには、以下のような正規表現が妥当であることがわかりました。
 
 ```
 ^(<\d+>)?\d?\s?\S+ \d+ \S+ \S+ (?P<app>[^\s\[]+)(\[\d+\])?:
 ```
 
-We can apply that regular expression to a preprocessor definition, as shown below:
+この正規表現をプリプロセッサの定義に適用すると、以下のようになります：
 
 ```
 [Listener "syslog"]
@@ -317,15 +317,15 @@ We can apply that regular expression to a preprocessor definition, as shown belo
         Route=sshd:sshlog
 ```
 
-Note that the preprocessor defines the regular expression, then calls out the capturing group "app" in the `Route-Extraction` parameter. It then uses the `Route=ssh:sshlog` definition to specify that those entries whose application name matches "sshd" should be routed to the tag "sshlog". We could define additional `Route` parameters as needed, e.g. `Route=apache:apachelog`.
+プリプロセッサは、正規表現を定義してから、`Route-Extraction`パラメータでキャプチャグループの「app」を呼び出していることに注意してください。そして、`Route=ssh:sshlog`の定義を使用して、アプリケーション名が「sshd」にマッチするエントリを「sshlog」というタグにルーティングするように指定しています。必要に応じて、追加の `Route` パラメータを定義することもできます。例えば、`Route=apache:apachelog` などです。
 
-With the above configuration, logs from sshd will be sent to the "sshlog" tag, while all other logs will go straight to the "syslog" tag. We could extract other applications from similarly-formatted syslog entries by adding additional `Route` specifications, but suppose we had some intermingled logs in RFC 5424 format, as shown below?
+上記の構成では、sshd からのログは "sshlog" タグに送られ、他のすべてのログは "syslog" タグに直接送られます。Route`の指定を追加することで、同じようなフォーマットのsyslogエントリから他のアプリケーションを抽出することができますが、以下のようにRFC 5424フォーマットのログが混ざっていたとしたらどうでしょうか。
 
 ```
 <101>1 2019-11-26T13:24:56.632535-07:00 web01.example.org webservice 21581 - [useragent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3191.0 Safari/537.36"] GET /
 ```
 
-The regular expression we already have won't extract the application name ("webservice") properly, but we can define a *second* preprocessor and put it in the preprocessor chain after the existing one:
+すでにある正規表現では、アプリケーション名（"webservice"）を正しく抽出できませんが、*2つ目の*プリプロセッサを定義し、既存のプリプロセッサの後にプリプロセッサチェーンに入れることができます。
 
 ```
 [Listener "syslog"]
@@ -353,27 +353,27 @@ The regular expression we already have won't extract the application name ("webs
 	Route=postfix:		# drop
 ```
 
-Note that this new preprocessor definition defines routes for the applications named "webservice" and "apache", sending both to the "weblog" tag. Note also that it specifies that logs from the "postfix" application should be *dropped*, perhaps because those logs are already being ingested from another source.
+この新しいプリプロセッサの定義では、"webservice "と "apache "というアプリケーションのためのルートを定義し、両方とも "weblog "タグに送っていることに注意してください。また、"postfix "アプリケーションからのログを *ドロップ* するように指定していることにも注意してください。これはおそらく、これらのログがすでに他のソースから取り込まれているためです。
 
-## Source Router Preprocessor
+## ソースルータープリプロセッサ
 
-The source router preprocessor can route entries to different tags based on the SRC field of the entry. Typically the SRC field will be the IP address of the entry's origination point, e.g. the system which created the syslog message sent to Simple Relay.
+ソースルータプリプロセッサは、エントリーのSRCフィールドに基づいて、エントリーを異なるタグにルーティングすることができます。通常、SRCフィールドはエントリーの起点のIPアドレスになります。例えば、Simple Relayに送信されたsyslogメッセージを作成したシステムなどです。
 
-The source router preprocessor Type is `srcrouter`.
+ソースルータのプリプロセッサタイプは `srcrouter` です。
 
-### Supported Options
+### サポートされるオプション
 
-* `Route` (string, optional): `Route` defines a mapping of SRC field value to tag, separated by a colon. For instance, `Route=192.168.0.1:server-logs` will send all entries with SRC=192.168.0.1 to the "server-logs" tag. Multiple `Route` parameters can be specified. Leaving the tag blank (`Route=192.168.0.1:`) tells the preprocessor to drop all matching entries instead.
-* `Route-File` (string, optional): `Route-File` should contain a path to a file containing newline-separated route specifications, e.g. `192.168.0.1:server-logs`.
-* `Drop-Misses` (boolean, optional): By default, entries which do not match any of the defined routes will be passed through unmodified. Setting `Drop-Misses` to true will instead drop any entries which do not explicitly match a route definition.
+* `Route` (string, optional): `Route` は、SRC フィールドの値とタグのマッピングをコロンで区切って定義します。たとえば、`Route=192.168.0.1:server-logs` とすると、SRC=192.168.0.1 のすべてのエントリを「server-logs」タグに送信します。複数の`Route`パラメータを指定することができます。タグを空白にすると (`Route=192.168.0.1:`)、プリプロセッサは代わりにマッチするすべてのエントリをドロップします。
+* `Route-File` (string, optional): `Route-File` には、`192.168.0.1:server-logs` のように、改行で区切られたルート指定を含むファイルへのパスを指定します。
+* `Drop-Misses` (boolean, optional): デフォルトでは、定義されたルートのどれにもマッチしないエントリーは、修正されずに通過します。Drop-Misses` を true に設定すると、ルート定義に明示的にマッチしないエントリはすべてドロップされます。
 
-At least one `Route` definition is required, unless `Route-File` is used.
+Route-File` を使用しない限り、少なくとも 1 つの `Route` 定義が必要です。
 
-A route can be either a single IP address or a properly formed CIDR specification, both IPv4 and IPv6 are supported.
+ルートは単一のIPアドレスか、適切に形成されたCIDR仕様のいずれかで、IPv4とIPv6の両方がサポートされています。
 
-### Example: Inline Route Definitions
+### 例：インラインでのルート定義
 
-The snippet below shows part of a Simple Relay ingester configuration that uses the source router preprocessor with routes defined inline. Entries originating from 10.0.0.1 will be tagged "internal-syslog", entries originating from 7.82.33.4 will be tagged "external-syslog", and all other entries will retain the default tag "syslog". Any entries with SRC=3.3.3.3 will be dropped.
+以下のスニペットは、ソースルータのプリプロセッサを使用し、インラインでルートを定義したSimple Relayインゲスターの設定の一部を示しています。10.0.0.1からのエントリーには "internal-syslog "というタグが付けられ、7.82.33.4からのエントリーには "external-syslog "というタグが付けられ、それ以外のエントリーにはデフォルトのタグ "syslog "が付けられます。SRC=3.3.3.3のエントリはすべて削除されます。
 
 ```
 [Listener "syslog"]
@@ -390,9 +390,9 @@ The snippet below shows part of a Simple Relay ingester configuration that uses 
         Route=FEED:FEBE::0/64:external-syslog
 ```
 
-### Example: File-based Definitions
+### 例：ファイルベースの定義
 
-The snippet below shows part of a Simple Relay ingester configuration that uses the source router preprocessor with routes defined in a file.
+以下のスニペットは、ファイルで定義されたルートを持つソースルータのプリプロセッサを使用するSimple Relayインゲスターの設定の一部です。
 
 ```
 [Listener "syslog"]
@@ -405,7 +405,7 @@ The snippet below shows part of a Simple Relay ingester configuration that uses 
         Route-File=/opt/gravwell/etc/syslog-routes
 ```
 
-The following is written to `/opt/gravwell/etc/syslog-routes`:
+以下の内容が `/opt/gravwell/etc/syslog-routes` に書き込まれます：
 
 ```
 10.0.0.0/24:internal-syslog
@@ -413,17 +413,17 @@ The following is written to `/opt/gravwell/etc/syslog-routes`:
 3.3.3.3:
 ```
 
-## Regex Timestamp Extraction Preprocessor
+## 正規表現タイムスタンプ抽出プリプロセッサ
 
-Ingesters will typically attempt to extract a timestamp from an entry by looking for the first thing which appears to be a valid timestamp and parsing it. In combination with additional ingester configuration rules for parsing timestamps (specifying a specific timestamp format to look for, etc.) this is usually sufficient to properly extract the appropriate timestamp, but some data sources may defy these straightforward methods. Consider a situation where a network device may send CSV-formatted event logs wrapped in syslog--a situation we have seen at Gravwell!
+摂取者は通常、有効なタイムスタンプであると思われる最初のものを探してそれを解析することにより、エントリからタイムスタンプを抽出しようとします。 タイムスタンプを解析するための追加のingester構成ルール（検索する特定のタイムスタンプ形式の指定など）と組み合わせると、通常、適切なタイムスタンプを適切に抽出するにはこれで十分ですが、一部のデータソースはこれらの単純な方法に反する場合があります。 ネットワークデバイスがsyslogでラップされたCSV形式のイベントログを送信する可能性がある状況を考えてみましょう。これはGravwellで見られた状況です。
 
-The Regex Timestamp Extraction preprocessor Type is `regextimestamp`.
+正規表現のタイムスタンプ抽出のプリプロセッサタイプは、 `regextimestamp`です。
 
-### Supported Options
+### サポートされているオプション
 
-* `Regex` (string, required): This parameter specifies the regular expression to be applied to the incoming entries. It must contain at least one [named capturing group](https://www.regular-expressions.info/named.html), e.g. `(?P<timestamp>.+)` which will be used with the `TS-Match-Name` parameter.
-* `TS-Match-Name` (string, required): This parameter gives the name of the named capturing group from the `Regex` parameter which will contain the extracted timestamp.
-* `Timestamp-Format-Override` (string, optional): This can be used to specify an alternate timestamp parsing format. Available time formats are:
+* `Regex` (文字列、必須)。このパラメータは、入力されたエントリーに適用される正規表現を指定します。例えば、`(?P<timestamp>.+)` は、`TS-Match-Name` パラメータと一緒に使用されます。
+* `TS-Match-Name` (文字列、必須)。このパラメータは、抽出されたタイムスタンプを含む、`Regex`パラメータから名前が付けられたキャプチャグループの名前を与えます。
+* `Timestamp-Format-Override` (string, optional): これを使って、別のタイムスタンプの解析フォーマットを指定することができます。利用可能なタイムフォーマットは
 	- AnsiC
 	- Unix
 	- Ruby
@@ -453,25 +453,25 @@ The Regex Timestamp Extraction preprocessor Type is `regextimestamp`.
 	- UnixMs
 	- UnixNano
 
-	Some timestamp formats have values that overlap (for example LDAP and UnixNano can produce timestamps with the same number of digits). If `Timestamp-Format-Override` is not used, the preprocessor will attempt to derive the timestamp in the order listed above. Always use `Timestamp-Format-Override` if using a timestamp format that can conflict with others in this list.
+	タイムスタンプのフォーマットの中には、重複する値を持つものがあります（例えば、LDAPとUnixNanoは同じ桁数のタイムスタンプを生成できます）。`Timestamp-Format-Override`が使用されていない場合、プリプロセッサは上記の順序でタイムスタンプを導き出そうとします。このリストの他のものと衝突する可能性のあるタイムスタンプフォーマットを使用する場合は、常に `Timestamp-Format-Override` を使用してください。
 
-* `Timezone-Override` (string, optional): If the extracted timestamp doesn't contain a timezone, the timezone specified here will be applied. Example: `US/Pacific`, `Europe/Rome`, `Cuba`.
-* `Assume-Local-Timezone` (boolean, optional): This option tells the preprocessor to assume the timestamp is in the local timezone if no timezone is included. This is mutually exclusive with the `Timezone-Override` parameter.
+* `Timezone-Override` (文字列、オプション): 抽出されたタイムスタンプにタイムゾーンが含まれていない場合は、ここで指定されたタイムゾーンが適用されます。例: `US/Pacific`、`Europe/Rome`、 `Cuba`。
+* `Assume-Local-Timezone` (boolean, optional): このオプションは、タイムゾーンが含まれていない場合、タイムスタンプがローカルのタイムゾーンであると仮定するようにプリプロセッサに指示します。これは `Timezone-Override` パラメータとは相互に排他的です。
 
 
-### Common Use Cases
+### 一般的な使用例
 
-Many data streams may have multiple timestamps or values that can easily be interpreted as timestamps.  The regextimestamp preprocessor allows you to force timegrinder to examine a specific timestamp within a log stream.  A good example is a log stream that is transported via syslog using an application that includes it's own timestamp but does not relay that timestamp to the syslog API.  The syslog wrapper will have a well formed timestamp which, but the actual data stream may need to use some internal field for the accurate timestamp.
+多くのデータストリームには、複数のタイムスタンプや、タイムスタンプとして解釈されやすい値が含まれていることがあります。 regextimestamp プリプロセッサを使用すると、 timegrinder にログストリーム内の特定のタイムスタンプを検査させることができます。 良い例は、それ自身のタイムスタンプを含むが、そのタイムスタンプをsyslog APIに中継しないアプリケーションを使用して、syslog経由で転送されるログストリームです。 syslogのラッパーは、よくできたタイムスタンプを持っていますが、実際のデータストリームでは、正確なタイムスタンプのためにいくつかの内部フィールドを使用する必要があるかもしれません。
 
-### Example: Wrapped Syslog Data
+### 例：ラップされたSyslogデータ
 
 ```
 Nov 25 15:09:17 webserver alerts[1923]: Nov 25 14:55:34,GET,10.1.3.4,/info.php
 ```
 
-We would like to extract the inner timestamp, "Nov 25 14:55:34", for the TS field on the ingested entry. Because it uses the same format as the syslog timestamp at the beginning of the line, we cannot extract it with clever timestamp format rules. However, the regex timestamp preprocessor can be used to extract it. By specifying a regular expression which captures the desired timestamp in a named sub-match, we can extract timestamps from anywhere in an entry. For this entry, the regex `\S+\s+\S+\[\d+\]: (?<timestamp>.+),` should be sufficient to properly extract the desired timestamp.
+インジェストされたエントリーのTSフィールドの内側のタイムスタンプ、"Nov 25 14:55:34 "を抽出したいと思います。これは行頭のsyslogタイムスタンプと同じフォーマットを使用しているので、巧妙なタイムスタンプフォーマットルールでは抽出できません。しかし、正規表現タイムスタンププリプロセッサを使って抽出することができます。名前付きのサブマッチで必要なタイムスタンプを捕らえる正規表現を指定することで、エントリーのどこからでもタイムスタンプを抽出することができます。このエントリーでは、正規表現 `\S+\s+\S+[\d+\]: (?<timestamp>.+),`という正規表現を使えば、目的のタイムスタンプを適切に抽出することができます。
 
-This config could be used to extract the timestamp shown in the example above:
+この設定を利用して、上の例で示したタイムスタンプを抽出することができます：
 
 ```
 [Preprocessor "ts"]
@@ -481,41 +481,41 @@ This config could be used to extract the timestamp shown in the example above:
 	Timezone-Override=US/Pacific
 ```
 
-## Regex Extraction Preprocessor
+## 正規表現抽出プリプロセッサ
 
-It is highly common for transport buses to wrap data streams with additional metadata that may not be pertinent to the actual event.  Syslog is an excellent example where the Syslog header may not provide value to the underlying data and/or may simply complicate the analysis of the data.  The regexextractor preprocessor allows for declaring a regular expression that can extract multiple fields and reform them into a new structure for format.
+トランスポートバスでは、データストリームに実際のイベントには関係のない追加のメタデータを付加することがよくあります。Syslogはその好例で、Syslogヘッダーが基礎となるデータに価値を与えない、あるいはデータの分析を単に複雑にする可能性があります。regexextractorプリプロセッサは、複数のフィールドを抽出し、新しい構造のフォーマットに変換する正規表現を宣言することができます。
 
-The regexextraction preprocessor uses named regular expression extraction fields and a template to extract data and then reform it into an output record.  Output templates can contain static values and completely reform the output data if needed.
+正規表現抽出プリプロセッサは、名前付きの正規表現抽出フィールドとテンプレートを使ってデータを抽出し、それを出力レコードに再構成します。 出力テンプレートには静的な値を含めることができ、必要に応じて出力データを完全に再構築します。
 
-Templates reference extracted values by name using field definitions similar to bash.  For example, if your regex extracted a field named `foo` you could insert that extraction in the template with `${foo}`. The templates also support the following special keys:
+テンプレートは、bashと同様にフィールド定義を使って抽出された値を名前で参照します。 たとえば、正規表現で `foo` という名前のフィールドを抽出した場合、その抽出値を `${foo}` としてテンプレートに挿入することができます。また、テンプレートは以下の特殊キーをサポートしています。
 
-* `${_SRC_}`, which will be replaced by the SRC field of the current entry.
-* `${_DATA_}`, which will be replaced by the string-formatted Data field of the current entry.
-* `${_TS_}`, which will be replaced by the string-formatted TS (timestamp) field of the current entry.
+* `${_SRC_}`, これは現在のエントリのSRCフィールドに置き換えられます。
+* `${_DATA_}`, これは現在のエントリの文字列形式のDataフィールドで置き換えられます。
+* `${_TS_}`, これは現在のエントリの文字列形式の TS (timestamp) フィールドに置き換えられます。
 
-The Regex Extraction preprocessor Type is `regexextract`.
+正規表現抽出プリプロセッサのTypeは `regexextract` です。
 
-### Supported Options
+### サポートされるオプション
 
-* Passthrough-Misses (boolean, optional): This parameter specifies whether the preprocessor should pass the record through unchanged if the regular expression does not match.
-* Regex (string, required): This parameter defines the regular expression for extraction
-* Template (string, required): This parameter defines the output form of the record.
+* Passthrough-Misses (boolean, optional)：このパラメータは、正規表現がマッチしない場合に、プリプロセッサがレコードを変更せずに通過させるかどうかを指定します。
+* Regex (文字列、必須)：このパラメータは、抽出のための正規表現を定義します。
+* Template (string, required): テンプレートを定義します。このパラメータは、レコードの出力形式を定義します。
 
-### Common Use Cases
+### 一般的な使用例
 
-The regexpreprocessor is most commonly used for stripping un-needed headers from data streams, however it can be used to reform data into easier to process formats.
+正規表現プリプロセッサは、データストリームから必要のないヘッダーを取り除くために最も一般的に使用されますが、データを処理しやすい形式に変換するためにも使用できます。
 
-#### Example: Stripping Syslog Headers
+#### 例：Syslog ヘッダーの除去
 
-Given the following record, we want to remove the syslog header and ship just the JSON blob.
+次のようなレコードがあった場合、syslogヘッダーを除去してJSON blobだけを出荷したいとします。
 
 ```
 <30>1 2020-03-20T15:35:20Z webserver.example.com loginapp 4961 - - {"user": "bob", "action": "login", "result": "success", "UID": 123, "ts": "2020-03-20T15:35:20Z"}
 ```
 
-The syslog message contains a well structured JSON blob but the syslog transport adds additional metadata that does not necessarily enhance the record.  We can use the Regex extractor to pull out the data we want and reform it into an easy to use record.
+syslogメッセージはよく構造化されたJSON blobを含んでいますが、syslogトランスポートは、必ずしもレコードを強化しない追加のメタデータを追加します。 Regexエクストラクタを使って必要なデータを取り出し、使いやすいレコードに整形することができます。
 
-We will use the regex extractor to pull out the data fields and the hostname, we will then use the template to build a new JSON blob with the host inserted.
+ここでは、正規表現抽出器を使用してデータフィールドとホスト名を抽出し、テンプレートを使用してホストが挿入された新しいJSON blobを構築します。
 
 
 ```
@@ -529,45 +529,45 @@ We will use the regex extractor to pull out the data fields and the hostname, we
 	Template="{\"host\": \"${host}\", \"data\": ${data}}"
 ```
 
-NOTE: Regular expressions often have backslashes to describe character sets, those backslashes must be escaped!
+注意：正規表現では、文字セットを記述するためにバックスラッシュを使用することがよくありますが、これらのバックスラッシュはエスケープする必要があります。
 
-The resulting data is:
+結果のデータは：
 
 ```
 {"host": "loginapp", "data": {"user": "bob", "action": "login", "result": "success", "UID": 123, "ts": "2020-03-20T15:35:20Z"}}
 ```
 
-NOTE: Templates can specify multiple fields constant values.  Extracted fields can be inserted multiple times.
+注：テンプレートでは、複数のフィールドの定数値を指定できます。 抽出されたフィールドは複数回挿入することができます。
 
-## Forwarding Preprocessor
+## フォワーディングプリプロセッサ
 
-The forwarding preprocessor is used to split a log stream and forward it to another endpoint.  This can be extremely useful when standing up additional logging tools or when feeding data to external archive processors.  The Forwarding preprocessor is a forking preprocessors.  This means that it will not alter the data stream, it only forwards the data on to additional endpoints.
+フォワーディングプリプロセッサは、ログストリームを分割して別のエンドポイントに転送するために使用します。 これは、追加のロギングツールを立ち上げるときや、外部のアーカイブプロセッサにデータを供給するときに非常に便利です。 フォワーディング」プリプロセッサは、フォーク型プリプロセッサです。 これは、データストリームを変更せず、データを追加のエンドポイントに転送するだけであることを意味します。
 
-By default the forwarding preprocessor is blocking, this means that if you specify a forwarding endpoint using a stateful connection like TCP or TLS and the endpoint is not up or is unable to accept data it will block ingestion.  This behavior can be altered using the `Non-Blocking` flag or by using a UDP protocol.
+デフォルトでは、フォワーディングプリプロセッサはブロッキングです。つまり、TCPやTLSなどのステートフルな接続を使用してフォワーディングエンドポイントを指定しても、そのエンドポイントが稼働していなかったり、データを受け入れることができなかったりすると、取り込みをブロックします。 この動作は、`Non-Blocking` フラグを使用するか、UDP プロトコルを使用することで変更できます。
 
-The forwarding preprocessor also supports several filter mechanisms to cut down or specify exactly which data streams are forwarded.  Streams can be filtered using entry tags, sources, or regular expressions which operation on the actual log data.  Each filter specification can be specified multiple times to create an OR pattern.
+フォワーディングプリプロセッサは、転送されるデータストリームを削減したり、正確に指定するためのいくつかのフィルタメカニズムもサポートしています。 ストリームは、エントリータグ、ソース、または実際のログデータ上で動作する正規表現を使用してフィルタリングできます。 各フィルター仕様は、複数回指定してORパターンを作ることができます。
 
-Multiple forwarding preprocessors can be specified, allowing for a specific log stream to be forwarded to multiple endpoints.
+複数のフォワーディングプリプロセッサを指定することができ、特定のログストリームを複数のエンドポイントにフォワードすることができます。
 
-The Forwarding preprocessor Type is `forwarder`.
+フォワーディングプリプロセッサのタイプは `forwarder` です。
 
-### Supported Options
+### サポートされるオプション
 
-* `Target` (string, required): Endpoint for forwarded data.  Should be a host:port pair unless using the `unix` protocol.
-* `Protocol` (string, required): Protocol to use when forwarding data.  Options are `tcp`, `udp`, `unix`, and `tls`.
-* `Delimiter` (string, optional): Optional delimiter to use when sending data via the `raw` output format.
-* `Format` (string, optional): Output format to send data.  Options are `raw`, `json`, and `syslog`.
-* `Tag` (string, optional, multiple allowed): Tags used to filter events.  Multiple specifications implies an OR.
-* `Regex` (string, optional, multiple allowed): Regular expressions used to filter events.  Multiple specifications implies an OR.
-* `Source` (string, optional, multiple allowed): IP or CIDR specifications used to filter events.  Multiple specifications implies an OR.
-* `Timeout` (unsigned int, optional, specified in seconds):  Timeout on connection and write attempts for the forwarder
-* `Buffer` (unsigned int, optional): Specifies the number of events that the forwarder can buffer when attempting to send data
-* `Non-Blocking` (boolean, optional): True specifies that the forwarder will make a best effort to forward data, but will not block ingestion.
-* `Insecure-Skip-TLS-Verify` (boolean, optional): Specifies that TLS based connections can ignore invalid TLS certificates.
+* `Target` (string, required): 転送されるデータのエンドポイントです。 unix` プロトコルを使用する場合を除き、ホストとポートのペアでなければなりません。
+* `Protocol` (string, 必須): データを転送する際に使用するプロトコルです。Protocol` (string, required): データを転送するときに使用するプロトコルです。 オプションは `tcp`, `udp`, `unix`, および `tls` です。
+* `Delimiter` (文字列、オプション)：`Raw` 出力フォーマットでデータを送信するときに使用するオプションのデリミタです。
+* `Format` (string, optional): データを送信する出力フォーマットです。 オプションは `raw`, `json`, `syslog` です。
+* `Tag` (string, optional, 複数可): イベントをフィルタリングするためのタグ。 複数指定は OR を意味する。
+* `Regex` (文字列、オプション、複数可): イベントのフィルタリングに使用される正規表現。 複数の指定は OR を意味します。
+* `Source` (文字列、オプション、複数可): イベントのフィルタリングに使用されるIPまたはCIDRの仕様。 複数の指定は OR を意味します。
+* `Timeout` (unsigned int, オプション, 秒単位で指定): フォワーダへの接続と書き込みの試行のタイムアウト
+* `Buffer` (unsigned int, オプション): フォワーダがデータ送信を試みる際にバッファリングできるイベント数を指定します。
+* `Non-Blocking` (boolean, optional): Trueを指定すると、フォワーダーはデータを転送するために最善の努力をしますが、取り込みをブロックしません。
+* `Insecure-Skip-TLS-Verify` (boolean, optional): TLS ベースの接続で、無効な TLS 証明書を無視できることを指定します。
 
-### Example: Forwarding syslog from a specific set of hosts
+### 例 特定のホストセットからのsyslogの転送
 
-For this example we are using the SimpleRelay ingester to ingest syslog messages and forward them in their raw form to another endpoint.  We are using the `Source` filter in the `forward` preprocessor to ONLY forward logs that have the source tag that is from either the `192.168.0.1` IP or within the `192.168.1.0/24` subnet.  The logs are forwarded on in their original format with a newline between each.
+この例では、SimpleRelayのインゲスターを使ってsyslogメッセージを取り込み、生のまま別のエンドポイントに転送します。 `forward`プリプロセッサの`Source`フィルタを使用して、`192.168.0.1`のIPまたは`192.168.1.0/24`のサブネットのいずれかからのsourceタグを持つログのみを転送しています。 ログはそれぞれの間に改行を入れた元のフォーマットで転送されます。
 
 ```
 [Listener "default"]              
@@ -588,13 +588,13 @@ For this example we are using the SimpleRelay ingester to ingest syslog messages
 	Non-Blocking=false
 ```
 
-### Example: Forwarding Specific Windows Event Logs
+### 例：特定のWindowsイベントログの転送
 
-For this example we are using the Federator to forward on data streams from potentially many downstream ingesters.  We are using both the `Tag` and `Regex` filters to capture a specific set of entries and forward them on.  Note that we are using the `syslog` format which means that we will send data to the endpoint with an RFC5424 header and the data in the body of the syslog message.  Forwarded data using the syslog format specifies `gravwell` as the Hostname and the entry TAG as the Appname.
+この例では、潜在的に多くのダウンストリーム・インゲスターからのデータ・ストリームを転送するためにフェデレーターを使用しています。 この例では、Federatorを使用して、多くのダウンストリームインゲスターからのデータストリームを転送しています。 ここでは`syslog`フォーマットを使用しており、RFC5424ヘッダーとsyslogメッセージのボディにデータを入れてエンドポイントにデータを送信していることに注意してください。 syslog形式で転送されたデータは、Hostnameに`gravwell`、AppnameにエントリーTAGを指定しています。
 
-The `Tag` filters specify that we only want to forward entries that are using the `windows` or `sysmon` tags.
+`Tag`フィルターは、`windows`または`sysmon`タグを使用しているエントリーのみを転送したいことを指定します。
 
-The `Regex` filters are used so that we only get event data from specific Channel/EventID combinations.  Namely login events from the security provider and execution events from the sysmon provider.
+`Regex`フィルターは、特定のチャンネルとイベントIDの組み合わせからのイベントデータのみを取得するために使用されます。 例えば、セキュリティプロバイダからのログインイベントや、sysmonプロバイダからの実行イベントなどです。
 ```
 [IngestListener "enclaveA"]
 	Ingest-Secret = IngestSuperSecrets
@@ -630,9 +630,9 @@ The `Regex` filters are used so that we only get event data from specific Channe
 ```
 
 
-### Example: Forwarding logs to multiple hosts
+### 例 複数のホストにログを転送する
 
-For this example we are using the Gravwell Federator to forward subsets of logs to different endpoints using different formats.  Because the forwarder preprocessor can be stacked the same way as any other preprocessor, we can specify multiple forwarding preprocessors with their own filters, endpoints, and formats.
+この例では、Gravwell Federatorを使って、ログのサブセットを異なるフォーマットで異なるエンドポイントに転送します。 フォワーダープリプロセッサは他のプリプロセッサと同じようにスタックできるので、独自のフィルタ、エンドポイント、フォーマットを持つ複数のフォワーダープリプロセッサを指定することができます。
 
 ```
 [IngestListener "enclaveB"]
@@ -656,21 +656,21 @@ For this example we are using the Gravwell Federator to forward subsets of logs 
 
 ```
 
-## Gravwell Forwarding Preprocessor
+## Gravwell転送プリプロセッサ
 
-The Gravwell forwarding processor allows for creating a complete Gravwell muxer which can duplicate entries to multiple instances of Gravwell.  This preprocessor can be useful for testing or situations where a specific Gravwell data stream needs to be duplicated to an alternate set of indexers.  The Gravwell forwarding preprocessor utilizes the same configuration structure to specify indexers, ingest secrets, and even cache controls as the packaged ingesters.  The Gravwell forwarding preprocessor is a blocking preprocessor, this means that if you do not enable a local cache it can block the ingest pipeline if the preprocessor cannot forward entries to the specified indexers.
+Gravwell転送プロセッサは、複数のGravwellインスタンスにエントリを複製できる完全なGravwell muxerの作成を可能にします。 このプリプロセッサは、テストや、特定のGravwellデータストリームを別のインデクサに複製する必要がある場合に役立ちます。 Gravwell転送プリプロセッサは、パッケージ化されたインジェスターと同じ構成構造を利用して、インデクサー、インジェスト・シークレット、およびキャッシュ・コントロールを指定します。 Gravwellフォワーディングプリプロセッサはブロッキングプリプロセッサであり、これはローカルキャッシュを有効にしていない場合、プリプロセッサが指定されたインデクサにエントリを転送できない場合、インジェストパイプラインをブロックすることができることを意味します。
 
-The Gravwell Forwarding preprocessor Type is `gravwellforwarder`.
+Gravwell Forwarding プリプロセッサの Type は `gravwellforwarder` です。
 
-### Supported Options
+### サポートされているオプション
 
-See the [Global Configuration Parameters](#!ingesters/ingesters.md#Global_Configuration_Parameters) section for full details on all the Gravwell ingester options.  Most global ingester configuration options are supported by the Gravwell Forwarder preprocessor.
+すべてのGravwellインジェスターオプションの詳細については、[グローバルコンフィギュレーションパラメータ](#!ingesters/ingesters.md#Global_Configuration_Parameters)セクションを参照してください。 ほとんどのインゲスターのグローバル設定オプションはGravwell Forwarderのプリプロセッサでサポートされています。
 
-### Example: Duplicating Data In a Federator
+### 例：フェデレーターでデータを複製する
 
-For this example we are going to specify a complete Federator configuration that will duplicate all entries to a second cluster.
+この例では、すべてのエントリを2つ目のクラスタに複製する完全なFederatorの構成を指定します。
 
-NOTE: We are enabling an `always` cache on the forwarding preprocessor so that it won't ever block the normal ingest path.
+注意: フォワーディングプリプロセッサで`always`キャッシュを有効にして、通常のインジェストパスをブロックしないようにしています。
 
 ```
 [Global]
@@ -697,11 +697,11 @@ Log-Level=INFO
 	Max-Ingest-Cache=1024 #Limit forwarder disk usage
 ```
 
-### Example: Stacking Duplicate Forwarders
+### 例：重複フォワーダのスタック
 
-For this example we are going to specify a complete Federator configuration and multiple Gravwell preprocessors so that we can duplicate our single stream of entries to multiple Gravwell clusters.
+この例では、完全なFederator構成と複数のGravwellプリプロセッサを指定して、1つのストリームのエントリを複数のGravwellクラスタに複製できるようにします。
 
-NOTE: The preprocessor control logic does NOT check that you are not forwarding to the same cluster multiple times.
+注意：プリプロセッサの制御ロジックは、同じクラスタに複数回転送していないかどうかはチェックしません。
 
 ```
 [Global]
@@ -742,19 +742,19 @@ Log-Level=INFO
 	Max-Ingest-Cache=1024
 ```
 
-## Drop Preprocessor
+## ドロッププリプロセッサ
 
-The drop preprocessor does exactly what the name implies, it simple drops entries from the ingest pipeline, effectively throwing them away.
+ドロッププリプロセッサは、その名が示す通り、インジェストパイプラインからエントリを単純にドロップし、効果的に破棄します。
 
-This processor can be useful if an ingest stream is to be primarily handled by another set of preprocessors.  For example, if you want to send data to a remote system using the forwarder preprocessor but NOT ingest it upstream into a Gravwell indexer, you could add a final `drop` preprocessor which will simply discard all entries that it sees.
+このプロセッサは、インジェストストリームが主に他のプリプロセッサのセットによって処理される場合に便利です。 例えば、フォワーダープリプロセッサを使ってリモートシステムにデータを送信したいが、Gravwellのインデクサにはアップストリームでインジェストしたくない場合、最終的に`drop`プリプロセッサを追加することで、見たエントリをすべて単純に廃棄することができます。
 
-### Supported Options
+### サポートされているオプション
 
-None.
+なし。
 
-### Example: Just Drop Everything
+### 例：すべてを廃棄
 
-This example has a single preprocessor `drop` which just discards all entries on a Simple Relay listener.
+この例では、シンプルなRelayリスナーのすべてのエントリを廃棄するだけの単一のプリプロセッサ `drop` を使用しています：
 
 ```
 [Listener "default"]              
@@ -767,9 +767,9 @@ This example has a single preprocessor `drop` which just discards all entries on
 	Type=Drop               
 ```
 
-### Example: Forward Entries and Drop
+### 例：エントリの転送とドロップ
 
-This example forwards entries via a TCP forwarder then drops them.
+この例では、TCPフォワーダーを使ってエントリーを転送し、ドロップします。
 
 ```
 [Listener "default"]              
@@ -794,30 +794,30 @@ This example forwards entries via a TCP forwarder then drops them.
 	Type=Drop               
 ```
 
-## Cisco ISE Preprocessor
+## CiscoISEプリプロセッサ
 
-The Cisco ISE preprocessor is designed to parse and accommodate the format and transport of Cisco ISE logs.  See the [Cisco Introduction to ISE Syslogs](https://www.cisco.com/c/en/us/td/docs/security/ise/syslog/Cisco_ISE_Syslogs/m_IntrotoSyslogs.pdf) for more information.
+Cisco ISEプリプロセッサは、Cisco ISE ログのフォーマットやトランスポートを解析し、適応させるために設計されています。 詳細については、[Cisco Introduction to ISE Syslogs](https://www.cisco.com/c/en/us/td/docs/security/ise/syslog/Cisco_ISE_Syslogs/m_IntrotoSyslogs.pdf)を参照してください。
 
-The Cisco ISE preprocessor is named `cisco_ise` and supports the ability to reassemble multipart messages, reformat the messages into a format more appropriate for Gravwell and modern syslog systems, filter unwanted message pairs, and remove redundant message headers.
+Cisco ISE プリプロセッサは `cisco_ise` という名前で、マルチパート メッセージの再構築、Gravwell や最新の syslog システムに適した形式へのメッセージの再フォーマット、不要なメッセージ ペアのフィルタリング、冗長なメッセージ ヘッダの削除などの機能をサポートしています。
 
-### Attribute Filtering and Formatting
+### 属性のフィルタリングとフォーマット
 
-The Cisco ISE logging system is designed to split a single message across multiple syslog messages.  Gravwell will accept messages that far exceed the maximum message size of syslog, however if you are supporting multiple targets for Cisco ISE messages it may be necessary to enable multipart messages.  Disabling multipart messages in your cisco device and letting Gravwell handle large payloads will be far more efficient.
+Cisco ISEのログシステムは、1つのメッセージを複数のsyslogメッセージに分割するように設計されています。 Gravwellはsyslogの最大メッセージサイズをはるかに超えるメッセージを受け入れますが、Cisco ISEメッセージの複数のターゲットをサポートしている場合、マルチパートメッセージを有効にする必要があります。 Ciscoデバイスでマルチパートメッセージを無効にして、Gravwellに大きなペイロードを処理させる方がはるかに効率的です。
 
-### Supported Options
+### サポートされているオプション
 
-* `Passthrough-Misses` (boolean, optional): If set to true, the preprocessor will pass along entries for which it was unable to extract a valid ISE message. By default, these entries are dropped.
-* `Enable-Multipart-Reassembly` (boolean, optional): If set to true the preprocessor will attempt to reassemble messages that contain a Cisco remote message header.
-* `Max-Multipart-Buffer` (uint64, optional): Specifies a maximum in-memory buffer to use when reassembling multipart messages, when the buffer is exceeded the oldest partially reassembled message will be sent to Gravwell.  The default buffer size is 8MB.
-* `Max-Multipart-Latency` (string, optional): Specifies a maximum time duration that a partially reassembled multipart message will be held before it is sent.  Time spans should be specified in `ms` and `s` values.
-* `Output-Format` (string, optional): Specifies the output format for sending ISE messages, the default format is `raw`, other options are `json` and `cef`.
-* `Attribute-Drop-Filter` (string array, optional): Specifies globbing patterns that can be used to match against attributes within a message which will be removed from the output.  The arguments must be [Unix Glob patterns](https://en.wikipedia.org/wiki/Glob_(programming)), many patterns can be specified.  Attribute drop filters are not compatible with the `raw` output format.
-* `Attribute-Strip-Header` (boolean, optional): Specifies that attributes with nested names and/or type information should have the header values stripped.  This is extremely useful for cleaning up poorly formed attribute values.
+* `Passthrough-Misses` (boolean, optional)：trueに設定すると、プリプロセッサは有効なISEメッセージを抽出することができなかったエントリを通過させます。デフォルトでは、これらのエントリーはドロップされます。
+* `Enable-Multipart-Reassembly` (boolean, optional): trueに設定すると、プリプロセッサはCiscoリモートメッセージヘッダを含むメッセージの再組み立てを試みます。
+* `Max-Multipart-Buffer` (uint64, オプション): このバッファを超えると、最も古い部分的に再構成されたメッセージがGravwellに送信されます。 デフォルトのバッファサイズは8MBです。
+* `Max-Multipart-Latency` (string, optional): 部分的に再構成されたマルチパートメッセージが送信される前に保持される最大時間帯を指定します。 時間間隔は `ms` や `s` の値で指定します。
+* `Output-Format` (string, optional): デフォルトのフォーマットは `raw` で、他のオプションは `json` と `cef` です。
+* `Attribute-Drop-Filter` (string array, optional): 出力から削除されるメッセージ内の属性に対するマッチングに使用できるグロブイングパターンを指定します。 引数は [Unix Glob patterns](https://en.wikipedia.org/wiki/Glob_(programming)) でなければならず、多くのパターンを指定することができます。 属性ドロップフィルターは `raw` 出力フォーマットとは互換性がありません。
+* `Attribute-Strip-Header` (boolean, optional): ネストされた名前やタイプ情報を持つ属性のヘッダ値を除去するように指定します。 これは、不適切に形成された属性値を整理するのに非常に便利です。
 
 
-### Example Configuration
+### 構成例
 
-The following `cisco_ise` preprocessor configuration is designed to re-assemble multipart messages, remove unwanted `Step` attributes, and reform the output messages in the CEF format.  It also strips the cisco attribute headers.
+以下の `cisco_ise` プリプロセッサの構成は、マルチパートのメッセージを再構成し、不要な `Step` 属性を削除して、出力メッセージを CEF 形式に変換するように設計されています。 また、cisco属性のヘッダを除去します。
 
 ```
 [preprocessor "iseCEF"]
@@ -829,13 +829,13 @@ The following `cisco_ise` preprocessor configuration is designed to re-assemble 
     Output-Format=cef
 ```
 
-An example output message using this configuration is:
+この設定を使った出力メッセージの例は以下の通りです：
 
 ```
 CEF:0|CISCO|ISE_DEVICE|||Passed-Authentication|NOTICE| sequence=1 ode=5200 class=Passed-Authentication text=Authentication succeeded ConfigVersionId=44 DeviceIPAddress=8.8.8.8 DestinationIPAddress=1.2.3.4 DestinationPort=1645 UserName=user@company.com Protocol=Radius RequestLatency=10301 audit-session-id=0a700e191cff70005fbbf63f
 ```
 
-The following `cisco_ise` preprocessor configuration is achieves a similar result, but it contains two attribute filters and re-formats the output message into JSON 
+次の `cisco_ise` プリプロセッサの設定は、同様の結果をもたらしますが、2つの属性フィルタを含み、出力メッセージをJSONに再フォーマットします。
 
 ```
 [preprocessor "iseCEF"]
@@ -847,7 +847,7 @@ The following `cisco_ise` preprocessor configuration is achieves a similar resul
     Output-Format=json
 ```
 
-An example output message using this configuration is:
+この設定を使った出力メッセージの例は以下の通りです：
 
 ```
 {

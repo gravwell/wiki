@@ -1,70 +1,71 @@
 ## Geoip
 
-The geoip module uses [MaxMind](https://maxmind.com/) GeoIP databases to extract location information about IP addresses. It can extract approximate latitude/longitude as well as city, country, and continent names. It can also extract ASN numbers and the ASN organization associated with the IP.
+geoipモジュールは[MaxMind](https://maxmind.com/)GeoIPデータベースを使用して、IPアドレスに関する位置情報を抽出します。おおよその緯度/経度、都市名、国名、大陸名を抽出できます。また、ASN番号とIPに関連付けられたASN組織を抽出することもできます。
 
-### Setting Up Databases
+### データベースのセットアップ
 
-Before using the geoip module, you must install [resources](#!resources/resources.md) containing the MaxMind databases. You can either [download the free, limited databases](https://dev.maxmind.com/geoip/geoip2/geolite2/) or purchase their enterprise versions. We recommend installing both the City and ASN databases. On the website, select the MaxMind DB versions as shown below and unpack the resulting tar files to find the requisite files (GeoLite2-City.mmdb and GeoLite2-ASN.mmdb).
+geoipモジュールを使用する前に、MaxMindデータベースを含む[リソース](#!resources/resources.md)をインストールする必要があります。[無料のデータベースをダウンロードする](https://dev.maxmind.com/geoip/geoip2/geolite2/)か、エンタープライズバージョンを購入することができます。 CityデータベースとASNデータベースの両方をインストールすることをお勧めします。 Webサイトで、以下に示すようにMaxMind DBバージョンを選択し、結果のtarファイルを解凍して、必要なファイル（GeoLite2-City.mmdbおよびGeoLite2-ASN.mmdb）を見つけます。
 
-Note: Make sure you download the binary version and extract the .mmdb file from tar.gz file.  Gravwell uses the native MaxMindDB format to ensure great throughput.
+注：必ずバイナリバージョンをダウンロードし、tar.gzファイルから.mmdbファイルを抽出してください。 Gravwellは、ネイティブのMaxmindDB形式を使用して、優れたスループットを保証します。
 
-[![MaxMind Download](download.png "Example download options")](https://dev.maxmind.com/geoip/geoip2/geolite2/)
+[![Maxmind Download](download.png "Example download options")](https://dev.maxmind.com/geoip/geoip2/geolite2/)
 
-By default, the geoip module expects the MaxMind "city" database (GeoLite2-City.mmdb) to be in a resource named "maxmind". This will allow you to do GeoIP extractions without specifying the resource name explicitly.
+デフォルトでは、geoipモジュールはMaxMind "city"データベース（GeoLite2-City.mmdb）が "maxmind"という名前のリソースにあることを想定しています。これにより、リソース名を明示的に指定せずにGeoIP抽出を行うことができます。
 
 ![](maxmind.png)
 
-While there is no default name for the ASN database, we recommend naming it something simple like "asn" to reduce typing:
+SNデータベースにはデフォルトの名前はありませんが、入力を減らすために"asn"のような単純な名前を付けることをお勧めします:
 
 ![](asn.png)
 
-### Supported Options
+### サポートされているオプション
 
-* `-r <arg>`: The “-r” option specifies the resource name or UUID which contains a MaxMind geoip database.  If no "-r" is specified the geoip module uses the default "maxmind" resource name.
-* `-s`: The “-s” option specifies that the geoip module should operate in strict mode.  In strict mode, if any of the specified operators cannot resolve an IP, the entry is dropped.
+* `-r <arg>`: “ -r”オプションは、Maxmind geoipデータベースを含むリソース名またはUUIDを指定します。  "-r"が指定されていない場合、geoipモジュールはデフォルトの "maxmind" リソース名を使用します。
+* `-s`:-s”オプションは、geoipモジュールが厳密モードで動作することを指定します。  ストリクトモードでは、指定されたオペレータのいずれかがIPを解決できない場合、エントリはドロップされます。
 
-### Processing Operators
+### 演算子
 
-The geoip extractors support direct operators that allow for very fast filtering in the geoip module.  These filters can enable fast filtering of entries based on locations, ISPs, owners, etc.  The filters supported by each operator are determined by the data type of the extracted item.  Strings, such as ISPs, countries, cities, etc. only support equal to (==) and not equal to (!=) where integers and floats support the full numeric comparison operators.  The Location extractor generates a data structure comprised of both the Longitude and Latitude and does not support any filtering operators.  Multiple operators can be specified in a single invocation of the geoip module, and the output enumerated value names can be modified using the "as" directive.  This allows for getting the country associated with two IP addresses in a single entry and populating two different enumerated values with the results.
+geoipエクストラクタは、geoipモジュールで非常に高速なフィルタリングを可能にする直接演算子をサポートします。  Tこれらのフィルタは、場所、ISP、所有者などに基づくエントリの高速フィルタリングを可能にします。  各オペレータによってサポートされるフィルタは、抽出されたアイテムのデータタイプによって決定されます。  整数値や浮動小数点数が完全な数値比較演算子をサポートする場合、ISP、国、都市などの文字列は、（!=）と等しい（==）だけをサポートします。  Locationエクストラクタは、経度と緯度の両方で構成されるデータ構造を生成し、フィルタ演算子をサポートしません。  geoipモジュールの1回の呼び出しで複数の演算子を指定でき、出力された列挙値の名前は "as"ディレクティブを使って変更できます。  これにより、1つのエントリで2つのIPアドレスに関連付けられている国を取得し、結果に2つの異なる列挙値を入力できます。
 
-| Operator | Name | Description
+| 演算子 | 名 | 説明
 |----------|------|-------------
-| == | Equal | Field must be equal
-| != | Not equal | Field must not be equal
-| < | Less than | Field must be less than
-| > | Greater than | Field must be greater than
-| <= | Less than or equal | Field must be less than or equal to
-| >= | Greater than or equal | Field must be greater than or equal to
-| ~ | Subset | Field must be a member of
-| !~ | Not subset | Field must not be a member of
+| == | 等しい | フィールドは等しくなければなりません
+| != | 等しくない | フィールドは等しくてはいけません
+| < | 未満 | フィールドはより小さい
+| > | より大きい | フィールドはより大きくなければなりません
+| <= | 以下 | フィールドは以下でなければなりません
+| >= | 以上 | フィールドは以上でなければなりません
+| ~ | サブセット | フィールドはメンバーでなければなりません
+| !~ | サブセットではない | フィールドはメンバーであってはいけません
 
-### Data Item Extractors
+### データ項目抽出
 
-The following extractions are possible with the standard MaxMind GeoIP database:
+標準のMaxMind GeoIPデータベースでは、次の抽出が可能です。
 
-| Extractor | Operators | Description | Example 
+| 抽出器 | オペレータ | 説明 | 例 
 |-----------|-----------|-------------|----------
-| ISP | == != | ISP which owns the IP (only available with MaxMind enterprise database) | SrcIP.ISP != Comcast
-| Country | == != | Country code for the IP | DstIP.Country == "US"
-| CountryName | == != | Country name for the IP | SrcIP.CountryName != "United States"
-| City |  == != | City name for the IP | DstIP.City
-| Continent |  == != | Continent code for the IP | SrcIP.Continent == NA
-| ContinentName |  == != | Continent name for the IP | DstIP.ContinentName != "North America"
-| TZ |  == != | Timezone for the IP | SrcIP.TZ != "MST"
-| Location |  | Latitude and Longitude location for IP | SrcIP.Location
-| Lat | > < <= >= == != | Latitude for IP | DstIP.Lat < 22.5432
-| Long |  > < <= >= == != | Longitude for IP | DstIP.Long > -15.1234
+| ISP | == != | IPを所有するISP（MaxMindエンタープライズデータベースでのみ使用可能） | SrcIP.ISP != Comcast
+| Country | == != | IPの国コード | DstIP.Country == "US"
+| CountryName | == != | IPの国名 | SrcIP.CountryName != "United States"
+| City |  == != | IPの都市名 | DstIP.City
+| Continent |  == != | IPの大陸| SrcIP.Continent == NA
+| ContinentName |  == != | IP大陸名 | DstIP.ContinentName != "North America"
+| TZ |  == != | IPのタイムゾーン | SrcIP.TZ != "MST"
+| Location |  | IPの緯度/経度 | SrcIP.Location
+| Lat | > < <= >= == != | IPの緯度 | DstIP.Lat < 22.5432
+| Long |  > < <= >= == != | IPの経度 | DstIP.Long > -15.1234
 
-The following require the separate ASN database (specified with the -r flag):
+以下には、個別のASNデータベース（-rフラグで指定）が必要です:
 
-| Extractor | Operators | Description | Example 
+| 抽出器 | オペレータ | 説明 | 例 
 |-----------|-----------|-------------|----------
-| ASNOrg |  == != | Autonomous system number organization owner for IP | DstIP.ASNOrg != Google
-| ASN |  > < <= >= == != | Autonomous system number | DstIP.ASN >= 1024
+| ASNOrg |  == != | IPの自律システム番号組織の所有者 | DstIP.ASNOrg != Google
+| ASN |  > < <= >= == != |  自律システム番号 | DstIP.ASN >= 1024
 
-### Examples
 
-#### Filtering on country and requiring that city is resolved
+### 例
+
+#### 国のフィルタリングとその都市の解決の要求
 
 ```
 tag=pcap packet IPv4.SrcIP ~ 10.0.0.0/16 IPv4.DstIP | geoip -s DstIP.Country == US DstIP.City | count by City | chart count by City
@@ -72,7 +73,7 @@ tag=pcap packet IPv4.SrcIP ~ 10.0.0.0/16 IPv4.DstIP | geoip -s DstIP.Country == 
 
 ![chart of traffic by American city](chartByCity.png)
 
-#### Showing Per IP Country Traffic
+#### IP国別トラフィックの表示
 
 ```
 tag=pcap packet ipv4.SrcIP ~ 10.10.10.0/24 ipv4.DstIP !~ 10.0.0.0/8 ipv4.Length  | geoip DstIP.Country as DestCountry | sum Length by SrcIP,DestCountry | stackgraph DestCountry SrcIP sum
@@ -80,16 +81,17 @@ tag=pcap packet ipv4.SrcIP ~ 10.10.10.0/24 ipv4.DstIP !~ 10.0.0.0/8 ipv4.Length 
 
 ![stackgraph of traffic to country by IP](stackgraphByCountry.png)
 
-#### Extracting City for Two IPs
+#### 2つのIPの都市の抽出
 
 ```
 tag=pcap packet ipv4.SrcIP ipv4.DstIP | geoip DstIP.City as dest SrcIP.City as src | fdg -b src dst
 ```
 
-#### Extracting ASN Org
+#### ASN組織の抽出
 
 ```
 tag=pcap packet ipv4.SrcIP !~ PRIVATE | geoip -r asn SrcIP.ASNOrg | table
 ```
 
 ![](asnorg.png)
+

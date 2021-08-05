@@ -1,19 +1,19 @@
 ## Langfind
 
-The langfind module is a basic human language analysis module that searches data for text and attempts to classify that text as a human language.
+langfindモジュールは、テキストのデータを検索し、そのテキストを人間の言語として分類しようとする基本的な人間言語分析モジュールです。
 
-### Example Search
+### 検索例
 
-The following search will build a table of the most common languages used in Reddit comments, in descending order from most popular to least.
+以下の検索では、Redditのコメントで最も一般的に使用されている言語を、人気のあるものから少ないものへと降順に並べた表を作成します。
 
 ```
 tag=reddit json Body | langfind -e Body | count by lang | sort by count desc | table lang count
 ```
 
-### Supported Options
+### サポートされているオプション
 
-* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record. For example, a pipeline that performed language analysis on HTTP payloads would be `tag=pcap ipv4.DstPort==80 tcp.Payload | langfind -e Payload`.
-* By default, the output is generated in the enumerated value "lang". Optionally, you can specify the enumerated value name as the last argument. For example, to generate the output in the enumerated value "foo":
+* `-e <arg>`: "e"オプションはレコード全体ではなく、列挙値に対して操作する。例えば、HTTPペイロードの言語解析を行うパイプラインは、`tag=pcap ipv4.DstPort==80 tcp.Payload | langfind -e Payload`のようになります。
+* デフォルトでは、列挙値 "lang "で出力されます。オプションで、最後の引数に列挙値名を指定することができます。例えば、列挙値 "foo "で出力を生成するには:
 
 ```
 tag=reddit json Body | langfind -e Body foo | table foo

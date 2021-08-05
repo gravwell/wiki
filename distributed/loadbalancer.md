@@ -1,28 +1,28 @@
-# The Gravwell Load Balancer
+# Gravwellロードバランサー
 
-To make setting up your environment as easy as possible, Gravwell provides a custom load balancer specifically designed for use with Gravwell webservers. It can automatically discover Gravwell webservers, meaning you don't need to reconfigure the loadbalancer every time you add or remove a webserver--and if a webserver goes down, it will automatically direct users to another server.
+Gravwellは、お客様の環境をできるだけ簡単に設定するために、Gravwellウェブサーバ用に特別に設計されたカスタムロードバランサーを提供しています。ロードバランサーは、Gravwellのウェブサーバを自動的に検出することができるので、ウェブサーバを追加・削除するたびにロードバランサーを再設定する必要はなく、ウェブサーバがダウンした場合は、自動的に別のサーバにユーザーを誘導することができます。
 
-## Load Balancer Architecture
+## ロードバランサーの構成
 
-The load balancer is an HTTP(S) proxy which automatically directs clients to one of the Gravwell webservers. It sets a cookie on the user's browser to maintain a level of "stickiness", so one session's requests all go to the same webserver.
+ロードバランサーはHTTP(S)プロキシであり、クライアントを自動的にGravwellのウェブサーバに誘導します。ロードバランサーは、ユーザーのブラウザにクッキーを設定して"スティッキネス"のレベルを維持し、1つのセッションのリクエストがすべて同じウェブサーバに送られるようにします。
 
-The load balancer discovers Gravwell webservers by communicating with the Gravwell datastore, which provides a list of active webservers. See [the distributed webserver documentation](frontend.md) for more info about the datastore.
+ロードバランサーはGravwellデータストアと通信することでGravwellウェブサーバを発見し、アクティブなウェブサーバのリストを提供します。データストアについての詳細は[分散ウェブサーバ](frontend.md)を参照してください。
 
-Once installed and configured, users should access Gravwell through the load balancer. We recommend setting a hostname such as `gravwell.example.org` to point at the load balancer while naming webservers something like `web1.example.org`; encourage users to visit `gravwell.example.org` instead of accessing the webservers directly.  Users do not need direct access to Gravwell webservers when using the load balancer--the webservers may be privately addressed or otherwise inaccessible to the wider world.
+インストールと設定が完了したら、ユーザーはロードバランサーを介してGravwellにアクセスします。ロードバランサーを指すホスト名として`gravwell.example.org`などを設定し、ウェブサーバの名前を`web1.example.org`などとすることをお勧めします。ユーザーはウェブサーバに直接アクセスするのではなく、`gravwell.example.org`にアクセスするようにしてください。ロードバランサーを使用する場合、ユーザーはGravwellのウェブサーバーに直接アクセスする必要はありません。ウェブサーバはプライベートアドレスになっていたり、一般にはアクセスできなかったりします。
 
-## Deploying the Load Balancer
+## ロードバランサーの導入
 
-The load balancer component is distributed through all the same channels as the main Gravwell installer:
+ロードバランサーコンポーネントは、Gravwellのメインインストーラーと同じルートで配布されます。
 
-* Self-extracting shell installer is available [on the downloads page](https://docs.gravwell.io/#!quickstart/downloads.md)
-* In the Debian and RedHat repositories as a package named `gravwell-loadbalancer`.
-* On DockerHub as [gravwell/loadbalancer](https://hub.docker.com/r/gravwell/loadbalancer)
+* 自己解凍型のシェルインストーラが[ダウンロード](https://docs.gravwell.io/#!quickstart/downloads.md)にあります。
+* DebianやRedHatのリポジトリでは、`gravwell-loadbalancer`という名前のパッケージとして提供されています。
+* DockerHubでは[gravwell/loadbalancer](https://hub.docker.com/r/gravwell/loadbalancer)です。
 
-The Debian installer will prompt for basic configuration options and should need no further setup after you've installed. For other installation methods, you will need to edit `/opt/gravwell/etc/loadbalancer.conf` as detailed below. If you are using Docker, you can also configure the container purely through environment variables, as described in the "Docker Environment Variables" section below.
+Debian のインストーラーは、基本的な設定オプションを求めてきますので、インストール後にそれ以上の設定は必要ありません。他のインストール方法の場合は、以下のように `/opt/gravwell/etc/loadbalancer.conf` を編集する必要があります。また、Dockerを使用している場合は、後述の「Dockerの環境変数」の項で説明するように、環境変数のみでコンテナを設定することもできます。
 
-## Config File Settings
+## 設定ファイル
 
-Configuration is managed in `/opt/gravwell/etc/loadbalancer.conf`. Here is a simple configuration for an HTTP-only configuration:
+設定は、`/opt/gravwell/etc/loadbalancer.conf`で管理します。ここでは、HTTPオンリーの簡単な設定を紹介します:
 
 ```
 [Global]
@@ -39,9 +39,9 @@ Datastore=datastore.example.org
 Datastore-Insecure-Disable-TLS=true
 ```
 
-The Disable-HTTP-Redirector and Insecure-Disable-HTTPS settings make the load balancer listen for incoming connections on HTTP only. At the bottom of the file, the Datastore parameter tells the load balancer where the Gravwell datastore may be found; the Control-Secret parameter gives the authentication token for communicating with the datastore, while Datastore-Insecure-Disable-TLS sets us to talk to the datastore over an unencrypted connection.
+Disable-HTTP-RedirectorとInsecure-Disable-HTTPSの設定により、ロードバランサーがHTTPのみで着信接続を待ち受けるようになります。ファイルの一番下にあるDatastoreパラメータは、ロードバランサーにGravwellデータストアの場所を伝えます。Control-Secret パラメーターは、暗号化されていない接続でデータストアと通信するようDatastore-Insecure-Disable-TLSが設定されている場合に、データストアと通信するための認証トークンを与えます。
 
-If we want to use HTTPS instead, we need to provide the load balancer with a valid TLS certificate & key pair (see [the TLS documentation](#!configuration/certificates.md) for more information on setting up TLS in Gravwell). Here's an example configuration that listens on HTTPS and communicates with the datastore over an encrypted channel:
+代わりにHTTPSを使いたい場合は、ロードバランサーに有効なTLS証明書とキーのペアを提供する必要があります（GravwellでのTLSの設定については、[TLS](#!configuration/certificates.md)を参照してください）。以下はHTTPSでリッスンし、データストアと暗号化されたチャネルで通信する設定例です:
 
 ```
 [Global]
@@ -59,81 +59,81 @@ Enable-Access-Log=true
 #Datastore-Insecure-Skip-TLS-Verify=true
 ```
 
-### Global Configuration Parameters
+### グローバル設定パラメータ
 
-This section lists every configuration parameter available in the `[Global]` section of the configuration file.
+ここでは、設定ファイルの`[Global]`セクションで利用可能なすべてのコンフィギュレーションパラメータをリストアップしています。
 
 **Disable-HTTP-Redirector**
-Default Value:	`false`
-Description:	When this parameter is set to `false`, the load balancer will redirect incoming HTTP connections to the HTTPS port. Set this to `true` if you are not using TLS.
+デフォルト値:	`false`
+説明:	このパラメータが`false`に設定されていると、ロードバランサーは受信したHTTP接続をHTTPSポートにリダイレクトします。TLSを使用しない場合は、`true`に設定してください。
 
 **Insecure-Disable-HTTPS**
-Default Value:	`false`
-Description:	When this parameter is set to `true`, the load balancer will listen for incoming HTTP connections instead of HTTPS. If this is set to `false`, you must also set the `Key-File` and `Certificate-File` parameters.
+デフォルト値:	`false`
+説明:	このパラメータが`true`に設定されていると、ロードバランサーはHTTPSではなくHTTP接続の着信を待ち受けます。これが`false`に設定されると、`Key-File`と`Certificate-File`パラメータも設定しなければなりません。
 
 **Web-Port**
-Default Value:	443 (80 if `Insecure-Disable-HTTPS=true` is set)
-Description:	This parameter sets the port on which to listen for incoming connections. The default is typically acceptable.
+デフォルト値:	443 (`Insecure-Disable-HTTPS=true`が設定されている場合は80)
+説明:	このパラメータでは、受信した接続をリッスンするポートを設定します。一般的には、デフォルトの設定で問題ありません。
 
 **Bind-Addr**
-Default Value:	`0.0.0.0`
-Description:	This parameter sets the IP address on which the load balancer will listen for incoming connections. By default, it listens on all interfaces.
+デフォルト値:	`0.0.0.0`
+説明:	このパラメーターは、ロードバランサーが着信接続をリッスンするIPアドレスを設定します。デフォルトでは、すべてのインターフェイスをリッスンします。
 
 **Key-File**
-Default Value:	(empty)
-Description:	Sets the location of a TLS secret key. The key must correspond to a valid certificate for the load balancer's hostname.
+デフォルト値:	(空欄)
+説明:	TLSの秘密鍵の場所を設定します。この鍵は、ロードバランサーのホスト名に対する有効な証明書に対応していなければなりません。
 
 **Certificate-File**
-Default Value:	(empty)
-Description:	Sets the location of a TLS certificate file. The certificate must be valid for the load balancer's hostname.
+デフォルト値:	(空欄)
+説明:	TLS 証明書ファイルの場所を設定します。証明書は、ロードバランサーのホスト名に対して有効でなければなりません。
 
 **Insecure-Skip-TLS-Verify**
-Default Value:	`false`
-Description:	If this parameter is set to `true`, the load balancer will not verify TLS certificates on Gravwell webservers when proxying connections. This setting is ignored if `Insecure-Disable-HTTPS=true` is set.
+デフォルト値:	`false`
+説明:	このパラメータが`true`に設定されている場合、ロードバランサーはプロキシ接続する際にGravwell WebサーバのTLS証明書を検証しません。この設定は、`Insecure-Disable-HTTPS=true`が設定されている場合は無視されます。
 
 **Update-Interval**
-Default Value:	30
-Description:	This parameter sets, in seconds, how frequently the load balancer should check for new or failed webservers.
+デフォルト値:	30
+説明:	このパラメーターは、ロードバランサーが新規または故障したウェブサーバーをチェックする頻度を秒単位で設定します。
 
 **Session-Timeout**
-Default Value:	10
-Description:	This parameter sets, in minutes, how long each load balancer session lasts. Note that users will not notice when these sessions expire; Gravwell webservers synchronize their user login sessions, so even though the load balancer starts sending requests to a different webserver, they will still work. The default value should be fine.
+デフォルト値:	10
+説明:	このパラメータは、各ロードバランサーのセッションが継続する時間を分単位で設定します。Gravwellのウェブサーバーはユーザーのログインセッションを同期しているので、ロードバランサーが別のウェブサーバーにリクエストを送るようになっても、ユーザーはセッションが切れることに気づかないことに注意してください。デフォルト値で問題ありません。
 
 **Datastore**
-Default Value:	(empty)
-Description:	This parameter points to the Gravwell datastore component. It should be a hostname or IP address, e.g. `Datastore=datastore.example.org` or `Datastore=192.168.0.11`. If the datastore is listening on a non-standard port (instead of 9405), you may include the port: `Datastore=datastore.example.org:9999`.
+デフォルト値:	(空欄)
+説明:	このパラメータはGravwellのデータストアコンポーネントを指します。これはホスト名またはIPアドレスで、例えば`Datastore=datastore.example.org`または`Datastore=192.168.0.11`のようになります。データストアが（9405ではなく）非標準のポートでリッスンしている場合は、そのポートを`Datastore=datastore.example.org:9999`と含めることができます。
 
 **Control-Secret**
-Default Value:	`ControlSecrets`
-Description:	This parameter gives the authentication token for communicating with the datastore. You will almost certainly need to change the default.
+デフォルト値:	`ControlSecrets`
+説明:	このパラメータは、データストアと通信するための認証トークンを与えます。ほとんどの場合、デフォルトの設定を変更する必要があります。
 
 **Disable-Datastore**
-Default Value:	`false`
-Description:	If set to true, the load balancer will not attempt to communicate with any datastore. Instead, it will use the webservers listed in the `[Override]` config stanzas (see following section).
+デフォルト値:	`false`
+説明:	trueに設定すると、ロードバランサーはどのデータストアとも通信しようとしません。代わりに、`[Override]`設定スタンザ(次のセクションを参照)にリストされたウェブサーバを使用します。
 
-**Datastore-Insecure-Disable-TLS*
-Default Value:	`false`
-Description:	If set to true, the load balancer will connect to the datastore via an unencrypted channel.
+**Datastore-Insecure-Disable-TLS**
+デフォルト値:	`false`
+説明:	trueに設定すると、ロードバランサーは暗号化されていないチャンネルでデータストアに接続します。
 
-**Datastore-Insecure-Skip-TLS-Verify*
-Default Value:	`false`
-Description:	If set to true, the load balancer will not verify the datastore's TLS certificates.
+**Datastore-Insecure-Skip-TLS-Verify**
+デフォルト値:	`false`
+説明:	trueに設定すると、ロードバランサーはデータストアのTLS証明書を検証しません。
 
 **Log-Dir**
-Default Value:	`/opt/gravwell/log/loadbalancer`
-Description:	Sets the directory where the loadbalancer will keep its log files.
+デフォルト値:	`/opt/gravwell/log/loadbalancer`
+説明:	ロードバランサーがログファイルを保管するディレクトリを設定します。
 
 **Log-Level**
-Default Value:	`error`
-Description:	Sets the severity level for logs. By default, only errors are logged. Valid levels are, in order of decreasing severity: `error`, `warn`, `info`. Setting it to `off`, `none`, or `disabled` will turn off logging completely.
+デフォルト値:	`error`
+説明:	ログの重大度を設定します。デフォルトでは、エラーのみが記録されます。有効なレベルは、重大度が低い順に、`error`、`warn`、`info`です。これを `off`, `none`, `disabled` に設定すると、ログを完全にオフにします。
 
 **Enable-Access-Log**
-Default Value:	`false`
-Description:	If this parameter is set to true, the load balancer will log every URL requested by clients and the response code from the webserver.
+デフォルト値:	`false`
+説明:	このパラメーターがtrueに設定されていると、ロードバランサーは、クライアントがリクエストしたすべてのURLと、ウェブサーバーからのレスポンスコードを記録します。
 
-### Override Stanzas
+### オーバーライドスタンザ
 
-Most systems will use the datastore to automatically get a list of Gravwell webservers. However, sometimes the load balancer cannot communicate directly with the datastore--frequently this is a result of corporate network security rules. In this case, you may add `[Override]` configuration blocks at the end of the configuration file to manually list webservers:
+ほとんどのシステムでは、データストアを使用してGravwellウェブサーバーのリストを自動的に取得します。しかし、ロードバランサーがデータストアと直接通信できない場合があります。これは、企業のネットワークセキュリティルールの結果であることがよくあります。このような場合には、設定ファイルの最後に`[Override]`という設定ブロックを追加して、手動でウェブサーバの一覧を取得することができます。
 
 ```
 [Global]
@@ -150,25 +150,25 @@ Disable-Datastore=true
 	Insecure-Disable-HTTPS=true
 ```
 
-In the example above, we manually specify Override stanzas for two webservers.
+上の例では、2つのウェブサーバーのオーバーライドスタンザを手動で指定しています。
 
-Each override may use the following parameters:
+各オーバーライドには、以下のパラメータを使用できます。
 
 **Webserver**
-Default Value:	(empty)
-Description:	This is the hostname/IP and (optional) port for the webserver, e.g. `Webserver=192.168.0.1:8080` or `Webserver=web1.example.org`. If no port is specified, the appropriate default will be set (80 if HTTPS is disabled, 443 otherwise).
+デフォルト値:	(空欄)
+説明:	例えば、`Webserver=192.168.0.1:8080` や `Webserver=web1.example.org` のように、ウェブサーバのホスト名/IP と (オプションの) ポートを指定します。ポートが指定されていない場合は、適切なデフォルト値が設定されます（HTTPSが無効な場合は80、それ以外は443）。
 
 **Insecure-Disable-HTTPS**
-Default Value:	`false`
-Description:	If set to true, the load balancer will communicate with the webserver over insecure HTTP.
+デフォルト値:	`false`
+説明:	trueに設定すると、ロードバランサーは安全でないHTTPでウェブサーバーと通信します。
 
 **Insecure-Skip-TLS-Verify**
-Default Value:	`false`
-Description:	If set to true, the load balancer will not validate the webserver's TLS certificates.
+デフォルト値:	`false`
+説明:	trueに設定すると、ロードバランサーはウェブサーバーのTLS証明書を検証しません。
 
-## Docker Environment Variables
+## Docker環境変数
 
-When deploying in Docker, it is frequently easier to configure components via Docker environment variables instead of modifying a config file. All basic parameters of the load balancer can be configured through environment variables:
+Dockerでデプロイする場合、設定ファイルを変更する代わりに、Dockerの環境変数を使ってコンポーネントを設定する方が簡単なことがよくあります。ロードバランサーの基本的なパラメータはすべて環境変数で設定できます:
 
 * `GRAVWELL_INSECURE_DISABLE_HTTPS` - Equivalent to the `Insecure-Disable-HTTPS` config parameter
 * `GRAVWELL_INSECURE_SKIP_TLS_VERIFY` - Equivalent to the `Insecure-Skip-TLS-Verify` config parameter
@@ -183,7 +183,7 @@ When deploying in Docker, it is frequently easier to configure components via Do
 * `GRAVWELL_LOG_DIR` - Equivalent to the `Log-Dir` config parameter
 * `GRAVWELL_LOG_ENABLED_ACCESS_LOG` - Equivalent to the `Enable-Access-Log` config parameter
 
-Thus for example you might invoke:
+例えば、以下のように呼び出します:
 
 ```
 docker create --name loadbalancer \

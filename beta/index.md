@@ -1,33 +1,34 @@
-# Gravwell Beta Program
+＃Gravwellベータプログラム
 
-Greetings and salutations!
+ご挨拶
 
-You are reading this message because you are in the early access group for Gravwell Beta!  We sincerely thank you for your participation and look forward to feedback and bug reports.
+Gravwell Betaの早期アクセスグループに所属しているため、このメッセージを読んでいます。皆様のご参加に心より感謝申し上げますとともに、フィードバックやバグレポートをお待ちしております。
 
-Please submit any bugs or feedback to [beta@gravwell.io](mailto:beta@gravwell.io)
+バグ報告やフィードバックは[beta@gravwell.io](mailto:beta@gravwell.io)までお願いします。
 
-Thank you!
+ありがとうございます！
 
-## Current "State of the Beta"
+## 現在の "ベータ版の状態"
 
-We're preparing for the release of Gravwell 4.2.0. The primary new feature of this release is the Data Explorer, which makes it easier to play with your data in a point-and-click manner.
+Gravwell 4.2.0のリリースに向けて準備を進めています。このリリースの主な新機能は「データエクスプローラー」で、ポイント＆クリックで簡単にデータを操作できるようになりました。
 
-### Desired Testing
+### 希望するテスト
 
-Testing desires for this sprint (in order of priority)
+このスプリントのテスト希望（優先度順）
 
-* Data Explorer - Try it with as many different data sources as you can. Add filters, remove filters, pivot into other query modes.
-* Query Studio - Make sure the query editing box is usable and robust, move between many queries and tags, check the new formatting with other renderers.
-* Per Tag Accelerators - Add some [tag specific accelerator definitions](#!configuration/accelerators.md#Accelerating_Specific_Tags).
+* データエクスプローラー - できるだけ多くの異なるデータソースでそれを試してみてください。フィルタを追加したり、フィルタを削除したり、他のクエリモードにピボットしたりします。
+* クエリスタジオ - クエリ編集ボックスが使いやすく堅牢であることを確認し、多くのクエリとタグの間を移動し、他のレンダラーで新しいフォーマットをチェックします。
+* タグごとのアクセラレータ - いくつかの [タグごとのアクセラレータ定義](#!configuration/accelerators.md#Accelerating_Specific_Tags) を追加します。
 
-## Installation and Upgrade
+## インストールとアップグレード
 
-We're very excited to say this build is now available for your use and testing. We have created a new Ubuntu repository and Docker images. Switching from Stable to Beta is done by modifying your apt source repository (or our quick start instructions if installing from scratch).
+このビルドが利用可能になり、テストできるようになったことを大変うれしく思います。新しいubuntuリポジトリとDockerイメージを作成しました。StableからBetaへの切り替えは、aptソースリポジトリ（または最初からインストールする場合はクイックスタート手順）を変更することで実行されます。
 
-### Upgrading:
-Edit your `/etc/apt/sources.list.d/gravwell.list` file and replace `https://update.gravwell.io/debian/` with `https://update.gravwell.io/debianbeta/`. Then `apt update` and `apt upgrade` and you should be on the new release.
+### アップグレード：
 
-### Installing from scratch:
+`etc/apt/sources.list.d/gravwell.list` ファイルを編集し、`https://update.gravwell.io/debian/`の代わりに`https://update.gravwell.io/debianbeta/`を使用します。次に `apt update` と `apt upgrade` を実行すると、新しいリリースになります。
+
+### ゼロからのインストール：
 
 ```
 curl https://update.gravwell.io/debian/update.gravwell.io.gpg.key | sudo apt-key add -
@@ -39,11 +40,10 @@ sudo apt-get install gravwell
 
 ### Docker
 
-The Docker image is available at [gravwell/beta](https://hub.docker.com/r/gravwell/beta). You can change `gravwell/gravwell` to `gravwell/beta` in any of our Docker commands in the documentation and it should "just work."
+Dockerイメージは[gravwell/beta](https://hub.docker.com/r/gravwell/beta)にあります。ドキュメント内のどのDockerコマンドについても、`gravwell/gravwell`を`gravwell/beta`に変更すれば、"難なく動く "はずです。
 
+## ありがとうございます
 
-## Thank You
+Gravwellがもたらす新しい機能にとても興奮しています。ベータプログラムに興味を持っていただき、ご参加いただきありがとうございました。あなたなしではできませんでした。
 
-We are very excited about the new capabilities that Gravwell brings. Thank you for your interest and participation in the beta program. We couldn't do it without you!
-
-Please send us feedback, bug reports, and especially show us cool stuff that you build with the new tools!
+フィードバックやバグレポート、特に新しいツールを使って作ったクールなものを見せてください!

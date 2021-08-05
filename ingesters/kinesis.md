@@ -1,18 +1,18 @@
-# Kinesis Ingester
+# Kinesisインジェスター
 
-Gravwell provides an ingester capable of fetching entries from Amazon's [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) service. The ingester can process multiple Kinesis streams at a time, with each stream composed of many individual shards. The process of setting up a Kinesis stream is outside the scope of this document, but in order to configure the Kinesis ingester for an existing stream you will need:
+Gravwellは、Amazonの[Kinesisデータストリーム](https://aws.amazon.com/kinesis/data-streams/)サービスからエントリを取得できるインジェスターを提供します。インジェスターは一度に複数のKinesisストリームを処理することができ、各ストリームは多数の個別シャードで構成されています。Kinesisストリームを設定するプロセスはこのドキュメントの範囲外ですが、既存のストリームに対してKinesisインジェスターを設定するためには、以下が必要になります:
 
-* An AWS access key (ID number & secret key)
-* The region in which your stream resides
-* The name of the stream itself
+* AWSアクセスキー (IDナンバーと秘密鍵)
+* ストリームが存在する地域
+* ストリーム自身の名前
 
-Once the stream is configured, each record in the Kinesis stream will be stored as a single entry in Gravwell.
+ストリームが設定されると、Kinesisストリームの各レコードはGravwellの1つのエントリーとして保存されます。
 
-## Basic Configuration
+## 基本設定
 
-The Kinesis ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the Kinesis ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+Kinesisインジェスターは、[インジェスター](#!ingesters/ingesters.md#Global_Configuration_Parameters)で説明されている統一されたグローバル設定ブロックを使用しています。 他の多くのGravwellインジェスターと同様に、Kinesisインジェスターは複数のアップストリームインデクサー、TLS、クリアテキスト、名前付きパイプ接続、ローカルキャッシュ、ローカルロギングをサポートしています。
 
-## KinesisStream Examples
+## Kinesisストリームの例
 
 ```
 [KinesisStream "stream1"]
@@ -32,17 +32,17 @@ The Kinesis ingester uses the unified global configuration block described in th
 	JSON-Metric=true
 ```
 
-## Installation and configuration
+## インストールと設定
 
-First, download the installer from the [Downloads page](#!quickstart/downloads.md), then install the ingester:
+まず、[ダウンロード](#!quickstart/downloads.md)からインストーラーをダウンロードして、インジェスターをインストールします:
 
 ```
 root@gravserver ~# bash gravwell_kinesis_ingest_installer.sh
 ```
 
-If the Gravwell services are present on the same machine, the installation script should automatically extract and configure the `Ingest-Auth` parameter and set it appropriately. You will now need to open the `/opt/gravwell/etc/kinesis_ingest.conf` configuration file and set it up for your Kinesis stream. Once you have modified the configuration as described below, start the service with the command `systemctl start gravwell_kinesis_ingest.service`
+Gravwellのサービスが同一マシン上に存在する場合は、インストールスクリプトが自動的に`Ingest-Auth`パラメータを抽出して適切に設定してくれるはずです。ここで、`/opt/gravwell/etc/kinesis_ingest.conf`という設定ファイルを開き、Kinesisストリーム用に設定を追加する必要があります。以下のように設定を変更したら、コマンド `systemctl start gravwell_kinesis_ingest.service` でサービスを開始します。
 
-The example below shows a sample configuration which connects to an indexer on the local machine (note the `Pipe-Backend-target` setting) and feeds it from a single Kinesis stream named "MyKinesisStreamName" in the us-west-1 region.
+以下の例では、ローカルマシン上のインデクサに接続し（`Pipe-Backend-target`の設定に注意）、us-west-1リージョンにある "MyKinesisStreamName" という名前の単一のKinesisストリームからフィードするサンプル構成を示しています。
 
 ```
 [Global]
@@ -69,19 +69,19 @@ AWS-Secret-Access-Key=REPLACEMEWITHYOURKEY
 	Assume-Localtime=true
 ```
 
-Note the `State-Store-Location` option. This sets the location of a state file which will track the ingester's position in the streams, to prevent re-ingesting entries which have already been seen.
+`State-Store-Location`オプションに注目してください。これは、既にインジェストされたエントリーの再インジェストを防ぐために、ストリーム内のインジェスターの位置を追跡するステートファイルの場所を設定します。
 
-You will need to set at least the following fields before starting the ingester:
+インジェスターを起動する前に、少なくとも以下のフィールドを設定する必要があります。:
 
-* `AWS-Access-Key-ID` - this is the ID of the AWS access key you wish to use
-* `AWS-Secret-Access-Key` - this is the secret access key itself
-* `Region` - the region in which the kinesis stream resides
-* `Stream-Name` - the name of the kinesis stream
+* `AWS-Access-Key-ID` - これは、使用したいAWSアクセスキーのIDです。
+* `AWS-Secret-Access-Key` - これは、秘密のアクセスキーそのものです。
+* `Region` - kinesisストリームが存在する地域
+* `Stream-Name` - kinesisストリームの名前
 
-You can configure multiple `KinesisStream` sections to support multiple different Kinesis streams.
+複数の異なるKinesisストリームをサポートするために、複数の`KinesisStream`セクションを構成することができます。
 
-You can test the config by running `/opt/gravwell/bin/gravwell_kinesis_ingester -v` by hand; if it does not print out errors, the configuration is probably acceptable.
+この設定をテストするには、`/opt/gravwell/bin/gravwell_kinesis_ingester -v`を手動実行します。
 
-Most of the fields are self-explanatory, but the `Iterator-Type` setting deserves a note. This setting selects where the ingester starts reading data **if it does not have a state file entry** for the stream/shard. The default is "LATEST", which means the ingester will ignore all existing records and only read records created after the ingester starts. By setting it to TRIM_HORIZON, the ingester will start reading records from the oldest available. In most situations we recommend setting it to TRIM_HORIZON so you can fetch older data; on further runs of the ingester, the state file will maintain the sequence number and prevent duplicate ingestion.
+ほとんどのフィールドは説明不要ですが、`Iterator-Type`の設定については注意が必要です。この設定は、インジェスターがストリーム/シャードの **状態ファイルエントリを持っていない場合** 、どこからデータを読み始めるかを選択します。デフォルトは "LATEST "で、これはインジェスターが既存のレコードをすべて無視して、インジェスターが開始した後に作成されたレコードのみを読み取ることを意味します。TRIM_HORIZONに設定すると、インジェスターは利用可能な最も古いものからレコードを読み始めます。ほとんどの状況では、古いデータを取得できるようにTRIM_HORIZONに設定することをお勧めします。インジェスターのさらなる実行時に、ステートファイルがシーケンス番号を維持し、重複した取り込みを防止します。
 
-The Kinesis ingester does not provide the `Ignore-Timestamps` option found in many other ingesters. Kinesis messages include an arrival timestamp; by default, the ingester will use that as the Gravwell timestamp. If `Parse-Time=true` is specified in the data consumer definition, the ingester will instead attempt to extract a timestamp from the message body.
+Kinesisインジェスターは、他の多くのインジェスターで見られる`Ignore-Timestamps`オプションを提供しません。Kinesisのメッセージには到着タイムスタンプが含まれており、デフォルトでは、インジェスターはそれをGravwellのタイムスタンプとして使用します。データコンシューマの定義で`Parse-Time=true`が指定されている場合、インジェスターは代わりにメッセージボディからタイムスタンプを抽出しようとします。

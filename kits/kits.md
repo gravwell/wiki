@@ -1,96 +1,96 @@
-# Kits
+# キット
 
-Kits are Gravwell's way of bundling up a lot of related items (dashboards, queries, scheduled searches, autoextractors) for easy installation on other systems. A kit might contain tools for analyzing Netflow data, or for monitoring a homebrewing setup. Gravwell Inc. provides pre-built kits for common use cases, but users can also build their own kits from within the Gravwell UI.
+キットとは、Gravwell が他のシステムに簡単にインストールできるように、多くの関連アイテム（ダッシュボード、クエリ、スケジュール検索、自動抽出器）を束ねたものです。キットには Netflow データの解析ツールや自作システムの監視ツールなどが含まれます。Gravwell Inc. は、一般的なユースケースのためにあらかじめキットを提供していますが、ユーザーは Gravwell UI から独自のキットを構築することもできます。
 
-## What's in a Kit
+## キットに含まれるもの
 
-There are many components which make up a kit. First, there are the *contents* of the kit, which fall into 2 categories:
+キットを構成する要素はたくさんあります。まず、キットの「コンテンツ」ですが、これは2つのカテゴリーに分かれます。
 
-* Items: Regular Gravwell components such as dashboards, scheduled searches, macros, actionables, etc.
-* Configuration Macros: These are specialized macros which the kit uses to configure itself, which can allow greater flexibility in e.g. choices of tags used. For instance, rather than using `tag=netflow` in all queries, a Netflow kit can say `tag=$NETFLOW_KIT_TAG`, then define a configuration macro named NETFLOW_KIT_TAG. At installation time, the kit prompts the user for which tag or tags contain Netflow records.
+* アイテム：ダッシュボード、スケジュール検索、マクロ、アクショナブルなど、通常の Gravwell コンポーネント。
+* 設定用マクロ：これは、キットが自分自身を構成するために使用する特殊なマクロで、使用するタグの選択などにおいて、より柔軟性を持たせることができます。たとえば、すべてのクエリで `tag=netflow` を使用するのではなく、Netflow キットでは `tag=$NETFLOW_KIT_TAG` とし、NETFLOW_KIT_TAG という名前の設定用マクロを定義することができます。インストール時に、キットは、どのタグまたはタグに Netflow レコードが含まれているかをユーザーに尋ねます。
 
-There are a few other things which help *identify* a kit that are useful to keep in mind:
+他にも、キットを識別するのに役立ついくつかのポイントがありますので、覚えておくと便利です。
 
-* ID: Identifies the kit. Gravwell uses namespaces similar to Android applications, e.g. "io.gravwell.netflowv5".
-* Version: Kits may be updated over time, and the version number tracks this so Gravwell can automatically notify of new kit versions.
-* Name: A user-friendly name for the kit, e.g. "Netflow v5".
-* Description: A detailed description of what the kit does.
-* MinVersion/MaxVersion: Some kits require specific Gravwell features; to ensure those features are available, these fields specify which Gravwell versions are compatible with the kit.
-* Dependencies: Kits can depend on other kits, like packages in a Linux distribution. Gravwell's Netflow v5 kit depends on the Network Enrichment kit, for example. Dependencies are automatically installed along with the kit.
+* ID：キットを識別します。Gravwell では、"io.gravwell.netflowv5" のように、Androidアプリケーションと同様の名前空間を使用しています。
+* バージョン：キットは時間の経過とともに更新されることがありますが、バージョン番号はそれを追跡し、Gravwell は新しいキットのバージョンを自動的に通知します。
+* 名前：「Netflow v5」など、キットのわかりやすい名前。
+* 説明：キットの機能についての詳細な説明です。
+* MinVersion/MaxVersion：キットによっては、Gravwell の特定の機能を必要とするものがあります。それらの機能が確実に利用できるように、これらのフィールドでは、キットと互換性のある Gravwell のバージョンを指定します。
+* 依存関係：キットは、Linux ディストリビューションのパッケージのように、他のキットに依存することがあります。例えば、Gravwell の Netflow v5 キットは Network Enrichment キットに依存しています。依存関係は、キットと一緒に自動的にインストールされます。
 
-## Browsing Installed Kits
+## インストールされたキットを見る
 
-Kits are managed through the Kits page, located in the main menu. When you load the kits page, you will first see a list of installed kits. In the image below, we see two installed kits:
+キットの管理は、メインメニューにある「キット」ページで行います。キットのページを開くと、まずインストールされているキットのリストが表示されます。下の画像では、2つのインストール済みキットが表示されています。
 
 ![](listkits.png)
 
-Clicking one of the kits will put you into the *context* of the selected kit and display the kit's contents:
+いずれかのキットをクリックすると、選択したキットのコンテキストに入り、キットの内容が表示されます。
 
 ![](showkit.png)
 
-The UI is now in the kit's *context*, meaning it will only show that kit's contents until you leave the context. For example, browsing to the Dashboards page from the main menu will show only two two dashboards included with that particular kit:
+UI はキットのコンテキストに入っているので、コンテキストを離れるまではそのキットの内容しか表示されません。例えば、メインメニューから Dashboards ページにアクセスすると、そのキットに含まれる2つのダッシュボードのみが表示されます。
 
 ![](kitcontext.png)
 
-Note the text "Kits / Netflow v5 / Dashboards" at the top of the page. This indicates that we are *inside* that particular kit. To leave the kit context, click the Gravwell logo next to the main menu button.
+ページの上部にある「Kits / Netflow v5 / Dashboards」というテキストに注目してください。これは、私たちがその特定のキットの中にいることを示しています。キットのコンテキストを離れるには、メインメニューボタンの横にある Gravwell のロゴをクリックします。
 
-## Installing Kits
+## キットのインストール
 
-To install a kit, you must enter kit management mode by clicking the "Manage Kits" button in the upper-right corner of the main kits page. If you have no kits installed, the UI will automatically take you to the 'Available Kits' tab, otherwise the default view will show your currently-installed kits. To find and install kits, click the 'Available Kits' label at the top of the screen.
+キットをインストールするには、メインのキットページの右上にある「キットを管理」ボタンをクリックして、キット管理モードに入る必要があります。キットがインストールされていない場合は、UI が自動的に「利用可能なキット」タブに移動しますが、そうでない場合はデフォルトの表示で現在インストールされているキットが表示されます。キットを探してインストールするには、画面上部の「利用可能なキット」ラベルをクリックします。
 
 ![](availablekits.png)
 
-You can click the kit details button to learn more about a given kit. Once you've decided on a kit to install, click the install kit button. The system will download the kit, then pop up a wizard for installation. In the screenshot below, we have selected the IPFIX kit for installation. The first page shows a list of items contained in the kit:
+キットの詳細ボタンをクリックすると、キットの詳細が表示されます。インストールするキットが決まったら、「キットのインストール」ボタンをクリックします。システムはキットをダウンロードして、インストールのためのウィザードをポップアップします。下のスクリーンショットでは、IPFIX キットを選択してインストールしています。最初のページには、キットに含まれるアイテムのリストが表示されます。
 
 ![](wizard1.png)
 
-After reviewing the contents, click the checkbox and select the Next button. The wizard will then display any licenses packaged with the kit; note that if there are multiple licenses, you will have to select each one individually from the list on the left and click each checkbox before continuing.
+内容を確認したら、チェックボックスをクリックし、「Next」ボタンを選択します。ウィザードには、キットに同梱されているライセンスが表示されます。複数のライセンスがある場合は、左のリストからそれぞれのライセンスを選択し、各チェックボックスをクリックしてから続行してください。
 
 ![](wizard2.png)
 
-Next, the wizard will prompt for *Configuration Macros*, if any are defined by the kit. A configuration macro allows install-time configuration of the queries which are shipped by the kit; these will typically include a default value but also provide a description to help you figure out what to enter. In this screenshot, it needs to know which tag contains IPFIX records; because we intend to use the "ipfix" tag, we can leave the default value alone.
+次に、キットで定義されているものがあれば、ウィザードは設定マクロの入力を促します。設定マクロとは、キットに同梱されているクエリをインストールの時に設定するためのもので、通常はデフォルト値が設定されていますが、入力すべき内容を把握するための説明も含まれています。このスクリーンショットでは、どのタグに IPFIX レコードが含まれているかを知る必要があります。
 
 ![](wizard3.png)
 
-The final page of the wizard prompts for additional options. "Override Existing Items", if checked, will overwrite any conflicting objects which may already exist on the system--for instance, if you have created a resource named "foo", but the kit will also create a resource named "foo". The "Group Access" dropdown allows you to optionally select a group which can see the contents of the kit. Admin users will also have the option to install the kit *globally*, meaning all users can see it.
+ウィザードの最後のページでは、追加オプションの入力を求められます。「Override Existing Items」にチェックを入れると、システム上に既に存在する矛盾したオブジェクトを上書きします。例えば、「foo」という名前のリソースを作成したのに、キットが「foo」という名前のリソースも作成してしまう場合です。「Group Access」ドロップダウンでは、キットのコンテンツを見ることができるグループを任意に選択することができます。管理者は、キットをグローバルにインストールして、すべてのユーザーが見ることができるようにすることもできます。
 
 ![](wizard4.png)
 
-When you click the "Deploy" button, the kit and any dependencies will be installed. This may take a minute or so, but eventually the kit will be listed as one of your installed kits.
+「Deploy」ボタンをクリックすると、キットとその依存関係がインストールされます。この作業には1分ほどかかることがありますが、最終的にはインストールされたキットの1つとしてリストアップされます。
 
-Note: If you abort the installation wizard, the kit will not be installed, but the downloaded kit will be shown in the "My kits" page under the label "Kits Staged for Deployment", as seen below. You can chose to delete the staged kit or restart the installation wizard.
+注：インストールウィザードを中止した場合、キットはインストールされませんが、ダウンロードしたキットは「My kits」ページの「Kits Staged for Deployment」というラベルの下に表示されます（下図）。このステージングされたキットを削除するか、インストールウィザードを再開するかを選択することができます。
 
 ![](staged.png)
 
-## Upgrading Kits
+## キットのアップグレード
 
-Gravwell will periodically push updates to the official kit server. When one of your installed kits has an update available, an "Upgrade" button will appear on that kit's tile:
+Gravwell は定期的に公式キットサーバーにアップデートを行います。インストールしたキットにアップデートがあると、そのキットのタイルに「アップグレード」ボタンが表示されます。
 
 ![](upgradekit.png)
 
-Clicking the button will launch an upgrade wizard similar to the installation wizard. The most important difference is the **Backup** option. If you have modified any of the items which were included in the kit, the wizard will notify you and provide options for copying or downloading the modified items. In the screenshot below, we see that three resources were changed and the wizard is offering download links for them. Other objects, like dashboards, can be "cloned" during the upgrade rather than downloaded.
+このボタンをクリックすると、インストールウィザードと同様のアップグレードウィザードが起動します。最も重要な違いは、**バックアップ**オプションです。キットに含まれていたアイテムを変更した場合、ウィザードはその旨を通知し、変更されたアイテムをコピーまたはダウンロードするためのオプションを提供します。以下のスクリーンショットでは、3つのリソースが変更され、ウィザードがそれらのダウンロードリンクを提供していることがわかります。ダッシュボードのような他のオブジェクトは、ダウンロードではなく、アップグレード中に「クローン」を作成することができます。
 
 ![](backup.png)
 
-If there are no items which have been modified, the Backup step will not be shown. The rest of the wizard is identical to the installation wizard, although defaults such as group access should be already set for you.
+変更された項目がない場合は、「バックアップ」のステップは表示されません。ウィザードの残りの部分はインストールウィザードと同じですが、グループアクセスなどのデフォルトはすでに設定されているはずです。
 
-Attention: The upgrading a kit to a new version involves the *complete deletion* of the previous version's contents. Do not click the "Deploy" button at the end of the wizard until you are prepared for this to happen!
+注意：キットを新しいバージョンにアップグレードすると、前のバージョンのコンテンツは完全に削除されます。準備ができるまで、ウィザードの最後にある「Deploy」ボタンをクリックしないでください。
 
-## Uninstalling Kits
+## キットのアンインストール
 
-To remove an installed kit, enter kit management mode by clicking the "Manage Kits" button in the upper-right corner of the main kits page. Then select the trash can icon on the desired kit. A dialog will pop up for confirmation:
+インストールしたキットを削除するには、メインのキットのページの右上にある「Manage Kits」ボタンをクリックして、キット管理モードに入ります。その後、削除したいキットのゴミ箱アイコンを選択します。確認のためのダイアログが表示されます。
 
 ![](uninstall-confirm.png)
 
-If you click "Uninstall", the kit will be removed, unless you have manually changed any of the kit contents. If you have modified any of the kit items, you will see a second dialog warning you of this fact and allowing one last chance to abort the process:
+「アンインストール」をクリックすると、キットの内容を手動で変更していない限り、キットが削除されます。キットの内容を変更した場合は、その旨を知らせる2つ目のダイアログが表示され、処理を中止する最後のチャンスが与えられます。
 
 ![](uninstall-warn.png)
 
-## The Kit Server
+## キットサーバ
 
-By default, Gravwell will check for available kits at `https://kits.gravwell.io/kits/list`. If you don't see any kits listed in the "Available Kits" page, make sure you can hit that server from your Gravwell webserver. We are currently working on a toolset to allow self-hosted kit servers.
+デフォルトでは、Gravwell は `https://kits.gravwell.io/kits/list` で利用可能なキットをチェックします。利用可能なキットページにキットが表示されていない場合は、Gravwell のウェブサーバからそのサーバにアクセスできるかどうかを確認してください。現在、自分でキットサーバを構築できるようなツールセットを開発中です。
 
-If you have `curl` and `jq` installed, you can use this command snippet to get a list of available kits:
+`curl`と`jq`がインストールされていれば、このコマンドスニペットを使って、利用可能なキットのリストを得ることができます。
 ```
 curl "https://kits.gravwell.io/kits/list" | jq .[].ID
 ```

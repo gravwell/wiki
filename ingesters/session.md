@@ -1,39 +1,39 @@
-# Session Ingester
+# セッションインジェスター
 
-The session ingester is a specialized tool used to ingest larger, single records. The ingester listens on a given port and upon receiving a connection from a client it will aggregate any data received into a single entry.
+セッションインジェスターは、より大きな単一のレコードをインジェストするために使用される特殊なツールです。 インジェスターは指定されたポートで待機し、クライアントからの接続を受信すると、受信したデータを1つのエントリに集約します。
 
-This enables behavior such as indexing all of your Windows executable files:
+これにより、Windowsのすべての実行ファイルをインデックス化するなどの動作が可能になります:
 
 ```
 for i in `ls /path/to/windows/exes`; do cat $i | nc 192.168.1.1 7777 ; done
 ```
 
-## Basic Configuration
+## 基本設定
 
-The session ingester is driven via command line parameters rather than a persistent configuration file.
+セッション・インジェスターは、永続的な設定ファイルではなく、コマンドライン・パラメーターで動作します。
 
 ```
 Usage of ./session:
   -bind string
-        Bind string specifying optional IP and port to listen on (default "0.0.0.0:7777")
+        リッスンするIPとポートを指定するバインド文字列 (デフォルトでは "0.0.0.0:7777")
   -clear-conns string
-        comma separated server:port list of cleartext targets
+        コンマで区切られたクリアテキストターゲットのサーバー：ポートのリスト
   -ingest-secret string
-        Ingest key (default "IngestSecrets")
+        インジェストキー (デフォルトでは "IngestSecrets")
   -max-session-mb int
-        Maximum MBs a single session will accept (default 8)
+        1つのセッションが受け入れる最大MB数 (デフォルトでは 8)
   -pipe-conns string
-        comma separated list of paths for named pie connection
+        名前付きパイプ接続のパスのコンマ区切りリスト
   -tag-name string
-        Tag name for ingested data (default "default")
+        インジェストデータのタグ名 (デフォルトでは "default")
   -timeout int
-        Connection timeout in seconds (default 1)
+        接続タイムアウト(秒) (デフォルトでは 1)
   -tls-conns string
-        comma separated server:port list of TLS connections
+        TLS接続のコンマ区切りのサーバー：ポートリスト
   -tls-private-key string
-        Path to TLS private key
+        TLS秘密鍵のパス
   -tls-public-key string
-        Path to TLS public key
+        TLS公開鍵のパス
   -tls-remote-verify string
-        Path to remote public key to verify against
+        照合するリモート公開鍵のパス
 ```

@@ -1,94 +1,89 @@
 # The Gravwell GUI
 
-Most users will interact with Gravwell through the web GUI. This page describes a few high-level menus and interface concepts; the pages linked below go into detail on other topics.
+ほとんどのユーザーは、Web GUIを通じてGravwellと対話します。このページでは、いくつかの高レベルのメニューとインターフェースの概念を説明します。
 
-* [The Search Interface](queries/queries.md)
-* [Dashboards](dashboards/dashboards.md)
-* [Persistent Searches](persistent/persistent.md)
-* [Labels and Filtering](labels/labels.md)
-* [The Query Library](querylibrary/querylibrary.md)
-* [Resources](#!resources/resources.md)
-* [Auto-Extractors](#!configuration/autoextractors.md)
-* [Kits](#!kits/kits.md)
-* [Templates](templates/templates.md)
-* [Macros](#!search/macros.md)
-* [Actionables](actionables/actionables.md)
-* [Advanced GUI User Preferences](#!configuration/gui.md)
+* [検索インターフェイス](queries/queries.md)
+* [ダッシュボード](dashboards/dashboards.md)
+* [ラベルとフィルタリング](labels/labels.md)
+* [リソース管理](#!resources/resources.md)
+* [オートエクストラクタの管理](#!configuration/autoextractors.md)
+* [キットの管理](#!kits/kits.md)
+* [高度なGUIのユーザー設定](#!configuration/gui.md)
 
-## GUI Introduction
+## GUI入門
 
-After logging in, you will by default be directed to the search page, shown below.
+ログイン後、デフォルトでは以下のような検索ページが表示されます。
 
 ![](searchpage.png)
 
-The icons along the top (labeled Main Menu, Help, Notifications, and User Profile) are visible at all times within the Gravwell GUI.
+上部にあるアイコン(メインメニュー、ヘルプ、通知、ユーザープロファイルのラベル)は、Gravwell GUI内でいつでも見ることができます。
 
-## The Main Menu
+## メインメニュー
 
-Clicking the "hamburger" menu in the upper left will open the Main Menu:
+左上の"ハンバーガー"メニューをクリックすると、メインメニューが開きます:
 
 ![](menu.png)
 
-This menu is used to access all the primary functionalities of Gravwell, including dashboards, the query library, and playbooks. Note that several items within the menu are actually sub-menus, which can be expanded to show additional options:
+このメニューは、ダッシュボード、クエリライブラリ、プレイブックなど、Gravwellのすべての主要な機能にアクセスするために使用されます。メニュー内のいくつかの項目は、実際にはサブメニューであり、追加オプションを表示するために拡張することができることに注意してください:
 
 ![](menu-expanded.png)
 
-Items within these sub-menus will typically be used less frequently that the top-level items.
+これらのサブメニュー内のアイテムは、通常、トップレベルのアイテムよりも使用頻度が低くなります。
 
-Note: These screenshots include an "Administrator" sub-menu, which contains admin-only management tools and is only visible to users flagged as administrators.
+注意: これらのスクリーンショットには、管理者専用の管理ツールを含む「管理者」サブメニューが含まれており、管理者としてフラグを立てられたユーザーのみが見ることができます。
 
-## Notifications
+## 通知
 
-Clicking the bell-shaped Notifications icon in the upper right of the screen brings up the Notifications display:
+画面右上のベル型の通知アイコンをクリックすると通知表示が表示される:
 
 ![](notifications.png)
 
-Clicking the "snooze" button on a notification will remove that notification from counter shown on the icon; this can be useful to prevent distractions.
+通知の"スヌーズ"ボタンをクリックすると、アイコンに表示されているカウンターからその通知が削除されます。
 
-Depending on the type of notification, clicking the "delete" icon may clear the notification entirely. Some notifications are persistent and cannot be deleted; some are system-wide and can only be deleted by the administrator, and some are targeted at the current user and can be deleted by that user. Note that there is no harm in clicking "delete" on a notification the user isn't allowed to delete.
+通知の種類によっては、「削除」アイコンをクリックすると通知が完全に消去される場合があります。通知の中には、永続的で削除できないものもあれば、システム全体を対象としたもので管理者のみが削除できるもの、現在のユーザーを対象としたものでそのユーザーが削除できるものもあります。ユーザーが削除できない通知の上で「削除」をクリックしても害はないことに注意してください。
 
-Critical notifications, such as an offline indexer, will change the notification bell into a warning sign:
+オフラインのインデクサーのような重大な通知は、通知ベルを警告サインに変更します:
 
 ![](notif-warn.png)
 
-## User Preferences
+## ユーザー設定
 
-Selecting the User Profile icon in the upper right of the screen brings up a small drop-down menu:
+画面右上のユーザープロファイルアイコンを選択すると、小さなドロップダウンメニューが表示されます:
 
 ![](user-dropdown.png)
 
-### Account
+### アカウント
 
-Selecting "Account" will open your preferences page, shown below. Here, you can change your email address, display name, or password; be sure to click "Update Account" after making changes! The "Log out all sessions" button at the bottom of the screen will kick *all* active sessions for your account, across all client machines.
+「アカウント」を選択すると、以下のような設定ページが表示されます。ここでは、メールアドレス、表示名、パスワードを変更することができます。画面下部にある「すべてのセッションをログアウトする」ボタンをクリックすると、すべてのクライアントマシンであなたのアカウントのすべてのアクティブなセッションが削除されます。
 
 ![](account-prefs.png)
 
-### Interface & Appearance 
+### インターフェースと外観 
 
-The second tab of the Preferences page, "Interface & Appearance", has options for customizing the Gravwell user interface. The "Interface theme" dropdown is of particular interest, as it selects a GUI-wide color scheme (including the ever-popular dark modes). 
+環境設定ページの 2 番目のタブ、"Interface & Appearance "には、Gravwell のユーザーインターフェースをカスタマイズするためのオプションがあります。" Interface theme "ドロップダウンは、GUI全体のカラースキーム(常に人気のあるダークモードを含む)を選択するため、特に興味深いものです。
 
-The "Chart theme" dropdown selects different color palettes which will be used when drawing charts. The editor theme & font size options control the appearance of Gravwell's built-in text editor, which is used to create automation scripts and in a few other places.
+" チャートテーマ "ドロップダウンは、チャートを描画するときに使用される異なるカラーパレットを選択します。エディタテーマとフォントサイズオプションは、オートメーションスクリプトの作成や他のいくつかの場所で使用されるGravwellの組み込みテキストエディタの外観を制御します。
 
 ![](interface-prefs.png)
 
-### Preferences
+### 設定
 
-The third tab, "Preferences", allows you to change some default behaviors of Gravwell.
+3つ目のタブ、"Preferences "では、Gravwellのデフォルトの動作を変更することができます。
 
 ![](general-prefs.png)
 
-The "Home Page" dropdown menu selects which page will be displayed after logging in or clicking the Gravwell icon next to the main menu. By default, the new search page is shown, but you can chose to be shown a list of dashboards, kits, or playbooks instead.
+「ホームページ」ドロップダウンメニューでは、ログイン後に表示されるページを選択するか、メインメニューの横にあるGravwellアイコンをクリックした後に表示されるページを選択します。デフォルトでは、新しい検索ページが表示されますが、代わりにダッシュボード、キット、またはプレイブックのリストを表示するように選択することもできます。
 
-The "Search Group Visibility" option allows you to share the results of all searches with a given group; this can be a convenient way to collaborate. In the screenshot, the user has selected the group named "foo"; all members of that group will have access to the searches this user runs in the future.
+「検索グループの可視化」オプションでは、すべての検索結果を特定のグループと共有することができます; これは共同作業をするのに便利な方法です。スクリーンショットでは、ユーザーは "foo "という名前のグループを選択しています。そのグループのすべてのメンバーは、このユーザーが今後実行する検索にアクセスできるようになります。
 
-The "Advanced Preferences" section can be ignored by most users. Selecting "Developer mode" enables manual editing of JSON preferences (see [this page](!#configuration/gui.md) for more information), while toggling "Experimental Features" will enable the Experimental Features section in the main menu.
+" Advanced Preferences" セクションは、ほとんどのユーザーが無視できます。「開発者モード」を選択すると、JSON環境設定を手動で編集することができます(詳細は [this page](!#configuration/gui.md) を参照してください)。
 
-### Email Server
+### メールサーバー
 
-The final tab, "Email Server", is extremely important for users who intend to do automated email alerting via scheduled scripts. It must be set up with a valid SMTP configuration before emails can be sent.
+最後のタブ、"Email Server "は、スケジュールされたスクリプトを介して自動化された電子メールアラートを行う予定のユーザーにとって非常に重要です。電子メールを送信する前に、有効なSMTP設定で設定する必要があります。
 
 ![](email-prefs.png)
 
-The fields are mostly self-explanatory; "Server" is an SMTP server, "Port" is the port to use for SMTP, "Username" and "Password" authenticate to that server. "Use TLS" should be enabled if the server expects TLS connections. The "Disable TLS certification validation" option is provided in case the server is using self-signed certificates; be cautious enabling this!
+「Server」はSMTPサーバー、「Port」はSMTPに使用するポート、「Username」と「Password」はそのサーバーの認証を行います。"Use TLS "は、サーバーがTLS接続を期待している場合に有効にする必要があります。サーバーが自己署名証明書を使用している場合には、"Disable TLS certification validation "オプションが用意されています。
 
-Once the fields have been populated, click "Update Settings" to save them, then click "Test Configuration" to send a test email.
+フィールドが入力されたら、「設定の更新」をクリックして保存し、「設定のテスト」をクリックしてテストメールを送信します。

@@ -1,66 +1,66 @@
-# The Query Library
+# クエリライブラリ
 
-The query library lets you store commonly-used search queries for quick recall. You can pull up queries from the library at the [Gravwell search prompt](#!gui/queries/queries.md) and embed them in [dashboards](#!gui/dashboards/dashboards.md).
+クエリライブラリでは、よく使う検索クエリを保存し、すぐに呼び出すことができます。[Gravwellの検索画面](#!gui/queries/queries.md)でライブラリからクエリを引き出し、[ダッシュボード](#!gui/dashboards/dashboards.md)に埋め込むことができます。
 
-## The Query Library Page
+## クエリライブラリのページ
 
-You can access the query library management page from the main menu, in the "Searches" section:
+クエリライブラリ管理ページは、メインメニューの「検索」からアクセスできます。
 
 ![](library-menu.png)
 
-The page displays tiles for all the user's stored queries:
+このページには、ユーザーが保存したすべてのクエリのタイルが表示されます。
 
 ![](library-page.png)
 
-## Creating a Query
+## クエリの作成
 
-There are two ways to create a new entry in the query library: by storing a search you have run, or by filling in a form on the management page.
+クエリライブラリに新しいエントリを作成するには、実行した検索を保存する方法と、管理ページのフォー ムに入力する方法の 2 通りがあります。
 
-### Save query from search
+### 検索からクエリを保存
 
-When you have run a manual search and decide you want to save that query for later, you can select 'Save query' from the search results menu:
+手動で検索した後、その検索結果を保存したい場合は、検索結果のメニューから [クエリの保存] を選択します。
 
 ![](save-query.png)
 
-The GUI will bring up a dialog prompting for a name and description of the query to be saved:
+GUIでは、保存するクエリの名前と説明を入力するダイアログが表示されます。
 
 ![](save-dialog.png)
 
-Once you fill in the name and description and click Save, the query will be available in the query library.
+名前と説明を入力して「Save」をクリックすると、そのクエリがクエリ・ライブラリに保存されます。
 
-### Add query manually
+### 手動でのクエリの追加
 
-You can also add a query to the library manually, by clicking the 'Add' button in the upper right corner of the query library management page. You will be presented with a page prompting for a query string, name, and description, plus some optional fields (labels, etc.)
+クエリライブラリ管理ページの右上隅にある'Add'ボタンをクリックして、手動でライブラリにク エリを追加することもできます。クエリの文字列、名前、説明、およびいくつかのオプションフィールド (ラベルなど) を入力する画面が表示されます。
 
 ![](manual-query.png)
 
-## Running a Query
+## クエリの実行
 
-You can run a query by clicking the search icon on the query's tile in the query library page. The UI will prompt for a timeframe; once you select a timeframe, the search will be launched:
+クエリを実行するには、クエリライブラリページのクエリのタイルにある検索アイコンをクリックします。タイムフレームを選択する画面が表示されるので、タイムフレームを選択すると検索が開始されます。
 
 ![](run-query.png)
 
 ![](query-timeframe.png)
 
-The queries stored in the query library are also available through the search bar. Click the list icon on the far-right side of the search bar as when accessing search history, *then* click "Query library" at the bottom of the dropdown to switch views. You can now select from the entries in your query library:
+クエリライブラリに保存されているクエリは、検索バーからも利用できます。検索履歴にアクセスするときと同様に、検索バーの右端にあるリストのアイコンをクリックし、ドロップダウンの下部にある「クエリライブラリ」をクリックして表示を切り替えます。これで、クエリライブラリのエントリから選択できるようになります。
 
 ![](search-bar.png)
 
-## Sharing a Query
+## クエリの共有
 
-Clicking the "Share Query URL" entry in the query tile's extended menu (shown below) will bring up a dialog with a URL. That URL can be copied and sent to other users, who can open the link to run the query themselves, *provided* you have granted them permission to view the query.
+クエリタイルの拡張メニューにある「クエリのURLを共有」をクリックすると（下図）、URLを記載したダイアログが表示されます。このURLをコピーして他のユーザーに送信すると、ユーザーはそのリンクを開いて自分でクエリを実行することができます。
 
 ![](share-query.png)
 
 ![](share-dialog.png)
 
-You may also change the timeframe used in the query by clicking "Change timeframe" and selecting a different timeframe:
+また、「Change timeframe」をクリックして別のタイムフレームを選択することで、クエリで使用するタイムフレームを変更することができます。
 
 ![](share-timeframe.png)
 
-## Scheduling a Query
+## クエリのスケジューリング
 
-You can easily create a [scheduled search](#!scripting/scheduledsearch.md) from a query library item by selecting the "Schedule" option in the extended menu. This will take you to a scheduled search creation page with the selected query pre-populated; fill in the the name, description, schedule, etc. and click 'Save' to create a scheduled search.
+拡張メニューの[スケジュール]を選択すると、クエリライブラリのアイテムから[スケジュール検索](#!scripting/scheduledsearch.md)を簡単に作成することができます。拡張メニューの「スケジュール」を選択すると、選択したクエリがあらかじめ入力されたスケジュール検索作成ページが表示されます。名前、説明、スケジュールなどを入力し、「保存」をクリックすると、スケジュール検索が作成されます。
 
 ![](schedule-query.png)
 

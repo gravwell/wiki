@@ -1,51 +1,51 @@
-# Configuring SSO for Azure Active Directory
+# Azure ActiveDirectoryのSSOの構成
 
-Microsoft's Azure Active Directory service provides cloud-based authentication and single-sign on. Gravwell can integrate with Azure AD for authentication; in fact, it is one of the easiest SSO services to set up!
+MicrosoftのAzureActive Directoryサービスは、クラウドベースの認証とシングルサインオンを提供します。Gravwellは、認証のためにAzureADと統合できます。実際、これはセットアップが最も簡単なSSOサービスの1つです。
 
-To set up Azure AD SSO for Gravwell, you'll need the following:
+Gravwell用にAzureAD SSOをセットアップするには、次のものが必要です。
 
-* An Azure Premium License or equivalent which allows the creation of Enterprise Applications & SSO (Contact Microsoft sales to determine your needs).
-* A Gravwell webserver configured with [TLS certificates and HTTPS](#!configuration/certificates.md).
+* エンタープライズアプリケーションとSSOの作成を可能にするAzureプレミアムライセンスまたは同等のもの（ニーズについては、マイクロソフトの営業担当者にお問い合わせください）。
+* [TLS証明書とHTTPS](#!configuration/certificates.md)で構成されたGravwell Webサーバーです。
 
-Additional Gravwell SSO configuration information can be found [here](#!configuration/sso.md) if needed.
+必要に応じて、追加のGravwell SSO構成情報が [ここ](#!configuration/sso.md)にあります。
 
-Note: For the purposes of this document, we'll assume your Gravwell webserver's URL is `https://gravwell.example.com/`.
+注：このドキュメントでは、GravwellウェブサーバーのURLは `https://gravwell.example.com/`であると想定しています。
 
-## Create Application in Azure
+## Azureでアプリケーションを作成する
 
-We manage authentication for Gravwell by creating an "Enterprise Application" in Azure. Within the Azure Active Directory console, select "Enterprise Applications", then select the "New Application" button:
+Azureで"Enterprise Application"を作成することにより、Gravwellの認証を管理します。 Azure Active Directoryコンソール内で、"Enterprise Applications"を選択し、"New Application" ボタンを選択します。
 
 ![](applications.png)
 
-A new screen will open showing options for creating a new application. Select "Create your own application" in the upper left, then fill in the form which comes up:
+新しい画面が開き、新しいアプリケーションを作成するためのオプションが表示されます。 左上の"Create your own application"を選択し、表示されるフォームに入力します。
 
 ![](newapp.png)
 
-After clicking "Create", you should be taken to a management page for the newly-created application:
+"Create"をクリックすると、新しく作成されたアプリケーションの管理ページが表示されます。
 
 ![](newapp2.png)
 
-First, select "Assign users and groups" and pick which users or groups should be allowed to log in to Gravwell; you may wish to make a "Gravwell Users" group to keep things simple:
+まず、"Assign users and groups" を選択し、Gravwellへのログインを許可するユーザーまたはグループを選択します。物事を単純にするために、"Gravwell Users"グループを作成することをお勧めします。
 
 ![](groups.png)
 
-Next, select "Single sign-on" in the left-hand menu and pick SAML in the resulting screen:
+次に、左側のメニューで"Single sign-on"を選択し、表示される画面でSAMLを選択します。
 
 ![](saml.png)
 
-You'll be taken to the SAML configuration screen:
+SAML構成画面が表示されます。
 
 ![](saml2.png)
 
- Click the pencil icon on the "Basic SAML Configuration" card. You'll need to fill in the "Identifier" and "Reply URL" fields. "Identifier" should be the URL of your Gravwell server's metadata file, e.g. `https://gravwell.example.com/saml/metadata`. "Reply URL" will be Gravwell's SSO reply URL, e.g. `https://gravwell.example.com/saml/acs`:
+ "Basic SAML Configuration" カードの鉛筆アイコンをクリックします。 "Identifier"フィールドと"Reply URL"フィールドに入力する必要があります。"Identifier"は、GravwellサーバーのメタデータファイルのURLである必要があります。`https://gravwell.example.com/saml/metadata`."Reply URL"は、GravwellのSSO返信URLになります。例：`https://gravwell.example.com/saml/acs`：
 
 ![](basic.png)
 
-Save the basic configuration. Back on the main SAML configuration screen, find the field named "App Federation Metadata URL" and copy the URL contained there; it should look something like `https://login.microsoftonline.com/e802844f-e935-49c1-ba4e-b42442356fe1/federationmetadata/2007-06/federationmetadata.xml?appid=1d41efd8-5cf3-4ac3-9ad3-e3874f48cadc` but the UUIDs in the URL will be different.
+基本構成を保存します。メインのSAML構成画面に戻り、"App Federation Metadata URL"という名前のフィールドを見つけてそこに含まれているURLをコピーします。`https://login.microsoftonline.com/e802844f-e935-49c1-ba4e-b42442356fe1/federationmetadata/2007-06/federationmetadata.xml?appid=1d41efd8-5cf3-4ac3-9ad3-e3874f48cadc`のようになりますが、 URLのUUIDは異なります。
 
-## Configure Gravwell
+## Gravwellを構成する
 
-Open `gravwell.conf` on your webserver and create an SSO section:
+Webサーバーで`gravwell.conf`を開き、SSOセクションを作成します。
 
 ```
 [SSO]
@@ -55,31 +55,31 @@ Open `gravwell.conf` on your webserver and create an SSO section:
 	Username-Attribute=http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name
 ```
 
-Change `Gravwell-Server-URL` to point to your Gravwell webserver (this can be an IP address if necessary), then set `Provider-Metadata-URL` to the "App Federation Metadata URL" you copied in the previous section. The other two parameters can be left alone.
+`Gravwell-Server-URL`をGravwellウェブサーバーを指すように変更し（これは必要に応じてIPアドレスにすることができます）、`Provider-Metadata-URL`を前のセクションでコピーした「AppFederationMetadataURL」に設定します。他の2つのパラメーターはそのままにしておくことができます。
 
-Attention: You MUST set the `Provider-Metadata-URL` option; the one given is invalid and serves only as an example.
+重要： `Provider-Metadata-URL`オプションを設定する必要があります。 与えられたものは無効であり、例としてのみ機能します。
 
-Now restart the Gravwell webserver (`systemctl restart gravwell_webserver.service`). It should come back up; if not, check for typos in your configuration and look in `/dev/shm/gravwell_webserver.service` and `/opt/gravwell/log/web/` for errors.
+次に、Gravwell Webサーバーを再起動します（`systemctl restart gravwell_webserver.service`）戻ってくるはずです。そうでない場合は、構成のタイプミスを確認し、`/dev/shm/gravwell_webserver.service` および `/opt/gravwell/log/web/` でエラーを確認してください。
 
-## Test SSO
+## SSOをテストします
 
-With Gravwell restarted, you should now see a "Login with SSO" button on the login page:
+Gravwellを再起動すると、ログインページに[Login withSSO]ボタンが表示されます。
 
 ![](gravlogin.png)
 
-Click it; you should be taken to a Microsoft login page:
+クリック；Microsoftのログインページに移動する必要があります。
 
 ![](login.png)
 
-Log in as one of the users you set up to access the Gravwell application. Once login is complete, you should be redirected to the Gravwell webserver, logged in as a user with the same username as the Azure user.
+Gravwellアプリケーションにアクセスするために設定したユーザーの1人としてログインします。ログインが完了すると、Gravwell Webサーバーにリダイレクトされ、Azureユーザーと同じユーザー名のユーザーとしてログインする必要があります。
 
-## Notes on Groups
+## グループに関する注意事項
 
-Gravwell can automatically create groups and add SSO users to these groups as [documented on the main SSO page](#!configuration/sso.md). You can configure Azure AD to send a claim with groups by clicking 'Add a group claim' in the application's User Attributes & Claims configuration page:
+Gravwellは、[メインのSSOページでドキュメント化されています](#!configuration/sso.md)のように、グループを自動的に作成し、これらのグループにSSOユーザーを追加することができます。アプリケーションのUser Attributes & Claims構成ページで「Add a group claim」をクリックすることで、グループでクレームを送信するようにAzure ADを構成することができます。
 
 ![](groups.png)
 
-To enable groups, you'll need to tell Gravwell which attribute contains the list of groups and specify the mapping from Azure group IDs (which are sent as UUIDs) to the desired group name in Gravwell. If you have a group with Azure Object ID = dc4b4166-21d7-11ea-a65f-cfd3443399ee that you want to be named "gravwell-users", you should add this to your gravwell.conf's SSO section:
+グループを有効にするには、どの属性にグループのリストが含まれているかをGravwellに伝え、AzureグループID(UUIDとして送信される)からGravwellで希望するグループ名へのマッピングを指定する必要があります。Azure Object ID = dc4b4166-21d7-11ea-a65f-cfd3443399eeで「gravwell-users」という名前にしたいグループがある場合、これをgravwell.confのSSOセクションに追加する必要があります。
 
 ```
 	Groups-Attribute=http://schemas.microsoft.com/ws/2008/06/identity/claims/groups

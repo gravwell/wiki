@@ -1,60 +1,60 @@
-# Persistent Searches
+# 持続的検索
 
-Gravwell users may wish to [send long-running searches to the background or save search results](#!gui/queries/queries.md), or [schedule searches](#!scripting/scheduledsearch.md) to run periodically. To review the search results at a later time, use the *Persistent Searches* page, found in the Searches section of the main menu:
+Gravwellでは、[長時間実行する検索をバックグラウンドに送る、または検索結果を保存する](#!gui/queries/queries.md)、または[検索をスケジュールする](#!scripting/scheduledsearch.md)ことで、定期的に検索を実行することができます。検索結果を後で確認するには、メインメニューの[検索]セクションにある、*Persistent Searches*ページを使用します。
 
 ![](persistent-menu.png)
 
-The persistent searches page will periodically update to show the current state. It will display searches belonging to the user or shared with the user. In the screenshot below, we see two searches:
+Persistent Searchページは定期的に更新され、現在の状態が表示されます。このページには、ユーザーに属する検索やユーザーと共有されている検索が表示されます。以下のスクリーンショットでは、2つの検索が表示されています。
 
 ![](persistent.png)
 
-The top search was run by the user manually one minute ago. We see that it is in the ACTIVE state and has 1 client attached, meaning the user is still viewing the search in another browser tab. The results of the search consume 328 bytes on disk.
+一番上の検索は、1分前にユーザーが手動で実行したものです。"ACTIVE"の状態で、1つのクライアントが接続されていることがわかります。つまり、ユーザーはまだ別のブラウザタブで検索を表示しているということです。検索結果は、ディスク上で328バイトを消費しています。
 
-The second search was run by the search agent, as indicated by 'Agent' in the Run By column. It is in the DORMANT state, which means that the search will remain available until it is deleted or the webserver restarts.
+2つ目の検索は、"Run By"欄に"Agent"と表示されているように、検索エージェントによって実行されました。このエージェントは DORMANT 状態であり、削除されるかウェブサーバが再起動するまで検索結果が利用可能であることを意味しています。
 
-## Search States
+## 検索の状態
 
-Every search within Gravwell has a *state*, but this state is not typically visible to users. However, knowing the state may be valuable when managing searches in the persistent searches page, so it is shown there. The following states are possible:
+Gravwellのすべての検索には*状態*がありますが、この状態は通常ユーザーには表示されません。しかし、永続的検索ページで検索を管理する際に状態を知っておくと便利なので、ここでは表示しています。状態には以下のものがあります。
 
-* ACTIVE: The search is either running or has just completed running, and there is still a client (typically a user's browser) attached to it.
-* DORMANT: The search has completed and has no clients attached. It can be opened again, but is not guaranteed to persist across webserver restarts. Backgrounded searches are marked DORMANT after completion.
-* ATTACHED: The search has completed previously and gone dormant, but a client has now re-attached to it.
+* ACTIVE：検索が実行されているか、実行が完了したばかりで、まだクライアント（通常はユーザーのブラウザ）が接続されている状態です。
+* DORMANT：検索が完了し、クライアントが接続されていません。再び開くことはできますが、ウェブサーバの再起動後も検索結果が継続することは保証されません。バックグラウンドの検索は、完了すると DORMANT と表示されます。
+* ATTACHED：検索が完了して休止状態になっていたが、クライアントが再び接続してきた状態です。
 
-The flag SAVED is appended to searches which the user has explicitly marked to save, e.g. "DORMANT/SAVED".  The results will persist across webserver restarts. Note that an ACTIVE search will be marked "ACTIVE/SAVING" because the search has not yet completed and thus cannot be fully saved.
+"DORMANT/SAVED"のように、ユーザが明示的に保存を指定した検索には、SAVEDフラグが付加されます。 検索結果はウェブサーバが再起動しても保存されます。活動中の検索には「ACTIVE/SAVING」と表示されますが、これは検索がまだ完了しておらず、完全には保存されないためです。
 
-There is another flag, BACKGROUNDED, which may be attached to an ACTIVE search, e.g. "ACTIVE/BACKGROUNDED"or even "ACTIVE/SAVING/BACKGROUNDED". This means the user has sent the search to the background and will review it later. If a search is not backgrounded, the search will be canceled and deleted if the user navigates away from the active search results page.
+ACTIVE検索にはBACKGROUNDEDというフラグがあり、"ACTIVE/BACKGROUNDED"や"ACTIVE/SAVING/BACKGROUNDED"などと表示されることがあります。これは、ユーザーが検索をバックグラウンドに送り、後で見直すことを意味する。検索がバックグラウンドになっていない場合、ユーザーがアクティブな検索結果ページから離れてナビゲートすると、その検索はキャンセルされ、削除されます。
 
-See the [search interface documentation](#!gui/queries/queries.md) for more information on saving and backgrounding searches.
+検索の保存とバックグラウンド化の詳細については、[search interface documentation](#!gui/queries/queries.md)を参照してください。
 
-## Viewing Results
+## 結果の表示
 
-To view the results of a search, click the 'View Results' icon on the right edge of that search's row:
+検索結果を表示するには、その検索結果の行の右端にある"View Results"アイコンをクリックします。
 
 ![](view-results.png)
 
-Note that this does not *re-run* the search; instead, it loads the results from the previous search which are stored on the webserver's disk. This means that even very old searches whose original data has been [aged out](!#configuration/ageout.md) can be viewed.
+これは検索の再実行ではなく、ウェブサーバのディスクに保存されている前回の検索結果を読み込むことに注意してください。つまり、元のデータが[age out](!#configuration/ageout.md)された非常に古い検索結果も表示することができるのです。
 
-## Adding Notes
+## メモの追加
 
-You can add a note to any search in the persistent searches page by clicking the 'Add Note' icon. A dialog will open in which you can enter a name for the search and a brief note.
+ノートの追加」アイコンをクリックすると、永続検索ページの検索結果にノートを追加できます。ダイアログが開き、検索の名前と簡単なメモを入力できます。
 
 ![](add-notes.png)
 
 ![](add-notes2.png)
 
-Once you have saved the note, the name you defined will be displayed above the query string. Be aware that adding a note will automatically mark the search as SAVED--we assume that anything you consider important enough to take notes on should be preserved!
+メモを保存すると、定義した名前がクエリ文字列の上に表示されます。メモを追加すると、自動的に検索結果が「SAVED」となりますので、ご注意ください。
 
 ![](add-notes3.png)
 
-## Additional Actions
+## 追加アクション
 
-Searches in the persistent searches page have a menu of additional actions which can be accessed through the icon showing three vertical dots:
+永続検索ページの検索結果には、追加アクションのメニューがあり、3つの縦のドットが表示されたアイコンからアクセスできます。
 
 ![](additional.png)
 
-* Save query: Stores the query string in a [query library](#!gui/querylibrary/querylibrary.md) entry.
-* Copy query: Copies the query string into the clipboard.
-* Save: Marks the search as saved.
-* Schedule: Brings up a page to create a new [scheduled search](#!scripting/scheduledsearch.md) using that query.
-* Background: For an active search, marks it as backgrounded.
-* Delete: Removes the search from the system.
+* Save query: クエリストリングを[クエリライブラリ](#!gui/querylibrary/querylibrary.md)に保存します。
+* Copy query:クエリ文字列をクリップボードにコピーします。
+* Save：検索結果を保存します。検索結果を保存します。
+* Schedule:そのクエリを使って新しい[sccheduledsearch](#!scripting/scheduledsearch.md)を作成するページを表示します。
+* Background: 背景を表示します。アクティブな検索に対して、バックグラウンドであることを示します。
+* Delete: 検索結果をシステムから削除します。

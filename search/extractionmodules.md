@@ -1,42 +1,42 @@
-# Search Extraction Modules
+# 検索抽出モジュール
 
-Gravwell is a structure-on-read data lake, and these are the modules that add that structure. This is where the power and flexibility of the platform can be seen, as information about data doesn't need to be known before collection. Instead, we can ingest the raw data and perform the extractions at search time which gives tremendous flexibility to search operations.
+Gravwell は structure-on-read のデータレイクであり、これらはその structure を追加するモジュールです。データに関する情報を収集前に知る必要がないため、プラットフォームのパワーと柔軟性が発揮されます。その代わりに、生データをインジェストして、検索時に抽出を行うことができるので、検索操作に圧倒的な柔軟性を与えてくれます。
 
-Extraction modules are often the first module in a search. Netflow data, as an example, sits in it's native binary format on disk and any searches looking to operate on that data will be using the netflow extraction module as a first module in the analysis pipeline to do extraction and basic filtering. While you *could* do filtering before the `netflow` extraction module using modules like `grep`, that is unlikely to be effective.
+抽出モジュールは検索の最初のモジュールであることが多いです。例えばネットフローデータは、ネイティブのバイナリ形式でディスク上にあり、そのデータを操作しようとする検索では、抽出と基本的なフィルタリングを行うために、分析パイプラインの最初のモジュールとしてネットフロー抽出モジュールを使用します。`netflow` 抽出モジュールの前に、`grep` のようなモジュールを使ってフィルタリングを行うことはできますが、それは効果的ではないでしょう。
 
-Search extraction modules extract fields from data which "ride along" with the raw data through the rest of the search pipeline. Any extracted data/fields/properties become Enumerated Values which exist alongside an entry for use by following modules in a pipeline. For example, a search using the module sequence `netflow Src | subnet Src /16 as srcsub | grep -e srcsub "10.1.0.0"` will extract the Src IP address from the raw netflow record, extract the /16 subnet from the Src IP address, and then filter based on the extracted subnet using grep. In this example, the raw data is available to the grep module as well as the "Src" and "srcsub" Enumerated Values.
+検索抽出モジュールは、検索パイプラインの残りの部分を通して、生データと一緒に検索されるデータからフィールドを抽出します。抽出されたデータ/フィールド/プロパティは、パイプライン内の次のモジュールが使用するためのエントリと一緒に存在する列挙値になります。例えば、モジュールシーケンス `netflow Src | subnet Src /16 as srcsub | grep -e srcsub "10.1.0.0.0"` を使用した検索は、生のネットフローレコードから Src IP アドレスを抽出し、Src IP アドレスから /16 サブネットを抽出し、その後 grep を使用して抽出されたサブネットに基づいてフィルタリングします。この例では、生データは「Src」と「srcsub」列挙値と同様にgrepモジュールで利用可能です。
 
-## Query Accelerators
+## クエリ・アクセラレータ
 
-Extraction modules can make use of [query accelerators](configuration/accelerators.md) (like full text indexing, JSON indexing, etc) when filtering is used with a given module. For example, using the module `netflow Src Dst Port==22` can use a properly configured accelerator to dramatically reduce search time because not all records need to be evaluated.
+抽出モジュールは、あるモジュールでフィルタリングが使用されている場合、[クエリ・アクセラレータ](configuration/accelerators.md) (フルテキストインデックス、JSONインデックスなど)を利用することができます。例えば、モジュール `netflow Src Dst Port==22` を使用すると、適切に設定されたアクセラレータを使用して検索時間を劇的に短縮することができます。
 
-Some processing modules (such as [words](words/words.md)) directly perform filtering against the accelerated indexes.
+いくつかの処理モジュール（[words](words/words.md)など）は、加速インデックスに対するフィルタリングを直接行います。
 
-## Universal Flags
+## ユニバーサル・フラグ
 
-Some flags appear in several different search modules and have the same meaning throughout:
+いくつかのフラグは、いくつかの異なる検索モジュールに表示され、全体を通して同じ意味を持ちます。
 
-* `-e <source name>` specifies that the module should attempt to read its input data from the given enumerated value rather than from the entry's data field. This is useful in for modules like [json](json/json.md), where the JSON-encoded data may have been extracted from a larger data record, for example the following search will attempt to read JSON fields from the payloads of HTTP packets: `tag=pcap packet tcp.Payload | json -e Payload user.email`
-* `-r <resource name>` specifies a resource in the [resources](#!resources/resources.md) system. This is generally used to store additional data used by the module, such as a GeoIP mapping table used by the [geoip](geoip/geoip.md) module.
-* `-v` indicates that the normal pass/drop logic should be inverted. For example the [grep](grep/grep.md) module normally passes entries which match a given pattern and drop those which do not match; specifying the `-v` flag will cause it to drop entries which match and pass those which do not.
-* `-s` indicates a "strict" mode. If a module normally allows an entry to proceed down the pipeline if any one of several conditions are met, setting the strict flag means an entry will proceed only if *all* conditions are met. For example, the [require](require/require.md) module will normally pass an entry if it contains any one of the required enumerated values, but when the `-s` flag is used, it will only pass entries which contain *all* specified enumerated values.
-* `-p` indicates "permissive" mode.  If a module normally drops entries when patterns and filters do not match, the permissive flag tells the module to let the module go through.  The [regex](regex/regex.md) and [grok](grok/grok.md) modules are good examples where the permissive flag can be valuable.
+* `-e <source name>` は、モジュールが入力データをエントリのデータフィールドからではなく、与えられた列挙された値から読み込もうとすることを指定します。これは[json](json/json.md)のようなモジュールで、JSONでエンコードされたデータがより大きなデータレコードから抽出されている場合に便利です。例えば、次の検索はHTTPパケットのペイロードからJSONフィールドを読み込もうとします: `tag=pcap packet tcp.Payload | json -e Payload user.email`
+* `-r <resource name>` は [resources](#!resources/resources.md) システム内のリソースを指定します。これは一般的に、[geoip](geoip/geoip.md)モジュールが使用するGeoIPマッピングテーブルなど、モジュールが使用する追加データを格納するために使用されます。
+* `-v` は、通常のパス/ドロップのロジックを反転させることを示します。例えば、[grep](grep/grep.md)モジュールは通常、指定されたパターンにマッチするエントリをパスし、マッチしないエントリをドロップします：`-v` フラグを指定すると、一致するエントリは削除され、一致しないエントリは渡されます。
+* `-s` は厳格モードを示します。モジュールが通常、いくつかの条件のうちどれか1つでも満たされていればエントリをパイプラインの下に進めることができる場合、strictフラグを設定すると、すべての条件が満たされている場合にのみエントリが進むことを意味します。例えば、[require](require/require.md)モジュールは、通常、必須の列挙値のいずれか1つを含むエントリを渡しますが、`-s`フラグが使用されている場合、指定されたすべての列挙値を含むエントリのみを渡します。
+* `-p` は "permissive" モードを示します。 パターンとフィルタが一致しないときにモジュールが通常はエントリを削除する場合、permissive フラグはモジュールを通過させるように指示します。 [regex](regex/regex.md) と [grok](grok/grok.md) モジュールは permissive フラグが有用な良い例です。
 
-## Universal Enumerated Values
+## ユニバーサルな列挙値
 
-The following enumerated values are available for every entry. They're actually convenient names for properties of the raw entries themselves, but can be treated as enumerated value names.
+以下の列挙値は、各エントリで利用可能です。これらは実際には生のエントリ自体のプロパティのための便利な名前ですが、列挙された値の名前として扱うことができます。
 
-* SRC -- the source of the entry data.
-* TAG -- the tag attached to the entry.
-* TIMESTAMP -- the timestamp of the entry.
-* DATA -- the actual entry data.
-* NOW -- the current time.
+* SRC -- エントリーデータのソース
+* TAG -- エントリーに添付されているタグ
+* TIMESTAMP -- エントリのタイムスタンプ
+* DATA -- 実際のエントリのデータ
+* NOW -- 現在の時刻
 
-These can be used just like user-defined enumerated values, thus `table foo bar DATA NOW` is valid. They do not need to be explicitly *extracted* anywhere; they are always available.
+これらはユーザー定義の列挙値と同じように使うことができるので、`table foo bar DATA NOW`が有効です。これらはどこでも明示的に抽出する必要はありません。
 
-## Search module documentation
+## モジュールのドキュメント
 
-Note: The modules listed here have a primary function of extraction. They may also perform filtering and/or processing.
+注意：ここに記載されているモジュールは、抽出の主な機能を持っています。また、フィルタリングや処理を行うこともできます。
 
 * [ax](ax/ax.md)
 * [canbus](canbus/canbus.md)

@@ -1,106 +1,107 @@
-# The eval module
+# evalモジュール
 
-As introduced in [the search modules documentation](#!search/searchmodules.md#Eval), Gravwell's eval module is a general tool for manipulating search entries when other modules may fall short. It uses the [Anko scripting language](scripting.md) to provide generic scriptability within the pipeline.
+[検索モジュールのドキュメント](#!search/searchmodules.md#Eval)で紹介されているように、Gravwellのevalモジュールは、他のモジュールでは不十分な場合に検索エントリを操作するための一般的なツールです。このモジュールは[Ankoスクリプト言語](scripting.md)を使用して、パイプライン内での汎用的なスクリプト機能を提供します。
 
-The eval module has several important restrictions:
+evalモジュールにはいくつかの重要な制限があります:
 
-* Only a single statement may be defined: `(x==y || j < 2)` is acceptable, as is `if SrcPort==80 { setEnum("http", true) }`, but `setEnum(foo, "1"); setEnum(bar, "2")` is two statements and will not work. See the following section for more details
-* Functions cannot be defined or imported
-* Loops are not allowed
-* No access to the resource system
+* 1つのステートメントのみ定義することができます: `(x==y || j < 2)` は `if SrcPort==80 { setEnum("http", true) }`と同様に許容されますが、 `setEnum(foo, "1"); setEnum(bar, "2")` は2つのステートメントであり、動作しません。詳細は以下のセクションを参照してください。
+* 関数の定義やインポートはできません。
+* ループは使用できません
+* リソースシステムへのアクセス不可
 
-Note: To make the structure of your eval expression more clear, hit Ctrl-Enter while typing the query to insert newlines if needed.
+注：eval式の構造をより明確にするために、クエリの入力中にCtrl-Enterを押すと、必要に応じて改行が挿入されます。
 
-See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting.md) for more details about the language itself.
 
-## Filtering: Expressions vs. Statements
+この言語自体の詳細については、[the Anko scripting language documentation](scripting.md)で使用されているスクリプト言語の一般的な説明を参照してください。
 
-The eval module will filter entries when the argument is an expression; it will not filter when the argument is a statement. Consider the following example:
+## フィルタリング: 表現方法とステートメントの比較
+
+evalモジュールは、引数が式の場合にはエントリーをフィルタリングしますが、引数が文の場合にはフィルタリングしません。次のような例を考えてみましょう:
 
 ```
 tag=reddit json Body | eval len(Body) < 20 | table Body
 ```
 
-`len(Body) < 20` is an expression, so only entries which match the expression are allowed to continue down the pipeline. In contrast, consider the following:
+`len(Body) < 20`は式なので、その式にマッチしたエントリーだけがパイプラインを進むことができます。これに対して、次のように考えてみましょう:
 
 ```
 tag=reddit json Body | eval if len(Body) <= 10 { setEnum("postlen", "short"); setEnum(“anotherEnum”, “foo”) } | table Body
 ```
 
-The `if` form is a statement; all entries continue down the pipeline regardless of the outcome of the if statement.
+`if`形式はステートメントであり、ifステートメントの結果に関わらず、すべてのエントリーはパイプラインを進みます。
 
-An expression is something which evaluates to a value, like the string `“foo”` or the number `1.5`. This also includes function calls, like `DoStuff(15)`, and boolean expressions such as `myVariable == 42`. Basically, anything which you could assign to a variable or pass as an argument to a function can be considered an expression.
+式とは，文字列 `“foo”`や数値 `1.5`のように，ある値に評価されるものです．これには、`DoStuff(15)`のような関数呼び出しや、`myVariable == 42`のようなブーリアン式も含まれます。基本的には、変数に代入したり、関数の引数として渡すことができるものはすべて式と考えることができます。
 
-A statement controls the flow and structure of the script, like `if` and `switch` statements, variable creation/assignment, a return, etc. A statement might itself contain multiple sub-statements; for example, an `if` statement contains an expression and several lists of statements. If the expression evaluates to true, one list of statements is executed. If the expression evaluates to false, a different list is executed.
+ステートメントは、`if`や`switch`などのステートメント、変数の作成や割り当て、リターンなど、スクリプトの流れや構造を制御します。例えば、`if`文には、式と複数の文のリストが含まれます。例えば、`if`文には、式と複数の文のリストが含まれており、式の評価値がtrueの場合、1つの文のリストが実行されます。式が評価されて真であれば、ステートメントの1つのリストが実行され、式が評価されて偽であれば、異なるリストが実行されます。
 
-## Enumerated Values
+## 列挙された値
 
-Within an eval statement, existing enumerated values may be referred to as if they were regular variables:
+eval文の中では、既存の列挙された値を通常の変数のように参照することができます:
 
 ```
 tag=reddit json Body | eval len(Body) < 20 | table Body
 ```
 
-However, to set an enumerated value, a more explicit statement is required. The `setEnum` function takes a name and a value as arguments. It creates or updates an enumerated value with the given name, inferring the correct enumerated value type for the given value:
+しかし、列挙型の値を設定するには、より明確な記述が必要です。`setEnum`関数は引数として名前と値を取ります。これは、与えられた名前の列挙型を作成または更新し、与えられた値に対して正しい列挙型を推論します。:
 
 ```
 tag=reddit json Body | eval if len(Body) <= 10 { setEnum("postlen", "short") } else if len(Body) > 10 && len(Body) < 300 { setEnum("postlen", "medium") } else { setEnum("postlen", "long") } | count by postlen | table postlen count
 ```
 
-The `delEnum` function will delete the specified enumerated value if desired, although this is rarely needed.
+`delEnum`関数は、必要に応じて指定された列挙型の値を削除しますが、これが必要になることはほとんどありません。
 
-## Utility Functions
+## ユーティリティー関数
 
-Eval provides built-in utility functions, listed below in the format `functionName(<functionArgs>) <returnValues>`:
+Evalにはビルトインのユーティリティー関数が用意されており、以下のように`functionName(<functionArgs>) <returnValues>`という形式で表示されます:
 
-* `setEnum(key, value)` creates an enumerated value named key containing value, which can be any valid enumerated value type.
-* `delEnum(key)` deletes an enumerated value named key.
-* `hasEnum(key) bool` returns a boolean indicating whether the entry has the enumerated value.
-* `setPersistentMap(mapname, key, value)` stores a key-value pair in a map which will persist for the entire search.
-* `getPersistentMap(mapname, key) value` returns the value associated with the given key from the named persistent map.
-* `len(val) int` returns the length of val, which can be a string, slice, etc.
-* `toIP(string) IP` converts string to an IP, suitable for comparing against IPs generated by e.g. the packet module.
-* `toMAC(string) MAC` converts string to a MAC address.
-* `toString(val) string` converts val to a string.
-* `toInt(val) int64` converts val to an integer if possible. Returns 0 if no conversion is possible.
-* `toFloat(val) float64` converts val to a floating point number if possible. Returns 0.0 if no conversion is possible.
-* `toBool(val) bool` attempts to convert val to a boolean. Returns false if no conversion is possible. Non-zero numbers and the strings “y”, “yes”, and “true” will return true.
-* `toHumanSize(val) string` attempts to convert val into an integer, then represent it as a human-readable byte count, e.g. `toHumanSize(15127)` will be converted to "14.77 KB".
-* `toHumanCount(val) string` attempts to convert val into an integer, then represent it as a human-friendly number, e.g. `toHumanCount(15127)` will be converted to "15.13 K".
-* `typeOf(val) type` returns the type of val as a string, e.g. “string”, “bool”.
+* `setEnum(key, value)` は、任意の有効な列挙型の値を含む key という名前の列挙型の値を作成します。
+* `delEnum(key)` は key という名前の列挙型の値を削除します。
+* `hasEnum(key) bool` は、エントリが列挙型の値を持っているかどうかを示すブール値を返します。
+* `setPersistentMap(mapname, key, value)` 検索全体で永続するキーと値のペアをマップに保存します。
+* `getPersistentMap(mapname, key) value` は、指定されたキーに関連する値を、指定された永続的なマップから返します。
+* `len(val) int` はvalの長さを返します。valは文字列やスライスなどです。
+* `toIP(string) IP` 文字列をIPに変換し、パケットモジュールなどで生成されたIPと比較します。
+* `toMAC(string) MAC` は、文字列をMACアドレスに変換します。
+* `toString(val) string` は、valを文字列に変換します。
+* `toInt(val) int64` 可能であれば，valを整数に変換します．変換できない場合は0を返します。
+* `toFloat(val) float64` は、可能であればvalを浮動小数点数に変換します。変換できない場合は0.0を返します。
+* `toBool(val) bool` は，valを真偽値に変換しようとします。変換できない場合は false を返します。0以外の数値や文字列 "y"，"yes"，"true "はtrueを返します。
+* 例： `toHumanSize(15127)` は "14.77KB" に変換されます。
+* 例えば、 `toHumanCount(15127)` は "15.13 K" に変換されます。
+例： `toHumanCount(15127)` は "15.13 K" に変換されます。 * `typeOf(val) type` は val の型を文字列で返します。
 
-The conversion functions are particularly important because eval can't always do implicit conversion the way you want. For example, the packet module extracts IPs in a special type, not just a string. In order to properly compare against an enumerated value containing an IP, you must use the `IP` function:
+evalが暗黙の変換を思い通りにできないこともあるので、変換関数は特に重要です。たとえば，パケットモジュールでは，IPを単なる文字列ではなく特別な型で抽出します。IPを含む列挙型の値と適切に比較するためには、`IP`関数を使わなければなりません:
 
 ```
 tag=pcap packet ipv4.SrcIP | eval SrcIP != toIP("192.168.0.1") | count by SrcIP | table SrcIP count
 ```
 
-You can check the type of an enumerated value by using the `typeOf` function, in case you're getting unexpected results:
+想定外の結果が出た場合に備えて、`typeOf`関数を使って列挙型の値の型を確認することができます:
 
 ```
 tag=pcap packet ipv4.SrcIP | eval setEnum("type", typeOf(SrcIP)) | table type
 ```
 
-In this case, the results show that `SrcIP` is a net.IP.
+この場合、結果は`SrcIP`がnet.IPであることを示しています。
 
-#### Persistent Maps
+#### パーシステントマップ
 
-Eval provides a method to store data in a map, meaning data from one entry can be stored for later comparison against another entry. The `SetPersistentMap(mapname, key, value)` function creates or updates an entry in a map (specified by `mapname` parameter) mapping the given string `key` to the `value`, which can be anything. The `GetPersistentMap(mapname, key)` function can then be used to retrieve that information.
+Evalはデータをマップに格納するメソッドを提供します。つまり、あるエントリのデータを格納して、後で別のエントリと比較することができます。SetPersistentMap(mapname, key, value)`関数は，与えられた文字列 `key` と `value` を対応付けるマップ（`mapname`パラメータで指定される）のエントリを作成または更新する。その後、`GetPersistentMap(mapname, key)`関数を使ってその情報を取得することができます。
 
-To give an example of the persistent map functionality, consider the following json-formatted Hacker News comment (not a real comment):
+パーシステントマップの機能の例として、次のようなJson形式のHacker Newsのコメントを考えてみましょう（実際のコメントではありません）:
 
 ```
 {"body": "The eval function has persistent map capabilities", "author": "Gravwell", "article-id": 1234000, "parent-id": 1234111, "article-title": "Gravwell for data analysis", "date-string": "0 minutes ago", "type": "comment", "id": 1234222}
 ```
 
-Note that the comment contains an ID for the current comment (1234222), the author's name ("Gravwell"), and the ID for the parent comment (12341111), but not the name of the parent comment's author.
+このコメントには、現在のコメントのID（1234222）、著者名（"Gravwell"）、親コメントのID（1234111）が含まれていますが、親コメントの著者名は含まれていないことに注意してください。
 
-The following command attempts to match parent IDs to author names. For every comment it sees, it stores a mapping of the comment ID to the author name in a map named "id_to_name". Then, it checks if the parent ID has an entry in that map; if so, it sets the `parentauthor` enumerated value to that name, otherwise it sets the enumerated value to "unknown".
+次のコマンドは、親のIDと著者名の照合を試みます。すべてのコメントに対して、コメントIDと著者名のマッピングを "id_to_name "という名前のマップに保存します。次に、親IDがそのマップにエントリを持っているかどうかをチェックし、エントリがあれば、`parentauthor`という列挙型の値をその名前に設定し、そうでなければ列挙型の値を「unknown」に設定します。
 
 ```
 tag=hackernews json author id "parent-id" as parentid | sort asc | eval if true { setPersistentMap("id_to_name", id, author);  name = getPersistentMap("id_to_name", parentid); if name != nil { setEnum("parentauthor", name) } else { setEnum("parentauthor", "unknown") } } | table author id parentid parentauthor
 ```
 
-One limitation of this approach is that the oldest comments, processed first, will be replying to even older comments which will not appear in the search; thus, the first results will all have a parent author of "unknown", with more and more comments finding valid parent authors as you scroll through the results. A better solution would be to do a search over the span of perhaps a week, pulling out the author name and comment ID for each comment and saving the results in a lookup table. Then that lookup table could be stored as a resource for use with the `lookup` module in a search of shorter duration.
+この方法の限界は、最初に処理された最も古いコメントが、検索に表示されないさらに古いコメントに返信してしまうことです。そのため、最初の検索結果はすべて親著作者が「unknown」となっており、結果をスクロールするにつれて、有効な親著作者を見つけるコメントが増えていきます。より良い解決策は、おそらく1週間に渡って検索を行い、各コメントの著者名とコメントIDを抽出して、結果をルックアップテーブルに保存することです。そして、そのルックアップテーブルをリソースとして保存しておけば、`lookup`モジュールを使って、より短い期間の検索を行うことができます。
 
-This example also shows another limitation of the eval module in its current state: it only executes one statement or expression, so we have to wrap the logic inside an `if true {}` statement.
+この例では、evalモジュールの現状におけるもうひとつの限界を示しています。それは、ひとつのステートメントや式しか実行されないため、ロジックを `if true {}` ステートメントの中に収めなければならないことです。

@@ -1,8 +1,8 @@
-# Gravwell Administration
+# Gravwell管理
 
-This section discusses the administration of a Gravwell system.
+このセクションでは、Gravwellシステムの管理について説明します。
 
-[Managing users and groups](users.md)
-[Updating licenses](license.md)
-[Managing resources, searches, and other user-created objects](manage.md)
-[Controlling system resource usage](limits.md)
+[ユーザーとグループの管理](users.md)
+[ライセンスの更新](license.md)
+[リソース、検索、およびその他のユーザー作成オブジェクトの管理](manage.md)
+[システムリソース使用量の制御](limits.md)

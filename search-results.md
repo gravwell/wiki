@@ -1,4 +1,4 @@
-# SEARCH RESULTS
+# 検索結果
 
 <div id="search-results"></div>
 

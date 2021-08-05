@@ -1,61 +1,60 @@
-# Compression
+﻿# 圧縮
 
-Storage is compressed by default, which helps shift some load from storage to CPU.  Gravwell is a highly asynchronous system built for modern hardware in a scale wide paradigm.  Modern systems are typically over-provisioned on CPU with mass storage lagging behind.  Compressing data allows Gravwell can reduce stress on storage links while employing excess CPU cycles to asynchronously compress and decompress data.  The result is that searches can be faster when employing compression on slower mass storage devices.  Compression can be configured independently for each well with different compression settings for hot and cold data.
+ストレージはデフォルトで圧縮されており、ストレージ処理の負荷をCPUへ移すのに役立っています。Gravwellは、スケールワイドパラダイム最新のハードウェア向けに構築された高度な非同期システムです。最新のシステムは一般的にCPUに過剰なまでプロビジョニングされていますが、一方で大容量ストレージの処理能力はそれほどではありません。データを圧縮することで、Gravwellはストレージリンクのストレスを軽減しながら、データの圧縮と解凍を非同期的に行うため、余剰のCPUサイクルを活用することができます。その結果、低速の大容量記憶装置ででも、圧縮を採用すると検索が高速化されます。圧縮は各ウェルごとに独立して設定でき、ホットデータとコールドデータで異なる圧縮設定が可能です。
 
-A notable exception is data that will not compress much (if at all). In this situation, attempting to compress the data burns CPU time with no actual improvement in storage space or speed. Raw network traffic is a good example where encryption and high entropy prevent effective compression.  To disable compression for a well, add the "Disable-Compression=true" directive.
+特筆すべき例外は、あまり圧縮できないデータです（まったく圧縮できない場合）。このような状況では、データを圧縮しようとすると、ストレージ容量や速度が実際に改善されることなく、CPU 時間が消費されます。それによく当てはまる例は、生のネットワーク・トラフィックで、暗号化と高いエントロピーが効果的な圧縮を妨げています。ウェルの圧縮を無効にするには、"Disable-Compression=true" ディレクティブを追加します。
 
-## Compression Settings
+## 圧縮の設定
 
-Gravwell supports two types of compression: default and transparent compression.  Default compression uses the [snappy](https://en.wikipedia.org/wiki/Snappy_%28compression%29) compression system to perform compression and decompression in userspace.  The default compression system is compatible with all filesystems.  The transparent compression system uses the underlying filesystem to provide transparent block level compression.
+Gravwellは、デフォルト圧縮と透過的圧縮の2種類の圧縮をサポートしています。デフォルトの圧縮は、[snappy](https://en.wikipedia.org/wiki/Snappy_%28compression%29)圧縮システムを使用して、ユーザー空間で圧縮と解凍を実行します。一方、デフォルトの圧縮システムはすべてのファイルシステムと互換性があります。透過的な圧縮システムは、基礎となるファイルシステムを使用して、透過的なブロックレベルの圧縮を提供します。
 
-Transparent compression allows for offloading compression/decompression work to the host kernel while maintaining an uncompressed page cache.  Transparent compression can allow for very fast and efficient compression/decompression but requires that the underlying filesystem support transparent compression.  Currently the [BTRFS](https://btrfs.wiki.kernel.org/index.php/Main_Page) and [ZFS](https://wiki.archlinux.org/index.php/ZFS) filesystem are supported.
+透過的圧縮は、圧縮されていないページキャッシュを維持して、ホストカーネルの圧縮/解凍作業負荷を低減することを可能にします。透過的圧縮は非常に高速で効率的な圧縮/解凍を可能にしますが、基礎となるファイルシステムが透過圧縮をサポートしている必要があります。現在、[BTRFS](https://btrfs.wiki.kernel.org/index.php/Main_Page) と [ZFS](https://wiki.archlinux.org/index.php/ZFS) ファイルシステムがサポートされています。
 
-Attention: Transparent compression has important implications for ageout rules involving total storage. Please refer to the [ageout documentation](ageout.md) for more information.
+注意：透過的圧縮は、ストレージ全体に影響を及ぼすageoutルールに重要な意味を持ちます。詳細は [エイジアウトのドキュメント](ageout.md) を参照してください。
 
 **Disable-Compression**
-Default Value: `false`
-Example: `Disable-Compression=true`
-Compression for the entire well is disabled, both hot and cold storage locations will not use compression
+デフォルト値: `false`
+例: `Disable-Compression=true`
+ウェル全体の圧縮が無効になっているため、ホットストレージ、コールドストレージの両方の場所で圧縮が用いられません
 
 **Disable-Hot-Compression**
-Default Value: `false`
-Example: `Disable-Hot-Compression=true`
-Compression for the hot storage location is disabled.
+デフォルト値: `false`
+例: `Disable-Hot-Compression=true`
+ホットストレージの場所の圧縮は無効になっています。
 
 **Disable-Cold-Compression**
-Default Value: `false`
-Example: `Disable-Cold-Compression=true`
-Compression for the cold storage location is disabled, if no cold storage location is specified the setting has no effect.
+デフォルト値: `false`
+例: `Disable-Cold-Compression=true`
+コールドストレージの場所の圧縮を無効にします。コールドストレージの場所が指定されていない場合、この設定は何の効果もありません。
 
 **Enable-Transparent-Compression**
-Default Value: `false`
-Example: `Enable-Transparent-Compression=true`
-Gravwell will mark the storage data as compressible and rely on the kernel to perform the compression operations.
+デフォルト値: `false`
+例: `Enable-Transparent-Compression=true`
+Gravwellはストレージデータを圧縮可能なものとしてマークし、圧縮操作を実行するかどうかはカーネルに任せます。
 
 **Enable-Hot-Transparent-Compression**
-Default Value: `false`
-Example: `Enable-Hot-Transparent-Compression=true`
-Gravwell will mark the hot storage data as compressible and rely on the kernel to perform the compression operations.
+デフォルト値: `false`
+例: `Enable-Hot-Transparent-Compression=true`
+Gravwellはホットストレージのデータを圧縮可能なものとしてマークし、圧縮操作を実行するかどうかはカーネルに任せます。
 
 **Enable-Cold-Transparent-Compression**
-Default Value: `false`
-Example: `Enable-Cold-Transparent-Compression=true`
-Gravwell will mark the Cold storage data as compressible and rely on the kernel to perform the compression operations.
+デフォルト値: `false`
+例: `Enable-Cold-Transparent-Compression=true`
+Gravwell はコールドストレージのデータを圧縮可能なものとしてマークし、圧縮操作を実行するかどうかはカーネルに任せます。
 
-Note: If transparent compression is enabled and the underlying filesystem is detected as incompatible with transparent compression, the data will effectively be uncompressed and Gravwell will send a notification to users.
+注釈: 透過圧縮が有効になっていて、一方で基礎となるファイルシステムが透過圧縮と互換性がないと検出された場合、実質的にはデータは非圧縮となり、Gravwellはユーザーに通知を送信します。
 
-Warning: If hot and cold storage locations are not compatible with regards to compression, Gravwell must perform additional work to ageout data from hot to cold.  If acceleration is enabled, Gravwell will re-index the data as it performs the ageout.  Incompatible compression settings can incur significant overhead during ageout.  Uncompressed data is compatible with transparently compressed data, but default compression is not compatible with uncompressed or transparently compressed data.  Gravwell will still function perfectly fine with incompatible compression, the indexer will just work much harder during ageout.
+警告: ホットストレージとコールドストレージの場所が圧縮に関して互換性がない場合、Gravwellはデータをホットからコールドにエージアウトするための追加作業を実行する必要があります。加速設定が有効になっている場合、Gravwellはエイジアウトを実行する際にデータのインデックスを再作成します。そのため、互換性のない圧縮設定は、エイジアウト中に大きなオーバーヘッドを発生させる可能性があります。非圧縮データは透過的圧縮されたデータと互換性がありますが、デフォルト圧縮は非圧縮または透過的に圧縮されたデータと互換性がありません。Gravwellは互換性のない圧縮でも完全に機能しますが、端的に、エイジアウトの間、インデクサーにはより高い負荷で動作させることのなります。
 
+## 圧縮とレプリケーション
 
-## Compression and Replication
+[レプリケーションシステム](replication.md)は、通常のウェルストレージと同じルールに従います。レプリケーションシステムによるデータ複製（レプリケーション）は、透過的圧縮、デフォルト圧縮、または全くの非圧縮に設定することができます。ウェル内のホットストレージとコールドストレージで適用されている互換性と圧縮に関する同じルールが、レプリケーションされたデータとレプリケーションピアにも適用されます。レプリケーションピアが互換性のない形式の圧縮の設定をされている場合、障害後の復元時にインデクサーが実行する作業が大幅に増えます。最高のパフォーマンスを得るために、Gravwellでは、ホットストレージ、コールドストレージ、およびレプリケーションストレージとで同じ圧縮方式を使用することを推奨しています。
 
-The [replication system][replication.md] adheres to the same rules as normal well storage.  Replicated data can be configured to use transparent compression, default compression, or no compression at all.  The same rules for compatibility between hot and cold storage locations in a well and compression also apply to replicated data and replication peers.  If a replication peer has configured an incompatible form of compression indexers will perform significantly more work when restoring after a failure.  For best performance, Gravwell recommends that hot, cold, and replication stores use the same compression schemes.
+レプリケーションストレージの圧縮は、`Disable-Compression`と`Enable-Transparent-Compression`の2つのディレクティブによって制御されます。デフォルトの圧縮方式はsnappy圧縮方式です。
 
-Compression for replication storage locations is controlled by the `Disable-Compression` and `Enable-Transparent-Compression` directives.  The snappy compression system is the default compression scheme.
+## 圧縮設定例
 
-## Compression Examples
-
-An example storage well with compression disabled for an entire well:
+全てのウェルについて圧縮を無効にしたストレージウェル設定例:
 
 ```
 [Storage-Well "network"]
@@ -68,7 +67,7 @@ An example storage well with compression disabled for an entire well:
 	Disable-Compression=true
 ```
 
-An example storage well with compression disabled for the hot storage location and transparent compression enabled for the cold location.  This configuration is considered compatible and will not require additional work during ageout.
+ホットストレージの場所では圧縮を無効にし、コールドストレージの場所では透過圧縮を有効にしたストレージウェルの設定例。この設定では二つのストレージの圧縮方式には互換性ありと捉えられ、エイジアウト時に必要となる追加処理はありません。
 
 ```
 [Storage-Well "syslog"]
@@ -82,7 +81,7 @@ An example storage well with compression disabled for the hot storage location a
 	Enable-Cold-Transparent-Compression=true
 ```
 
-An example storage well with transparent compression enabled on the hot storage location and default userspace compression on the cold well.  This configuration is considered incompatible and will incur additional overhead during data ageout.
+ホットストレージの場所で透過的圧縮を有効にし、コールドウェルでデフォルトのユーザースペース圧縮を有効にしたストレージウェルの例。この設定は互換性なしと捉えられ、データのエイジアウト時に追加のオーバーヘッドが発生します。
 
 ```
 [Storage-Well "windows"]
@@ -96,7 +95,7 @@ An example storage well with transparent compression enabled on the hot storage 
 	Disable-Cold-Compression=true
 ```
 
-An example replication configuration that uses transparent compression for the replication storage.
+レプリケーションストレージに透過的圧縮を使用するレプリケーション設定の例。
 
 ```
 [Replication]

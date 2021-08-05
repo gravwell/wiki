@@ -1,19 +1,19 @@
-# Getting Status
+# ステータスを取得する
 
-Websocket located at /ws/stats
+/ws/statsにあるWebsocket
 
-The server will immediately start throwing stats at you via the RoutingWebsocket protocol.  It expects the following types to be registered and will produce data on each:
+サーバーは、RoutingWebsocketプロトコルを介してすぐに統計情報を投げ始めます。 以下のタイプが登録されることを期待し、それぞれのデータを生成します：
 
 * ping
 * idxStats
 * sysStats
 * sysDesc
 
-Upon connecting the websocket will throw a single JSON package on the sysDesc type first (and ALWAYS FIRST).  This can reliably be used to enumerate the number of backend systems you will continue to get stats about.  Use that first packet to build out tables and what not, to be continually filled via the idxStats and sysStats types.  The ping type is a keep alive, and should you not get an update from the ping type after 30 seconds, the backend is dead, let the user know.
+接続すると、websocketは最初にsysDescタイプで単一のJSONパッケージをスローします（常に最初に）。 これは、統計情報を取得し続けるバックエンドシステムの数を列挙するために確実に使用できます。 その最初のパケットを使用して、テーブルを構築しますが、idxStatsおよびsysStatsタイプを介して継続的に入力します。 pingタイプはキープアライブであり、30秒後にpingタイプから更新を取得しない場合、バックエンドは停止しています。ユーザーに知らせてください。
 
-# type examples
+# タイプの例
 
-## system description subproto sysDesc
+## システム記述サブプロトコルsysDesc
 
 ```
 {
@@ -38,7 +38,7 @@ Upon connecting the websocket will throw a single JSON package on the sysDesc ty
 }
 ```
 
-## example ping JSON
+## JSONのpingの例
 ```
 {
 	"Error": "",
@@ -55,7 +55,7 @@ Upon connecting the websocket will throw a single JSON package on the sysDesc ty
 }
 ```
 
-## example sysStats JSON packet
+## sysStats JSONパケットの例
 ```json
 {
 	"Error": "",
@@ -176,7 +176,7 @@ Upon connecting the websocket will throw a single JSON package on the sysDesc ty
 ```
 
 
-## example indexer stats JSON packet
+## インデクサーの統計JSONパケットの例
 
 ```json
 {

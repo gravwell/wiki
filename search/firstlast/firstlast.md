@@ -1,8 +1,8 @@
-# First / Last Modules
+# First / Last モジュール
 
-The `first` and `last` modules are a convenient way to see specific entries over a time period. For instance, given a collection of syslog messages from a number of sources, one might wish to see the earliest or most recent entry from each individual host, or from each daemon.
+`first` と `last` モジュールは、ある期間の特定のエントリを見るのに便利な方法です。例えば、多くのソースからのsyslogメッセージの集合を与えられた場合、個々のホストや各デーモンからの最も古いエントリや最新のエントリを見たいと思うかもしれません。
 
-The modules use the same syntax. Each optionally takes one or more enumerated value names; if specified, the modules will emit the first/last entry for each combination of values of the enumerated values, similar to the behavior of the unique module.
+モジュールは同じ構文を使用します。各モジュールはオプションで一つ以上の列挙された値の名前を取ります; 指定された場合、モジュールはユニークモジュールの動作と同様に、列挙された値の各組み合わせの最初/最後のエントリを出力します。
 
 ```
 first [enumerated value]...

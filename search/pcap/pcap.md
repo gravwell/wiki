@@ -1,14 +1,13 @@
 # PCAP
 
-The pcap renderer attempts to decode entries as packets and display them in a human-readable text format. It will, for instance, display the various flags and options set at the Ethernet, IP, and TCP layers of a packet. It can also decode 802.11 packets as captured from a wireless interface in monitor mode.
+pcapレンダラーは、エントリをパケットとしてデコードし、人間が読み取れるテキスト形式で表示しようとします。たとえば、パケットのイーサネット、IP、およびTCPレイヤーで設定されたさまざまなフラグとオプションを表示します。また、モニターモードでワイヤレスインターフェイスからキャプチャされた802.11パケットをデコードすることもできます。
 
-The pcap renderer has a special download option, named simply 'pcap', which allows you to save the packets in the current query as a Wireshark-readable packet capture file.
-
+pcapレンダラーには、単に 'pcap'という名前の特別なダウンロードオプションがあり、現在のクエリのパケットをWiresharkで読み取り可能なパケットキャプチャファイルとして保存できます。
 The pcap renderer has no option flags and takes no arguments.
 
-## Sample Queries
+## サンプルクエリ
 
-The following query assumes the "packet" tag contains packets captured with the Network Capture ingester. It simply displays the packets as text. This is a way to get a general look at what kind of traffic might exist on your network:
+次のクエリは、"パケット"タグにネットワークキャプチャingesterでキャプチャされたパケットが含まれていると想定しています。パケットをテキストとして表示するだけです。これは、ネットワーク上にどのようなトラフィックが存在する可能性があるかを一般的に把握する方法です:
 
 ```
 tag=packet pcap
@@ -16,7 +15,7 @@ tag=packet pcap
 
 ![](pcap1.png)
 
-You can also restrict the entries by using search modules as usual:
+通常どおり検索モジュールを使用して、エントリを制限することもできます:
 
 ```
 tag=packet packet tcp.Port==80 | pcap
@@ -24,6 +23,6 @@ tag=packet packet tcp.Port==80 | pcap
 
 ![](pcap-http.png)
 
-Having determined that this traffic appears interesting, you can click the Download button to save it in the PCAP format for further inspection with a tool such as Wireshark.
+このトラフィックが興味深いと判断されたら、ダウンロードボタンをクリックして、Wiresharkなどのツールでさらに検査するためにPCAP形式で保存できます。
 
 ![](download.png)

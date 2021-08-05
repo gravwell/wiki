@@ -1,16 +1,17 @@
 # Stackgraph
 
-The stackgraph renderer is used to display horizontal bar graphs with stacked data points.  A stackgraph is useful in displaying the magnitude of results that are accumulated from multiple components across a set of tags.  The stackgraph renderer is an accumulator, meaning that it can interpret the operation of some upstream search modules and recalculate the results based on sub selections.  In Gravwell terms, stackgraph supports second order searching and selection.
+スタックグラフレンダラは、積み重ねられたデータポイントを持つ水平棒グラフを表示するために使用されます。  スタックグラフは、一連のタグにわたって複数のコンポーネントから累積された結果の大きさを表示するのに役立ちます。  stackgraphレンダラーはアキュムレータです。  つまり、上流の検索モジュールの動作を解釈し、サブセレクションに基づいて結果を再計算することができます。  Gravwellの用語では、stackgraphは2次検索と選択をサポートしています。
 
-Stackgraph invocation requires three arguments which must be the names of enumerated values extracted by upstream search components.  Argument one specifies the enumerated value which names each individual horizontal bar, for example an IP address. Argument two specifies the enumerated value which gives the individual components of each horizontal bar, for example a TCP port. Argument three is the magnitude value which represents the magnitude component of each stack value within a horizontal bar.  Example magnitude components are count, sum, stddev, sum, max, and min. The easiest way to understand these arguments is by examining the examples below.
+Stackgraphの呼び出しには3つの引数が必要です。  これは上流の検索コンポーネントによって抽出された列挙値の名前でなければなりません。  引数1は、IPアドレスなど、個々の水平バーに名前を付ける列挙値を指定します。  引数2は、例えばTCPポートのように、各水平バーの個々の要素を与える列挙値を指定します。  引数3は、水平バー内の各スタック値の大きさの成分を表す大きさの値です。  マグニチュード成分の例は、count、sum、stddev、sum、max、minです。  これらの議論を理解する最も簡単な方法は、以下の例を調べることです。
 
-Note: Sorting data before sending it to stackgraph is unlikely to do what is desired. If you had a count of IP->port pairs and were interested in sorting based on that count and then sending to a stackgraph (e.g. ```count by SrcIP,DstPort | sort by count desc | table SrcIP DstPort count```) then the first item in the list might be a port that has a very high count but only for one IP. For example, say port IP 10.0.0.1 spoke on port 443 with count 10000 but the next 8 entries are 8 different IPs all using port 80 with counts in the 9000 range, they will dwarf port 443 on the graph.
+注：データをstackgraphに送信する前にソートしても、望みどおりのことはできません。  あなたがIP->ポートのペアの数を持っていて、その数に基づいてソートしてからスタックグラフ（例えばcount by SrcIP,DstPort | sort by count desc | table SrcIP DstPort count）に送ることに興味があるなら、リストの最初の項目は非常に高い数を持っていますが1つのみのポートIP たとえば、ポートIP 10.0.0.1がカウント10000のポート443で、次の8つのエントリが8つの異なるIPで、すべて9000の範囲のポート80を使用しているとすると、ポート443はグラフ上で小さくなります。
 
-## Examples
+## 例
 
-The best way to describe a stackgraph is to show a couple.
+スタックグラフを記述する最善の方法は、カップルを表示することです。  
 
-### Traffic Volumes by IP and Port
+
+### IPおよびポート別のトラフィック量
 
 ```
 tag=netflow netflow Src ~ PRIVATE Port < 1024 Bytes as traffic |  sum traffic by Src,Port | stackgraph Src Port sum
@@ -18,7 +19,7 @@ tag=netflow netflow Src ~ PRIVATE Port < 1024 Bytes as traffic |  sum traffic by
 
 ![IP Port Traffic Volumes](IPPortTraffic.png)
 
-### Traffic Volumes by Port and Country
+### Portおよび国による通信量
 
 ```
 tag=netflow netflow Src ~ PRIVATE Dst  Bytes as traffic Port |  geoip Dst.CountryName | sum traffic by Port, CountryName | stackgraph CountryName Port sum
@@ -26,7 +27,7 @@ tag=netflow netflow Src ~ PRIVATE Dst  Bytes as traffic Port |  geoip Dst.Countr
 
 ![Country Traffic by Port](CountryPortTraffic.png)
 
-### Failed SSH Logins by Country and Attempted User
+### 国別および試行ユーザー別のSSHログイン失敗
 
 ```
 tag=syslog grep sshd | regex "Failed password for (?P<user>\S+) from (?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) " | geoip ip.Country | count by user,Country | stackgraph Country user count
@@ -34,7 +35,7 @@ tag=syslog grep sshd | regex "Failed password for (?P<user>\S+) from (?P<ip>\d{1
 
 ![Failed SSH Logins by Country](SSHUserCountry.png)
 
-### Failed SSH Logins by Country and Attempted User (China removed)
+### 国別および試行ユーザー別のSSHログイン失敗（中国削除）
 
 ```
 tag=syslog grep sshd | regex "Failed password for (?P<user>\S+) from (?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) " | geoip ip.Country != CN | count by user,Country | stackgraph Country user count

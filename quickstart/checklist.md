@@ -1,75 +1,75 @@
-# Installation Checklists
+# インストールチェックリスト
 
-## Single-Node Checklist
+# # シングルノードチェックリスト
 
-This checklist gives a general order of operation for configuring a single-node, standalone Gravwell instance. Refer to the [Quickstart](quickstart.md) for additional step-by-step instructions.
+このチェックリストは、シングルノード、スタンドアロンのGravwellインスタンスを設定するための一般的な操作手順を示します。手順の詳細は[クイックスタート](quickstart.md)を参照してください。
 
-□ Install Gravwell via self-extracting installer, Debian/Redhat package, or Docker container (see [Quickstart](quickstart.md)).
+自己解凍型インストーラ、Debian/Redhatパッケージ、またはDockerコンテナでGravwellをインストールする（[クイックスタート](quickstart.md)参照）。
 
-□ Verify firewall rules allow incoming traffic on [ports used by Gravwell](#!configuration/networking.md).
+□ ファイアウォールで[Gravwellが使用するポート](#!configuration/networking.md)への着信を許可することを確認する。
 
-□ Use a web browser to access the new Gravwell instance, e.g. `http://gravwell.example.org/`, and upload your license file when prompted.
+Webブラウザで新しいGravwellにアクセスし、`http://gravwell.example.org/`のように表示されたらライセンスファイルをアップロードする。
 
-□ Login as "admin", password "changeme". Change the default admin password by clicking user icon in upper right.
+管理者（admin）とパスワード（changeme）でログインします。デフォルトのパスワードは右上のユーザーアイコンから変更できます。
 
-□ Configure any additional storage wells if desired. (See [Gravwell configuration](#!configuration/configuration.md) and [detailed configuration parameters](#!configuration/parameters.md) documentation)
+必要に応じて追加のストレージウェルを設定します。[Gravwell configuration](#!configuration/configuration.md) および [detail configuration parameters](#!configuration/parameters.md) を参照してください。
 
-□ Set up [ageout](#!configuration/ageout.md) on your wells to avoid running out of disk space.
+□ ディスク容量が不足しないように、ウェルに[ageout](#!configuration/ageout.md)を設定する。
 
-□ Optional: [configure TLS](#!configuration/certificates.md) for user access and ingester connections.
+□ オプションです。ユーザーのアクセスとインゲスターの接続に[TLSの設定](#!configuration/certificates.md)を行います。
 
-□ [Configure ingesters](#!ingesters/ingesters.md) to bring data into Gravwell.
+□ [インジェスターの設定](#!ingesters/ingesters.md)でデータをGravwellに取り込みます。
 
 
-<!-- TODO: this is a complex process that's difficult to capture in a linear checklist, because there are lots of options you may or may not be using. Leaving this here because it collects at least some of the steps.
-## Cluster Checklist
+<!-- TODO: これは複雑なプロセスで、使用しているかどうかわからないオプションがたくさんあるため、直線的なチェックリストで捉えるのは困難です。少なくともいくつかのステップを集めているので、ここに残しておきます。
+## クラスターチェックリスト
 
-### Preparation
+### 準備
 
-□ Determine which nodes will be indexers and which will be webservers. If you intend to deploy more than one webserver, select one webserver to run the search agent.
+どのノードがインデクサーになり、どのノードがウェブサーバーになるかを決定します。複数の Web サーバを導入する場合は、検索エージェントを実行する Web サーバを 1 つ選択します。
 
-□ If you intend to use [distributed frontends](#!distributed/frontend.md), provision an additional system for the *datastore*. Note that the datastore cannot be co-resident with an indexer or webserver process.
+分散フロントエンド](#!distributed/frontend.md)を使用する場合は、*データストア*用に追加のシステムを用意してください。データストアは、インデクサやウェブサーバプロセスと同居することはできないので注意が必要です。
 
-□ Install Gravwell on each of the webserver and indexer nodes (see [Quickstart](quickstart.md)).
+Webサーバとインデクサの各ノードにGravwellをインストールする（[クイックスタート](quickstart.md)参照）。
 
-□ Install the datastore if desired. This is included in the core shell installer, but is in a separate package for Debian and Redhat.
+□ 必要に応じてデータストアをインストールする。これはコアシェルインストーラーに含まれているが、Debian と Redhat では別のパッケージになっている。
 
-□ Install the loadbalancer if desired.
+必要に応じてロードバランサーをインストールしてください。
 
-□ Deploy TLS certificates to webservers, datastore, and loadbalancer as appropriate. We recommend copying the certificate to `/opt/gravwell/etc/cert.pem` and the secret key to `/opt/gravwell/etc/key.pem`.
+TLS 証明書を Web サーバ、データストア、ロードバランサーに適宜導入する。証明書を `/opt/gravwell/etc/cert.pem` に、秘密鍵を `/opt/gravwell/etc/key.pem` にコピーすることをお勧めします。
 
-### Configuration
+### 構成
 
-□ Copy one node's `gravwell.conf` file out to serve as the base for configurations. Remove any `Webserver-UUID` lines or `Indexer-UUID` lines.
+設定のベースとなるノードの `gravwell.conf` ファイルをコピーします。Webserver-UUID "行や "Indexer-UUID "行を削除してください。
 
 #### Indexer Config
 
-□ Make a copy of the config to be used for the indexers.
+インデクサーに使用するコンフィグのコピーを作成する。
 
-□ Define desired wells in the indexer config (see [this document](#!configuration/configuration.md).
+このドキュメント](#!configuration/configuration.md)を参照してください） □ インデクサーのコンフィグに必要なWellを定義する。
 
-□ Set [ageout configuration](#!configuration/ageout.md) for each well.
+□ 各ウェルに[ageout configuration](#!configuration/ageout.md)を設定する。
 
-#### Webserver Config
+#### ウェブサーバの設定
 
-□ Make a copy of the base config to be used for the webservers.
+ウェブサーバに使用するベースコンフィグのコピーを作成します。
 
-□ Set `Remote-Indexers` parameters to list all planned indexers, e.g.:
+□ `Remote-Indexers` パラメータを設定して、予定されているすべてのインデクサーをリストアップします。
 ```
-Remote-Indexers=net:indexer0.example.net:9404
-Remote-Indexers=net:indexer1.example.net:9404
-Remote-Indexers=net:indexer2.example.net:9404
+Remote-Indexers=ネット:インデクサー0.example.net:9404
+Remote-Indexers=ネット:インデクサー1.example.net:9404
+2.Remote-Indexers=net:indexer2.example.net:9404
 ```
 
-□ If using a datastore, set the `Datastore` and `External-Addr` options in gravwell.conf as described in the [distributed frontends](#!distributed/frontend.md) document.
+データストアを使用する場合は、[distributed frontends](#!distributed/frontend.md)に記載されている通り、gravwell.confの`Datastore`と`External-Addr`オプションを設定してください。
 
-□ Set up [TLS](#!configuration/certificates.md) by setting the `Certificate-File` and `Key-File` fields.
+TLS](#!configuration/certificates.md)の`Certificate-File`と`Key-File`フィールドを設定してください。
 
-### Deployment
+### デプロイメント
 
-□ Use systemd to disable un-needed Gravwell processes: disable webserver & searchagent on indexers, indexer on webservers. Make sure the searchagent process is only enabled on one webserver.
+systemd を使用して必要のない Gravwell プロセスを無効にする。インデクサでは Web サーバと searchagent を、Web サーバでは indexer を無効にする。インデクサでは webserver と searchagent を、web サーバでは indexer を無効にする。searchagent プロセスは 1 つの web サーバでのみ有効にする。
 
-□ Copy indexer config to indexers, webserver config to webservers.
+インデクサーの設定をインデクサーに、ウェブサーバーの設定をウェブサーバーにコピーする。
 
-□ Restart gravwell processes on all nodes
+全ノードの gravwell プロセスを再起動します。
 -->

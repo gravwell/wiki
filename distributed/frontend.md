@@ -1,55 +1,55 @@
-# The distributed Gravwell webserver
+# 分散Gravwell ウェブサーバー
 
-Just as Gravwell is designed to have multiple indexers operating at once, it can also have multiple webservers operating at once, pointing to the same set of indexers. Having multiple webservers allows for load balancing and high availability. Even if you only have a single webserver, deploying a datastore can provide useful resiliency, since the datastore can be used to restore a failed webserver or vice versa.
+Gravwellが複数のインデクサーを同時に動作するように設計されているように、同じインデクサーのセットを指す複数のWebサーバーを同時に動作させることもできます。 複数のWebサーバーを使用すると、負荷分散と高可用性が可能になります。 Webサーバーが1つしかない場合でも、データストアを使用して障害が発生したWebサーバーを復元したり、その逆を行うことができるため、データストアを展開すると有用な復元力が得られます。
 
-Once configured, distributed webservers will synchronize resources, users, dashboards, user preferences, and user search histories.
+構成が完了すると、分散Webサーバーはリソース、ユーザー、ダッシュボード、ユーザー設定、およびユーザー検索履歴を同期します。
 
-## The datastore server
+## データストアサーバー
 
-Gravwell uses a separate server process called the datastore to keep webservers in sync. It can run on its own machine or it can share a server with a webserver. Fetch the datastore installer from [the downloads page](#!quickstart/downloads.md), then run it on the machine which will contain the datastore.
+Gravwellは、データストアと呼ばれる別のサーバープロセスを使用してWebサーバーの同期を保ちます。 それはそれ自身のマシン上で走ることができるか、あるいはウェブサーバーとサーバーを共有することができます。 [ダウンロード](#!quickstart/downloads.md)からデータストアインストーラを取得し、データストアを含むマシン上でそれを実行します。
 
-### Configuring the datastore server
+### データストアサーバーの設定
 
-The datastore server should be ready to run without any changes to `gravwell.conf`. To enable the datastore server at boot-time and start the service, run the following commands:
+データストアサーバーは、gravwell.confに変更を加えずに実行できる状態になっているはずです。 起動時にデータストアサーバーを有効にしてサービスを開始するには、次のコマンドを実行します。
 
 ```
 systemctl enable gravwell_datastore.service
 systemctl start gravwell_datastore.service
 ```
 
-#### Advanced datastore config
+#### 高度なデータストア設定
 
-By default, the datastore server will listen on all interfaces over port 9405. If for some reason you need to change this uncomment and set the following line in your `/opt/gravwell/etc/gravwell.conf` file:
+デフォルトでは、データストアサーバーはポート9405を介してすべてのインターフェースをlistenします。何らかの理由でこのコメント解除を変更して/opt/gravwell/etc/gravwell.confファイルに次の行を設定する必要がある場合。
 
 ```
 Datastore-Listen-Address=10.0.0.5	# listen only on 10.0.0.5
 Datastore-Port=9555					# listen on port 9555 instead of 9405
 ```
 
-## Configuring webservers for distributed operation
+## 分散操作用のWebサーバーの構成
 
-To tell a webserver to start communicating with a datastore, set the `Datastore` and `External-Addr` fields in the "global" section of the webserver's `/opt/gravwell/etc/gravwell.conf`. For example, if the datastore server was was running on the machine with IP 10.0.0.5 and the default datastore port, and the webserver being configured was running on 10.0.0.1, the entry would look like this:
+Webサーバにデータストアとの通信を開始するように指示するには、Webサーバの/opt/gravwell/etc/gravwell.confの「global」セクションにあるDatastoreフィールドとExternal-Addrフィールドを設定します。 たとえば、データストアサーバがIP 10.0.0.5およびデフォルトのデータストアポートを持つマシン上で実行されていて、設定中のWebサーバが10.0.0.1上で実行されていた場合、エントリは次のようになります。
 
 ```
 Datastore=10.0.0.5:9405
 External-Addr=10.0.0.1:443
 ```
 
-The `External-Addr` field is the IP address and port that *other webservers* should use to contact this webserver. This allows a user on one webserver to view the results of a search executed on another webserver.
+External-Addrフィールドは、他のWebサーバーがこのWebサーバーと通信するために使用するIPアドレスとポートです。 これにより、あるWebサーバーのユーザーは別のWebサーバーで実行された検索の結果を見ることができます。
 
-Note: By default, the webserver will check in with the datastore every 10 seconds. This can be modified by setting the `Datastore-Update-Interval` field to the desired number of seconds. Be warned that waiting too long between updates will make changes propagate very slowly between webservers, while overly-frequent updates may cause undue system load. 5 to 10 seconds is a good choice.
+注：デフォルトでは、Webサーバは10秒ごとにデータストアにチェックインします。 これは、Datastore-Update-Intervalフィールドを希望の秒数に設定することで変更できます。 更新間の待ち時間が長すぎると、Webサーバ間での変更の伝播が非常に遅くなります。更新が頻繁に行われると、システムに過度の負荷がかかる可能性があります。 5〜10秒が良い選択です。
 
-## Disaster recovery
+## 災害からの回復
 
-Due to the synchronization techniques used by the datastore and webservers, care must be taken if the datastore server is re-initialized or replaced. Once a webserver has synchronized with a datastore, it considers that datastore the ground truth on all topics; if a resource does not exist on the datastore, but the webserver had previously synchronized that resource with the datastore, the webserver will delete the resource.
+データストアとWebサーバーで使用される同期技術により、データストアサーバーを再初期化するか交換する場合は注意が必要です。 Webサーバーがデータストアと同期すると、そのデータストアはすべてのトピックで真実であると見なされます。 リソースがデータストアに存在しないが、Webサーバーが以前にそのリソースをデータストアと同期していた場合、Webサーバーはそのリソースを削除します。
 
-The datastore stores data in the following locations:
+データストアは次の場所にデータを格納します。
 
 * `/opt/gravwell/etc/datastore-users.db` (user database)
 * `/opt/gravwell/etc/datastore-webstore.db` (dashboards, user preferences, search history)
 * `/opt/gravwell/etc/resources/datastore/` (resources)
 
-If any of these locations are accidentally lost or deleted, they should be restored from one of the webserver systems before restarting the datastore. Assuming the datastore is on the same machine as one of the webservers, use the following commands:
+これらの場所のいずれかが誤って紛失または削除された場合は、データストアを再起動する前にいずれかのWebサーバーシステムから復元する必要があります。 データストアがWebサーバーの1つと同じマシン上にあると仮定して、以下のコマンドを使用します。
 
 ```
 cp /opt/gravwell/etc/users.db /opt/gravwell/etc/datastore-users.db
@@ -57,8 +57,8 @@ cp /opt/gravwell/etc/webstore.db /opt/gravwell/etc/webstore.db
 cp -r /opt/gravwell/resources/webserver/* /opt/gravwell/resources/datastore/
 ```
 
-If the datastore is on a separate machine, use `scp` or another file transfer method to copy those files from a webserver server.
+データストアが別のマシンにある場合は、scpまたは他のファイル転送方法を使用してそれらのファイルをWebサーバサーバからコピーします。
 
-## Load balancing
+## ロードバランサー
 
-Gravwell now offers a custom load balancing component specifically designed to distribute users across multiple webservers with minimal configuration. See [the load balancing configuration page](loadbalancer.md) for information on setting it up.
+Gravwellでは、最小限の設定で複数のWebサーバーにユーザーを分散させるために特別に設計されたカスタムロードバランサーコンポーネントを提供しています。負荷分散の設定については[ロードバランサー](loadbalancer.md)を参照してください。

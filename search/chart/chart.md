@@ -1,11 +1,11 @@
 # Chart
 
-The chart renderer is used display aggregate results such as trends, quantities, counts, and other numerical data. Charting will plot an enumerated value with an optional “by” parameter. For example, if there are counts associated with names, `chart count by name` will chart a line for each name showing the counts over time.
+チャートレンダラーは、傾向、数量、数、その他の数値データなどの集計結果の表示に使用されます。  チャートは、オプションの「by」パラメータを使用して列挙値をプロットします。 たとえば、名前に関連付けられた件数がある場合chart count by nameは、時間ごとの件数を示す名前ごとに線をグラフ化します。
 
-The `chart` render module is a condensing module that collapses and recalculates data in order to show an accurate representation of data for a given timespan.  As you dig into data and zoom in, the chart renderer is constantly re-condensing the results of a search without rerunning the query.
-## Sample Query
+チャートレンダラーは自動的にプロットされた線または棒グループを8つの値に制限します。さらに多くの行を見たい場合は、limit <n>引数を追加して、指定されたn値の制限を超えるまで「その他」のグループ化を導入しないようチャート作成ライブラリに指示することができます。チャート作成のためのユーザインタフェースは、折れ線チャート、面チャート、棒グラフ、円グラフ、ドーナツチャートの間の迅速な移行を可能にします。
+## サンプルクエリ
 
-The following query generates a chart showing which usernames most commonly fail ssh authentication; due to online brute-forcing attacks, we can expect "root" to be the most common.
+次のクエリは、どのユーザー名が最も一般的にssh認証に失敗するかを示すチャートを生成します; オンラインのブルートフォース攻撃のため、 "root"が最も一般的であると予想できます。
 
 ```
 tag=syslog grep sshd | grep "Failed password for" | regex "Failed\spassword\sfor\s(?P<user>\S+)" | count by user | chart count by user limit 10
@@ -17,9 +17,9 @@ tag=syslog grep sshd | grep "Failed password for" | regex "Failed\spassword\sfor
 ![](chart4.png)
 ![](chart5.png)
 
-## Charts with Keys
+## キー付きチャート
 
-The `chart` renderer can produce data sets based on keys.  In the above examples we are plotting the `count` of entries using the key `user` which produces a count for each user user.  Chart supports multiple keys, which would allow us to chart data using the intersection of multiple key values.  For example we can run a query that calculates the size of data for each IP and Port using PCAP.  The query and results would be:
+`chart`レンダラーはキーに基づいてデータセットを生成できます。  上記の例ではユーザーごとにカウントを生成する`user`キーを使用して、エントリの`count`をプロットしています  チャートは複数のキーをサポートしているため、複数のキー値の共通部分を使用してデータをチャート化できます。  たとえば、PCAPを使用して各IPおよびポートのデータのサイズを計算するクエリを実行できます。  クエリと結果は次のようになります:
 
 ```
 tag=pcap packet ipv4.IP ~ 10.10.10.0/24 tcp.Port | length | stats sum(length) by IP Port | chart sum by IP Port
@@ -28,13 +28,13 @@ tag=pcap packet ipv4.IP ~ 10.10.10.0/24 tcp.Port | length | stats sum(length) by
 ![Chart with multiple keys](multikey.png)
 
 
-Notice that chart generated a legend with the IP and Port concatenated, the key for each sum is the intersection of the IP and Port.
+注:チャートはIPとポートが連結された凡例を生成することに注意してください。各合計のキーはIPとポートの共通部分です。
 
-## Multiple Chart Categories
+## 複数のチャートカテゴリ
 
-The `chart` renderer can also plot multiple independent data sources.  We might want to plot the min, max, and mean of a stream of data.  Chart allows for specifying multiple groups of data.
+`chart`レンダラーは、複数の独立したデータソースをプロットすることもできます。  データのストリームの最小値、最大値、平均値をプロットすることができます。  チャートでは、複数のデータグループを指定できます。
 
-The following query generates the `min`, `max`, and `mean` of packet lengths over time and displays the results on a single chart:
+次のクエリは、時間の経過に伴うパケットの長さの`min`、`max`、および`mean`を生成し、結果を1つのグラフに表示します:
 
 ```
 tag=pcap packet ipv4.IP ~ 10.10.10.0/24 tcp.Port | length | stats min(length) max(length) mean(length)| chart min max mean
@@ -42,10 +42,10 @@ tag=pcap packet ipv4.IP ~ 10.10.10.0/24 tcp.Port | length | stats min(length) ma
 
 ![Chart with multiple datasets](multidata.png)
 
-Note: Multiple value types on a single chart are called categories.
+注: 単一のチャート上の複数の値タイプはカテゴリと呼ばれます。
 
 
-Charts can use multiple keys and categories, it is perfectly acceptable to plot the `min`, `max`, and `mean` using a set of keys.  This query plots the `min`, `max`, and `mean` of packet sizes using the `IP` and `Port` keys.  The chart can get a little busy, but the output can still be useful.
+チャートは複数のキーとカテゴリを使用できます。  一連のキーを使用して`min`、`max`、`mean`をプロットすることは完全に受け入れられます。  このクエリは、`IP`キーと`Port`キーを使用して、パケットサイズの`min`、`max`、`mean`をプロットします。  グラフは少しビジーになる可能性がありますが、出力は引き続き有用です。
 
 ```
 tag=pcap packet ipv4.IP ~ 10.10.10.0/24 tcp.Port | length | stats min(length) max(length) mean(length) by IP Port | chart min max mean by IP Port
@@ -53,9 +53,9 @@ tag=pcap packet ipv4.IP ~ 10.10.10.0/24 tcp.Port | length | stats min(length) ma
 
 ![Chart with multiple categories and keys](multicatdata.png)
 
-## Intelligent Keying with Multiple Categories
+## 複数のカテゴリを持つインテリジェントキーイング
 
-The `chart` renderer utilizes the Gravwell pipeline to decide how to key and condense multiple categories.  It is intelligent enough to identify the correct keys that generated a data category and condense using those keys.  This allows us to generate very complex charts with multiple categories that do not have uniform key sets.  For example, maybe we want mean packet sizes for each IP, but we want the standard deviation of packet sizes for everything.  This can be accomplished using the following query:
+`chart`レンダラーはGravwellパイプラインを使用して、複数のカテゴリーをキーイングおよび圧縮する方法を決定します。  データカテゴリを生成し、それらのキーを使用して圧縮する正しいキーを識別するのに十分なインテリジェントです。  これにより、均一なキーセットを持たない複数のカテゴリを持つ非常に複雑なチャートを生成できます。  たとえば、各IPの平均パケットサイズが必要な場合でも、すべてのパケットサイズの標準偏差が必要な場合があります。  これは、次のクエリを使用して実現できます:
 
 ```
 tag=pcap packet ipv4.IP ~ 10.10.10.0/24 tcp.Port | length | stats mean(length) by IP stddev(length) | chart stddev mean by IP limit 3
@@ -63,9 +63,9 @@ tag=pcap packet ipv4.IP ~ 10.10.10.0/24 tcp.Port | length | stats mean(length) b
 
 ![Chart with complex keying](complexkeys1.png)
 
-Chart can handle even more complex category and key interactions, here is a query that plots the mean of packet lengths by IP, and the max packet for each IP Port, and the standard deviation of all packet lengths.
+チャートはさらに複雑なカテゴリとキーのやり取りを処理できます。ここでは、IPごとのパケット長の平均、各IPポートの最大パケット、およびすべてのパケット長の標準偏差を記録するクエリを示します。
 
-Note: Notice that we provide all the categories and a single set of keys that covers all keys used for the categories.  Chart will figure out which keys go to which category and *do the right thing*.
+注:すべてのカテゴリと、カテゴリに使用されるすべてのキーをカバーする単一のキーセットを提供することに注意してください。 チャートは、どのキーがどのカテゴリに移動し、*正しいことをするか*を判断します。
 
 ```
 tag=pcap packet ipv4.IP ~ 10.10.10.0/24 tcp.Port | length | stats mean(length) by IP stddev(length) max(length) by IP Port | chart stddev max mean by IP Port limit 3
@@ -73,8 +73,8 @@ tag=pcap packet ipv4.IP ~ 10.10.10.0/24 tcp.Port | length | stats mean(length) b
 
 ![Chart with multiple complex keying](complexkeys2.png)
 
-## Chart Limiting and Grouping
+## グラフの制限とグループ化
 
-The charting renderer will automatically limit the plotted lines or bar groups to 8 values. If you would like to see many more lines you can add the `limit <n>` argument which tells the charting library to not introduce the “other” grouping until it exceeds the given limit of `n` values. The user interface for charting allows for a rapid transition between line, area, bar, pie, and donut charts.  If there are more groups than the allowable limits, chart generates an `other` group that is comprised of everything not in the displayed groups.  The limit maximum specifies the total number of data sets for a category; if the limit is 4 there may be 3 keyed sets and 1 other group.
+グラフ表示レンダラーは、プロットされた線または棒グループを8つの値に自動的に制限します。  さらに多くの行を表示したい場合は、`limit  <n>`引数を追加して、指定された`n`値の制限を超えるまで`その他`のグループ化を導入しないようにチャートライブラリに指示できます。  チャートのユーザーインターフェイスにより、折れ線グラフ、面グラフ、棒グラフ、円グラフ、ドーナツグラフをすばやく切り替えることができます。  許容限度よりも多くのグループがある場合、チャートは表示されたグループにないすべてで構成される`その他`グループを生成します。  最大制限は、カテゴリのデータセットの総数を指定します。  制限が4の場合、3つのキー付きセットと1つの他のグループがあります。
 
-The chart renderer runs a pre-scan at the beginning of every query in order to determine which data sets will be drawn and which will be grouped into the `other` group.  Chart will scan until either 1/3 of the query timespan is covered, or it receives enough data to make a decision.  If multiple data sets are being drawn, chart creates an other group for each category of data if needed.  For example, if we were running a query with the following chart parameters `chart foo bar baz by X` there might be three other groups, one for each category `foo`, `bar`, `baz`. 
+チャートレンダラーは、どのデータセットが描画され、どのデータセットが`その他`グループにグループ化されるかを決定するために、すべてのクエリの開始時に事前スキャンを実行します。  チャートは、クエリのタイムスパンの1/3がカバーされるか、決定を下すのに十分なデータを受け取るまでスキャンします。  複数のデータセットが描画されている場合、チャートは必要に応じてデータの各カテゴリに別のグループを作成します。  たとえば、次のチャートパラメータ`chart foo bar baz by X`でクエリを実行している場合、`foo`、`bar`、`baz`の各カテゴリに1つずつ、3つのグループが存在する可能性があります。 

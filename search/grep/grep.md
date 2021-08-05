@@ -1,78 +1,78 @@
 ## Grep
 
-Grep is a very basic pipeline module that searches for a text string (not Unicode). Any record containing such text will match and be passed through the pipeline. Any record not containing the text is dropped from the pipeline. For example, `grep foo` will pass on any records containing the text “foo” and drop any records that do not have “foo” anywhere within. Grep is case sensitive so `grep foo` would match “foo” but drop “Foo”.  Grep also supports a standard set of escape codes similar to printf, allowing for binary filters as well.
+Grepは、テキスト文字列（Unicodeではない）を検索する非常に基本的なパイプラインモジュールです。そのようなテキストを含むレコードはすべてマッチし、パイプラインを通過します。テキストを含まないレコードはパイプラインから削除されます。例えば、`grep foo` は "foo" というテキストを含むレコードを渡し、その中のどこにも "foo" が含まれていないレコードはすべて削除します。Grep は大文字小文字を区別しますので、`grep foo` は "foo" にマッチしますが、"Foo" は削除します。 また、Grepはprintfと同様にエスケープコードの標準セットをサポートしており、 バイナリフィルタも可能です。
 
-Grep supports the standard GNU wildcards as well as fast string and binary matching.  To look for all entries that start that contain “foo” and “bar” separated by 0 or N bytes you can use `grep foo*bar`.  For more information on available wildcards see the TLDP miniguide[1].
+Grepは標準的なGNUワイルドカードと高速な文字列とバイナリのマッチングをサポートしています。 0バイトかNバイトで区切られた "foo "と "bar "を含むすべてのエントリを探すには、`grep foo*bar`を使うことができます。 利用可能なワイルドカードの詳細については TLDP miniguide[1] を参照ください
 
-Grep allows multiple patterns to be specified. If any pattern is matched, the entry is passed down the pipeline. If the `-v` flag is used to invert the search, the entry will be dropped if *any* pattern matches.
+Grep では、複数のパターンを指定することができます。パターンにマッチするものがあれば、そのエントリはパイプラインの下に渡されます。v` フラグを使用して検索を反転させた場合、すべてのパターンが一致した場合にはエントリは削除されます。
 
-### Supported options
+### サポートされているオプション
 
-* `-v`: “Inverse” grep. For instance, `grep -v bar` would drop any records containing the text “bar” and pass on any records that do not contain “bar”.
-* `-i`: Match case insensitive values. Thus, `grep -i foo` would match “Foo” and “foo”. Case insensitive search tends to be one of the slowest operations; put it later in your pipeline if possible to keep things fast.
-* `-e <arg>`: Operate on an enumerated value instead of on the entire record. For example, a pipeline that showed packets that contain HTTP text but aren’t destined for port 80 would be `tag=pcap packet ipv4.DstPort!=80 tcp.Payload | grep -e Payload "GET / HTTP/1.1"`
-* `-s`: Strict match.  All patterns must match, or in the case of a negated strict match, no pattern may match.`
-* `-simple`: Simple match. With this flag, `grep` will match exactly the characters you specify, with no wildcard matching. This allows you to find asterisks and other normally-reserved characters: `grep -s * `
-* `-w`: A word match.  The entire match pattern must a word as would be matched by the fulltext extractors.
+* `-v`: “「逆」グレップ。  たとえば、grep -v bar「bar」というテキストを含むレコードを削除し、「bar」を含まないレコードを検索します。
+* `-i`: 大文字と小文字を区別しない値と一致します。  したがって、grep -i foo「Foo」と「foo」は一致します。  大文字と小文字を区別しない検索は最も遅い操作の1つです。  物事を速くするために、可能であれば後でそれをパイプラインに入れてください。
+* `-e <arg>`: 処置：レコード全体ではなく、列挙値を操作してください。  たとえば、HTTPテキストを含むがポート80宛てではないパケットを示すパイプラインは次のようになります。 `tag=pcap packet ipv4.DstPort!=80 tcp.Payload | grep -e Payload "GET / HTTP/1.1"`
+* `-s`:厳密な一致 すべてのパターンが一致する必要があります。  または、厳密な一致が否定された場合は、パターンが一致しない可能性があります。`
+* `-simple`: 単純一致。  このフラグ`grep`を使用すると、ワイルドカードによるマッチングは行わずに、指定した文字と正確に一致します。  これにより、アスタリスクやその他の通常予約されている文字を見つけることができます: `grep -s * `
+* `-w`: 単語の一致。  一致パターン全体は、フルテキストエクストラクターによって一致する単語でなければなりません。
 
-Attention: Case-insensitive search is significantly slower. If you must do case-insensitive grep, try to put it later in your search pipeline to improve speed.
+重要: 大/小文字を区別しない検索はかなり遅くなります。  大文字と小文字を区別しないでgrepを実行する必要がある場合は、速度を向上させるために後で検索パイプラインに追加するようにしてください。
 
-Attention: The `-w` word match implies a simple match as the wildcards allow for crossing word boundaries.
+重要: ワイルドカードは単語の境界を越えることができるため、`-w`という単語の一致は単純な一致を意味します。
 
-### Parameter Structure
+### 検索例
 ```
 grep <argument list> <search parameter>
 ```
 
-### Example Search
+### 検索例
 
-To find any Apache logs containing the exact string "Mozilla\*Firefox" (no wildcards):
+正確な文字列 "Mozilla * Firefox"（ワイルドカードなし）を含むApacheログを見つけるには:
 
 ```
 tag=apache grep "Mozilla\*Firefox"
 ```
 
-To find packets over port 80 whose payloads begin with the bytes 0, 1, 2, 3:
+ペイロードがバイト0、1、2、3で始まるポート80上のパケットを見つけるには、次のように入力します:
 
 ```
 tag=pcap packet tcp.Port==80 tcp.Payload | grep -e Payload "\x01\x02\x03\x04"
 ```
 
-Match any Reddit post which contains words ending in "ing" or "ed":
+"ing"または "ed"で終わる単語を含むRedditの投稿と一致する:
 
 ```
 tag=reddit json Body | grep -e Body "*ing" "*ed"
 ```
 
-Drop any Reddit posts on subreddits beginning with "Ask" or containing "foo":
+"Ask"で始まる、または "foo"を含むサブクレジットにReddit投稿をドロップします。:
 
 ```
 tag=reddit json Subreddit | grep -v -e Subreddit "Ask*" "foo"
 ```
 
-Grab only user agents that contain Mozilla and Windows
+GMozillaとWindowsを含むユーザーエージェントだけを抽出
 
 ```
 tag=apache grep -s Mozilla Windows
 ```
 
-### Working With Word Matches
+### 単語一致の使用
 
-The word match system is designed to match complete words.  Grep with the -w flag is one of the primary methods to interacting with the fulltext indexing system.
+単語照合システムは、完全な単語を照合するように設計されています。   -wフラグ付きのGrepは、フルテキストインデックスシステムと対話するための主要な方法の1つです。
 
-The -w flag is designed to create some additional specificity when selecting values, lets look at some example data to see what will and will not match.
+-wフラグは、値を選択するときにいくつかの追加の特異性を作成するように設計されています。いくつかのサンプルデータを見て、一致するものとしないものを確認します。
 
 ```
 16.246.30.72 - - [08/May/2017:15:20:35 -0600] "DELETE /search/tag/list HTTP/1.0" 200 5032 "http://nguyen.biz/category/tags/tag/home.htm" "Opera/8.74.(Windows 98; Win 9x 4.90; it-IT) Presto/2.9.173 Version/11.00"
 ```
 
-Lets look at a few invocations of grep to see what would and would not match:
+grepのいくつかの呼び出しを見て、一致するものと一致しないものを確認してみましょう:
 
-| Grep Invocation | MATCHES | Explanation |
+| Grepの呼び出し | マッチ | 説明 |
 |-----------------|---------|-------------|
-| grep Ver        |   YES   | A simple grep WILL match due to the `Version/11.00` byte pattern |
-| grep -w Ver     |   NO    | The word match will NOT match `Version/11.00` pattern because Ver is not a complete word |
-| grep -w Ver*    |   NO    | The word match will NOT match because `-w` implies a simple match and literal bytes `Ver*` are not in the log` |
-| grep -w Version |   YES   | The word match WILL match because Version is a full word, the `/` character is a split character |
-| grep -w "11.00" |   YES   | The word will match, the `.` character is only a separator if it is followed by a space, this allows matching IP addresses |
-| grep -w "Version/11.00" |  ERROR  | The grep module will throw an error, you cannot have word boundary characters in a match |
+| grep Ver        |   YES   | `Version / 11.00`バイトパターンにより、単純なgrepが一致します |
+| grep -w Ver     |   NO    | Verは完全な単語ではないため、単語の一致は `Version / 11.00`パターンと一致しません |
+| grep -w Ver*    |   NO    | `-w`は単純な一致を意味し、リテラルバイト`Ver *`はログにないため、単語の一致は一致しません。 |
+| grep -w Version |   YES   | バージョンは完全な単語であり、 `/`文字は分割文字であるため、単語一致は一致します |
+| grep -w "11.00" |   YES   | 単語は一致します。`.`文字の後にスペースが続く場合は区切り文字にすぎません。これにより、IPアドレスの一致が許可されます。 |
+| grep -w "Version/11.00" |  ERROR  | The grep module will grepモジュールはエラーを表示します。マッチに単語境界文字を含めることはできません |

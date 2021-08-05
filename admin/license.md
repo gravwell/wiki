@@ -1,9 +1,8 @@
-# Updating Licenses
+# ライセンスの更新
+Gravwellライセンスは限られた有効期間です。ライセンスの有効期限が切れそうになると、Gravwell GUIで通知されます。 Community Editionユーザーは、[https://www.gravwell.io/download](https://www.gravwell.io/download)で情報を再入力するだけで、新しいライセンスをメールで受け取ることができます。 有料のお客様はGravwellサポート（support@gravwell.io）に連絡して契約を更新してください。
 
-Gravwell licenses are valid for a limited period of time. You will be notified in the Gravwell GUI when your license is about to expire. Community Edition users can simply re-enter their information at [https://www.gravwell.io/download](https://www.gravwell.io/download) to get a new license emailed to them; paid customers should contact Gravwell support (support@gravwell.io) to renew their contract.
-
-Once you have your new license file, simply select the 'License' page from the Administrator section of the Gravwell menu and upload your new license:
+新しいライセンスファイルを取得したら、単にGravwellメニューの[管理者]セクションから[ライセンス]ページを選択し、新しいライセンスをアップロードします。
 
 ![](license.png)
 
-You can also deploy your new license by renaming the file to `/opt/gravwell/etc/license` on the webserver node and restarting your Gravwell processes. This will push the new license out to the indexers.
+ファイルの名前をウェブサーバーノードの`/opt/gravwell/etc/license`に変更してGravwellプロセスを再起動することにより、新しいライセンスをデプロイすることもできます。 これにより、新しいライセンスがインデクサーにプッシュされます。

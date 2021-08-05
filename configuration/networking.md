@@ -1,39 +1,38 @@
-# Networking Considerations for Gravwell
+﻿# Gravwellのネットワークに関する考察
 
-Gravwell uses several network ports for communication between distributed components. This article describes which ports are used for which purposes.
+Gravwellは、分散配置されたコンポーネント間の通信にいくつかのネットワークポートを使用します。この記事では、どのポートがどの目的で使用されているかを説明します。
 
-## Indexer Control Port: TCP 9404
+## インデクサー制御用ポート: TCP 9404
 
-This port, set by the `Control-Port` option in gravwell.conf, is used by the webserver to communicate with the indexers. Ensure that any firewalls on the *indexers* allow incoming connections on this port from the *webserver*, and that no network infrastructure blocks this port between the webserver and the indexers.
+このポートは gravwell.conf の `Control-Port` オプションで設定され、ウェブサーバーがインデクサーと通信するために使用します。全ての*インデクサー*上のファイアウォールが *ウェブサーバー* からのこのポートでの着信接続を許可していること、ウェブサーバーと全てのインデクサー間のネットワークインフラストラクチャがこのポートをブロックしていないことを確認してください。
 
-## Webserver Port: TCP 80/443
+## ウェブサーバー用ポート: TCP 80/443
 
-This port is how Gravwell users access the Gravwell webserver. The default configuration uses unencrypted HTTP on port 80, specified with the `Web-Port` option in gravwell.conf. This can be changed to another value, e.g. 8080 if desired. We recommend changing the port to 443 if you [install TLS certificates](#!configuration/certificates.md).
+このポートは、GravwellユーザーがGravwellウェブサーバーにアクセスするためのものです。デフォルトの設定では、gravwell.confの`Web-Port`オプションで指定された80番ポートで暗号化されていないHTTPを使用します。これは必要に応じて別の値、例えば8080に変更することができます。[TLS 証明書をインストール](#!configuration/certificates.md)する場合は、`Web-Port`で指定するウェブサーバー用ポートを 443 に変更することを推奨します。
 
-## Cleartext Ingest Port: TCP 4023
+## 平文通信のインジェスト用ポート: TCP 4023
 
-This port is used by ingesters to connect to indexers and upload entries via unencrypted communications. The default port is TCP 4023, but it can be changed using the `Ingest-Port` option in gravwell.conf. Because ingesters and indexers are often on entirely different networks, it is essential that firewalls are configured such that the *ingesters* are allowed to connect to this port on the *indexers*.
+このポートはインジェスターがインデクサーに接続し、非暗号化通信によってエントリをアップロードするために使用されます。デフォルトのポートはTCP 4023ですが、gravwell.confの`Ingest-Port`オプションを使って変更することができます。インジェスターとインデクサーは完全に異なるネットワーク上にあることが多いので、*インジェスター*からの*インデクサー*上のこのポートへの接続を許可されるようにファイアウォールが設定されていることが不可欠です。
 
-## TLS Ingest Port: TCP 4024
+## TLS通信のインジェスト用ポート: TCP 4024
 
-This port is used by ingesters to connect to indexers and upload entries via TLS-encrypted communications. The default port is TCP 4024, but it can be changed using the `TLS-Ingest-Port` option in gravwell.conf. Because ingesters and indexers are often on entirely different networks, it is essential that firewalls are configured such that the *ingesters* are allowed to connect to this port on the *indexers*.
+このポートはインジェスターがインデクサーに接続し、TLS暗号通信によってエントリをアップロードするために使用されます。デフォルトのポートはTCP 4024ですが、gravwell.confの`TLS-Ingest-Port`オプションを使って変更することができます。インジェスターとインデクサーは完全に異なるネットワーク上にあることが多いので、*インジェスター*からの*インデクサー*上のこのポートへの接続を許可されるようにファイアウォールが設定されていることが不可欠です。
 
-## Indexer Replication Port: TCP 9606
+## インデクサーのレプリケーション用ポート: TCP 9606
 
-This port is used by indexers to communicate with each other for [replication](#!configuration/replication.md). The default port is 9606 if not otherwise specified in the `Peer` and `Listen-Address` options of the Replication portion of gravwell.conf. Only indexers use this port.
+このポートはインデクサーが[レプリケーション](#!configuration/replication.md)の際にお互いに通信するために使用されます。gravwell.confのレプリケーション部分の `Peer` と `Listen-Address` オプションで指定がなされていなければ、デフォルトのポートは9606です。インデクサーのみがこのポートを使用します。
 
-## Datastore Port: TCP 9405
+## データストア用ポート: TCP 9405
 
-This port is used when a Gravwell cluster has [multiple webservers](#!distributed/frontend.md) configured. The *datastore* component listens on this port (specified using the `Datastore-Port` option) for incoming connections from *webservers*.
+このポートは、Gravwellクラスタで[複数のWebサーバー](#!distributed/frontend.md)を設定している場合に使用されます。*データストア*コンポーネントはこのポート(`Datastore-Port`オプションで指定)で*ウェブサーバー*から来る接続をリッスンします。
 
-## RHEL (Redhat Enterprise Linux) and CentOS firewall commands
+## RHEL (Redhat Enterprise Linux) や CentOS でのファイアウォールコマンド
 
-RHEL/CentOS uses its own firewall commands. For convenience, we have collected the commands needed to open ports for the webserver and indexer components, plus the Simple Relay ingester. Note that any ingesters which listen on network ports will likely need ports opened in this manner.
+RHEL/CentOS は独自のファイアウォールコマンドを使用します。利便性のために、ウェブサーバーとインデクサーコンポーネントとSimple Relayインジェスターのためにポートを開くために必要なコマンドを掲載します。ネットワークポートをリッスンするインジェスターは、これと同じ方法でポートを開く必要があることに注意してください。
 
-Note: The commands shown here will only *temporarily* open ports; rebooting the system will reset the rules. To make the rule changes permanent, run `sudo firewall-cmd --runtime-to-permanent`
+注意: ここに示したコマンドは、*一時的に*ポートを開くだけです。システムを再起動するとルールがリセットされます。ルールの変更を恒久的なものにするには、`sudo firewall-cmd --runtime-to-permanent` を実行してください。
 
-
-### Indexer ports
+### インデクサーのポート
 
 ```
 sudo firewall-cmd --zone=public --add-port=9404/tcp 
@@ -42,14 +41,14 @@ sudo firewall-cmd --zone=public --add-port=4023/tcp
 sudo firewall-cmd --zone=public --add-port=4024/tcp
 ```
 
-### Webserver ports
+### ウェブサーバーのポート
 
 ```
 sudo firewall-cmd --zone=public --add-service=http
 sudo firewall-cmd --zone=public --add-service=https
 ```
 
-### Simple Relay ports
+### Simple Relayインジェスターのポート
 
 ```
 sudo firewall-cmd --zone=public --add-port=7777/tcp

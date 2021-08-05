@@ -1,102 +1,102 @@
-# Hardening a Gravwell Installation
+# Gravwell のインストールのハードニング
 
-Hardening a Gravwell installation is a pretty straight forward process.  We take pride in shipping a well-contained and well-isolated product that adheres to the [principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege).  Beyond a few basic tweaks and some common sense measures, hardening a Gravwell install is the exact same as hardening any other system.  Gravwell runs entirely in userspace with an unprivileged account; it is at the mercy of the system it runs on, so protect that system and you will protect Gravwell.
+Gravwellのインストールをハードニングすることはかなり明快なプロセスです。 私たちは、[最小特権の原則](https://en.wikipedia.org/wiki/Principle_of_least_privilege)を遵守した、よく収納された、よく隔離された製品を出荷することに誇りを持っています。 いくつかの基本的な調整と常識的な対策を超えて、Gravwellのインストールをハードニングすることは、他のシステムをハードニングするのと全く同じです。 Gravwellは、特権を持たないアカウントで完全にユーザー空間で動作します。
 
-The [Linux Audit](https://linux-audit.com/linux-server-hardening-most-important-steps-to-secure-systems/) page has a few good tips for general hardening of Linux systems. Lock down your host OS and you're 90% of the way there.
+[Linux Audit](https://linux-audit.com/linux-server-hardening-most-important-steps-to-secure-systems/)のページには、Linuxシステムの一般的なハードニングのためのいくつかの良いヒントがあります。ホストOSをロックダウンしておけば、90%の確率で解決することができます。
 
-There are a few areas that may warrant some attention upon initial installation, such as TLS certificates.  We ship with a set of defaults that should satisfy most users but there are a few settings that you may want to tweak.
+TLS 証明書など、初期インストール時に注意が必要な部分がいくつかあります。 ほとんどのユーザーを満足させるデフォルトのセットを出荷していますが、微調整したいと思うかもしれないいくつかの設定があります。
 
-We also highly recommend keeping up-to-date with the latest Gravwell releases and occasionally checking in on the [changelog](../#!changelog/list.md).  If we encounter a security issue we will document it there.  We will also notify customers of critical security issues via the prescribed point of contact.
+また、最新のGravwellリリースを最新の状態にしておき、[changelog](./#!changelog/list.md)を時々チェックすることを強くお勧めします。 セキュリティ上の問題が発生した場合は、そこに文書化します。 また、重要なセキュリティ問題については、所定の連絡先を通じてお客様に通知します。
 
-## Quickstart
+## クイックスタート
 
-Securing Gravwell is not much different than securing any other network-accessible application.  Change the default passwords, setup proper encryption via TLS certificates, and make sure permissions and authentication tokens are strong.
+Gravwellのセキュリティを確保することは、他のネットワークからアクセス可能なアプリケーションのセキュリティを確保することと大差ありません。デフォルトのパスワードを変更し、TLS証明書を介して適切な暗号化を設定し、権限と認証トークンが強力であることを確認してください。
 
-If you are in a hurry and just want to hit the high points, do this:
+急いでいて、ただ基本的なことだけをやりたい人はこれをやりましょう。
 
-1. Change the password for the admin user
-2. Install a valid TLS Certificate and enable HTTPS [More Info](certificates.md)
-3. Change the username for the admin user
-4. Ensure you use good secrets for ingesters and enable Ciphertext connections [More Info](../#!ingesters/ingesters.md)
-5. Enable [password complexity controls](#!configuration/configuration.md#Password_Complexity) or [Single Sign On](#!configuration/sso.md)
-6. Enable HTTPS communication in the Search Agent [More Info](certificates.md)
-7. Ensure communications between webservers and indexers are over a trusted network.
+1. 管理者ユーザーのパスワードを変更する
+2. 有効な TLS 証明書をインストールして HTTPS を有効にする [詳細](certificates.md)
+3. 管理者ユーザーのユーザー名を変更する
+4. インジェスターに良い秘密を使用し、暗号文接続を有効にすることを確認する [詳細](./#!ingesters/ingesters.md)
+5. [パスワード複雑化制御](#!configuration/configuration.md#Password_Complexity)または [シングルサインオン](#!configuration/sso.md)を有効にします。
+6. 検索エージェントでHTTPS通信を有効にする [詳細](certificates.md)
+7. ウェブサーバとインデクサ間の通信が信頼できるネットワーク上で行われるようにします。
 
-Installing a valid TLS certificate and enabling HTTPS is only slightly less important than changing the default password for the admin user.  When logging in, if Gravwell detects that you are not using HTTPS the login prompt will show a warning:
+有効な TLS 証明書をインストールして HTTPS を有効にすることは、管理者ユーザーのデフォルトパスワードを変更することよりもわずかに重要ではありません。 ログイン時に、GravwellがHTTPSを使用していないことを検出すると、ログインプロンプトに警告が表示されます:
 
 ![](tls_warning.png)
 
-Without HTTPS enabled and valid TLS certificates attackers could sniff login credentials, so *never access Gravwell over the public Internet without HTTPS enabled!*
+HTTPSを有効にして有効なTLS証明書がないと、攻撃者はログイン認証情報を盗み見することができるので、HTTPSを有効にしていない状態で公共のインターネット上でGravwellに絶対にアクセスしてはいけません。
 
-# Gravwell Users and Groups
+# Gravwellのユーザーとグループ
 
-Gravwell users and groups loosely follow the Unix patterns.  At a high level, Gravwell access controls boil down to the following rules:
+Gravwellのユーザーとグループは、Unixパターンにゆるく従います。 高レベルでは、Gravwellのアクセス制御は以下のルールに集約されます。
 
-1. A user can be a member of multiple groups
-2. All searches, resources, and scripts are owned by a single user
-3. Searches, resources, scripts, and dashboards can be shared via group membership
-4. Access via  group membership does not grant write access (only owners and admins can write)
-5. Admin users are not restricted in any way (think `root`)
-6. The Admin user with UID 1 cannot be deleted or locked out of the system (again, think `root`)
-7. Multiple users may be granted Admin privileges
+1. ユーザーは複数のグループのメンバーになることができます。
+2. すべての検索、リソース、スクリプトは、単一のユーザーが所有しています。
+3. 検索、リソース、スクリプト、ダッシュボードは、グループメンバーシップを介して共有することができます。
+4. グループメンバーによるアクセスでは書き込み権限は付与されません（オーナーと管理者のみ書き込み可能）
+5. 管理者ユーザは何の制限も受けません (`root` を考えてください)
+6. UID 1 の Admin ユーザを削除したり、システムからロックアウトしたりすることはできません (もう一度 `root` を考えてみてください)
+7. 複数のユーザーに管理者権限を付与することができます。
 
-User and group management is the sole responsibility of admin users. Non-admins cannot modify users or change user group memberships.
+ユーザーとグループの管理は、管理者ユーザーのみが行うものとします。管理者以外のユーザーは、ユーザーを変更したり、ユーザーグループのメンバーシップを変更したりすることはできません。
 
-## Default Accounts
+## デフォルトのアカウント
 
-Default Gravwell installations have a single user named `admin` with the password `changeme`.  This default account uses the coveted UID of 1.  Gravwell treats UID 1 in the same way that Unix treats UID 0.  It is special and cannot be deleted, locked, or otherwise disabled.  You should protect this account carefully!
+デフォルトのGravwellのインストールでは、`admin`という名前の単一ユーザーとパスワード `changeme`を持ちます。 このデフォルトアカウントは、切望される1のUIDを使用します。 GravwellはUnixがUID 0を扱うのと同じようにUID 1を扱います。 これは特別なもので、削除したり、ロックしたり、その他の方法で無効にすることはできません。 このアカウントを慎重に保護する必要があります!
 
-While you cannot delete the `admin` user with the special UID of 1, you can change the username; which we **HIGHLY** recommend you do.  This makes it much harder for an unauthorized user to guess credentials.  To try and further drive home the point that this default account requires your attention, we set the accounts 'real name' to "Sir changeme of change my password the third".  Seriously, the first thing you should do is lock down this account.
+特別な UID 1 の `admin` ユーザを削除することはできませんが、ユーザ名を変更することはできます。変更することを強くお勧めします。 これにより、権限のないユーザが資格情報を推測するのがはるかに難しくなります。 このデフォルトアカウントがあなたの注意を必要としているという点をさらに強調するために、アカウントの「実名」を「Sir changeme of change my password the third」に設定しています。 真面目な話、まず最初にすべきことはこのアカウントをロックダウンすることです。
 
-A default installation also contains a basic `users` group.  This group is just a starting point and does not have any special privileges.
+デフォルトのインストールには、基本的な `users` グループも含まれています。 このグループは出発点に過ぎず、特別な権限はありません。
 
-### Account Storage and Password Hashing
+### アカウントの保存とパスワードのハッシュ化
 
-Gravwell uses the [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) hashing system to store and validate logins.  This means that passwords are **NEVER** stored plaintext and we have no way to recover them.
+Gravwellは[bcrypt](https://en.wikipedia.org/wiki/Bcrypt)ハッシュシステムを使用してログインの保存と検証を行っています。 これは、パスワードは決して平文で保存されることはなく、復元する方法がないことを意味します。
 
-We start with a pretty aggressive bcrypt hash cost of 12 and routinely re-evaluate whether we need to increase that cost. 
+bcryptのハッシュコストは12というかなり積極的なものから始め、このコストを上げる必要があるかどうかを定期的に再評価しています。
 
-### Account Brute Force Protections
+### アカウントのブルートフォースプロテクション
 
-Gravwell employs a login throttling system to protect accounts.  If a user repeatedly fails authentication, Gravwell will introduce a delay in the authentication process that grows with each failed login attempt, eventually locking the account.  The login throttling controls can be tweaked using the following parameters in the `gravwell.conf` file:
+Gravwellはアカウントを保護するためにログインスロットリングシステムを採用しています。 ユーザーが認証に何度も失敗すると、Gravwellは認証プロセスに遅延を導入し、ログインに失敗するたびに大きくなり、最終的にはアカウントがロックされます。 ログインスロットリング制御は、`gravwell.conf`ファイル内の以下のパラメータを使って微調整できます。
 
-`Login-Fail-Lock-Count` - Controls how many times a user can fail authentication before we start slowing down the login attempts.  The default value is 0.
+`Login-Fail-Lock-Count` - ログイン試行を遅くし始める前に、ユーザが認証に何回失敗するかを制御します。 デフォルト値は0です。
 
-`Login-Fail-Lock-Duration` - Duration in minutes used for calculating the failure count.  The default is 0.
+`Login-Fail-Lock-Duration` - 失敗回数の計算に使用する時間を分単位で指定します。 既定値は 0 です。
 
-The account lockout feature is disabled by default, however the `gravwell.conf` configuration shipped in the Docker containers and installers sets a value of 5 and 5, this means that a user can fail logging in up to 5 times in 5 minutes without locking their account.
+アカウントロックアウト機能はデフォルトでは無効になっていますが、Dockerコンテナとインストーラに同梱されている`gravwell.conf`の設定では5と5の値が設定されており、これはユーザーがアカウントをロックしなくても5分間に5回までログインに失敗できることを意味します。
 
-The special UID 1 admin account **IS** subject to login throttling and exponential delays, but is **NOT** subject to account locking.  That account cannot be locked out.  Accounts that are locked due to brute force attempts do not eject all active sessions, while a user cannot login after having their account locked, they CAN maintain any active sessions.  This is so an attacker cannot DOS the Gravwell system and boot active users.
+特別なUID 1の管理者アカウントは、ログインスロットリングと指数関数的な遅延の対象となりますが、アカウントロックの対象にはなりません。 そのアカウントはロックアウトできません。 ブルートフォースの試みによってロックされたアカウントは、すべてのアクティブなセッションを排出することはありませんが、アカウントがロックされるとログインできなくなります。 これは、攻撃者が Gravwell システムを DOS 攻撃してアクティブなユーザを起動できないようにするためです。
 
-Setting either the `Login-Fail-Lock-Count` or `Login-Fail-Lock-Duration` to zero disables the locking of accounts.  Locked accounts can be unlocked in the user control panel.
+`Login-Fail-Lock-Count` または `Login-Fail-Lock-Duration` のいずれかをゼロに設定すると、アカウントのロックを無効にします。 ロックされたアカウントはユーザコントロールパネルでロックを解除することができます。
 
 [//]: # (![](locked_account.png))
 
-## Installation Components
+## インストール・コンポーネント
 
-By default, Gravwell is installed in `/opt/gravwell`.  The installers create the user and group `gravwell`:`gravwell`.  Neither the user nor the group is installed with login privileges.  All components execute under the `gravwell` user, and almost all execute under the `gravwell` group.
+デフォルトでは、Gravwellは `/opt/gravwell` にインストールされます。 インストーラは、ユーザーとグループ `gravwell`:`gravwell` を作成します。 ユーザーもグループもログイン権限を持ってインストールされることはありません。 すべてのコンポーネントは `gravwell` ユーザーの下で実行され、ほとんどすべてのコンポーネントは `gravwell` グループの下で実行されます。
 
-The notable exception is the File Follower ingester which executes under the `admin` group so that it can tail log files in `/var/log`.  If you do not want *any* Gravwell component executing with elevated privileges we recommend not using the [File Follower](#!ingesters/ingesters.md#File_Follower) and instead configure syslog to send data to the [Simple Relay](#!ingesters/ingesters.md#Simple_Relay) ingester via TCP.  You may also alter the File Follower systemd unit file to execute using the `gravwell` group if you do not need to follow any controlled system log files.  Check out the system unit file section below for more info.
+注目すべき例外は、`/var/log`のログファイルを尾行できるように `admin` グループの下で実行される File Follower インジェスターです。 Gravwellコンポーネントを昇格した権限で実行させたくない場合は、[File Follower](#!ingesters/ingesters.md#File_Follower)を使用せず、代わりにTCP経由で[Simple Relay](#!ingesters/ingesters.md#Simple_Relay)インジェスターにデータを送信するようにsyslogを設定することをお勧めします。 また、制御されたシステムログファイルを追う必要がない場合は、`gravwell` グループを使って実行するように File Follower systemd ユニットファイルを変更することもできます。 詳細は以下のシステムユニットファイルのセクションを参照してください。
 
-Gravwell installers come in two forms: repository installation packages (either Debian `.deb` or RedHat `.rpm`) and shell-based self-extracting installers.  The repository installation packages are all signed using the published Gravwell [repository key](https://update.gravwell.io/debian/update.gravwell.io.gpg.key).  The self-extracting shell installers are always accompanied by MD5 hashes. Always validate the MD5 hashes and/or repository signatures before installing any package (Gravwell or otherwise).
+Gravwell のインストーラには、2 つの形式があります: respository インストールパッケージ (Debian `.deb` または RedHat `.rpm`) と、シェルベースの自己解凍型インストーラです。 リポジトリインストールパッケージはすべて、公開されている Gravwell [respository key](https://update.gravwell.io/debian/update.gravwell.io.gpg.key) を使って署名されています。 自己解凍型シェルインストーラには、常に MD5 ハッシュが添付されています。パッケージ (Gravwell であろうとなかろうと) をインストールする前には、必ず MD5 ハッシュやリポジトリ署名を検証してください。
 
-## Installation Configuration Files
+## インストール設定ファイル
 
-Gravwell configuration files are stored in `/opt/gravwell/etc` and are used to control how webservers, search agents, indexers, and ingesters behave.  The Gravwell configuration files usually contain shared secret tokens that are used for authentication.  The shared secrets allow allow varying levels of control over Gravwell components.  For instance, if the `Ingest-Secret` is compromised attackers could send superfluous entries into the index, consuming storage but not leaking any sensitive information, while compromising the `Control-Secret` would allow an attacker to search across the data in the indexers. Take care to avoid leaking secrets; aside from the ingest secret, most will never need to leave the indexer & webserver nodes.
+Gravwell設定ファイルは `/opt/gravwell/etc` に格納され、ウェブサーバー、検索エージェント、インデクサー、インジェスターの動作を制御するために使用されます。 Gravwell設定ファイルは通常、認証に使用される共有シークレットトークンを含みます。 共有秘密は、Gravwellコンポーネントをさまざまなレベルで制御することを可能にします。 例えば、`Ingest-Secret`が漏洩した場合、攻撃者はインデックスに余分なエントリを送信し、ストレージを消費しますが、機密情報は漏洩しません。秘密が漏洩しないように注意してください。インジェストシークレットは別として、ほとんどの場合、インデクサとウェブサーバのノードを離れる必要はありません。
 
-## systemd Unit Files
+## Systemd ユニットファイル
 
-Gravwell relies on the [systemd](https://www.freedesktop.org/wiki/Software/systemd/) init manager to get Gravwell up and running, as well as manage crash reports.  The installers register and install [systemd unit files](https://www.freedesktop.org/software/systemd/man/systemd.unit.html) into `/etc/systemd/system`.  These unit files are responsible for starting the Gravwell processes and applying cgroup restrictions to ensure that Gravwell processes behave.
+Gravwell は [systemd](https://www.freedesktop.org/wiki/Software/systemd/) init マネージャに依存して、Gravwell を起動して動作させ、クラッシュレポートを管理します。 インストーラは、`/etc/systemd/system`に[SystemD unit files](https://www.freedesktop.org/software/systemd/man/systemd.unit.html)を登録してインストールします。 これらのユニットファイルは、Gravwellプロセスを起動し、Gravwellプロセスが動作するように cgroup制限を適用する責任があります。
 
-Most users do not need to change the systemd unit files, but if you need to allow an ingester to touch specific resources or want to run as an alternate user or group, you may want to tweak the `User` or `Group` parameters under the `[Service]` section.
+ほとんどのユーザーは systemd ユニットファイルを変更する必要はありませんが、インジェスターが特定のリソースに触れることを許可する必要がある場合や、代替のユーザーやグループとして実行したい場合は、`[Service]`セクションの下の`User`や`Group`のパラメータを微調整した方がよいでしょう。
 
-### Systemd Resource Restrictions
+### システムリソース制限
 
-Gravwell is built for speed and scale.  Many of our customers are processing hundreds of gigabytes per day on very large systems, we thrive on high core counts, big memory, and fast disks.  You got cores?  We'll use 'em!  However, Community Edition users or customers that need to co-reside Gravwell with other systems may need to ensure that Gravwell doesn't stretch out and consume too many of the resources available to it.  Systemd unit files provide the ability to control Linux Cgroups, meaning you can restrict memory, CPU, and even system file descriptor use by Gravwell.
+Gravwellは、スピードとスケールのために構築されています。 当社のお客様の多くは、非常に大規模なシステムで1日に数百ギガバイトを処理していますが、当社は高コア数、大容量メモリ、および高速ディスクで成功しています。 コアをお持ちですか?  使わせていただきます。 しかし、Community Edition のユーザーや、他のシステムと Gravwell を共存させる必要がある顧客は、Gravwell が拡張して利用可能なリソースの多くを消費しないようにする必要があるかもしれません。 Systemd ユニットファイルは Linux Cgroups を制御する機能を提供します。つまり、Gravwell によるメモリ、CPU、システムファイル記述子の使用を制限することができます。
 
-Hardening a system **for** Gravwell may also entail hardening a system **from** Gravwell.  Systemd can set up a bit of a "wall" so that we only use a subset of total system resources, even when Gravwell is working hard.  Below is an example systemd unit file that restricts the number of system threads, CPU usage, and resident memory.
+Gravwell のためにシステムをハードニングすることは、Gravwell からシステムをハードニングすることを伴うかもしれません。  Systemd は少しの「壁」を設定して、Gravwell が頑張っているときでも、システムリソース全体のサブセットだけを使用するようにすることができます。 以下は、システムスレッド数、CPU 使用率、常駐メモリを制限する systemd ユニットファイルの例です。
 
-We are restricting this indexer to 4 threads, 8GB of resident memory, and applying a nice value to the process to reduce its priority.  This means the indexer will tend to get less time on the CPU than other processes on the system.
+このインデクサーを4スレッド、8GBの常駐メモリに制限し、プロセスの優先度を下げるために素敵な値を適用しています。 これは、システム上の他のプロセスに比べて、インデクサがCPUにかかる時間が短くなる傾向があることを意味します。
 
 ```
 [Install]
@@ -128,39 +128,39 @@ MemoryHigh=7168M
 MemoryMax=8192M
 ```
 
-Notice that we don't limit the number of open file descriptors using the `LimitNOFILE` parameter. Gravwell is careful with file descriptors, but limiting the number that can be open may cause errors when searching large swaths of time or when many ingesters are connected.  For a full list of all system tweaks available, see the freedesktop.org [exec](https://www.freedesktop.org/software/systemd/man/systemd.exec.html) manual.
+`LimitNOFILE` パラメータを使ってファイルディスクリプタを開く数を制限していないことに注意してほしいです。Gravwellはファイルディスクリプタに注意を払っていますが、オープンできる数を制限すると、大規模な時間の検索や、多数のインジェスタが接続されている場合にエラーが発生する可能性があります。 利用可能なすべてのシステム調整の完全なリストについては、freedesktop.org [exec](https://www.freedesktop.org/software/systemd/man/systemd.exec.html) のマニュアルを参照してください。
 
-## Gravwell Application Executables
+## Gravwell アプリケーション実行ファイル
 
-All Gravwell service executables (excluding the Windows ingesters) are installed in `/opt/gravwell/bin` and owned by the user `gravwell` and the group `gravwell`.  The permission bits on the executables do not allow reading, writing, or execution by `other`.  This means that only root and the `gravwell`:`gravwell` user and group can execute or read the applications.
+すべてのGravwellサービス実行ファイル(Windowsインジェスタを除く)は `/opt/gravwell/bin` にインストールされ、ユーザー `gravwell` とグループ `gravwell` が所有しています。 実行可能ファイルのパーミッションビットは `other` による読み書きや実行を許可しません。 これは、ルートと `gravwell`:`gravwell` のユーザーとグループだけがアプリケーションの実行や読み込みを行うことができることを意味します。
 
-Some components are installed with special capabilities that allow them to perform specific actions without executing as a special user or group.  At this time, Gravwell components only make use of the following two capabilities:
+一部のコンポーネントは、特別なユーザーやグループとして実行することなく、特定のアクションを実行できるようにする特別な機能を備えてインストールされています。 現時点では、Gravwellコンポーネントは以下の2つの機能のみを利用しています。
 
-* `CAP_NET_BIND_SERVICE` - allows non-root applications to bind to ports less than 1024.
-* `CAP_NET_RAW` - Allows a non-root application to open a raw socket.
+* `CAP_NET_BIND_SERVICE` - root 以外のアプリケーションが 1024 未満のポートにバインドできるようにします。
+* `CAP_NET_RAW` - 非 root アプリケーションが raw ソケットを開くことを許可します。
 
-The `CAP_NET_RAW` capability is only used by the [Network Capture](/#!ingesters/ingesters.md#Network_Ingester) ingester so that it can capture raw packets from an interface without running as root.
+`CAP_NET_RAW` capabilityは、[Network Capture](/#!ingesters/ingesters.md#Network_Ingester)インジェスターでのみ使用され、rootとして実行しなくてもインターフェースから生のパケットをキャプチャすることができます。
 
-The `CAP_NET_BIND_SERVICE` capability is used by the [Simple Relay](/#!ingesters/ingesters.md#Simple_Relay) and the Webserver so that they can bind to low numbered ports such as 80, and 443 for the webserver and 601 and 514 for the Simple Relay ingester.
+`CAP_NET_BIND_SERVICE` capabilityは、[Simple Relay](/#!ingesters/ingesters.md#Simple_Relay)とWebserverで使用され、Webserverでは80や443、Simple Relayインジェスターでは601や514といった低い番号のポートにバインドすることができます。
 
-## Search Scripting and Automation
+## 検索スクリプティングと自動化
 
-The Gravwell automation system is extremely powerful. It can execute queries, update resources, and reach out to external systems.  The automation scripting system is underpinned by a [Turing Complete](https://simple.wikipedia.org/wiki/Turing_complete) language and can essentially do *anything*.  But with great power comes great responsibility.  Depending on your user base, you may wish to disable "risky" API access in scripts to limit what a user can do.  APIs that are deemed "risky" are those that can establish external connectivity outside of Gravwell, including HTTP, network, SSH, FTP, SFTP, etc.
+Gravwellの自動化システムは非常に強力です。クエリを実行したり、リソースを更新したり、外部システムにアクセスしたりすることができます。 自動化スクリプトシステムは、[Turing Complete](https://simple.wikipedia.org/wiki/Turing_complete)言語に支えられており、本質的には何でもできます。 しかし、大きな力には大きな責任が伴います。 ユーザーベースによっては、ユーザーができることを制限するために、スクリプト内の「危険な」APIアクセスを無効にしたいと思うかもしれません。 リスクが高いと判断されるAPIは、HTTP、ネットワーク、SSH、FTP、SFTPなど、Gravwellの外部接続を確立できるAPIです。
 
-Disabling the risky APIs can reduce the chances that users export sensitive data.  Disable these APIs by setting the following in your Gravwell.conf file:
+リスクの高いAPIを無効にすることで、ユーザーが機密データをエクスポートする機会を減らすことができます。 Gravwell.confファイルで以下を設定して、これらのAPIを無効にします：
 
 `Disable-Network-Script-Functions=true`
 
-Note: The network scripting functions are extremely useful, so only disable them if you're concerned about users abusing them.
+注意: ネットワークスクリプティング機能は非常に便利なので、ユーザーがこれらの機能を悪用しているのではないかと心配な場合にのみ、これらの機能を無効にしてください。
 
 [//]: # (# Query Controls)
 
-## Notes on SELinux
+## SELinuxに関する注意事項
 
-Gravwell's installers attempt to configure SELinux appropriately if SELinux is enabled. This configuration consists of the following:
+Gravwell のインストーラは、SELinux が有効になっている場合、SELinux を適切に設定しようとします。この設定は以下のもので構成されています。
 
-* Adding the usr_t context to all files in `/opt/gravwell/` (excepting the `bin` subdirectory) via the semanage command.
-* Adding the bin_t context to all files in `/opt/gravwell/bin` via the semanage command.
-* Using the `restorecon` command to apply the new context rules.
+* semanageコマンドを使用して、`/opt/gravwell/` (`bin` サブディレクトリを除く) のすべてのファイルに usr_t コンテキストを追加する。
+* bin_t コンテキストを semanage コマンドで `/opt/gravwell/bin` 内のすべてのファイルに追加する。
+* 新しいコンテキストルールを適用するために `restorecon` コマンドを使用する。
 
-If you find that SELinux is preventing Gravwell from running, check the rules using `/sbin/semanage fcontext -l | grep /opt/gravwell`.
+SELinux が Gravwell の実行を妨げていることがわかったら、`/sbin/semanage fcontext -l | grep /opt/gravwell` でルールを確認してください。

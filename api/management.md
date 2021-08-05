@@ -1,24 +1,24 @@
-# System Management
+# システム管理
 
-This page documents admin-only APIs for managing the Gravwell processes and configuration.
+このページでは、Gravwellのプロセスや設定を管理するための、管理者専用のAPIを説明します。
 
-## Restarting Gravwell
+## Gravwellの再起動
 
-Two APIs are provided to restart Gravwell processes; one to restart the webserver, and one to restart the indexers. In both cases, "restarting" is accomplished by shutting down the process and allowing systemd (or whatever init system is in use) to restart it.
+Gravwellのプロセスを再起動するためのAPIが2つ用意されています。1つはウェブサーバの再起動、もう1つはインデクサの再起動です。どちらの場合も、プロセスをシャットダウンしてsystemd（または使用しているinitシステム）に再起動させることで「再起動」が行われます。
 
-### Restarting the webserver
+### ウェブサーバの再起動
 
-To restart the webserver, send a POST request with an empty body to `/api/restart/webserver`. This should trigger the webserver to shut down and restart immediately.
+ウェブサーバを再起動するには、空のボディを持つ POST リクエストを `/api/restart/webserver` に送信します。これにより、ウェブサーバは直ちにシャットダウンして再起動します。
 
-### Restarting the indexers
+### インデクサーの再起動
 
-To restart all indexers to which the webserver is currently connected, send a POST request with an empty body to `/api/restart/indexers`. The webserver will signal to each indexer that it should shut itself down and restart. As the individual indexers come back up, the webserver will reconnect automatically.
+ウェブサーバが現在接続しているすべてのインデクサを再起動するには、`/api/restart/indexers` にボディが空の POST リクエストを送信します。ウェブサーバは、各インデクサに対してシャットダウンと再起動のシグナルを送ります。個々のインデクサーが復旧すると、ウェブサーバは自動的に再接続します。
 
-### Checking for a Distributed Frontend and deployment info
+### 分散型フロントエンドの確認とデプロイメント情報の確認
 
-To check whether the Gravwell cluster is operating in a distributed frontend mode, perform a GET on `/api/deployment`.  The webserver will respond with a JSON object indicating whether the frontend is configured in a distributed mode.
+Gravwellクラスタが分散フロントエンドモードで動作しているかどうかを確認するには、`/api/deployment`に対してGETを実行します。 ウェブサーバからは、フロントエンドが分散モードで設定されているかどうかを示すJSONオブジェクトが返信されます。
 
-An example response when not in distributed mode:
+分散モードでない場合のレスポンス例:
 
 ```
 {
@@ -28,30 +28,30 @@ An example response when not in distributed mode:
 ```
 
 
-### Performing a system backup
+### システムバックアップの実行
 
-Admin users may request a system backup which will provide a backup file containing all content related to the state of Gravwell.
+管理者ユーザーは、システムバックアップを要求すると、Gravwell の状態に関連するすべての コンテンツを含むバックアップファイルが提供されます。
 
-A system backup can be used to save user and group accounts, dashboards, kits, query libraries, and even saved searches.  This is essentially everything but data and system configuration.
+システムバックアップには、ユーザーやグループのアカウント、ダッシュボード、キット、クエリライブラリ、保存された検索結果などが含まれます。 これは基本的にデータとシステム設定以外のすべてのものである。
 
-A backup is obtained by performing a `GET` request on `/api/backup` as an admin user, the API will then return a file download with the backup file.
+バックアップを取得するには、管理者ユーザーとして `/api/backup` に `GET` リクエストを実行すると、API はバックアップファイルのダウンロードを返します。
 
-By default a backup does not contain any saved searches; to include saved searches in the backup append the `savedsearch=true` URL parameter on the GET request.
+デフォルトでは、バックアップには保存された検索が含まれていません。保存された検索をバックアップに含めるには、GETリクエストに `savedsearch=true` というURLパラメータを追加します。
 
-The `/api/backup` API may be authenticated using either the JWT authorization token or a cookie.
+`api/backup` APIは、JWT認証トークンまたはクッキーを使って認証することができます。
 
-NOTE: Only a single backup and/or restore may take place at any given time.
+注： バックアップやリストアは、一度に一回しか実行できません。
 
-### Restoring from a system backup
+### システムバックアップからのリストア
 
-Admin users may restore the system from a backup archive by performing a `POST` to the `/api/backup` API and uploading a backup file using a multipart form.
+管理者ユーザーは `/api/backup`API に対して `POST` を実行し、マルチパートフォームを使ってバックアップファイルをアップロードすることで、バックアップアーカイブからシステムを復元することができます。
 
-The API expects that the backup file be located in the `backup` form field and be uploaded using a multipart form.
+APIはバックアップファイルが `backup`フォームフィールドに置かれ、マルチパートフォームを使ってアップロードされることを期待している。
 
-The `/api/backup` API may be authenticated using either the JWT authorization token or a cookie.
+`api/backup` APIは、JWT認証トークンまたはクッキーを使って認証することができます。
 
-NOTE: A restoration is a complete restoration, any changes to users, content, or saved searches will after the restoration point will be lost.
+注： 復元は完全な復元であり、復元ポイント以降に行われたユーザー、コンテンツ、保存された検索への変更はすべて失われます。
 
-NOTE: Only a single backup and/or restore may take place at any given time.
+注：一度に実行できるバックアップや復元は1つだけです。
 
-NOTE: Once the restoration begins, all sessions will be terminated.  Upon successful completion of a restore, all users will need to log back in.
+注：リストアを開始すると、すべてのセッションが終了します。 復元が正常に完了すると、すべてのユーザーが再ログインする必要があります。

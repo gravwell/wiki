@@ -1,12 +1,12 @@
-# collectd Ingester
+# Collectdインジェスター
 
-The collectd ingester is a fully standalone [collectd](https://collectd.org/) collection agent which can directly ship collectd samples to Gravwell.  The ingester supports multiple collectors which can be configured with different tags, security controls, and plugin-to-tag overrides.
+Collectdインジェスターは完全にスタンドアローンの[collectd](https://collectd.org/)コレクションエージェントで、collectdのサンプルを直接Gravwellに送ることができます。 インジェスターは複数のコレクターをサポートしており、それぞれに異なるタグ、セキュリティコントロール、プラグインからタグへのオーバーライドを設定できます。
 
-## Basic Configuration
+## 基本設定
 
-The collectd ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the collectd ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+Collectdインジェスターは、[インジェスター](#!ingesters/ingesters.md#Global_Configuration_Parameters)で説明されている統一されたグローバル設定ブロックを使用します。 他の多くのGravwellインジェスターと同様に、Collectdインジェスターは複数のアップストリームインデクサー、TLS、クリアテキスト、名前付きパイプ接続、ローカルキャッシュ、ローカルロギングをサポートしています。
 
-## Collector Examples
+## コレクター例
 
 ```
 [Collector "default"]
@@ -24,30 +24,30 @@ The collectd ingester uses the unified global configuration block described in t
 	Tag-Plugin-Override=swap:collectdswap
 ```
 
-## Installation
-If you're using the Gravwell Debian repository, installation is just a single apt command:
+## インストール
+GravwellのDebianリポジトリを使用している場合、インストールはaptコマンド1つで完了します:
 
 ```
 apt-get install gravwell-collectd
 ```
 
-Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+それ以外の場合は、[ダウンロード](#!quickstart/downloads.md)からインストーラーをダウンロードしてください。Gravwellサーバのターミナルを使って、スーパーユーザーとして（`sudo`コマンドなどで）以下のコマンドを実行し、インジェスターをインストールします:
 
 ```
 root@gravserver ~ # bash gravwell_collectd_installer.sh
 ```
 
-If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately.  However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, the installer will prompt for the authentication token and the IP address of the Gravwell indexer. You can set these values during installation or leave them blank and modify the configuration file in `/opt/gravwell/etc/collectd.conf` manually.
+Gravwellのサービスが同じマシンに存在する場合、インストールスクリプトは自動的に`Ingest-Auth`パラメータを抽出し、適切に設定します。しかし、インジェスターが既存のGravwellバックエンドと同じマシンに常駐していない場合、インストーラは認証トークンとGravwellインデクサーのIPアドレスを要求します。これらの値はインストール時に設定するか、あるいは空欄にして、`/opt/gravwell/etc/collectd.conf`の設定ファイルを手動で修正することができます。
 
-## Configuration
+## 設定
 
-The collectd ingester relies on the same Global configuration system as all other ingesters.  The Global section is used for defining indexer connections, authentication, and local cache controls.
+Collectdインジェスターは、他のすべてのインジェスターと同じグローバル設定システムに依存しています。グローバルセクションは、インデクサの接続、認証、およびローカルキャッシュコントロールを定義するために使用されます。
 
-Collector configuration blocks are used to define listening collectors which can accept collectd samples.  Each collector configuration can have a unique Security-Level, authentication, tag, source override, network bind, and tag overrides.  Using multiple collector configurations, a single collectd ingester can listen on multiple interfaces and apply unique tags to collectd samples coming in from multiple network enclaves.
+コレクター設定ブロックは、collectdのサンプルを受け入れることができるリスニングコレクターを定義するために使用されます。 各コレクター設定は、固有のセキュリティレベル、認証、タグ、ソースオーバーライド、ネットワークバインド、タグオーバーライドを持つことができます。複数のコレクター設定を使用すると、単一のcollectdインジェスターが複数のインターフェイスをリッスンし、複数のネットワークエンクレーブから来るcollectdサンプルに固有のタグを適用できます。
 
-By default the collectd ingester reads a configuration file located at _/opt/gravwell/etc/collectd.conf_.
+デフォルトでは、collectdインジェスターは _/opt/gravwell/etc/collectd.conf_ にある設定ファイルを読み込みます。
 
-### Example Configuration
+### 設定例
 
 ```
 [Global]
@@ -70,15 +70,15 @@ By default the collectd ingester reads a configuration file located at _/opt/gra
 	Tag-Plugin-Override=cpu:collectdcpu
 ```
 
-### Collector Configuration Options
+### コレクター設定オプション
 
-Each Collector block must contain a unique name and non-overlapping Bind-Strings.  You cannot have multiple Collectors that are bound to the same interface on the same port.
+各コレクターブロックには、固有の名前と重複しないバインド文字列が必要です。 同じポートの同じインターフェイスにバインドされた複数のコレクターを持つことはできません。
 
 #### Bind-String
 
-Bind-String controls the address and port which the Collector uses to listen for incoming collectd samples.  A valid Bind-String must contain either an IPv4 or IPv6 address and a port.  To listen on all interfaces use the "0.0.0.0" wildcard address.
+Bind-Stringは、コレクターが受信するcollectdサンプルのリッスンに使用するアドレスとポートを制御します。有効な Bind-String には、IPv4 または IPv6 のアドレスとポートのいずれかが含まれていなければなりません。 すべてのインターフェースをリッスンするには、「0.0.0.0」のワイルドカードアドレスを使用します。
 
-##### Example Bind-String
+##### Bind-Stringの例
 ```
 Bind-String=0.0.0.0:25826
 Bind-String=127.0.0.1:25826
@@ -88,13 +88,13 @@ Bind-String=[fe80::1]:25826
 
 #### Tag-Name
 
-Tag-Name defines the tag that collectd samples will be assigned unless a Tag-Plugin-Override applies.
+Tag-Nameは、Tag-Plugin-Override が適用されない限り、collectd のサンプルに割り当てられるタグを定義します。
 
 #### Source-Override
 
-The Source-Override directive is used to override the source value applied to entries when they are sent to Gravwell.  By default the ingester applies the Source of the ingester, but it may be desirable to apply a specific source value to a Collector block in order to apply segmentation or filtering at search time.  A Source-Override is any valid IPv4 or IPv6 address.
+Source-Overrideディレクティブは、Gravwellに送信される際にエントリに適用されるSource値をオーバーライドするために使用します。 デフォルトでは、インジェスターはインジェスターのSourceを適用しますが、検索時にセグメンテーションやフィルタリングを適用するために、コレクターブロックに特定のSource値を適用することが望ましい場合があります。Source-Overrideは任意の有効なIPv4またはIPv6アドレスです。
 
-#### Example Source-Override
+#### Source-Overrideの例
 ```
 Source-Override=192.168.1.1
 Source-Override=[DEAD::BEEF]
@@ -103,9 +103,9 @@ Source-Override=[fe80::1:1]
 
 #### Security-Level
 
-The Security-Level directive controls how the Collector authenticates collectd packets.  Available options are: encrypt, sign, none.  By default a Collector uses the "encrypt" Security-Level and requires that both a User and Password are specified.  If "none" is used, no User or Password is required.
+Security-Level ディレクティブは、コレクターが collectd パケットを認証する方法を制御します。 利用可能なオプションは、encrypt、sign、none です。 デフォルトでは、コレクターは "encrypt "セキュリティレベルを使用し、ユーザとパスワードの両方を指定する必要があります。 "none"の場合は、ユーザもパスワードも必要ありません。
 
-#### Example Security-Level
+#### Security-Levelの例
 ```
 Security-Level=none
 Security-Level=encrypt
@@ -113,11 +113,11 @@ Security-Level = sign
 Security-Level = SIGN
 ```
 
-#### User and Password
+#### User と Password
 
-When the Security-Level is set as "sign" or "encrypt" a username and password must be provided that match the values set in endpoints.  The default values are "user" and "secret" to match the default values shipped with collectd.  These values should be changed when collectd data might contain sensitive information.
+Security-Levelが "sign"または "encrypt"に設定されている場合、エンドポイントで設定されている値と一致するユーザー名とパスワードを提供する必要があります。 デフォルト値は、collectdに同梱されているデフォルト値に合わせて、「user」と「secret」になっています。 collectd のデータに機密情報が含まれている可能性がある場合は、これらの値を変更する必要があります。
 
-##### User and Password Examples
+##### User と Password の例
 ```
 User=username
 Password=password
@@ -127,9 +127,9 @@ Password = "Password with spaces and other characters @$@#@()*$#W)("
 
 #### Encoder
 
-The default collectd encoder is JSON, but a simple text encoder is also available.  Options are "JSON" or "text"
+collectdのデフォルトのエンコーダーはJSONですが、シンプルなテキストエンコーダーも用意されています。 オプションは "JSON" または "text" です。
 
-An example entry using the JSON encoder:
+JSONエンコーダーを使ったエントリーの例です。:
 
 ```
 {"host":"build","plugin":"memory","type":"memory","type_instance":"used","value":727789568,"dsname":"value","time":"2018-07-10T16:37:47.034562831-06:00","interval":10000000000}
@@ -137,11 +137,11 @@ An example entry using the JSON encoder:
 
 ## Tag Plugin Overrides
 
-Each Collector block supports N number of Tag-Plugin-Override declarations which are used to apply a unique tag to a collectd sample based on the plugin that generated it.  Tag-Plugin-Overrides can be useful when you want to store data coming from different plugins in different wells and apply different ageout rules.  For example, it may be valuable to store collectd records about disk usage for 9 months, but CPU usage records can expire out at 14 days.  The Tag-Plugin-Override system makes this easy.
+各 Collector ブロックは N 個の Tag-Plugin-Override 宣言をサポートしています。この宣言は、Collectd サンプルを生成したプラグインに基づいて一意のタグを適用するために使用されます。 Tag-Plugin-Overrides は、異なるプラグインからのデータを異なるウェルに保存し、異なるエージアウトルールを適用したい場合に役立ちます。 例えば、ディスク使用量に関するcollectdレコードを9ヶ月間保存することは価値があるかもしれませんが、CPU使用量のレコードは14日で期限切れになります。 Tag-Plugin-Overrideシステムはこれを容易にします。
 
-The Tag-Plugin-Override format is comprised of two strings separated by the ":" character.  The string on the left represents the name of the plugin and the string on the right represents the name of the desired tag.  All the usual rules about tags apply.  A single plugin cannot be mapped to multiple tags, but multiple plugins CAN be mapped to the same tag.
+Tag-Plugin-Overrideのフォーマットは、":"文字で区切られた2つの文字列で構成されています。 左側の文字列はプラグインの名前を表し、右側の文字列は希望するタグの名前を表します。 タグに関する通常のルールがすべて適用されます。 1つのプラグインを複数のタグに対応させることはできませんが、複数のプラグインを同じタグに対応させることはできます。
 
-### Example Tag Plugin Overrides
+### Tag Plugin Overridesの例
 ```
 Tag-Plugin-Override=cpu:collectdcpu # Map CPU plugin data to the "collectdcpu" tag.
 Tag-Plugin-Override=memory:memstats # Map the memory plugin data to the "memstats" tag.

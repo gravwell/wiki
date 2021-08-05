@@ -1,12 +1,12 @@
-# Netflow Ingester
+# Netflowインジェスター
 
-The Netflow ingester acts as a Netflow collector (see [the Wikipedia article](https://en.wikipedia.org/wiki/NetFlow) for a full description of Netflow roles), gathering records created by Netflow exporters and capturing them as Gravwell entries for later analysis. These entries can then be analyzed using the [netflow](#!search/netflow/netflow.md) search module.
+NetflowインジェスターはNetflowコレクター（Netflowの役割の詳細については[Wikipedia記事](https://en.wikipedia.org/wiki/NetFlow)を参照）として機能し、Netflowエクスポーターによって作成されたレコードを収集し、後の分析のためにGravwellのエントリとして取り込むことができます。これらのエントリは、[netflow](#!search/netflow/netflow.md)検索モジュールを使用して分析することができます。
 
-## Basic Configuration
+## 基本設定
 
-The Netflow ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the Netflow ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+Netflowインジェスターは、[インジェスター](#!ingesters/ingesters.md#Global_Configuration_Parameters)で説明されている統一されたグローバル設定ブロックを使用します。 他の多くのGravwellインジェスターと同様に、Netflowインジェスターは複数のアップストリームインデクサー、TLS、クリアテキスト、名前付きパイプ接続、ローカルキャッシュ、ローカルロギングをサポートしています。
 
-## Collector Examples
+## コレクターの例
 
 ```
 [Collector "netflow v5"]
@@ -21,21 +21,21 @@ The Netflow ingester uses the unified global configuration block described in th
 	Flow-Type=ipfix
 ```
 
-## Installation
+## インストール
 
-If you're using the Gravwell Debian repository, installation is just a single apt command:
+GravwellのDebianリポジトリを使用している場合、インストールはaptコマンド1つで完了します:
 
 ```
 apt-get install gravwell-netflow-capture
 ```
 
-Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). To install the Netflow ingester, simply run the installer as root (the actual file name will typically include a version number):
+それ以外の場合は、[ダウンロード](#!quickstart/downloads.md)からインストーラーをダウンロードしてください。Netflowインジェスターをインストールするには、rootとしてインストーラーを実行するだけです（実際のファイル名には通常、バージョン番号が含まれています）:
 
 ```
 root@gravserver ~ # bash gravwell_netflow_capture_installer.sh
 ```
 
-If there is no Gravwell indexer on the local machine, the installer will prompt for an Ingest-Secret value and an IP address for an indexer (or a Federator). Otherwise, it will pull the appropriate values from the existing Gravwell configuration. In any case, review the configuration file in `/opt/gravwell/etc/netflow_capture.conf` after installation. A straightforward example which listens on UDP port 2055 might look like this:
+ローカルマシンにGravwellインデクサーがない場合、インストーラはIngest-Secretの値とインデクサー（またはフェデレーター）のIPアドレスの入力を求めます。そうでない場合は、既存のGravwellの設定から適切な値を読み込みます。いずれにしても、インストール後は `/opt/gravwell/etc/netflow_capture.conf` にある設定ファイルを確認してください。UDPポート2055をリッスンする簡単な例は以下のようになります:
 
 ```
 [Global]
@@ -50,9 +50,9 @@ Log-Level=INFO
 	Tag-Name=netflow
 ```
 
-Note that this configuration sends entries to a local indexer via `/opt/gravwell/comms/pipe`. Entries are tagged 'netflow'.
+この設定では、`/opt/gravwell/comms/pipe`を介してローカルのインデクサにエントリを送信することに注意してください。エントリには「netflow」というタグが付けられます。
 
-You can configure any number of `Collector` entries listening on different ports with different tags; this can help organize the data more clearly.
+異なるポートをリッスンする`Collector`エントリを、異なるタグでいくつでも構成することができます。これにより、データをより明確に整理することができます。
 
-Note: At this time, the ingester only supports Netflow v5; keep this in mind when configuring Netflow exporters.
+注：現時点では、インジェスターはNetflow v5しかサポートしていません。Netflowエクスポーターを構成する際には、この点に注意してください。
 

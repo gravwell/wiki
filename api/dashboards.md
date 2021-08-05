@@ -1,24 +1,24 @@
-# Dashboard Storage API
+# ダッシュボードストレージAPI
 
-The dashboard api is essentially a generic CRUD api for managing json blobs used by the GUI to render dashboards. Searches present on a dashboard are launched by the GUI and the backend/frontend/webserver doesn't really have a concept of what they are.
+ダッシュボードAPIは、基本的に、GUIがダッシュボードをレンダリングするために使用するjsonblobを管理するための汎用CRUDAPIです。 ダッシュボードに表示される検索はGUIによって起動され、backend/frontend/webserverには実際にはそれらが何であるかという概念がありません。
 
-## Data Structure
+## データ構造
 
-* ID: A 64-bit integer which uniquely identifies the dashboard.
-* GUID: A UUID which designates the dashboard. Persists across kit installation (see below). Used when referring to dashboards from actionables.
-* Name: A user-friendly name for the dashboard.
-* Description: A more detailed description of the dashboard.
-* UID: The numeric ID of the dashboard's owner.
-* GIDs: An array of numeric group IDs with which this dashboard is shared.
-* Global: A boolean, set to true if dashboard should be visible to all users (admin only).
-* Created: The timestamp at which the dashboard was created.
-* Updated: The timestamp at which the dashboard was last updated.
-* Labels: An array of strings containing [labels](#!gui/labels/labels.md).
-* Data: The actual definition of the dashboard contents (see below).
+* ID：ダッシュボードを一意に識別する64ビット整数。
+* GUID：ダッシュボードを指定するUUID。 キットのインストール全体で持続します（以下を参照）。 アクション可能からダッシュボードを参照するときに使用されます。
+* Name：ダッシュボードのわかりやすい名前。
+* Description：ダッシュボードのより詳細な説明。
+* UID：ダッシュボードの所有者の数値ID。
+* GID：このダッシュボードが共有される数値グループIDの配列。
+* Global：ブール値。ダッシュボードをすべてのユーザーに表示する必要がある場合はtrueに設定します（管理者のみ）。
+* Created：ダッシュボードが作成されたタイムスタンプ。
+* Updated：ダッシュボードが最後に更新されたタイムスタンプ。
+* Labels： [labels](#!gui/labels/labels.md).を含む文字列の配列。
+* Data：ダッシュボードコンテンツの実際の定義（以下を参照）。
 
-Note that every dashboard has both an `ID` field and a `GUID` field. This is because dashboards may be packed in kits along with actionables which *refer* to those dashboards. A dashboard packed into a kit includes its existing GUID, and that GUID is preserved when the kit is installed, so it is safe for actionables to refer to the dashboard by its GUID. The ID field, on the other hand, is randomly generated whenever a dashboard is created or installed. A given system may actually have several dashboards with the same GUID (installed by different users, typically) but each dashboard will have its own unique ID.
+すべてのダッシュボードには、`ID`フィールドと`GUID`フィールドの両方があることに注意してください。 これは、ダッシュボードが、それらのダッシュボードを*参照*するアクション可能なものと一緒にキットにパックされている可能性があるためです。 キットにパックされたダッシュボードには既存のGUIDが含まれており、キットのインストール時にそのGUIDが保持されるため、アクション担当者がGUIDでダッシュボードを参照しても安全です。 一方、IDフィールドは、ダッシュボードが作成またはインストールされるたびにランダムに生成されます。 特定のシステムには、実際には同じGUIDを持つ複数のダッシュボード（通常は異なるユーザーによってインストールされます）がありますが、各ダッシュボードには独自の一意のIDがあります。
 
-Although the webserver does not care what goes into the `Data` field (except that it should be valid JSON), there is a particular format which the **GUI** uses. The following is a complete Typescript definition of the Dashboard structure including the Data field as used by the GUI:
+Webサーバーは `Data`フィールドに何が入力されるかを気にしませんが（有効なJSONである必要があることを除いて）、**GUI**が使用する特定の形式があります。 以下は、GUIで使用されるデータフィールドを含むダッシュボード構造の完全なTypescript定義です。
 
 ```
 interface RawDashboard {
@@ -100,11 +100,11 @@ interface RendererOptions {
 }
 ```
 
-Note: Throughout this document, we include valid `Data` structures, but for brevity we will tend to use structures describing an empty dashboard rather than one containing tiles.
+注：このドキュメント全体に有効な`データ`構造が含まれていますが、簡潔にするために、タイルを含むダッシュボードではなく、空のダッシュボードを記述する構造を使用する傾向があります。
 
-## Creating a dashboard
+## ダッシュボードの作成
 
-To add a dashboard, issue a POST request to `/api/dashboards` with a payload in the following format:
+ダッシュボードを追加するには、次の形式のペイロードを使用して`/api/dashboards`にPOSTリクエストを発行します。
 
 ```
 {
@@ -119,24 +119,23 @@ To add a dashboard, issue a POST request to `/api/dashboards` with a payload in 
 }
 ```
 
-The `Data` property is the JSON used by the GUI to create the actual dashboard. It can be initialized or left blank for later populating; here we have included an empty "tiles" field for demonstration purposes.
+`Data`プロパティは、実際のダッシュボードを作成するためにGUIによって使用されるJSONです。 初期化することも、後で入力するために空白のままにすることもできます。 ここでは、デモンストレーション用に空の「タイル」フィールドを含めました。
 
-If the `UID` parameter is omitted from the request, it will default to the UID of the requesting user. Only admin users can set the UID to any ID except their own.
+`UID`パラメータがリクエストから省略されている場合、デフォルトでリクエストしているユーザーのUIDになります。 管理者ユーザーのみが、自分以外のIDにUIDを設定できます。
 
-The `GIDs` array should contain a list of group IDs with which the dashboard will be shared. If left empty, the dashboard is not shared with anyone.
+`GIDs`配列には、ダッシュボードを共有するグループIDのリストが含まれている必要があります。 空のままにすると、ダッシュボードは誰とも共有されません。
 
-Admin users may also set the boolean `Global` field to true; setting this will allow all users on the system to access the dashboard.
+管理者ユーザーは、ブール値の「グローバル」フィールドをtrueに設定することもできます。 これを設定すると、システム上のすべてのユーザーがダッシュボードにアクセスできるようになります。
 
-If a `GUID` field is included and is a valid UUID, it will be used for the dashboard instead of a randomly generated one. In most cases, the GUID field should be left blank so the webserver can generate a random one.
+`GUID`フィールドが含まれていて、有効なUUIDである場合、ランダムに生成されたものではなく、ダッシュボードに使用されます。 ほとんどの場合、Webサーバーがランダムなものを生成できるように、GUIDフィールドは空白のままにする必要があります。
 
-The webserver's response contains the numeric ID of the newly-created dashboard.
+Webサーバーの応答には、新しく作成されたダッシュボードの数値IDが含まれます。
 
-## Listing Dashboards
+## ダッシュボードの一覧表示
 
-### Getting all dashboards for the current user
+### 現在のユーザーのすべてのダッシュボードを取得する
 
-A user can get all dashboards to which they have access (via ownership or group) by issuing a GET request on `/api/dashboards`. The following shows a response containing two dashboards:
-
+ユーザーは、`/api/dashboards`でGETリクエストを発行することにより、（所有権またはグループを介して）アクセスできるすべてのダッシュボードを取得できます。 以下に、2つのダッシュボードを含む応答を示します。
 ```
 [
   {
@@ -209,8 +208,8 @@ A user can get all dashboards to which they have access (via ownership or group)
 ]
 ```
 
-### Getting all dashboards owned by a user
-To get dashboards explicitly owned by a user, issue a GET request on `/api/users/{uid}/dashboards`, replacing {uid} with the desired user ID. The webserver will return ONLY those dashboards specifically owned by that UID.  This WILL NOT include dashboards the user has access to through group memberships.
+### ユーザーが所有するすべてのダッシュボードを取得する
+ユーザーが明示的に所有するダッシュボードを取得するには、`/api/users/{uid}/dashboards`でGETリクエストを発行し、{uid}を目的のユーザーIDに置き換えます。 Webサーバーは、そのUIDによって特別に所有されているダッシュボードのみを返します。 これには、ユーザーがグループメンバーシップを通じてアクセスできるダッシュボードは含まれません。
 
 ```
 WEB GET /api/users/1/dashboards:
@@ -240,8 +239,8 @@ WEB GET /api/users/1/dashboards:
 
 ```
 
-### Getting all of a group's dashboards
-To get all dashboards that a specific group has access to, issue a GET request to `/api/groups/{gid}/dashboards`, replacing {gid} with the desired group ID. The server will return any dashboards shared with that group.  This deviates a little from normal Unix permissions in that a dashboard can be shared with multiple groups (so groups don't really OWN a dashboard, but rather dashboards are kind of members of a group).
+### グループのすべてのダッシュボードを取得する
+特定のグループがアクセスできるすべてのダッシュボードを取得するには、GETリクエストを`/api/groups/{gid}/dashboards`に発行し、{gid}を目的のグループIDに置き換えます。 サーバーは、そのグループと共有されているダッシュボードを返します。 これは、ダッシュボードを複数のグループと共有できるという点で、通常のUnix権限とは少し異なります（したがって、グループは実際にはダッシュボードを所有していませんが、ダッシュボードは一種のグループのメンバーです）。
 
 ```
 WEB GET /api/groups/2/dashboards:
@@ -293,8 +292,8 @@ WEB GET /api/groups/2/dashboards:
 ```
 
 
-### Admin-only: List ALL dashboards of ALL users
-To get *all* dashboards on the system, an admin user may issue a GET request to `/api/dashboards/all`. If this request is issued by a non-admin user it should return all dashboards to which they have access (equivalent to a GET on `/api/dashboards`)
+### 管理者のみ：すべてのユーザーのすべてのダッシュボードを一覧表示します
+システム上の*すべて*のダッシュボードを取得するために、管理者ユーザーは`/api/Dashboards/all`にGETリクエストを発行できます。 このリクエストが管理者以外のユーザーによって発行された場合、アクセスできるすべてのダッシュボードを返す必要があります(`/api/dashboards`のGETに相当)
 
 ```
 WEB GET /api/dashboards/all:
@@ -341,17 +340,16 @@ WEB GET /api/dashboards/all:
 
 ```
 
-## Getting a specific dashboard
-To fetch a particular ID, issue a GET request to `/api/dashboards/{id}`, replacing `{id}` with the dashboard's ID, e.g. `/api/dashboards/69148521436807`.
+## 特定のダッシュボードを取得する
+特定のIDを取得するには、`/api/dashboards/{id}`に対してGETリクエストを発行し、`{id}`をダッシュボードのIDに置き換えてください（例：`/api/dashboards/69148521436807`）。
 
-It is also possible to fetch a specific dashboard by GUID rather than ID: `GET /api/dashboards/d28b6887-ad55-479e-8af3-0cbcbd5084b1`.
+IDではなくGUIDで特定のダッシュボードをフェッチすることもできます：`GET/api/dashboards/d28b6887-ad55-479e-8af3-0cbcbd5084b1`。
 
 
-## Updating a Dashboard
-Updating a dashboard (to change the data or alter the name, description, GID list, etc) is done by issuing a PUT request to `/api/dashboards/{id}` where {id} is the unique identifier for a given dashboard.
+## ダッシュボードの更新
+ダッシュボードの更新（データの変更や名前、説明、GIDリストの変更など）は、`/api/dashboards/{id}`にPUTリクエストを発行することで行われます。ここで、{id}は特定のダッシュボードの一意の識別子です。 。
 
-In this example a user (UID 3) wishes to add permission for group 1 to access a dashboard (ID 2). The user first fetches the dashboard:
-
+この例では、ユーザー（UID 3）は、グループ1がダッシュボード（ID 2）にアクセスするためのアクセス許可を追加したいと考えています。 ユーザーは最初にダッシュボードを取得します。
 ```
 GET /api/dashboards/2:
 {
@@ -398,7 +396,7 @@ GET /api/dashboards/2:
 }
 ```
 
-The user has now retrieved the target dashboard, makes the modifications, and posts a PUT request:
+これで、ユーザーはターゲットダッシュボードを取得し、変更を加えて、PUTリクエストを投稿しました:
 ```
 WEB PUT /api/dashboards/2:
 {
@@ -448,11 +446,11 @@ WEB PUT /api/dashboards/2:
 
 ```
 
-The server will respond to update requests with the updated dashboard structure.
+サーバーは、更新されたダッシュボード構造で更新要求に応答します。
 
-To be safe, take care to send back all fields which were present in the original fetch, even if unchanged. For instance, although this update did not modify the `Description` field, we include it in the update request because the webserver cannot distinguish between an *un-set* field and an *empty* field.
+安全のため、変更されていない場合でも、元のフェッチに存在していたすべてのフィールドを返送するように注意してください。 たとえば、この更新では `Description`フィールドは変更されませんでしたが、ウェブサーバーは*un-set*フィールドと*empty*フィールドを区別できないため、更新リクエストに含めます。
 
-Note: The GUID may be used in place of the dashboard ID if desired.
+注：必要に応じて、ダッシュボードIDの代わりにGUIDを使用できます。
 
-## Deleting a dashboard
-To remove a dashboard issue a request with the DELETE method on the url `/api/dashboards/{id}` where {id} is the numeric ID of the dashboard.
+## ダッシュボードの削除
+ダッシュボードを削除するには、`/api/dashboards/{id}`というURLにDELETEメソッドでリクエストを発行します。{id}はダッシュボードの数値IDです。

@@ -1,42 +1,42 @@
-# Stats Module
+# stats モジュール
 
-The stats module allows the user to perform multiple stats operations simultaneously, where the individual math modules only perform one operation. The canonical example for the stats module is computing the mean and standard deviation of values in order to display error bars on a graph.
+stats モジュールでは、複数の統計演算を同時に行うことができます。個々の数学モジュールでは1つの演算しか行わないのに対し、stats モジュールでは複数の統計演算を同時に行うことができます。stats モジュールの典型的な例は、グラフにエラーバーを表示するために、値の平均値と標準偏差を計算することです。
 
-## Syntax
+## 構文
 
-An invocation of the stats module consists of:
+stats モジュールの呼び出しは以下のように構成されています。
 
-* The module name (`stats`)
-* A list of operations, specifying which enumerated values should be operated on and optionally a name for the output (`mean(length)`, `count as foo`)
-* Optional "by" arguments, which specify that the operations should be performed separately for each combination of by arguments (as in `mean(Length) by SrcIP`)
-* An optional time window
+* モジュール名（`stats`）
+* 操作のリストで、どの列挙型の値を操作するかを指定し、オプションで出力の名前を指定します（`mean(length)`, `count as foo`）
+* オプションの by 引数では、by 引数の組み合わせごとに別々に処理を行うことを指定します（`mean(Length) by SrcIP`のように）。
+* 任意の時間枠
 
-These components are discussed below.
+これらの構成要素については、以下で説明します。
 
-### Supported Flags
+### サポートされているフラグ
 
-* `-b`: This flag tells the stats module to always preserve the original body of the entry. For example, saying `tag=* length | stats max(length) | text` would normally cause the output entry's body to be overwritten with the maximum length seen, for convenient display with the text renderer. Adding the `-b` flag (`tag=* length | stats -b max(length) | text`) would preserve the original body, meaning the renderer will instead display the *contents* of the longest entry seen.
+* `-b`: このフラグは stats モジュールに、エントリの元のボディを常に維持するように指示します。例えば、`tag=* length | stats max(length) | text` とすると、通常、出力エントリの本文は、テキストレンダラでの表示に便利なように、見たままの最大長で上書きされてしまいます。`-b` フラグ（`tag=* length | stats -b max(length) | text`）を追加すると、元のボディが維持され、レンダラーは代わりに見た中で最も長いエントリのコンテンツを表示することになります。
 
-## Math Operations Specification
- 
-An operation consists of the operation name, the "source" enumerated value contained in parentheses, and optionally a different name for the output enumerated value.
+## 数学的演算の仕様
 
-The following operation names are supported:
+演算は、操作名、括弧内のソース列挙値、およびオプションで出力列挙値の別の名前で構成されます。
 
-* count: count entries
-* sum: sum values and return the total
-* mean: calculate the average
-* stddev: calculate the standard deviation
-* variance: calculate the variance
-* min: return the minimum value seen
-* max: return the maximum value seen
-* unique_count: return the number of unique instances of the source were seen.
+以下の演算がサポートされています。
 
-The operation is performed on the source enumerated value. Thus, specifying `stats sum(Bytes)` would tell the stats module to sum up the Bytes enumerated values, outputting a single entry with an enumerated value named `sum` containing the total.
+* count: エントリー数をカウントします
+* sum: 値の合計を返します
+* mean: 平均値を計算します
+* stddev: 標準偏差を計算します
+* variance: 分散を計算します
+* min: 最小値を返します
+* max: 最大値を返します
+* unique_count: ソースのユニークなインスタンスの数を返します
 
-Note: If no source is specified, the operation is instead performed on the body of the entry. Specifying `stats sum` is equivalent to specifying `stats sum(DATA)`
+演算はソースの列挙値に対して行われます。したがって、`stats sum(Bytes)` を指定すると、stats モジュールに Bytes の列挙値を合計することを指示し、合計値を含む `sum` という名前の列挙値を持つ単一のエントリを出力します。
 
-Multiple operations can be specified:
+注意：ソースが指定されていない場合は、エントリのボディに対して演算が行われます。`stats sum` を指定することは、`stats sum(DATA)` を指定することと同じです。
+
+複数の演算を指定することができます。
 
 ```
 stats sum(Bytes) mean(Bytes)
@@ -46,72 +46,72 @@ stats sum(Bytes) mean(Bytes)
 stats mean(Bytes) stddev(bytes) min(Length)
 ```
 
-The output of an operation is, by default, assigned to an enumerated value with the name of the operation. Thus `stats sum(Bytes)` will create an enumerated value named `sum` to hold the output. You can change this with the `as` option:
+演算の結果は、デフォルトでは、演算の名前を持つ列挙型の値に割り当てられます。したがって，`stats sum(Bytes)` は，`sum` という名前の列挙型の値を作成して出力を格納します．これを変更するには、`as` オプションを使用します。
 
 ```
 stats mean(Bytes) as BytesAvg
 ```
 
-This is particularly useful when performing the same operation on multiple different enumerated values:
+これは、複数の異なる列挙型の値に対して同じ演算を行う場合に特に有効です。
 
 ```
 stats mean(Bytes) as BytesAvg mean(Length) as LengthAvg
 ```
 
-## "By" Arguments Specification
+## by 引数の仕様
 
-When the user needs an operation performed separately for e.g. each different IP, it is necessary to specify "by arguments".
+（例えば、異なるIPごとに）別々の演算を行う必要がある場合は、「by 引数」を指定する必要があります。
 
 ```
 stats mean(Bytes) stddev(Bytes) by SrcIP
 ```
 
-This tells the stats module to calculate separate mean and standard deviation for each unique SrcIP value. The result will be 1 entry for each SrcIP seen, each containing the appropriate SrcIP, mean, and stddev enumerated values.
+これは stats モジュールに、固有の SrcIP 値ごとに平均値と標準偏差を計算するように指示します。その結果、SrcIP ごとに 1 つのエントリが作成され、それぞれに適切な SrcIP、mean、stddev の列挙値が含まれます。
 
-You can specify as many by arguments as you want:
+by 引数はいくつでも指定できます。
 
 ```
 stats mean(Bytes) stddev(Bytes) by SrcIP DstIP DstPort
 ```
 
-The module will calculate a separate mean and standard deviation for *every combination of SrcIP, DstIP, and DstPort*.
+このモジュールは、SrcIP、DstIP、および DstPort のすべての組み合わせに対して、個別に平均値と標準偏差を計算します。
 
-Attention: When working with very large datasets on systems with limited memory, specifying too many by arguments can lead to memory exhaustion as the stats module attempts to keep millions of combinations in memory.
+注意：メモリが限られているシステムで非常に大きなデータセットを扱う場合、引数に指定する数が多すぎると、stats モジュールが何百万もの組み合わせをメモリに保持しようとするため、メモリの枯渇につながる可能性があります。
 
-### Using complex "By" arguments
+### 複雑な by 引数の使用
 
-If only a single "by" argument is provided and it is applied to the last operation then stats will apply it to all the operations.  This is a shorthand method.  If you do NOT want it applied to all operations ensure that the last operation does not have the "by" argument.
+by 引数を1つだけ指定し、それが最後の演算に適用された場合、stats はそれをすべての演算に適用します。 これは省略可能な方法です。 すべての演算に適用させたくない場合は、最後の演算に by 引数がないことを確認してください。
 
-For example, the following will run a "mean" operation using `SrcIP DstIP DstPort` as the keys, but the stddev operation is applied without keys:
+例えば、以下のようにすると、`SrcIP DstIP DstPort` をキーにして「mean」演算を行いますが、stddev 演算はキーなしで適用されます。
 
 ```
 stats mean(Bytes) by SrcIP DstIP DstPort stddev(Bytes)
 ```
 
-The stats module can perform operations with complex keying, this means that you can provide a keyset (or lack thereof) for every operation.  This is useful if you want to see multiple operation with different keys in a single table or chart.
+stats モジュールは、複雑なキーイングを用いた演算を行うことができます。これは、すべての演算に対してキーセット（またはキーセットがないもの）を提供できることを意味します。 これは、異なるキーを持つ複数の演算を 1 つの表やチャートで表示したい場合に便利です。
 
-For example, here is a query that performs a sum of packet sizes by IP but also provides a baseline sum across all packets:
+例えば、IP ごとのパケットサイズの合計を算出し、さらに全パケットのベースラインの合計も算出するクエリを以下に示します。
 
 ```
-tag=pcap packet ipv4.IP ~ 10.10.10.0/24 | length | stats sum(length) by IP sum(length) as total | chart total sum by IP 
+tag=pcap packet ipv4.IP ~ 10.10.10.0/24 | length | stats sum(length) by IP sum(length) as total | chart total sum by IP
 ```
 
 ![complex keys](complexkey.png)
 
-## Time Window Specification
+## 時間枠の仕様
 
-The stats module can operate in two modes: temporal or condensed.
+stats モジュールは、テンポラルとコンデンスの2つのモードで動作します。
 
-In condensed mode, it emits results only once. This occurs automatically when using the text renderer or when the `-nt` flag is passed to the table renderer.
+コンデンスモードでは、結果を一度だけ出力します。これは、テキストレンダラを使用した場合や、テーブルレンダラに `-nt` フラグが渡された場合に自動的に行われます。
 
-In temporal mode, the stats module operates over time windows, defaulting to 1 second. For every 1 second of data, the module emits a set of result entries. This is used when sending data to the chart renderer.
+テンポラルモードでは、stats モジュールは、デフォルトでは 1 秒の時間枠で動作します。1 秒のデータごとに、モジュールは結果エントリのセットを出力します。これは、チャートレンダラーにデータを送信する際に使用されます。
 
-While the default window is 1 second, the window size can be modified with the "over" option:
+デフォルトの枠は 1 秒ですが、「over」オプションで枠のサイズを変更できます。
 
 ```
 stats mean(Bytes) stddev(Bytes) by SrcIP over 5m
 ```
 
-When sent to the chart module, the results will be calculated over a 5 minute window rather than the standard 1 second.
+チャートモジュールに送られた場合、結果は標準の 1 秒ではなく、5 分間の枠で計算されます。
 
-Note: Only one time window can be specified, and the time window is applied to all operations.  The time window must also be the LAST argument to stats
+注意：時間枠は 1 つだけ指定でき、その時間枠はすべての演算に適用されます。時間枠は、stats の最後の引数でなければなりません。

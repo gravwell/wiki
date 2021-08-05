@@ -1,25 +1,25 @@
-## Packet Layer
+## パケットレイヤー
 
-The packet module is provides a very robust interface into packet processing but has one significant hindrance, it expects sanity.  When invoking various operations the packet processor inherits necessary parent layers in order to accurately deconstruct a packet.  When a packet query asks for a tcp port, the packet processor invokes the necessary sublayers to get to the tcp layer (whether it be Ethernet, 802.11q, IPv4, IPv6).  In the case where packet layer processing is required, but the packets may be malformed, wrapped, or just straight corrupt the "Packet Layer" can be used to handle JUST the layers specified.
+パケットモジュールは、パケット処理への非常に堅牢なインターフェースを提供していますが、1つの重要な障害があります、それは健全性を期待しています。 パケットプロセッサは、様々な操作を行う際に、パケットを正確に分解するために、必要のない親レイヤーを継承します。 パケットクエリが tcp ポートを要求する場合、パケットプロセッサは tcp レイヤー（イーサネット、802.11q、IPv4、IPv6のいずれか）に到達するために必要なサブレイヤーを呼び出します。 パケットレイヤーの処理が必要な場合でも、パケットが不正な形式であったり、ラップされていたり、あるいは単に破損していたりする場合には、「パケットレイヤー」を使用して指定されたレイヤーだけを処理することができます。
 
-The invocation for the "packetlayer" module is identical to the "packet" module, but it expects the lowest level layer to be the only layers present.  Below are are some example queries where this may prove useful.  The packetlayer parser will also continue to extract packet layers as long as there is data available in an entry or enumerated value, making it possible to handle very large blobs of packet layers.  Do you have a flat binary file of netflow packets?  Packetlayer can handle that.
+packetlayer モジュールの呼び出しは、packet モジュールと同じですが、最下層のレイヤーが存在する唯一のレイヤーであることを期待しています。 以下に、この機能が役立つと思われるクエリの例を示します。 パケットレイヤーのパーサーは、エントリーや列挙値にデータがある限り、パケットレイヤーを抽出し続けますので、非常に大きなパケットレイヤーの塊を扱うことが可能になります。 netflow パケットのフラットなバイナリファイルを持っていますか？ Packetlayer はそれを扱うことができます。
 
-### Supported Options
+### サポートされているオプション
 
-* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record. For example, the packet processing engine can operate on extracted values such as analyzing layer 2 tunnels.`
-* `-m : The “-m” option tells the packetlayer processor to continue extracting the specified layers until no data is available (multi-extract).  This option is useful for extracting Layer 4+ messages`
+* `-e <arg>`: 「-e」オプションは、レコード全体ではなく、列挙値を操作します。例えば、パケット処理エンジンは、レイヤー 2 のトンネルの分析など、抽出された値に対して操作することができます。
+* `-m : 「-m」オプションは、データがなくなるまで、指定されたレイヤーを抽出し続けることをパケットレイヤープロセッサーに指示します（マルチエクストラクト）。 このオプションは、レイヤー 4+ のメッセージを抽出するのに便利です。`
 
-### Layer 4+ Protocol Extraction
+### レイヤー 4+ プロトコル抽出
 
-Protocol layers above layer 3 are often stream based, relying on lower layers to handle transport, which often means that multiple layer 4+ messages may be in a single layer 3 payload.  An example query leveraging the packet layer processor to extract these messages uses the packet module to get to the tcp layer payload and the packetlayer module to extract multiple Modbus payloads.
+レイヤー 3 以上のプロトコル・レイヤーはストリーム・ベースであることが多く、下位レイヤーにトランスポートを依存しているため、複数のレイヤー 4+ メッセージが 1 つのレイヤー 3 ペイロードに含まれていることがあります。 パケットレイヤープロセッサーを利用してこれらのメッセージを抽出するクエリの例では、tcp レイヤーのペイロードを取得するためにパケットモジュールを使用し、複数の Modbus ペイロードを抽出するためにパケットレイヤーモジュールを使用します。
 
 ```
 tag=pcap tcp.Port == 502 tcp.Payload | packetlayer -m -e Payload modbus.Transaction != 0 modbus.Unit | count by Unit | chart count by Unit
 ```
 
-### Extracting Wrapped Packet Transports
+### ラップされたパケットトランスポートの抽出
 
-We occasionally encounter transport protocols that are not documented or hand rolled by angry developers.  Using the packetlayer module we can still maintain sanity.
+時折、ドキュメントのないトランスポートプロトコルに遭遇したり、怒った開発者に手を焼いたりすることがあります。 packetlayer モジュールを使用することで、正気を保つことができます。
 
 ```
 tag=pcap ipv6.SrcIP udp.Port == 31337 udp.Payload | slice Payload[0:4] as id Payload[4:] as payload2 | packetlayer -e payload2 modbus.Transaction != 0 modbus.Unit | count by Unit | chart count by Unit

@@ -1,67 +1,67 @@
-## Lookup
+## lookup
 
-The lookup module is used to do data enrichment and translation off of a static lookup table stored in a resource. The contents of one or more *enumerated values* are compared against values in the *match columns* until a match is found, then the value in that row's *extract column* is extracted into another enumerated value:
+lookup モジュールは、リソースに保存されている静的な lookup テーブルから、データの濃縮やトランスレーションを行うために使用されます。1つまたは複数の*列挙値*の内容は、一致するものが見つかるまで *match 列*の値と比較され、その行の *extract 列*の値が別の列挙値に抽出されます。
 
 ```
 lookup -r <resource name> <enumerated value> <column to match> <column to extract> as <valuename>
 ```
 
-Note: If you do NOT provide an ```as <valuename>``` addition to the syntax, lookup will create an enumerated value with the name of the "extracting" column.
+注意：シンタックスに ```as <valuename>``` を追加しない場合、lookup は抽出する列の名前を持つ列挙値を作成します。
 
-Multiple lookup operations can be specified in a single invocation of the lookup module by stringing together additional operations:
+lookup モジュールの1回の呼び出しで、複数の lookup の操作を、追加の操作を連結して指定することができます。
 
 ```
 lookup -r mytable A B C as foo D E F
 ```
 
-You can also extract multiple columns for each match. The following example matches the contents of enumerated value A against the values in column B; when a match is found, it extracts both columns C and D:
+一致するごとに複数の列を抽出することもできます。次の例では、列挙値Aの内容をB列の値と照合します。一致した場合、C列とD列の両方を抽出します。
 
 ```
 lookup -r mytable A B (C as foo D as bar)
 ```
 
-Lookup also supports vectored matches, this means you can match a set of enumerated values against a set of columns.  Vectored matches are performed by specifying match and extraction lists.  When performing vectored matches the number of extracted enumerated values much match the number of columns to match against.
+Lookup はベクトル化された一致もサポートしています。つまり、列のセットに対して列挙された値のセットをマッチさせることができます。 ベクトル化された一致は、マッチリストと抽出リストを指定して実行されます。 ベクトル化された一致を実行する場合、抽出された列挙値の数は、一致する列の数と一致する必要があります。
 
 ```
 lookup -r mytable [A B] [A B] (C as foo D as bar)
 ```
 
-### Supported Options
-* `-r <arg>`: The "-r" option informs the lookup module which lookup resource should be used to enrich data.
-* `-s`: The "-s" option specifies that the lookup modules should require that all extractions succeed or the entry will be dropped.
-* `-v`: The "-v" flag inverts the flow logic in the lookup module, meaning that successful matches are suppressed and missed matches are passed on.  The "-v" and "-s" flags can be combined to provide basic whitelisting, passing only values which do not exist in the specified lookup table.
+### サポートされているオプション
+* `-r <arg>`: 「-r」オプションは、どの lookup リソースを使用してデータを充実させるかを lookup モジュールに通知します。
+* `-s`: 「-s」オプションは、lookup モジュールが、すべての抽出が成功しないとエントリーが削除されることを要求するように指定します。
+* `-v`: 「-v」フラグは、lookup モジュールのフローロジックを反転させます。つまり、マッチしたものは抑制され、マッチしなかったものは引き継がれます。 「-v」フラグと「-s」フラグを組み合わせることで、指定した lookup テーブルに存在しない値のみを渡す、基本的なホワイトリストを提供することができます。
 
-Note: When using the `-s` or `-v` flags it is legal to specify that no extractions are to take place.  This operation can be useful when performing whitelisting or blacklisting.
+注意： `-s` または `-v` フラグを使用する際に、抽出を行わないように指定することは合法です。 この操作は、ホワイトリストやブラックリストを実行するときに便利です。
 
-Here is an example that ensures that enumerated values `A` and `B` exist in the columns `X` and `Y` but does not enrich data.
+列 `X` と `Y` に列挙値 `A` と `B` が存在することを保証するものの、データをリッチ化しない例を示します。
 
 ```
 lookup -v -r mytable [A B] [X Y] ()
 ```
 
-### Setting up a lookupdata resource
+### lookupdata リソースの設定
 
-Lookup data can be downloaded from compatible render modules (e.g. the table module) and stored in a resource for sharing and utilization. Using the menu on the search results page, we can opt to download a table of search results in this format by selecting "LOOKUPDATA".
+検索結果のデータは、互換性のあるレンダリングモジュール（table モジュールなど）からダウンロードしてリソースに保存し、共有・活用することができます。検索結果ページのメニューで「LOOKUPDATA」を選択すると、この形式で検索結果の表をダウンロードすることができます。
 
 ![Lookup Download](lookup-download.png)
 
-The [table renderer](#!search/table/table.md) also provides a `-save` option, which will automatically save the search result table as a resource for later use by lookup:
+[テーブルレンダラー](#!search/table/table.md)には、`-save`オプションもあり、検索結果のテーブルを自動的にリソースとして保存し、後で lookup で利用できるようにします。
 
 ```
 tag=syslog regex "DHCPACK on (?P<ip>\S+) to (?P<mac>\S+)" | unique ip mac | table -save ip2mac ip mac
 ```
 
-In the above example, the table renderer automatically creates a resource named 'ip2mac' which contains a mapping of IP addresses to MAC addresses as derived from DHCP logs.
+上記の例では、テーブルレンダラーが自動的に「ip2mac」というリソースを作成し、DHCPログから得られたIPアドレスとMACアドレスのマッピングを含んでいます。
 
-#### CSV tables
+#### CSV テーブル
 
-CSV data can also be used for the lookup module. In order to use a csv file as a resource in the Gravwell lookup search module the CSV must contain unique headers for the columns.
+CSV データは検索モジュールにも使用できます。Gravwell の検索モジュールで CSV ファイルをリソースとして使用するためには、CSV には列に対応するユニークなヘッダーが含まれていなければなりません。
 
-### Examples
+### 例
 
-#### Basic Extraction
+#### 基本的な抽出
 
-In this example, we have a resource called "macresolution" which was created from the following csv:
+この例では、以下の csv から作成された「macresolution」というリソースがあります。
 ```
 mac,hostname
 mobile-device-1,40:b0:fa:d7:af:01
@@ -70,13 +70,13 @@ mobile-device-2,40:b0:fa:d7:ae:02
 desktop-2,64:bc:0c:87:9a:11
 ```
 
-Then we issue a search off of packet data and use the lookup module to enrich our data stream to include hostnames, which in this case we are assigning to the "devicename" enumerated value.
+次に、パケットデータから検索を行い、lookup モジュールを使用して、データストリームにホスト名を追加します。ここでは、「devicename」という列挙値に割り当てています。
 
 ```
 tag=pcap packet eth.SrcMAC | count by SrcMAC | lookup -r macresolution SrcMAC mac hostname as devicename |  table SrcMAC devicename count
 ```
 
-This results in a table containing the following:
+この結果、次のような内容を含むテーブルができあがります。
 
 ```
 64:bc:0c:87:bc:71	|	desktop-1       	|	52183
@@ -85,15 +85,15 @@ This results in a table containing the following:
 40:b0:fa:d7:af:01	|	mobile-device-1 	|	  927
 ```
 
-#### Whitelisting
+#### ホワイトリスティング
 
-Using the same "macresolution" table shown above:
+先ほどの「macresolution」の表と同じものを使用します。
 
 ```
 tag=pcap packet eth.SrcMAC | count by SrcMAC | lookup -v -s -r macresolution SrcMAC mac hostname |  table SrcMAC count
 ```
 
-This results in a table containing any mac addresses which were **not** in the look up list.  System administrators can use the "-v" and "-s" flag to provide basic white listing and identification of new devices on a network or new logs in an event stream.
+この結果、lookup リストに含まれていない MAC アドレスがテーブルに表示されます。 システム管理者は、「-v」および「-s」フラグを使用して、ネットワーク上の新しいデバイスや、イベントストリームの新しいログの基本的なホワイトリストとの識別を行うことができます。
 
 ```
 64:bc:0c:87:bc:60	|	24382
@@ -102,9 +102,9 @@ This results in a table containing any mac addresses which were **not** in the l
 40:b0:fa:d7:af:fe	|	   21
 ```
 
-#### Multiple Extraction
+#### 多重抽出
 
-Consider the following lookup table named "places":
+次のような「places」という名前の lookup テーブルを考えてみましょう。
 
 ```
 name,lat,long
@@ -113,12 +113,12 @@ Santa Fe,35.6682,-105.96
 Sacramento,38.527,-121.347
 ```
 
-Given the name of a city, we'd like to be able to extract both latitude and longitude values. Assuming we're working with JSON entries with contain a "City" field, the following query will do exactly that:
+都市名を指定すると、緯度と経度の両方の値を抽出できるようにしたいと思います。City フィールドを含む JSON エントリーを扱う場合、以下のクエリはまさにそれを実行します。
 
 ```
 tag=default json City | lookup -r places City name (lat long) | table
 ```
 
-It matches the enumerated value City against the table's "name" column, then when a match is found it extracts both "lat" and "long", as shown below:
+列挙値 City をテーブルの name 列と照合し、一致したものがあれば、以下のように緯度と経度の両方を抽出します。
 
 ![](city.png)

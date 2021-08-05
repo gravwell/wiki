@@ -1,24 +1,24 @@
 # IP
 
-The ip module can convert enumerated values to the IP type and optionally perform filtering. This allows the user to, for instance, extract a string containing an IP address from a JSON structure, then use the ip module to convert that string to an IP address and check if it is in a certain subnet.
+ipモジュールは、列挙値をIP型に変換し、オプションでフィルタリングを行うことができます。これにより、例えば JSON 構造体から IP アドレスを含む文字列を抽出し、 ip モジュールを使用してその文字列を IP アドレスに変換し、それが特定のサブネット内にあるかどうかをチェックすることができます。
 
-## Supported Options
+## サポートされているオプション
 
-* `-or`: The "-or" flag specifies that the ip module should allow an entry to continue down the pipeline if ANY of the filters are successful.
-* `-categorize`: If the "-categorize" flag is set, the module will attempt to categorize each enumerated value as "PRIVATE", "PUBLIC", or "MULTICAST". Running `ip -categorize srcIP` will create an enumerated value named "srcIP_category" containing the category string.
+* `-or`: "or" フラグは、フィルタのいずれかが成功した場合に、 ipモジュールがエントリをパイプラインに続けることを許可するように指定する。
+* `-categorize`: もし"-categorize"フラグが設定されている場合、モジュールは各列挙値を "PRIVATE"、"PUBLIC"、"MULTICAST "のいずれかに分類しようとします。`ip -categorize srcIP`を実行すると、カテゴリ文字列を含む "srcIP_category"という名前の列挙値が作成されます。
 
-## Processing Operators
+## 処理演算子
 
-Enumerated values passed to the ip module can be compared against IP addresses or subnets using the following operators.
+ipモジュールに渡された列挙値は、以下の演算子を使用してIPアドレスまたはサブネットと比較することができます。
 
-| Operator | Name | Description |
+| 演算子 | 名前 | 説明 |
 |----------|------|-------------|
-| == | Equal | IP must be equal to the given address
-| != | Not equal | IP must not be equal to the given address
-| ~ | Subset | IP must be a member of the given subnet
-| !~ | Not subset | IP must not be a member of the given subnet
+| == | 等しい | IPは与えられたアドレスと同じでなければなりません。
+| != | 等しくない | IP は、与えられたアドレスと同じであってはなりません。
+| ~ | 含む | IPは与えられたサブネットのメンバーでなければなりません。
+| !~ | 含まない | IPは与えられたサブネットのメンバーであってはなりません。
 
-The ip module defines the keyword PRIVATE to match any of the standard private networks:
+ipモジュールは、標準のプライベートネットワークにマッチするキーワード PRIVATE を定義します:
 
 * 10.0.0.0/8
 * 172.16.0.0/12
@@ -29,50 +29,50 @@ The ip module defines the keyword PRIVATE to match any of the standard private n
 * fd00::/8
 * fe80::/10
 
-## Examples
+## 例
 
-### Convert a string to an IP
+### 文字列をIPに変換する
 
-Assuming JSON-formatted entries containing an 'ipaddr' field, extract that field and convert it to an IP address for later use:
+'ipaddr'フィールドを含む JSON 形式のエントリを想定して、そのフィールドを抽出し、後で使用するために IP アドレスに変換します:
 
 ```
 tag=json json ipaddr | ip ipaddr
 ```
 
-The resulting IP enumerated value can also be assigned to a different enumerated value name rather than overwriting the original:
+結果のIP列挙値は、元の値を上書きするのではなく、別の列挙値名に割り当てることもできます:
 
 ```
 tag=json json ipaddr | ip ipaddr as IP
 ```
 
-### Filter by address or subnet
+### アドレスまたはサブネットによるフィルタリング
 
-Assuming CSV-formatted data in which the 3rd field describes the source IP address of a connection, we can drop all connections not originating from 192.168.1.5:
+3番目のフィールドに接続元の IP アドレスが記述された CSV 形式のデータを想定すると、192.168.1.5 以外の接続はすべてドロップすることができます:
 
 ```
 tag=csv csv [2] as srcip | ip srcip==192.168.1.5
 ```
 
-We can also eliminate any connections which originated in the local subnet:
+また、ローカルサブネットから発生した接続を排除することもできます:
 
 ```
 tag=csv csv [2] as srcip | ip srcip !~ 192.168.0.0/16
 ```
 
-### Use the PRIVATE keyword
+### PRIVATEキーワードを使用する
 
-Assuming CSV-formatted data in which the 3rd field describes the source IP address of a connection, we can use the ip module to keep only those entries originating from private networks:
+3番目のフィールドに接続元のIPアドレスが記述されたCSV形式のデータを想定すると、 ipモジュールを使用してプライベートネットワークからのエントリのみを保持することができます:
 
 ```
 tag=csv csv [2] as srcip | ip srcip ~ PRIVATE
 ```
 
-### Categorize IP addresses
+### IPアドレスの分類
 
-Assuming CSV-formatted data in which the 3rd field describes the source IP address of a connection, we can use the ip module to assign a network category for each IP address:
+3番目のフィールドに接続元のIPアドレスが記述されたCSV形式のデータを想定して、IPモジュールを使用してIPアドレスごとにネットワークカテゴリを割り当てることができます:
 
 ```
 tag=csv csv [2] as srcip | ip -categorize srcip | table srcip srcip_category
 ```
 
-The resulting table will contain two columns: `srcip`, and `srcip_category` which will contain one of "PRIVATE", "PUBLIC", or "MULTICAST".
+結果として得られるテーブルには2つのカラムが含まれます: `srcip`, および `srcip_category` の2つのカラムが含まれ、これらのカラムには"PRIVATE"、"PUBLIC"、"MULTICAST "のいずれかが格納されます。

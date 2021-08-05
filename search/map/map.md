@@ -1,17 +1,17 @@
-# Map modules
+# マップモジュール
 
-The `pointmap` and `heatmap` renderer modules translate search results onto a map. Both place entries on the map based on locations in enumerated values. By default, the modules look for an enumerated value called 'Location', as set by the [geoip](#!search/geoip/geoip.md) search module. Locations can also be specified explicitly using the following:
+`pointmap` と `heatmap` のレンダラモジュールは、検索結果を地図上に変換します。どちらも、列挙値の位置に基づいて、地図上にエントリを配置します。デフォルトでは、[geoip](#!search/geoip/geoip.md) 検索モジュールで設定された 'Location' と呼ばれる列挙型の値を検索します。ロケーションは、以下のようにして明示的に指定することもできます。
 
-* `-loc <enumerated value>` tells the module to look for a location in the specified enumerated value, rather than the default `Location`.
-* `-lat <enumerated value> -long <enumerated value>` tells the module to look for the latitude and longitude values separately. These can be floating point numbers (as delivered by the `geoip` module) or strings from another source.
+* `-loc <列挙値>` は、デフォルトの `Location` ではなく、指定された列挙値の中からロケーションを探すようにモジュールに指示します。
+* `-lat <列挙値> -long <列挙値>` は、緯度と経度の値を別々に探すようにモジュールに指示します。これらの値は、浮動小数点数（`geoip`モジュールによって提供されるもの）または他のソースからの文字列です。
 
-The map will display a maximum of 1000 points. It is geofenced, meaning that zooming in on one portion of the map will display up to 1000 points within that area.
+マップには最大 1000 地点が表示されます。地図の一部を拡大すると、その範囲内で最大 1000 地点が表示されます。
 
-# Pointmap
+# pointmap
 
-Pointmap translates entries into distinct markers on the map. If additional enumerated value names are specified, their contents will be displayed when a point is clicked.
+pointmap は、エントリを地図上の明確なマーカーに変換します。追加の列挙値名が指定された場合、ポイントがクリックされたときにその内容が表示されます。
 
-The following search displays a map of all IP addresses captured in netflow records:
+以下の検索では、netflow レコードに取り込まれたすべての IP アドレスのマップが表示されます。
 
 ```
 tag=netflow netflow IP | geoip IP.Location | pointmap IP
@@ -19,7 +19,7 @@ tag=netflow netflow IP | geoip IP.Location | pointmap IP
 
 ![](map1.png)
 
-If we sum up the number of bytes from each IP and add the IP and Bytes enumerated values to pointmap's arguments, they will appear when we click on a point (we also added the ASN Organization so we can see WHO we are talking to):
+各 IP からのバイト数を集計し、IP と Bytes の列挙値を pointmap の引数に追加すれば、ポイントをクリックしたときに表示されます（誰と話しているのかわかるように、ASN組織も追加しています）。
 
 ```
 tag=netflow netflow IP Bytes | sum Bytes by IP | geoip IP.Location | geoip -r maxmindASN IP.ASNOrg | pointmap IP Bytes ASNOrg
@@ -27,9 +27,9 @@ tag=netflow netflow IP Bytes | sum Bytes by IP | geoip IP.Location | geoip -r ma
 
 ![](map2.png)
 
-# Heatmap
+# heatmap
 
-Heatmap operates similarly to pointmap, but it takes 0 or 1 additional enumerated values as arguments. If no enumerated value argument is given, it generates a heat map using the number of entries for each location as the 'heat'. In this example using netflow records, the 'heat' represents the number of connections from a location:
+heatmap は pointmap と同様の動作をしますが、引数として 0 または 1 の追加の列挙値を受け取ります。列挙値の引数が与えられない場合は、各場所のエントリ数を「heat」としてヒートマップを生成します。netflow レコードを使用したこの例では、「heat」はある場所からの接続数を表しています。
 
 ```
 tag=netflow netflow IP | geoip IP.Lat IP.Long | heatmap -lat Lat -long Long
@@ -37,7 +37,7 @@ tag=netflow netflow IP | geoip IP.Lat IP.Long | heatmap -lat Lat -long Long
 
 ![](map3.png)
 
-If we add the total number of bytes as an argument, the 'heat' is derived from the number of bytes sent over the connection, rather than the number of connections:
+総バイト数を引数に加えれば、「熱」は接続数ではなく、接続で送られたバイト数から得られます。
 
 ```
 tag=netflow netflow IP Bytes | sum Bytes by IP | geoip IP.Location | heatmap sum
@@ -45,16 +45,16 @@ tag=netflow netflow IP Bytes | sum Bytes by IP | geoip IP.Location | heatmap sum
 
 ![](map4.png)
 
-## Getting in on that 3D
+## 3D について
 
-Heatmap and Pointmap also have 3D renderings, just click the "Globe" selector in the upper right hand side of the map and the map will redraw.
+heatmap と pointmap には 3D レンダリング機能もあり、マップの右上にある「Globe」セレクターをクリックすると、マップが再描画されます。
 
 ![](selector.png)
 
-Running the exact same heatmap query, but rendered using the Globe system shows the following:
+全く同じ heatmap クエリを実行しますが、Globe システムを使ってレンダリングすると以下のようになります。
 
 ![](map5.png)
 
-But there is one more super nifty trick, we can add rotation so that all your bosses know you are definitely thinking in real-time about all the global threats.
+しかし、もう1つ、非常に気の利いた仕掛けがあります。ローテーションを追加することで、あなたが世界的な脅威についてリアルタイムに考えていることを、上司全員に知らせることができます。
 
 ![](rotation.gif)

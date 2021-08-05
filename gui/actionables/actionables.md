@@ -1,108 +1,108 @@
 # Actionables
 
-## Overview
+## 概要
 
-Actionables provide a way to create custom triggers and menus that key on any text rendered in a query and take one or more actions when selected. Similar to an HTML Hyperlink, actionables can be used to open external URLs that key on data, but actionables can also be leveraged to submit new Gravwell queries, launch dashboards, and execute templates.
+アクショナブルとは、クエリで表示されたテキストをキーにして、選択されたときに1つ以上のアクションを実行するカスタムトリガーやメニューを作成する方法です。HTMLハイパーリンクと同様に、アクショナブルはデータをキーとした外部URLを開くために使用できますが、アクショナブルはGravwellの新規クエリの送信、ダッシュボードの起動、テンプレートの実行にも利用できます。
 
-Actionables are created by specifying one or more regular expressions, along with one or more actions. Gravwell automatically parses all text rendered with the [table](#!/search/table/table.md) and [chart](#!/search/chart/chart.md) renderers and creates menus for any provided triggers.
+アクショナブルは、1つまたは複数の正規表現と1つまたは複数のアクションを指定して作成されます。Gravwellは、[table](#!/search/table/table.md)や[chart](#!/search/chart/chart.md)レンダラでレンダリングされたすべてのテキストを自動的に解析し、指定されたトリガー用のメニューを作成します。
 
 ![](actionables-overview.png)
 
-## Actionable Structure
+## アクション可能な構造
 
 ![](actionables-architecture.png)
 
-Actionables are made up of two components - triggers, which are simply regular expressions that Gravwell uses to match on text, and actions, which are the actions that can be taken on a matched trigger.
+アクショナブルは2つの要素で構成されています。トリガーはGravwellがテキストをマッチさせるための正規表現であり、アクションはマッチしたトリガーに対して実行されるアクションです。
 
-An actionable can contain more than one trigger and triggers can enumerate values within a regular expression. For example, if you wanted to extract the color "green" from the phrase "The color is green". You could write this regular expression trigger as:
+1つのアクショナブルには複数のトリガーを含めることができ、トリガーは正規表現内の値を列挙することができます。例えば、「The color is green」というフレーズから「green」という色を抽出したいとします。この正規表現のトリガーを次のように書くことができます。
 
 ```The color is (?<color>.*)```
 
-Gravwell would then match on the named color, and provide any actions available to the word "green", such as looking up the color on Wikipedia.
+するとGravwellは名前の付いた色にマッチし、"green "という単語に対してWikipediaで色を調べるなどのアクションを提供します。
 
-## Creating Actionables
+## アクショナブルの作成
 
-To get started with actionables, first open the Actionables menu, found in the main menu.
+アクショナブルを使い始めるには、まずメインメニューにある"Actionables"を開きます。
 
-Actionables are listed by name, and it's possible for two actionables to have the same name. By allowing actionables to have the same name, Gravwell can automatically group like actionables from different sources. For example, both the Netflow and CoreDNS kits provide actionables for IP addresses, and both are named "IP Address". 
+アクショナブルは名前ごとに表示され、同じ名前のアクショナブルが2つ存在することもあります。同じ名前のアクショナブルが存在することで、Gravwellは異なるソースの同じようなアクショナブルを自動的にグループ化することができます。例えば、NetflowキットとCoreDNSキットの両方がIPアドレスのアクショナブルを提供しており、どちらも"IP Address"という名前になっています。
 
 ![](actionables-menu.png)
 
 ## Triggers
 
-Triggers are simply regular expressions, as defined by the [JavaScript regular expression syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions). An actionable may contain multiple triggers, and triggers can contain a capture group that can be used in queries, URLs, and other actions. 
+トリガーは、[JavaScript regular expression syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions)で定義されているように、単なる正規表現です。1つのアクショナブルに複数のトリガーを含めることができ、トリガーにはクエリやURL、その他のアクションで使用できるキャプチャグループを含めることができます。
 
-For example, we could have a trigger to extract a given color from multiple forms of sentences, such as:
+例えば、次のような複数の形式の文章から指定された色を抽出するトリガーがあるとします:
 
 ```The color is (?<color>.*)```
 
 ```The sky is (?<color>.*)```
 
-For a given actionable with both of these triggers any listed actions will appear for any instance of either of these triggers.
+これらのトリガーの両方を持つ特定のアクショナブルについては、これらのトリガーのいずれかのインスタンスに対してリストされたアクションが表示されます。
 
-In the trigger menu a "test" field is provided to allow you to enter example data to test the trigger.
+トリガーメニューには、トリガーをテストするためのサンプルデータを入力するための"test"フィールドが用意されています。
 
 ![](actionables-trigger.png)
 
-### Trigger Modes
+### トリガーのモード
 
-Triggers have two modes that control when the actionable menu should be presented - "Click and Text", and "Text". In the "Click and Text" mode (the default mode), any matching triggers are hyperlinked, allowing the user to simply click on the matching trigger to present the menu. 
+トリガーには、"Click and Text"と "Text"の2つのモードがあり、アクションメニューを表示するタイミングを制御します。デフォルトのモードである "Click and Text "では、マッチしたトリガーにはハイパーリンクが張られており、ユーザーはマッチしたトリガーをクリックするだけでメニューが表示されます。
 
-On "Text" only triggers, the user must first highlight a block of text in order to parse the trigger. Using "Text" mode triggers can be useful where the text that should be triggered on cannot be meaningfully matched by a regular expression, such as a number. In this case, a "Click and Text" mode trigger would hyperlink all numbers.
+テキスト」のみのトリガーでは、ユーザーはトリガーを解析するために、まずテキストのブロックをハイライトする必要があります。テキスト」モードのトリガーは、トリガーをかけるべきテキストが、数字などの正規表現では意味のあるマッチングができない場合に有効です。この場合、"Click and Text"モードのトリガーは、すべての数字をハイパーリンクします。
 
 ![](actionables-trigger2.png)
 
-### Grouping Actionables
+### アクショナブルのグループ化
 
-By default, actionables menus are named by the name of the actionable itself. Actionables with the same name are automatically grouped by menu. Additionally, you can provide the menu name of an actionable to force it into another menu. This is helpful to group like actionables.
+デフォルトでは、アクショナブルのメニューには、アクショナブル自体の名前が付けられます。同じ名前のアクショナブルは、自動的にメニューごとにグループ化されます。さらに、アクショナブルのメニュー名を指定すると、そのアクショナブルを別のメニューに強制的に組み込むことができます。これは、同じようなアクショナブルをグループ化するのに便利です。
 
-For example, the CoreDNS Kit provides several actionables based on the format of the domain names. Each of these actionables are put in the "DNS" menu, as shown below.
+たとえば、CoreDNSキットでは、ドメイン名の形式に基づいていくつかの実行可能ファイルを提供しています。これらのアクショナブルはそれぞれ、以下のように"DNS"メニューに入れられます。
 
 ![](actionables-grouping.png)
 ![](actionables-grouping2.png)
 
-## Actions
+## アクション
 
-Actions provide operations that can be executed on text matched by an actionable trigger. An actionable can contain any number of actions. Actions include opening URLs, launching other searches, and more.
+アクションは、アクション可能なトリガーにマッチしたテキストに対して実行可能な操作を提供します。アクショナブルには、任意の数のアクションを含めることができます。アクションには、URLを開く、他の検索を起動するなどがあります。
 
-### The `_VALUE_` Variable
+### 変数 `_VALUE_` について
 
-Some actions allow using the text of a capture group from the regular expression of a trigger to be used in the action itself. For example, we can use the contents of the "color" capture group in a URL:
+アクションの中には、トリガーの正規表現からキャプチャグループのテキストをアクション自体に使用できるものがあります。例えば、"color "というキャプチャグループの内容をURLで使用することができます。
 
 ```The color is (?<color>.*)```
 
-The capture group contents can then be used in a URL, using `_VALUE_` for the matched text:
+キャプチャグループの内容は、URLの中で、マッチしたテキストに`_VALUE_`を使って利用することができます。
 
 ```https://en.wikipedia.org/wiki/_VALUE_```
 
-The keyword `_VALUE_` is the default placeholder for the matched text, and can be changed in some actions.
+キーワード`_VALUE_ `はマッチしたテキストのデフォルトのプレースホルダーですが、いくつかのアクションでは変更できます。
 
-### Action Types
+### アクションの種類
 
-Gravwell provides several actions, and an actionable can use any or all actions in a single actionable. 
+Gravwellにはいくつかのアクションが用意されており、1つのアクショナブルには任意のアクションまたはすべてのアクションを使用することができます。
 
-#### Run a Query
+#### クエリの実行
 
-This action simply runs a new query, with the contents of the matched text as `_VALUE_`.
+マッチしたテキストの内容を`_VALUE_`として、単純に新しいクエリを実行するアクションです。
 
-#### Execute a Template
+#### テンプレートの実行
 
-The template action runs a pre-made template, using the matched text as the input variable to the template. 
+テンプレートアクションは、マッチしたテキストをテンプレートへの入力変数として、事前に作成されたテンプレートを実行します。
 
-#### Launch a Dashboard
+#### ダッシュボードの起動
 
-The launch dashboard action opens a dashboard. If the dashboard has template variables, the user is prompted to select which variable to populate with the matched text.
+launch dashboardアクションは、ダッシュボードを開きます。ダッシュボードにテンプレート変数がある場合は、マッチしたテキストをどの変数に入力するかをユーザが選択するように促されます。
 
 ![](actionables-dashboard.png)
 
-#### Open a URL
+#### URLを開きます
 
-The URL action supports opening a new window/tab with a given URL and matched text, and additionally provides a set of timestamp options for providing the time range arguments from the search that the actionable triggered on. 
+URLアクションは、指定されたURLとマッチしたテキストで新しいウィンドウ/タブを開くことをサポートしており、さらにアクション可能なトリガーとなった検索からの時間範囲引数を提供するための一連のタイムスタンプオプションを提供しています。
 
-The "Open in a modal" option opens the URL in a window within the current Gravwell instance, similar to an HTML iframe.
+モーダルで開く "オプションは、HTMLのiframeのように、URLを現在のGravwellインスタンス内のウィンドウで開きます。
 
-#### Run a Saved Query
+#### 保存したクエリの実行
 
-Simply run a query from the Query Library. 
+クエリライブラリからクエリを実行することができます。
 
 

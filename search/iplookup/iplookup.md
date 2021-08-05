@@ -1,33 +1,33 @@
 ## IPLookup
 
-The `iplookup` module is used to perform data enrichment of IP addresses using a subnet as a key, this allows for generating simpler lookup tables that do not need to contain an exact match, potentially simplifying the management of some resources.  The `iplookup` module uses a resource that specifies a column containing a CIDR.  Each row in the CSV must contain a valid IPv4 or IPv6 CIDR definition.  Additional columns in the CSV can be used to provide additional values that can be attached to entries during query.  This may be network segment names, organizations, security tier, or even a latitude/longitude.
+`iplookup`モジュールは、サブネットをキーとして使用してIPアドレスのデータエンリッチメントを実行するために使用されます。これにより、完全一致を含む必要のないシンプルなルックアップテーブルを生成することができ、いくつかのリソースの管理を簡素化できる可能性があります。 `iplookup`モジュールはCIDRを含む列を指定するリソースを利用する。 CSVの各行は有効なIPv4またはIPv6のCIDR定義を含まなければならない。 CSV内の追加の列は、クエリ中にエントリに付加できる追加の値を提供するために使用することができる。 これには、ネットワークセグメント名、組織名、セキュリティ階層、あるいは緯度/経度などがあります。
 
-The `iplookup` module uses a [radix tree](https://en.wikipedia.org/wiki/Radix_tree) to match a specific IP or CIDR against the provided data list.  While radix trees are fast, it is NOT an `O(1)` lookup.  There are some cases where the iplookup module may not be the best choice.  For example, if your resource contains mostly `/32` CIDRs, a plain old [lookup](../lookup/lookup.md) list might be a better option.  Extremely large sets of lookups may also incur significant memory and CPU overhead.  The `iplookup` system fully supports IPv6 and it is entirely possible to specify trillions of CIDRs in the resource which will consume TBs of RAM and create an extremely large tree.  Most reasonable uses of the iplookup module will be very fast, even faster than the [geoip](../geoip/geoip.md) module using the maxmind database.
+`iplookup`モジュールは、[基数木](https://ja.wikipedia.org/wiki/%E5%9F%BA%E6%95%B0%E6%9C%A8)を使用して、特定のIPやCIDRを提供されたデータリストと照合します。 radixツリーは高速ですが、`O(1)`ルックアップではありません。 iplookupモジュールが最良の選択ではない場合もあります。 例えば、リソースのほとんどが `/32` CIDR を含んでいる場合は、古い [lookup](../lookup/lookup.md) リストの方が良い選択肢になるかもしれません。 また、非常に大きなルックアップのセットは、メモリとCPUのオーバーヘッドが大きくなるかもしれません。 `iplookup` システムは IPv6を完全にサポートしており、リソースに何兆個もの CIDR を指定することが完全に可能です。 iplookupモジュールのほとんどの合理的な使い方は非常に速く、maxmindデータベースを使った[geoip](./geoip/geoip.md)モジュールよりもさらに速くなります。
 
-The `iplookup` module can perform any number of enrichments in a single execution.  For example, if your CSV contained the columns `CIDR`, `network`, `building`, `lat`, `long`, `division` we could attach all of the additional data at once using a single invocation.  An example would look like:
+`iplookup`モジュールは、一度の実行で任意のnubmerのエンリッチメントを実行することができます。 例えば、CSVに `CIDR`, `network`, `building`, `lat`, `long`, `division` という列が含まれていたとします。 例としては以下のようになります。
 
 ```
 iplookup -r <resource> -e IP network building lat long division
 ```
 
-The `iplookup` module can also assign into enumerated values using a custom name.  This is performed using the `as` keyword.  In this example we are going to enrich the entry with the value contained in the `division` column, but we are going to name it `Business Unit` in the enumerated value:
+`iplookup` モジュールは、カスタム名を使って列挙された値に代入することもできます。 これは `as` キーワードを用いて実行されます。 この例では、`division` カラムに含まれる値をエントリに追加しますが、列挙値には `Business Unit` という名前を付けます。
 
 ```
 iplookup -r <resource> -e IP network as "Business Unit"
 ```
 
-### Supported Options
-* `-r <arg>`: The "-r" option informs the iplookup module which lookup resource should be used to enrich data.
-* `-s`: The "-s" option specifies that the iplookup modules should require that all specified operations succeed.
-* `-v`: The "-v" flag inverts the flow logic in the lookup module, meaning that successful matches are suppressed and missed matches are passed on.  The `-v` flag is not compatible with enrichments
-* `-e <arg>`: The "-e" flag specifies the enumerated value to use when matching against the resource list.  "-e" is a required flag.
-* `-cidr <arg>`: The "-cidr" flag specifies the column to use in the resource CSV that contains the CIDR specifications.  If no "-cidr" flag is specified the `iplookup` module assumes a column named `CIDR`.
+### サポートされているオプション
+* `-r <arg>` : "r" オプションは iplookup モジュールに、どのルックアップリソースを使用してデータを充実させるかを通知します。
+* `-s` : "s" オプションは iplookup モジュールが指定された全ての操作を成功させるように要求することを指定する。
+* `-v` : "v" フラグはルックアップモジュールのフローロジックを反転させ、成功したマッチは抑制され、 失敗したマッチは引き継がれることを意味する。 `v` フラグはエンリッチメントとは互換性がありません。
+* `-e <arg>` : "e" フラグは、リソースリストと照合する際に使用する列挙された値を指定する。 "e"は必須フラグである。
+* `-cidr <arg>` : "cidr" フラグはCIDRの仕様を含むリソースCSVのカラムを指定する。 "cidr"フラグが指定されていない場合、`iplookup`モジュールは`CIDR`という名前の列を想定する。
 
-### Setting up an iplookup resource
+### iplookupリソースの設定
 
-The iplookup resources are simply CSVs.  A valid resource is any CSV where at least one column contains a standard [CIDR notation](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation).  Iplookup assumes the column containing the CIDR definition is named "CIDR" but you can set it to whatever you want, just make sure to specify the column with the `-cidr` flag.  We recommend that you stay in the habit of using the defaults as it makes queries shorter.
+iplookupリソースは単なるCSVです。有効なリソースは、少なくとも1つの列に標準の[CIDR表記](https://ja.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF)が含まれているCSVです。iplookupはCIDR定義を含む列を "CIDR"という名前にすることを前提としていますが、それを好きなように設定することができます。 クエリを短くするために、デフォルトを使用する習慣を維持することをお勧めします。
 
-Here is an example resource containing both IPv4 and IPv6 definitions:
+以下に、IPv4とIPv6の両方の定義を含むリソースの例を示します。
 
 ```
 CIDR,network,owner
@@ -37,15 +37,15 @@ CIDR,network,owner
 2001:4860:4860:FE08::/48,corporate ipv6,CEO
 ```
 
-Warning: If two CIDRs contain overlapping definitions, the larger definition takes precedence.  That means that if you define `192.168.1.0/24` and `192.168.0.0/16` the definition for `192.168.1.0/24` will be ignored and lookups will match `192.168.0.0/16`.
+警告 : 2つのCIDRに重複する定義が含まれている場合は、大きい方の定義が優先されます。 つまり、`192.168.1.0/24` と `192.168.0.0/16` を定義した場合、`192.168.1.0/24` の定義は無視され、検索結果は `192.168.0.0/16` にマッチします。
 
-### Example Searches
+### 検索例
 
-The iplookup module can be used for creating whitelists (`-s` flag), blacklists (`-v` flag), or just to enrich things like Zeek logs, netflow, pcap, or any log with an IP address.
+iplookupモジュールは、ホワイトリスト(`-s` フラグ)やブラックリスト(`-v` フラグ)を作成したり、Zeekのログやnetflow、pcap、その他IPアドレスを含むあらゆるログを充実させたりするために使用できます。
 
-#### Example subnet categorizing
+#### サブネットの分類例
 
-The `iplookup` module is often used for categorizing IPs and enriching IPs.  Some useful queries might group traffic by business unit, or system tier.  It can also provide a simple means to apply geolocation to private subnets where you know the exact coordinates of a machine based on its subnet.  Here we show using the iplookup module to enrich netflow to perform traffic accounting using a business unit.  In this case we have a segmented network and can see the traffic volumes by each segment.
+`iplookup`モジュールは、IPを分類したり、IPを充実させたりするためによく使われる。 便利なクエリとしては、ビジネスユニットやシステム階層ごとにトラフィックをグループ化するものがあります。 また、プライベートサブネットにジオロケーションを適用して、サブネットに基づいてマシンの正確な座標を知る簡単な手段も提供できます。 ここでは、ビジネスユニットを使用してトラフィックのアカウンティングを実行するためにネットフローを充実させるために iplookup モジュールを使用することを示します。 このケースでは、セグメント化されたネットワークがあり、各セグメントごとのトラフィック量を見ることができます。
 
 ```
 tag=netflow netflow IP~PRIVATE Bytes |
@@ -56,11 +56,11 @@ chart sum by network
 
 ![](traffic.png)
 
-####  Example subnet blacklists
+#### サブネットブラックリストの例
 
-The iplookup module can be used to perform blacklist checks, where we can ensure that IP addresses DO NOT exist in a list.  This may be useful for auditing secure enclaves or firewall rules.  For example, we may want to ensure that a specific host or set of hosts do not communicate with some set of subnets.  In the critical infrastructure world the control system network is sacrosanct, so validating that nothing in the IT side of the house is even attempting to communicate with control system subnets may be a daily query, or candidate for alert.
+iplookup モジュールはブラックリストチェックに使用することができ、 IPアドレスがリストに存在しないことを確認することができます。 これは、セキュアな飛び地やファイアウォールのルールを監査するのに便利かもしれません。 例えば、特定のホストやホストのセットが、いくつかのサブネットのセットと通信しないことを確認したい場合があります。 重要なインフラストラクチャの世界では、制御システムのネットワークは神聖なものであるため、家のIT側の何も制御システムのサブネットと通信しようとしていないことを検証することは、毎日のクエリ、またはアラートの候補になるかもしれません。
 
-Here is an example query that uses the iplookup system to ensure that there are no flows between our 172.17.0.0/16 subnet and a set of defined subnets specified in the `controlsubnets` resource.  Here we use the `-s` flag to ONLY look at flows with a Dst address in the specified resource.
+ここでは、172.17.0.0/16サブネットと`controlsubnets`リソースで指定された定義済みサブネットのセットとの間にフローがないことを確認するためにiplookupシステムを使用するクエリの例を示します。 ここでは、`-s` フラグを使って、指定されたリソースの宛先アドレスを持つフローのみを調べるようにしています。
 
 ```
 tag=netflow
@@ -70,7 +70,7 @@ stats count by Src Dst DstPort |
 table Src Dst DstPort count
 ```
 
-The `controlsubnets` resource might be a CSV that looks like the following:
+リソース `controlsubnets` は以下のようなCSVになるかもしれません。
 
 ```
 CIDR,network

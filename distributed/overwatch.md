@@ -1,44 +1,44 @@
-# Gravwell Overwatch
+# Gravwell オーバーウォッチ
 
-For any number of reasons it may be advantageous to run multiple separate instances of Gravwell. A Managed Security Service Provider (MSSP) might set up a Gravwell indexer+webserver instance for each of their customers for easy separation of data and simpler user management. However, while you don't want Customer A to access Customer B's data, it would be useful for the MSSP to be able to query across Customer A and Customer B simultaneously.
+いくつかの理由により、複数のGravwellインスタンスを別々に実行するのが有利な場合があります。マネージドセキュリティサービスプロバイダ(MSSP)は、データ分離とユーザー管理を簡単にするために、顧客ごとに Gravwell インデクサーとウェブサーバーインスタンスをセットアップする場合があるでしょう。しかし、顧客Aが顧客Bのデータにアクセスすることは望ましくなくとも、MSSPが顧客Aと顧客Bにまたがる検索文を同時に実行できることは有用です。
 
-Overwatch makes this possible. An Overwatch webserver can connect to the *indexers* of both customers and run searches across all data simultaneously. It maintains its own set of users, resources, scheduled searches, etc. completely unique from the customer clusters.
+オーバーウォッチはこれを可能にします。オーバーウォッチウェブサーバーは、両方の顧客の*インデクサー*に接続し、すべてのデータを同時に検索することができます。それは、顧客クラスタからは完全に独立でのユーザー、リソース、スケジュールされた検索などの独自のセットを維持します。
 
 ![](overwatch.png)
 
-The image above shows an example Overwatch configuration. Customers A and B each have their own set of 4 indexers and 1 webserver. An Overwatch webserver (shown on the right with glasses) connects directly to the indexers, bypassing the customer webservers.
+上の画像はオーバーウォッチの設定例です。顧客AとBはそれぞれ4つのインデクサーと1つのウェブサーバーのセットを持っています。オーバーウォッチウェブサーバー（メガネ付きで右側に表示）は、顧客のウェブサーバーをバイパスしてインデクサーに直接接続しています。
 
-## Security notes
+## セキュリティメモ
 
-We recommend the following when running multiple Gravwell clusters for external clients, especially when using Overwatch:
+外部クライアント向けに複数のGravwellクラスターを運用する場合、特にオーバーウォッチを使用する場合は以下を推奨します。
 
-* Clients should not be allowed to SSH into their webserver or indexer systems. This could allow them to break their configurations.
-* For extra security, *client* Gravwell clusters should not be able to route to each other. The Overwatch server must be allowed to route to each cluster, but they should not be allowed to communicate with each other.
+* クライアントがウェブサーバーやインデクサーに SSH でアクセスすることを許可すべきではありません。これは設定を壊すことを許容してしまう可能性があります。
+* さらなるセキュリティのために、*クライアント*のGravwellクラスタはお互いにルーティングできないようにしてください。オーバーウォッチサーバーは各クラスタへのルーティングを許可しなければなりませんが、クラスター間での通信を許可してはいけません。
 
-## Licensing Notes
+## ライセンスメモ
 
-Gravwell overwatch requires a specific license that is unique to overwatch webservers, if you are interested in getting access to overwatch, email [sales](mailto:sales@gravwell.io).
+Gravwellのオーバーウォッチは、オーバーウォッチウェブサーバーに固有のライセンスを必要とします。オーバーウォッチ機能にもしご興味がおありでしたら、[セールス](mailto:sales@gravwell.io)までお問い合わせください。
 
-Overwatch webservers will NOT distribute their license to client nodes.  This means that an overwatch webserver cannot be used for the initial setup of a Gravwell cluster as the indexers will not receive licenses during setup.  Overwatch licenses also cannot be used on indexers.
+オーバーウォッチウェブサーバーはクライアントノードにライセンスを配布しません。 つまり、オーバーウォッチウェブサーバーは Gravwell クラスタの初期セットアップには使用できません。 オーバーウォッチのライセンスはインデクサーでも使用できません。
 
-## Configuring Overwatch
+## オーバーウォッチの設定
 
-Before setting up your Overwatch server, note that *all* indexers must use the same `Control-Auth` token. This allows the Overwatch server to connect to all the indexers simultaneously.
+オーバーウォッチサーバーを設定する前に、*すべて*のインデクサーは同じ `Control-Auth`トークンを使用しなければならないことに注意してください。これによりオーバーウォッチサーバーはすべてのインデクサーに同時に接続することができます。
 
-To install an Overwatch server, use the Gravwell installer to install only the webserver component. Configure it to use the same `Control-Auth` in use on the client indexers, then set the `Remote-Indexers` list to include *all* client indexers.
+オーバーウォッチサーバーをインストールするには、Gravwell インストーラーを使ってウェブサーバーコンポーネントのみをインストールしてください。クライアントインデクサーで使用しているのと同じ `Control-Auth`を使用するように設定し、`Remote-Indexers`リストに *すべての*クライアントインデクサーを含めるように設定します。
 
-Next, the webserver should be configured in an **Overwatch Domain**. The domain is set with the `Webserver-Domain` parameter in gravwell.conf. Client webservers can safely be left in domain 0, but the Overwatch webserver should be set to a different number; this can be any integer between 0 and 32767.
+次に、ウェブサーバーは**オーバーウォッチドメイン**で設定する必要があります。ドメインはgravwell.confの`Webserver-Domain`パラメータで設定します。クライアントのウェブサーバーはドメイン0のままでも問題ありませんが、オーバーウォッチのウェブサーバーは別の数値を設定しなければなりません。これは0から32767の間の任意の整数にすることができます。
 
-Those are the only essential configurations for the Overwatch webserver. You may wish to [configure TLS](#!configuration/certificates.md) or set other options, but at this point it should be safe to restart the webserver (`systemctl restart gravwell_webserver.service`) and begin use.
+以上がオーバーウォッチウェブサーバーのために必要な設定です。[TLS設定](#!configuration/certificates.md)や他のオプションを設定したいかもしれませんが、この時点でウェブサーバーを再起動(`systemctl restart gravwell_webserver.service`)して使用を開始しても安全です。
 
-### Configuring Multiple Overwatch Servers
+### 複数のオーバーウォッチサーバーを設定する
 
-It may be advantageous to configure multiple overwatch systems that are tied to either all or some subset of client indexers.  MSSPs may want the ability to segment their customer base such that specific analysts operate on some subset of clients.  Enterprises may wish to provide fully independent overwatch webservers to multiple organizations.  Because overwatch systems operate on the domain configuration parameter, multiple overwatch webservers can be configured on multiple domains.
+クライアント・インデクサーのすべてまたは一部のサブセットのいずれかに関連付けられた複数のオーバーウォッチ・システムを構成することが望ましいかもしれません。 MSSP は、特定のアナリストがクライアントのいくつかのサブセットで動作するように、顧客ベースをセグメント化する機能を望むかもしれません。 企業は、複数の組織に完全に独立したオーバーウォッチ・ウェブサーバーを提供したい場合があります。 オーバーウォッチシステムはドメイン構成パラメータで動作するため、複数のオーバーウォッチウェブサーバーを複数のドメインに構成することができます。
 
-Warning: Multiple Overwatch webservers *MUST* be on separate domains unless they are configured to operate in distributed mode. If multiple Overwatch webservers are configured on the same domain, resources will be improperly managed on the indexers, leading to query errors.
+警告: 複数のオーバーウォッチウェブサーバーは、分散モードで動作するように設定されていない限り、別々のドメイン上に存在しなければなりません。複数のオーバーウォッチウェブサーバーが同じドメイン上に設定されている場合、リソースがインデクサー上で不適切に管理され、検索エラーが発生します。
 
 ![](OverwatchMutiple.png)
 
-## Using an Overwatch server
+## オーバーウォッチサーバーの利用
 
-Use the Overwatch webserver exactly like a regular Gravwell webserver--because it *is* a regular Gravwell webserver. You can use the Overwatch server to keep an eye on ingest rates across all clients; has someone's Active Directory server stopped uploading logs? You can use it to investigate incidents at the request of clients, etc. Users and resources created on the Overwatch webserver will not interfere with those created on the client clusters, but be aware that performing a resource-intensive search will consume *indexer* resources on the client clusters... and a particularly large search across all clients could result in hundreds of gigabytes of results being shipped up to the Overwatch server, so query with that in mind.
+オーバーウォッチウェブサーバーは、通常のGravwellウェブサーバーなので、通常のGravwellウェブサーバーと同じように使用できます。オーバーウォッチサーバーを使用して、誰かのActive Directoryサーバーがログのアップロードを停止していないか、すべてのクライアントのインジェストレートを監視することができますし、依頼に応じてインシデント調査に使うこともできます。ただし、オーバーウォッチウェブサーバー上で作成されたユーザーやリソースはクライアントクラスタ上で作成されたものと干渉しないものの、リソース集約的な検索を行うとクライアントクラスタ上の*インデクサー*リソースを消費しますし、すべてのクライアントで大規模な検索を行えば、何百ギガバイトもの結果がオーバーウォッチサーバーに送られることにもなりかねないため、それらのことを念頭に置いて使用してください。

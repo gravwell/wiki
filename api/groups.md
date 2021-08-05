@@ -1,14 +1,14 @@
-# Group APIs
+# グループAPI
 
-This page describes the APIs for interacting with user groups.
+このページでは、ユーザーグループと対話するためのAPIについて説明します。
 
-Requests sent to `/api/groups` and other URLs under the `/api/groups/` path operate on user accounts. The webserver will send StatusOK (200) on a good request, while a 400-500 status will be sent on error (depending on the error).
+`/api/groups` や `/api/groups/` パス以下の他の URL に送られたリクエストは、ユーザアカウントで動作します。ウェブサーバは正常なリクエストにはStatusOK(200)を、エラーには(エラーに応じて)400-500のステータスを送信します。
 
-Note: Adding and removing users from groups is done through the [user account APIs](account.md), not the group APIs. These APIs are purely for creating, deleting, and describing groups.
+注意: グループへのユーザーの追加や削除は、グループAPIではなく、[ユーザーアカウントAPI](account.md)を使用して行います。これらのAPIは純粋にグループの作成、削除、記述のためのものです。
 
-## Data types
+## データタイプ
 
-The APIs on this page primarily deal with group details structures. The group details structure is as follows:
+このページのAPIは、主にグループ詳細構造を扱います。グループ詳細構造は以下の通りです。
 
 ```
 {
@@ -19,9 +19,9 @@ The APIs on this page primarily deal with group details structures. The group de
 }
 ```
 
-## Admin only: Adding a group
+## 管理者のみグループの追加
 
-To add a new group, send a POST request to `/api/groups`. The body of the request should contain a structure which defines the group's name and description, as below:
+新しいグループを追加するには、`/api/groups`にPOSTリクエストを送信します。リクエストの本文には、以下のようにグループの名前と説明を定義する構造体が含まれていなければなりません。
 
 ```
 {
@@ -30,15 +30,15 @@ To add a new group, send a POST request to `/api/groups`. The body of the reques
 }
 ```
 
-The server will attempt to parse the request and create the group; if successful, it will respond with a 200 status code and the GID of the new group in the body of the response.
+サーバーはリクエストを解析してグループを作成しようとします。成功した場合、200のステータスコードと新しいグループのGIDをレスポンスの本文に記載して応答します。
 
-## Admin only: Deleting a group
+## 管理者のみグループの削除
 
-To delete a group, send a DELETE request to `/api/groups/{gid}`.
+グループを削除するには、`/api/groups/{gid}`にDELETEリクエストを送ります。
 
-## Admin only: Updating group info
+## 管理者のみグループ情報の更新
 
-To modify a group's information, send a PUT request to `/api/groups/{gid}`. The body of the request should contain a group details structure, as below:
+グループの情報を変更するには、`/api/groups/{gid}`にPUTリクエストを送る。リクエストの本文には、以下のようにグループの詳細構造が含まれている必要があります。
 
 ```
 {
@@ -48,11 +48,11 @@ To modify a group's information, send a PUT request to `/api/groups/{gid}`. The 
 }
 ```
 
-If the Name or Desc fields are excluded, the current values will be kept.
+Name または Desc フィールドが除外されている場合は、現在の値が保持されます。
 
-## Listing all groups
+## すべてのグループをリストアップ
 
-To get a list of all groups on the system, send a GET request to `/api/groups`. The response will contain an array of group details structures:
+システム上のすべてのグループのリストを取得するには、`/api/groups`にGETリクエストを送る。レスポンスには、グループの詳細構造の配列が含まれます。
 
 ```
 [
@@ -77,9 +77,9 @@ To get a list of all groups on the system, send a GET request to `/api/groups`. 
 ]
 ```
 
-## Getting info about a group
+## グループの情報を取得する
 
-Administrators or members of a particular group may get information about a particular group. Issue a GET request to `/api/groups/{gid}`. The response will contain the group details:
+管理者や特定のグループのメンバーは、特定のグループに関する情報を取得することができます。GETリクエストを `/api/groups/{gid}` に発行します。レスポンスには、グループの詳細が含まれます。
 
 ```
 {
@@ -90,9 +90,9 @@ Administrators or members of a particular group may get information about a part
 }
 ```
 
-## Listing users in a group
+## グループ内のユーザーをリストアップする
 
-Administrators or members of a particular group may query the list of users in that group by issuing a GET request to `/api/groups/{gid}/members`. The response will be an array of user details structures:
+管理者や特定のグループのメンバーは、`/api/groups/{gid}/members`にGETリクエストを発行することで、そのグループのユーザーのリストを問い合わせることができます。応答は、ユーザ詳細構造体の配列となります。
 
 ```
 [

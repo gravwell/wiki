@@ -1,30 +1,30 @@
 # Response formats
 
-Although all modules respond to the same commands, the format in which they return entries differs due to the differing nature of the data types involved. The responses described here are common to RESP_GET_ENTRIES, RESP_STREAMING, and RESP_TS_RANGE; we use these request/response IDs through the examples in this section.
+すべてのモジュールは同じコマンドに応答しますが、関連するデータタイプの性質が異なるため、エントリを返す形式が異なります。ここで説明する応答は、RESP_GET_ENTRIES、RESP_STREAMING、RESP_TS_RANGEに共通です。このセクションの例では、これらのリクエスト/レスポンスIDを使用しています。
 
 ## Render Store Limits
 
-Note that Gravwell has limits in place to prevent users from consuming too much disk space with query results. By default, searches can generate a maximum 1GB of output; this is configurable through the `Render-Store-Limit` parameter in `gravwell.conf`. Once the limit is exceeded, the renderer will stop storing results, but will otherwise allow the search to complete.
+Gravwellには、ユーザーが検索結果でディスク容量を使いすぎないようにするための制限があります。デフォルトでは、検索結果は最大1GBの出力が可能です。これは`gravwell.conf`の`Render-Store-Limit`パラメータで設定できます。これは `gravwell.conf` の `Render-Store-Limit` パラメータで設定できます。制限を超えると、レンダラーは結果の保存を停止しますが、それ以外は検索の完了を許可します。
 
-All search socket response messages may contain the fields `OverLimit` and `LimitDroppedRange`. OverLimit is a boolean, set to true if the search results exceeded the limits. LimitDroppedRange indicates what, if any, time range of results has been dropped.
+すべての検索ソケットの応答メッセージには、フィールド `OverLimit` と `LimitDroppedRange` が含まれます。OverLimitは真偽値で、検索結果が制限を超えた場合にtrueが設定される。LimitDroppedRangeは、検索結果がドロップされた時間範囲を示します。
 
-Here is an example from a search which exceeded the limits:
+以下に制限を超えた検索結果の例を示します。
 
 ```
 "OverLimit":true,
 "LimitDroppedRange":{"StartTS":"2021-03-11T09:10:54.199-08:00","EndTS":"2021-03-11T09:36:00-08:00"},
 ```
 
-Here is an example of what you might see for a search which does *not* exceed the limits:
+以下は、制限値を超えていない検索の場合の例です。
 
 ```
 "OverLimit":false,
 "LimitDroppedRange":{"StartTS":"0000-12-31T16:07:02-07:52","EndTS":"0000-12-31T16:07:02-07:52"},
 ```
 
-## Text & raw module responses
+## textおよびRawのモジュール応答
 
-The 'text' and 'raw' render modules return their entries as an array in a field labeled "Entries":
+「text」および「raw」レンダリングモジュールは、「エントリ」というラベルのフィールドに配列としてエントリを返します。
 
 ```
 {
@@ -59,9 +59,9 @@ The 'text' and 'raw' render modules return their entries as an array in a field 
 }
 ```
 
-## Table module responses
+## テーブルモジュールの応答
 
-The table module returns the entries in a field called "Entries", containing a structure defining Rows and Columns:
+テーブルモジュールは、行と列を定義する構造を含む「エントリ」というフィールドにエントリを返します。
 
 ```
 {
@@ -97,9 +97,9 @@ The table module returns the entries in a field called "Entries", containing a s
 }
 ```
 
-## Gauge module responses
+## ゲージモジュールの応答
 
-The gauge module returns entries as an array of structures containing the gauge's name, the magnitude, and (optionally) the minimum and maximum values defined for this gauge:
+ゲージモジュールは、ゲージの名前、大きさ、および（オプションで）このゲージに定義された最小値と最大値を含む構造体の配列としてエントリを返します。
 
 ```
 {
@@ -120,17 +120,17 @@ The gauge module returns entries as an array of structures containing the gauge'
 }
 ```
 
-## Point-to-Point module responses
+## Point-to-Pointモジュールの応答
 
-The point2point module returns an array of entries containing DstLocation, SrcLocation, and Magnitude fields. Optionally, the entries may also contain a 'Values' array, containing additional enumerated values specified as arguments to the renderer. The names for these enumerated values are given in the 'ValueNames' array.
+point2pointモジュールは、DstLocation、SrcLocation、およびMagnitudeフィールドを含むエントリの配列を返します。 オプションで、エントリにはレンダラーへの引数として指定された追加の列挙値を含む「値」配列も含まれる場合があります。 これらの列挙値の名前は、「ValueNames」配列で指定されます。
 
-This query:
+クエリ
 
 ```
 tag=pcap packet tcp.Port ipv4.SrcIP ipv4.DstIP ipv4.Length | geoip SrcIP.Location as srcloc DstIP.Location as dstloc | sum Length by srcloc dstloc | point2point -srcloc srcloc -dstloc dstloc -mag sum SrcIP DstIP
 ```
 
-should produce a result like this:
+次のような結果が生成されます。
 
 ```
 {
@@ -189,12 +189,11 @@ should produce a result like this:
 }
 ```
 
-Note that the "Values" arrays on each entry correspond to the titles in the "ValueNames" array, e.g. the first entry has a "SrcIP" of 151.11.24.133.
+各エントリの「Values」配列は、「ValueNames」配列のタイトルに対応していることに注意してください。 最初のエントリの151.11.24.133の「SrcIP」があります。
 
-## Chart module responses
+## チャートモジュールの応答
 
-The chart module returns entries in a field called "Entries", containing a structure which defines "Names" and "Values". The "Names" component is an array of names for the lines being plotted; in the case of this example, it contains IP addresses. The "Values" component contains a timestamp and a "Data" array; the elements in the Data array are the values corresponding to the names in the "Names" array at the given timestamp.
-
+チャートモジュールは、「名前」と「値」を定義する構造を含む「エントリ」というフィールドにエントリを返します。 「名前」コンポーネントは、プロットされる線の名前の配列です。 この例の場合、IPアドレスが含まれています。 「値」コンポーネントには、タイムスタンプと「データ」配列が含まれています。 Data配列の要素は、指定されたタイムスタンプでの「Names」配列の名前に対応する値です。
 ```
 {
     "EntryCount": 5,
@@ -256,13 +255,13 @@ The chart module returns entries in a field called "Entries", containing a struc
 }
 ```
 
-## Force Directed Graph responses
+## 有向グラフ応答の強制
 
-The fdg module's responses are the most complex. There are three sections to the data returned: groups, links, and nodes.
+fdgモジュールの応答は最も複雑です。 返されるデータには、グループ、リンク、ノードの3つのセクションがあります。
 
-The nodes and links represent the graph. Each node has a name and a group to which it belongs. Links are directional, so they specify a source node and a target node as indexes into the array of nodes, plus a 'value', which represents how "weighty" the link is (in this example, the value is always 1, but it will often be larger).
+ノードとリンクはグラフを表します。 各ノードには、名前と所属するグループがあります。 リンクは方向性があるため、ノードの配列へのインデックスとしてソースノードとターゲットノードを指定し、さらにリンクの「重み」を表す「値」を指定します（この例では、値は常に1ですが、 しばしば大きくなります）。
 
-Groups are defined in the search and are used to color nodes in the fdg display. In this example there are three groups: "operations", "IT", and an unnamed group. Each node belongs to one of the groups, referenced by their index in the groups array.
+グループは検索で定義され、fdg表示でノードを色付けするために使用されます。 この例には、「オペレーション」、「IT」、および名前のないグループの3つのグループがあります。 各ノードは、グループ配列のインデックスによって参照されるグループのいずれかに属します。
 
 ```
 {

@@ -1,10 +1,10 @@
 ## Upper / Lower
 
-The upper and lower modules convert text to upper or lower case. Simply invoking `upper` (or `lower`) will cause the entry's raw data to be converted to upper case. Invoking the module with a list of one or more enumerated value names will cause those enumerated values to be converted to all upper or lower case. This can be useful to normalize data before passing it to `unique` or other modules.
+upperモジュールとlowerモジュールは、テキストを大文字または小文字に変換します。  単に`upper`（または`lower`）を呼び出すと、エントリの生データが大文字に変換されます。  1つ以上の列挙値の名前のリストを使用してモジュールを呼び出すと、それらの列挙値はすべて大文字または小文字に変換されます。  これは`unique`などのモジュールに渡す前にデータを正規化するのに役立ちます。
 
-### Example Usage
+### 使用例
 
-This example uses the `upper` module to normalize Shodan data prior to counting.
+この例では、`upper`カウント前にShodanデータを正規化するためにモジュールを使用しています。
 
 ```
 tag=shodan json location.region_code | upper region_code | count by region_code | table region_code count

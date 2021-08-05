@@ -1,25 +1,25 @@
 # Grok
 
-The grok module allows you to extract data from complicated text structures without specifying the whole regular expression every time. Instead, grok assigns names to regular expressions, allowing the user to specify the name instead. Grok patterns may contain additional patterns nested within them, making it easy to build up new definitions. It pre-defines a selection of useful patterns, but can also read your own customized set of patterns from a [resource](#!resources/resources.md).
+grokモジュールを使用すると、正規表現全体を毎回指定することなく、複雑なテキスト構造からデータを抽出できます。代わりに、grokは正規表現に名前を割り当て、ユーザーが代わりに名前を指定できるようにします。 Grokパターンには、ネストされた追加のパターンが含まれている場合があり、新しい定義を簡単に作成できます。有用なパターンの選択を事前定義しますが、[リソース](#!resources/resources.md)から独自のカスタマイズされたパターンのセットを読み取ることもできます。
 
-By default, grok passes through any entry which matches the pattern and drops any which does not. This behavior can be inverted with the `-v` flag.
+デフォルトでは、grokはパターンに一致するエントリをすべて通過し、一致しないエントリはすべてドロップします。この動作は、`-v`フラグで反転できます。
 
-Grok is a filtering module; after specifying the desired pattern, you may also specify a list of filters to apply to the extracted fields.
+Grokはフィルタリングモジュールです。目的のパターンを指定した後、抽出されたフィールドに適用するフィルターのリストを指定することもできます。
 
-Note: Because some filters incorporate extremely strict and complex patterns, they can be relatively slow when processing large numbers of entries. Use modules such as [grep](#!search/grep/grep.md), [regex](#!search/regex/regex.md), and [words](#!search/words/words.md) to pre-filter as much as possible.
+注：一部のフィルターには非常に厳密で複雑なパターンが組み込まれているため、多数のエントリーを処理する場合は比較的遅くなる可能性があります。 [grep]（＃！search / grep / grep.md）、[regex](#!search/regex/regex.md)、[words](#!search/words/words.md)などのモジュールを使用して可能な限り事前にフィルタします。
 
-## Supported Options
+## サポートされているオプション 
 
-* `-e <arg>`: Operate on the specified enumerated value instead of the entire record.
-* `-r <resource>`: load custom grok patterns from the resource with the specified name, rather than the default `grok` resource.
-* `-v`: Operate in inverse mode; entries which do *not* match the pattern will be passed, and entries which *do* match will be dropped. You cannot specify any filters when using this flag.
-* `-p`: The "-p" option tells grok to allow entries through if the expression does not match at all.  The permissive flag does not change the operation of filters.
+* `-e <arg>`: レコード全体ではなく、指定された列挙値を操作します。
+* `-r <resource>`: デフォルトの `grok`リソースではなく、指定された名前のリソースからカスタムgrokパターンをロードします。
+* `-v`: 反転モードで動作します;パターンに*一致しない*エントリは渡され、*一致する*エントリはドロップされます。このフラグを使用する場合、フィルターを指定できません。
+* `-p`: "-p"オプションは、式がまったく一致しない場合にエントリを許可するようにgrokに指示します。許容フラグは、フィルターの動作を変更しません。
 
-### Parse Apache Logs
+### Apacheログを解析する
 
-The following query takes advantage of a resource to implement a complex pattern to strictly process Apache2.0 combined access logs.  The `COMBINEDAPACHELOG` pattern is part of the very large pattern set provided by Gravwell on [github](https://raw.githubusercontent.com/gravwell/resources/master/grok/all.grok).  Download the pattern set and upload it as a resource name `grok` to gain access to a massive suite of predefined grok patterns.
+次のクエリは、リソースを利用して複雑なパターンを実装し、Apache2.0結合アクセスログを厳密に処理します。 `COMBINEDAPACHELOG`パターンは、[github](https://raw.githubusercontent.com/gravwell/resources/master/grok/all.grok)でGravwellが提供する非常に大きなパターンセットの一部です。パターンセットをダウンロードし、リソース名`grok`としてアップロードして、定義済みのgrokパターンの大規模なスイートにアクセスします。
 
-The following query finds all Apache logs for "PUT" requests and parses them out into their components:
+次のクエリは、"PUT"リクエストのすべてのApacheログを検索し、それらをコンポーネントに解析します:
 
 ```
 tag=apache words PUT | grok "%{COMBINEDAPACHELOG}" | table
@@ -27,11 +27,11 @@ tag=apache words PUT | grok "%{COMBINEDAPACHELOG}" | table
 
 ![](apache.png)
 
-Note: This query may take some time if you have millions of entries since the COMBINEDAPACHELOG pattern is complex and very strict.
+注：COMBINEDAPACHELOGパターンは複雑で非常に厳密であるため、数百万のエントリがある場合、このクエリには時間がかかることがあります。
 
-### Filtering
+### フィルタリング
 
-We can build on the previous query to return only those entries whose "clientip" field matches a particular IP and uses the PUT method:
+前のクエリに基づいて、"clientip"フィールドが特定のIPと一致し、PUTメソッドを使用するエントリのみを返すように構築できます:
 
 ```
 tag=apache words PUT 128.10.247.36 | grok "%{COMBINEDAPACHELOG}" clientip=="128.10.247.36" verb==PUT | table clientip
@@ -39,35 +39,35 @@ tag=apache words PUT 128.10.247.36 | grok "%{COMBINEDAPACHELOG}" clientip=="128.
 
 ![](apache-filter.png)
 
-Note: We filter for PUT and the IP using the words module to engage indexing and reduce the number of entries that are processed by the expensive `COMBINEDAPACHELOG` grok pattern.
+注：単語モジュールを使用してPUTとIPをフィルター処理し、インデックス作成を行い、高価な COMBINEDAPACHELOG` grokパターンによって処理されるエントリの数を減らします。
 
-## Performance
+## パフォーマンス
 
-Grok can dramatically simplify complicated regular expressions and allow mere mortals to crack apart large log fragments.  However, a grok pattern designed to extract and validate every field in a log is going to be complex and slow.  If you don't need every field, consider using fragments and primitives.  A smaller grok pattern that only extracts a few items can be dramatically faster than a complete pattern that extracts everything.
+Grokは複雑な正規表現を劇的に単純化し、単なる人間が大きなログフラグメントを分解できるようにします。ただし、ログ内のすべてのフィールドを抽出して検証するように設計されたgrokパターンは、複雑で遅くなります。すべてのフィールドが必要でない場合は、フラグメントとプリミティブの使用を検討してください。少数のアイテムのみを抽出する小さなgrokパターンは、すべてを抽出する完全なパターンよりも劇的に高速です。
 
-For example, let's look at two queries that compile response code counts for each HTTP method and display them in a stackgraph, the first query uses grok with the `COMBINEDAPACHELOG` pattern allows for a very simple query:
+たとえば、各HTTPメソッドの応答コードカウントをコンパイルしてスタックグラフに表示する2つのクエリを見てみましょう。最初のクエリではgrokを使用し、`COMBINEDAPACHELOG`パターンで非常に単純なクエリを実行します:
 
 ```
 tag=apache grok "%{COMBINEDAPACHELOG}" | stats count by verb response | stackgraph verb response count
 ```
 
-The second query uses grok primitives to extract only the fields that are explicitly needed:
+2番目のクエリはgrokプリミティブを使用して、明示的に必要なフィールドのみを抽出します:
 
 ```
 tag=apache grok "] \"%{WORD:verb}\s\S+\s\S+\s%{POSINT:response}" | stats count by verb response | stackgraph verb response count
 ```
 
-Both queries produce identical results:
+両方のクエリは同じ結果を生成します:
 
 ![](apachestackgraph.png)
 
-However, to process 10M Apache access logs the first query took `2m 39s`.  The second query took only `3.46s`, that is over a 45X speedup.  So while the simpler query looks great, it can be worth your time to work with primitive patterns when working on large data sets.
+ただし、10MのApacheアクセスログを処理するには、最初のクエリに`2m 39s`が必要でした。 2番目のクエリは、`3.46s`だけで済み、45倍のスピードアップになりました。そのため、単純なクエリは見栄えがよくなりますが、大規模なデータセットを操作するときにプリミティブパターンを操作するのに時間をかける価値があります。
 
-## Pre-defined Patterns
+## 事前定義されたパターン
 
-The Grok module provides a base set of predefined patterns that are ready for use.  These base patterns cover basic data types and are generally very strict about what they will and will not accept, for a large set of patterns designed to handle entire log sets see our the published resource on [github](https://raw.githubusercontent.com/gravwell/resources/master/grok/all.grok)
+Grokモジュールは、すぐに使用できる定義済みパターンの基本セットを提供します。これらの基本パターンは基本的なデータ型をカバーし、一般に、受け入れられるものと受け入れられないものについて非常に厳格です。ログセット全体を処理するように設計されたパターンの大きなセットについては、[github](https://raw.githubusercontent.com/gravwell/resources/master/grok/all.grok)
 
-| Pattern Name | Substitution Pattern                                                                               |
+| パターン名 | 置換パターン                                                                               |
 | ------------ | -------------------------------------------------------------------------------------------------- |
 | USERNAME | `[a-zA-Z0-9._-]+` |
 | USER | `%{USERNAME}` |

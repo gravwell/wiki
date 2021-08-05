@@ -1,32 +1,32 @@
-# Ingester Custom Time Formats
+# インジェスターカスタム時刻フォーマット
 
-Many ingesters can support the inclusion of custom time formats that can extend the capability of the Gravwell TimeGrinder time resolution system.  The [TimeGrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder) has a wide array of timestamp formats that it can automatically identify and resolve.  However, in the real world with real developers there is no telling what time format a system may decide to use.  That is why we enable users to specify custom time formats for inclusion in the TimeGrinder system.
+多くのインジェスターは、Gravwell TimeGrinder時間解決システムの機能を拡張できるカスタム時間フォーマットの組み込みをサポートしています。[TimeGrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder)には、自動的に識別して解決できるタイムスタンプフォーマットが豊富に用意されています。 しかし、実際の開発者がいる現実世界では、システムがどのような時間フォーマットを使用するかはわかりません。そのため、TimeGrinderシステムでは、ユーザーがカスタムタイムフォーマットを指定できるようになっています。
 
-## Supported Ingesters
+## サポートされるインジェスター
 
-Not all ingesters support custom time formats.  One-off or standalone ingesters such as [singlefile](https://github.com/gravwell/gravwell/blob/v3.7.0/ingesters/singleFile/main.go) are applications meant to be invoked by hand and do not have a configuration file.  Dedicated ingesters like [netflow](#!ingesters/ingesters.md#Netflow_Ingester) don't need to resolve timestamps, so there is no need for custom formats.
+すべてのインジェスターがカスタムタイムフォーマットをサポートしているわけではありません。[シングルファイル](https://github.com/gravwell/gravwell/blob/v3.7.0/ingesters/singleFile/main.go)のようなワンオフまたはスタンドアロンのインジェスターは、手動で起動することを目的としたアプリケーションであり、設定ファイルはありません。[netflow](#!ingesters/ingesters.md#Netflow_Ingester)のような専用のインジェスターは、タイムスタンプを解決する必要がないため、カスタムフォーマットの必要はありません。
 
-The following ingesters support the inclusion of custom time formats:
+以下のインジェスターは、カスタムタイムフォーマットの組み込みをサポートしています:
 
-* [Simple Relay](#!ingesters/ingesters.md#Simple_Relay)
-* [File Follower](#!ingesters/ingesters.md#File_Follower)
-* [HTTP Ingester](#!ingesters/ingesters.md#HTTP)
+* [シンプルリレー](#!ingesters/ingesters.md#Simple_Relay)
+* [ファイルフォロワー](#!ingesters/ingesters.md#File_Follower)
+* [HTTPインジェスター](#!ingesters/ingesters.md#HTTP)
 * [Amazon Kinesis](#!ingesters/ingesters.md#Kinesis_Ingester)
 * [Microsoft Graph API](#!ingesters/ingesters.md#Microsoft_Graph_API_Ingester)
 * [Office 365](#!ingesters/ingesters.md#Office_365_Log_Ingester)
 * [Kafka](#!ingesters/ingesters.md#Kafka)
 
-## Defining a Custom Format
+## カスタムフォーマットの定義
 
-A custom format requires three items to function:
+カスタムフォーマットには3つのアイテムが必要です:
 
-* Name
-* Regular Expression
-* Format
+* 名前
+* 正規表現
+* フォーマット
 
-The given name for a custom time format must be unique across other custom time formats and the included timegrinder formats.  For a complete up-to-date listing of included time formats and their names, check out our [timegrinder documentation)[https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#pkg-constants].
+カスタム時刻フォーマットの名前は、他のカスタム時刻フォーマットや含まれるtimegrinderフォーマットで一意でなければなりません。 含まれる時間フォーマットとその名前の完全な最新リストについては、[TimeGrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#pkg-constants)をご覧ください。
 
-Custom time formats are declared in the configuration files for supported ingesters by specifying a named `TimeFormat` INI block.  Here is an example format named "foo" which handles timestamps that are delimited using underscores:
+カスタムの時間フォーマットは、サポートされているインジェスターの設定ファイルで、`TimeFormat`という名前のINIブロックを指定して宣言します。ここでは、アンダースコアで区切られたタイムスタンプを扱う"foo"というフォーマットの例を紹介します:
 
 ```
 [TimeFormat "foo"]
@@ -34,7 +34,7 @@ Custom time formats are declared in the configuration files for supported ingest
 	Regex=`\d{4}_\d{1,2}_\d{1,2}_\d{1,2}_\d{1,2}_\d{1,2}`
 ```
 
-This format would properly handle the timestamps in the following logs:
+このフォーマットは、以下のログのタイムスタンプを適切に処理します:
 
 ```
 2021_02_05_09_00_00 and my id is 1
@@ -45,7 +45,7 @@ This format would properly handle the timestamps in the following logs:
 2021_02_05_09_00_00 and my id is 6
 ```
 
-Here is another format that handles logs with only a timestamp:
+ここでは、タイムスタンプのみのログを扱う別のフォーマットを紹介します:
 
 ```
 [TimeFormat "foo2"]
@@ -53,7 +53,7 @@ Here is another format that handles logs with only a timestamp:
 	Regex=`\d{1,2}\^\d{1,2}\^\d{1,2}`
 ```
 
-This format would handle the following logs, appropriately applying the current date to each extracted timestamp:
+このフォーマットでは、抽出された各タイムスタンプに適切に現在の日付を適用して、以下のログを処理します:
 
 ```
 09^00^00 and my id is 1
@@ -64,19 +64,19 @@ This format would handle the following logs, appropriately applying the current 
 09^00^00 and my id is 6
 ```
 
-Note: The custom timestamp format names can be used in [Timestamp-Format-Override](#!ingesters/ingesters.md#Time_Parsing_Overrides) values.  For example we can force the timestamp format to our custom format using `Timestamp-Format-Override="foo"`.
+注：カスタムのタイムスタンプフォーマット名は、[Timestamp-Format-Override](#!ingesters/ingesters.md#Time_Parsing_Overrides)の値で使用できます。 例えば、`Timestamp-Format-Override="foo"`を使用して、タイムスタンプフォーマットをカスタムフォーマットに強制することができます。
 
-### Time Formats
+### 時刻フォーマット
 
-The `Format` component uses the [Go standard time format specification](https://golang.org/pkg/time/#pkg-constants).  Long story short, you must describe the date `Mon Jan 2 15:04:05 MST 2006` using whatever format you choose.
+`Format`コンポーネントは[Go standard time format specification](https://golang.org/pkg/time/#pkg-constants)を使用しています。 簡単に説明すると、どのようなフォーマットであっても、日付 `Mon Jan 2 15:04:05 MST 2006` を記述しなければなりません。
 
-Time formats can omit the date component.  When the custom format system identifies that a custom time format does not include a date component, it will automatically update the extracted timestamp's date to `today`.
+時間フォーマットでは、日付の要素を省略することができます。 カスタムフォーマットシステムは、カスタム時間フォーマットに日付コンポーネントが含まれていないことを識別すると、抽出されたタイムスタンプの日付を自動的に `today` に更新します。
 
-### Time Zones
+### タイムゾーン
 
-All custom time formats will attempt to operate in UTC unless otherwise indicated using the `Format` directive.  This means that if you have a time format without a date component you must pay special attention to the timezone.  If an application emits a timestamp of `12:00:00` in MST and there is no timezone component or timezone overrides, timegrinder will interpret the timestamp as UTC and the extracted date will be 7 hours in the past.
+すべてのカスタム時刻フォーマットは、`Format` ディレクティブで指定されていない限り、 UTC で動作するようになっています。 つまり、日付要素のない時刻フォーマットを使用する場合は、タイムゾーンに特別な注意を払わなければなりません。 アプリケーションがMSTの`12:00:00`というタイムスタンプを発行し、タイムゾーンコンポーネントやタイムゾーンオーバーライドがない場合、timegrinderはタイムスタンプをUTCと解釈し、抽出された日付は7時間前のものになります。
 
-If your timestamp does contain a timezone you must include that in your `Format` directive so that the timegrinder system knows to interpret the timestamp in the correct time zone.  For example here is the previously described "foo" custom format but with a timezone component:
+タイムスタンプにタイムゾーンが含まれている場合には、タイムグラインダーシステムが正しいタイムゾーンでタイムスタンプを解釈できるように、`Format` ディレクティブにタイムゾーンを含める必要があります。 例えば、前述の "foo "カスタムフォーマットにタイムゾーンの要素を加えたものは以下の通りです:
 
 ```
 [TimeFormat "foo"]
@@ -84,11 +84,11 @@ If your timestamp does contain a timezone you must include that in your `Format`
 	Regex=`\d{4}_\d{1,2}_\d{1,2}_\d{1,2}_\d{1,2}_\d{1,2}_\S+`
 ```
 
-This example will properly handle timestamps in their respective time zones and apply the correct timestamp on extraction.
+この例では、それぞれのタイムゾーンのタイムスタンプを適切に処理し、抽出時に正しいタイムスタンプを適用します。
 
-## Examples
+## 例
 
-Here is an example [File Follower](#!ingesters/file_follow.md) configuration which adds two custom time formats:
+ここでは、2つのカスタムタイムフォーマットを追加する[ファイルフォロワー](#!ingesters/file_follow.md)の設定例を紹介します:
 
 ```
 [Global]
@@ -119,4 +119,4 @@ Max-Files-Watched=64 # Maximum number of files to watch before rotating out old 
 
 ```
 
-The file follower will handle timestamps that are specified as `2021_02_14_12_33_52` and `15!05!22` properly due to the additional custom time formats.
+`2021_02_14_12_33_52`や`15!05!22`と指定されたタイムスタンプは、カスタムタイムフォーマットの追加により、ファイルフォロワーで適切に処理されます。

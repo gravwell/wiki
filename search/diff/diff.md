@@ -1,15 +1,15 @@
 # Diff
 
-The diff module finds the difference between enumerated values. It can operate in two modes:
+diffモジュールは、列挙された値の差を求めます。2つのモードで動作します:
 
-1. Find the difference between two enumerated values on the current entry. ("Normal mode")
-2. Find the difference between an enumerated value on the current entry, and the same enumerated value on the *previous* entry. ("Temporal mode")
+1. 現在のエントリで列挙された2つの値の間の差を求めます。("通常モード")
+2. 現在のエントリの列挙された値と、*前*のエントリの同じ列挙された値との差を求めます。("時系列モード")
 
-The module can find the difference between integers, floating point numbers, timestamps, and time durations. If an enumerated value is a string, diff will attempt to parse the string as a number first.
+このモジュールは、整数、浮動小数点、タイムスタンプ、および持続時間の違いを見つけることができます。列挙された値が文字列の場合、diffは最初に文字列を数値として解析しようとします。
 
-## Examples
+## 例
 
-You can find the difference between two values by specifying the two enumerated value names as arguments; the second will be subtracted from the first. The following will generate enumerated values named "diff" containing DstPort - SrcPort:
+2つの列挙値名を引数に指定することで、2つの値の間の差を見つけることができ、2つ目の値は1つ目の値から減算されます。以下は、DstPort - SrcPortを含む「diff」という名前の列挙値を生成します:
 
 ```
 tag=netflow netflow SrcPort DstPort | diff DstPort SrcPort | table
@@ -17,9 +17,9 @@ tag=netflow netflow SrcPort DstPort | diff DstPort SrcPort | table
 
 ![](diff1.png)
 
-(Not particularly useful, but it demonstrates how the tool works)
+(特に有用ではありませんが、ツールがどのように動作するかを示しています)
 
-The following query uses the other mode; it compares the TIMESTAMP field of the current entry against that of the previous entry to see how frequently netflow packets are arriving:
+次のクエリは他のモードを使用します。現在のエントリの TIMESTAMP フィールドと前のエントリのそれとを比較して、ネットフロー パケットがどのくらいの頻度で到着しているかを確認します:
 
 ```
 tag=netflow sort by time asc | diff TIMESTAMP | table
@@ -27,17 +27,17 @@ tag=netflow sort by time asc | diff TIMESTAMP | table
 
 ![](diff2.png)
 
-## Output options
+## 出力オプション
 
-By default, the module will create a new enumerated value named `diff` containing the calculated difference. You can change the name with the "as" keyword, e.g.:
+デフォルトでは、モジュールは計算された差分を含む `diff` という名前の新しい列挙値を作成します。この名前は "as" キーワードで変更できます。 例:
 
 ```
 diff foo bar as foobarDiff
 ```
 
-## Keying
+## キーイング
 
-When in temporal mode (comparing an enumerated value against its value in the previous entry), diff can store multiple "previous entries" based on a specified key set. The following query extracts the source IP address from network packets and checks how long it's been since that IP has been seen:
+一時モード (列挙された値と前のエントリの値を比較する) の場合、diff は、指定されたキーセットに基づいて複数の "前のエントリ" を格納することができます。次のクエリは、ネットワークパケットからソースIPアドレスを抽出し、そのIPが見られてからどのくらいの時間が経過しているかを調べます:
 
 ```
 tag=pcap sort by time asc | packet ipv4.SrcIP | diff TIMESTAMP by SrcIP | table

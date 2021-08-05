@@ -1,23 +1,23 @@
 ## Sort
 
-By default, everything in the Gravwell search pipeline is temporally sorted. The web interface provides some additional sorting capabilities while maintaining the raw power of temporal sorting on the search backend.
+デフォルトでは、Gravwell検索パイプライン内のすべてのものが一時的にソートされています。  Webインターフェースは、検索バックエンドでの一時的ソートの生の力を維持しながら、いくつかの追加のソート機能を提供します。
 
-The sort module, however, allows the user to sort on other values. This can be very useful for organizing information. For example, a query to display a table of the top domains requested from the dnsmasq daemon might look like:
+しかし、sortモジュールはユーザーが他の値でソートすることを可能にします。  これは情報を整理するのに非常に役立ちます。  たとえば、dnsmasqデーモンから要求されたトップドメインのテーブルを表示するクエリは、次のようになります:
 
 ```
 tag=syslog grep dnsmasq | regex ".*query\[A\]\s(?P<dnsquery>[a-zA-Z0-9\.\-]+)" | count by dnsquery | sort by count desc | table dnsquery count
 ```
 
-The syntax is `sort [by sortparam] [asc/desc]`. `sortparam` is the parameter to sort by, which can be `time`, `tag`, `src`, or any enumerated value. The sort parameter is optional; if not specified, it defaults to `time`. The other parameter selects the direction of sorting, either ascending (`asc`) or descending (`desc`). If not specified, it defaults to descending sort for time and ascending sort for all other parameters.
+構文は`sort [by sortparam] [asc/desc]`です。  `sortparam`は並べ替えの基準となるパラメーターで、` time`、 `tag`、` src`、または列挙値のいずれかです。  sortパラメーターはオプションです。 指定されない場合、デフォルトで「時間」になります。  もう1つのパラメーターは、昇順（`asc`）または降順（`desc`）のどちらかでソートの方向を選択します。  指定されていない場合、デフォルトでは時間の降順でソートされ、他のすべてのパラメーターの昇順でソートされます。
 
-Some example sort invocations:
+ソート呼び出しの例:
 
-| Command | Description |
+| コマンド | 説明 |
 |---------|-------------|
-| `sort` | Sort by time in descending order |
-| `sort by tag` | Sort by entry tag in ascending order |
-| `sort by count asc` | Sort by an enumerated value called "count" in ascending order |
-| `sort asc` | Sort by time in ascending order |
-| `sort by src desc` | Sort by entry source in descending order |
+| `sort` | 時間の降順で並べ替え |
+| `sort by tag` | エントリタグで昇順に並べ替え |
+| `sort by count asc` | "count"という列挙値で昇順に並べ替え |
+| `sort asc` | 時間の昇順で並べ替え |
+| `sort by src desc` | 入力元で降順に並べ替え |
 
-Note: The sort module collapses the pipeline  and can restrict second order temporal searching for all renderers.  This means that the overview graph and timeslice selection in the web interface will not affect a search that has been sorted non-temporally. Care must be taken to ensure that any pipeline modules following sort are expecting non-temporally ordered data.
+注：並べ替えモジュールはパイプラインを折りたたみ、すべてのレンダラーの2次的な一時検索を制限できます。  つまり、Webインターフェースでの概要グラフとタイムスライスの選択は、一時的ではないソートされた検索には影響しません。  並べ替え後のパイプラインモジュールが非一時的に順序付けられたデータを期待するように注意する必要があります。

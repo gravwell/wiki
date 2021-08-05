@@ -1,12 +1,9 @@
-### Gravwell Wiki
-Current version of Gravwell documentation can always be found at http://docs.gravwell.io
+### Soliton NK Wiki
+Soliton NK のマニュアルの最新版は https://docs.example.com/ で公開しています。
+また、このリポジトリをダウンロードすれば、オフラインでもマニュアルを参照することができます。
 
-This repo is served up at that url and can be cloned for offline use.
+オフラインでマニュアルを参照する場合は、このリポジトリをドキュメントルートとしてウェブサーバを起ち上げ、ウェブブラウザからアクセスして下さい。
 
-To view docs, you can issue the go command "go run serve.go" and then open a webrowser to http://localhost:3001.
+リポジトリにある server.go は、Go 言語で書かれた簡易ウェブサーバプログラムです。$ go run serve.go でサーバが起動します。ウェブブラウザから http://localhost:3001/ にアクセスして下さい。
 
-Or
-
-To run, open a webserver that hosts this directory and navigate to the index.html.
-
-Using mdwiki: http://dynalon.github.io/mdwiki/
+マニュアルは Markdown で書かれており、MDwiki http://dynalon.github.io/mdwiki/ を使って HTML に変換しています。

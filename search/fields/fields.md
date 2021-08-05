@@ -1,65 +1,70 @@
 ## Fields
 
-The fields module is used to extract and filter data from search entries into enumerated values for later use.  The fields module is designed to be extremely flexible in capturing and filtering data where data items are delimited by a constant set of bytes.  Formats that are comma delimited (CSV), tab delimited, or space delimited are easily processed using the fields module.  More complicated structures which multi-byte delimiters and/or binary formats with known fields separators can use the fields system to extract on arbitrary field boundaries.  Example data producers that can benefit from the fields module are [bro](https://www.bro.org/) with its tab delimited format or the CSV output format from snort.
+fieldsモジュールは、後で使用するために、検索エントリから列挙値にデータを抽出してフィルタ処理するために使用されます。  fieldsモジュールは、データ項目が一定のバイトセットで区切られている場合に、データをキャプチャしてフィルタ処理する際に非常に柔軟になるように設計されています。  カンマ区切り（CSV）、タブ区切り、スペース区切りの形式は、fieldsモジュールを使用して簡単に処理できます。  マルチバイトの区切り文字や既知のフィールド区切り文字を持つバイナリフォーマット、あるいはその両方を使用したもっと複雑な構造では、フィールドシステムを使用して任意のフィールド境界で抽出できます。  fieldsモジュールの恩恵を受けることができるデータプロデューサーの例は、タブ区切り形式またはsnortからのCSV出力形式を持つ[bro](https://www.bro.org/)です。
 
-Because specifying numeric field offsets can be cumbersome when used frequently, the [namedfields](#!search/namedfields/namedfields.md) module uses user-uploaded resources to assign friendly names to field indexes.
+数値フィールドオフセットの指定は頻繁に使用すると面倒になることがあるため、namedfieldsモジュールはユーザーがアップロードしたリソースを使用してフィールドインデックスにわかりやすい名前を割り当てます。
 
-### Specifying Extraction Fields
+### 抽出フィールドの指定
 
-Fields are extracted by specifying an index into data from a base of zero.  An index is specified using a positive integer surrounded by square brackets.  Multiple fields can be extracted by providing multiple directives.  Field extraction indexes do not need be be specified in order.
+フィールドは、ゼロの基数からデータへのインデックスを指定することによって抽出されます。  インデックスは、角括弧で囲まれた正の整数を使用して指定されます。複数のディレクティブを指定することで複数のフィールドを抽出できます。  フィールド抽出インデックスを順番に指定する必要はありません
 
-Extracted index fields can be renamed by appending the directive `as <name>` immediately after a field index value.  For example, to extract the 6th field from a piece of data into an enumerated value with the name "uri" the extraction directive would be `[5] as uri`.  If no rename directive is provided the extracted values are given the name that matches the index.  Extracted fields also support filters which allows for quickly filtering entries based on equality or contained values.  Filters must be specified before the renaming statement.  An example fields directive which only allows entries to pass by where the 1st field is the value "stuff" would be `[0]=="stuff"`.  To only allow entries where the 1st field does not equal the value "stuff" and rename the 1st field to "things" the directive would be `[0] != "stuff" as things`.
+抽出されたインデックスフィールドは`as <name>`、フィールドインデックス値の直後にディレクティブを追加することによって名前を変更できます。 たとえば、データから6番目のフィールドを "uri"という名前の列挙値に抽出するには、抽出ディレクティブは次のようになります
+`[5] as uri`
+名前変更ディレクティブが指定されていない場合、抽出された値にはインデックスと一致する名前が付けられます。  抽出されたフィールドはフィルタをサポートしています。これにより、同等性または含まれている値に基づいてエントリをすばやくフィルタリングできます。  フィルタは、名前変更ステートメントの前に指定する必要があります。  最初のフィールドが値 "stuff"であるところだけでエントリが通過できるようにするfieldsディレクティブの例は以下となります。
+`[0]=="stuff"`
+1番目のフィールドが "stuff"の値と等しくないエントリのみを許可し、1番目のフィールドの名前を "things"に変更します`[0] != "stuff" as things`。
 
-Attention: Field extraction indexes can be specified as base 10, base 8, or base 16.  The default name applied is the original text value of the index.  An extraction directive of [0xA] will extract the 11th field with the name "0xA", while [010] will extract the 9th field and apply the name "010".
+重要: フィールド抽出索引は、10進数、8進数、または16進数として指定できます。  適用されるデフォルト名は、索引の元のテキスト値です。  [0xA]の抽出ディレクティブは "0xA"という名前の11番目のフィールドを抽出し、[010]は9番目のフィールドを抽出して "010"という名前を適用します。
 
-Attention: To specify filter values and or extraction names which contain special characters like "-", ".", or spaces surround the value in double quotes.
+重要: " - "、 "。"、またはスペースなどの特殊文字を含むフィルター値や抽出名を二重引用符で囲むように指定します。
 
-### Supported Options
+### サポートされているオプション
 
-* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
-* `-d <arg>` : The “-d” option specifies the delimiter used to extract fields.  A delimiter can be any string of bytes.  The default is a comma: ",".
-* `-s` : The “-s” option specifies that the fields module should operate in a strict mode.  If any field specification cannot be met, the entry is dropped.  For example if you want the 0th, 1st, and 2nd field but an entry only has 2 fields the strict flag will cause the entry to be dropped.
-* `-q` : The “-q” option specifies that the fields can be quoted.  This is useful when dealing with delimiters which might show up in fields.  For example, if the field delimiter is a space, columns may need to contain a space and will be quoted.  If the "-q" argument is specified, any delimiter that is surrounded boy double quotes will be ignored and included in the field.  Delimiters cannot contain double quotes when using the "-q" flag.
-* `-clean` : The “-clean” flag specifies that the fields module should remove all surrounding whitespace from extracted fields.  Data formats like CSV which may have trailing whitespace can use the "-clean" flag to remove the unwanted whitespace.  If the "-q" flag is specified with "-clean" double quotes will be removed from quoted fields.
+* `-e <arg>`: “ -e”オプションは、レコード全体ではなく列挙値に作用します。
+* `-d <arg>` : “ -d”オプションは、フィールドの抽出に使用される区切り文字を指定します。  区切り文字は任意のバイト文字列です。デフォルトはカンマ： ","です。
+* `-s` :“ -s”オプションは、fieldsモジュールが厳密モードで動作することを指定します。いずれかのフィールド指定を満たすことができない場合、そのエントリは削除されます。例えば、0番目、1番目、2番目のフィールドが欲しいがエントリが2つのフィールドしか持っていない場合、strictフラグはエントリを落とします。
+* `-q` : “ -q”オプションは、フィールドを引用符で囲むことができることを指定します。これは、フィールドに現れる可能性のある区切り文字を扱うときに便利です。たとえば、フィールド区切り文字がスペースの場合、列にはスペースを含める必要があり、引用符で囲まれます。"-q"引数を指定した場合、二重引用符で囲まれた区切り文字は無視され、フィールドに含まれます。"-q"フラグを使用する場合、区切り文字に二重引用符を含めることはできません。
+-clean注：“ -clean”フラグは、fieldsモジュールが抽出されたフィールドから周囲の空白をすべて削除するように指定します。末尾の空白があるかもしれないCSVのようなデータフォーマットは、無用の空白を削除するために "-clean"フラグを使うことができます。"-q"フラグが "-clean"とともに指定されている場合、二重引用符は引用符付きフィールドから削除されます。
 
-### Filtering Operators
 
-The fields module allows for a filtering based on equality.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
+### フィルタリング演算子
 
-| Operator | Name | Description |
+fieldsモジュールは同等性に基づくフィルタリングを可能にします。  等価（ "等しい"、 "等しくない"、 "含む"、 "含まない"）を指定するフィルタが有効になっている場合、フィルタの指定に失敗したエントリはすべて削除されます。  フィールドが等しくない "！="として指定され、そのフィールドが存在しない場合、そのフィールドは抽出されませんが、エントリは完全にはドロップされません。
+
+| オペレーター | 名 | 説明 |
 |----------|------|-------------|
-| == | Equal | Field must be equal
-| != | Not equal | Field must not be equal
-| ~ | Subset | Field contains the value
-| !~ | Not Subset | Field does NOT contain the value
+| == | 等しい | フィールドは等しくなければなりません
+| != | 等しくない | フィールドは等しくてはいけませんl
+| ~ | サブセット | フィールドに値が含まれています
+| !~ | サブセットではない | フィールドに値が含まれていません
 
-### Examples
+### 例
 
-Extract the URL field from a tab delimited bro http.log feed and name it "url".
+タブ区切りのbro http.logフィードからURLフィールドを抽出し、「url」という名前を付けます。
 
 ```
 tag=brohttp fields -d "\t" [9] as url
 ```
 
-Extract the URL and requester field from a tab delimited bro http.log feed and filter for only entries where the URL contains a space and outputting the results in a table.
+タブ区切りのbro http.logフィードからURLおよび要求者フィールドを抽出し、URLにスペースが含まれているエントリーのみをフィルター処理して結果を表に出力します。
 
 ```
 tag=brohttp fields -d "\t" [9] ~ " " as url [2] as requester | table url requester
 ```
 
-Extract the 4th, 5th, and 6th fields using a delimiter of "|" and clean white space from extracted fields.
+区切り文字 "|"を使用して4、5、6番目のフィールドを抽出します。そして抽出されたフィールドからきれいな空白を取り除きます。
 
 ```
 tag=default fields -clean -d "|" [3] [4] [5] | table 3 4 5
 ```
 
-Extract a URI from a bro http log stream and separate the URI into a path and PUT arguments components then calculate the entropy of the args for each path and chart the results.
+bro httpログストリームからURIを抽出し、そのURIをパスとPUT引数コンポーネントに分離してから、各パスの引数のエントロピーを計算し、結果をグラフ化します。
 
 ```
 tag=brohttp fields -d "\t" [9] ~ "?" as uri |  regex -e uri "^(?P<path>[^\?;]+)\?(?P<args>.+)" | entropy args by path | chart entropy by path
 ```
 
-Find HTTP packets with JPEG structures that have more than one stream (e.g. main image and thumbnail)
+複数のストリームを持つJPEG構造を持つHTTPパケットを探します（例：メイン画像とサムネイル）
 
 ```
 tag=pcap packet tcp.Port==80 tcp.Payload | fields -s -e Payload -d "\xd8\xff" [1]~"JFIF"  [2]~"JFIF" | slice 1[0:10] 2[0:10] | table 1, 2

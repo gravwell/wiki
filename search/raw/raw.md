@@ -1,5 +1,5 @@
 # Raw
 
-The raw renderer is functionally similar to the text renderer, but does not attempt to modify or change any non-printable characters. This renderer hands back the raw record, for better or worse. This renderer can be useful when passing data back to other tools which need the raw values, or when you just want to see if your browser can take a stab at turning packets into emojis.
+rawのレンダラは機能的にはテキストレンダラと似ていますが、印刷不可能な文字を変更または変更しようとはしません。  このレンダラーは、生のレコードを返答します。  このレンダラーは、生の値を必要とする他のツールにデータを戻すときや、ブラウザがパケットを絵文字に変換するのに手間がかかるかどうかを確認したいときに便利です。
 
 Example: `raw limit 2048`

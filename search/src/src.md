@@ -1,44 +1,44 @@
-## Src
+## src
 
-The source module is used for filtering entries based on source, which is a universal metadata item that all entries have.  The module is useful for looking at entries emanating from a specific location.  Src can filter on IP and subnet.
+source モジュールは、すべてのエントリーが持つ普遍的なメタデータ項目であるソースに基づいてエントリーをフィルタリングするために使用されます。 このモジュールは、特定の場所から発信されたエントリーを見るのに便利です。 src は IP とサブネットでフィルタリングできます。
 
-The source module can translate/handle values specified as IPs, subnets, integers, base 16 integers, and 16 byte hashes.  The entry source field is meant to be extremely flexible.
+source モジュールは、IP、サブネット、整数、16 進数、16 バイトのハッシュとして指定された値を翻訳／処理することができます。 入力ソースフィールドは、非常に柔軟性が高いことを意味しています。
 
-Note: The source field can be used by the acceleration/indexing system to help speed up queries.  However, only direct equality matches invoke the acceleration system.  Filtering by subnet or using negation does not engage the accelerator.
+注意：ソース・フィールドは、アクセラレーション／インデックス・システムによって使用され、クエリを高速化することができます。 ただし、アクセラレーション・システムを起動するのは、直接の等号によるマッチのみです。 サブネットによるフィルタリングや否定を使用しても、アクセラレータは働きません。
 
-### Example Usage
+### 使用例
 
-Eliminate entries coming from a specific source:
+特定のソースからのエントリーを排除します。
 
 ```
 tag=syslog,apache,pcap src != 192.168.1.1 | count by TAG | chart count by TAG
 ```
 
-Select only those entries coming from a specific subnet:
+特定のサブネットからのエントリーのみを選択します。
 
 ```
 tag=syslog,apache,pcap src ~ 192.168.1.0/24 | count by SRC | chart count by SRC
 ```
 
-Eliminate entries from a specific subnet
+特定のサブネットからのエントリーを排除します。
 
 ```
 tag=syslog src !~ 192.168.0.0/16
 ```
 
-Select only entries with a src representing an integer ID
+整数 ID を表す src を持つエントリーのみを選択します。
 
 ```
 tag=syslog src == 1
 ```
 
-Eliminate entries with a src representing a hex encoded ID
+16 進数でエンコードされた ID を表す src を持つエントリーを排除します。
 
 ```
 tag=syslog src != 0xfeadbeef
 ```
 
-Search for entries with src as a hex string
+src を 16 進数で表記したエントリーを検索します。
 
 ```
 tag=syslog src == 1234567890ABCDEF0011223344556677

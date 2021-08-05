@@ -1,22 +1,22 @@
-# Gravwell License System
+# Gravwell ライセンスシステム
 
-Gravwell provides several license tiers that enable additional features and capabilities.  The most basic license tier is the Community Edition and the most advanced tier is the Unlimited license.  The Community Edition license allows for limited ingest on a single indexer and is the only license tier that is not unlimited ingest, all other license tiers have no ingest limit.
+Gravwell では、追加の機能を利用できるいくつかのライセンス層を提供しています。 最も基本的なライセンス層は Community Edition で、最も高度なライセンス層は Unlimited ライセンスです。 Community Edition では、1 台のインデクサへのインジェストが制限されており、インジェスト無制限ではない唯一のライセンス層です。
 
-Gravwell installations are licensed using a license file that is located at the path /opt/gravwell/etc/license by default.  The license location can be controlled in the gravwell.conf file by setting the License-Location variable in the [Global] configuration block.  Gravwell will validate the license at each startup and periodically check it.
+Gravwell は、デフォルトでは /opt/gravwell/etc/license にあるライセンスファイルを使用してライセンスを取得します。 ライセンスの場所は、gravwell.conf ファイルの [Global] 設定ブロックで License-Location 変数を設定することで制御できます。 Gravwell は起動毎にライセンスを検証し、定期的にチェックを行います。
 
-## Installing a License
+## ライセンスのインストール
 
-A license can be installed via the GUI, the CLI, or by simply copying the license file to the appropriate location.  Only administrative users can update the license via the GUI or CLI.  At startup, if no license is installed or the current license is invalid the system will wait for a valid license to be installed.  The GUI will prompt for a license upload and wait for a valid license before completing startup.  The license installation API validates the provided license and will not allow you to install an invalid license.
+ライセンスのインストールは、GUI、CLI、またはライセンスファイルを適切な場所にコピーすることで行うことができます。 GUI または CLI を使用してライセンスを更新できるのは、管理者ユーザーのみです。 起動時に、ライセンスがインストールされていないか、現在のライセンスが無効な場合、システムは有効なライセンスがインストールされるのを待ちます。 GUI ではライセンスのアップロードを促し、有効なライセンスを待ってから起動を完了します。 ライセンスインストール API は提供されたライセンスを検証し、無効なライセンスをインストールすることはできません。
 
 ![Upload a License](upload.png)
 
 ![License Install](install.png)
 
-If you use the CLI or GUI to install a license Gravwell will distribute the license to all connected indexers automatically.  Gravwell will also validate the installed license for each indexer and update if necessary at each connection.  That means that if you bring a new indexer online it will automatically receive the appropriate license when the webserver connects.
+CLI または GUI を使用してライセンスをインストールした場合、Gravwell は接続されたすべてのインデクサーにライセンスを自動的に配布します。 Gravwell は、各インデクサーにインストールされたライセンスを検証し、必要に応じて接続ごとに更新します。 つまり、新しいインデクサーをオンラインにすると、ウェブサーバが接続されたときに自動的に適切なライセンスを受け取ることができるのです。
 
-## Updating a License
+## ライセンスの更新
 
-Updating a Gravwell license can be performed using the CLI or GUI without restarting Gravwell, but if you just copy the license file to the appropriate directory you must restart Gravwell in order for the license to be reloaded.  Only administrators can update the license file through the GUI or CLI.  To update the license, log into Gravwell as an administrator and navigate to the license section under the administrator panel.  The License page will provide details about your license and its expiration date, select the new license file and upload it to update the webserver and all connected Gravwell indexers.
+Gravwell のライセンス更新は、CLI または GUI を使用して Gravwell を再起動せずに行うことができますが、ライセンスファイルを適切なディレクトリにコピーしただけでは、ライセンスを再読み込みするために Gravwell を再起動する必要があります。 GUI や CLI でライセンスファイルを更新できるのは管理者のみです。 ライセンスを更新するには、管理者として Gravwell にログインし、管理者パネルの下にあるライセンスセクションに移動します。 ライセンスページには、ライセンスの詳細とその有効期限が表示されます。新しいライセンスファイルを選択してアップロードすると、ウェブサーバと接続されているすべての Gravwell インデクサーが更新されます。
 
 ![License Page](navpanel.png)
 
@@ -24,26 +24,26 @@ Updating a Gravwell license can be performed using the CLI or GUI without restar
 
 ![License Upload](licupload.png)
 
-## License Expiration
+## ライセンスの有効期限
 
-All Gravwell licenses have an expiration date and once a license has expired Gravwell will not start.  A license expires in four discrete steps:
+Gravwell のすべてのライセンスには有効期限があり、ライセンスが切れると Gravwell は起動しません。 ライセンスの有効期限は 4 段階に分かれています。
 
-1. Warning about upcoming expiration
-2. Expiration grace period
-3. Ingest is disabled
-4. Search is disabled
+1. 有効期限が近づいているという警告
+2. 期限切れの猶予期間
+3. インジェストが無効
+4. 検索が無効
 
-Prior to expiring Gravwell will post a notification in the GUI warning that the license is about to expire, once the expiration date is reached there is a 14 day grace period where Gravwell is fully functional.  The grace period allows you to continue using Gravwell, but if you restart the Gravwell indexer or webserver it will stop and wait for a valid license.  Once the Grace period has expired Gravwell will disable ingest, in this state you can still query your data but Gravwell will not ingest any new data.  After the query grace period expires Gravwell will disable search functionality.
+ライセンスの有効期限が切れる前には、GUI 上にライセンスの有効期限が迫っていることを警告する通知が表示され、有効期限が切れると 14 日間の猶予期間が設けられ、Gravwell は完全に機能します。 猶予期間中は Gravwell の使用を継続できますが、Gravwell のインデクサやウェブサーバを再起動すると停止して有効なライセンスを待ちます。 猶予期間が終了すると、Gravwell はインジェストを無効にします。この状態では、データのクエリは可能ですが、Gravwell は新しいデータをインジェストしません。 クエリ猶予期間が終了すると、検索機能が無効になります。
 
-Gravwell will never delete data due to license expiration, all stored data, resources, dashboards, and query history is preserved.  If a new license is installed everything will be right where you left it.
+ライセンスの期限切れでデータが削除されることはありません。保存されたデータ、リソース、ダッシュボード、クエリの履歴はすべて保存されます。新しいライセンスをインストールしても、すべてのデータはそのまま残ります。
 
-Here is a handy table that explains the events leading up to and after license expiration.
+ここでは、ライセンス満了までとその後のイベントを説明する便利な表をご紹介します。
 
 
-| Event | Description | Time to License Expiration |
+| イベント | 説明 | ライセンス満了までの期間 |
 |-------|-------------|:--------------------------:|
-| Warning 1 | A notification indicating that the license will expire in less than 30 days | T - 30 days |
-| Warning 2 | A notification indicating that the license will expire in less than 15 days | T - 15 days |
-| Expiration | A notification indicating that the license is expired, 14 day grace period begins | T - 0 |
-| Ingest Disabled | Ingest is disabled and a notification indicating that the license is expired | T + 15 days |
-| Query Disabled | Searching is disabled and a notification indicating that the license is expired | T + 30 days |
+| 警告 1 | ライセンスの有効期限が 30 日以内であることを示す通知 | T - 30 日 |
+| 警告 2 | ライセンスの有効期限が 15 日以内であることを示す通知 | T - 15 日 |
+| 満了 | ライセンスが失効したことを示す通知、14日間の猶予期間開始 | T - 0 |
+| インジェストの無効化 | インジェストが無効になり、ライセンスの有効期限が切れたことを示す通知が表示される | T + 15 日 |
+| クエリの無効化 | 検索が無効になり、ライセンスが失効したことを示す通知が表示される | T + 30 日 |

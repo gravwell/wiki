@@ -1,23 +1,23 @@
-# Split
+# split
 
-The split module lets you split the contents of an entry or enumerated value into multiple entries.
+split モジュールは、エントリーや列挙値の内容を複数のエントリーに分割することができます。
 
-## Supported Options
+## サポートされているオプション
 
-Specifying a name following any options informs the split module that it should split the named enumerated value rather than the contents of the entry itself. Omitting a name will cause it to operate on the entry.
+オプションの後に名前を指定すると、エントリ自体のコンテンツではなく、指定された列挙値を分割するよう split モジュールに通知します。名前を省略した場合は、そのエントリに対して操作を行います。
 
-* `-d <delim>`: specify the delimiter. This can be a single character such as a semicolon, or a string--even a string with spaces, provided you wrap it in quotes.
-* `-clean`: tells the module that after splitting the data, it should clean up tabs, spaces, and quote characters from the left and right ends of each string. Thus the entry containing `foo   ,'bar', baz` would be split into three entries containing `foo`, `bar`, and `baz`.
+* `-d <delim>`: 区切り文字を指定します。セミコロンのような1文字でも、文字列でも、スペースを含む文字列でも、引用符で囲めばOKです。
+* `-clean`: データを分割した後に、各文字列の左端と右端にあるタブやスペース、引用符などの文字を整理するようにモジュールに指示します。したがって、`foo ,'bar', baz` を含むエントリは、`foo`, `bar`, `baz` を含む3つのエントリに分割されます。
 
-## Example Usage
+## 使用例
 
-For these examples, we will consider the following example entries:
+これらの例では、以下のようなエントリー例を考えてみます。
 
 ![](data.png)
 
-### Basic splitting
+### 基本的な分割
 
-Specifying the split module with no additional arguments will split the entries based on the default delimiter, the comma:
+split モジュールを追加の引数なしで指定すると、デフォルトのデリミタ（区切り文字）であるカンマに基づいてエントリが分割されます。
 
 ```
 tag=default split
@@ -25,9 +25,9 @@ tag=default split
 
 ![](s1.png)
 
-### Using the clean flag
+### clean フラグの使用
 
-If we add the `-clean` flag, we note that trailing/leading quote marks and whitespace are eliminated:
+また、`-clean` フラグを追加すると、末尾/先頭の引用符とホワイトスペースが削除されることがわかります。
 
 ```
 tag=default split -clean
@@ -35,9 +35,9 @@ tag=default split -clean
 
 ![](s2.png)
 
-### Specifying a delimiter
+### デリミタの指定
 
-Some of the entries contain tabs. We can split on that using the `-d` flag:
+エントリの中にはタブが含まれているものもあります。その場合は `-d` フラグを使って分割することができます。
 
 ```
 tag=default split -d "\t"
@@ -45,9 +45,9 @@ tag=default split -d "\t"
 
 ![](s3.png)
 
-Note that one entry, `a	b	c` was cleanly split into 3 entries because it had a tab between every field, while another entry, `"a",  b, c	,d'` was split into two because it contained a single tab character between 'c' and ','.
+あるエントリー `a	b	c` は、すべてのフィールドの間にタブがあったため、3つのエントリーにきれいに分割されたことに注意してください。一方、別のエントリー`"a",  b, c	,d'`は、'c' と ',' の間に1つのタブ文字が含まれているため、2つに分割されました。
 
-We can also specify arbitrary strings to use as delimiters:
+また、任意の文字列をデリミタとして指定することもできます。
 
 ```
 tag=default split -d custom
@@ -55,13 +55,13 @@ tag=default split -d custom
 
 ![](s4.png)
 
-## Example Usage with Enumerated Values
+## 列挙値の使用例
 
-For this example, we will use entries from the [JSON generator](https://github.com/gravwell/generators) to demonstrate how the split module can operate on enumerated values.
+この例では、[JSON ジェネレーター](https://github.com/gravwell/generators) のエントリを使用して、split モジュールが列挙値に対してどのように操作できるかを説明します。
 
 ![](ev.png)
 
-We can extract the 'useragent' field from the JSON structure, then split it on commas:
+JSON 構造から「useragent」フィールドを抽出して、カンマで分割すればいいのです。
 
 ```
 tag=json json useragent | split useragent | table useragent
@@ -69,7 +69,7 @@ tag=json json useragent | split useragent | table useragent
 
 ![](evdata.png)
 
-Note that the raw *contents* of the entries are not modified:
+なお、エントリーの生の内容は変更されません。
 
 ```
 tag=json json useragent | split useragent | table useragent DATA

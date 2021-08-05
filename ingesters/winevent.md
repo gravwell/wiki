@@ -1,12 +1,12 @@
-# Windows Event Service
+# Windows イベントサービス
 
-The Gravwell Windows events ingester runs as a service on a Windows machine and sends Windows events to the Gravwell indexer.  The ingester consumes from the `System`, `Application`, `Setup`, and `Security` channels by default.  Each channel can be configured to consume from a specific set of events or providers.
+Gravwell Windows イベントインジェスターは、Windows マシン上のサービスとして動作し、Windows イベントを Gravwell インデクサーに送信します。 インジェスターはデフォルトで `System`、`Application`、`Setup`、`Security` の各チャンネルを消費します。 各チャンネルは、特定のイベントやプロバイダのセットから消費するように設定できます。
 
-## Basic Configuration
+## 基本的な構成
 
-The Windows Event ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the Windows Evenet ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+Windows イベントインジェスターは、[インジェスターのセクション](#!ingesters/ingesters.md#Global_Configuration_Parameters)で説明されている統一されたグローバルコンフィギュレーションブロックを使用します。 他の多くの Gravwell インジェスターと同様に、Windows イベントインジェスターは複数のアップストリームインデクサー、TLS、クリアテキスト、名前付きパイプ接続、ローカルキャッシュ、ローカルロギングをサポートしています。
 
-## EventChannel Examples
+## EventChannel の例
 
 ```
 [EventChannel "system"]
@@ -42,32 +42,32 @@ The Windows Event ingester uses the unified global configuration block described
 	EventID=-401 #AND ignore event ID 401
 ```
 
-## Installation
+## インストール
 
-Download the Gravwell Windows ingester installer from the [Downloads page](#!quickstart/downloads.md).
+[ダウンロードページ](#!quickstart/downloads.md)から Gravwell Windows インジェスターのインストーラーをダウンロードします。
 
-Run the .msi installation wizard to install the Gravwell events service.  On first installation the installation wizard will prompt to configure the indexer endpoint and ingest secret.  Subsequent installations and/or upgrades will identify a resident configuration file and will not prompt.
+.msi のインストールウィザードを実行し、Gravwell events serviceをインストールします。 初回のインストール時には、インデクサのエンドポイントとインジェストシークレットの設定を求めるプロンプトが表示されます。 その後のインストールやアップグレードでは、常駐する設定ファイルが特定され、プロンプトは表示されません。
 
-The ingester is configured with the `config.cfg` file located at `%PROGRAMDATA%\gravwell\eventlog\config.cfg`.  The configuration file follows the same form as other Gravwell ingesters with a `[Global]` section configuring the indexer connections and multiple `EventChannel` definitions.
+インジェスターの設定は、`%PROGRAMDATA%\gravwell\eventlog\config.cfg` にある `config.cfg` ファイルで行います。 設定ファイルは他の Gravwell インジェスターと同じ形式で、インデクサの接続を設定する`[Global]`セクションと、複数の`EventChannel`定義があります。
 
-To modify the indexer connection or specify multiple indexers, change the connection IP address to the IP of your Gravwell server and set the Ingest-Secret value.  This example shows configuring an encrypted transport:
+インデクサの接続を変更したり、複数のインデクサを指定するには、接続 IP アドレスを Gravwell サーバの IP に変更し、Ingest-Secret の値を設定します。 この例では、暗号化トランスポートを設定しています。
 
 ```
 Ingest-Secret=YourSecretGoesHere
 Encrypted-Backend-target=ip.addr.goes.here:port
 ```
 
-Once configured, this file can be copied to any other Windows system from which you would like to collect events.
+一度設定したこのファイルは、イベントを収集したい他の Windows システムにコピーすることができます。
 
-### Silent Installation
+### サイレントインストール
 
-The Windows event ingester is designed to be compatible with an automated deployment.  This means that a domain controller can push the installer to clients and invoke installation without user interaction.  To force a silent installation execute the installer with administrative privileges via [msiexec](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec) with the `/quiet` argument.  This installation method will install the default configuration and start the service.
+Windows イベントインジェスターは、自動化された展開と互換性があるように設計されています。 これは、ドメインコントローラがインストーラをクライアントにプッシュして、ユーザーの操作なしにインストールを起動できることを意味します。 サイレントインストールを強制的に行うには、[msiexec](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/msiexec) で `/quiet` 引数を指定して、管理者権限でインストーラを実行します。 このインストール方法では、デフォルトの構成がインストールされ、サービスが開始されます。
 
-To configure your specific parameters you will then need to either push a modified configuration file to `%PROGRAMDATA%\gravwell\eventlog\config.cfg` and restart the service, or also provide the `CONFIGFILE` argument with the fully qualified path to the `config.cfg` file.
+特定のパラメータを設定するには、変更した設定ファイルを `%PROGRAMDATA%gravwell\eventlog\config.cfg` にプッシュしてサービスを再起動するか、`CONFIGFILE` 引数に `config.cfg` ファイルへの完全修飾パスを指定する必要があります。
 
-Note that you may need to create the `%PROGRAMDATA%\gravwell\eventlog` path.
+なお、`%PROGRAMDATA%%gravwell\eventlog` のパスを作成する必要がある場合があります。
 
-A complete execution sequence for a Group Policy push might look like:
+グループポリシープッシュの完全な実行順序は次のようになります：
 
 ```
 msiexec.exe /i gravwell_win_events_3.3.12.msi /quiet
@@ -76,17 +76,17 @@ sc stop "GravwellEvent Service"
 sc start "GravwellEvent Service"
 ```
 
-Or
+または、
 
 ```
 msiexec.exe /i gravwell_win_events_3.3.12.msi /quiet CONFIGFILE=\\share\gravwell_config.cfg
 ```
 
-## Optional Sysmon Integration
+## オプションの Sysmon の統合
 
-The Sysmon utility, part of the sysinternals suite, is an effective and popular tool for monitoring Windows systems. There are plenty of resources with examples of good sysmon configuration files. At Gravwell, we like to use the config created by infosec Twitter personality @InfosecTaylorSwift.
+sysinternals suite の一部である Sysmon ユーティリティは、Windows システムを監視するための効果的で人気のあるツールです。Sysmon の優れた設定ファイルの例を紹介した資料は数多くあります。Gravwell では、infosec Twitter のパーソナリティである @InfosecTaylorSwift 氏が作成した設定ファイルを好んで使用しています。
 
-Edit the Gravwell Windows agent config file located at `%PROGRAMDATA%\gravwell\eventlog\config.cfg` and add the following lines:
+`%PROGRAMDATA%%gravwell\eventlog\config.cfg` にある Gravwell Windows Agent の設定ファイルを編集し、以下の行を追加します。
 
 ```
 [EventChannel "Sysmon"]
@@ -95,19 +95,19 @@ Edit the Gravwell Windows agent config file located at `%PROGRAMDATA%\gravwell\e
         Channel=Microsoft-Windows-Sysmon/Operational
 ```
 
-[Download the excellent sysmon configuration file by SwiftOnSecurity](https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml)
+[SwiftOnSecurity による優れた sysmon 設定ファイルのダウンロード](https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml)
 
-[Download sysmon](https://technet.microsoft.com/en-us/sysinternals/sysmon)
+[sysmon のダウンロード](https://technet.microsoft.com/en-us/sysinternals/sysmon)
 
-Install `sysmon` with your configuration using an administrator shell (Powershell works too) by running the following command:
+管理者シェル（Powershellも可）を使って、以下のコマンドを実行し、設定した内容で `sysmon` をインストールします。
 
 ```
 sysmon.exe -accepteula -i sysmonconfig-export.xml
 ```
 
-Restart the Gravwell service via standard windows service management.
+Windows 標準のサービス管理で Gravwell サービスを再起動します。
 
-### Example Configuration with Sysmon
+### Sysmon の設定例
 
 ```
 [EventChannel "system"]
@@ -136,36 +136,36 @@ Restart the Gravwell service via standard windows service management.
         Channel=Microsoft-Windows-Sysmon/Operational
 ```
 
-## Troubleshooting
+## トラブルシューティング
 
-You can verify the Windows ingester connectivity by navigating to the Ingester page on the web interface.  If the Windows ingester is not present, check the status of the service either via the windows GUI or by running `sc query GravwellEvents` at the command line.
+Web インターフェースの Ingester ページに移動することで、Windows インジェスターの接続性を確認することができます。 Windows のインジェスターが存在しない場合は、Windows の GUI を使用するか、コマンドラインで `sc query GravwellEvents` を実行してサービスの状態を確認してください。
 
 ![](querystatus.png)
 
 ![](querystatusgui.png)
 
-## Example Windows Searches
+## Windows 検索の例
 
-Assuming the default tag names are used, to see ALL sysmon entries in their entirety run this search:
+デフォルトのタグ名が使用されていると仮定して、すべての sysmon エントリを全体的に見るには、以下の検索を実行します。
 
 ```
 tag=sysmon
 ```
 
-To see ALL Windows events in their entirety run:
+すべての Windows イベントを確認するには、以下を実行してください。
 
 ```
 tag=windows
 ```
 
-For the following searches we can use the `winlog` search module to filter and extract specific events and fields.  To see all network creation by non-standard processes:
+以下の検索では、`winlog` 検索モジュールを使って、特定のイベントやフィールドをフィルタリングして抽出することができます。 非標準的なプロセスによるすべてのネットワーク作成を確認します。
 
 ```
 tag=sysmon regex winlog EventID==3 Image SourceHostname DestinationIp DestinationPort |
 table TIMESTAMP SourceHostname Image DestinationIP DestinationPort
 ```
 
-To chart network creation by source host:
+送信元ホストのネットワーク作成状況をグラフ化します。
 
 ```
 tag=sysmon regex winlog EventID==3 Image SourceHostname DestinationIp DestinationPort |
@@ -173,7 +173,7 @@ count by SourceHostname |
 chart count by SourceHostname limit 10
 ```
 
-To see suspicious file creation:
+疑わしいファイルの作成を確認するには次のようにします。
 
 ```
 tag=sysmon winlog EventID==11 Image TargetFilename |

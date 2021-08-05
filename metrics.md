@@ -1,14 +1,14 @@
-# Gravwell Metrics and Crash Reporting
+# Gravwellのメトリクスとクラッシュレポート
 
-Gravwell users care about what's going on in their networks--it's a big reason people check us out in the first place. We want to make sure all users are aware of and comfortable with the automated crash reporting & metrics systems built into Gravwell. This document will cover both systems, with complete examples of exactly what we send back to the Gravwell servers.
+Gravwellのユーザーは、自分のネットワークで何が起こっているかを気にかけています。それは、人々が最初に私たちをチェックアウトする大きな理由です。Gravwellに組み込まれている自動クラッシュレポートとメトリックスシステムについて、すべてのユーザーが理解し、快適に使用できるようにしたいと考えています。このドキュメントでは、Gravwellのサーバーに送信される内容の完全な例とともに、両方のシステムについて説明します。
 
-## Crash Reporting
+## クラッシュレポート
 
-When a Gravwell component crashes, an automated crash report is sent to Gravwell. This consists of the console output from the component in question, which typically includes some brief information about the license (in order to determine whose system just crashed) and a stack trace. **Every** Gravwell component--the webserver, the indexer, the ingesters, the search agent--is set up to send crash reports.
+Gravwellのコンポーネントがクラッシュすると、自動クラッシュレポートがGravwellに送信されます。これは対象コンポーネントのコンソール出力で構成されており、通常はライセンスに関する簡単な情報（誰のシステムがクラッシュしたかを判断するため）とスタックトレースが含まれている。**Gravwellのすべてのコンポーネント（ウェブサーバ、インデクサ、インジェスタ、サーチエージェント）は、クラッシュレポートを送信するように設定されています。
  
-Note: Crash reports are always sent via TLS-verified HTTPS to update.gravwell.io. If we are unable to fully validate the remote certificate, the report does *not* go out.
+注：クラッシュレポートは常にTLSで検証されたHTTPSでupdate.gravwell.ioに送信されます。リモートの証明書を完全に検証できない場合は、レポートは*出ません*。
 
-Here's an example of a crash report from a Gravwell employee's test system:
+以下は、Gravwell社員のテストシステムからのクラッシュレポートの例です。
 
 ```
 Component:      webserver
@@ -56,41 +56,41 @@ created by gravwell/pkg/search.(*SearchManager).GetSystemStats.func1
         gravwell@/pkg/search/manager_handlers.go:301 +0x65
 ```
 
-The message starts with the particular component that crashed, in this case the webserver. It then lists the Gravwell version, the IP and hostname of the system that crashed, and a path where Gravwell staff can find a full copy of the crash log--if a backtrace is particularly long, we receive an email with only the first 100 lines or so.
+メッセージは、クラッシュした特定のコンポーネント（この場合はウェブサーバ）から始まります。そして、Gravwellのバージョン、クラッシュしたシステムのIPとホスト名、Gravwellスタッフがクラッシュログの完全なコピーを見つけられるパスが記載されています（バックトレースが特に長い場合は、最初の100行ほどだけがメールで送られてきます）。
 
-The remainder of the message is the console output from the crashed program. The crash reporter pulls this directly from the component's output file in `/dev/shm`; you can see what your system might send by looking at e.g. `/dev/shm/gravwell_webserver`. You can also view any past crash reports in `/opt/gravwell/log/crash`, but be aware that if you *disable* the crash reporter, crash logs will no longer be stored in that directory.
+メッセージの残りの部分は、クラッシュしたプログラムのコンソール出力です。クラッシュレポーターは、`/dev/shm`にあるコンポーネントの出力ファイルから直接これを取り出します。例えば`/dev/shm/gravwell_webserver`を見れば、あなたのシステムが何を送信しているかがわかります。また、`/opt/gravwell/log/crash` で過去のクラッシュレポートを見ることができますが、クラッシュレポーターを *disable* した場合、クラッシュログはそのディレクトリに保存されなくなることに注意してください。
 
-The first few lines (Version, API Version, Build Date, and Build ID) help us determine exactly what version of Gravwell was running. "Cmdline", "Executing user", "Parent PID", "Parent cmdline", and "Parent user" all help us figure out how the Gravwell process is being run and identify potential issues there--in this example, because the parent process as PID 1 and named "manager", we can infer that Gravwell is being run in a Docker container. Sometimes issues can crop up in one environment (e.g. in Docker being launched by "manager") but not in others (Ubuntu, launching via systemd), and this helps us chase that down.
+最初の数行（Version, API Version, Build Date, Build ID）は、Gravwellのどのバージョンが実行されていたかを正確に判断するのに役立ちます。「Cmdline"、"Executing user"、"Parent PID"、"Parent cmdline"、"Parent user "は、Gravwellのプロセスがどのように実行されているかを把握し、潜在的な問題を特定するのに役立ちます。この例では、親プロセスのPIDが1で、名前が "manager "であることから、GravwellはDockerコンテナで実行されていると推測できます。この例では、親プロセスのPIDが1で、名前が "manager "であることから、GravwellはDockerコンテナで実行されていると推測できます。
 
-We also include information about the amount of memory on the system and the rlimits set because this can help us track down certain classes of crashes--for instance, an out-of-memory error on a system with 512MB of RAM wouldn't be particularly surprising! Note that the "Host hash" field is a unique identifier for the host running the process, but because it is a hash we can only use it to say "This is the same machine as that other crash report"; no other information is included.
+また、システム上のメモリ量と設定されているrlimitsの情報も含まれています。これは、特定のクラスのクラッシュを追跡するのに役立つからです。例えば、512MBのRAMを持つシステムでメモリ不足のエラーが発生しても、特に驚くことではありません。Host hash」フィールドは、プロセスを実行しているホストのユニークな識別子ですが、ハッシュなので「これは他のクラッシュレポートと同じマシンだ」と言うためにしか使えず、他の情報は含まれていないことに注意してください。
 
-The "SKU", "Customer NUM", and "Customer GUID" fields describe the license in use. The SKU describes the capabilities allowed by the user's license; in this case, the Gravwell employee is using an unlimited ("UX") license. The customer number and customer GUID fields allow us to refer to our customer database and see who is having the problem.
+SKU」、「Customer NUM」、「Customer GUID」フィールドは、使用中のライセンスを示します。SKUは、ユーザーのライセンスで許可されている機能を表します。このケースでは、Gravwellの従業員は無制限（"UX"）ライセンスを使用しています。顧客番号と顧客GUIDフィールドは、顧客データベースを参照し、誰が問題を抱えているかを確認するためのものです。
 
-Below all this information is the backtrace from the Gravwell process. In this case, we see that a bug in an alpha build caused a crash in the routine that the webserver uses to check CPU/memory information of the indexers for use on the GUI's hardware stats page. We want to make it very clear that these stacktraces will never contain user data, only line numbers from our source code: just enough so we can figure out where in the program it's crashing.
+これらの情報の下には、Gravwellのプロセスからのバックトレースがあります。このケースでは、アルファビルドのバグにより、GUIのハードウェア統計ページで使用するためにウェブサーバがインデクサのCPU/メモリ情報をチェックするために使用するルーチンがクラッシュしたことがわかります。このスタックトレースにはユーザーデータは含まれておらず、ソースコードの行番号のみが含まれていることを明確にしておきます。
 
-### Disabling Crash Reporting
+### クラッシュレポートの無効化
 
-If for any reason you decide you don't want to send crash reports, you have multiple options for disabling the report system.
+何らかの理由でクラッシュレポートを送信したくないと思った場合、レポートシステムを無効にする方法が複数あります。
 
-* If using the standalone shell installer, you can disable it at install time with the `--no-crash-report` flag.
-* If you installed Gravwell from the Debian repositories, you can disable it with `systemctl disable gravwell_crash_report`.
-* If you're using the Gravwell Docker image, you can disable the crash reporter by passing `-e DISABLE_ERROR_HANDLING=true` in the Docker command.
+* スタンドアロンのシェルインストーラを使用している場合は、インストール時に `--no-crash-report` フラグを付けて無効にすることができます。
+* DebianのリポジトリからGravwellをインストールした場合は、`systemctl disable gravwell_crash_report`で無効にすることができます。
+* GravwellのDockerイメージを使用している場合は、Dockerコマンドに`-e DISABLE_ERROR_HANDLING=true`を渡すことで、クラッシュレポーターを無効にすることができます。
 
-However, we'd really appreciate if you'd leave crash reporting enabled. Thanks to these crash reports, we can often identify and fix problems that users may not even notice! It's one of our best feedback mechanisms to improve our software.
+しかし、クラッシュレポートを有効にしたままにしておいていただけるとありがたいです。クラッシュレポートのおかげで、ユーザーが気づかないような問題を発見し、修正することができます。これは我々のソフトウェアを改善するための最高のフィードバックメカニズムの一つです。
 
-If you would like us to remove all past crash reports that your system has sent, please email support@gravwell.io and we will permanently delete them from our system.
+過去のクラッシュレポートの削除をご希望の場合は、support@gravwell.io までご連絡ください。
 
-## Metrics Reporting
+## メトリクスレポート
 
-The Gravwell webserver component (*only* the webserver) will occasionally send an HTTPS POST request to the Gravwell corporate servers with generic usage statistics. This information helps us figure out which features get the most use and which can use more work. We can generate statistics about how much RAM is being consumed by Gravwell--do we need to optimize garbage collection, or be more conservative in our default configuration? It also allows us to make sure paid licenses aren't being deployed improperly.
+Gravwellのウェブサーバコンポーネント（ウェブサーバのみ）は、一般的な使用状況を示すHTTPS POSTリクエストをGravwellコーポレートサーバに送信することがあります。この情報は、どの機能が最も利用されているか、どの機能がもっと利用されているかを把握するのに役立ちます。GravwellがどのくらいのRAMを消費しているのか、ガベージコレクションを最適化する必要があるのか、あるいはデフォルトの設定をより保守的にする必要があるのか、といった統計情報を生成することができます。また、有料のライセンスが不適切に導入されていないかどうかも確認できます。
 
-Our most important goal in gathering these metrics is to protect the anonymity of your data. These metrics reports will **never** include the actual contents of any data stored in Gravwell, nor will they ever send actual search queries or even a list of tags on the system.
+これらのメトリクスを収集する際の最も重要な目的は、お客様のデータの匿名性を守ることです。これらのメトリクスレポートには、Gravwellに保存されているデータの実際の内容が含まれることはなく、実際の検索クエリやシステム上のタグのリストが送信されることもありません。
 
-Note: Metrics reports are always sent via TLS-verified HTTPS to update.gravwell.io. If we are unable to fully validate the remote certificate, the report does *not* go out.
+注）メトリクスレポートは、常にTLSで検証されたHTTPSでupdate.gravwell.ioに送信されます。リモート証明書を完全に検証できない場合、レポートは*出ません*。
 
-We use this same system to notify users of new Gravwell releases: when the metrics report is sent, the server will respond with the latest version of Gravwell. This lets us display a notification in the Gravwell UI when a new version is available (these notifications can be disabled with the `Disable-Update-Notification` parameter in gravwell.conf).
+メトリクスレポートが送信されると、サーバーはGravwellの最新バージョンで応答します。これにより、新しいバージョンが利用可能になったときに、Gravwell UIに通知を表示することができます（これらの通知は、gravwell.confの`Disable-Update-Notification`パラメータで無効にすることができます）。
 
-Here's an example that was sent by a Gravwell employee's home system:
+以下は、Gravwell社員のホームシステムから送られてきた例です:
 
 ```
 {
@@ -345,67 +345,67 @@ Here's an example that was sent by a Gravwell employee's home system:
 }
 ```
 
-The structure is large, in part because this webserver is connected to 4 indexers which each get their own set of information. Here's a breakdown of the fields in detail:
+このウェブサーバが4つのインデクサに接続されており、それぞれが独自の情報を取得していることもあって、構造が大きくなっています。以下にフィールドの詳細を説明します。
 
-* `ApiVer`: An internal Gravwell API versioning number.
-* `AutomatedSearchCount`: The number of searches which have been executed "automatically" (by the search agent, or by loading a dashboard).
-* `BuildVer`: A structure describing the particular build of Gravwell on this system.
-* `CustomerNumber`: The customer number associated with the license on this system.
-* `CustomerUUID`: The UUID of the license on this system.
-* `DashboardCount`: The number of dashboards that exist.
-* `DashboardLoadCount`: The number of types any dashboard has been opened by any user.
-* `DistributedFrontends`: Set to true if [distributed webservers](#!distributed/frontend.md) are enabled.
-* `ForeignDashboardLoadCount`: The number of times users have viewed dashboards owned by another user (helps us determine if our dashboard sharing options are sufficiently flexible)
-* `ForeignSearchLoadCount`: The number of times users have viewed searches owned by another user (helps us determine if our search sharing options are sufficiently flexible)
-* `Groups`: The number of user groups on the system.
-* `IndexerCount`: The number of indexers to which this webserver is connected.
-* `IndexerNodeInfo`: An array of structures, one per indexer, briefly describing the statistics of each indexer:
-	- `CPUCount`: The number of CPU cores on the indexer.
-	- `HostHash`: A non-reversible hash (see [github.com/denisbrodbeck/machineid](https://github.com/denisbrodbeck/machineid)) that uniquely identifies the host machine running the indexer. Note that in this example, the indexers are all running on a single Docker host, so they all have the same HostHash.
-	- `ProcessHeapAllocation`: The amount of heap memory allocated by the indexer process.
-	- `ProcessSysReserved`: The total amount of memory the indexer process has reserved from the OS.
-	- `TotalMemory`: The size of the system's main memory.
-	- `VirtRole`: "host" or "guest", depending on if the indexer is running in a virtual machine or not.
-	- `VirtSystem`: The virtualization system, if any, e.g. "xen", "kvm", "vbox", "vmware", "docker", "openvz", "lxc".
-* `IndexerStats`: An array of statistics structures for each indexer:
-	* `WellStats`: An array of anonymized information about each well on the indexer:
-		* `Cold`: Whether or not this is a "cold" well.
-		* `Data`: The number of bytes of data in this well.
-		* `Entries`: The number of entries in this well.
-* `IngesterCount`: The number of unique ingesters attached to the system.
-* `LicenseHash`: The MD5 sum of the license in use.
-* `LicenseTimeLeft`: The number of seconds remaining in the license.
-* `ManualSearchCount`: The number of searches executed manually.
-* `ResourceUpdates`: The number of times any resource has been modified.
-* `ResourcesCount`: The number of resources on the system.
-* `SKU`: The SKU of the license in use.
-* `ScheduledSearchCount`: The number of scheduled searches installed on the system.
-* `SearchCount`: a deprecated field, the total of `ManualSearchCount` + `AutomatedSearchCount`.
-* `Source`: The IP from which this report originated.
-* `SystemMemory`: How many bytes of memory are installed on the webserver's host system.
-* `SystemProcs`: The number of processes running on the host system.
-* `SystemUptime`: Number of seconds the host system has been running.
-* `TimeStamp`: The time at which this report was generated.
-* `TotalData`: The number of bytes across all wells on all indexers.
-* `TotalEntries`: The number of entries across all wells on all indexers.
-* `Uptime`: The number of seconds since the webserver process started.
-* `UserLoginCount`: The number of times users have logged in.
-* `Users`: The number of users on the system.
-* `WebserverNodeInfo`: A brief description of the system running the webserver process:
-	- `CPUCount`: The number of CPU cores on the webserver.
-	- `HostHash`: A non-reversible hash (see [github.com/denisbrodbeck/machineid](https://github.com/denisbrodbeck/machineid)) that uniquely identifies the host machine running the webserver.
-	- `ProcessHeapAllocation`: The amount of heap memory allocated by the webserver process.
-	- `ProcessSysReserved`: The total amount of memory the webserver process has reserved from the OS.
-	- `TotalMemory`: The size of the system's main memory.
-	- `VirtRole`: "host" or "guest", depending on if the webserver is running in a virtual machine or not.
-	- `VirtSystem`: The virtualization system, if any, e.g. "xen", "kvm", "vbox", "vmware", "docker", "openvz", "lxc".
-* `WebserverUUID`: Every Gravwell webserver generates a UUID when installed; this field contains that UUID.
-* `WellCount`: The total number of wells across all indexers.
+* `ApiVer`: Gravwell APIの内部バージョニング番号。
+* `AutomatedSearchCount`: 検索エージェントやダッシュボードの読み込みによって）"自動的に "実行された検索の数です。
+* `BuildVer`: * `BuildVer`: このシステム上のGravwellの特定のビルドを記述する構造体です。
+* `CustomerNumber`: * `CustomerNumber`: このシステム上のライセンスに関連する顧客番号。
+* `CustomerUUID`: このシステム上のライセンスに関連する顧客番号です。このシステム上のライセンスのUUIDです。
+* `DashboardCount`: ダッシュボードの数です。存在するダッシュボードの数です。
+* `DashboardLoadCount`: ダッシュボードの数です。* `DashboardLoadCount`: ユーザーによって開かれたダッシュボードの種類の数。
+* `DistributedFrontends`: 分散型フロントエンドです。Distributed Webservers](#!distributed/frontend.md)が有効な場合、trueに設定されます。
+* `ForeignDashboardLoadCount`: ユーザーがダッシュボードを閲覧した回数です。ForeignDashboardLoadCount`: ユーザーが他のユーザーが所有するダッシュボードを閲覧した回数です (ダッシュボードの共有オプションが十分な柔軟性を持っているかどうかを判断するのに役立ちます)。
+* `ForeignSearchLoadCount`: 他のユーザーが所有する検索をユーザーが閲覧した回数（検索の共有オプションが十分な柔軟性を持っているかどうかの判断に役立ちます。
+* `Groups`: システム上のユーザーグループの数です。
+* `IndexerCount`: * `IndexerCount`: このウェブサーバが接続されているインデクサの数です。
+* `IndexerNodeInfo`: 各インデクサの統計情報を簡潔に記述した、インデクサごとに1つの構造体の配列。
+	- `CPUCount`: CPUCount`: インデクサに搭載されているCPUコアの数。
+	- `HostHash`: 非可逆的なハッシュ（[github.com/denisbrodbeck/machineid](https://github.com/denisbrodbeck/machineid)を参照）で、インデクサーを実行しているホストマシンを一意に識別します。なお、この例では、インデクサはすべて1つのDockerホスト上で動作しているため、すべて同じHostHashを持っています。
+	- `ProcessHeapAllocation`: インデクサプロセスによって割り当てられるヒープメモリの量です。
+	- `ProcessSysReserved`: IndexerプロセスがOSから予約したメモリの合計量です。
+	- `TotalMemory`: システムのメインメモリのサイズです。システムのメインメモリのサイズです。
+	- `VirtRole`: VirtRole`: "host "または "guest "で、インデクサーが仮想マシンで動作しているかどうかによります。
+	- `VirtSystem`: 仮想化システム。xen」、「kvm」、「vbox」、「vmware」、「docker」、「openvz」、「lxc」などがあります。
+* `IndexerStats`: 各インデクサの統計構造体の配列です。
+	* `WellStats`: インデクサ上の各ウェルに関する匿名化された情報の配列です。
+		* `Cold`: Cold`: "コールド "ウェルであるかどうか。
+		* `Data`: このウェルに含まれるデータのバイト数です。
+		* `Entries`: エントリ数。このウェルに含まれるエントリーの数です。
+* `IngesterCount`: インジェスター数です。システムに接続されているユニークなインゲスターの数です。
+* `LicenseHash`: ライセンスの MD5 合計です。使用されているライセンスの MD5 合計です。
+* `LicenseTimeLeft`: ライセンスの残り時間です。ライセンスの残りの秒数です。
+* `ManualSearchCount`: 手動で実行された検索回数です。手動で実行された検索の数です。
+* `ResourceUpdates`: リソースの更新回数です。リソースが変更された回数です。
+* `ResourcesCount`: リソースの数。システム上のリソースの数です。
+* `SKU`: 使用中のライセンスのSKUです。使用されているライセンスのSKUです。
+* `ScheduledSearchCount`: システムにインストールされているスケジュール検索の数です。
+* `SearchCount`: 非推奨のフィールドで、`ManualSearchCount` + `AutomatedSearchCount` の合計値です。
+* `Source`: このレポートが発信されたIPです。このレポートが発信されたIPです。
+* `SystemMemory`: * `SystemMemory`: ウェブサーバのホストシステムにインストールされているメモリのバイト数。
+* `SystemProcs`: * `SystemProcs`: ホストシステム上で動作しているプロセスの数。
+* `SystemUptime`: * `SystemUptime`: ホストシステムが稼働している秒数。
+* `TimeStamp`: このレポートが生成された時間。
+* `TotalData`: データの総量です。* `TotalData`: すべてのインデクサー上のすべてのウェルのバイト数です。
+* `TotalEntries`: 全てのインデクサー上の全てのウェルにおけるエントリー数です。
+* `Uptime`: `Uptime`: ウェブサーバプロセスが起動してからの秒数。
+* `UserLoginCount`: ユーザーがログインした回数です。ユーザーがログインした回数です。
+* `Users`: ユーザーがログインした回数。システムに登録されているユーザー数。
+* `WebserverNodeInfo`: Webサーバプロセスを実行しているシステムの簡単な説明です。
+	- `CPUCount`: `CPUCount`: ウェブサーバに搭載されているCPUコアの数。
+	- `HostHash`: 非可逆的なハッシュ (github.com/denisbrodbeck/machineid](https://github.com/denisbrodbeck/machineid) を参照) で、ウェブサーバを実行しているホストマシンを一意に識別します。
+	- `ProcessHeapAllocation` です。ウェブサーバプロセスによって割り当てられたヒープメモリの量です。
+	- `ProcessSysReserved`: Web サーバプロセスが OS から予約したメモリの総量。
+	- `TotalMemory`: システムのメインメモリのサイズ。システムのメインメモリのサイズです。
+	- `VirtRole`: `VirtRole`: "host "または "guest "で、ウェブサーバが仮想マシンの中で動作しているかどうかによる。
+	- `VirtSystem`: 仮想化システム。xen", "kvm", "vbox", "vmware", "docker", "openvz", "lxc" などの仮想化システムです。
+* `WebserverUUID`: Gravwell の Web サーバはインストール時に UUID を生成するが、このフィールドにはその UUID が格納される。
+* `WellCount`: * `WellCount`: 全てのインデクサーにおけるウェルの合計数です。
 
-We carefully considered the information we report, taking pains to make it impossible to glean any intelligence regarding the type or content of the data you've got in Gravwell. We are always happy to discuss the reasoning behind any of the information we gather; please email support@gravwell.io with any questions.
+私たちは報告する情報を慎重に検討し、あなたがGravwellに持っているデータの種類や内容に関する情報を得ることができないようにするために努力しました。ご質問があれば、support@gravwell.io までお問い合わせください。
 
-### Limiting Metric Reporting
+## メトリクスレポートの制限
 
-Customers may set `Disable-Stats-Report=true` in gravwell.conf, which will strip down the metrics report to a bare minimum containing the CustomerUUID, CustomerNumber, BuildVer, ApiVer, LicenseTimeLeft, and LicenseHash fields--just enough information to verify that the correct license is installed and the system is running.
+お客様は gravwell.conf で `Disable-Stats-Report=true` を設定することで、メトリクスレポートを最小限にし、CustomerUUID、CustomerNumber、BuildVer、ApiVer、LicenseTimeLeft、LicenseHash フィールドを含む、正しいライセンスがインストールされ、システムが稼働していることを確認するのに十分な情報を提供することができます。
 
-We'd really appreciate if you'd leave full stats reports enabled, though. As we said above, these stats reports help us figure out which features are getting used the most, what kind of systems Gravwell is running on, how much RAM it's using--information that, in aggregate, can help us decide where to prioritize future improvements.
+正しいライセンスがインストールされ、システムが稼働しているかどうかを確認するのに十分な情報です。ただし、完全な統計レポートを有効にしておいていただけると幸いです。前述したように、これらの統計レポートは、どの機能が最も使用されているか、Gravwellがどのようなシステム上で動作しているか、どのくらいのRAMを使用しているかなどを把握するのに役立ちます。

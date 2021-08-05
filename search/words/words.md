@@ -1,64 +1,64 @@
-## Words
+## words
 
-Words is a simple text matching engine that searches for a text word that is delimited by split characters.  The words module is functionally equivalent to `grep -s -w` and is designed to interact with the fulltext accelerator.  Words supports UTF8 character encoding and will normally behave well with binary data, this means it is possible to look for the word "foo" in a pcap stream.  However, it is important to understand how the words module breaks on word boundaries.  If the word `foo` is adjacent to the byte 0x44 in a binary data stream the words module will identify the word as `Dfoo` and will not match the query term `foo`.  Words is a great first level filter when operating on unknown data.
+words は、分割文字で区切られたテキストの単語を検索する、シンプルなテキストマッチングエンジンです。 words モジュールは、機能的には `grep -s -w` と同等であり、フルテキストアクセラレータと相互に作用するように設計されています。 words は UTF8 の文字エンコーディングをサポートしており、通常はバイナリデータをうまく扱うことができます。つまり、pcap のストリームの中から「foo」という単語を探すことができるのです。 しかし、words モジュールが単語の境界でどのようにブレークするかを理解することは重要です。 単語 `foo` がバイナリデータストリーム中のバイト 0x44 に隣接している場合、word モジュールはその単語を `Dfoo` と認識し、クエリ用語 `foo` にはマッチしません。 words は未知のデータを扱う際の最初のレベルのフィルタとして最適です。
 
-The words module does not support wildcards, if you need word matching with wildcard support check out the [grep](../grep/grep.md) module using the `-w` flag.
+ワイルドカードに対応した単語照合が必要な場合は、[grep](../grep/grep.md) モジュールの `-w` フラグをご利用ください。
 
-The `words` module allows multiple patterns to be specified and defaults to as strict mode, this means that every pattern must match for the entry to be passed down the pipeline.  If you need an `any` matching behavior the `-or` flag specifies that if any word matches the entry will be passed down the pipeline.  The `words` module also supports an inverted logic so that you can search for entries that do not contain words.
+`words` モジュールでは、複数のパターンを指定することができ、デフォルトでは strict モードになっています。これは、すべてのパターンがマッチしないとエントリがパイプラインに渡されないことを意味します。 任意のマッチング動作が必要な場合は、`-or` フラグで、いずれかの単語がマッチした場合にエントリがパイプラインに渡されるように指定します。 また、`words` モジュールは、単語を含まないエントリを検索できるように、反転した論理もサポートしています。
 
-### Supported options
+### サポートされているオプション
 
-* `-v`: “Inverse” match. For instance, `words -v bar` would drop any records containing the word “bar” and pass on any records that do not contain the word “bar”, if there are multiple words specified all words must not exist in the entry.
-* `-e <arg>`: Operate on an enumerated value instead of on the entire record. For example, a pipeline that showed packets that contain HTTP text but aren’t destined for port 80 would be `tag=pcap packet ipv4.DstPort!=80 tcp.Payload | words -e Payload GET HTTP 1.1"`
-* `-or`: Any match.  If any pattern matches pass the entry on, when combined with the negate flag drop any entry that has a missing word.
+* `-v`: 逆のマッチ。例えば、`words -v bar`とすると、"bar" という単語を含むレコードをすべて削除し、"bar" という単語を含まないレコードをすべて通過させることができます。
+* `-e <arg>`: レコード全体ではなく、列挙値に対して操作を行います。例えば、HTTP テキストを含むが 80 番ポートに向けられていないパケットを表示するパイプラインは、`tag=pcap packet ipv4.DstPort!=80 tcp.Payload | words -e Payload GET HTTP 1.1"` となります。
+* `-or`: 任意のマッチ。パターンにマッチするものがあれば、そのエントリーを通過させます。negate フラグと組み合わせると、単語が欠落しているエントリーを削除します。
 
-### Parameter Structure
+### パラメータ構造
 ```
 words <argument list> <search parameter>
 ```
 
-### Example Search
+### 検索例
 
-To find any Apache logs containing the words `Mozilla` and `Firefox`:
+`Mozilla` と `Firefox` という言葉を含む Apache のログを探します：
 
 ```
 tag=apache words Mozilla Firefox
 ```
 
-To find packets destined for port 80 whose payloads DO NOT contain the words HTTP or 1.1:
+80 番ポートを宛先とするパケットのうち、ペイロードに HTTP や 1.1 という単語が含まれていないものを探します：
 
 ```
 tag=pcap packet tcp.Port==80 tcp.Payload | words -e Payload -v HTTP 1.1
 ```
 
-Match any Reddit post which contains words `Gravwell` or `gravwell`:
+`Gravwell` または `gravwell` という言葉を含む Reddit の投稿にマッチします：
 
 ```
 tag=reddit json Body | words -e Body -or Gravwell gravwell
 ```
 
-Grab only user agents that contain Mozilla and Windows
+Mozilla と Windows を含むユーザーエージェントのみを取り込みます：
 
 ```
 tag=apache words Mozilla Windows
 ```
 
-### Working With Word Matches
+### 単語のマッチ
 
-The word match system is designed to match complete words.  Words is designed to create some additional specificity when selecting values, lets look at some example data to see what will and will not match.
+単語照合システムは、完全な単語を照合するように設計されています。 単語は、値を選択する際に、さらに具体性を持たせるように設計されています。いくつかのデータ例を見て、何がマッチするか、何がマッチしないかを確認してみましょう。
 
 ```
 16.246.30.72 - - [08/May/2017:15:20:35 -0600] "DELETE /search/tag/list HTTP/1.0" 200 5032 "http://nguyen.biz/category/tags/tag/home.htm" "Opera/8.74.(Windows 98; Win 9x 4.90; it-IT) Presto/2.9.173 Version/11.00"
 ```
 
-Lets look at a few invocations of `words` to see what would and would not match:
+いくつかの `words` の呼び出しを見て、何がマッチするのか、しないのかを見てみましょう。
 
-| Words Invocation | MATCHES | Explanation |
+| 呼び出し | <div style="min-width: 40px;">マッチするか</div> | 説明 |
 |-----------------|---------|-------------|
-| words Ver       |   NO    | The words module will NOT match `Version/11.00` pattern because Ver is not a complete word |
-| words 16.246.30.72   |   YES    | The words will match IPs, because the "." character is not a boundary delimiter |
-| words 8.74   |   YES    | The words will match the "8.74" value even though the word "8.74" has a trailing "." character.  This is because the "." character is considered a trim character and will be removed from matches.  This is so that you can match natural language words when punctuation is used (like "." and "," and ";"). |
-| words Version   |   YES   | The words module WILL match because Version is a full word, the `/` character is a split character |
-| words 11.00     |   YES     | The word will match, the `.` character is only a separator if it is followed by a space, this allows matching IP addresses |
-| words "Version/11.00"   |  ERROR  | The words module will throw an error, you cannot have word boundary characters in a match |
-| words "Ver*"   |  NO  | The words module will not match because the words module does not treat the "*" character as a wildcard, it's looking for the complete word "Ver*" |
+| words Ver       |   しない    | Ver は完全な単語ではないため、単語モジュールは `Version/11.00` パターンにはマッチしません。 |
+| words 16.246.30.72   |   する    |「.」文字はバウンダリデリミタではないので、単語は IP にマッチします。 |
+| words 8.74   |   する    | 「8.74」という単語の後ろに「.」という文字があっても、「8.74」という値にマッチします。 これは、「.」文字がトリム文字とみなされ、一致したものから削除されるためです。 これは、句読点が使用されている場合（「.」や「,」、「;」など）に、自然言語の単語をマッチさせるためです。 |
+| words Version   |   する   | Version は完全な単語で、`/` は分割文字なので、words モジュールはマッチします。 |
+| words 11.00     |   する     | 単語はマッチします。`.` の文字は、スペースが続く場合のみセパレーターとなり、IPアドレスを照合することができます。 |
+| words "Version/11.00"   |  エラー  | words モジュールはエラーを出します。マッチの中に単語の境界文字を入れることはできません。 |
+| words "Ver*"   |  しない  | words モジュールは、"*" 文字をワイルドカードとして扱わず、完全な単語 "Ver*" を探しているため、マッチしません。 |

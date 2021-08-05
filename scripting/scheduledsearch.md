@@ -1,85 +1,85 @@
-# Scheduling Searches and Scripts with the Search Agent
+# Search Agentによる検索とスクリプトのスケジューリング
 
-It is often advantageous to perform searches or run scripts automatically, for instance running a search every morning to detect malicious behavior from the previous night. Using Gravwell's search agent, searches and [search scripts](scriptingsearch.md) can be run on customized scheduled.
+例えば、毎朝検索を実行して前夜の悪意ある行動を検出するなど、検索やスクリプトの実行を自動的に行うことが有利な場合があります。Gravwellの検索エージェントを使えば、検索や[検索スクリプト](scriptingsearch.md)をカスタマイズしたスケジュールで実行することができます。
 
-The scheduling feature allows the user to schedule both regular searches and [search scripts](scriptingsearch.md).
+スケジューリング機能では、通常の検索と[検索スクリプト](scriptingsearch.md)の両方をスケジュールすることができます。
 
-## Setting up the Search Agent
+## サーチエージェントの設定
 
-The Gravwell Search Agent is now included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the Search Agent. The Search Agent is installed automatically by the Gravwell Debian package.
+Gravwell Search AgentはGravwellの主要なインストールパッケージに含まれ、デフォルトでインストールされるようになりました。ウェブサーバコンポーネントを `--no-webserver` フラグで無効にしたり、`--no-searchagent` フラグを設定すると、検索エージェントがインストールされなくなります。サーチエージェントはGravwellのDebianパッケージによって自動的にインストールされます。
 
-For more information about configuring (or disabling) the search agent, see [the search agent documentation](searchagent.md).
+サーチエージェントの設定(または無効化)についての詳細は[サーチエージェントのドキュメント](searchagent.md)を参照してください。
 
-## Managing Scheduled Searches
+## スケジュール検索の管理
 
-Scheduled searches are managed from the 'Scheduled Searches' page, located under the "Automation" sub-menu of the main menu. The following screenshot shows a single scheduled search which runs every hour:
+スケジュール検索の管理は、メインメニューの「自動化」サブメニューの下にある「Scheduled Searches」ページから行います。次のスクリーンショットは、1時間ごとに実行される1つのスケジュール検索を示しています。
 
 ![](sched1.png)
 
-### Creating a Scheduled Search
+### スケジュール検索の作成
 
-To create a new scheduled search, click the 'Add' button in the upper-right corner of the Scheduled Searches page. A new page will open:
+新しいスケジュール検索を作成するには、「Scheduled Searches」ページの右上隅にある「Add」ボタンをクリックします。新しいページが開きます。
 
 ![](newsched.png)
 
-You must provide a search query, specify a timeframe over which it should run, give it a name and description, and define the schedule. You may also optionally chose one or more groups whose members may see the results of this scheduled search, define [labels](#!gui/labels/labels.md), or assign the scheduled search to an installed kit.
+検索クエリを指定し、検索を実行する期間を指定し、名前と説明を付け、スケジュールを定義する必要があります。また、このスケジュール検索の結果を見ることができる1つ以上のグループを選択したり、[ラベル]を定義したり(#!gui/labels/labels.md)、インストールしたキットにスケジュール検索を割り当てたりすることもできます。
 
-Note: Gravwell uses the cron schedule format to specify when a search should run. If you're not familiar with cron, check out [the Wikipedia article](https://en.wikipedia.org/wiki/Cron) and try [this site to experiment with scheduling](https://cron.help/)
+注意：Gravwellはcronスケジュール形式で検索の実行時間を指定します。cronに慣れていない方は、[Wikipediaの記事](https://en.wikipedia.org/wiki/Cron)や[スケジューリングを試すサイト](https://cron.help/)を参照してください。
 
-Below, we have defined a simple scheduled search which runs every minute and counts how many entries came in over the last minute:
+以下では、1分ごとに実行され、過去1分間に何件のエントリーがあったかをカウントするシンプルなスケジュール検索を定義しています。
 
 ![](countsearch.png)
 
-Note that we have selected the "run after saving" option. This tells the searchagent to run the search as soon as it can, then begin the regular schedule. This is particularly useful when you're running searches to update a lookup table.
+ここでは、「run after saving」オプションを選択していることに注意してください。これは、検索エージェントに、できる限り早く検索を実行し、その後、通常のスケジュールを開始するように指示しています。これは、ルックアップテーブルを更新するために検索を実行している場合に特に有効です。
 
-After clicking Save, the search now shows up in the scheduled search listing and will soon run, updating the 'Last Run' field:
+保存」をクリックすると、検索はスケジュールされた検索リストに表示され、すぐに実行されて「最後の実行」フィールドが更新されます。
 
 ![](lastrun.png)
 
-## Managing Scheduled Scripts
+## スケジュールされたスクリプトの管理
 
-Scheduled scripts are managed from the 'Scripts' page, located under the "Automation" sub-menu of the main menu. Scripts are managed in exactly the same way as scheduled searches, with identical controls available.
+スケジュールされたスクリプトは、メインメニューの "Automation "サブメニューにある "Scripts "ページで管理します。スクリプトは、スケジュール検索とまったく同じ方法で管理され、同じコントロールが利用できます。
 
-### Creating a Scheduled Script
+### スケジュールスクリプトの作成
 
-To create a scheduled search, click the 'Add' button in the upper right of the Scripts page. This will open the New Script page, with a text area for entering a script:
+スケジュール検索を作成するには、[スクリプト]ページの右上にある[追加]ボタンをクリッ クします。新しいスクリプトのページが表示され、スクリプトを入力するためのテキストエリアが表示されます。
 
 ![](newscript.png)
 
-Once you have entered the script, a name, a description, and a schedule, click "Save" or "Save & Exit" to create the script.
+スクリプト、名前、説明、スケジュールを入力したら、[保存]または[保存して終了]をクリックしてスクリプトを作成します。
 
-### Debugging Scripts
+### スクリプトのデバッグ
 
-By default, the right-hand side of the script editing page will show the "Info" tab, but note the column of icons at the far right. Clicking the check mark will open the Debugging tab, which can be used to test your scripts. When you click the "Debug" button, the Search Agent will execute your script as soon as possible, *with printing functions enabled*. This can be very helpful when attempting to debug a problematic script. The example below shows a very simple script and the debug output.
+デフォルトでは、スクリプト編集画面の右側には「情報」タブが表示されていますが、右端のアイコンの列に注目してください。このチェックマークをクリックすると、スクリプトのテストに使用する「デバッグ」タブが表示されます。Debug」ボタンをクリックすると、Search Agentは印刷機能を有効にした状態で*できるだけ早くスクリプトを実行します。これは、問題のあるスクリプトをデバッグしようとするときに非常に役立ちます。以下の例では、非常にシンプルなスクリプトとデバッグ出力を示しています。
 
 ![](debugscript.png)
 
-## Viewing Search Results
+## 検索結果の表示
 
-To see the last results of a scheduled search, click the 'View Results' icon:
+スケジュールされた検索の最後の結果を表示するには、「View Results」アイコンをクリックします。
 
 ![](results.png)
 
-The most recent set of results for the scheduled search will load:
+スケジュールされた検索の最新の結果セットが読み込まれます。
 
 ![](results2.png)
 
-## Disabling a Scheduled Search or Script
+## スケジュールされた検索またはスクリプトの無効化
 
-Disabling a scheduled search will prevent it from running again until it is re-enabled. To disable a search, open the three-dot menu to view additional options and select Disable:
+スケジュールされた検索を無効にすると、再度有効にするまでその検索は実行されません。検索を無効にするには、3ドットメニューを開いて追加オプションを表示し、「Disable」を選択します。
 
 ![](disable.png)
 
-To re-enable, repeat the process; rather than "Disable", the menu will say "Enable".
+再度有効にするには、同じ手順を繰り返します。"Disable "ではなく、"Enable "と表示されます。
 
-## Scheduling a Search/Script Immediately
+## 検索/スクリプトをすぐに実行する
 
-You can force a scheduled search or script to run immediately at any time. Open the three-dot menu for that search/script and select "Schedule immediately". The search agent will run it as soon as possible.
+スケジュールされた検索やスクリプトは、いつでもすぐに実行させることができます。その検索/スクリプトの3点メニューを開き、「Schedule immediately」を選択してください。検索エージェントは、できるだけ早くその検索を実行します。
 
 ![](immediate.png)
 
-## Deleting a Scheduled Search/Script
+## スケジュールされた検索/スクリプトの削除
 
-To delete a scheduled search, select the "Delete" option:
+スケジュールされた検索を削除するには、「Delete」を選択します。
 
 ![](delete.png)

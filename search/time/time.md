@@ -1,25 +1,25 @@
-# Time
+# time
 
-The time module is used to convert Timestamp enumerated values into formatted strings, and vice versa. For example, the following will print each entry's built-in timestamp value using the specified format and save the result as a string in a new enumerated value named "formattedTS":
+timeモジュールは、タイムスタンプ列挙値をフォーマットされた文字列に変換するために使用されます。例えば、以下の例では、指定されたフォーマットを使用して各エントリの組み込みタイムスタンプ値を表示し、その結果を「formattedTS」という名前の新しい列挙値に文字列として保存します。
 
 ```
 time -f "Mon Jan _2 15:04:05 2006 MST" TIMESTAMP formattedTS
 ```
 
-If the first enumerated value argument is a string rather than a timestamp, the module will instead attempt to parse the string as a time and save the output into a Timestamp enumerated value. Note that if no specific format is given, the module will use the `timegrinder` library to try many possibilities. The following will look at a string enumerated value named "tsString" and attempt to convert it to a timestamp, placing the result in "extractedTS" if successful.
+列挙値の最初の引数がタイムスタンプではなく文字列の場合、モジュールは代わりに文字列を時間として解析し、出力をタイムスタンプ列挙値に保存しようとします。特定のフォーマットが与えられない場合、モジュールは `timegrinder` ライブラリを使用して多くの可能性を試すことに注意してください。以下は、「tsString」という名前の文字列列挙値を見て、それをタイムスタンプに変換しようとし、成功した場合には結果を「extractedTS」に格納します。
 
 ```
 time tsString extractedTS
 ```
 
-## Supported Options
+## サポートされているオプション
 
-* `-f <format>`: Specifies the format to be used when printing timestamps or optionally when parsing strings. The format consists of a string representation of a specific time, "Mon Jan 2 15:04:05 MST 2006", as used by the [Go time library](https://golang.org/pkg/time/#pkg-constants). For instance, one may say `-f "Mon 3:04PM"` to get a very brief timestamp format. Refer to the linked documentation for more examples.
-* `-tz <timezone>`: Specifies a time zone, in [tz database format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), e.g. "America/Denver", "UTC", or "Atlantic/Reykjavik". This time zone will be used when *printing* timestamps (which do not have a time zone associated with them) and when *parsing* strings which do not contain a time zone specification.
+* `-f <format>`: タイムスタンプを表示するときや、オプションで文字列を解析するときに使用するフォーマットを指定します。フォーマットは、[Go time library](https://golang.org/pkg/time/#pkg-constants)で使用されている "Mon Jan 2 15:04:05 MST 2006" という特定の時刻を文字列で表現したものです。例えば、`-f "Mon 3:04PM"` とすると、非常に短いタイムスタンプ形式が得られます。より多くの例については、リンク先のドキュメントを参照してください。
+* `-tz <timezone>`: タイムゾーンを [tz データベース形式](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) で指定します。このタイムゾーンは、タイムスタンプ(タイムゾーンに関連付けられていないもの)を表示する際や、タイムゾーン指定を含まない文字列を解析する際に使用されます。
 
-## Examples
+## 例
 
-To print entry timestamps in a specific format and time zone:
+エントリーのタイムスタンプを特定のフォーマットとタイムゾーンで表示する。
 
 ```
 tag=json time -f "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIMESTAMP foo | table TIMESTAMP foo
@@ -27,7 +27,7 @@ tag=json time -f "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIMESTAMP 
 
 ![](time1.png)
 
-The output of the previous module invocation can be fed back in to the time module to convert back into timestamps:
+前のモジュール呼び出しの出力をタイムスタンプに変換するために、タイムモジュールにフィードバックすることができます。
 
 ```
 tag=json time -f "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIMESTAMP foo | time -f "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" foo bar | table TIMESTAMP foo bar
@@ -35,4 +35,4 @@ tag=json time -f "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIMESTAMP 
 
 ![](time2.png)
 
-Note that the fractional seconds are truncated in the final output, because the intermediate time format does not include them.
+中間時点フォーマットには端数秒が含まれていないため、最終的な出力では端数秒が切り捨てられていることに注意してください。

@@ -1,57 +1,45 @@
-# Configuring TLS certificates
+# TLS 証明書の設定
 
-Gravwell ships without TLS certificates by default, meaning all communications will be unencrypted until you set up certificates. We did this because using auto-generated self-signed certificates tends to both frighten users with the browser's warnings and provide a false sense of security. It is difficult to properly validate a self-signed certificate and there is a real risk of training users to simply accept potentially impersonated certificates.  This is compounded by the extremely fickle behavior of Chromium-based browsers, which timeout certificate exceptions in unpredictable ways (you are often forced to close EVERY Chromium/Chrome zygote process in order to re-accept the certificate).
+GravwellはデフォルトでTLS証明書を使用せずに出荷されます。自動生成された自己署名証明書を使用すると、ブラウザの警告でユーザーを怖がらせ、誤った安全性を提供する傾向があるため、このようにしました。自己署名証明書を適切に検証することは困難であり、ユーザーに偽装の可能性のある証明書を受け入れるように教育するリスクがあります。 これは、Chromium ベースのブラウザの挙動が非常に気まぐれで、予測不可能な方法で証明書の例外をタイムアウトさせてしまうことにも起因しています（証明書を再受諾するために、Chromium/Chrome のザイゴートプロセスをすべて閉じなければならないことがよくあります）。
 
-We strongly recommend that you acquire fully validated certificates from a trusted provider if you plan to expose the Gravwell system to the Internet.  The folks at [LetsEncrypt](https://letsencrypt.org) are a great resource for learning about proper certificate validation, and they provide free certificates that are trusted by every major browser.
+Gravwellシステムをインターネットに公開するつもりなら、信頼できるプロバイダから完全に検証された証明書を取得することを強くお勧めします。 [LetsEncrypt](https://letsencrypt.org)の人々は、適切な証明書の検証について学ぶための素晴らしいリソースであり、主要なブラウザで信頼されている無料の証明書を提供しています。
 
-The Gravwell administrator has three options for certificates:
+Gravwell 管理者には、証明書のための 3 つのオプションがあります：
 
-* Continue to use unencrypted HTTP only. This is suitable for installations that will only be accessed on a trusted private network, or where Gravwell will be fronted by an HTTP proxy such as nginx.
-* Install a properly-signed TLS certificate. This is the ideal configuration, but typically requires the Gravwell instance to have a publicly-accessible hostname.
-* Install a self-signed certificate. This makes sense when you want to encrypt traffic to Gravwell but for one reason or another cannot get a properly signed certificate.
+* 暗号化されていない HTTP のみを使用し続けます。これは、信頼されたプライベートネットワーク上でのみアクセスするインストールや、GravwellがnginxのようなHTTPプロキシでフロントする場合に適しています。
+* 適切に署名された TLS 証明書をインストールします。これは理想的な構成ですが、一般的にはGravwellインスタンスが公開されたホスト名を持つ必要があります。
+* 自己署名証明書をインストールします。これは、Gravwellへのトラフィックを暗号化したいけれども、何らかの理由で適切に署名された証明書を取得できない場合に理にかなっています。
 
-## Allowed TLS Ciphers
+## HTTPのみの使用
 
-A number of TLS ciphers are considered cryptographically insecure, so Gravwell only supports the following TLS ciphers:
+これはGravwellのデフォルト設定であり、使用するための変更は必要ありません。ホームネットワークで Gravwell を実験している人や、仕事のために実験的なネットワークで Gravwell を評価している人に適しています。また、Gravwell ウェブサーバが nginx のようなロードバランサ/リバースプロキシを介してアクセスされる場合にも許容できる設定です。これにより、プロキシが HTTPS 暗号化/復号化を実行し、Gravwell システムの負荷を軽減することができます。
 
-- RSA-WITH-AES-256-CBC-SHA
-- ECDHE-ECDSA-WITH-AES-256-CBC-SHA
-- ECDHE-RSA-WITH-AES-256-CBC-SHA
-- ECDHE-ECDSA-WITH-AES-256-GCM-SHA384
-- AES-128-GCM-SHA256
-- AES-256-GCM-SHA384
-- CHACHA20-POLY1305-SHA256
+証明書がない場合、インジェスタはインデクサへのトラフィックを暗号化できないことに注意してください。インジェスタのトラフィックを暗号化したいが、ウェブサーバをHTTPのみのモードにしておきたい場合、他のセクションで説明したように証明書をインストールすることができますが、 gravwell.conf の `Certificate-File`, `Key-File`, `TLS-Ingest-Port` オプションのコメントを外すだけです。これにより、インデクサに対してはTLSが有効になりますが、ウェブサーバに対しては有効になりません。
 
-## Using HTTP only
+注意: 分散型ウェブサーバとデータストアをHTTPSを無効にして設定する場合、データストアとウェブサーバの両方に gravwell.conf で `Datastore-Insecure-Disable-TLS` フラグを設定しなければなりません。
 
-This is the default configuration for Gravwell, and no changes are needed to use it. It is suitable for someone experimenting with Gravwell on a home network, or evaluating it on an experimental network for work. It is also an acceptable configuration when the Gravwell webserver will be accessed through a load balancer/reverse proxy such as nginx; this allows the proxy to perform HTTPS encryption/decryption, taking load off the Gravwell system.
+## 適切に署名されたTLS証明書をインストールする
 
-Please note that without a certificate, ingesters will be unable to encrypt their traffic to the indexer. If you wish to encrypt ingester traffic but leave the webserver in HTTP-only mode, you may install a certificate as described in either of the other sections, but only uncomment the `Certificate-File`, `Key-File`, and `TLS-Ingest-Port` options in gravwell.conf. This will enable TLS for the indexer but not the webserver.
+適切に署名されたTLS証明書は、Gravwellにアクセスする最も安全な方法です。ブラウザは文句を言わずに証明書を自動的に受け入れます。
 
-Note: If you configure distributed webservers and a datastore with HTTPS disabled, you must set the `Datastore-Insecure-Disable-TLS` flag in gravwell.conf for both the datastore and the webservers.
+証明書の取得はこの文書の範囲外です。従来のプロバイダで証明書を購入するか、[LetsEncrypt](https://letsencrypt.org)を利用して無料の証明書を取得することを検討してください。
 
-## Install a properly-signed TLS certificate
-
-A properly-signed TLS certificate is the most secure way to access Gravwell. Browsers will automatically accept the certificate without complaint.
-
-Obtaining a certificate is outside the scope of this documentation; consider either purchasing a certificate through one of the traditional providers or using [LetsEncrypt](https://letsencrypt.org) to obtain a free one.
-
-To use the certificate, Gravwell must be told where the certificate and key files are. Assuming the files are at `/etc/certs/cert.pem` and `/etc/certs/key.pem`, edit gravwell.conf to uncomment and populate the `Certificate-File` and `Key-File` options:
+証明書を使用するためには、Gravwell に証明書と鍵のファイルがどこにあるかを教えなければなりません。ファイルが `/etc/certs/cert.pem` と `/etc/certs/key.pem` にあると仮定して、gravwell.conf を編集して `Certificat-File` と `Key-File` オプションをアンコメントして入力します：
 
 ```
 Certificate-File=/etc/certs/cert.pem
 Key-File=/etc/certs/key.pem
 ```
 
-Note: These files must be readable by the "gravwell" user. However, take care to protect the key file from other users; if it is made world-readable, any user on the system can access the secret key.
+注意: これらのファイルは「gravwell」ユーザーが読めるようにしなければなりません。しかし、他のユーザーから鍵ファイルを保護するように注意してください。
 
-To enable HTTPS on the webserver, change the `Web-Port` directive from 80 to 443, then comment out the `Insecure-Disable-HTTPS` directive.
+ウェブサーバでHTTPSを有効にするには、`Web-Port` ディレクティブを80から443に変更し、`Insecure-Disable-HTTPS` ディレクティブをコメントアウトします。
 
-To enable TLS-encrypted ingester connections, find and uncomment the line `TLS-Ingest-Port=4024`.
+TLSで暗号化されたインジェスター接続を有効にするには、`TLS-Ingest-Port=4024`という行を見つけてコメントを外します。
 
-To enable HTTPS for the search agent, open /opt/gravwell/etc/searchagent.conf and comment out the `Insecure-Use-HTTP=true` line and change the port in the `Webserver-Address` line from 80 to 443.
+検索エージェントでHTTPSを有効にするには、/opt/gravwell/etc/searchagent.confを開き、`Insecure-Use-HTTP=true`行をコメントアウトし、`Webserver-Address`行のポートを80から443に変更します。
 
-Finally, restart the webserver, indexer, and search agent:
+最後に、ウェブサーバ、インデクサ、検索エージェントを再起動します：
 
 ```
 systemctl restart gravwell_webserver.service
@@ -59,30 +47,30 @@ systemctl restart gravwell_indexer.service
 systemctl restart gravwell_searchagent.service
 ```
 
-Note: If using the datastore and multiple webservers, you must set the `Search-Forwarding-Insecure-Skip-TLS-Verify parameter` to `true` to enable webservers to communicate with each other using self-signed certs. If the datastore also uses self-signed certificates, set `Datastore-Insecure-Skip-TLS-Verify` on the webservers to enable them to communicate with the datastore.
+注意: データストアと複数のWebサーバを使用する場合、自己署名証明書を使用してWebサーバ同士が通信できるようにするには、`Search-Forwarding-Insecure-Skip-TLS-Verifyパラメータ`を`true`に設定しなければなりません。データストアが自己署名証明書を使用している場合は、`Datastore-Insecure-Skip-TLS-Verify`をウェブサーバに設定して、ウェブサーバがデータストアと通信できるようにします。
 
-## Install a self-signed certificate
+## 自己署名証明書のインストール
 
-Although it is not as secure as a proper TLS certificate, a self-signed certificate will ensure encrypted communication between users and Gravwell. By instructing browsers to trust the self-signed cert, it is also possible to avoid recurring warning screens.
+適切なTLS証明書ほど安全ではありませんが、自己署名証明書はユーザーとGravwell間の暗号化された通信を保証します。ブラウザに自己署名証明書を信頼するように指示することで、繰り返し発生する警告画面を回避することも可能です。
 
-First, we will generate a 1-year certificate in `/opt/gravwell/etc` using `gencert`, a program we ship with the Gravwell install:
+まず、`/opt/gravwell/etc`にある `gencert` というGravwellインストール時に同梱されているプログラムを使って、1年間の証明書を生成します：
 
 ```
 cd /opt/gravwell/etc
 sudo -u gravwell ../bin/gencert -h HOSTNAME
 ```
 
-Make sure to replace HOSTNAME with either the hostname or the IP address of your Gravwell system. You can specify multiple hostnames or IPs by separating them with commas, e.g. `gencert -h gravwell.floren.lan,10.0.0.1,192.168.0.3`
+HOSTNAMEをGravwellシステムのホスト名またはIPアドレスに置き換えてください。カンマで区切ることで、複数のホスト名またはIPを指定することができます。例: `gencert -h gravwell.floren.lan,10.0.0.0.1,192.168.0.3`。
 
-Now, open gravwell.conf and uncomment the `Certificate-File` and `Key-File` directives. The defaults should point correctly to the two files we just created.
+gravwell.confを開き、`Certificate-File` と `Key-File` ディレクティブのコメントを外してください。デフォルトでは、先ほど作成した2つのファイルが正しく指し示されているはずです。
 
-To enable HTTPS on the webserver, change the `Web-Port` directive from 80 to 443, then comment out the `Insecure-Disable-HTTPS` directive.
+ウェブサーバでHTTPSを有効にするには、`Web-Port` ディレクティブを80から443に変更し、`Insecure-Disable-HTTPS` ディレクティブをコメントアウトします。
 
-To enable TLS-encrypted ingester connections, find and uncomment the line `TLS-Ingest-Port=4024`.
+TLSで暗号化されたインジェスター接続を有効にするには、`TLS-Ingest-Port=4024`行を見つけてコメントアウトします。
 
-To enable HTTPS for the search agent, open /opt/gravwell/etc/searchagent.conf and comment out the `Insecure-Use-HTTP=true` line and change the port in the `Webserver-Address` line from 80 to 443.
+検索エージェントでHTTPSを有効にするには、/opt/gravwell/etc/searchagent.confを開き、`Insecure-Use-HTTP=true`行をコメントアウトし、`Webserver-Address`行のポートを80から443に変更します。
 
-Finally, restart the webserver, indexer, and search agent:
+最後に、ウェブサーバ、インデクサ、検索エージェントを再起動します：
 
 ```
 systemctl restart gravwell_webserver.service
@@ -90,58 +78,58 @@ systemctl restart gravwell_indexer.service
 systemctl restart gravwell_searchagent.service
 ```
 
-### Making browsers trust the self-signed certificate
+### 自己署名証明書をブラウザに信頼させる
 
-Browsers will issue a warning if a certificate is not signed by a recognized root CA. However, we can make the browser trust our certificate by installing it manually.
+証明書が認められたルートCAによって署名されていない場合、ブラウザは警告を表示します。しかし、証明書を手動でインストールすることで、ブラウザに証明書を信頼させることができます。
 
 #### Firefox
 
-Installing the certificate in Firefox is simple. First, navigate to your Gravwell instance via HTTPS. Firefox should display a screen similar to this:
+Firefoxに証明書をインストールするのは非常に簡単です。まず、HTTPS経由でGravwellインスタンスに移動します。Firefoxはこのような画面を表示するはずです：
 
 ![](firefox-warning.png)
 
-Click the 'Advanced' button:
+詳細設定ボタンをクリックしてください：
 
 ![](firefox-warning-advanced.png)
 
-Then click 'Add Exception...':
+次に、「例外を追加...」をクリックします。
 
 ![](firefox-exception.png)
 
-The defaults should be appropriate, but make sure 'Permanently store this exception' is checked. Click 'Confirm Security Exception'.
+デフォルトは適切なものでなければなりませんが、「この例外を永続的に保存する」がチェックされていることを確認してください。「Confirm Security Exception」をクリックします。
 
-Firefox should now accept your self-signed certificate until the certificate expires.
+これで Firefox は証明書の有効期限が切れるまで自己署名証明書を受け入れるようになりました。
 
 #### Chrome
 
-Installing a certificate in a Chrome browser is slightly more complicated. First, navigate to your Gravwell instance via HTTPS. Chrome will display a warning screen:
+Chromeブラウザで証明書をインストールするのは少し複雑です。まず、HTTPS経由でGravwellインスタンスに移動します。Chromeは警告画面を表示します。
 
 ![](chrome-warning.png)
 
-Click the 'Not Secure' label in the address bar:
+アドレスバーの「安全でない」ラベルをクリックします。
 
 ![](chrome-export1.png)
 
-Then click the 'Invalid' link under 'Certificate'. A Certificate Viewer window should open; click the 'Details' tab:
+次に、「Certificate」の下にある「Invalid」リンクをクリックします。証明書ビューア」ウィンドウが開きますので、「詳細」タブをクリックします。
 
 ![](chrome-export2.png)
 
-Select the 'Export' button. Chrome will display a file dialog to save the certificate; save it somewhere and remember the location.
+「エクスポート」ボタンを選択します。Chromeは証明書を保存するためのファイルダイアログを表示するので、どこかに保存して場所を覚えておきます。
 
-Now, enter [chrome://settings](chrome://settings) in your address bar or open Settings from the Chrome browser menu. Scroll to the bottom and click the Advanced button:
+アドレスバーに[chrome://settings](chrome://settings)と入力するか、Chromeブラウザのメニューから設定を開きます。一番下までスクロールして、「詳細設定」ボタンをクリックします。
 
 ![](chrome-advanced.png)
 
-Within the 'Privacy and Security' section, find and click 'Manage certificates':
+「プライバシーとセキュリティ」セクション内で、「証明書の管理」を見つけてクリックします。
 
 ![](chrome-advanced2.png)
 
-Now select the 'Authorities' tab and click 'IMPORT':
+ここで「Authorities」タブを選択し、「Import」をクリックします。
 
 ![](chrome-authorities.png)
 
-A file dialog will open; select the certificate file you saved earlier. Then, in the next dialog, check 'Trust this certificate for identifying websites' and click Ok:
+ファイルダイアログが開きますので、先ほど保存した証明書ファイルを選択します。次のダイアログで「この証明書をウェブサイトを識別するために信頼する」にチェックを入れ、「OK」をクリックします。
 
 ![](chrome-import.png)
 
-Now you should be able to refresh the Gravwell tab without further SSL warnings.
+これで、SSLの警告なしでGravwellタブを更新できるようになりました。

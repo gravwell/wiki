@@ -1,50 +1,50 @@
-# The anko module
+# ankoモジュール
 
-As introduced in [the search modules documentation](#!search/searchmodules.md#Anko), Gravwell's anko module is a general-purpose scripting tool within the search pipeline. It allows extremely flexible manipulations of search entries, at the cost of complexity for the script creator. Once a script is created, though, it can be easily shared with other users.
+[検索モジュールのドキュメント](#!search/searchmodules.md#Anko)で紹介されているように、Gravwellのankoモジュールは検索パイプライン内の汎用スクリプトツールである。これにより、スクリプト作成者にとっては複雑さを犠牲にしても、非常に柔軟に検索エントリを操作することができます。しかし、一度作成したスクリプトは、他のユーザーと簡単に共有することができます。
 
-See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting.md) for more details about the language itself.
+この言語自体の詳細については、[Anko スクリプト言語ドキュメント](scripting.md) で使用されているスクリプト言語の一般的な説明を参照してください。
 
-### Disabling network functions in anko scripts
+### anko スクリプトでのネットワーク機能の無効化
 
-By default, anko scripts are allowed to use network utilities such as the http and net libraries, sftp, and ssh. You may not want to give Gravwell users network access; setting the option `Disable-Network-Script-Functions=true` in `/opt/gravwell/etc/gravwell.conf` will disable this.
+デフォルトでは、ankoスクリプトはhttpやnetライブラリ、sftp、sshなどのネットワークユーティリティの使用を許可されています。Gravwellユーザーにネットワークアクセスを与えたくない場合は、`/opt/gravwell/etc/gravwell.conf`のオプション`Disable-Network-Script-Functions=true'を設定することで、この機能を無効にすることができます。
 
-## Managing anko scripts
+## ankoスクリプトの管理
 
-In order to run an anko script in a search, the text file containing the script must be uploaded as a resource. See the [resources section](#!resources/resources.md) for information on how to create and upload a resource.
+ankoスクリプトを検索で実行するには、スクリプトを含むテキストファイルをリソースとしてアップロードする必要があります。リソースの作成とアップロードの方法については、[resources section](#!resources/resources.md)を参照してください。
 
-At this time, to make a change to a script you must edit the script in the original text file, then re-upload the file to the resource. Future versions of Gravwell will include an integrated text editor to make scripting simpler.
+現時点では、スクリプトを変更するには、元のテキストファイル内のスクリプトを編集してから、リソースにアップロードし直す必要があります。Gravwellの将来のバージョンでは、スクリプトをより簡単に作成できるようにテキストエディタが統合される予定です。
 
-## Running an anko script
+## ankoスクリプトの実行
 
-To run a script, simply specify "anko", followed by the name of the script, followed by any arguments intended for the script. For example, to run a script named "foo" which takes two numbers as arguments, type `anko foo 1 3` in the pipeline.
+ankoスクリプトを実行するには、"anko "の後にスクリプト名を指定し、さらにそのスクリプトに必要な引数を指定します。例えば、2つの数字を引数に取る「foo」というスクリプトを実行するには、パイプラインで「anko foo 1 3」と入力します。
 
-## Writing anko scripts
+## ankoスクリプトの書き方
 
-Anko scripts use the same syntax as eval commands; refer to examples below and in the eval module section.
+Anko スクリプトは eval コマンドと同じ構文を使用します。以下の例と eval モジュールのセクションを参照してください。
 
-### Essential function definitions
+### 必須関数の定義
 
-An anko script **must** contain either a function named `Process` or a function named `Main`. These functions do not take arguments. These two functions represent two different options for processing search entries.
+anko スクリプトは、`Process` という名前の関数か、`Main` という名前の関数のどちらかを **必ず** 含む必要があります。これらの関数は引数を取りません。これら2つの関数は、検索エントリを処理するための2つの異なるオプションを表します。
 
-If a `Process` function is defined, it will be called once per search entry; enumerated values on the entry may be treated as local variables, and the return value of the `Process` function determines if the entry is allowed to continue down the pipeline (true) or not (false).
+エントリー上の列挙された値はローカル変数として扱うことができ、`Process`関数の戻り値はエントリーがパイプラインを進むことを許可される(true)かどうか(false)を決定します。
 
-If a `Main` function is defined, it will be called only once; the programmer must therefore call the `readEntry` and `writeEntry` functions to fetch each search entry and pass it down the line after operating on it.
+`main`関数が定義されている場合、それは一度だけ呼ばれます。したがって、プログラマは各検索エントリを取得し、それを操作した後にラインに渡すために、`readEntry`と`writeEntry`関数を呼ばなければなりません。
 
-We strongly recommend writing scripts with `Process` instead of `Main` whenever possible, because it is conceptually much simpler.
+可能な限り、`Main`の代わりに`Process`を使ってスクリプトを書くことを強くお勧めします。なぜならば、概念的にずっとシンプルだからです。
 
-### Optional function definitions
+### オプション関数の定義
 
-The script may also contain functions named `Parse` and `Finalize`.
+スクリプトには `Parse` と `Finalize` という名前の関数を含めることができます。
 
-The `Parse` function is called before `Process` or `Main` and is given the command line arguments as an array of arguments. The `Parse` function indicates that the arguments have been successfully processed by returning nil; any non-nil return is treated as an error and presented to the user. See the sample script below for a sample of how to parse script arguments.
+`Parse`関数は `Process` や `Main` の前に呼び出され、コマンドライン引数を引数の配列として与えられます。Parse`関数は引数が正常に処理されたことをnilを返すことで示します。nil以外の値が返された場合にはエラーとして扱われ、ユーザに提示されます。スクリプトの引数を解析する方法のサンプルは、以下のサンプルスクリプトをご覧ください。
 
-Attention: The Parse function MUST explicitly return a value. Returning nil signals a successful parse; returning anything else indicates an error. In case of an error, we recommend returning a string describing the problem.
+注意 Parse関数は、明示的に値を返さなければなりません。nilを返すと解析が成功したことになり、それ以外の値を返すとエラーになります。エラーが発生した場合には、問題を説明する文字列を返すことをお勧めします。
 
-The `Finalize` function is called after `Process` or `Main` have completed. It is the last code executed in the script; this is a good place to create resources if desired.
+`Finalize`関数は`Process`や`Main`が完了した後に呼び出されます。この関数はスクリプトの最後に実行されるコードで、必要に応じてリソースを作成するのに適した場所です。
 
-### Sample script using Process() function
+### Process()関数を使用したサンプルスクリプト
 
-This example script operates in two modes, specified as an argument to the script. In 'build' mode, it takes the "SrcIP" field extracted from the packet module and builds a list of IP addresses seen in the current search, then stores that list as a resource. In 'apply' mode, it takes the previously-built table and drops any entries which contain a previously-seen "SrcIP" field. This script was used to look for new devices on a network, although the `lookup` module now provides the same functionality with more flexibility.
+このサンプルスクリプトでは、スクリプトの引数で指定した2つのモードで動作します。build」モードでは、パケットモジュールから抽出した「SrcIP」フィールドを用いて、現在の検索で見られるIPアドレスのリストを構築し、そのリストをリソースとして保存します。適用」モードでは、以前に構築したテーブルを使用し、以前に見た「SrcIP」フィールドを含むエントリをすべて削除します。このスクリプトは、ネットワーク上の新しいデバイスを探すために使用されていましたが、現在では `lookup` モジュールが同じ機能をより柔軟に提供しています。
 
 ```
 table = make(map[string]interface)
@@ -97,16 +97,16 @@ func Finalize() {
 }
 ```
 
-Observe that the "SrcIP" enumerated value may be **read** like any other variable inside the `Process` function, but in order to set an enumerated value we must use the `setEnum` function to make the action explicit.
+"SrcIP"列挙型の値は、`Process`関数内の他の変数と同様に**読み取ることができますが、列挙型の値を設定するためには、その動作を明示するために`setEnum`関数を使用しなければならないことに注意してください。
 
-Note that the `table` and `task` variables are declared outside the function definitions. The built-in json encoding library is also imported prior to the function definitions. A full list of available libraries is provided below.
+変数 `table` と `task` は、関数定義の外側で宣言されていることに注意してください。組み込みのjsonエンコーディングライブラリも、関数定義の前にインポートされています。利用可能なライブラリの一覧は以下のとおりです。
 
 
-### Sample script using Main() function
+### Main()関数を使ったサンプルスクリプト
 
-Although writing scripts using a `Main` function is more challenging, it is necessary if you need to duplicate entries. The following script reads in an entry containing a Modbus message; if the message is a request of type 0x10 ("Write multiple registers"), the script duplicates the original entry once for each of the registers being written and to each entry attaches "RegAddr" and "RegValue" enumerated values containing a single register address + register value.
+Main()関数を使ってスクリプトを書くのは難易度が高いですが、エントリを複製する必要がある場合には必要です。以下のスクリプトは、Modbusメッセージを含むエントリを読み込み、メッセージが0x10タイプのリクエスト（"Write multiple registers"）である場合、スクリプトは書き込まれるレジスタごとに元のエントリを一度だけ複製し、各エントリに1つのレジスタアドレス＋レジスタ値を含む "RegAddr "および "RegValue "列挙値を付加します。
 
-Note: This script will not function on its own; as written, it was intended to consume the output of another anko script earlier in the pipeline, which would populate enumerated values such as "Request" and "WriteAddr".
+注：このスクリプトは単独では機能しません。このスクリプトは、パイプラインの初期にある別のankoスクリプトの出力を消費するように意図されており、「Request」や「WriteAddr」などの列挙値を生成します。
 
 ```
 func Main() {
@@ -170,123 +170,123 @@ func Main() {
 }
 ```
 
-Note the use of the `readEntry`, `cloneEntry`, and `writeEntry` functions; this explicit management of search entries is not necessary in scripts using `Process` functions. Note also the use of `getEntryEnum` and `setEntryEnum` functions to read enumerated values rather than treating them as variables.
+`ReadEntry`、`cloneEntry`, `writeEntry` 関数の使用に注意してください。このような検索エントリの明示的な管理は、`Process` 関数を使用するスクリプトでは必要ありません。また、列挙された値を変数として扱うのではなく、読み取るための `getEntryEnum` および `setEntryEnum` 関数の使用にも注意してください。
 
-## Utility functions
+## ユーティリティー関数
 
-Anko provides built-in utility functions, listed below in the format `functionName(<functionArgs>) <returnValues>`. The following functions can be used in any anko script:
+Ankoはビルトインのユーティリティー関数を提供しており、以下のように `functionName(<functionArgs>) <returnValues>` という形式でリストアップされています。以下の関数は任意のAnkoスクリプトで使用できます。
 
-* `getResource(name) []byte, error` returns the slice of bytes is the content of the specified resource, while the error is any error encountered while fetching the resource.
-* `setResource(name, value) error` creates (if necessary) and updates a resource named `name` with the contents of `value`, returning an error if one arises.
-* `getMacro(name) string, error` returns the value of the given macro or an error if it does not exist. Note that this function does not perform macro expansion.
-* `len(val) int` returns the length of val, which can be a string, slice, etc.
-* `toIP(string) IP` converts string to an IP, suitable for comparing against IPs generated by e.g. the packet module.
-* `toMAC(string) MAC` converts string to a MAC address.
-* `toString(val) string` converts val to a string.
-* `toInt(val) int64` converts val to an integer if possible. Returns 0 if no conversion is possible.
-* `toFloat(val) float64` converts val to a floating point number if possible. Returns 0.0 if no conversion is possible.
-* `toBool(val) bool` attempts to convert val to a boolean. Returns false if no conversion is possible. Non-zero numbers and the strings “y”, “yes”, and “true” will return true.
-* `toHumanSize(val) string` attempts to convert val into an integer, then represent it as a human-readable byte count, e.g. `toHumanSize(15127)` will be converted to "14.77 KB".
-* `toHumanCount(val) string` attempts to convert val into an integer, then represent it as a human-friendly number, e.g. `toHumanCount(15127)` will be converted to "15.13 K".
-* `typeOf(val) type` returns the type of val as a string, e.g. “string”, “bool”.
-* `producesEnum(val)` Informs the pipeline that the script plans to produce an Enumerated Value of that name.  Should be called in the Parse() function.
-* `consumesEnum(val)` Informs the pipeline that the script plans to consume the Enumerated Value of that name.  Should be called in the Parse() function.
+* `getResource(name) []byte, error` は、指定されたリソースのコンテンツであるバイトのスライスを返し、エラーはリソースのフェッチ中に発生したあらゆるエラーです。
+* `setResource(name, value) error` は、`name` という名前のリソースを（必要に応じて）作成し、`value` の内容で更新し、エラーが発生した場合はエラーを返します。
+* `getMacro(name) string, error` は、与えられたマクロの値を返し、マクロが存在しない場合はエラーを返します。この関数はマクロの展開を行いませんのでご注意ください。
+* `len(val) int` は val の長さを返します。val は文字列やスライスなどです。
+* `toIP(string) IP` 文字列をIPに変換します。これは、パケットモジュールなどで生成されたIPと比較するのに適しています。
+* `toMAC(string) MAC` は、文字列をMACアドレスに変換します。
+* `toString(val) string` は、valを文字列に変換します。
+* `toInt(val) int64` 可能であれば，valを整数に変換します．変換できない場合は0を返します。
+* `toFloat(val) float64` は、可能であればvalを浮動小数点数に変換します。変換できない場合は0.0を返します。
+* `toBool(val) bool` は，valを真偽値に変換しようとします。変換できない場合は false を返します。0以外の数値や文字列 "y"，"yes"，"true "はtrueを返します。
+* 例： `toHumanSize(15127)` は "14.77KB" に変換されます。
+* 例えば、 `toHumanCount(15127)` は "15.13 K" に変換されます。
+* `typeOf(val) type` は、valの型を文字列で返します。
+* `producesEnum(val)` スクリプトがその名前のEnumerated Valueを生成する予定であることをパイプラインに通知します。 Parse()関数の中で呼び出されなければなりません。
+* `consumesEnum(val)` スクリプトがその名前のEnumerated Valueを消費する予定であることをパイプラインに通知します。 Parse()関数の中で呼び出されるべきです。
 
-The following functions are only available in scripts implementing the `Process` function:
+以下の関数は、`Process`関数を実装したスクリプトでのみ利用可能です:
 
-* `setEnum(key, value) error` creates an enumerated value on the current entry named `key` containing `value`.
-* `getEnum(key) value, error` returns the enumerated value specified by `key`
-* `delEnum(key)` deletes an enumerated value named `key` from the current entry.
-* `hasEnum(key) bool` returns whether the current entry has the enumerated value.
+* `setEnum(key, value) error` は、`key` という名前の現在のエントリに、`value` を含む列挙型の値を作成します。
+* `getEnum(key) value, error` は、`key` で指定された列挙型の値を返します。
+* `delEnum(key)` は、現在のエントリから `key` という名前の列挙型の値を削除します。
+* `hasEnum(key) bool` は、現在のエントリが列挙された値を持っているかどうかを返します。
 
-The following functions are only available in scripts implementing the `Main` function:
+以下の関数は、`Main`関数を実装したスクリプトでのみ利用可能です。
 
-* `readEntry() entry, error` returns the next entry and an error (if any). It will return an error when no entries remain.
-* `writeEntry(ent) error` writes out the given entry down the pipeline, returning an error if any.
-* `cloneEntry(ent) entry` returns a copy of the specified entry.
-* `dupEntryByReference(ent, names...) entry` duplicates the given entry and makes copies of the enumerated values specified by the `names` parameter(s).
-* `newEntry() entry` creates an entirely new entry, with the timestamp set to the end of the current query.
-* `setEntryEnum(ent, key, value)` sets an enumerated value on the specified entry.
-* `getEntryEnum(ent, key) value, error` reads an enumerated value from the specified entry.
-* `hasEntryEnum(ent, key) bool` returns whether the entry contains the enumerated value.
-* `delEntryEnum(ent, key)` deletes the specified enumerated value from the given entry.
-* `setEntryData(ent, value)` sets the data portion of an entry.
-* `setEntrySrc(ent, ip)` sets the source field of an entry.
-* `setEntryTimestamp(ent, time)` sets the timestamp of an entry.
+* `readEntry() entry, error` は、次のエントリとエラー（もしあれば）を返します。エントリが残っていない場合は、エラーを返します。
+* `writeEntry(ent) error` 与えられたエントリをパイプラインに書き出し、エラーがあればそれを返します。
+* `cloneEntry(ent) entry` 指定したエントリのコピーを返します。
+* `dupEntryByReference(ent, names...) entry` は、与えられたエントリを複製し、`names` パラメータで指定された列挙型の値のコピーを作成します。
+* `newEntry() entry` は全く新しいエントリを作成し、タイムスタンプは現在のクエリの終了時に設定されます。
+* `setEntryEnum(ent, key, value)` 指定したエントリに列挙型の値を設定します。
+* `getEntryEnum(ent, key) value, error` 指定したエントリから列挙型の値を読み込みます。
+* `hasEntryEnum(ent, key) bool` エントリが列挙型の値を含んでいるかどうかを返します。
+* `delEntryEnum(ent, key)` 指定したエントリから、指定した列挙型の値を削除します。
+* `setEntryData(ent, value)` エントリのデータ部分を設定します。
+* `setEntrySrc(ent, ip)` エントリのソース・フィールドを設定します。
+* `setEntryTimestamp(ent, time)` エントリのタイムスタンプを設定します。
 
-Note: The `setEnum`, `hasEnum`, and `delEnum` functions differ for scripts using `Process` functions vs. `Main` functions, because the `Process` function is implicitly operating on a particular entry.
+注: `Process` 関数と `Main` 関数を使用するスクリプトでは、`setEnum`, `hasEnum`, および `delEnum` 関数が異なります。
 
-## Built-in variables
+## 組み込み変数
 
-The following variables are pre-defined for anko scripts:
+以下の変数は anko スクリプト用にあらかじめ定義されています。:
 
-* `START`: the start time of the query.
-* `END`: the end time of the query.
-* `TAGMAP`: a map of string tag names to entry.EntryTag tag numbers. This only contains tags used in the current query, so if you say `tag=default,foo` TAGMAP will contain 'default'→0 and 'foo'→1. Use this in conjunction with the `cloneEntry` or `newEntry` functions.
+* `START`: クエリの開始時刻です。
+* `END`: クエリの終了時刻です。
+* `TAGMAP`: 文字列のタグ名からentry.EntryTagのタグ番号へのマップ。これは現在のクエリで使用されているタグのみを含むので、`tag=default,foo`とすると、TAGMAPには'default'→0と'foo'→1が含まれます。これは `cloneEntry` や `newEntry` 関数と組み合わせて使用します。
 
-## Available packages
+## 利用可能なパッケージ
 
-It is possible to import anko wrappers for certain Go libraries with syntax similar to the following:
+特定のGoライブラリのankoラッパーを以下のような構文でインポートすることができます。
 
 ```
 var json = import("encoding/json")
 ```
 
-For security reasons, the anko module does not allow access to *all* packages included with the full Anko scripting language. The following packages are available for use in anko scripts:
+セキュリティ上の理由から、ankoモジュールは、Ankoスクリプト言語に含まれるすべての*パッケージへのアクセスを許可していません。以下のパッケージが anko スクリプトで使用できます:
 
-* [bytes](https://golang.org/pkg/bytes): work with byte slices
-* [crypto/md5](https://golang.org/pkg/crypto/md5), [crypto/sha1](https://golang.org/pkg/crypto/sha1), [crypto/sha256](https://golang.org/pkg/crypto/sha256), [crypto/sha512](https://golang.org/pkg/crypto/sha512): cryptographic hashing
-* [crypto/tls](https://golang.org/pkg/crypto/tls): limited TLS functionality
-* [encoding/base64](https://golang.org/pkg/encoding/base64): limited base64 functionality
-* [encoding/csv](https://golang.org/pkg/encoding/csv): encode and decode CSV data
-* [encoding/hex](https://golang.org/pkg/encoding/hex): limited hex encoding functionality
-* [encoding/json](https://golang.org/pkg/encoding/json): encode and decode json data
-* [encoding/xml](https://golang.org/pkg/encoding/xml): limited XML encoding functionality
-* [errors](https://golang.org/pkg/errors): handle Go errors
-* [flag](https://golang.org/pkg/flag): limited flag parsing functionality
-* [fmt](https://golang.org/pkg/fmt): printing & formatting strings
-* [github.com/google/uuid](https://github.com/google/uuid): generate and inspect UUIDs
-* [github.com/gravwell/ipexist](https://github.com/gravwell/ipexist): Gravwell IP helper functions
-* [github.com/RackSec/srslog](https://github.com/RackSec/srslog): alternate syslog package to Go's standard library
-* [io](https://golang.org/pkg/io): basic I/O primitives
-* [io/util](https://golang.org/pkg/io/util): just the `ioutil.ReadAll` function (see below)
-* [math](https://golang.org/pkg/math): mathematical functions
-* [math/big](https://golang.org/pkg/math/big): bignums
-* [math/rand](https://golang.org/pkg/math/rand): random numbers
-* [net](https://golang.org/pkg/net): limited network functionality
-* [net/https](https://golang.org/pkg/net/https): limited HTTP functionality (client only)
-* [net/url](https://golang.org/pkg/net/url): URLs
-* [path](https://golang.org/pkg/path): paths
-* [path/filepath](https://golang.org/pkg/path/filepath): path functions specific to files
-* [regexp](https://golang.org/pkg/regexp): regular expressions
-* [sort](https://golang.org/pkg/sort): sorting
-* [strings](https://golang.org/pkg/strings): string processing functions
-* [time](https://golang.org/pkg/time): time processing functions
-* [github.com/ziutek/telnet](https://github.com/ziutek/telnet): telnet client functions 
+* [bytes](https://golang.org/pkg/bytes): バイトスライスを扱う。
+* [crypto/md5](https://golang.org/pkg/crypto/md5), [crypto/sha1](https://golang.org/pkg/crypto/sha1), [crypto/sha256](https://golang.org/pkg/crypto/sha256), [crypto/sha512](https://golang.org/pkg/crypto/sha512): 暗号のハッシュ化
+* [crypto/tls](https://golang.org/pkg/crypto/tls): 限定的な TLS 機能
+* [encoding/base64](https://golang.org/pkg/encoding/base64): 制限付き base64 機能
+* [encoding/csv](https://golang.org/pkg/encoding/csv): CSV データのエンコードとデコードを行います。
+* [encoding/hex](https://golang.org/pkg/encoding/hex): 限定的な 16 進数エンコーディング機能です。
+* [encoding/json](https://golang.org/pkg/encoding/json): json データのエンコードとデコードを行ないます。
+* [encoding/xml](https://golang.org/pkg/encoding/xml): 限定的な XML エンコーディング機能を提供します。
+* [errors](https://golang.org/pkg/errors): Go のエラーを処理します。
+* [flag](https://golang.org/pkg/flag): 限られたフラグ解析機能
+* [fmt](https://golang.org/pkg/fmt): 文字列の印刷と書式設定を行います。
+* [github.com/google/uuid](https://github.com/google/uuid): UUIDの生成と検査
+* [github.com/gravwell/ipexist](https://github.com/gravwell/ipexist): GravwellのIPヘルパー機能
+* [github.com/RackSec/srslog](https://github.com/RackSec/srslog): golang の標準ライブラリに代わる syslog パッケージです。
+* [io](https://golang.org/pkg/io): 基本的な I/O プリミティブ
+* [io/util](https://golang.org/pkg/io/util): `ioutil.ReadAll` 関数のみ (後述)
+* [math](https://golang.org/pkg/math): 数学関数
+* [math/big](https://golang.org/pkg/math/big): ビグナム(bignum)
+* [math/rand](https://golang.org/pkg/math/rand): 乱数
+* [net](https://golang.org/pkg/net): 限られたネットワーク機能
+* [net/https](https://golang.org/pkg/net/https): 限定的な HTTP 機能 (クライアントのみ)
+* [net/url](https://golang.org/pkg/net/url): URL
+* [path](https://golang.org/pkg/path): パス
+* [path/filepath](https://golang.org/pkg/path/filepath): ファイルに特化したパス機能
+* [regexp](https://golang.org/pkg/regexp): 正規表現
+* [sort](https://golang.org/pkg/sort): 並べ替え
+* [strings](https://golang.org/pkg/strings): 文字列処理関数
+* [time](https://golang.org/pkg/time): 時間処理関数
+* [github.com/ziutek/telnet](https://github.com/ziutek/telnet): telnetクライアント関数 
 
-An exhaustive description of every package is not possible in this document; you can view the available functions exported for each package at [the official anko repository](https://github.com/mattn/anko/tree/master/packages). Some specific packages are described further below, as they do not offer the complete functionality exported by the official anko repository.
+すべてのパッケージを網羅的に説明することはできません。各パッケージでエクスポートされる利用可能な機能は、[anko公式リポジトリ](https://github.com/mattn/anko/tree/master/packages)で見ることができます。いくつかのパッケージは、公式 anko リポジトリでエクスポートされる機能を完全には提供していないため、以下でさらに説明します。
 
-## Package restrictions
+## パッケージの制限
 
-Some packages have functions that are potentially dangerous to export via a scripting language. Gravwell restricts certain package exports to a subset of those available in the full package. Below is a list of all package restrictions, if any, for each package.
+パッケージの中には、スクリプト言語でのエクスポートが危険な機能を持つものがあります。Gravwellではパッケージのエクスポートを制限していますが、これはフルパッケージで利用できる機能の一部です。以下は各パッケージの制限事項の一覧です。
 
 ### crypto/md5
 
-`crypto/md5` only exports the "New" and "Sum" functions:
+`crypto/md5`は "New" と "Sum" 関数のみをエクスポートします:
 
 - `md5.New`
 - `md5.Sum`
 
 ### crypto/sha1
 
-`crypto/sha1` only exports the "New" and "Sum" functions:
+`crypto/sha1`は "New" および "Sum" 関数のみをエクスポートします:
 
 - `sha1.New`
 - `sha1.Sum`
 
 ### crypto/sha256
 
-`crypto/sha256` only exports the various "New" and "Sum" functions:
+`crypto/sha256`では、さまざまな「New」と「Sum」の関数のみをエクスポートします:
 
 - `sha256.New`
 - `sha256.New224`
@@ -295,7 +295,7 @@ Some packages have functions that are potentially dangerous to export via a scri
 
 ### crypto/sha512
 
-`crypto/sha512` only exports the various "New" and "Sum" functions:
+`crypto/sha512`では、さまざまな「New」および「Sum」関数のみをエクスポートします:
 
 - `sha512.New`
 - `sha512.New384`
@@ -308,21 +308,21 @@ Some packages have functions that are potentially dangerous to export via a scri
 
 ### crypto/tls
 
-This module is only available if `Disable-Network-Script-Functions` is set to `false` in the Gravwell config. `crypto/tls` only exports the TLS config type for use in the `net/http` module:
+このモジュールは、Gravwellの設定で`Disable-Network-Script-Functions`が`false`に設定されている場合にのみ使用できます。`crypto/tls`は、`net/http`モジュールで使用するTLSコンフィグタイプのみをエクスポートするします:
 
 - `tls.Config`
 
 ### encoding/csv
 
-`encoding/csv` only exports CSV initializers:
+`encoding/csv` は CSV のイニシャライザのみをエクスポートします。:
 
-- `csv.NewReader` (actually calls `csv.NewReader` with the LazyQuotes option set to true)
+- `csv.NewReader` (実際には、LazyQuotesオプションをtrueに設定して、`csv.NewReader`を呼び出します)
 - `csv.NewWriter`
 - `csv.NewBuilder`
 
 ### encoding/base64
 
-`encoding/base64` only exports base64 initializers and encoding types:
+`encoding/base64` は base64 のイニシャライザとエンコーディングタイプのみをエクスポートします:
 
 - `base64.NewDecoder`
 - `base64.NewEncoder`
@@ -334,7 +334,7 @@ This module is only available if `Disable-Network-Script-Functions` is set to `f
 
 ### encoding/hex
 
-`encoding/hex` exports a subset of initializers and wrappers:
+`encoding/hex`は、イニシャライザとラッパのサブセットをエクスポートします
 
 - `hex.Decode`
 - `hex.DecodeString`
@@ -349,7 +349,7 @@ This module is only available if `Disable-Network-Script-Functions` is set to `f
 
 ### encoding/xml
 
-`encoding/xml` exports a subset of initializers, wrappers, and encoding options:
+`encoding/exml` は、イニシャライザ、ラッパー、およびエンコーディングオプションのサブセットをエクスポートします:
 
 - `xml.Escape`
 - `xml.EscapeText`
@@ -372,7 +372,7 @@ This module is only available if `Disable-Network-Script-Functions` is set to `f
 
 ### flag 
 
-`flag` only exports a subset of types, instead of the entire `flag` package:
+`flag`はパッケージ全体ではなく、タイプのサブセットのみをエクスポートします:
 
 - `flag.NewFlagSet`
 - `flag.PanicOnError`
@@ -380,7 +380,7 @@ This module is only available if `Disable-Network-Script-Functions` is set to `f
 
 ### github.com/google/uuid
 
-`github.com/google/uuid` only exports the "New" and "Parse" functions:
+`github.com/google/uuid`では、"New "と "Parse "機能のみをエクスポートします:
 
 - `uuid.New`
 - `uuid.Parse`
@@ -388,14 +388,14 @@ This module is only available if `Disable-Network-Script-Functions` is set to `f
 
 ### github.com/gravwell/ipexist
 
-This module is only available if `Disable-Network-Script-Functions` is set to `false` in the Gravwell config. `github.com/gravwell/ipexist` only exports the "New" related functions:
+このモジュールは、Gravwellの設定で`Disable-Network-Script-Functions`が`false`に設定されている場合にのみ使用できます。github.com/gravwell/ipexist`では、"New "関連の関数のみをエクスポートします:
 
 - `ipexist.New`
 - `ipexist.NewIPBitMap`
 
 ### github.com/RackSec/srslog
 
-This module is only available if `Disable-Network-Script-Functions` is set to `false` in the Gravwell config. `github.com/RackSec/srslog` only exposes the syslog related functionality:
+このモジュールは、Gravwellの設定で`Disable-Network-Script-Functions`が`false`に設定されている場合にのみ利用できます。github.com/RackSec/srslog`ではsyslog関連の機能のみを公開しています:
 
 - `srslog.Dial`
 - `srslog.DefaultFormatter`
@@ -435,7 +435,7 @@ This module is only available if `Disable-Network-Script-Functions` is set to `f
 
 ### github.com/ziutek/telnet
 
-This module is only available if `Disable-Network-Script-Functions` is set to `false` in the Gravwell config. Exported functions and types include:
+このモジュールは、Gravwellの設定で`Disable-Network-Script-Functions`が`false`に設定されている場合にのみ使用できます。エクスポートされる関数や型は以下の通りです:
 
 - `telnet.Dial`
 - `telnet.DialTimeout`
@@ -444,11 +444,11 @@ This module is only available if `Disable-Network-Script-Functions` is set to `f
 
 ### io/ioutil
 
-`io/ioutil` only exports one function, `ioutil.ReadAll()`.
+`io/ioutil`、`ioutil.ReadAll()`という1つの関数しかエクスポートしていません
 
 ### net
 
-This module is only available if `Disable-Network-Script-Functions` is set to `false` in the Gravwell config. Exported functions and types include:
+このモジュールは、Gravwellの設定で`Disable-Network-Script-Functions`が`false`に設定されている場合にのみ使用できます。エクスポートされる関数や型は以下の通りです:
 
 - `net.CIDRMask`
 - `net.Dial`
@@ -501,13 +501,13 @@ This module is only available if `Disable-Network-Script-Functions` is set to `f
 
 ### net/http
 
-This module is only available if `Disable-Network-Script-Functions` is set to `false` in the Gravwell config. 
+このモジュールは、Gravwellの設定で`Disable-Network-Script-Functions`が`false`に設定されている場合にのみ利用可能です。
 
-`net/http` exports a subset of functions, types, and variables for performing HTTP *requests*. The types `Client`, `Cookie`, `Request`, and `Response` are exported; see [the Go documentation](https://golang.org/pkg/net/http/) for a description of these types.
+`net/http` はHTTP *requests* を実行するための関数、型、変数のサブセットをエクスポートします。タイプとしては`Client`, `Cookie`, `Request`, `Response`がエクスポートされます。これらのタイプの説明は[Go documentation](https://golang.org/pkg/net/http/)を参照してください。
 
-The function `NewRequest(operation, url, body) (Request, error)` prepares a new http.Request with the given operation ("PUT", "POST", "GET", "DELETE") on the specified URL string. The body is an optional parameter for use with PUT and POST requests; it should be set to either 'nil' or an io.Reader.
+関数 `NewRequest(operation, url, body) (Request, error)` は、指定されたURL文字列に対して、指定された操作("PUT", "POST", "GET", "DELETE")を行う新しいhttp.Requestを準備します。bodyはPUTおよびPOSTリクエストで使用するオプションのパラメータで、'nil'またはio.Readerのいずれかに設定する必要があります。
 
-For most purposes, you will create a Request with the NewRequest function, then use http.DefaultClient to execute that request:
+ほとんどの場合、NewRequest関数でリクエストを作成し、http.DefaultClientを使用してそのリクエストを実行します。:
 
 ```
 req, _ = http.NewRequest("GET", "http://example.org/foo", nil)
@@ -515,7 +515,7 @@ resp, _ = http.DefaultClient.Do(req)
 resp.Body.Close()
 ```
 
-Additional headers or cookies can be set on the request before sending:
+送信前のリクエストに、追加のヘッダーやクッキーを設定することができます:
 
 ```
 req, _ = http.NewRequest("GET", "http://example.org/foo", nil)
@@ -530,5 +530,5 @@ resp, _ = http.DefaultClient.Do(req)
 resp.Body.Close()
 ```
 
-Warning: You *must* close the http.Response's Body field when you are finished, as shown above. Leaving the Body open will leave a network connection open, eventually causing the search agent to run out of sockets. The `httpGet` and `httpPost` functions will close the Body automatically; please consider using those wherever possible.
+警告: 上の図のように、終了時には http.Response の Body フィールドを *必ず* 閉じなければなりません。Bodyを開いたままにしておくと、ネットワーク接続が開いたままになり、最終的にサーチエージェントのソケットが足りなくなってしまいます。httpGet`と`httpPost`関数は自動的にBodyを閉じますので、可能な限りこれらの使用を検討してください。
 

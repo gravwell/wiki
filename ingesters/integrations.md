@@ -1,20 +1,20 @@
-# Integrations
+# インテグレーション
 
-The gravwell ingest framework is open sourced via the BSD 2-clause license, which enables it to be directly included in both open source and commercial products.  Data processors and/or generators can directly embed the ingest framework and provide an easy to configure integration with Gravwell.  This documentation page is used to highlight and where appropriate document some Gravwell integrations.
+Gravwellインジェストフレームワークは、BSD 2-clauseライセンスでオープンソース化されており、オープンソース製品と商用製品の両方に直接組み込むことができます。 データプロセッサーやジェネレーターは、インジェストフレームワークを直接組み込み、Gravwellとの統合を簡単に設定することができます。 このドキュメントページでは、Gravwellの統合機能を紹介し、必要に応じてドキュメント化しています。
 
 ## CoreDNS
 
-CoreDNS is a highly configurable and plugin friendly DNS server meant to provide a base platform for DNS services.   The base functionality of CoreDNS provides a robust and performant DNS server that can act as a relay, proxy, or full blown DNS server.  CoreDNS is licensed under the Apache-2.0 and is available on [github](https://github.com/coredns/coredns).  To learn more about CoreDNS visit [https://coredns.io](https://coredns.io).
+CoreDNSは、高度な設定が可能で、プラグインにも対応したDNSサーバーであり、DNSサービスのベースとなるプラットフォームを提供します。 CoreDNSの基本機能は、リレー、プロキシ、または本格的なDNSサーバーとして機能する、堅牢で性能の高いDNSサーバーを提供します。CoreDNSのライセンスはApache-2.0で、[github](https://github.com/coredns/coredns)から入手可能です。 CoreDNSの詳細については、[https://coredns.io](https://coredns.io)をご覧ください。
 
-### Gravwell CoreDNS Plugin
+### Gravwell CoreDNS プラグイン
 
-A Gravwell plugin is available for CoreDNS which directly embeds the ingest framework into CoreDNS.  Using the plugin, a statically compiled and high performance DNS server can directly transmit DNS audit data to a Gravwell instance.  The plugin is licensed under BSD 2-Clause and available on [github](https://github.com/gravwell/coredns).
+CoreDNSにはGravwellプラグインが用意されており、インジェストフレームワークをCoreDNSに直接組み込むことができます。このプラグインを使用すると、静的にコンパイルされた高性能なDNSサーバが、DNS監査データをGravwellインスタンスに直接送信することができます。プラグインはBSD 2-Clauseでライセンスされており、[github](https://github.com/gravwell/coredns)から入手可能です。
 
-The plugin provides a complete ingest system which supports all the usual features: local caching for high reliability, load balancing, failover, etc...  Additional information about the Gravwell plugin can be found on the CoreDNS [External Plugins](https://coredns.io/explugins/gravwell/) page.
+このプラグインは、信頼性の高いローカルキャッシュ、ロードバランシング、フェイルオーバーなど、通常の機能をすべてサポートする完全なインジェストシステムを提供します。 Gravwellプラグインについての詳細は、CoreDNS [外部プラグイン](https://coredns.io/explugins/gravwell/)のページを参照してください。
 
-#### Building CoreDNS with Gravwell
+#### GravwellでCoreDNSを構築する
 
-Building CoreDNS with the Gravwell plugin requires that the Go toolchain and compiler is installed, more information is available [here](https://golang.org/).
+GravwellプラグインでCoreDNSを構築するには、Golangツールチェーンとコンパイラがインストールされている必要があります。詳細は[こちら](https://golang.org/)を参照してください。
 
 ```
 go get github.com/coredns/coredns
@@ -25,32 +25,32 @@ CGO_ENABLED=0 go build -o /tmp/coredns
 popd
 ```
 
-The resulting statically compiled binary will be located at _/tmp/coredns_.  CoreDNS can then be started by providing a valid Corefile as the first argument.  If you are running CoreDNS as a non-root user, you will need to give the binary the [service bind capability](https://wiki.apache.org/httpd/NonRootPortBinding).
+静的にコンパイルされたバイナリは、_/tmp/coredns_に格納されます。 CoreDNS は、有効な Corefile を最初の引数として与えることで起動できます。 非rootユーザーでCoreDNSを実行する場合は、バイナリに[service bind capability](https://wiki.apache.org/httpd/NonRootPortBinding)を与える必要があります。
 
 ```
 setcap 'cap_net_bind_service=+ep' /tmp/coredns
 ```
 
-#### Configuring Gravwell Plugin
+#### Gravwellプラグインの設定
 
-Configuration is performed via the CoreDNS Corefile which has the basic syntax of **directive** **value**.  Comments are preceded by the "#" character.
+設定はCoreDNS Corefileを介して行われ、基本的な構文は**directive** **value**となります。 コメントの前には「#」文字が付きます。
 
-The following configuration parameters are available:
+設定可能なパラメータは以下のとおりです:
 
-* **Ingest-Secret** defines the token used to authenticate with indexers.  **Ingest-Secret** is required.
-* **Cleartext-Target** defines the address and port for a remote indexer using a TCP connection.  IPv4 and IPv6 addresses as well as host names are supported.
-* **Ciphertext-Target** defines the address and port for a remote indexer using a TLS connection.  IPv4 and IPv6 addresses as well as host names are supported.
-* **Tag** specifies the tag that DNS audit logs are assigned.  Can be any alphanumeric value without special characters or spaces.  A valid Tag value is required.
-* **Encoding** specifies the format of transported DNS audit logs.  Options are _json_ or _text_.  Default is _json_.
-* **Insecure-Novalidate-TLS** toggles certificate validation on TLS connections.  Validation is on by default.
-* **Log-Level** specifies the logging verbosity over the integrated gravwell tag.  Options are _OFF_ _INFO_ _WARN_ _ERROR_.  Default is _ERROR_.
-* **Ingest-Cache-Path** specifies a file path for the cache system which engages when indexer connectivity is lost.  Path must be an absolute path to a writable file.
-* **Max-Cache-Size-MB** specifies in megabytes the maximum size of the cache file.  This is used as a safety net.  Zero value is the default and represents unlimited.
-* **Cache-Depth** specifies the size of the in-memory ingest buffer, in entries. The default is 128.
-* **Cache-Mode** specifies the behavior of the backing cache based on the state of indexer connections. The default mode is "always".
+* **Ingest-Secret** は、インデクサーとの認証に使用するトークンを定義します。 **Ingest-Secret**は必須です。
+* **Cleartext-Target** は、TCP接続を使用するリモートインデクサーのアドレスとポートを定義します。 IPv4とIPv6のアドレス、およびホスト名がサポートされています。
+* **Ciphertext-Target** は、TLS 接続を使用するリモートインデクサーのアドレスとポートを定義します。 IPv4とIPv6のアドレス、およびホスト名がサポートされています。
+* **Tag** は、DNS 監査ログに割り当てられるタグを指定します。 特殊文字やスペースを含まない任意の英数字を指定できます。 有効なTagの値が必要です。
+* **Encoding** はDNS監査ログを転送する際の形式を指定します。オプションは_json_または_text_です。 デフォルトは_json_です。
+* **Insecure-Novalidate-TLS** は、TLS接続時の証明書検証の有無を切り替えます。 デフォルトでは検証はオンになっています。
+* **Log-Level** は、統合されたgravwellタグを使ったロギングの冗長性を指定します。 オプションは、_OFF_ _INFO_ _WARN_ _ERROR_ です。 デフォルトは _ERROR_ です。
+* **Ingest-Cache-Path** は、インデクサの接続が失われたときに作動するキャッシュシステムのファイルパスを指定します。 パスは書き込み可能なファイルの絶対パスでなければなりません。
+* **Max-Cache-Size-MB** は、キャッシュファイルの最大サイズをメガバイトで指定します。これはセーフティーネットとして使用されます。ゼロがデフォルトで、無制限を意味します。
+* **Cache-Depth** は、メモリ内インジェスト・バッファのサイズをエントリ数で指定します。デフォルトは128です。
+* **Cache-Mode** は、インデクサの接続の状態に基づいてバッキング・キャッシュの動作を指定します。デフォルトのモードは「always」です。
 
 
-A basic Gravwell definition looks like so:
+基本的なGravwellの設定は次のようになります。:
 
 ~~~
 gravwell {
@@ -67,7 +67,7 @@ gravwell {
 }
 ~~~
 
-A unique Gravwell plugin section can be applied to each DNS listener.  An example Corefile which listens to two different interfaces and applies a unique Gravwell configuration to each might look like so:
+DNSリスナーごとに固有のGravwellプラグインセクションを適用することができます。2つの異なるインターフェースをリッスンし、それぞれに固有のGravwell設定を適用するCorefileの例は以下のようになります:
 
 ~~~
 .:53 {
@@ -101,9 +101,9 @@ A unique Gravwell plugin section can be applied to each DNS listener.  An exampl
 }
 ~~~
 
-Notice that we are sending each of the DNS listeners to two completely independent Gravwell installations, one a single indexer the other a distributed cluster.
+DNSリスナーのそれぞれを、完全に独立した2つのGravwellインストレーション（1つは単一のインデクサー、もう1つは分散クラスタ）に送信していることに注目してください。
 
-A sample Gravwell Corefile section which sends DNS requests to a single indexer over an unencrypted connection.  Local cache is disabled.
+暗号化されていない接続を介して単一のインデクサにDNSリクエストを送信するGravwell Corefileセクションのサンプルです。 ローカルキャッシュは無効です。
 
 ~~~
 gravwell {
@@ -113,8 +113,8 @@ gravwell {
   }
 ~~~
 
-A sample Gravwell Corefile section which sends DNS requests to two indexers over a TLS connection and accepts unsigned certificates. Local cache is disabled.
-IPv4 and IPv6 addresses are supported for both the Cleartext and Ciphertext targets.  IPv6 addresses must be enclosed in brackets.
+TLS接続を介して2つのインデクサにDNSリクエストを送信し、署名されていない証明書を受け付けるGravwell Corefileセクションのサンプルです。ローカルキャッシュは無効です。
+IPv4とIPv6のアドレスはCleartextとCiphertextの両方のターゲットに対応しています。IPv6アドレスは括弧で囲む必要があります。
 
 ~~~
 gravwell {
@@ -127,7 +127,7 @@ gravwell {
   }
 ~~~
 
-A sample Gravwell Corefile section which sends DNS requests to two indexers over a TLS connection and accepts unsigned certificates. Local cache is disabled.
+TLS接続を介して2つのインデクサにDNSリクエストを送信し、署名されていない証明書を受け付けるGravwell Corefileセクションのサンプルです。ローカルキャッシュは無効です。
 
 ~~~
 gravwell {
@@ -141,7 +141,7 @@ gravwell {
   }
 ~~~
 
-A sample Gravwell Corefile section which sends DNS requests to two indexers and enables a local cache should indexer communication fail.  Up to 1GB of data can be locally cached.
+2つのインデクサーにDNSリクエストを送信し、インデクサーとの通信に失敗した場合はローカルキャッシュを有効にするGravwell Corefileセクションのサンプルです。最大1GBのデータをローカルにキャッシュすることができます。
 
 ~~~
 gravwell {

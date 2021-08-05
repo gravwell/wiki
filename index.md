@@ -1,128 +1,140 @@
 # 
 
-# Gravwell Docs
+![](logo-name.png)
 
-This site contains documentation for Gravwell, plus other resources such as Changelogs.
+# Gravwell
 
-If you're just starting out with Gravwell, we recommend reading the [Quickstart](quickstart/quickstart.md) first, then moving on to the [Search pipeline](search/search.md) documentation to learn more.
+このサイトには、Gravwellのドキュメントと、その他にChangelogsなどのリソースが含まれています。
 
-Gravwell is pleased to announce our free [Community Edition](https://www.gravwell.io/download)!
+Gravwellを使い始めたばかりの方は、まず[クイックスタート](quickstart/quickstart.md)を読んでから、[パイプライン検索](search/search.md)を読んで詳細を学ぶことをお勧めします。
 
-## Quickstart and Downloads
+Gravwellは、無料の[コミュニティ版](https://www.gravwell.io/download)を発表できて嬉しく思います。
 
-  * [Quickstart](quickstart/quickstart.md)
+## クイックスタートとダウンロード
 
-  * [Downloads](quickstart/downloads.md)
+  * [クイックスタート](quickstart/quickstart.md)
 
-## Searching with Gravwell
+  * [ダウンロード](quickstart/downloads.md)
 
-  * [Search overview](search/search.md)
+## Gravwellで検索
 
-  * [Search Extraction modules](search/extractionmodules.md)
+  * [検索の概要](search/search.md)
 
-  * [Search Processing modules](search/processingmodules.md)
+  * [抽出モジュール](search/extractionmodules.md)
 
-  * [Search Render modules](search/rendermodules.md)
+  * [処理モジュール](search/processingmodules.md)
 
-  * [Alphabetical List of All Pipeline Modules](search/complete-module-list.md)
+  * [レンダーモジュール](search/rendermodules.md)
 
-## System Architecture
+  * [全パイプラインモジュールのアルファベット順リスト](search/complete-module-list.md)
 
-  * [Gravwell System Architecture](architecture/architecture.md)
+## システムアーキテクチャ
 
-    * [Network Ports Used by Gravwell](configuration/networking.md)
+  * [Gravwellシステムアーキテクチャ](architecture/architecture.md)
 
-
-  * [The Resource System](resources/resources.md)
-
-## Ingester Configuration: Getting Data Into Gravwell
-
-  * [Overview and List of Ingesters](ingesters/ingesters.md)
-
-  * [Ingester Preprocessors](ingesters/preprocessors/preprocessors.md)
-
-  * [Custom Time Formats](ingesters/customtime/customtime.md)
-
-  * [Service Integrations](ingesters/integrations.md)
-
-## Advanced Gravwell Installation and Configuration
-
-  * [Installing and Configuring Gravwell](configuration/configuration.md)
-
-  * [Docker Deployment](configuration/docker.md)
-
-  * [Setting up TLS/HTTPS](configuration/certificates.md)
-
-  * [Building a Gravwell Cluster](distributed/cluster.md)
-
-  * [Distributed Frontends](distributed/frontend.md)
-
-    * [Overwatch](distributed/overwatch.md)
+    * [Gravwellが使用するネットワークポート](configuration/networking.md)
 
 
-  * [Environment Variables](configuration/environment-variables.md)
+  * [リソースシステム](resources/resources.md)
 
-  * [Detailed Configuration Parameters](configuration/parameters.md)
+## インジェスターの設定 : Gravwellへのデータ取り込み
 
-  * [Single Sign-On](configuration/sso.md)
+  * [インジェスターの設定](ingesters/ingesters.md)
 
-  * [Hardening Gravwell](configuration/hardening.md)
+    * [ファイルフォロワーインジェスター](ingesters/file_follow.md)
 
-  * [Common Problems & Caveats](configuration/caveats.md)
+    * [シンプルリレーインジェスター](ingesters/simple_relay.md)
+    
+    * [Windows イベントインジェスター](ingesters/ingesters.md#Windows_Event_Service)
 
-## Query Acceleration, Auto-Extraction, and Data Management
+    * [Netflow/IPFIX インジェスター](ingesters/ingesters.md#Netflow_Ingester)
+
+    * [Collectd インジェスター](ingesters/ingesters.md#collectd_Ingester)
+
+  * [プリプロセッサー](ingesters/preprocessors/preprocessors.md)
+
+  * [カスタムタイムフォーマット](ingesters/customtime/customtime.md)
+
+  * [サービスの統合](ingesters/integrations.md)
+
+## 高度なGravwellのインストールと設定
+
+  * [Gravwellのインストールと設定](configuration/configuration.md)
+
+  * [Dockerデプロイメント](configuration/docker.md)
+
+  * [TLS/HTTPSの設定](configuration/certificates.md)
+
+  * [Gravwellクラスター](distributed/cluster.md)
+
+  * [分散Gravwellウェブサーバー](distributed/frontend.md)
+
+    * [Gravwellオーバーウォッチ](distributed/overwatch.md)
+
+
+  * [環境変数](configuration/environment-variables.md)
+
+  * [詳細設定パラメータ](configuration/parameters.md)
+
+  * [シングルサインオン](configuration/sso.md)
+
+  * [Gravwellの堅牢化](configuration/hardening.md)
+
+  * [一般的な問題と警告](configuration/caveats.md)
+
+## クエリの高速化、自動抽出、データ管理
   
-  * [Setting up Auto-extractors](configuration/autoextractors.md)
+  * [自動抽出器の設定](configuration/autoextractors.md)
   
-  * [Query Acceleration (indexing and bloom filters)](configuration/accelerators.md)
+  * [クエリの高速化（インデックス化とブルームフィルタ）](configuration/accelerators.md)
 
-  * [Data Replication](configuration/replication.md)
+  * [データ複製](configuration/replication.md)
 
-  * [Data Ageout](configuration/ageout.md)
+  * [データエイジアウト](configuration/ageout.md)
 
-  * [Data Compression](configuration/compression.md)
+  * [データ圧縮](configuration/compression.md)
 
-  * [Data Archiving](configuration/archive.md)
+  * [データアーカイブ](configuration/archive.md)
 
-## Automation
+## 自動化
 
-  * [Scheduled Searches & Scripts](scripting/scheduledsearch.md)
+  * [スケジュール検索とスクリプト](scripting/scheduledsearch.md)
 
-    * [Automation Script APIs & Examples](scripting/scriptingsearch.md)
+    * [自動化スクリプトのAPIと例](scripting/scriptingsearch.md)
 
 
-  * [Scripting Overview](scripting/scripting.md)
+  * [スクリプトの概要](scripting/scripting.md)
 
-	* [The Anko Module](scripting/anko.md)
+	* [Ankoモジュール](scripting/anko.md)
 
-	* [The Eval Module](scripting/eval.md)
+	* [Evalモジュール](scripting/eval.md)
 
-## User Interfaces
+## ユーザーインターフェース
 
   * [Gravwell Web GUI](gui/gui.md)
 
-    * [The Search Interface](gui/queries/queries.md)
+    * [検索インターフェイス](gui/queries/queries.md)
 
-    * [Labels and Filtering](gui/labels/labels.md)
+    * [ラベルとフィルタリング](gui/labels/labels.md)
 
-    * [Kits](kits/kits.md)
+	* [キット](kits/kits.md)
 
-  * [Command-Line Client](cli/cli.md)
+  * [コマンドラインクライアント](cli/cli.md)
 
 ## API
 
   * [API](api/api.md)
 
-## Misc
+## その他
 
-  * [Licensing](license/license.md)
+  * [ライセンス](license/license.md)
 
-  * [Metrics & Crash Reporting](metrics.md)
+  * [メトリクスとクラッシュレポート](metrics.md)
 
   * [Changelogs](changelog/list.md)
 
   * [Gravwell EULA](eula.md)
 
-  * [Open-source Licenses](open_source.md)
+  * [オープンソースライセンス](open_source.md)
 
 Documentation version 2.0

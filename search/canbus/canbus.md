@@ -1,23 +1,23 @@
 ## Canbus
 
-The canbus module extracts fields from CAN messages (i.e. vehicle data). These fields are automatically extracted with the invocation of the canbus module.
+canbusモジュールはCANメッセージからフィールドを抽出します（すなわち車両データ）。 これらのフィールドは、canbusモジュールの呼び出しで自動的に抽出されます。
 
-| mod | Field | Operators | Example
+| mod | フィールド | オペレータ | 例
 |-----|-------|-----------|----------
 | canbus | ID | == != < > <= >= | canbus ID==0x341
 | canbus | EID | == != < > <= >= | canbus EID==0x123456
 | canbus | RTR | == != | canbus RTR==true
 | canbus | Data | ~ !~ | canbus Data
 
-### Example Search
+### 検索例
 
-The following search will count by canbus packet IDs and display a table with the most frequent IDs.
+次の検索では、canbusパケットIDでカウントし、最も頻度の高いIDを含む表を表示します。
 
 ```
 tag=vehicles canbus | count by ID | sort by count desc | table ID count
 ```
 
-The following search extracts messages specifying throttle data and plots the mean position of the throttle. Note that each make/model may use different message IDs and data formats for throttle.
+次の検索では、スロットルデータを指定しているパケットを抽出し、スロットルの平均位置をプロットします。
 ```
 tag=vehicles canbus ID==0x123 Data | slice uint16be(Data[2:4]) as throttle | mean throttle | chart mean
 ```

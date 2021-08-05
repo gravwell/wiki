@@ -1,26 +1,26 @@
-# Search Control
+# サーチコントロール
 
-REST API located at /api/searchctrl
+REST APIは/api/searchctrlにあります。
 
-The searchctrl group is used to query information about persistent searches and optionally invoke some action.  We currently provide the ability to query all active searches, get information about a specific search, background a an active search, archive an active search, and delete/terminate a search.
+searchctrlグループは、永続的な検索に関する情報を照会したり、オプションで何らかのアクションを実行するために使用されます。 現在は、すべてのアクティブな検索の問い合わせ、特定の検索に関する情報の取得、アクティブな検索のバックグラウンド、アクティブな検索のアーカイブ、検索の削除/終了などの機能を提供しています。
 
-## Basic API overview
+## 基本的なAPIの概要
 
-The basic action here is to perform a GET, DELETE, or PATCH on a REST url.
+ここでの基本的な動作は、REST urlに対してGET, DELETE, PATCHを実行することです。
 
-## Search States
+## 検索の状態
 
-Searches can be in any of the following states, and can be in more than one state at a time (such as ACTIVE/BACKGROUNDED, SAVED/ATTACHED, or DORMANT/SAVED). 
+検索は以下のいずれかの状態にあり、同時に複数の状態（ACTIVE/BACKGROUNDED、SAVED/ATTACHED、DORMANT/SAVEDなど）になることができます。
 
-- Active: The search is running and/or finished and there is a session attached to it.
-- Backgrounded: The search is actively running but marked in a way that it will persist without an attached session.
-- Saving: The search has been marked as saved, but is still waiting for completion to move its contents to a persistent location.
-- Saved: The search is marked as saved and moved to the appropriate persistent location.
-- Dormant: The search is being kept (background or saved) and no sessions are attached.
-- Attached: The search is saved and a session has re-attached to it.
+- ACTIVE：検索は実行中および/または終了しており、それに接続されたセッションがあります。
+- Backgrounded：検索はアクティブに実行されているが、セッションが接続されていない状態で持続するようにマークされている。
+- Saving：検索は保存済みとしてマークされていますが、コンテンツを永続的な場所に移動させるために完了を待っている状態です。
+- Saved：検索は保存済みとしてマークされ、適切な永続的な場所に移動されています。
+- Dormant：検索は保持（バックグラウンドまたは保存）されており、セッションは添付されていません。
+- Attached：検索が保存され、セッションが再接続されています。
 
-## Getting a list of searches
-When requesting the list of searches the web server will return all searches the current user is authorized to view.  No json package is posted, but rather an empty GET is performed against '/api/searchctrl'.  
+## 検索結果の一覧の取得
+検索の一覧をリクエストすると、ウェブサーバーは現在のユーザーが閲覧を許可されているすべての検索を返します。 jsonパッケージは投稿されず、'/api/searchctrl'に対して空のGETが実行されます。 
 
 ```
 [
@@ -48,8 +48,8 @@ When requesting the list of searches the web server will return all searches the
 ]
 ```
 
-## Getting the info of a specific search
-Getting the status of a specific search is performed by performing a GET the REST url /api/searchctrl/:ID
+## 特定の検索の情報を取得する
+特定の検索のステータスを取得するには、REST url /api/searchctrl/:ID を GET する必要があります。
 
 ```
 WEB GET /api/searchctrl/795927171:
@@ -69,65 +69,65 @@ WEB GET /api/searchctrl/795927171:
 ]
 ```
 
-## Backgrounding a search
+## 検索の背景処理
 
-Backgrounding a search is used to inform the web server that if the last client lets go, its ok to continue the search.  To background a search perform a PATCH on the url /api/searchctrl/:ID/background correct ID.   The Search MUST be active or already backgrounded for the command to succeed and the user must be an admin or have access to the search.
+検索のバックグラウンド化は、最後のクライアントが離脱した場合に、検索を続行しても問題ないことをウェブサーバに知らせるために使用されます。 検索をバックグラウンドにするには、/api/searchctrl/:ID/background correct IDのURLにPATCHを実行します。  このコマンドが成功するためには、検索がアクティブであるか、すでにバックグラウンドになっている必要があり、ユーザーは管理者であるか、検索へのアクセス権を持っている必要があります。
 
 ```
 WEB PATCH /api/searchctrl/795927171/background:
 null
 ```
 
-## Saving a search
+## 検索結果の保存
 
-Saving a search is used to inform the webserver that we wish to keep the results of this search.  A backgrounded search will stay resident (even if no one is connected to it) as long as the webserver doesn't need the disk space (or it isn't explicitly deleted).  Saving moves the results to the saved location, and the results will not be deleted unless someone (with the proper authority) explicitly requests it.  To Save a search perform a PATCH on the url /api/searchctrl/:ID/save correct ID.   The Search can be in in any state, but will only begin transferring to the persistent storage once it hits the dormant state.  The transfer to persistent storage is either instantaneous (if the persistent storage is on the same drive) or requires a full copy.  This is done in the background in its own goroutine, so nothing is blocked while it happens.
+検索の保存は、検索結果を保存しておきたいことをウェブサーバに伝えるために使います。 バックグラウンドで行われた検索は、ウェブサーバがディスクスペースを必要としない（あるいは明示的に削除されない）限り、（誰も接続していなくても）常駐します。 保存すると、検索結果は保存された場所に移動し、（適切な権限を持つ）誰かが明示的に要求しない限り、検索結果が削除されることはありません。 検索結果を保存するには、/api/searchctrl/:ID/save correct ID という URL に対して PATCH を実行します。  検索はどのような状態でもよいのですが、休止状態になって初めて永続的なストレージへの転送が開始されます。 永続的なストレージへの転送は、（永続的なストレージが同じドライブにある場合）瞬時に行われるか、完全なコピーが必要となります。 この処理は、バックグラウンドで独自のゴルーチンで行われるため、処理中にブロックされることはありません。
 
-An optional set of metadata can be attached to a saved search, the metadata must be a valid JSON structure.  This metadata can be used to attach notes, info, or pretty much anything that can be encoded as a JSON blob.  Metadata should be encoded into the body of the `PATCH` request to save the search.
+保存された検索にはオプションでメタデータを添付することができ、メタデータは有効なJSON構造でなければなりません。 メタデータは有効なJSON構造でなければなりません。このメタデータは、メモや情報など、JSONブロブとしてエンコード可能なものなら何でも添付することができます。 メタデータは、検索を保存するための `PATCH` リクエストのボディにエンコードする必要があります。
 
 ```
 WEB PATCH /api/searchctrl/10985768/save:
 null
 ```
 
-## Deleting/terminating a search
+## 検索の削除/終了
 
-Deleting a search terminates the search (and kicks off any active users) and immediately removes any storage associated with the search results.  A search may be deleted while in any state.  To delete a search perform a DELETE request to /api/searchctrl/:ID with the correct ID.  The server will return 200 on success, 5XX on error, and 403 if the user is not authorized to modify the search.
+検索を削除すると、検索が終了し（アクティブなユーザーがいなくなり）、検索結果に関連付けられたストレージが直ちに削除されます。 検索はどのような状態であっても削除することができます。 検索を削除するには、正しいIDを指定して/api/searchctrl/:IDにDELETEリクエストを送信してください。 サーバーは、成功した場合は200、エラーの場合は5XX、ユーザーが検索の変更を許可されていない場合は403を返します。
 
 ```
 WEB DELETE /api/searchctrl/010985768:
 null
 ```
 
-## Stopping an active search
+## アクティブな検索の停止
 
-Stopping a search causes the indexers to stop feeding the search pipeline new data, but the existing data that has already been process is maintained and users can continue to interact with the output. A search may only be stopped when it is in an active running state, searches that are saved or in a dormant state will respond with an error if a stop command is issued. To stop a search perform a PUT request to /api/searchctrl/ID/stop with the correct ID. The server will return 200 on success, 5XX on error, and 403 if the user is not authorized to modify the search.  Only the owner of a search or an admin may stop an active search, users in a shared group may not stop a search they do not own.  Search results may still be saved after a stop command has been completed.
+検索を停止すると、インデクサは検索パイプラインへの新しいデータの供給を停止しますが、すでに処理された既存のデータは維持され、ユーザーは引き続き出力を操作することができます。保存されている検索や休止状態にある検索は、停止コマンドが発行されるとエラーで応答します。検索を停止するには、正しいIDを指定して/api/searchctrl/ID/stopにPUTリクエストを行います。サーバーは、成功時には200、エラー時には5XX、ユーザーが検索の変更を許可されていない場合には403を返します。 検索の所有者または管理者のみがアクティブな検索を停止することができ、共有グループのユーザーは所有していない検索を停止することはできません。 共有グループのユーザーは、自分が所有していない検索を停止することはできません。停止コマンドが完了した後も、検索結果を保存することができます。
 
 ```
 WEB PUT /api/searchctrl/010985768/stop:
 null
 ```
 
-## Importing a saved search archive
+## 保存された検索アーカイブのインポート
 
-An optional download format for a search is an `archive`.  An archive represents a fully self-contained search that can be imported into another Gravwell instance.  The import API accepts the saved search archives as an upload and unpacks the search into the saved search system.  Users can then attach to the search as if it were saved on the local system.
+検索結果のダウンロード形式として、オプションで`archive`があります。 アーカイブは完全に自己完結した検索を表し、別のGravwellインスタンスにインポートすることができます。 インポートAPIは保存された検索アーカイブをアップロードとして受け入れ、検索を保存された検索システムに解凍します。 ユーザーは、あたかもローカルシステムに保存されているかのように、検索に添付することができます。
 
-When a search archive is re-imported, the imported search is owned by the user that *imported* it, regardless of which user *downloaded* it.  An optional `GID` form field may be supplied in the import request to share the imported search with a group.
+検索アーカイブが再インポートされると、インポートされた検索は、どのユーザがそれを*ダウンロード*したかに関わらず、*インポート*したユーザによって所有されます。 インポートされた検索をグループで共有するために、オプションの `GID` フォームフィールドをインポート要求で提供することができます。
 
-Searches are imported by performing a multipart form `POST` to the `/api/searchctrl/import` URL.
+検索は `/api/searchctrl/import` というURLにマルチパートのフォーム `POST` を実行することでインポートされます。
 
-The API expects that the file upload be in the form field called `file`.
+APIでは，`file`というフォームフィールドにファイルをアップロードすることを想定しています。
 
-The import API can be authenticated using either the JWT authorization token or a cookie.
+インポートAPIは，JWT認証トークンまたはクッキーを使って認証することができます。
 
-NOTE: An admin can specify groups it is not a member of in the `GID` form field, but non-admin users must be a member of the group specified in `GID`.
+注: 管理者は `GID` というフォームフィールドで自分がメンバーではないグループを指定することができますが，管理者以外のユーザは `GID` で指定されたグループのメンバーである必要があります。
 
-## Admin APIs
+## 管理者API
 
-Admin users can get information about any search, delete any search, load any search, send any search to the background, etc. using the API endpoints documented above.
+管理者は、上記の API エンドポイントを使用して、検索情報の取得、検索の削除、検索の読み込み、検索のバックグランドへの送信などを行うことができます。
 
-### List all searches
+### すべての検索の一覧表示
 
-In order to get a list of all searches that exist on the system, an admin user may do a GET on `/api/searchctrl/all`. The format is identical to that returned from `/api/searchctrl`, but includes all searches on the system.
+システム上に存在するすべての検索の一覧を取得するには、管理者ユーザーは `/api/searchctrl/all` を GET します。フォーマットは `/api/searchctrl` から返されるものと同じですが、システム上のすべての検索が含まれています。
 
 ```
 [

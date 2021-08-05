@@ -1,76 +1,76 @@
-## Netflow
+## netflow
 
-The netflow processor is designed to extract and filter raw netflow data frames, allowing for quickly identifying network flows, filtering on ports, or generally monitoring the behavior of aggregate flows.  Gravwell has a native netflow ingester which is open source and available at https://github.com/gravwell/ingesters or as an installer in the [quickstart section](#!quickstart/downloads.md).
+netflow プロセッサは、生の netflow データフレームを抽出してフィルタリングするように設計されており、ネットワークフローの迅速な識別、ポートでのフィルタリング、または一般的なアグリゲートフローの動作の監視を可能にします。 Gravwell にはネイティブの netflow インジェスターがあり、オープンソースで、https://github.com/gravwell/ingesters または [quickstart section](#!quickstart/downloads.md) にあるインストーラーで入手できます。
 
-### Supported Options
+### サポートされているオプション
 
-* `-e`: The “-e” option specifies that the netflow module should operate on an enumerated value.  Operating on enumerated values can be useful when you have extracted a netflow frame using upstream modules.  You could extract netflow frames from raw PCAP and pass the frames into the netflow module.
+* `-e`: 「-e」オプションは、netflow モジュールが列挙値を操作することを指定します。 列挙型の値を操作することは、上流のモジュールを使って netflow フレームを抽出した場合に有効です。 生の PCAP から netflow フレームを抽出し、そのフレームを netflow モジュールに渡すことができます。
 
-### Processing Operators
+### 処理演算子
 
-Each netflow field supports a set of operators that can act as fast filters.  The filters supported by each operator are determined by the data type of the field. Numeric values support everything but the subset operators and IP addresses support just the subset operators.
+netflow の各フィールドは、高速フィルタとして機能する一連の演算子をサポートしています。 各演算子がサポートするフィルタは、フィールドのデータタイプによって決まります。数値はサブセット演算子以外のすべてをサポートし、IP アドレスはサブセット演算子のみをサポートします。
 
-| Operator | Name | Description |
+| 演算子 | 名称 | 意味 |
 |----------|------|-------------|
-| == | Equal | Field must be equal
-| != | Not equal | Field must not be equal
-| < | Less than | Field must be less than
-| > | Greater than | Field must be greater than
-| <= | Less than or equal | Field must be less than or equal to
-| >= | Greater than or equal | Field must be greater than or equal to
-| ~ | Subset | Field must be a member of
-| !~ | Not subset | Field must not be a member of
+| == | 等しい | フィールドは等しい
+| != | 等しくない | フィールドは等しくない
+| < | 小なり | フィールドはその値より小さい
+| > | 大なり | フィールドはその値より大きい
+| <= | 小なりイコール | フィールドはその値以下である
+| >= | 大なりイコール | フィールドはその値以上である
+| ~ | 含まれる | フィールドはそれに含まれる
+| !~ | 含まれない | フィールドはそれに含まれない
 
 
-### Data Items
+### データ項目
 
-The netflow search module is designed to process raw netflow frames.  A single netflow frame consists of a header and N records; for Netflow V5 N must be > 0 and < 31.  Each data item in a netflow record can be extracted and used as a filter.  When filtering on Header data items, the filter applies to all records in the frame.  Header data items are processed first, and only if the header filters do not drop the frame are the records processed.  The netflow processor is an expanding module; expanding modules break input entries into multiple output entries.  This means that when using the netflow module more entries can come out of the pipeline than were fed in.
+netflow 検索モジュールは、生の netflow フレームを処理するように設計されています。 1 つの netflow フレームは、ヘッダーと N 個のレコードで構成され、Netflow V5 では、N は 0 以上 31 以下でなければなりません。 netflow レコードの各データ項目は、抽出してフィルタとして使用することができます。 ヘッダーのデータ項目でフィルターをかける場合、フレーム内のすべてのレコードに適用されます。 ヘッダーデータ項目が最初に処理され、ヘッダーフィルターがフレームをドロップしない場合にのみ、レコードが処理されます。 netflow プロセッサは拡張モジュールです。拡張モジュールは、入力エントリを複数の出力エントリに分割します。 つまり、netflow モジュールを使用すると、入力されたエントリよりも多くのエントリがパイプラインから出力される可能性があります。
 
-#### Netflow v5 Header Data Items
+#### Netflow v5 ヘッダーデータ項目
 
-| Field |       Description        | Supported Operators | Example |
+| フィールド |       意味        | サポートされている演算子 | 例 |
 |-------|--------------------------|---------------------|---------|
-| Count | The number of records in the netflow frame | > < <= >= == != | Count >= 10
-| Version | The Netflow frame version | > < <= >= == != | Version == 5
-| Uptime | Total number of seconds the netflow sensor has been active | > < <= >= == != | Uptime > 0x100000
-| Sec | Current Unix timestamp of the sensing device | > < <= >= == != | Sec == 1526511023
-| NSec | Residual nanoseconds for the current time of the sensing device | > < <= >= == != | Nsec > 0x100101
-| Sequence | Sequence counter of total flows on the sensing device | > < <= >= == != | Sequence == 1
-| EngineType | The type of flow-switching engine | > < <= >= == != | EngineType == 0x1A
-| EngineID | The ID for the flow sensing engine | > < <= >= == != | EngineID == 0x00
-| SampleMode | 2 bit ID for the Sampling mode of the sensing engine | > < <= >= == != | SampleMode == 0x01
-| SampleInterval | 14 bit value representing the sampling interval of the sensing engine | > < <= >= == != | SampleInterval > 0x100
-| Timestamp | Helper extractor that converts Sec and NSec to a friendly timestamp value. Filtering is NOT supported. | |
+| Count | netflow フレーム内のレコード数 | > < <= >= == != | Count >= 10
+| Version | Netflow フレームのバージョン | > < <= >= == != | Version == 5
+| Uptime | netflow センサーがアクティブだった秒数 | > < <= >= == != | Uptime > 0x100000
+| Sec | 検知デバイスの現在の Unix タイムスタンプ | > < <= >= == != | Sec == 1526511023
+| NSec | 検知デバイスの現在時刻に対する残差ナノ秒 | > < <= >= == != | Nsec > 0x100101
+| Sequence | 検知デバイスの総フローのシーケンスカウンタ | > < <= >= == != | Sequence == 1
+| EngineType | フロースイッチ・エンジンの種類 | > < <= >= == != | EngineType == 0x1A
+| EngineID | フローセンシングエンジンの ID | > < <= >= == != | EngineID == 0x00
+| SampleMode | センシングエンジンのサンプリングモードを表す 2 ビットの ID | > < <= >= == != | SampleMode == 0x01
+| SampleInterval | センシングエンジンのサンプリング間隔を表す 14 ビットの値 | > < <= >= == != | SampleInterval > 0x100
+| Timestamp | Sec と NSec をフレンドリーなタイムスタンプ値に変換するヘルパー抽出器。フィルタリングはサポートされていません。 | |
 
-#### Netflow v5 Record Data Items
+#### Netflow v5 レコードデータ項目
 
-| Field |       Description        | Supported Operators | Example |
+| フィールド |       意味        | サポートされている演算子 | 例 |
 |-------|--------------------------|---------------------|---------|
-| IP | Extract the first IP that matches a filter.  If no filter is specified the Src is used | ~ !~ == != | IP ~ 10.0.0.0/24 
-| Port | Extract the first Port that matches the filter.  If no filter is specified the SrcPort is used | > < <= >= == != | Port == 80
-| Src | Source IPv4 address in the flow record | ~ !~ == != | Src !~ 192.168.1.0/24
-| Dst | Destination IPv4 address in the flow record | ~ !~ == != | Dst ~ 10.0.0.0/16
-| Next | Next hop address in the flow record | ~ !~ | Next == 1.2.3.4
-| Input | SNMP index of the input interface | > < <= >= == != | Input == 1
-| Output | SNMP index of the output interface | > < <= >= == != | Output != 1
-| Pkts | Total number of packets in the flow | > < <= >= == != | Pkts > 10
-| Bytes | Total number of bytes in the flow | > < <= >= == != | Bytes < 1400
-| UptimeFirst | Uptime of the sensing engine when the first packet was seen | > < <= >= == != | UptimeFirst != 0
-| UptimeLast | Uptime of the sensing engine when the last packet was seen | > < <= >= == != | UptimeLast > 0x10000
-| SrcPort | Source port of the flow.  If the protocol does not have a port the value is zero | > < <= >= == != | SrcPort != 0
-| DstPort | Destination port of the flow.  If the protocol does not have a port the value is zero | > < <= >= == != | DstPort == 0
-| Flags | Cumulative OR of TCP flags for the flow | > < <= >= == != | Flags == 0x7
-| Protocol | Protocol number of the flow (TCP = 6, UDP = 17 | > < <= >= == != | Protocol == 17
-| ToS | IP type of the flow | > < <= >= == != | ToS == 19
-| SrcAs | Source Autonomous System Number of the flow | > < <= >= == != | SrcAS == 15169
-| DstAs | Source Autonomous System Number of the flow | > < <= >= == != | DstAs != 15169
-| SrcMask | Source IPv4 address mask bits | > < <= >= == != | SrcMask > 24
-| DstMask | Destination IPv4 address mask bits | > < <= >= == != | DstMask <= 16
-| Duration | Helper value that converts UptimeFirst and UptimeLast into a duration | > < <= >= == != | Duration > 100ms
+| IP | フィルターにマッチした最初の IP を抽出します。 フィルターが指定されていない場合は、Src が使用されます。 | ~ !~ == != | IP ~ 10.0.0.0/24
+| Port | フィルターにマッチした最初のポートを抽出します。 フィルターが指定されていない場合は、SrcPort が使用されます。 | > < <= >= == != | Port == 80
+| Src | フローレコード内のソース IPv4 アドレス | ~ !~ == != | Src !~ 192.168.1.0/24
+| Dst | フローレコードの送信先 IPv4 アドレス | ~ !~ == != | Dst ~ 10.0.0.0/16
+| Next | フローレコード内の次のホップアドレス | ~ !~ | Next == 1.2.3.4
+| Input | 入力インターフェースの SNMP インデックス | > < <= >= == != | Input == 1
+| Output | 出力インターフェースの SNMP インデックス | > < <= >= == != | Output != 1
+| Pkts | フロー内の総パケット数 | > < <= >= == != | Pkts > 10
+| Bytes | フロー内の総バイト数 | > < <= >= == != | Bytes < 1400
+| UptimeFirst | 最初のパケットが観測されたときのセンシングエンジンの稼働時間 | > < <= >= == != | UptimeFirst != 0
+| UptimeLast | 最後のパケットが確認されたときのセンシングエンジンの稼働時間 | > < <= >= == != | UptimeLast > 0x10000
+| SrcPort | フローのソースポート。 プロトコルがポートを持たない場合、値はゼロとなる | > < <= >= == != | SrcPort != 0
+| DstPort | フローの宛先ポート。 プロトコルがポートを持たない場合、値はゼロとなる | > < <= >= == != | DstPort == 0
+| Flags | フローの TCP フラグの累積 OR | > < <= >= == != | Flags == 0x7
+| Protocol | フローのプロトコル番号 (TCP = 6, UDP = 17 | > < <= >= == != | Protocol == 17
+| ToS | フローの IP タイプ | > < <= >= == != | ToS == 19
+| SrcAs | フローの送信元自律システム番号 | > < <= >= == != | SrcAS == 15169
+| DstAs | ソース自律システムフローの数値 | > < <= >= == != | DstAs != 15169
+| SrcMask | ソース IPv4 アドレスのマスクビット | > < <= >= == != | SrcMask > 24
+| DstMask | 送信先 IPv4 アドレスマスクビット | > < <= >= == != | DstMask <= 16
+| Duration | UptimeFirst と UptimeLast を期間に変換するヘルパー値 | > < <= >= == != | Duration > 100ms
 
-### Examples
+### 例
 
-#### Number of HTTP flows by Source IP over time
+#### 送信元 IP 別の HTTP フロー数の推移
 
 ```
 tag=netflow netflow Src Dst Port==80 | count by Src | chart count by Src limit 24
@@ -78,7 +78,7 @@ tag=netflow netflow Src Dst Port==80 | count by Src | chart count by Src limit 2
 
 ![Number of flows by ip](flowcounts.png)
 
-#### Total traffic by IP and Protocol
+#### IP およびプロトコル別の総トラフィック
 
 ```
 tag=netflow netflow IP Protocol Bytes as traffic | sum traffic by IP,Protocol | stackgraph IP Protocol sum

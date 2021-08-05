@@ -1,64 +1,64 @@
-# Templates
+# テンプレート
 
-Templates are special objects which define a Gravwell query containing *variables*. Multiple templates using the same variable(s) can be included in a dashboard to create a powerful investigative tool--for instance, templates which expect an IP address as their variable can be used to create an IP address investigation dashboard.
+テンプレートとは、Gravwellのクエリを定義する特殊なオブジェクトです。同じ変数を使った複数のテンプレートをダッシュボードに含めることで、強力な調査ツールを作成することができます。例えば、IPアドレスを変数とするテンプレートを使って、IPアドレス調査ダッシュボードを作成することができます。
 
-## The Template Page
+## テンプレートページ
 
-The template management page may be accessed from the main menu, under the "Tools & Resources" section:
+テンプレート管理ページは、メインメニューの「ツール＆リソース」からアクセスできます:
 
 ![](template-menu.png)
 
 ![](template-page.png)
 
-## Creating a Template
+## テンプレートの作成
 
-To create a new template, click the 'Add' button in the upper right corner of the templates page. Gravwell will prompt for several values which are used to define the template. In the image below, we're defining a template which will search syslog entries for a user-specified DHCP message type:
+新しいテンプレートを作成するには、テンプレートページの右上にある`Add`ボタンをクリックします。Gravwellはテンプレートを定義するためのいくつかの値を入力します。以下の例では、ユーザーが指定したDHCPメッセージタイプを検索するテンプレートを定義しています。
 
 ![](new-template.png)
 
-The various fields are described below:
+各フィールドの説明は以下の通りです。
 
-* **Query Template**: In this field, we have entered a query containing a variable: `tag=syslog grep DHCP%%VAR%%`.
-* **Variable name in query**: Here, we define the name of the variable we used in the query. Note that you *can* use any string as the variable name (as long as it doesn't contain spaces), but we strongly recommend using something unique, like `%%VAR%%` or `__IPADDR__`.
-* **Variable label**: This label will be shown when the user is prompted to fill in the variable. It should be short, but descriptive.
-* **Variable hint**: This is additional text which will be shown when prompting for the variable; here we give examples of two strings the user may chose to enter.
-* **'Require a value' checkbox**: This checkbox indicates whether or not a value *must* be entered. Some queries may be useful with or without a value in the variable, so this box enables that behavior.
-* **Preview & Validation**: This is an *optional* text box where you can enter a value to check the resulting query. Here, we have entered the string "ACK", and observe that the resulting query `tag=syslog grep DHCPACK` looks appropriate. 
+* **クエリテンプレート**：このフィールドには、変数 `tag = syslog grep DHCP %% VAR %%`を含むクエリを入力しました。
+* **クエリ内の変数名**: ここでは、変数名を定義します。ここでは、クエリで使用した変数の名前を定義します。しかし、`%%VAR%%`や`__IPADDR__`のようなユニークな名前を使うことを強くお勧めします。
+* **変数のラベル**: このラベルは、ユーザーが変数への入力を求められたときに表示されます。短いですが、説明的である必要があります。
+* **変数のヒント**: ここでは、ユーザーが入力することができる2つの文字列の例を示します。
+* **'Require a value' checkbox**: このチェックボックスは、値を入力する必要があるかどうかを示します。クエリの中には、変数に値を入れても入れなくても有用なものがありますので、このボックスでその動作を有効にします。
+* **プレビュー＆バリデーション**: これは、結果として得られるクエリをチェックするための値を入力できる *オプション* のテキストボックスです。ここでは、文字列 "ACK "を入力し、結果として得られるクエリ`tag=syslog grep DHCPACK`が適切であることを確認しています。
 
-The remaining fields (Name, Description, etc.) are common to most objects in Gravwell and need no explanation.
+残りのフィールド（Name、Descriptionなど）は、Gravwellのほとんどのオブジェクトに共通しているので、説明の必要はありません。
 
-When the template has been properly defined, we click 'Save' and are returned to the main template page.
+テンプレートが正しく定義されたら、"保存"をクリックして、メインのテンプレートページに戻ります。
 
-## Executing a Template
+## テンプレートを実行します
 
-You can run a template query by clicking the search icon on the template's card:
+テンプレートのカードにある検索アイコンをクリックすると、テンプレートのクエリを実行することができます。
 
 ![](run-template.png)
 
-This will bring up a dialog prompting for the variable value:
+変数の値を入力するためのダイアログが表示されます。
 
 ![](template-prompt.png)
 
-We decide we want to search for DHCP *REQUEST* messages over the last hour, so we enter `REQUEST` in the field and change the timeframe dropdown:
+ここでは、過去1時間のDHCP *REQUEST*メッセージを検索したいと考え、フィールドに「REQUEST」と入力し、時間枠のドロップダウンを変更します。
 
 ![](template-prompt2.png)
 
-Clicking "Launch" begins the search. We can see the template query at the top of the page, with the variable (`%%VAR%%`) replaced by the string we gave:
+起動」をクリックすると、検索が開始されます。ページの一番上にテンプレートのクエリが表示され、変数（`%%VAR%%`）が私たちの与えた文字列に置き換えられているのがわかります。
 
 ![](template-results.png)
 
-## Editing & Deleting Templates
+## テンプレートの編集と削除
 
-To modify a template, click the edit icon (a pencil) on the template's tile. To delete the template, click the delete (trash can) icon.
+テンプレートを変更するには、テンプレートのタイルにある編集アイコン（鉛筆）をクリックします。テンプレートを削除するには、削除（ゴミ箱）アイコンをクリックします。
 
 ![](edit-delete.png)
 
-## Sharing Templates
+## テンプレートの共有
 
-As with most objects in Gravwell, templates may be set visible to the owner only, shared with one or more groups, or shared globally (by administrators only). This is managed from the Permissions tab in the template editor:
+Gravwellのほとんどのオブジェクトと同様に、テンプレートは所有者のみが閲覧可能、1つ以上のグループで共有、またはグローバルに共有（管理者のみ）という設定が可能です。この設定はテンプレートエディタのPermissionsタブで行います。
 
 ![](permissions.png)
 
-## Using Templates in Dashboards
+## ダッシュボードでのテンプレートの使用
 
-Templates may be embedded in dashboard tiles. When the dashboard is loaded, the user will be prompted for variable values. See the [dashboard documentation page](#!gui/dashboards/dashboards.md) for instructions on adding templates to dashboards.
+テンプレートは、ダッシュボードのタイルに埋め込むことができます。ダッシュボードが読み込まれたときに、ユーザーは変数の値を入力するよう求められます。ダッシュボードにテンプレートを追加する手順については、[ダッシュボードのドキュメントページ](#!gui/dashboards/dashboards.md)を参照してください。

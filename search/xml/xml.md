@@ -1,30 +1,30 @@
 ## XML
 
-The xml module can extract components from XML data into enumerated values for later use. Since XML is untyped, all results are returned as strings.
+xmlモジュールは、後で使用するためにXMLデータから列挙値にコンポーネントを抽出できます。  XMLは型指定されていないので、すべての結果は文字列として返されます。
 
-Consider the following XML snippet, consisting of three nested elements `A`, `B`, and `C`; the inner-most element `C` has an associated attribute named `MyAttr`.
+3つのネストされた要素`A`、`B`、および`C`で構成される次のXMLスニペットを考えます。  最も内側の要素`C`には、`MyAttr`という名前の関連属性があります。.
 
 ```
 <A><B><C MyAttr="foo">bar</C></B></A>
 ```
 
-To extract the **value** of `C`, we would use the following query:
+`C`の**値**を抽出するには、次のクエリを使用します:
 
 ```
 xml A.B.C
 ```
 
-The query places the result, "bar", in an enumerated value named "C".
+クエリは、結果 "bar"を "C"という名前の列挙値に配置します。
 
-If, on the other hand, we wanted to extract the value of the MyAttr attribute, we would use the following syntax:
+一方、MyAttr属性の値を抽出する場合は、次の構文を使用します:
 
 ```
 xml A.B.C[MyAttr]
 ```
 
-This creates an enumerated value named "MyAttr" containing the value "foo".
+これにより、値 "foo"を含む "MyAttr"という名前の列挙値が作成されます。
 
-If the final element specified contains more XML elements, the module will return the inner XML as a string:
+指定された最後の要素がさらにXML要素を含む場合、モジュールは内部XMLを文字列として返します。:
 
 ```
 xml A.B
@@ -32,41 +32,41 @@ xml A.B
 
 returns ```<C MyAttr="foo">bar</C>```.
 
-XML elements are not always named in a way suitable for use with other modules; for instance, an element named "My-Element" will confuse the eval module, which will think you wish to subtract a variable `Element` from another variable `My`. The xml module allows you to select a different name for the resulting enumerated value:
+XML要素は、他のモジュールで使用するのに適した方法で常に命名されているわけではありません。  たとえば、 "My-Element"という名前の要素はevalモジュールを混乱させElementますMy。  そのため、ある変数から別の変数から減算したいと思うでしょう。  xmlモジュールを使用すると、結果の列挙値に別の名前を選択できます:
 
 ```
 xml A.B.My-Element as MyElement
 ```
 
-Similarly, if an element or attribute contains a ".", "[", or "]" character, you can simply enclose the element in quotes to let the module know that the special character is part of the element name:
+同様に、要素または属性に ".", "[", または "]"の文字が含まれている場合は、その要素を引用符で囲んで、特殊文字が要素名の一部であることをモジュールに知らせることができます:
 
 ```
 xml A."My.Element" as MyElement
 ```
 
-### Filtering
+### フィルタリング
 
-The xml module allows for simple pre-filtering of data, to avoid invoking addition modules (like eval) when possible. Because of the way XML works, there are a few peculiarities in how the xml module handles filtering, so it is important to read this section carefully.
+xmlモジュールは、可能な場合に追加モジュール（evalなど）の呼び出しを回避するために、データの単純な事前フィルタリングを可能にします。  XMLの動作方法のため、xmlモジュールがフィルタリングを処理する方法にはいくつかの特殊性があるため、このセクションを注意深く読むことが重要です
 
-The module can test if an element value is equal to a literal value. If so, the requested element is extracted and the search entry is passed along the pipeline. Consider this search:
+モジュールは、要素の値がリテラル値と等しいかどうかをテストできます。 その場合、要求された要素が抽出され、検索エントリがパイプラインに沿って渡されます。 この検索を検討してください:
 
 ```
 xml A.B=="foo"
 ```
 
-The following XML entry will pass the test and continue down the pipeline with a new enumerated element named "B":
+次のXMLエントリはテストに合格し、"B"という名前の新しい列挙要素でパイプラインを続行します。:
 
 ```
 <A><B>foo</B></A>
 ```
 
-This entry will not:
+次のエントリでは続行しません:
 
 ```
 <A><B>bar</B></A>
 ```
 
-This is all more or less intuitive. However, XML also allows multiple child elements at the same level, making it very difficult to extract the desired data. For example, one might see something like this:
+これは多かれ少なかれ直感的です。  ただし、XMLでは同じレベルで複数の子要素を使用できるため、目的のデータを抽出することが非常に困難です。  たとえば、次のようなものがあります。:
 
 ```
 <System>
@@ -75,15 +75,15 @@ This is all more or less intuitive. However, XML also allows multiple child elem
 </System>
 ```
 
-Simply saying `xml System.Data` will only extract the first result, "Windows 10". In order to extract the username, you can compare against an **attribute**; when the xml module finds a match, however, it extract the current **element** data:
+`xml System.Data`と言うだけでは、最初の結果"Windows 10"のみが抽出されます。  ユーザー名を抽出するために、**属性**と比較できます。  ただし、xmlモジュールが一致を検出すると、現在の** element **データを抽出します:
 
 ```
 xml System.Data[Name]=="Username"
 ```
 
-This query results in a new enumerated value named `Data` containing the string "gravwell".
+このクエリの結果、文字列"gravwell"を含む`Data`という名前の新しい列挙値が作成されます。
 
 
-### Supported Options
+### ポートされているオプション
 
-* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
+* `-e <arg>`: "-e"オプションは、レコード全体ではなく列挙値で動作します。

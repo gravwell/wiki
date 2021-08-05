@@ -1,35 +1,35 @@
 # Require
 
-The require module is a simple filter that examines entries in the pipeline and drops any entries that do not have specific enumerated fields.  The example use case is second level filtering when an upstream module is extracting metadata but may not always populate all names desired.  Require allows a search to ensure that only entries that actually have the desired feature sets make it through the module.
+requireモジュールは、パイプライン内のエントリを調べて、特定の列挙型フィールドを持たないエントリを削除する単純なフィルタです。  ユースケースの例は、アップストリームモジュールがメタデータを抽出しているが、必要なすべての名前を常に入力するとは限らない場合の第2レベルのフィルタリングです。  [必須]を選択すると、実際に目的の機能セットを持つエントリのみがモジュールを通過するように検索されます。
 
-By default, given a list of enumerated values the require module will pass an entry down the pipeline if it contains **at least one** of those enumerated value names. This behavior can be modified using flags as shown below.
+デフォルトでは、列挙値のリストを指定すると、requireモジュールは、列挙値の名前のうち少なくとも1つが含まれていれば、エントリをパイプラインに渡します。  この動作は、次に示すようにフラグを使って変更できます。
 
-## Supported Options
+## サポートされているオプション
 
-* `-s`: The `-s` option specifies strict operation: *all* listed enumerated values must exist, not just one. Essentially, changes the module from a logical OR operation to a logical AND.
-* `-v `: The `-v` option inverts the requirement logic, essentially saying "drop all entries that have any of these enumerated values." This flag implies the `-s` flag. Inverting the requirement module can be useful when upstream modules may or may not extract some field, and you only want to see entries that did not have the field.
+* `-s`: `-s`このオプションは厳密な操作を指定します。  列挙された列挙値は、1つだけではなくすべて存在しなければなりません。  基本的に、モジュールを論理OR演算から論理ANDに変更します。
+* `-v `: `-v`オプションは、本質的に「これらの列挙値のいずれかを持つすべてのエントリを削除する」と言って、要件ロジックを逆にします。  このフラグはフラグを意味し-sます。  上流のモジュールが何らかのフィールドを抽出するかもしれないし、しないかもしれない、そしてあなたがフィールドを持っていなかったエントリーだけを見たいとき、要求モジュールを逆にすることは役に立つことができます。
 
-## Example Usage
+## 使用例
 
-The following search takes packet entries and eliminates any which do not have a "SrcPort" enumerated value set, then counts how many times each source port appeared. This has the effect of eliminating all packets which are not TCP traffic:
+次の検索はパケットエントリを取得し、 "SrcPort"列挙値が設定されていないものを削除してから、各送信元ポートが出現した回数をカウントします。  これはTCPトラフィックではないすべてのパケットを排除する効果があります:
 
 ```
 tag=pcap packet tcp.SrcPort | require SrcPort | count by SrcPort | table SrcPort count
 ```
 
-The following search looks for DNS requests which do not have a successful IPv4 resolution by dropping all entries where the A field is present in an enumerated value:
+次の検索では、Aフィールドが列挙値に存在するすべてのエントリを削除することによって、IPv4解決が成功しなかったDNS要求を探します:
 
 ```
 tag=dns json Question.Hdr.Name Question.A | require -v A | count by Name | table Name count
 ```
 
-This search passes through any packet which has *either* a TCP source port or a UDP source port specified:
+この検索は、TCP送信元ポートまたはUDP送信元ポートのいずれかが指定されているパケットを通過します:
 
 ```
 tag=pcap packet tcp.SrcPort as tsp udp.SrcPort as usp | require tsp usp | table tsp usp
 ```
 
-This search drops any packet which does not have *both* an IPv4 source IP *and* a TCP source port:
+この検索は、IPv4送信元IP と TCP送信元ポートの両方を持たないパケットをすべてドロップします:
 
 ```
 tag=pcap packet tcp.SrcPort ipv4.SrcIP | require -s SrcPort SrcIP | table SrcPort SrcIP

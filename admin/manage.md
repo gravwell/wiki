@@ -1,17 +1,17 @@
-# Managing User-Created Objects
+# ユーザー作成オブジェクトの管理
 
-Users can create a variety of objects within the Gravwell system:
+ユーザーは、Gravwellシステム内でさまざまなオブジェクトを作成できます:
 
-* Resources
-* Saved/backgrounded searches
-* Scheduled searches/scripts
-* Dashboards
-* Templates
-* Userfiles
+* リソース
+* 保存/バックグラウンド検索
+* スケジュールされた検索/スクリプト
+* ダッシュボード
+* テンプレート
+* ユーザーファイル
 
-At this time, there are no GUI utilities for managing these objects as the administrator. However, the [Gravwell command-line client](#!cli/cli.md) can list, delete, and modify all of these object types using options in the **admin** sub-menu.
+現時点では、これらのオブジェクトを管理者として管理するためのGUIユーティリティはありません。 ただし、 [Gravwellコマンドラインクライアント](#!cli/cli.md)は、**admin**サブメニューのオプションを使用して、これらすべてのオブジェクトタイプを一覧表示、削除、および変更できます。
 
-To access these management options, run the client, log in as an administrator user, and enter the admin menu:
+これらの管理オプションにアクセスするには、クライアントを実行し、管理者ユーザーとしてログインして、管理メニューに入ります:
 
 ```
 $ ./client -s gravwell.example.org
@@ -59,29 +59,29 @@ sync_extractions    Force a sync of installed autoextractors to indexers
 resource            Create and manage resources
 scheduled_search    Manage scheduled searches
 templates           Manage templates
-pivots              Manage actionables
+pivots              Manage pivots
 userfiles           Manage user files
 kits                Manage and upload kits
 admin>
 ```
 
-The rest of this section will briefly describe management options for each object type.
+このセクションの残りの部分では、各オブジェクトタイプの管理オプションについて簡単に説明します。
 
-## Managing Dashboards
+## ダッシュボードの管理
 
-To list all dashboards on the system, from the **admin** menu run the `all_dashboards` command.
+システム上のすべてのダッシュボードを一覧表示するには、**admin**メニューから`all_dashboards`コマンドを実行します。
 
-To delete a dashboard, run the `del_dashboard` command from the **admin** menu.
+ダッシュボードを削除するには、**admin**メニューから`del_dashboard`コマンドを実行します。
 
-## Managing Searches
+## 検索の管理
 
-To list all searches on the system (saved, backgrounded, or active), run the `list_queries` command from the **admin** menu.
+システム上のすべての検索（保存済み、バックグラウンド、またはアクティブ）を一覧表示するには、**admin**メニューから`list_queries`コマンドを実行します。
 
-To delete a query, run the `delete_queries` command.
+クエリを削除するには、`delete_queries`コマンドを実行します。
 
-## Managing Resources
+## リソースの管理
 
-The admin sub-menu contains its own sub-menu for managing resources with commands mirroring those available in the regular resource menu:
+adminサブメニューには、通常のリソースメニューで使用可能なコマンドを反映したコマンドでリソースを管理するための独自のサブメニューが含まれています:
 
 ```
 admin>  resource
@@ -94,11 +94,11 @@ updatemeta          	Update resource metadata
 resource>  
 ```
 
-From this menu, the administrator can list *all* resources on the system, modify a resource's contents, change its name/description/ownership, or delete it.
+このメニューから、管理者はシステム上の*すべての*リソースを一覧表示したり、リソースの内容を変更したり、名前/説明/所有権を変更したり、削除したりできます。
 
-## Managing Scheduled Searches
+## スケジュールされた検索の管理
 
-The admin sub-menu contains its own sub-menu for managing scheduled searches:
+adminサブメニューには、スケジュールされた検索を管理するための独自のサブメニューが含まれています:
 
 ```
 admin>  scheduled_search
@@ -110,11 +110,11 @@ createscript        	Create a new scheduled search w/ script
 delete              	Delete a scheduled search
 ```
 
-From this menu, the administrator can manage *all* scheduled searches on the system, not just his/her own.
+管理者は、このメニューから、自分の検索だけでなく、システム上の*すべての*スケジュールされた検索を管理できます。
 
-## Managing templates/actionables
+## テンプレート/ピボットの管理
 
-Templates and actionables (called "pivots" here) each have a sub-menu within the admin menu (`templates` and `pivots`) with an identical set of commands for administrators:
+テンプレートとピボットにはそれぞれ、管理者メニュー内にサブメニュー（`templates`と`pivots`）があり、管理者向けの同じコマンドセットがあります。
 
 ```
 admin>  templates
@@ -128,20 +128,20 @@ updatemeta          	Update template metadata
 template>  quit
 admin>  pivots
 pivot>  help
-list                	List actionables
-create              	Create a new actionable
-update              	Upload new contents to an actionable
-delete              	Delete an actionable
-print               	Print actionable contents
-updatemeta          	Update actionabl metadata
+list                	List pivots
+create              	Create a new pivot
+update              	Upload new contents to a pivot
+delete              	Delete a pivot
+print               	Print pivot contents
+updatemeta          	Update pivot metadata
 pivot>
 ```
 
-These commands can be used to affect any template or actionable on the system.
+これらのコマンドを使用して、システム上の任意のテンプレートまたはピボットに影響を与えることができます。
 
-## Managing User Files
+## ユーザーファイルの管理
 
-As with templates, resources, etc., user files also have a sub-menu within the admin menu for admin management. Commands executed within the admin menu can operate on any user file in the whole system.
+テンプレートやリソースなどと同様に、ユーザーファイルにも管理メニュー内に管理管理用のサブメニューがあります。管理メニュー内で実行されるコマンドは、システム全体の任意のユーザーファイルで操作できます。
 
 ```
 admin>  userfiles

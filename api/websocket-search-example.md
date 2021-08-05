@@ -1,10 +1,10 @@
-# JSON exchanges
+# JSONでのデータ交換
 
-This page contains a full example of JSON transferred between client and server when initiating a "grep foo" search, complete with entry data retrieval.
+このページでは、"grep foo"の検索を初期化し、エントリーデータの検索を実施する際にクライアントとサーバ間でやりとりされるJSONデータの全容が例示されています。
 
-Example code can be found at [websocket-example-code](websocket-example-code.md).
+コードの例は、[websocketのサンプルコード](websocket-example-code.md)のページを参照してください。
 
-## Protocol initialization
+## プロトコル初期化
 ```
 C: {"Subs":["PONG","parse","search","attach"]}
 S: {"Resp":"ACK"}
@@ -13,14 +13,14 @@ C: {"type":"PONG","data":{}}
 S: {"type":"PONG","data":{}}
 ```
 
-## Parsing a query
+## クエリのパース
 
 ```
 C: {"type":"parse","data":{"SearchString":"grep foo"}}
 S: {"type":"parse","data":{"GoodQuery":true,"ParsedQuery":"grep foo","ModuleIndex":0}}
 ```
 
-## Launching a search
+## 検索の起動
 
 ```
 C: {"type":"search","data":{"SearchString":"grep foo","SearchStart":"2018-02-02T22:02:13.382Z","SearchEnd":"2018-02-02T23:02:13.382Z","Background":false}}
@@ -28,7 +28,7 @@ S: {"type":"search","data":{"SearchString":"grep foo","RenderModule":"text","Ren
 C: {"type":"search","data":{"OK":true,"OutputSearchSubproto":"search61"}}
 ```
 
-## Requesting Stats info and search details
+## 統計情報と検索詳細のリクエスト
 
 ```
 C: {"type":"search61","data":{"ID":4}}
@@ -37,7 +37,7 @@ C: {"type":"search61","data":{"ID":5}}
 S: {"type":"search61","data":{"ID":4,"SearchInfo":{"ID":"963542516","UID":1,"UserQuery":"grep foo","EffectiveQuery":"grep foo","StartRange":"2018-02-02T14:02:13.382-08:00","EndRange":"2018-02-02T15:02:13.382-08:00","Descending":true,"Started":"2018-02-02T15:02:16.208716435-08:00","LastUpdate":"0001-01-01T00:00:00Z","StoreSize":0,"IndexSize":0,"ItemCount":0,"TimeZoomDisabled":false,"Duration":"0s","Tags":["default"]},"EntryCount":0,"AdditionalEntries":false,"Finished":false}}
 ```
 
-## Requesting stats
+## 統計情報のリクエスト
 
 ```
 C: {"type":"search61","data":{"ID":2130706435,"Stats":{"SetCount":60}}}
@@ -49,7 +49,7 @@ S: {"type":"search61","data":{"ID":5,"Tags":{"default":0},"EntryCount":0,"Additi
 S: {"type":"search61","data":{"ID":2130706435,"Stats":{"Size":0,"Set":[{"TS":"2018-02-02T14:02:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:03:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:04:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:05:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:06:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:07:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:08:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:09:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:10:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:11:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:12:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:13:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:14:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:15:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:16:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:17:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:18:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:19:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:20:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:21:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:22:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:23:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:24:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:25:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:26:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:27:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:28:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:29:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:30:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:31:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:32:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:33:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:34:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:35:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:36:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:37:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:38:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:39:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:40:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:41:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:42:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:43:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:44:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:45:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:46:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:47:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:48:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:49:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:50:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:51:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:52:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:53:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:54:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:55:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:56:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:57:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:58:13.382-08:00","Stats":[]},{"TS":"2018-02-02T14:59:13.382-08:00","Stats":[]},{"TS":"2018-02-02T15:00:13.382-08:00","Stats":[]},{"TS":"2018-02-02T15:01:13.382-08:00","Stats":[{"Name":"grep","Args":"grep foo","InputCount":50,"OutputCount":50,"InputBytes":7552,"OutputBytes":7552,"Duration":8018989},{"Name":"sort","Args":"sort by time","InputCount":50,"OutputCount":50,"InputBytes":7552,"OutputBytes":7552,"Duration":25788253}]}],"RangeStart":"2018-02-02T14:02:13.382-08:00","RangeEnd":"2018-02-02T15:02:13.382-08:00","Current":"2018-02-02T14:02:13.382-08:00"},"EntryCount":50,"AdditionalEntries":false,"Finished":true}}
 ```
 
-## Requesting stats and resulting entries
+## 統計情報と得られたエントリーのリクエスト
 
 ```
 C: {"type":"search61","data":{"ID":4}}
@@ -68,7 +68,7 @@ S: {"type":"search61","data":{"ID":18,"EntryCount":50,"AdditionalEntries":true,"
 
 
 
-## Requesting more entries
+## 引き続いてのエントリーのリクエスト
 
 ```
 C: {"type":"search61","data":{"ID":18,"EntryRange":{"First":25,"Last":50,"StartTS":"2018-02-02T14:02:13.382-08:00","EndTS":"2018-02-02T15:02:13.382-08:00"}}}
@@ -76,7 +76,7 @@ S: {"type":"search61","data":{"ID":18,"EntryCount":50,"AdditionalEntries":false,
 ```
 
 
-## Teardown
+## 撤収作業
 ```
 C: {"type":"search61","data":{"ID":1}}
 S: {"type":"search61","data":{"ID":1}}

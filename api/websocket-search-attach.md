@@ -1,18 +1,19 @@
 ## Reattaching to an existing search
-Attaching to a search that already exists is performed through the existing websocket using another subprotocol named "attach" which must be negotiated along with "search", "parse", and "PONG" when connecting.
+### 既存の検索に再接続する
+既存の検索へのアタッチは、接続時に "search"、 "parse"、および "PONG"とネゴシエートする必要がある "attach"という名前の別のサブプロトコルを使用して既存のWebソケットを介して実行されます。
 
-#### Permissions
-Users must either be a member of the group the search is assigned, the owner, or an admin in order to attach to searches.  If a user is not allowed to attach to a search, a permission denied message will be sent back over the socket.
+#### 許可
+検索に参加するには、ユーザーは検索が割り当てられているグループのメンバー、所有者、または管理者である必要があります。ユーザーが検索にアタッチすることを許可されていない場合は、許可拒否メッセージがソケットを介して送り返されます。
 
-### Requesting to attach to a search
-Basically you just pass in the ID in and the server will respond with either an Error, or a new SubProto, RenderMod, RenderCmd, and SearchInfo.
+### 検索への添付を要求する
+基本的には単にIDを渡すだけで、サーバーはError、または新しいSubProto、RenderMod、RenderCmd、およびSearchInfoのいずれかで応答します。
 
-The new Subproto is the name of the new subprotocol which will be created to service the newly attached search.  This means that you can fire up the websocket and then attach to lots of searches at the same time.
+新しいサブプロトコルは、新しく接続された検索を処理するために作成される新しいサブプロトコルの名前です。つまり、WebSocketを起動してから、同時に多数の検索にアタッチすることができます。
 
-### Example transfers
-Below is an example of the client asking for a list of searches, then attaching to one.
+### 転送例
+以下は、検索リストを要求してからそれに添付するクライアントの例です。
 
-Asking for list of searches
+検索リストを尋ねる
 ```
 WEB GET /api/searchctrl:
 [
@@ -40,7 +41,7 @@ WEB GET /api/searchctrl:
 ]
 ```
 
-Transaction on the "attach" subprotocol
+「付加」サブプロトコル上のトランザクション
 ```
 SUBPROTO PUT attach:
 {
@@ -64,7 +65,7 @@ SUBPROTO GET attach:
         }
 }
 ```
-After negotiating a new attached search, continue on using the same old APIs as you would when normally taking to a renderer.
+新しい添付検索のネゴシエーションを行った後は、通常レンダラーを利用するときと同じ古いAPIを引き続き使用してください。
 ```
 SUBPROTO PUT attach5:
 {

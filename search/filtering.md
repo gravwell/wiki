@@ -1,26 +1,50 @@
-# Inline Filtering
+# インラインフィルタリング
 
-Very frequently you will want to filter entries in a query based on some criteria--perhaps you want to remove all HTTPS flows from Netflow data, or you only want to look at traffic originating in a certain subnet, or you need to match against a particular username in Windows logs. *Inline filtering* is an efficient way to filter down many different types of Gravwell data.
+非常に頻繁に、いくつかの基準に基づいてクエリ内のエントリをフィルタリングしたいと思うことがあるでしょう。*Inline filtering* は、Gravwellデータの多くの異なるタイプをフィルタリングする効率的な方法です。
 
-Gravwell extraction modules will typically allow *extracted* items to be *filtered* at extraction time. Consider the query below, which extracts the IPv4 destination IP and the TCP destination port from packets:
+Gravwell抽出モジュールは、通常、抽出時に*extracted*項目を*filtered*することを可能にします。パケットからIPv4宛先IPとTCP宛先ポートを抽出する以下のクエリを考えてみましょう。
 
 ```
 tag=pcap packet ipv4.DstIP tcp.DstPort
 ```
 
-We can add filters to, for example, only show packets destined for port 22 on IPs in the 10.0.0.0/8 subnet:
+例えば、10.0.0.0.0/8サブネット内のIPのポート22向けのパケットのみを表示するようにフィルタを追加することができます。
 
 ```
 tag=pcap packet ipv4.DstIP ~ 10.0.0.0/8 tcp.DstPort == 22
 ```
 
-Any entry whose DstIP and DstPort do not match the specified filters will be **dropped**.
+DstIPとDstPortが指定されたフィルタと一致しないエントリは、**dropped**されます。
 
-## Filtering Operations & Data Types
+以下のモジュールがフィルタリングをサポートしています。
 
-Within the Gravwell search pipeline, enumerated values can be a variety of different *types*, for example strings, integers, or IP addresses. Some types cannot be filtered in certain ways--it is not particularly useful to ask if an IP address is "less than" another IP address! The filtering operations supported by Gravwell are below:
+* [ax](ax/ax.md)
+* [canbus](canbus/canbus.md)
+* [cef](cef/cef.md)
+* [csv](csv/csv.md)
+* [fields](fields/fields.md)
+* [grok](grok/grok.md)
+* [ip](ip/ip.md)
+* [ipfix](ipfix/ipfix.md)
+* [j1939](j1939/j1939.md)
+* [json](json/json.md)
+* [kv](kv/kv.md)
+* [namedfields](namedfields/namedfields.md)
+* [netflow](netflow/netflow.md)
+* [packet](packet/packet.md)
+* [packetlayer](packetlayer/packetlayer.md)
+* [regex](regex/regex.md)
+* [slice](slice/slice.md)
+* [subnet](subnet/subnet.md)
+* [syslog](syslog/syslog.md)
+* [winlog](winlog/winlog.md)
+* [xml](xml/xml.md)
 
-| Operator | Name |
+## フィルタリング操作とデータタイプ
+
+Gravwell検索パイプラインの中では、列挙された値は、文字列、整数、IPアドレスなど、様々な異なる*types*になる可能性があります。あるIPアドレスが他のIPアドレスより "less than" かどうかを尋ねるのは特に有用ではありません! Gravwellがサポートするフィルタリング操作は以下の通りです。
+
+| オペレーター | 名前 |
 |----------|------|
 | == | Equal |
 | != | Not equal |
@@ -31,11 +55,11 @@ Within the Gravwell search pipeline, enumerated values can be a variety of diffe
 | ~ | Subset |
 | !~ | Not subset |
 
-Most of these operations are self-explanatory, but the subset operations deserve special mention. The subset operation (~) applies to strings and IP addresses; for strings, it means "the enumerated value contains the argument", while for IP addresses it means "the IP address is within the specified subnet. Thus, `json domainName ~ "gravwell.io"` would pass only those entries which have a JSON field named 'domainName' that contains the string "gravwell.io". Similarly, `packet ipv4.DstIP ~ 10.0.0.0/8` would pass only those entries whose IPv4 destination IP address is in the 10.0.0.0/8 subnet.
+これらの操作のほとんどは自明ですが、サブセット操作については特に言及する必要があります。サブセット操作(~)は文字列とIPアドレスに適用されます。文字列の場合は「列挙された値に引数が含まれている」ことを意味し、IPアドレスの場合は「IPアドレスが指定されたサブネット内にある」ことを意味します。したがって、`json domainName ~ "gravwell.io"`は、文字列 "gravwell.io "を含む'domainName'という名前のJSONフィールドを持つエントリのみを渡すことになります。同様に、`packet ipv4.DstIP ~ 10.0.0.0/8`は、IPv4の宛先IPアドレスが10.0.0.0/8サブネットにあるエントリのみを渡します。
 
-Each enumerated value type is compatible with some filters but not others:
+各列挙値型は、いくつかのフィルタと互換性がありますが、他のフィルタとは互換性がありません。
 
-| Enumerated Value Type | Compatible Operators |
+| 列挙値タイプ | 互換性のあるオペレータ |
 |-----------------------|----------------------|
 | string | ==, !=, ~, !~
 | byte slice | ==, !=, ~, !~
@@ -46,20 +70,20 @@ Each enumerated value type is compatible with some filters but not others:
 | boolean | ==, !=
 | duration | ==, !=, <, >, <=, >=
 
-## Filtering & Acceleration
+## フィルタリングと加速
 
-If your data is in an [accelerated well](#!configuration/accelerators.md), inline filters can be used to speed up your queries. Only the equal operator (==) will engage acceleration; filtering for equality allows the acceleration engine to look up entries which match the desired field.
+データが[アクセラレーションウェル](#!configuration/accelerators.md)にある場合は、インラインフィルターを使用してクエリを高速化できます。 等しい演算子（==）のみが加速を行います。 等式のフィルタリングにより、アクセラレーションエンジンは目的のフィールドに一致するエントリを検索できます。
 
-For acceleration to be engaged, your data needs to be configured to accelerate on the specified field. For instance, if you are indexing pcap data on the tcp.DstPort and tcp.SrcPort fields, the query `tag=pcap packet tcp.DstPort==22` will use the index, but `tag=pcap packet ipv4.SrcIP==10.0.0.1` will not.
+アクセラレーションを有効にするには、指定したフィールドでアクセラレーションするようにデータを構成する必要があります。 たとえば、tcp.DstPortフィールドとtcp.SrcPortフィールドでpcapデータにインデックスを付ける場合、クエリ `tag = pcap packet tcp.DstPort == 22`はインデックスを使用しますが、` tag = pcap packet ipv4.SrcIP == 10.0.0.1`はしません。
 
-## Built-in Keywords
+## ビルトインキーワード
 
-Gravwell implements some special shortcuts for filtering. When filtering IP addresses by subnet, you can specify the keywords PRIVATE and MULTICAST instead of giving a single subnet, e.g. `packet ipv4.DstIP ~ PRIVATE`. The keywords map to the following subnets:
+Gravwellはフィルタリングのためにいくつかの特別なショートカットを実装しています。IPアドレスをサブネットでフィルタリングする場合、単一のサブネットを指定する代わりに、PRIVATEとMULTICASTというキーワードを指定することができます(例: `packet ipv4.DstIP ~ PRIVATE`)。キーワードは以下のサブネットにマッピングされます。
 
 * PRIVATE: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8, 224.0.0.0/24, 169.254.0.0/16, fd00::/8, fe80::/10
 * MULTICAST: 224.0.0.0/4, ff00::/8
 
-## Filtering Examples
+## フィルタリングの例
 
 Regex:
 

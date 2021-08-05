@@ -1,20 +1,20 @@
 # Join
 
-The join module makes it easier to join two or more enumerated values into a single enumerated value. All enumerated value types are converted to strings and concatenated, except for byte slices which can only be joined to byte slices and will remain byte slices.
+joinモジュールを使用すると、2つ以上の列挙値を1つの列挙値に簡単に結合することができます。すべての列挙値型は文字列に変換されて連結されますが、バイトスライスにのみ結合でき、バイトスライスのままになるバイトスライスを除いては、バイトスライスのままになります。
 
-The following search will extract the destination IP and port from netflow records and join them with a semicolon as a separator, placing the result in an enumerated value named `dialstring`:
+以下の検索は、ネットフローレコードから宛先の IP とポートを抽出し、セミコロンを区切りとしてそれらを結合し、その結果を `dialstring` という名前の列挙値に配置します。
 
 ```
 tag=netflow netflow Dst DstPort | join -s : Dst DstPort as dialstring | table Dst DstPort dialstring
 ```
 
-Any number of enumerated values can be specified. An output enumerated value is specified with the `as` argument e.g. `join foo bar as output`; if not given, the first-listed enumerated value will be overwritten.
+列挙値は何個でも指定できます。列挙値の出力は `as` 引数で指定します。
 
-## Supported Options
+## サポートされているオプション
 
-* `-s <separator>`: Place the given separator string between the value of each enumerated value in the resulting string. If not specified, no separator will be used. Ignored for byte slices.
+* `-s <separator>`：結果として得られる文字列の列挙値の間に、指定された区切り文字列を配置します。指定しない場合、セパレータは使用されません。バイトスライスの場合は無視されます。
 
-## Example
+## 例
 
 ```
 tag=pcap packet ipv4.SrcIP ~ 192.168.0.0/16 tcp.SrcPort | join -s : SrcIP SrcPort as dialstring | unique SrcIP SrcPort | table SrcIP SrcPort dialstring

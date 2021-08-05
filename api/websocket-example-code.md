@@ -1,6 +1,6 @@
-## Example code
+## サンプルコード
 
-The following example code that logs in, grabs auth headers, sets up a websocket, performs a search query parse, and then logs out.
+次の例は、ログインし、authヘッダーを取得し、ウェブソケットを設定し、検索文のパースを実行し、ログアウトするコードです。
 
 ```javascript
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";

@@ -1,18 +1,18 @@
-# Mass File Ingester
+# マスファイルインジェスター
 
-The Mass File ingester is a very powerful but specialized tool for ingesting an archive of many logs from many sources.
+マスファイルインジェスターは、多数のソースからの多数のログのアーカイブを取り込むための、非常に強力だが特殊なツールです。
 
-## Basic Configuration
+##基本構成
 
-The Mass File ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the Mass File ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+マスファイルインジェスターは、[インジェスター](#!ingesters/ingesters.md#Global_Configuration_Parameters)で説明されている統一されたグローバル設定ブロックを使用します。他の多くのGravwellインジェスターと同様に、マスファイルインジェスターは複数のアップストリームインデクサー、TLS、クリアテキスト、名前付きパイプ接続、ローカルキャッシュ、ローカルロギングをサポートします。
 
-## Example use case
+## 使用例
 
-Gravwell users have used this tool when investigating a potential network breach. The user had Apache logs from over 50 different servers and needed to search them all. Ingesting them one after another causes poor temporal indexing performance. This tool was created to ingest the files while preserving the temporal nature of the log entries and ensuring solid performance.  The massfile ingester works best when the ingesting machine has enough space (storage and memory) to optimized the source logs prior to ingesting.  The optimization phase helps relieve pressure on the Gravwell storage system at ingest and during search, ensuring that incident responders can move quickly and get performant access to their log data in short order.
+Gravwellのユーザーは、ネットワーク侵害の可能性を調査する際にこのツールを使用しました。そのユーザーは50以上の異なるサーバーからのApacheログを持っており、それらすべてを検索する必要がありました。それらを次々と取り込むと、一時的にインデックス作成のパフォーマンスが悪くなります。このツールは、ログエントリの時間的性質を維持しながらファイルをインジェストし、確かなパフォーマンスを確保するために作成されました。マスファイルインジェスターは、インジェストするマシンが、インジェストする前にソースログを最適化するのに十分なスペース（ストレージとメモリ）を持っている場合に、最も効果的に機能します。最適化フェーズは、インジェスト時と検索時のGravwellストレージシステムへの負担を軽減し、インシデントレスポンダーが迅速に行動し、パフォーマンスの高いログデータへのアクセスを短時間で実現できるようにします。
 
-## Notes
+## メモ
 
-The mass file ingester is driven via command line parameters and is not designed to run as a service.  The code is available on [Github](https://github.com/gravwell/ingesters).
+マスファイルインジェスターは、コマンドラインのパラメータで動作し、サービスとして実行するようには設計されていません。 コードは[Github](https://github.com/gravwell/ingesters)で公開されています。
 
 ```
 Usage of ./massFile:

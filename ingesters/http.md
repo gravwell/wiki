@@ -1,18 +1,18 @@
 # HTTP
 
-The HTTP ingester sets up HTTP listeners on one or more paths. If an HTTP request is sent to one of those paths, the request's Body will be ingested as a single entry.
+HTTPインジェスターは、1つまたは複数のパスにHTTPリスナーを設定します。これらのパスのいずれかにHTTPリクエストが送信されると、リクエストのBodyが1つのエントリとして取り込まれます。
 
-This is an extremely convenient method for scriptable data ingest, since the `curl` command makes it easy to do a POST request using standard input as the body.
+`curl`コマンドを使えば、標準入力をボディにしたPOSTリクエストを簡単に行うことができるので、スクリプトによるデータ取り込みには非常に便利な方法です。
 
-## Basic Configuration
+## 基本設定
 
-The HTTP ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the HTTP ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+HTTPインジェスターは、[インジェスター](#!ingesters/ingesters.md#Global_Configuration_Parameters)で説明されている統一されたグローバル設定ブロックを使用します。 他の多くのGravwellインジェスターと同様に、HTTPインジェスターは複数のアップストリームインデクサー、TLS、クリアテキスト、名前付きパイプ接続、ローカルキャッシュ、ローカルロギングをサポートしています。
 
-## Listener Examples
+## リスナーの例
 
-In addition to the universal configuration parameters used by all ingesters, the HTTP POST ingester has two additional global configuration parameters that control the behavior of the embedded webserver.  The first configuration parameter is the `Bind` option, which specifies the interface and port that the webserver listens on.  The second is the `Max-Body` parameter, which controls how large of a POST the webserver will allow.  The Max-Body parameter is a good safety net to prevent rogue processes from attempting to upload very large files into your Gravwell instance as a single entry.  Gravwell can support up to 1GB as a single entry, but we wouldn't recommend it.
+すべてのインジェスターで使用される普遍的な構成パラメータに加えて、HTTP POSTインジェスターには、組み込みウェブサーバの動作を制御する2つの追加グローバル設定パラメータがあります。 1つ目の設定パラメータは`Bind`オプションで、ウェブサーバがリッスンするインターフェースとポートを指定します。 2つ目は、`Max-Body`パラメータで、ウェブサーバが許容するPOSTの大きさを制御するものです。Max-Bodyパラメータは、不正なプロセスが非常に大きなファイルを1つのエントリとしてGravwellインスタンスにアップロードしようとするのを防ぐための安全策として有効です。Gravwellは1つのエントリーとして1GBまでサポートしていますが、それを推奨はしません。
 
-Multiple "Listener" definitions can be defined allowing specific URLs to send entries to specific tags.  In the example configuration we define two listeners which accept data from a weather IOT device and a smart thermostat.
+複数のリスナーを定義することで、特定のURLから特定のタグにエントリーを送信することができます。 設定例では、天気予報のIoTデバイスとスマートサーモスタットからのデータを受け付ける2つのリスナーを定義しています。
 
 ```
  Example using basic authentication
@@ -56,9 +56,9 @@ Multiple "Listener" definitions can be defined allowing specific URLs to send en
 	TokenValue=Secret
 ```
 
-## Splunk HEC Compatibility
+## Splunk HEC 互換性
 
-The HTTP ingester supports a listener block that is API compatible with the Splunk HTTP Event Collector.  This special listener block enables a simplified configuration so that any endpoint that can send data to the Splunk HEC can also send to the Gravwell HTTP Ingester.  The HEC compatible configuration block looks like so:
+HTTPインジェスターは、Splunk HTTPイベントコレクター(HEC)とAPI互換性のあるリスナーブロックをサポートしています。 この特別なリスナーブロックにより、Splunk HECにデータを送信できるエンドポイントであれば、Gravwell HTTPインジェスターにもデータを送信できるように設定を簡略化することができます。 HEC互換の設定ブロックは以下のようになります。
 
 ```
 [HEC-Compatible-Listener "testing"]
@@ -68,15 +68,15 @@ The HTTP ingester supports a listener block that is API compatible with the Splu
 
 ```
 
-The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items, if the `URL` configuration item is omitted it will default to `/services/collector/event`.
+`HEC-Compatible-Listener`ブロックは、`TokenValue`と`Tag-Name`の設定を必要とし、`URL`の設定が省略された場合は、`/services/collector/event`がデフォルトとなります。
 
-Both `Listener` and `HEC-Compatible-Listener` configuration blocks can be specified on the same HTTP ingester.
+`Listener`と`HEC-Compatible-Listener`の両設定ブロックは、同じHTTPインジェスターに指定することができます。
 
-## Health Checks
+## ヘルスチェック
 
-Some systems (such as AWS load balancers) require an unauthenticated URL that can be probed and interpreted as "proof of life".  The HTTP ingester can be configured to provide an a URL which when accessed with any method, body, and/or query parameters will always return a 200 OK.  To enable this health check endpoint add the `Health-Check-URL` stanza to the Global configuration block.
+一部のシステム（AWSロードバランサーなど）では、プローブして生存確認できる認証されていないURLを必要とします。HTTPインジェスターは、任意のメソッド、ボディ、クエリパラメータでアクセスした場合に、常に200 OKを返すようなURLを提供するように設定できます。 このヘルスチェックエンドポイントを有効にするには、グローバル設定ブロックに`Health-Check-URL`スタンザを追加します。
 
-Here is a minimal example configuration snippet with the health check URL `/logbot/are/you/alive`:
+ここでは、ヘルスチェックURLを `/logbot/are/you/alive` とした最小限の設定例を紹介します:
 
 ```
 [Global]
@@ -91,27 +91,27 @@ Health-Check-URL="/logbot/are/you/alive"
 
 ```
 
-## Installation
+## インストール
 
-If you're using the Gravwell Debian repository, installation is just a single apt command:
+GravwellのDebianリポジトリを使用している場合、インストールはaptコマンド1つで完了します:
 
 ```
 apt-get install gravwell-http-ingester
 ```
 
-Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+それ以外の場合は、[ダウンロード](#!quickstart/downloads.md)からインストーラーをダウンロードしてください。Gravwellサーバのターミナルを使って、スーパーユーザーとして（`sudo`コマンドなどで）以下のコマンドを実行し、インジェスターをインストールします。:
 
 ```
 root@gravserver ~ # bash gravwell_http_ingester_installer_3.0.0.sh
 ```
 
-If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately. However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, the installer will prompt for the authentication token and the IP address of the Gravwell indexer. You can set these values during installation or leave them blank and modify the configuration file in `/opt/gravwell/etc/gravwell_http_ingester.conf` manually.
+Gravwellのサービスが同じマシンに存在する場合、インストールスクリプトは自動的に`Ingest-Auth`パラメータを抽出し、適切に設定します。しかし、インジェスターが既存のGravwellバックエンドと同じマシンに常駐していない場合、インストーラは認証トークンとGravwellインデクサーのIPアドレスを要求します。これらの値はインストール時に設定するか、あるいは空欄にして、`/opt/gravwell/etc/gravwell_http_ingester.conf`の設定ファイルを手動で変更することができます。
 
-## Configuring HTTPS
+## HTTPS設定
 
-By default the HTTP Ingester runs a cleartext HTTP server, but it can be configured to run an HTTPS server using x509 TLS certificates.  To configure the HTTP Ingester as an HTTPS server provide a certificate and key PEM files in the Global configuration space using the `TLS-Certificate-File` and `TLS-Key-File` parameters.
+デフォルトでは、HTTPインジェスターはクリアテキストのHTTPサーバを実行しますが、x509 TLS証明書を使ってHTTPSサーバを実行するように構成することができます。 HTTPインジェスターをHTTPSサーバとして構成するには、グローバル設定で、`TLS-Certificate-File`と`TLS-Key-File`パラメータを使い、証明書と鍵のPEMファイルを提供します。
 
-An example global configuration with HTTPS enabled might look like the following:
+HTTPSを有効にしたグローバル設定の例は以下のようになります。:
 
 ```
 [Global]
@@ -119,9 +119,9 @@ An example global configuration with HTTPS enabled might look like the following
 	TLS-Key-File=/opt/gravwell/etc/key.pem
 ```
 
-### Listener Authentication
+### リスナーの認証
 
-Each HTTP Ingester listener can be configured to enforce authentication.  The supported authentication methods are:
+各HTTPインジェスターリスナーは、認証を実施するように設定できます。 サポートされている認証方法は以下の通りです:
 
 * none
 * basic
@@ -130,15 +130,15 @@ Each HTTP Ingester listener can be configured to enforce authentication.  The su
 * preshared-token
 * preshared-parameter
 
-When specifying an authentication system other than none credentials must be provided.  The `jwt` and `cookie` and cookie authentication systems require a username and password while the `preshared-token` and `preshared-parameter` must provide a token value and optional token name.
+none以外の認証システムを指定する場合は、認証情報を提供する必要があります。`jwt`や`cookie`、Cookie認証システムでは、ユーザー名とパスワードが必要です。一方、`preshared-token`や`preshared-parameter`では、トークンの値とオプションのトークン名を提供する必要があります。
 
-Warning: Like any other webpage, authentication is NOT SECURE over cleartext connections and attackers that can sniff traffic can capture tokens and cookies.
+警告: 他のウェブページと同様に、認証は平文での接続では安全ではなく、トラフィックを盗聴できる攻撃者はトークンやクッキーをキャプチャすることができます。
 
-### No Authentication
+### 認証なし
 
-The default authentication method is none, allowing anyone that can reach the ingester to push entries.  The `basic` authentication mechanism uses HTTP Basic authentication, where a username and password is base64 encoded and sent with every request.
+デフォルトの認証方法はなしで、インジェスターに到達できる人なら誰でもエントリーをプッシュできます。 `basic`認証は、HTTP Basic認証を使用しており、ユーザー名とパスワードをbase64でエンコードして、リクエストごとに送信します。
 
-Here is an example listener using the basic authentication system:
+以下は、basic認証システムを使用したリスナーの例です:
 
 ```
 [Listener "basicauth"]
@@ -149,17 +149,17 @@ Here is an example listener using the basic authentication system:
 	Password=secretpassword
 ```
 
-An example curl command to send an entry with basic authentication might look like:
+basic認証でエントリーを送信するcurlコマンドの例は次のようになります:
 
 ```
 curl -d "only i can say hi" --user secretuser:secretpassword -X POST http://10.0.0.1:8080/basic/data
 ```
 
-### JWT Authentication
+### JWT認証
 
-The JWT authentication system uses a cryptographically signed token for authentication.  When using jwt authentication you must specify an Login URL where clients will authenticate and receive a token which must then be sent with each request.  The jwt tokens expire after 48 hours.  Authentication is performed by sending a `POST` request to the login URL with the `username` and `password` form fields populated.
+JWT認証システムは、暗号化されたトークンを使って認証を行います。 JWT認証を使用する場合は、クライアントが認証を行うログインURLを指定し、リクエストごとに送信する必要のあるトークンを受け取る必要があります。JWTトークンは48時間で失効します。 認証は、`username`と`password`のフォームフィールドを入力した`POST`リクエストをログインURLに送信することで行われます。
 
-Authenticating with the HTTP ingester using jwt authentication is a two step process and requires an additional configuration parameter.  Here is an example configuration:
+HTTPインジェスターでJWT認証を使って認証するには、2つのステップがあり、追加の設定パラメータが必要です。 以下に設定例を示します:
 
 ```
 [Listener "jwtauth"]
@@ -171,18 +171,18 @@ Authenticating with the HTTP ingester using jwt authentication is a two step pro
 	Password=secretpassword
 ```
 
-Sending entries requires that endpoints first authenticate to obtain a token, the token can then be reused for up to 48 hours.  If a request receives a 401 response, clients should re-authenticate.  Here is an example using curl to authenticate and then push data.
+エントリを送信するには、エンドポイントが最初に認証を行ってトークンを取得する必要があり、トークンは最大48時間まで再利用できます。リクエストが401レスポンスを受け取った場合、クライアントは再度認証を行う必要があります。ここでは、curlを使って認証を行い、データをプッシュする例を示します。
 
 ```
 x=$(curl -X POST -d "username=user1&password=pass1" http://127.0.0.1:8080/jwt/login) #grab the token and stuff it into a variable
 curl -X POST -H "Authorization: Bearer $x" -d "this is a test using JWT auth" http://127.0.0.1:8080/jwt/data #send the request with the token
 ```
 
-### Cookie Authentication
+### Cookie認証
 
-The cookie authentication system is virtually identical to JWT authentication other than the method of controlling state.  Listeners that use cookie authentication require that a client login with a username and password to acquire a cookie which is set by the login page.  Subsequent requests to the ingest URL must provide the cookie in each request.
+cookie認証システムは、状態を制御する方法以外はJWT認証とほぼ同じです。 クッキー認証を使用するリスナーは、クライアントがユーザー名とパスワードでログインして、ログインページで設定されたクッキーを取得する必要があります。 インジェストURLへの後続のリクエストは、各リクエストでクッキーを提供しなければなりません。
 
-Here is an example configuration block:
+ここでは、設定ブロックの例を示します:
 
 ```
 [Listener "cookieauth"]
@@ -194,20 +194,20 @@ Here is an example configuration block:
 	Password=secretpassword
 ```
 
-An example set of curl commands that login and retrieve the cookie before ingesting some data might look like:
+ログインして、データを取り込む前にクッキーを取得するcurlコマンドの例は次のようになります:
 
 ```
 curl -c /tmp/cookie.txt -d "username=user1&password=pass1" localhost:8080/cookie/login
 curl -X POST -c /tmp/cookie.txt -b /tmp/cookie.txt -d "this is a cookie data" localhost:8080/cookie/data
 ```
 
-### Preshared Token
+### プリシェアド・トークン
 
-The Preshared token authentication mechanism uses a preshared secret rather than a login mechanism.  The preshared secret is expected to be sent with each request in an Authorization header.  Many HTTP frameworks expect this type of ingest, such as the Splunk HEC and supporting AWS Kinesis and Lambda infrastructure.  Using a preshared token listener we can define a capture system that is a plugin replacement for Splunk HEC.
+プリシェアド・トークン認証メカニズムは、ログインメカニズムではなく、事前に共有されたsecretを使用します。事前共有secretは、認証ヘッダーで各リクエストとともに送信されることが期待されます。多くのHTTPフレームワークは、Splunk HECやサポートするAWS KinesisやLambdaインフラストラクチャのように、このタイプのインジェストを期待しています。事前共有トークンのリスナーを使用すると、Splunk HEC のプラグイン代替となるキャプチャシステムを定義することができます。
 
-Note: If you do not define a `TokenName` value, the default value of `Bearer` will be used.
+注：`TokenName`の値を定義しない場合、デフォルト値の`Bearer`が使用されます。
 
-An example configuration which defines a preshared token:
+プリシェアド・トークンを定義する設定例です。:
 
 ```
 [Listener "presharedtoken"]
@@ -218,19 +218,19 @@ An example configuration which defines a preshared token:
 	TokenValue=barbaz
 ```
 
-An example curl command the sends data using the preshared secret:
+プリシェアド・シークレットを使ってデータを送信するcurlコマンドの例です:
 
 ```
 curl -X POST -H "Authorization: foo barbaz" -d "this is a preshared token" localhost:8080/preshared/token/data
 ```
 
-### Preshared Parameter
+### プリシェアド・パラメータ
 
-The Preshared Parameter authentication mechanism uses a preshared secret that is provided as a query parameter.  The `preshared-parameter` system can be useful when scripting or using data producers that typically do not support authentication by embedding the authentication token into the URL.
+プリシェアド・パラメータ認証機構は、クエリパラメータとして提供される事前共有secretを使用します。`Preshared-parameter`システムは、スクリプトを書いたり、認証トークンをURLに埋め込んで通常は認証をサポートしていないデータプロデューサを使用する場合に便利です。
 
-Note: Embedding the authentication token into the URL means the proxies and HTTP logging infrastructure may capture and log authentication tokens.
+注：認証トークンをURLに埋め込むことは、プロキシやHTTPロギングインフラが認証トークンを捕捉してログに残すことを意味します。
 
-An example configuration which defines a preshared parameter:
+プリシェアド・パラメーターを定義した設定例です:
 
 ```
 [Listener "presharedtoken"]
@@ -241,17 +241,17 @@ An example configuration which defines a preshared parameter:
 	TokenValue=barbaz
 ```
 
-An example curl command the sends data using the preshared secret:
+プリシェアド・シークレットを使ってデータを送信するcurlコマンドの例です:
 
 ```
 curl -X POST -d "this is a preshared parameter" localhost:8080/preshared/parameter/data?foo=barbaz
 ```
 
-## Listener Methods
+## リスナー・メソッド
 
-The HTTP Ingester can be configured to use virtually any method, but data is always expected to be in the body of the request.
+HTTPインジェスターはほぼすべてのメソッドを使用するように設定できますが、データは常にリクエストのボディにあることが期待されます。
 
-For example, here is a Listener configuration that expects the PUT method:
+例えば、PUTメソッドを想定したリスナーの設定を以下に示します:
 
 ```
 [Listener "test"]
@@ -260,13 +260,13 @@ For example, here is a Listener configuration that expects the PUT method:
 	Tag-Name=stuff
 ```
 
-The corresponding curl command would be:
+対応するcurlコマンドは次のようになります:
 
 ```
 curl -X PUT -d "this is a test 2 using basic auth" http://127.0.0.1:8080/data
 ```
 
-The HTTP Ingester can go out of spec on methods, accepting almost any ASCII string that does not contain special characters.
+HTTPインジェスターは、特殊文字を含まないほとんどすべてのASCII文字列を受け入れることができ、メソッドの仕様を変更することができます。
 
 ```
 [Listener "test"]

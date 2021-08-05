@@ -1,7 +1,7 @@
-# Gravwell Docs
+# Gravwellドキュメント
 
-[Home](index.md)
-[Changelogs](changelog/list.md)
+[ホーム](index.md)
+[チェンジログ](changelog/list.md)
 
 <li class="search-form-container">
 <form id="search" class="form-inline" onsubmit="goToSearch(this);return false">

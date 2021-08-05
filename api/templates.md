@@ -1,29 +1,24 @@
-# Templates API
+# テンプレート API
 
-Templates are special objects which define a Gravwell query containing *variables*. Multiple templates using the same variable(s) can be included in a dashboard to create a powerful investigative tool--for instance, templates which expect an IP address as their variable can be used to create an IP address investigation dashboard.
+テンプレートとは、Gravwellのクエリを定義する特殊なオブジェクトです。同じ変数を使った複数のテンプレートをダッシュボードに組み込むことで、強力な調査ツールを作ることができます。例えば、IPアドレスを変数とするテンプレートを使って、IPアドレス調査ダッシュボードを作ることができます。
 
-## Data Structure
+## データ構造
 
-The template structure contains the following fields:
+テンプレート構造には、以下のフィールドがあります。
 
-* GUID: A global reference for the template. Persists across kit installation. (see next section)
-* ThingUUID: A unique ID for this particular template instance. (see next section)
-* UID: The numeric ID of the template's owner.
-* GIDs: An array of numeric group IDs with which this template is shared.
-* Global: A boolean, set to true if template should be visible to all users (admin only).
-* Name: The template's name.
-* Description: A more detailed description of the template.
-* Updated: A timestamp representing the last update time for the template.
-* Labels: An array of strings containing [labels](#!gui/labels/labels.md).
-* Contents: The actual definition of the template itself (see below).
-  * Contents.query: The template query.
-  * Contents.variable: Variable name in query.
-  * Contents.variableLabel: Label displayed to the user.
-  * Contents.variableDescription: Hint or additional information displayed to the user.
-  * Contents.required: True if it's required a value from the user when running the template.
-  * Contents.testValue: Default value for preview and validation.
+* GUID： テンプレートのグローバルリファレンス。キットをインストールしても永続します。(次のセクションを参照)
+* ThingUUID：この特定のテンプレート・インスタンスのためのユニークなID。(次のセクションを参照)
+* UID：テンプレートの所有者の数字によるIDです。
+* GIDs： このテンプレートが共有されているグループIDの配列
+* Global： ブーリアン値で、テンプレートをすべてのユーザー（adminのみ）に表示する場合はtrueに設定されます。
+* Name： テンプレートの名前です。
+* Description： テンプレートの詳細な説明です。
+* Updated： テンプレートの最終更新時刻を表すタイムスタンプ
+* Labels： [ラベル](#!gui/labels/labels.md)を含む文字列の配列です。
+* コンテンツ。コンテンツ： テンプレートの実際の定義 (下記参照)
 
-Although the webserver does not care what goes into the `Contents` field (except that it must be valid JSON), there is a particular format which the **GUI** uses. The Contents field should conform to this structure in order to be usable for the GUI:
+
+ウェブサーバは、`Contents`フィールドに何が入るかは気にしませんが(有効なJSONでなければならないことを除いて)、**GUI**が使用する特定のフォーマットがあります。GUIで使用するためには、Contentsフィールドがこの構造に準拠している必要があります。
 
 ```
 Contents: {
@@ -36,7 +31,7 @@ Contents: {
 };
 ```
 
-The following is a complete Typescript definition of the template data type:
+以下は、テンプレートデータタイプの完全なTypescriptの定義です：
 
 ```
 interface RawTemplate {
@@ -60,29 +55,29 @@ interface RawTemplate {
 }
 ```
 
-## Naming: GUIDs and ThingUUIDs
+## ネーミング GUIDとThingUUID
 
-Templates have two different IDs attached to them: a GUID, and a ThingUUID. They are both UUIDs, which can be confusing--why have two identifiers for one object? We will attempt to clarify in this section.
+テンプレートには、GUIDとThingUUIDという2つの異なるIDが付けられています。これらはどちらもUUIDですが、これは混乱を招く恐れがあります。このセクションではそれを明らかにしていきます。
 
-In Gravwell, a dashboard may refer to a particular template. This dashboard & corresponding template may also be packed into a kit for distribution to other users. The dashboard needs a way to refer to the template that will **persist** when packed in a kit and installed elsewhere, so we introduce the GUID as a "global" name for the template: wherever the kit gets installed, that template will have the same GUID. However, multiple users are allowed to install the same kit, so we also need a different identifier for *for each individual instantiation* of the template. This role is filled by the ThingUUID field.
+Gravwellでは、ダッシュボードは特定のテンプレートを指すことがあります。このダッシュボードと対応するテンプレートは、他のユーザーに配布するためにキットにまとめられることもあります。ダッシュボードは、キットにまとめられて他の場所にインストールされたときにも、テンプレートを参照する方法が必要です。そこで、テンプレートの「グローバル」な名前としてGUIDを導入しています。しかし、複数のユーザーが同じキットをインストールすることが許されているので、テンプレートの個々のインスタンス化*のために異なる識別子も必要です。この役割を果たすのが、ThingUUIDフィールドです。
 
-Consider an example: I build a kit which includes a dashboard and a template. I create the template from scratch, so it gets assigned a random GUID, `e80293f0-5732-4c7e-a3d1-2fb779b91bf7`, and a random ThingUUID, `c3b24e1e-5186-4828-82ee-82724a1d4c45`. I then create a tile in the dashboard which refers to the template by its GUID (`e80293f0-5732-4c7e-a3d1-2fb779b91bf7`) and bundle both template & dashboard into a kit. Another user on the same system then installs this kit for themselves, which instantiates a template with the **same** GUID (`e80293f0-5732-4c7e-a3d1-2fb779b91bf7`) but a **random** ThingUUID (`f07373a8-ea85-415f-8dfd-61f7b9204ae0`). When the user opens the dashboard, the dashboard will ask for a template with GUID == `e80293f0-5732-4c7e-a3d1-2fb779b91bf7`. The webserver will return that user's instance of the template, with ThingUUID == `f07373a8-ea85-415f-8dfd-61f7b9204ae0`.
+例を挙げてみましょう。ダッシュボードとテンプレートを含むキットを作ります。テンプレートをゼロから作成するので、ランダムなGUID、`e80293f0-5732-4c7e-a3d1-2fb779b91bf7`と、ランダムなThingUUID、`c3b24e1e-5186-4828-82ee-82724a1d4c45`が割り当てられます。そして、ダッシュボードに、テンプレートをGUID（`e80293f0-5732-4c7e-a3d1-2fb779b91bf7`）で参照するタイルを作成し、テンプレートとダッシュボードの両方をキットにバンドルします。同じシステムの別のユーザーが自分用にこのキットをインストールすると、**同じ** GUID (`e80293f0-5732-4c7e-a3d1-2fb779b91bf7`)で**ランダム**なThingUUID (`f07373a8-ea85-415f-8dfd-61f7b9204ae0`)を持つテンプレートがインスタンス化されます。ユーザーがダッシュボードを開くと、ダッシュボードはGUID == `e80293f0-5732-4c7e-a3d1-2fb779b91bf7`のテンプレートを要求します。ウェブサーバは、ThingUUID == `f07373a8-ea85-415f-8dfd-61f7b9204ae0`のテンプレートのそのユーザのインスタンスを返します。
 
-Note that if a user installs a template with the same GUID as a global template, theirs will transparently override the global one, but only for themselves. If multiple templates exist with the same GUID, they are prioritized in the following order:
+ユーザーがグローバルテンプレートと同じGUIDのテンプレートをインストールした場合、そのユーザーのテンプレートは透過的にグローバルテンプレートをオーバーライドしますが、それは自分自身に対してのみであることに注意してください。同じGUIDで複数のテンプレートが存在する場合は、以下の順序で優先されます。
 
-* Owned by the user
-* Shared with a group the user is a member of
-* Global
+* ユーザーが所有しているもの
+* ユーザーが属しているグループで共有されているもの
+* グローバル
 
-This means that if a user is accessing a global dashboard, they can override a particular template referred to by the dashboard by creating their own copy of the template with the same GUID. In practice, this should be rare.
+これは、ユーザーがグローバルなダッシュボードにアクセスしている場合、同じGUIDでテンプレートの独自のコピーを作成することで、ダッシュボードが参照する特定のテンプレートをオーバーライドできることを意味します。実際には、このようなことはほとんどないはずです。
 
-### Accessing Templates via GUID vs ThingUUID
+### GUIDとThingUUIDの違いによるテンプレートへのアクセス
 
-Regular users must always access templates by GUID. Admin users may refer to a template by ThingUUID instead, but the `?admin=true` parameter must be set in the request URL.
+一般ユーザーは常にGUIDでテンプレートにアクセスする必要があります。管理者ユーザーは、ThingUUIDでテンプレートを参照することができますが、リクエストURLに`?admin=true`パラメータを設定する必要があります。
 
-## Create a template
+## テンプレートの作成
 
-To create a template, issue a POST to `/api/templates`. The body should be a JSON structure with a 'Contents' field containing any valid JSON, and optionally a GUID, Labels, Name, and Description. The following are all valid:
+テンプレートを作成するには、`/api/templates`にPOSTを発行します。ボディは、任意の有効なJSONを含む「Contents」フィールドと、オプションでGUID、ラベル、名前、説明を含むJSON構造でなければなりません。以下のものはすべて有効です。
 
 ```
 {
@@ -158,13 +153,13 @@ To create a template, issue a POST to `/api/templates`. The body should be a JSO
 }
 ```
 
-The API will respond with the GUID of the newly-created template. If a GUID is specified in the request, that GUID will be used. If no GUID is specified, a random GUID will be generated.
+APIは、新しく作成されたテンプレートのGUIDを応答します。リクエストにGUIDが指定されている場合は、そのGUIDが使用されます。GUIDが指定されていない場合は、ランダムなGUIDが生成されます。
 
-Note: At this time, the `UID`, `GIDs`, and `Global` fields cannot be set during template creation. They must instead be set via an update call (see below).
+注：現時点では、`UID`、`GIDs`、`Global`の各フィールドは、テンプレートの作成時には設定できません。これらのフィールドは、アップデートコールで設定する必要があります。
 
-## List templates
+## テンプレートの一覧表示
 
-To list all templates available to a user, do a GET on `/api/templates`. The result will be an array of templates:
+あるユーザーが利用できるすべてのテンプレートをリストアップするには、`/api/templates`を GET します。結果として、テンプレートの配列が得られます。
 
 ```
 [
@@ -196,9 +191,9 @@ To list all templates available to a user, do a GET on `/api/templates`. The res
 
 ```
 
-## Fetch a single template
+## 一つのテンプレートを取得
 
-To fetch a single template, issue a GET request to `/api/templates/<guid>`. The server will respond with the contents of that template, for instance a GET on `/api/templates/780b1d31-e46b-4460-ad83-2fc11c34a162` might return:
+1つのテンプレートを取得するには、`/api/templates/<guid>`に対してGETリクエストを発行します。例えば、`/api/templates/780b1d31-e46b-4460-ad83-2fc11c34a162`をGETすると、そのテンプレートのコンテンツが返ってきます。
 
 ```
 {
@@ -227,31 +222,31 @@ To fetch a single template, issue a GET request to `/api/templates/<guid>`. The 
 }
 ```
 
-Note that an administrator can fetch this particular template explicitly by using the ThingUUID and the admin parameter, e.g. `/api/templates/1b36a1d7-a5ac-11ea-b07e-7085c2d881ce?admin=true`.
+なお、管理者は、ThingUUIDとadminパラメータを使用して、この特定のテンプレートを明示的に取得することができます。
 
-## Update a template
+## テンプレートの更新
 
-To update a template, issue a PUT request to `/api/templates/<guid>`. The request body should be identical to that returned by a GET on the same path, with any desired elements changed. Note that the GUID and ThingUUID cannot be changed; only the following fields may be modified:
+テンプレートを更新するには、`/api/templates/<guid>`にPUTリクエストを発行します。 リクエストの本文は、必要な要素を変更して、同じパスのGETによって返されるものと同じである必要があります。 GUIDとThingUUIDは変更できないことに注意してください。 次のフィールドのみを変更できます：
 
-* Contents: The actual body/contents of the template
-* Name: Change the name of the template
-* Description: Change the template's description
-* GIDs: May be set to an array of 32-bit integer group IDs, e.g. `"GIDs":[1,4]`
-* UID: (Admin only) Set to a 32-bit integer
-* Global: (Admin only) Set to a boolean true or false; Global templates are visible to all users.
+* Contents： テンプレートの実際のボディ／コンテンツ
+* Name： テンプレートの名前を変更
+* Description： テンプレートの説明を変更
+* GIDs： 32ビット整数のグループIDの配列を設定することができます。
+* UID： (管理者のみ) 32ビット整数で設定可能
+* Global： (Admin only) 真偽値を設定します。グローバルテンプレートはすべてのユーザーに表示されます。
 
-Note: Leaving any of these field blank will result in the template being updated with a null value for that field!
+注：これらのフィールドを空白にすると、そのフィールドのNULL値でテンプレートが更新されます。
 
-## Delete a template
+## テンプレートの削除
 
-To delete a template, issue a DELETE request to `/api/templates/<guid>`.
+テンプレートを削除するには、`/api/templates/<guid>`にDELETEリクエストを発行します。
 
-## Admin actions
+## 管理者権限
 
-Admin users may occasionally need to view all templates on the system, modify them, or delete them. Because GUIDs are not necessarily unique, the admin API must refer instead to the unique UUID Gravwell uses internally to store the items. Note that the example template listings above include a field named "ThingUUID". This is the internal, unique identifier for that template.
+管理者ユーザーは、システム上のすべてのテンプレートを表示したり、修正したり、削除したりする必要がある場合があります。GUIDは必ずしも一意ではないので、管理者APIはGravwellがアイテムを保存するために内部的に使用している一意のUUIDを参照する必要があります。上記のテンプレートリストの例では、"ThingUUID "というフィールドが含まれていることに注意してください。これは、そのテンプレートの内部的な一意の識別子です。
 
-An administrator user may obtain a global listing of all templates in the system with a GET request on `/api/templates?admin=true`.
+管理者ユーザーは、`/api/templates?admin=true`のGETリクエストで、システム内の全テンプレートのグローバルリストを取得することができます。
 
-The administrator may then update a particular template with a PUT to `/api/templates/<ThingUUID>?admin=true`, substituting in the ThingUUID value for the desired template. The same pattern applies to deletion.
+その後、管理者は、`/api/templates/<ThingUUID>?admin=true`へのPUTで、希望するテンプレートのThingUUID値に置き換えて、特定のテンプレートを更新することができます。削除の場合も同じパターンです。
 
-An administrator may access or delete a particular template with a GET or DELETE request (respectively) on `/api/templates/<ThingUUID>?admin=true`.
+管理者は、`/api/templates/<ThingUUID>?admin=true`へのGETまたはDELETEリクエスト（それぞれ）で、特定のテンプレートにアクセスまたは削除することができます。

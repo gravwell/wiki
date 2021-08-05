@@ -1,6 +1,6 @@
 # Text
 
-The text renderer is designed to show human readable entries in a text format. Any non-printable characters will be converted to the ‘.’ character. Text also fully supports Unicode and can render non-ASCII characters. Text is the default renderer and is applied if no renderer is specified.
-Text also has a default limit of approximately 1000 characters per entry, to prevent accidentally displaying multiple megabytes of raw data. To increase the maximum length of output add the `limit <n>` argument, where `n` is the number of characters to display.
+textレンダラは、人間が読めるエントリをテキスト形式で表示するように設計されています。  印刷できない文字はすべて '.'に変換されます。  テキストもUnicodeを完全にサポートしており、非ASCII文字をレンダリングできます。  テキストはデフォルトのレンダラであり、レンダラが指定されていない場合に適用されます。  
+誤って数メガバイトの生データが表示されるのを防ぐために、テキストにはエントリごとに約1000文字のデフォルト制限もあります。  出力の最大長を増やすには、`limit <n>`引数を追加します。  ここでの`n`は表示する文字数です。
 
-Example: `text limit 4096`
+例: `text limit 4096`

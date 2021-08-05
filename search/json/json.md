@@ -1,122 +1,122 @@
 # JSON
 
-The json module is used to extract and filter data from search entries into enumerated values for later use.  JSON is an excellent data format for dynamic exploration as the data is self-describing.  The JSON module can extract items and rename them, or filter based on the extracted value.  Filtering directly within the JSON module provides a very high speed and intuitive way to select data of a specific format.
+jsonモジュールは、検索エントリからデータを抽出し、後で使用するため列挙値にフィルタリングするために使用されます。 JSONは、データが自己記述的であるため、デイトミックな探索に最適なデータ形式です。 JSONモジュールは、項目を抽出して名前を変更したり、抽出した値に基づいてフィルタリングしたりすることができます。 JSONモジュール内で直接フィルタリングすることで、特定のフォーマットのデータを選択するための非常に高速で直感的な方法を提供します。
 
-## Supported Options
+## サポートされているオプション
 
-* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
-* `-s`: The “-s” option informs the json module that we are in strict mode, meaning that if any field extraction fails, drop the entire entry. If you say `json -s foo`, any entry which doesn't contain a field named "foo" will be dropped; conversely, `json foo` simply extracts "foo" when possible and drops nothing. Specifying `json -s foo bar` means each entry must contain fields named "foo" and "bar".
-* `-x <arg>`: The “-x” option tells the module to expand the contents of a JSON array into multiple entries, one per array value. The rest of the entry remains the same. The argument can be the output name of one of the current extractions, or it can be an enumerated value. Thus, both `tag=foo json -x bar foo.bar` and `tag=foo json foo.bar | json -x bar` are valid invocations.
+* `-e <arg>` : "e" オプションはレコード全体ではなく、列挙値に対して操作します。
+* `-s`: "s" オプションは、厳密なモードであることをjsonモジュールに通知します。`json -s foo` と指定すると、"foo" という名前のフィールドを含まないエントリはすべて削除されます。逆に、`json foo` は可能な限り単に "foo" を抽出し、何も削除しません。`json -s foo bar` を指定すると、各エントリは "foo" と "bar" という名前のフィールドを含まなければならないことを意味します。
+* `-x <arg>`: "x"オプションは、JSON配列の内容を、配列の値ごとに複数のエントリに展開することを示します。 エントリの残りの部分は同じままです。引数には、現在の抽出物の1つの出力名を指定することも、列挙値を指定することもできます。 したがって、`tag=foo json -x bar foo.bar` と `tag=foo json foo.bar | json -x bar` の両方が有効な起動方法です。
 
-## Filtering Operators
+## フィルタリング演算子
 
-The JSON module allows for a filtering based on equality.  If a filter is enabled that specifies equality ("equal" or "not equal") any entry that fails the filter specification will be dropped entirely.  
+JSONモジュールは、平等性に基づくフィルタリングを可能にします。等しさを指定するフィルタが有効になっている場合、フィルタの指定に失敗したエントリは完全に削除されます。 
 
-| Operator | Name | Description |
+| 演算子 | 名称 | 意味 |
 |----------|------|-------------|
-| == | Equal | Field must be equal
-| != | Not equal | Field must not be equal
-| ~ | Subset | Field contains the value
-| !~ | Not Subset | Field does NOT contain the value
+| == | 等しい  | フィールドは等しい|
+| != | 等しくない | フィールドは等しくない|
+| ~  | 含む | フィールドはその値を含む|
+| !~ | 含まない | フィールドはその値を含まない|
 
-Note: If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped. If you wish to drop the entries which don't contain the field at all, use the `-s` flag.
+注意 : フィールドが"!="ではなく、フィールドが存在しないと指定された場合、フィールドは抽出されませんが、エントリは削除されません。フィールドを全く含まないエントリを削除したい場合は `-s` フラグを使ってください。
 
-## Examples
-To find the most prolific Reddit posters, the following search extracts the "Author" field from each Reddit post into a new enumerated value, then counts the occurrence of each author and puts it into a table:
+## 例
+最も多く投稿しているredditt投稿者を見つけるために、以下の検索は各reddit投稿の "Author"フィールドを新しい列挙値に抽出し、各投稿者の出現回数をカウントしてテーブルに格納します。
 
 ```
 tag=reddit json Author | count by Author | table Author count
 ```
 
-The module can also descend multiple layers into the JSON entry. For example, in the Shodan data we ingest for testing, we can extract the "region code" from entries to discover where the endpoint resides. If we want to learn which states have the most AT&T U-verse customers, we can issue the following search:
+また、このモジュールはJSONエントリに複数のレイヤーを降順させることもできます。例えば、テストのためにインジェストするShodanのデータでは、エントリーから「リージョンコード」を抽出して、エンドポイントがどこに存在するかを発見することができます。AT&T U-verseの顧客が最も多い州を知りたい場合は、以下のように検索することができます。
 
 ```
 tag=shodan grep "AT&T U-verse" | json location.region_code | count by region_code | table region_code count
 ```
 
-### Using Enumerated Values
+### 列挙値の使用
 
-We can also operate on enumerated values rather than the full entry data if desired; for instance, if an XML entry contains json within it:
+必要であれば、完全な入力データではなく列挙値を操作することもできます。
 
 ```
-<System><Data>{ "domain": "gravwell.io" }</Data></System>
+<System><Data>{ "domain". "gravwell.io" }</Data></System> </Data
 ```
 
-We can use the following command to extract the JSON from within the XML as an enumerated value named "Data", then apply the json module to parse out the domain value into another enumerated value named "domain":
+次のコマンドを使ってXML内のJSONを "Data "という名前の列挙値として抽出し、jsonモジュールを適用してドメインの値を "domain "という名前の別の列挙値に解析します:
 
 ```
 xml System.Data | json -e Data domain
 ```
 
-### Renaming Extractions
+### 抽出物の名前を変更
 
-Enumerated value names are derived by the last name in a JSON specification, in the earlier example which extracted the region_code field the output is populated in the "region_code" enumerated value.  Output enumerated value names can be overridden with an "as" argument.  The following example extracts the domain member from the Data enumerated value and assigns it into a new enumerated value named "dd":
+列挙値名は、JSON仕様の最後の名前によって導出されます。先ほどのregion_codeフィールドを抽出した例では、出力は "region_code"列挙値で生成されています。 出力される列挙値名は、"as"引数で上書きすることができます。 次の例はData列挙値からドメインメンバーを抽出し、それを "dd"という名前の新しい列挙値に代入しています:
 
 ```
 json -e Data domain as dd
 ```
-Using the filter operator we can extract the Data field, but only when the domain is not the value "google.com." Filters can be combined with renaming.
+フィルタ演算子を使用すると、Dataフィールドを抽出することができますが、ドメインが "google.com "という値ではない場合に限ります。フィルタはリネームと組み合わせることができます。
 
 ```
 json -e Data domain != "google.com" as dd
 ```
 
-### Quoting Rules
+### 引用のルール
 
-The JSON format is extremely liberal and allows names of all types, including characters Gravwell usually treats as separators such as '.' and "-". In cases where the JSON name contains such characters, wrap the individual field in double-quotes to parse it as a single token. For example, this JSON string contains a dot character in a field name:
+JSONフォーマットは非常に自由度が高く、Gravwellが通常'.'や"-"などの区切り文字として扱う文字を含め、すべてのタイプの名前を許可します。JSON名にそのような文字が含まれている場合は、個々のフィールドをダブルクォートで囲み、1つのトークンとして解析します。例えば、このJSON文字列はフィールド名にドット文字を含んでいます:
 
 ```
 { "subfield.op": "stuff", "subfield.type": "int", "subfield.value": 99}
 ```
 
-An example json module argument to extract the subfield.op member would be:
+subfield.opのメンバーを抽出するjsonモジュールの引数の例は次のようになります。
 
 ```
 json "subfield.op" as sop
 ```
 
-Similarly, consider the following nested structure:
+同様に、次のような入れ子構造を考えてみます:
 
 ```
-{ "fields": { "search-id": 1234, "search-type": "background" } }
+{ "fields"。{ "search-id". 1234, "search-type". "background" } }
 ```
 
-Because search-id and search-type contain a dash character, they should be wrapped in quotes when used:
+search-idとsearch-typeにはダッシュ文字が含まれているので、使用する場合は引用符で括る必要があります:
 
 ```
-json fields."search-id" fields."search-type" as type | count by "search-id",type | table "search-id" type count
+json fields. "search-id" fields. "search-type" as type｜"search-id",type｜table "search-id" type count
 ```
 
-### Arrays
+### 配列
 
-The json module can extract elements from arrays. Consider the following structure:
-
-```
-{ "uid": 1, "groups": [17,3] }
-```
-
-To extract the first group from the array of groups, we can say:
+jsonモジュールは配列から要素を抽出することができます。次のような構造を考えます：
 
 ```
-json groups.[0] as gid
+{ "uid"。1, "groups". [17,3] }
 ```
 
-(If the extraction is not renamed, the enumerated value will be named "[0]" which is very clumsy)
+グループの配列から最初のグループを抽出するには：
 
-To expand an array, we extract the array and pass the output name to the `-x` flag:
+```
+json groups.
+```
+
+(抽出がリネームされていない場合、列挙値は"[0]"という名前になりますが、これは非常に不格好です)
+
+配列を展開するには、配列を抽出し、出力名を `-x` フラグに渡します:
 
 ```
 json -x groups groups uid
 ```
 
-This will turn the single entry into two entries, one with enumerated values `uid=1` and `groups=17`, one with `uid=1` and `groups=3`.
+これにより、1つのエントリーが、列挙値が `uid=1` と `groups=17` のものと、 `uid=1` と `groups=3` のものの、2つのエントリーになります。
 
-Note: When expanding an array via the `-x` flag, the underlying Data field and all other enumerated values are duplicated intact; only the contents of the array enumerated value change.
+注意: `-x` フラグで配列を展開すると、基礎となる Data フィールドと他のすべての列挙値はそのまま複製され、配列の列挙値のコンテンツのみが変更されます。
 
-We can also extract components from within array elements:
+配列の要素の中からコンポーネントを抽出することもできます:
 
 ```
-{ "Metadata": [ {"Value": "john"}, {"Value": "Albuquerque"} ] }
+{ "Metadata" [ {"Value": "john"}, {"Value": "Albuquerque"} ] } } }
 ```
 
 ```
@@ -124,21 +124,21 @@ json Metadata.[0].Value as Username
 ```
 
 
-## Empty Fields and the Strict Flag
+## 空フィールドと厳格なフラグ
 
-The module makes a distinction between fields which are not defined and fields which contain the empty string. Consider the following entries:
+このモジュールでは、定義されていないフィールドと空の文字列を含むフィールドを区別しています。以下のエントリを考えます：
 
 ```
-{"A": "B", "FOO": ""}
+{"A": "B", "FOO". ""}
 ```
 
 ```
 {"A": "Z"}
 ```
 
-The first entry contains a field named "FOO" which is an empty string. The second entry does not contain a "FOO" field at all.
+最初のエントリには "FOO"というフィールドが含まれていますが、これは空の文字列です。2番目のエントリには "FOO"フィールドが全く含まれていません。
 
-This query will drop the first entry but pass the second:
+このクエリは最初のエントリを削除して、2番目のエントリを渡します:
 
 ```
 json FOO!=""
@@ -146,7 +146,7 @@ json FOO!=""
 
 ![](foo1.png)
 
-The following query will drop the second entry but pass the first, extracting an empty string into an enumerated value named FOO:
+次のクエリは2番目のエントリを削除して1番目のエントリを渡し、空の文字列をFOOという名前の列挙型の値に抽出します:
 
 ```
 json -s FOO
@@ -154,7 +154,7 @@ json -s FOO
 
 ![](foo2.png)
 
-This query will pass both entries, extracting FOO from the first entry:
+このクエリは両方のエントリを渡し、最初のエントリからFOOを抽出します:
 
 ```
 json FOO
@@ -162,7 +162,7 @@ json FOO
 
 ![](foo3.png)
 
-This query will drop both entries, because the != filter excludes the first entry and the strict flag excludes the second (because it lacks a field named "FOO"):
+このクエリは両方のエントリを削除します。なぜならば、!=フィルターは最初のエントリを除外し、strictフラグは2番目のエントリを除外するからです(FOOという名前のフィールドがないからです):
 
 ```
 json -s FOO!=""

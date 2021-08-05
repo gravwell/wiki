@@ -1,16 +1,16 @@
-# Microsoft Graph API Ingester
+# Microsoft Graph API インジェスター
 
-Gravwell provides an ingester which can pull security information from Microsoft's Graph API. In order to configure the ingester, you will need to register a new *application* within the Azure Active Directory management portal; this will generate a set of keys which can be used to access the logs. You will need the following information:
+Gravwellは、MicrosoftのGraph APIからセキュリティ情報を取得するインジェスターを提供しています。インジェスターを設定するには、Azure Active Directory管理ポータルで新しい *アプリケーション* を登録する必要があります。これにより、ログにアクセスするためのキーセットが生成されます。その際、以下の情報が必要となります。
 
-* Client ID: A UUID generated for your application via the Azure management console
-* Client secret: A secret token generated for your application via the Azure console
-* Tenant Domain: The domain of your Azure domain, e.g. "mycorp.onmicrosoft.com"
+* クライアントID: クライアントID：Azure管理コンソールでアプリケーション用に生成されたUUID。
+* クライアントシークレット: Azureコンソールでアプリケーション用に生成されたシークレットトークン
+* テナントドメイン: Azure ドメインのドメイン(例："mycorp.onmicrosoft.com")
 
-## Basic Configuration
+## 基本設定
 
-The MS Graph ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the MS Graph ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+MS Graphインジェスターは、[インジェスター](#!ingesters/ingesters.md#Global_Configuration_Parameters)で説明されている統一されたグローバル設定ブロックを使用します。 他の多くのGravwellインジェスターと同様に、MS Graphインジェスターは複数のアップストリームインデクサー、TLS、クリアテキスト、名前付きパイプ接続、ローカルキャッシュ、ローカルロギングをサポートしています。
 
-## ContentType Examples
+## コンテンツタイプの例
 
 ```
 [ContentType "alerts"]
@@ -27,19 +27,19 @@ The MS Graph ingester uses the unified global configuration block described in t
 	Tag-Name="graph-profiles"
 ```
 
-## Installation and configuration
+## インストールと設定
 
-First, download the installer from the [Downloads page](#!quickstart/downloads.md), then install the ingester:
+まず、[ダウンロード](#!quickstart/downloads.md)からインストーラーをダウンロードして、インジェスターをインストールします:
 
 ```
 root@gravserver ~# bash gravwell_msgraph_installer.sh
 ```
 
-If the Gravwell services are present on the same machine, the installation script should automatically extract and configure the `Ingest-Auth` parameter and set it appropriately. You will now need to open the `/opt/gravwell/etc/msgraph_ingest.conf` configuration file and set it up for your application, replacing the placeholder fields and modifying tags as desired. Once you have modified the configuration as described below, start the service with the command `systemctl start gravwell_msgraph_ingest.service`.
+Gravwellのサービスが同一マシン上に存在する場合、インストールスクリプトは自動的に`Ingest-Auth`パラメータを抽出し、適切に設定します。次に、`/opt/gravwell/etc/msgraph_ingest.conf`設定ファイルを開いて、アプリケーション用に設定し、プレースホルダーフィールドを置き換えたり、必要に応じてタグを修正する必要があります。以下のように設定を変更したら、コマンド `systemctl start gravwell_msgraph_ingest.service` でサービスを開始します。
 
-By default, the ingester will ingest security alerts as they arrive. It will also periodically query for new security score results (typically issued daily), and ingest the associated control profiles which are used to build those security score results. These three data sources are by default ingested to the tags `graph-alerts`, `graph-scores`, and `graph-profiles`, respectively.
+デフォルトでは、インジェスターはセキュリティアラートが到着するとそれを取り込みます。また、新しいセキュリティスコアの結果を定期的に照会し（通常、毎日発行されます）、それらのセキュリティスコアの結果を構築するために使用される関連する制御プロファイルを取り込みます。これら3つのデータソースは、デフォルトでは、それぞれ`graph-alerts`、`graph-scores`、`graph-profiles`というタグに取り込まれます。
 
-The example below shows a sample configuration which connects to an indexer on the local machine (note the `Pipe-Backend-target` setting) and feeds it logs from all supported types:
+以下の例は、ローカルマシン上のインデクサーに接続し（`Pipe-Backend-target`の設定に注意）、サポートされているすべてのタイプからのログをフィードするサンプル構成を示しています。
 
 ```
 [Global]

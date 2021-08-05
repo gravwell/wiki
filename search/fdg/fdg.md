@@ -1,16 +1,16 @@
 # Force Directed Graph
 
-The force directed graph (fdg) module is used to generate a directed graph using node pairs and optional grouping. The fdg module accepts source and destination groups as well as a weight value for the resulting edge.
+有向グラフ（fdg）モジュールは、ノードペアとオプションのグループ化を使用して有向グラフを生成するために使用されます。fdgモジュールは、結果として得られるエッジの重み値とともに、送信元と送信先のグループを受け入れます。
 
-## Supported Options
-* `-b`: Indicates that edges are bidirectional, meaning that the pair [A, B] is equivalent to [B, A]
-* `-v <enumerated value>`: Indicates that edges should be weighted as a sum of the provided enumerated value. The `-v` flag is useful in generating directed graphs where edges have weights represented by something other than a raw count.
-* `-sg <enumerated value>`: Provides a group to apply to a source value which is used for coloring a graph. For example a source group may be a subnet for an IP which enables a nodes in a graph to be grouped.
-* `-dg <enumerated value>`: Same as -sg, but grouping based on destination parameter.
+## サポートされているオプション
+* `-b`:エッジが双方向であることを示します。つまり、[A、B]のペアは[B、A]と同じです。
+* `-v <enumerated value>`: エッジは指定された列挙値の合計として重み付けされるべきであることを示します。この-vフラグは、エッジが生カウント以外のもので表される重みを持つ有向グラフを生成するのに役立ちます。
+* `-sg <enumerated value>`: グラフの色付けに使用されるソース値に適用するグループを提供します。例えば、ソースグループは、グラフ内のノードをグループ化することを可能にするＩＰのためのサブネットであり得ます。
+* `-dg <enumerated value>`:-sgと同じですが、destinationパラメータに基づいてグループ化されています。
 
-## Sample Query
+## サンプルクエリ
 
-One example where a force directed graph can prove useful is to identify relationships between addresses on a network. Generating a weighted force directed graph of IPV4 traffic while grouping nodes into a class C network can be accomplished with the query:
+力有向グラフが有用であると証明できる一例は、ネットワーク上のアドレス間の関係を識別することです。ノードをクラスCネットワークにグループ化しながらIPV4トラフィックの重み付き強制有向グラフを生成するには、次のクエリを使用します。:
 
 ```
 tag=pcap packet ipv4.SrcIP ipv4.DstIP ipv4.Length | sum Length by SrcIP,DstIP | subnet SrcIP /24 as SrcSub | subnet DstIP /24 as DstSub | fdg -v sum -sg SrcSub -dg DstSub SrcIP DstIP
@@ -18,10 +18,10 @@ tag=pcap packet ipv4.SrcIP ipv4.DstIP ipv4.Length | sum Length by SrcIP,DstIP | 
 
 ![](fdg1.png)
 
-Hovering the mouse over a node shows its label and the labels of its neighbors:
+ノードの上にマウスを置くと、そのラベルとその隣のラベルが表示されます:
 
 ![](fdg2.png)
 
-The options menu can enable or disable animation and change between the standard force-directed graph and a circular graph as shown below:
+オプションメニューでは、アニメーションを有効または無効にしたり、標準の強制有向グラフと円グラフを切り替えたりできます:
 
 ![](fdg3.png)

@@ -1,43 +1,43 @@
- 
-## Taint
 
-The taint module is used for taint analysis and flow tracking.  The module can be used to specify known start points and then propagate "infections" forward.  Taint can also be used to specify infection endpoints and work backwards in time to identify origination points.  The taint module has the ability to reverse the direction of the search system.  For example, if taint is attempting to start with a known patient zero, it will force the search to start at the beginning of the time window and move forward in time.  However, if taint is starting with a known infection and working backwards to find patient zero, it will force the search to start at the end of the time window and move backwards.
+## taint
 
-Taint requires enumerated values to track tainted values from source to destination.  The source and destination arguments to taint can be any named enumerated value.  When moving forward in time (starting with a patient zero) the taint module will look for the enumerated value specified by the source argument and extract its value.  If the source value has been marked as tainted (either via a patient zero argument, or because of previous tainting) the destination value is then marked as tainted.
+taint モジュールは、taint の解析とフローの追跡に使用されます。 このモジュールは、既知の開始点を指定して、「感染」を前方に伝播させるために使用できます。また、taint は感染の終点を指定し、時間をさかのぼって起点を特定するためにも使用できます。 taint モジュールには、検索システムの方向性を逆転させる機能があります。 例えば、taint が既知のペイシェント・ゼロから開始しようとしている場合、検索は強制的に時間枠の最初から開始され、時間的に前方に移動します。 しかし、taint が既知の感染症から開始し、ペイシェント・ゼロを見つけるために逆算している場合、検索を時間枠の最後から開始し、逆方向に移動させます。
 
-Taint tracking can also be performed in reverse, starting with some known infection point and working backwards in time using the -f flag.  The relationship of source to destination arguments is still preserved (source infects destination), so the source and destination enumerated value names should be reversed when using -f vs -pz.
+taint は、汚染された値をソースからデスティネーションまで追跡するために、列挙値を必要とします。taint の source と destination の引数には、任意の名前の列挙値を指定できます。taint モジュールは、時間を進めるとき（ペイシェント・ゼロから始めるとき）、source引数で指定された列挙値を探し、その値を抽出します。 source値が tainted とマークされている場合（ペイシェント・ゼロ引数を介して、または以前に tainted があったため）、destination 値は tainted とマークされます。
 
-The process of taint tracking is designed to propagate marks forward or backwards in time.  For example if we knew A was tainted, and we saw A touch B, then B touches C we would get a propagation of A->B->C whereby A, B, or C are all considered tainted and could then taint other enumerated values.
+taint tracking は、-f フラグを使用して、既知の感染ポイントから時間を逆にさかのぼって実行することもできます。ソースとデスティネーションの引数の関係は維持されます（ソースがデスティネーションを感染させる）ので、-f と -pz を使用する場合は、ソースとデスティネーションの列挙値の名前を逆にする必要があります。
 
-The taint module can be used to track network flow propagation, infection propagation, or movement of physical systems.  For example, if we were tracking ICMP propagation, the source enumerated value might be "SrcIP" and the destination argument might be the enumerated value "DstIP".
+taint tracking のプロセスは、マークを時間的に前進または後退させるように設計されています。 例えば、A が汚染されていることを知っていた場合、A が B に触れ、B が C に触れると、A->B->C の伝搬が起こり、A、B、C のいずれもが汚染されているとみなされ、他の列挙値を汚染する可能性があります。
 
-Gravwell presented research at the S4x18 conference in Miami which successfully tracked USB based infectors that [hopped air gaps](https://s4x18.com/sessions/using-force-directed-graphs-to-analyze-huge-event-datasets/).
+taint モジュールは、ネットワークフローの伝搬、感染症の伝搬、物理システムの移動などを追跡するために使用できます。 例えば、ICMP の伝播を追跡する場合、ソースの列挙値は "SrcIP"、デスティネーションの引数は列挙値 "DstIP" となります。
 
-Attention: Because taint can control the direction of the search, it is not advisable to combine it with the sort module.
+Gravwell は、マイアミで開催されたS4x18カンファレンスで、[エアギャップをホップする](https://s4x18.com/sessions/using-force-directed-graphs-to-analyze-huge-event-datasets/) USB ベースの感染者の追跡に成功した研究を発表しました。
 
-### Syntax
+注意：taint は検索の方向性を制御できるため、sort モジュールと組み合わせることはお勧めできません。
 
-The command syntax for the taint module is similar to a force directed graph.  We must specify a source and destination with flags designating whether flow is bidirectional.  A starting point is required, whether it be a patient zero (-pz) or a known infection (-f).
+### 構文
 
-#### Starting with patient zero
+taint モジュールのコマンド構文は、強制有向グラフに似ています。 ソースとデスティネーションを指定し、フローが双方向であるかどうかを指定するフラグを立てなければなりません。 ペイシェント・ゼロ (-pz) や既知の感染症 (-f) など、出発点が必要です。
+
+#### ペイシェント・ゼロからのスタート
 ```
 taint -pz <known value> <src> <dest>
 ```
 
-#### Starting with known endpoint
+#### 既知のエンドポイントからのスタート
 ```
 taint -f <known value> <src> <dest>
 ```
 
-### Supported Options
-* `-pz <arg>`: The -pz flag specifies the value for a patient zero (starting point).  Taint will look in the <src> enumerated values for the patient zero value to start tainting.
-* `-f <arg>`: The -f flag specifies the value for a known infection.  Taint will look in enumerated values specified by <src> for the known-infected value and begin tracking taints.
-* `-b`: The -b flag specifies that infections are bidirectional, and if either side has been tainted in the past, the taint is transferred to the other.
-* `-a`: The -a flag specifies that all entries should pass through the taint module, meaning that the taint module will NOT drop entries that do not contain tainted values.
+### サポートされているオプション
+* `-pz <arg>`: -pz フラグは、ペイシェント・ゼロ（開始点）の値を指定します。 taint は、\<src\> の列挙値の中から、tainting を開始するためのペイシェント・ゼロの値を探します。
+* `-f <arg>`: -f フラグは、既知の感染のための値を指定します。 taint は \<src\> で指定された列挙値の中から、既知の感染した値を探し、taint の追跡を開始します。
+* `-b`: -b フラグは感染が双方向であることを指定しており、どちらかの側が過去に汚染されていた場合、その汚染はもう一方の側に移されます。
+* `-a`: -a フラグは、すべてのエントリーが taint モジュールを通過するように指定します。つまり、taint モジュールは、taint された値を含まないエントリーを削除しません。
 
-### Examples
+### 例
 
-If we were to assume that a vicious new infection vector was found which could arbitrarily infect DNS servers by embedding a payload in their lookup cache, we could use the taint module to identify which top level domain names may have been attacked.  The following search starts with a known patient zero, and generates a force directed graph showing all future propagation of tainted domains in a small network.
+DNS サーバーの lookup キャッシュにペイロードを埋め込むことで任意に感染させることができる、悪質な新しい感染ベクトルが見つかったと仮定した場合、taint モジュールを使用して、どのトップレベルドメイン名が攻撃された可能性があるかを特定することができます。 以下の検索は、既知のペイシェント・ゼロから始まり、小さなネットワークにおける汚染されたドメインのすべての将来のプロパゲーションを示す強制有向グラフを生成します。
 
 ```
 tag=dns json Remote Answer.Hdr.Name |  regex -e Name "(?P<tld>[^\.]+\.[^\.]+)\.$" | regex -e Remote "(?P<ip>[\d\.]+):\d+" | taint -b -pz 10.0.0.99 ip tld | fdg -b ip tld
@@ -45,7 +45,7 @@ tag=dns json Remote Answer.Hdr.Name |  regex -e Name "(?P<tld>[^\.]+\.[^\.]+)\.$
 
 ![DNS Infection Propagation From Known Patient Zero](taintPatientZero.png)
 
-Reversing the work flow, the following search shows how a hunter might start with a known infection and work backwards to a potential patient zero.
+作業の流れを逆にすると、次の検索では、ハンターが既知の感染症から始めて、潜在的なペイシェント・ゼロに向かって逆算する方法を示しています。
 
 ```
 tag=dns json Remote Answer.Hdr.Name |  regex -e Name "(?P<tld>[^\.]+\.[^\.]+)\.$" | regex -e Remote "(?P<ip>[\d\.]+):\d+" | taint -b -f google.com tld ip | fdg -b ip tld

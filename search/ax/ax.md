@@ -1,51 +1,45 @@
 ## AX
 
-The ax module is a wrapper module which uses pre-extraction rules to extract fields from data by invoking the functionality of other modules.  It can significantly simplify queries which use data that is not self-describing, standard, or structured.
+axモジュールは、他のモジュールの機能を呼び出すことによってデータからフィールドを抽出するために事前抽出規則を使用するラッパーモジュールです。自己記述型、標準型、または構造化されていないデータを使用するクエリを大幅に簡略化できます。
 
-As of release 4.2.0 the following AX processors are available:
+以下のAXプロセッサが使用可能です:
 
 * [CSV](../csv/csv.md)
-* [fields](../fields/fields.md)
-* [ipfix](../ipfix/ipfix.md)
-* [json](../json/json.md)
-* [KV](../kv/kv.md)
-* [netflow](../netflow/netflow.md)
-* [regex](../regex/regex.md)
-* [slice](../slice/slice.md)
-* [syslog](../syslog/syslog.md)
-* [winlog](../winlog/winlog.md)
+* [Fields](../fields/fields.md)
+* [Regex](../regex/regex.md)
+* [Slice](../slice/slice.md)
 
-For full documentation on the configuration of AX extractors, see the [autoextractor section](../../configuration/autoextractors.md).
+AXエクストラクタの設定に関する完全なドキュメントについては、[autoextractorセクション](../../configuration/autoextractors.md)を参照してください。
 
-### Filtering
+### フィルタリング
 
-The ax module supports inline filtering on extracted values using the same filtering semantics as the underlying processor.  Each processor may support a specific subset of filter operators.
+axモジュールは、基礎となるプロセッサと同じフィルタ処理セマンティクスを使用して、抽出値に対するインラインフィルタ処理をサポートします。各プロセッサは、フィルタ演算子の特定のサブセットをサポートできます。
 
-For example the CSV, fields, and regex processors support limited equality filters (== != ~ !~) where the slice processor supports specific filters depending on the type cast.
+たとえば、CSV、fields、およびregexプロセッサは、制限付き等価フィルタ（==！=?！?）をサポートしています。スライスプロセッサは、キャストの種類に応じて特定のフィルタをサポートします。
 
-| Operator | Name | Description |
+| オペレーター | 名 | 説明 |
 |----------|------|-------------|
-| == | Equal | Field must be equal
-| != | Not equal | Field must not be equal
-| ~ | Subset | Field contains the value
-| !~ | Not Subset | Field does NOT contain the value
-| < | Less Than | Numeric value of field is less than
-| <= | Less Than or Equal to | Numeric value of field is less than or equal to
-| > | Greater Than | Numeric value of field is greater than
-| >= | Greater Than or Equal to | Numeric value of field is greater than or equal to
+| == | 等しい | フィールドは等しくなければなりません
+| != | 等しくない | フィールドは等しくてはいけません
+| ~ | サブセット | フィールドに値が含まれています
+| !~ | サブセットではない | フィールドに値が含まれていません
+| < | 未満 | フィールドの数値がより小さい
+| <= | より小さいか等しい | フィールドの数値が以下である
+| > | より大きい | フィールドの数値がより大きい
+| >= | 以上 | フィールドの数値が以上
 
-Note: Every operator is not supported by every processor.  If multiple tags extract fields with the same name, the filter operator set will be restricted to a common subset.
+注：すべての演算子がすべてのプロセッサーでサポートされているわけではありません。複数のタグが同じ名前のフィールドを抽出すると、フィルタ演算子セットは共通のサブセットに制限されます。
 
-### Invoking AX
+### AXの起動
 
-The AX module can process multiple tags with multiple custom processors at the same time.  This means that if you have a tag named "foo" which contains CSV data and a tag named "bar" that contains unstructured data you can use ax to seamlessly process both streams with a single invocation.  Here is an example of two different data formats (CSV and unstructured):
+AXモジュールは、複数のカスタムプロセッサで同時に複数のタグを処理できます。  つまり、CSVデータを含む "foo"というタグと、非構造化データを含む "bar"というタグがある場合は、axを使用して両方のストリームを1回の呼び出しでシームレスに処理できます。  これは、2つの異なるデータ形式（CSVと非構造化）の例です:
 
 ```
 2019-02-07T14:39:21.819693-07:00,cotton,59296,6accf07c-d7fb-4394-b27c-a8fde782e4a7,111.63.178.212,2697,115.152.163.129,1381
 2019-02-07T14:39:29.529007-07:00 [calico] <7dee02fa-06a7-493d-812b-54f0d9a33b2b> 7e2:d377:3b3e:669d:b2f9:d311:b99f:f1d6 4462 7a38:8702:357b:9e09:e9ad:959d:1e1a:949 557
 ```
 
-We will assume that the CSV data is tagged "testcsv" and the unstructured data is tagged "testregex". The two data formats are very different, but do contain some common data fields.  We can use the following auto-extraction definitions for each data format:
+CSVデータには「testcsv」というタグが付けられ、非構造化データには「testregex」というタグが付けられると想定します。 2つのデータ形式は大きく異なりますが、いくつかの共通データフィールドが含まれています。 データフォーマットごとに、次の自動抽出定義を使用できます:
 
 ```
 [[extraction]]
@@ -61,7 +55,7 @@ We will assume that the CSV data is tagged "testcsv" and the unstructured data i
 	params="ts, app, id, uuid, src, srcport, dst, dstport"
 ```
 
-Using AX and the ax module we can specify both tags ("testregex" and "testcsv") and extract the common fields and unify them into a single view:
+AXとaxモジュールを使用して、両方のタグ（ "testregex"と "testcsv"）を指定して共通フィールドを抽出し、それらを単一のビューに統合することができます:
 
 ```
 tag=testregex,testcsv ax app src dst | ip src as IP | subnet IP /3 | count by subnet | sort by count desc | table -nt subnet count
@@ -69,7 +63,7 @@ tag=testregex,testcsv ax app src dst | ip src as IP | subnet IP /3 | count by su
 
 ![Subnet Counts](subcounts.png)
 
-AX does not *require* arguments.  If no arguments are given to ax, the module will extract all fields specified with the extractions.  Given the same two data sets with the same extraction configurations we can issue the extremely simple query:
+AXは引数を必要としません。  axに引数が与えられていない場合、モジュールは抽出で指定されたすべてのフィールドを抽出します。  同じ抽出設定を持つ同じ2つのデータセットを考えると、非常に単純なクエリを発行できます:
 
 ```
 tag=testregex,testcsv ax | table
@@ -77,7 +71,7 @@ tag=testregex,testcsv ax | table
 
 ![AX Extract All](ax.png)
 
-We can also add filtering to specify that we only want entries which match the given filters:
+与えられたフィルタに一致するエントリだけが欲しいということを指定するためにフィルタリングを追加することもできます:
 
 ```
 tag=testregex,testcsv ax dstport==80 | table app src dst

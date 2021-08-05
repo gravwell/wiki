@@ -1,14 +1,14 @@
-# Amazon SQS Ingester
+# Amazon SQS インジェスター
 
-The Amazon SQS Ingester (sqsIngester) is a simple ingester that can subscribe to both standard and FIFO SQS queues for ingest. Amazon SQS is a high volume message queue service that supports message delivery guarantees, "soft" ordering of messages, and "at-least-once" delivery of messages. 
+Amazon SQS Ingester（sqsIngester）は、標準的なSQSキューとFIFO SQSキューの両方をサブスクライブしてインジェストすることができるシンプルなインジェスターです。 Amazon SQSは、メッセージ配信保証、メッセージの"soft"オーダー、メッセージの"at-least-once"配信をサポートする大容量のメッセージキューサービスです。 
 
-For Gravwell, "at-least-once" delivery is an important caveat - The SQS ingester may receive duplicate messages with identical timestamps (depending on your configuration). It's also possible that the SQS ingester doesn't see some messages, depending on how your SQS workflow is deployed with other connected services. See [Amazon SQS](https://aws.amazon.com/sqs/) for more information.
+Gravwellの場合、"at-least-once"配信には重要な注意点があります。SQSインジェスターは、同一のタイムスタンプを持つ重複したメッセージを受信する可能性があります（設定によります）。 また、SQSのワークフローが他の接続されたサービスとどのように展開されているかによって、SQSインジェスターに一部のメッセージが表示されない可能性もあります。 詳しくは[Amazon SQS](https://aws.amazon.com/sqs/)をご覧ください。
 
-## Basic Configuration
+## 基本設定
 
-The SQS ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, SQS supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+SQSインジェスターは、[インジェスターセクション]（#!ingesters/ingesters.md#Global_Configuration_Parameters）に記載されている統一されたグローバル設定ブロックを使用します。  他の多くのGravwellインジェスターと同様に、SQSは複数のアップストリームインデクサー、TLS、クリアテキスト、名前付きパイプ接続、ローカルキャッシュ、ローカルロギングをサポートしています。
 
-## Queue Examples
+## キューの例
 
 ```
 [Queue "default"]
@@ -28,20 +28,20 @@ The SQS ingester uses the unified global configuration block described in the [i
 	Secret="..."
 ```
 
-## Installation
-If you're using the Gravwell Debian repository, installation is just a single apt command:
+## インストール
+GravwellのDebianリポジトリを使用している場合、インストールはaptコマンド1つで完了します:
 
 ```
 apt-get install gravwell-sqs
 ```
 
-Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). To install the Netflow ingester, simply run the installer as root (the actual file name will typically include a version number):
+それ以外の場合は、[ダウンロードページ](#!quickstart/downloads.md)からインストーラーをダウンロードしてください。 Netflow インジェスターをインストールするには、root 権限でインストーラーを実行します（実際のファイル名には通常、バージョン番号が含まれます）:
 
 ```
 root@gravserver ~ # bash gravwell_sqs.sh
 ```
 
-If there is no Gravwell indexer on the local machine, the installer will prompt for an Ingest-Secret value and an IP address for an indexer (or a Federator). Otherwise, it will pull the appropriate values from the existing Gravwell configuration. In any case, review the configuration file in `/opt/gravwell/etc/sqs.conf` after installation. A typical configuration will look like: 
+ローカルマシンにGravwellインデクサーがない場合、インストーラはIngest-Secretの値とインデクサー（またはフェデレーター）のIPアドレスの入力を求める。 そうでない場合は、既存のGravwellの設定から適切な値を引き出します。いずれにしても、インストール後は `/opt/gravwell/etc/sqs.conf` にある設定ファイルを確認してください。典型的な設定は以下のようになります: 
 
 ```
 [Global]
@@ -63,6 +63,6 @@ Log-File=/opt/gravwell/log/sqs.log
 	Secret="..."
 ```
 
-Note that this configuration sends entries to a local indexer via `/opt/gravwell/comms/pipe`. Entries are tagged 'sqs'.
+この設定では、`/opt/gravwell/comms/pipe`を介してローカルのインデクサにエントリーを送信することに注意してください。エントリーには'sqs'というタグが付けられます。
 
-You can configure any number of `Queue` entries, one for each SQS queue, and provide unique authentication, tag names, etc., for each one.
+SQSキューごとに1つずつ、任意の数の`Queue`エントリーを構成し、それぞれに固有の認証やタグ名などを提供することができます。

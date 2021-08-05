@@ -1,30 +1,30 @@
-## Transaction
+## transaction
 
-NOTE: The `transaction` module can consume a large amount of memory. Use caution when using this module on memory constrained systems.
+注意：`transaction` モジュールは大量のメモリを消費する可能性があります。メモリに制約のあるシステムでこのモジュールを使用する場合は注意してください。
 
-The `transaction` module transforms and groups entries in the pipeline into single-entry "transactions" - groupings of entries - based on any number of keys. It is a powerful tool for capturing the activity of a given user, IP, etc., across multiple entries in a datastream. 
+`transaction` モジュールは、任意の数のキーに基づいて、パイプライン内のエントリを単一エントリの「トランザクション」（エントリのグループ化）に変換し、グループ化します。これは、データストリームの複数のエントリにまたがる、特定のユーザや IP などのアクティビティをキャプチャするための強力なツールです。
 
-### Supported Options
+### サポートされているオプション
 
-* `-e`: The `-e` option operates on an enumerated value instead of on the entire record. Multiple EVs are supported by providing additional `-e` flags.
-* `-rsep`: The `-rsep` option sets the string to insert between transaction records. The default is "\n".
-* `-fsep`: The `-fsep` option sets the string to insert between enumerated values within a given record. The default is " ".
-* `-o`: The `-o` option sets the output EV to produce. The default is "transaction".
-* `-c`: The `-c` option enables a count of the number of entries that make up a given transaction in the provided name. The default is "count".
-* `-maxsize`: The `-maxsize` flag sets the maximum size, in kilobytes, of a given transaction before it is evicted from the tracking table (see "Memory considerations" below). The default is 500kb.
-* `-maxstate`: The `-maxstate` flag sets the maximum number of transactions to track. Once exceeded, the oldest transaction will be evicted (see "Memory considerations" below). The default is 200.
+* `-e`: `-e` オプションは、レコード全体ではなく、列挙値に対して操作を行います。追加の `-e` フラグを提供することで、複数の EV をサポートします。
+* `-rsep`: `-rsep` オプションでは、トランザクションレコードの間に挿入する文字列を設定します。デフォルトは "\n" です。
+* `-fsep`: `-fsep` オプションは、与えられたレコードの中の列挙値の間に挿入する文字列を設定します。デフォルトは " " です。
+* `-o`: `-o` オプションは、生成する出力 EV を設定します。デフォルトは "transaction" です。
+* `-c`: `-c` オプションは、指定された名前のトランザクションを構成するエントリの数をカウントすることを可能にします。デフォルトは "count" です。
+* `-maxsize`: `-maxsize` フラグは、あるトランザクションがトラッキングテーブルから退避するまでの最大サイズをキロバイト単位で設定します（後述の「メモリに関する考慮事項」を参照）。デフォルトは 500kb です。
+* `-maxstate`: `-maxstate` フラグは、追跡するトランザクションの最大数を設定します。これを超えると、最も古いトランザクションが破棄されます（後述の「メモリに関する考察」を参照）。デフォルトは 200 です。
 
-All flags are optional.
+すべてのフラグはオプションです。
 
-### Overview
+### 概要
 
-The `transaction` module groups entries into single entries based on a provided set of keys. For example, given a dataset with enumerated values "host", "message", and "action", the query:
+`transaction` モジュールは、与えられたキーのセットに基づいて、エントリを単一のエントリにグループ化します。例えば、"host"、"message"、"action" という列挙値を持つデータセットが与えられた場合、次のようなクエリを実行します。
 
 ```
 tag=data kv host action message | transaction -fsep " -- " host | table
 ```
 
-Will collapse all entries with the same value for the EV "host" into a single entry. By default, `transaction` will group all EVs that are *not* part of the key into the output. In the example above, the EVs "host" and "message" will be grouped, using `-fsep` as a separator, and all entries that match this key will be further grouped by `-rsep`. To illustrate the example above, given the following entries:
+EV "host" に同じ値を持つすべてのエントリを、ひとつのエントリにまとめます。デフォルトでは、`transaction` は、キーの一部ではないすべての EV を出力にグループ化します。上記の例では、EV "host" と "message" が `-fsep` をセパレータとしてグループ化され、このキーにマッチするすべてのエントリが `-rsep` によってさらにグループ化されます。上記の例を説明するために、次のようなエントリーがあるとします。
 
 ```
 Entry 1: host="foo" message="Host foo login" action="login"
@@ -33,7 +33,7 @@ Entry 3: host="bar" message="Host bar login" action="login"
 Entry 4: host="foo" message="Host foo logout" action="logout"
 ```
 
-Will be collapsed into two entries, one for "foo", and another for "bar":
+は、"foo" と "bar" の2つのエントリーに分割されます。
 
 ```
 Entry 1: transaction="login -- Host foo login
@@ -42,36 +42,36 @@ Entry 1: transaction="login -- Host foo login
 Entry 2: transaction="login -- Host bar login"
 ```
 
-To specify exactly which EVs to group, you can use one or more `-e` flags in the query. EVs will be grouped in the order provided. For example:
+グループ化する EV を正確に指定するには、クエリの中で1つ以上の `-e` フラグを使用します。EV は指定された順序でグループ化されます。例えば、以下のようになります。
 
 ```
 tag=data kv host action message user group | transaction -e action -e message host | table
 ```
 
-Will only group EVs "action" and "message", ignoring "user" and "group". 
+"user" と "group" を無視して、"action" と "message" の EV のみをグループ化します。
 
-Multiple keys can be provided, and records will be created based on the grouping of all provided keys. For example:
+複数のキーを指定することができ、指定されたすべてのキーのグループ化に基づいてレコードが作成されます。例えば、以下のようになります。
 
 ```
 tag=data kv host action message user group | transaction host action user | table
 ```
 
-Will group records with the same host, action, and user. 
+同じホスト、アクション、ユーザーを持つレコードをグループ化します。
 
-### Memory considerations
+### メモリに関する考察
 
-The `transaction` module must buffer all entries in the datastream in order to create transactions. For queries that produce large amounts of data, this can quickly exhaust the available memory on a system. In order to prevent this, the `transaction` module provides two flags, `-maxsize`, and `-maxstate`, to control how much and how long to retain data before passing it downstream in the pipeline. 
+トランザクションを作成するためには，`transaction` モジュールがデータストリームのすべてのエントリをバッファリングする必要があります．大量のデータを生成するクエリの場合，これはシステム上の利用可能なメモリをすぐに使い果たしてしまう可能性があります．これを防ぐために、`transaction` モジュールは、`-maxsize` と `-maxstate` という2つのフラグを用意し、パイプラインの下流にデータを渡す前にデータを保持する量と期間を制御します。
 
-When running, the `transaction` module keeps a table of records, with one record for every unique set of provided keys. When an entry matches the provided keys, it is added to other entries with the same match in the table (or creates a new record if it's the first one encountered). Two checks are asserted every time an entry is added to the table:
+実行中、`transaction` モジュールはレコードのテーブルを保持し、提供されたキーのユニークなセットごとに 1 つのレコードを持ちます。あるエントリーが提供されたキーにマッチすると、テーブル内の同じマッチを持つ他のエントリーに追加されます（最初に遭遇した場合は新しいレコードが作成されます）。エントリーがテーブルに追加されるたびに、2つのチェックが行われます。
 
-* If the size of a given record exceeds the `-maxsize` argument, the record is immediately "evicted" - meaning it is sent down the query pipeline and is removed from the table. 
-* If the number of records exceeds the `-maxstate` argument, the _least recently updated_ record is evicted. 
+* 与えられたレコードのサイズが `-maxsize` 引数を超えた場合、そのレコードは直ちに "evict" されます。つまり、クエリパイプラインを通ってテーブルから削除されます。
+* レコードの数が `-maxstate` 引数を超えると、最も最近更新されたレコードが消去されます。
 
-If a record is evicted, and later an entry with a key matching that of the evicted record is encountered, a new record is created. If you notice "fragmentation" in your output, check the `-maxsize` and `-maxstate` flags. 
+レコードが退避され、その後、退避されたレコードと同じキーを持つエントリに遭遇した場合、新しいレコードが作成されます。出力に「断片化」が見られる場合には、`-maxsize` と `-maxstate` フラグをチェックしてください。
 
-Because the `transaction` module can easily exhaust all available memory on your Gravwell system, follow these general guidelines when writing queries with `transaction`:
+`transaction` モジュールは Gravwell システムの利用可能なメモリを簡単に使い切ってしまうので、`transaction` を使ってクエリを書くときは以下の一般的なガイドラインに従ってください。
 
-* Put the `transaction` module as late in the query as possible. 
-* Work on the smallest time window possible for your query. 
-* Start with small `-maxsize` and `-maxstate` values, and increase only if needed.
-* Instead of grouping all enumerated values, only group those of concern for your query by explicitly naming them with `-e`.
+* `transaction` モジュールは、クエリのできるだけ最後に配置します。
+* 最小の時間枠を設定してください。
+* 小さな `-maxsize` と `-maxstate` の値で開始し、必要に応じて増やしていきます。
+* すべての列挙値をグループ化するのではなく、クエリに関係するものだけをグループ化するために、`-e`と明示的に名前を付けます。

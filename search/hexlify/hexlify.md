@@ -1,37 +1,37 @@
 ## Hexlify
 
-The hexlify module is used to encode a data into ASCII hex representations.  The module can be useful when tackling unknown data types and learning how to process binary data.  For example, one might encode an unknown enumerated value extracted from canbus data.  Most manufacturers do not publish canbus specs, but by extracting from IDs and encoding it in hex it can assist in identifying values that are changing in predictable patterns, helping to identify parameters.  This is exactly how the Gravwell team derived the PDUs for gas level, speed, and throttle position of a RAM 1500 truck without having access to canbus IDs from Fiat Chrysler of America.
+hexlifyモジュールは、データをASCIIの16進表現にエンコードするために使用されます。  このモジュールは、未知のデータ型に取り組み、バイナリデータを処理する方法を学ぶときに役立ちます。  たとえば、canbusデータから抽出された未知の列挙値をエンコードすることがあります。  ほとんどの製造元はcanbusの仕様を公開していませんが、IDから抽出して16進数でエンコードすることで、予測可能なパターンで変化している値を識別し、パラメータを識別するのに役立ちます。  これは、Gravwellチームが、Fiat Chrysler of Americaのcanbus IDにアクセスせずに、RAM 1500トラックのガスレベル、速度、およびスロットル位置のPDUを導き出した方法です。
 
-### Supported Options
+### サポートされているオプション
 
-* `-d`: Decode ASCII hex into an integer, rather than encoding an int as ASCII hex.
+* `-d`: intをASCII 16進数としてエンコードするのではなく、ASCII 16進数を整数にデコードします。
 
 
-### Example Search to hexlify all data
+### すべてのデータを16進化するための検索例
 
 ```
 tag=stuff hexlify
 ```
 
-### Example Search to hexlify a single enumerated value	
+### 1つの列挙値を16進数にするための検索例
 
 ```
 tag=CAN canbus ID Data | hexlify Data | table ID Data
 ```
 
-### Example Search to hexlify all data and assign to a new name
+### すべてのデータを16進数にして新しい名前に割り当てるための検索例
 
 ```
 tag=stuff hexlify DATA as hexdata | table DATA hexdata
 ```
 
-### Example Search to hexlify a few enumerated values with reassignment
+### いくつかの列挙値を再割り当てで16進数化するための検索例
 
 ```
 tag=CAN canbus ID Data | hexlify ID as hexid Data as hexdata | table ID hexid DATA hexdata
 ```
 
-### Example decoding hex data
+### 16進データのデコード例
 
 ```
 tag=apache json val | hexlify -d val as decodedval | table val decodedval

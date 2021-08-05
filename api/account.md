@@ -1,14 +1,14 @@
-# User Account APIs
+# ユーザーアカウントAPI
 
-This page describes the APIs for interacting with users.
+このページでは、ユーザーと対話するためのAPIについて説明します。
 
-Requests sent to `/api/users` and other URLs under the `/api/users/` path operate on user accounts. The webserver will send StatusOK (200) on a good request, while a 400-500 status will be sent on error (depending on the error).
+`/api/users` や `/api/users/` パス以下の他の URL に送られたリクエストは、ユーザアカウントで動作します。ウェブサーバは正常なリクエストにはStatusOK (200)を、エラーには(エラーに応じて)400-500のステータスを送信します。
 
-The default "admin" account username cannot be changed or deleted, nor can the account be demoted out of admin status. Other user accounts may be also assigned administrator privileges.
+デフォルトの「admin」アカウントのユーザー名を変更または削除したり、アカウントを管理者ステータスから降格したりすることはできません。 他のユーザーアカウントにも管理者権限が割り当てられている場合があります。
 
-## Data types
+## データタイプ
 
-The APIs on this page primarily deal with user and group details structures. The user details structure is as follows:
+このページのAPIは、主にユーザーとグループの詳細構造を扱います。 ユーザーの詳細構造は次のとおりです。
 
 ```
 {
@@ -25,7 +25,7 @@ The APIs on this page primarily deal with user and group details structures. The
 }
 ```
 
-The group details structure is as follows:
+グループの詳細構造は次のとおりです。
 
 ```
 {
@@ -36,12 +36,13 @@ The group details structure is as follows:
 }
 ```
 
-## Log in and log out
+## ログインとログアウト
 
-The API to authenticate with the webserver is [documented here](login.md).
+ウェブサーバで認証するためのAPIは[このドキュメント](login.md)です。
 
-## Fetch current user's info
-GET on /api/info/whoami returns current account info
+## 現在のユーザー情報を取得
+
+GET on /api/info/whoami は現在のアカウント情報を返します。
 
 ```
 {
@@ -64,9 +65,9 @@ GET on /api/info/whoami returns current account info
 
 ```
 
-## List all accounts
+## すべてのアカウントをリストアップ
 
-Sending a GET request to `/api/users` will return a JSON packet containing information about every account.  The JSON returned is as follows:
+GETリクエストを `/api/users` に送信すると、すべてのアカウントに関する情報を含むJSONパケットが返されます。 返されるJSONは以下の通りです。
 
 ```
 [
@@ -127,8 +128,9 @@ Sending a GET request to `/api/users` will return a JSON packet containing infor
 ]
 ```
 
-## Get a single user's information
-To get a single user's account information, send a GET to `/api/users/{id}/`.  Admins can retrieve any account, while non-admins can ONLY retrieve their own account information.  Response of 200 will contain valid JSON in the body, 400-500 means someone boned the request and the body will contain an error message.  The backend will respond with a JSON packet containing the user details as described at the top of this page; an example response follows:
+## 単一のユーザー情報を取得する
+
+単一のユーザのアカウント情報を取得するには、`/api/users/{id}/`にGETを送ってください。 管理者は任意のアカウントを取得することができますが、非管理者は自分のアカウント情報のみを取得することができます。 200のレスポンスは本文に有効なJSONが含まれていますが、400～500のレスポンスは誰かがリクエストを破棄したことを意味し、本文にはエラーメッセージが含まれています。 バックエンドは、このページのトップで説明したようにユーザーの詳細を含む JSON パケットで応答します。
 
 ```
 {
@@ -152,8 +154,9 @@ To get a single user's account information, send a GET to `/api/users/{id}/`.  A
 }
 ```
 
-## Add a new user
-To add a new user, an admin account can POST to `/api/users` with a request containing these fields:
+## 新しいユーザーの追加
+
+新しいユーザーを追加するには、管理者アカウントはこれらのフィールドを含むリクエストを `/api/users` にPOSTすることができます。
 
 ```
 {
@@ -165,16 +168,16 @@ To add a new user, an admin account can POST to `/api/users` with a request cont
 }
 ```
 
-All fields must be populated.  The back end will respond with the new user's UID, e.g. `17`.
+すべてのフィールドを入力しなければなりません。 バックエンドは新しいユーザーのUIDで応答します。
 
-## Lock a user account
-To lock an account, send an empty PUT to `/api/users/{id}/lock`, where {id} is the UID for the user that will be locked.  Locking a user account will immediately log out the user's active sessions and prevent any new logins.
+## ユーザーアカウントをロックする
+アカウントをロックするには、空のPUTを `/api/users/{id}/lock` に送ります。 ユーザアカウントをロックすると、そのユーザのアクティブなセッションが直ちにログアウトされ、新規ログインができなくなります。
 
-## Unlock a user account
-To unlock an account, send an empty DELETE to `/api/users/{id}/lock` where {id} is the UID for the user that will be unlocked.  The webserver will respond with success regardless of whether the account was actually unlocked if the action is allowed.  We do this because locking a locked account ends in the state that the account is locked.  So its all good.  Same with unlocking.
+## ユーザーアカウントのロックを解除する
+アカウントのロックを解除するには、空のDELETEを `/api/users/{id}/lock` に送信します。 このアクションが許可されていれば、アカウントが実際にロックされていたかどうかに関係なく、ウェブサーバは成功して応答します。 ロックされたアカウントをロックすると、そのアカウントがロックされた状態で終了するため、このようにしています。 これで問題ありません。 ロック解除も同じです。
 
-## Changing user info
-To change user info the client should send a PUT `/api/users/{id}` with the desired fields to update:
+## ユーザー情報変更
+ユーザー情報を変更するには、クライアントは更新したいフィールドを指定してPUT `/api/users/{id}`を送信しなければなりません。
 
 ```
 {
@@ -184,11 +187,12 @@ To change user info the client should send a PUT `/api/users/{id}` with the desi
 }
 ```
 
-Any field that is NOT populated will be ignored.  The backend will respond with the standard response JSON as mentioned above.  If the current user is NOT an admin and not changing their own account, the request will be rejected.  Admins can change information for any account.  The primary admin account (UID zero) cannot change its admin status.  The backend responds with a 200 on success and 400-500 on error depending on who caused the error and why.  Error messages will be returned in the body of the response and are human displayable.
+入力されていないフィールドは無視されます。 バックエンドは上記のように標準的なレスポンスJSONで応答します。 現在のユーザーが管理者ではなく、自分のアカウントを変更していない場合、リクエストは拒否されます。 管理者は任意のアカウントの情報を変更することができます。 プライマリ管理者アカウント(UIDゼロ)は管理者ステータスを変更することができません。 バックエンドは成功時には200、エラー時には400～500で応答します。 エラーメッセージはレスポンスの本文に返され、表示できるようになっています。
 
-## Changing a users password
 
-To change a password, issue a PUT to the url `/api/users/{id}/pwd`.
+## ユーザーのパスワードを変更する
+
+パスワードを変更するには、URL `/api/users/{id}/pwd` にPUTを発行する。
 
 ```
 {
@@ -197,19 +201,19 @@ To change a password, issue a PUT to the url `/api/users/{id}/pwd`.
 }
 ```
 
-Note: If the current user is an admin and changing the password for an account they DO NOT OWN, the OrigPass field is NOT required.
+注: 現在のユーザーが管理者であり、彼らが所有していないアカウントのパスワードを変更する場合、OrigPassフィールドは必要ありません。
 
-## Delete a user
-To delete a user the client should send a DELETE to `/api/users/{id}/` with `{id}` set to the UID to delete.  Only admins can use this facility, and a user cannot delete their own account.  The primary admin (UID 1) cannot be deleted.
+## ユーザーを削除する
+ユーザーを削除するには、クライアントは `/api/users/{id}/` に削除するUIDを `{id}` に設定してDELETEを送信しなければなりません。 この機能を使用できるのは管理者のみであり、ユーザは自分のアカウントを削除することはできません。 プライマリ管理者 (UID 1) は削除できません。
 
-## Get/Set user admin status
-To change the admin status of a user or query the admin status, send a request to `/api/users/{id}/admin` with an empty body. The method specifies the desired action.  The webserver will respond with 200 on success and 400-500 on error depending on the type of failure.
+## ユーザーの管理者ステータスの取得、設定
+ユーザの管理者の状態を変更したり、管理者の状態を問い合わせたりするには、`/api/users/{id}/admin`に空のボディでリクエストを送ります。メソッドは希望するアクションを指定します。 ウェブサーバは失敗の種類に応じて、成功の場合は200、エラーの場合は400から500の値で応答します。
 
-* GET - returns current admin status
-* PUT - sets the user as an admin and returns the new status
-* DELETE - removes admin status for the user
+* GET - 現在の管理者の状態を返します。
+* PUT - ユーザーを管理者に設定し、新しいステータスを返します。
+* DELETE - ユーザの管理者ステータスを削除します。
 
-Example JSON on success:
+成功時のJSONの例。
 
 ```
 {
@@ -218,9 +222,9 @@ Example JSON on success:
 }
 ```
 
-## Get user sessions
+## ユーザーセッションの取得
 
-A user may get a list of his or her own sessions by issuing a GET request to `/api/users/{id}/sessions`. An admin may issue the request for any UID. The response will be an array of session objects, as shown below:
+ユーザは、`/api/users/{id}/sessions`にGETリクエストを発行することで、自分のセッションのリストを取得することができます。管理者は、任意のUIDに対してリクエストを発行することができます。レスポンスは、以下に示すように、セッションオブジェクトの配列になります。
 
 ```
 {
@@ -237,9 +241,9 @@ A user may get a list of his or her own sessions by issuing a GET request to `/a
 }
 ```
 
-## Set default search group
+## デフォルトの検索グループを設定します。
 
-Each user can set a default search group. If set, all queries run by the user will be shared with that group by default. To set the default search group, issue a PUT request to `/api/users/{id}/searchgroup`, with the desired group specified in the request body as shown below:
+各ユーザーはデフォルトの検索グループを設定することができます。設定された場合、そのユーザーが実行したすべてのクエリは、デフォルトでそのグループと共有されます。デフォルトの検索グループを設定するには、`/api/users/{id}/searchgroup`にPUTリクエストを発行する。
 
 ```
 {
@@ -247,29 +251,29 @@ Each user can set a default search group. If set, all queries run by the user wi
 }
 ```
 
-## Get default search group
+## デフォルトの検索グループを取得
 
-Each user can set a default search group. If set, all queries run by the user will be shared with that group by default. To fetch the user's search group, issue a GET request to `/api/users/{id}/searchgroup`. The server's response will contain an integer GID, e.g. `3`.
+各ユーザーはデフォルトの検索グループを設定することができます。設定されている場合、そのユーザーが実行したすべてのクエリは、デフォルトでそのグループと共有されます。ユーザの検索グループを取得するには、`/api/users/{id}/searchgroup`にGETリクエストを発行する。サーバの応答は整数のGID、例えば `3` を含む。
 
-## User preferences
+## ユーザー設定
 
-"User preferences" consist of an arbitrary JSON blob set by the frontend for the user. This allows the frontend to store the user's UI settings (color scheme, etc.) across multiple computers. User preferences can only be set by 1) the user in question, or 2) an admin user.
+"ユーザー設定 "は、フロントエンドがユーザーのために設定した任意のJSONブロブで構成されています。これにより、フロントエンドはユーザーの UI 設定 (配色など) を複数のコンピュータに保存することができます。ユーザー設定は、1) 問題のユーザーか、2) 管理者ユーザーのみが設定できます。
 
-### Set user preferences
+### ユーザー設定の設定
 
-To set the user's preferences, issue a PUT request to `/api/users/{id}/preferences`. The request body should contain valid JSON; the actual contents of the JSON are ignored by the webserver.
+ユーザー設定を設定するには、`/api/users/{id}/preferences`にPUTリクエストを発行します。リクエスト本文には有効なJSONが含まれていなければなりません; 実際のJSONの内容はウェブサーバによって無視されます。
 
-### Get user preferences
+### ユーザー設定の取得
 
-To fetch the user's preferences, issue a GET request on `/api/users/{id}/preferences`. The body of the response will contain any previously-set preferences.
+ユーザ設定を取得するには、`/api/users/{id}/preferences`にGETリクエストを発行します。レスポンスの本文には、以前に設定された設定が含まれます。
 
-### Clear user preferences
+### ユーザー設定をクリア
 
-To clear out anything in the user's preferences, issue a DELETE on `/api/users/{id}/preferences`.
+ユーザーの環境設定をクリアするには、`/api/users/{id}/preferences`でDELETEを発行します。
 
-### Admin only: Fetch all user preferences
+### 管理者のみすべてのユーザー設定を取得
 
-The administrator can issue a GET request on `/api/users/preferences` to get a complete listing of all users' preferences. The response will include both user preferences (with Name == "prefs") and user *email* configurations (Name == "emailSettings"). The interface to set and modify email settings is described elsewhere:
+管理者は `/api/users/preferences` にGETリクエストを発行して、すべてのユーザの設定の完全なリストを取得することができます。レスポンスには、ユーザの設定(Name == "prefs")とユーザの*email*設定(Name == "emailSettings")の両方が含まれます。電子メール設定を設定・変更するためのインターフェイスは別の場所で説明されています。
 
 ```
 [
@@ -290,9 +294,9 @@ The administrator can issue a GET request on `/api/users/preferences` to get a c
 ]
 ```
 
-## Add user to groups
+## ユーザーをグループに追加
 
-Administrators can add users to groups by sending a POST request to `/api/users/{id}/group`. The body of the request should contain a list of GIDs which should be *added* to the user's group memberships. Thus, to add a user to a group with GID 8, send the following, regardless of any other group memberships:
+管理者は、`/api/users/{id}/group`にPOSTリクエストを送信することで、ユーザーをグループに追加することができます。リクエストの本文には、ユーザのグループメンバシップに*追加されるべきGIDのリストが含まれていなければなりません。したがって、GID 8のユーザーをグループに追加するには、他のグループメンバーシップに関係なく、以下のように送信します。
 
 ```
 {
@@ -300,14 +304,13 @@ Administrators can add users to groups by sending a POST request to `/api/users/
 }
 ```
 
-## Remove user from group
+## グループからユーザーを削除する
 
-To remove a user from a specific group, an admin can send a DELETE request to `/api/users/{id}/group/{gid}`, where {id} is the user's UID and {gid} is the group's GID.
+特定のグループからユーザを削除するには、管理者は `/api/users/{id}/group/{gid}` にDELETEリクエストを送ることができます。
 
-## Get user groups
+## ユーザーグループの取得
 
-To get a list of groups to which a user belongs, the user (or an admin) should issue a GET request to `/api/users/{id}/group`. The response will be an array of group details structures, as below:
-
+ユーザが所属するグループのリストを取得するには、ユーザ(または管理者)は `/api/users/{id}/group` にGETリクエストを発行しなければなりません。レスポンスは、以下のようなグループ詳細構造の配列になります。
 ```
 [
     {

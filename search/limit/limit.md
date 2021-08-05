@@ -1,18 +1,18 @@
 ## Limit
 
-The limit module allows a specified number of entries through and no more. This may be especially useful during the process of building a query, for example while testing regular expressions; by inserting a `limit 50` into the pipeline, the results displayed will be less overwhelming.
+limitモジュールは、指定した数のエントリを通過させ、それ以上は通過させないようにします。これは、例えば正規表現をテストしているときなど、クエリを構築している間に特に便利かもしれません。
 
-The syntax is simple: `limit <n>`, where `n` is the maximum number of entries to allow through, or `limit <n> <m>`, which allows the Nth to the Mth entries through.
+構文は単純です: `limit <n>`, ここで `n` は通過させるエントリの最大数、`limit <n> <m>` は N 番目から M 番目までのエントリを通過させるものです。
 
-Specifically, `limit X Y` will pass entries `[X,Y)`. That is limit is inclusive of the first term, and exclusive of the second. Terms are also zero-indexed, meaning given a set `[a,b,c,d,e,f]`, `limit 2 5` will return `[c d e]`.
+具体的には、`limit X Y` はエントリ `[X,Y)` を渡す。つまり、limitは最初の項を含み、2番目の項を含まない。つまり、集合 `[a,b,c,d,e,f]` が与えられると、`limit 2 5` は `[c d e]` を返す。
 
-For example, to look at the payload of 10 packets:
+例えば、10個のパケットのペイロードを見るには:
 
 ```
 tag=pcap packet tcp.Payload | limit 10 | table Payload
 ```
 
-To look at packets 5 to 10:
+パケット5から10を見るには:
 
 ```
 tag=pcap packet tcp.Payload | limit 5 10 | table Payload

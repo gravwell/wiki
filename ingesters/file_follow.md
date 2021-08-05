@@ -1,20 +1,21 @@
-# File Follower
+# ファイルフォロワー
 
-The File Follower ingester is the best way to ingest files on the local filesystem in situations where those files may be updated on the fly. It ingests each line of the files as a single entry.
+ファイルフォロワー・インジェスターは、ローカルファイルシステム上のファイルがその場で更新される可能性のある状況でファイルを取り込むための最適な方法です。ファイルの各行を1つのエントリとして取り込みます。
 
-The most common use case for File Follower is monitoring a directory containing log files which are actively being updated, such as /var/log. It intelligently handles log rotation, detecting when `logfile` has been moved to `logfile.1` and so on. It can be configured to ingest files matching a specific pattern in a directory, optionally recursively descending into the subdirectories of that top-level directory.
+ファイルフォロワーの最も一般的な使用例は、/var/logのような、活発に更新されているログファイルを含むディレクトリを監視することです。ファイルフォロワーはログのローテーションをインテリジェントに処理し、`logfile` が `logfile.1` に移動したことなどを検出します。ディレクトリ内の特定のパターンに一致するファイルを取り込むように設定することができ、オプションでトップレベルのディレクトリのサブディレクトリに再帰的に降りていくことができます。
 
-Attention: On RHEL/CentOS, `/var/log` belongs to the "root" group, not "adm" as we assume. File Follower runs in the adm group by default, so if you want it to read `/var/log` you need to `chgrp -R adm /var/log` OR change the group in the systemd unit file.
+注: RHEL/Centosでは、`/var/log`は "adm"ではなく "root"グループに属しています。ファイルフォロワーはデフォルトではadmグループで動作しますので、`/var/log`を読みたい場合は`chgrp -R adm /var/log`とするか、systemdユニットファイルでグループを変更する必要があります。
 
-## Basic Configuration
 
-The File Follower configuration file is by default located in `/opt/gravwell/etc/file_follow.conf` on Linux and `C:\Program Files\gravwell\file_follow.cfg` on Windows.
+## 基本的な設定
 
-The File Follower ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, File Follower supports multiple upstream indexers, TLS, cleartext, and named pipe connections, and local logging.
+ファイルフォロワーの設定ファイルは、デフォルトでLinuxでは`/opt/gravwell/etc/file_follow.conf`に、Windowsでは`C:GRAVWEL\file_follow.cfg`にあります。
 
-Note: We recommend strongly against using a file cache with the File Follower ingester, since it is already tracking its position within the source files.
+ファイルフォロワーインジェスターは[インジェスター](#!ingesters/ingesters.md#Global_Configuration_Parameters)で説明されている統一されたグローバル設定ブロックを使用します。他の多くのGravwellインジェスターと同様に、ファイルフォロワーは複数のアップストリームインデクサー、TLS、クリアテキスト、名前付きパイプ接続、ローカルロギングをサポートしています。
 
-An example configuration for the File Follower ingester, configured to watch several different types of log files in /var/log and recursively follow files under /tmp/incoming:
+注: ファイルフォロワーインジェスターではファイルキャッシュを使用しないことを強くお勧めします。なぜなら、ソースファイル内の位置をすでに追跡しているからです。
+
+以下は、/var/logにある複数の異なるタイプのログファイルを監視し、/tmp/incomingにあるファイルを再帰的に追跡するように構成されたファイルフォロワーインジェスターの設定例です:
 
 ```
 [Global]
@@ -50,23 +51,23 @@ Max-Files-Watched=64
 		Timezone-Override="America/Los_Angeles"
 ```
 
-In this example, the "syslog" follower reads `/var/log/syslog` and its rotations, ingesting lines to the syslog tag and assuming dates to be in the local timezone. Similarly, the "auth" follower also uses the syslog tag to ingest `/var/log/auth.log`. The "packages" follower ingests Debian's package management logs to the dpkg tag; for the purposes of illustration, it ignores the timestamps and marks each entry with the time it was read.
+この例では、"syslog "フォロワーが `/var/log/syslog` とそのローテーションを読み、行を syslog タグに取り込み、日付はローカルのタイムゾーンであると仮定しています。同様に、"auth "フォロワーもsyslogタグを使って、`/var/log/auth.log`を取り込みます。"packages"フォロワーは、Debian のパッケージ管理ログを dpkg タグで取り込みます。説明のために、タイムスタンプを無視して、各エントリに読み込まれた時間をマークします。
 
-Finally, the "external" follower reads all files ending in `.log` from the directory `/tmp/incoming`, descending recursively into directories. It parses timestamps as though they were in the Pacific time zone. This follower illustrates a configuration that would be useful if, for example, several servers on the US west coast periodically uploaded their log files to this system.
+最後に、"external"フォロワーは、ディレクトリ `/tmp/incoming` から `.log` で終わるすべてのファイルを読み込み、再帰的にディレクトリをさかのぼります。タイムスタンプはタイムゾーンがPacific時間であるかのように解析されます。このフォロワーでは、例えばアメリカ西海岸にある複数のサーバーが定期的にログファイルをこのシステムにアップロードしている場合に便利な設定を紹介しています。
 
-The configuration parameters used above are explained in greater detail in the following sections
+上記で使用した設定パラメータの詳細は、以下のセクションで説明します。
 
-## Additional Global Parameters
+## 追加のグローバルパラメーター
 
 ### Max-Files-Watched
 
-The Max-Files-Watched parameter prevents the File Follower from maintaining too many open file descriptors. If `Max-Files-Watched=64` is specified, the File Follower will actively watch up to 64 log files. When a new file is created, the File Follower will stop actively watching the oldest existing file in order to watch the new one. However, if the old file is later updated, it will return to the top of the queue.
+Max-Files-Watched パラメーターは、ファイルフォロワーが開いているファイルの数が増えすぎることを防ぎます。Max-Files-Watched=64`が指定された場合、ファイルフォロワーは最大64個のログファイルをアクティブに監視します。新しいファイルが作成されると、ファイルフォロワーは新しいファイルを監視するために、既存の最も古いファイルの監視を停止します。しかし、古いファイルが後に更新された場合は、キューの先頭に戻ります。
 
-We recommend leaving this setting at 64 in most cases; configuring the limit too high can run into limits set by the kernel.
+ほとんどの場合、この設定を64のままにしておくことをお勧めします。上限を高く設定しすぎると、カーネルが設定した制限に抵触する可能性があります。
 
-## Follower Configuration
+## フォロワー設定
 
-The File Follower configuration file contains one or more "Follower" directives:
+ファイルフォロワー設定ファイルには、1つ以上の"フォロワー"ディレクティブが含まれています:
 
 ```
 [Follower "syslog"]
@@ -75,29 +76,29 @@ The File Follower configuration file contains one or more "Follower" directives:
         Tag-Name=syslog
 ```
 
-Each follower specifies at minimum a base directory and a filename filtering pattern. This section describes possible configuration parameters which can be set per follower.
+各フォロワーは、最低でもベースディレクトリとファイル名のフィルタリングパターンを指定します。このセクションでは、フォロワーごとに設定可能な設定パラメーターについて説明します。
 
 ###	Base-Directory
 
-The Base-Directory parameter specifies the directory which will contain the files to be ingested. It should be an absolute path and contain no wildcards.
+Base-Directoryパラメータは、取り込み対象となるファイルを格納するディレクトリを指定します。絶対パスでなければならず、ワイルドカードは使用できません。
 
 ### File-Filter
 
-The File-Filter parameter defines the filenames which should be ingested. It can be as simple as a single file name:
+File-Filterパラメーターは、取り込むべきファイル名を定義します。それは、単一のファイル名のように単純なものである可能性があります:
 
 ```
 File-Filter="foo.log"
 ```
 
-Or it can contain multiple patterns:
+または複数のパターンを含むことができます:
 
 ```
 File-Filter="kern*.log,kern*.log.[0-9]"
 ```
 
-which will match any filename beginning with "kern" and ending with ".log", or beginning with "kern" and ending with ".log.0" through ".log.9".
+これは、"kern "で始まり".log "で終わるファイル名、または "kern "で始まり".log.0 "から".log.9 "で終わるファイル名にマッチします。
 
-The full matching syntax, as defined in [https://golang.org/pkg/path/filepath/#Match](https://golang.org/pkg/path/filepath/#Match):
+完全なマッチング構文は、[https://golang.org/pkg/path/filepath/#Match](https://golang.org/pkg/path/filepath/#Match)で定義されています:
 
 ```
 pattern:
@@ -118,9 +119,9 @@ character-range:
 
 ### Recursive
 
-The recursive parameter directs the File Follower to ingest files matching the File-Filter recursively under the Base-Directory.
+recursive パラメータは、File Follower がBase-Directory下のFile-Filterにマッチするファイルを再帰的に取り込むことを指示します。
 
-By default, the ingester will only ingest those files matching the File-Filter under the top level of the Base-Directory; the following would ingest `/tmp/incoming/foo.log` but not `/tmp/incoming/system1/foo.log`:
+デフォルトでは、インジェスターは Base-Directory のトップレベルにある File-Filter にマッチするファイルのみを取り込みます。以下の例では、`/tmp/incoming/foo.log`は取り込みますが、`/tmp/incoming/system1/foo.log`は取り込みません:
 
 ```
 Base-Directory="/tmp/incoming"
@@ -128,17 +129,17 @@ File-Filter="foo.log"
 Recursive=false
 ```
 
-By setting Recursive=true, the configuration will ingest **any** file named foo.log at any directory depth under `/tmp/incoming`.
+Recusive=trueを設定すると、`/tmp/incoming`以下の任意のディレクトリの深さにある、**foo.logという名前のファイルを取り込むことができます。
 
 ### Tag-Name
 
-The Tag-Name parameter specifies the tag to apply to entries ingested by this follower.
+Tag-Nameパラメータは、このフォロワーが取り込んだエントリーに適用するタグを指定します。
 
 ### Ignore-Line-Prefix
 
-The ingester will drop (not ingest) any lines beginning with the string passed to Ignore-Line-Prefix. This is useful when ingesting log files which contain comments, such as Bro logs. The Ignore-Line-Prefix parameter may be specified multiple times.
+インジェスターは、Ignore-Line-Prefixに渡された文字列で始まるすべての行をドロップします(インジェストしません)。これは、Broログのようなコメントを含むログファイルをインジェストするときに便利です。Ignore-Line-Prefixパラメータは複数回指定できます。
 
-The following indicates that lines beginning with `#` or `//` should not be ingested:
+以下は、`#`または`//`で始まる行がインジェストされないことを示しています。:
 
 ```
 Ignore-Line-Prefix="#"
@@ -147,7 +148,7 @@ Ignore-Line-Prefix="//"
 
 ### Regex-Delimiter
 
-The `Regex-Delimiter` option allows the user to specify a regular expression which will be used to split entries, rather than newlines. Thus, if your input files look like this:
+`Regex-Delimiter`オプションでは、エントリーを分割する際に、改行ではなく、正規表現を指定することができます。たとえば、入力ファイルが次のようなものだとすると:
 
 ```
 ####This is the first entry
@@ -155,32 +156,32 @@ additional data
 ####This is the second entry
 ```
 
-You could add the following line to your follower definition:
+フォロワーの定義に次のような行を追加することができます:
 
 ```
 Regex-Delimiter="####"
 ```
 
-This will parse the preceding file into two entries:
+これは、前のファイルを解析し2つのエントリーにします:
 
 ```
 ####This is the first entry
 additional data
 ```
 
-and
+と
 
 ```
 ####This is the second entry
 ```
 
-Note: `Timestamp-Delimited` overrides `Regex-Delimiter`; set one or the other.
+注: `Timestamp-Delimited` は `Regex-Delimiter` よりも優先されるので、どちらか一方を設定してください。
 
 ### Timestamp-Delimited
 
-The Timestamp-Delimited parameter is a boolean specifying that each occurrence of a time stamp should be considered the start of a new entry. This is useful when log entries may span multiple lines. When specifying Timestamp-Delimited, the Timestamp-Format-Override parameter must also be set.
+Timestamp-Delimitedパラメータは、タイムスタンプが出現するたびに、新しいエントリの開始とみなすことを指定するブール値です。これは、ログエントリが複数の行にまたがる場合に便利です。Timestamp-Delimitedを指定する場合は、Timestamp-Format-Overrideパラメータも設定する必要があります。
 
-If a log file looks like this:
+ログファイルが以下のような場合:
 
 ```
 2012-11-01T22:08:41+00:00 Line 1 of the first entry
@@ -190,7 +191,7 @@ Line 2 of the second entry
 Line 3 of the second entry
 ```
 
-Provided the follower is configured with `Timestamp-Delimited=true` and `Timestamp-Format-Override=RFC3339`, it will generate the following two entries:
+フォロワーが`Timestamp-Delimited=true`と`Timestamp-Format-Override=RFC3339`で設定されている場合、以下の2つのエントリーが生成されます:
 
 ```
 2012-11-01T22:08:41+00:00 Line 1 of the first entry
@@ -202,31 +203,31 @@ Line 2 of the second entry
 Line 3 of the second entry
 ```
 
-Note: `Timestamp-Delimited` overrides `Regex-Delimiter`; set one or the other.
+注: `Timestamp-Delimited` は `Regex-Delimiter` よりも優先されるので、どちらか一方を設定してください。
 
 ### Ignore-Timestamps
 
-The Ignore-Timestamps parameter indicates that the follower should not attempt to extract a timestamp from each line of the file, but rather tag each line with the current time.
+Ignore-Timestampsパラメータは、フォロワーがファイルの各行からタイムスタンプを抽出せず、各行に現在時刻をタグ付けすることを示します。
 
 ### Assume-Local-Timezone
 
-Assume-Local-Timezone is a boolean setting which directs the ingester to parse timestamps which lack timezone specifications as though they were in the local time zone rather than the default UTC.
+Assume-Local-Timezoneは、タイムゾーンの指定がないタイムスタンプを、デフォルトのUTCではなくローカルのタイムゾーンで解析するよう、インジェスターに指示するブール値の設定です。
 
-Assume-Local-Timezone and Timezone-Override are mutually exclusive.
+Assume-Local-TimezoneとTimezone-Overrideは相互に排他的です。
 
 ### Timezone-Override
 
-The Timezone-Override parameter directs the ingester to parse timestamps which lack timezone specifications as though they were in the given time zone rather than the default UTC. The timezone should be specified in IANA database string format as shown in [https://en.wikipedia.org/wiki/List_of_tz_database_time_zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones); for example, US Central Time should be specified as follows:
+Timezone-Overrideパラメータは、タイムゾーンの指定がないタイムスタンプを、デフォルトのUTCではなく指定されたタイムゾーンで解析するようにインジェスターに指示します。タイムゾーンは、[https://en.wikipedia.org/wiki/List_of_tz_database_time_zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)に示すように、IANAデータベースの文字列形式で指定する必要があります:
 
 ```
 Timezone-Override="America/Chicago"
 ```
 
-Assume-Local-Timezone and Timezone-Override are mutually exclusive. `Timezone-Override="Local"` is functionally equivalent to `Assume-Local-Timezone=true`
+Assume-Local-TimezoneとTimezone-Overrideは相互に排他的です。`Timezone-Override="Local"`は、機能的には`Assume-Local-Timezone=true`と同じです。
 
 ### Timestamp-Format-Override
 
-Data values may contain multiple timestamps which can cause some confusion when attempting to derive timestamps out of the data.  Normally, the followers will grab the left most timestamp that can be derived, but if there are multiple timestamps in an entry it may be useful to specify a format to try first.  "Timestamp-Format-Override" tells the follower to try a specific format first.  The following timestamp formats are available:
+データ値に複数のタイムスタンプが含まれている場合、データからタイムスタンプを導き出そうとすると、混乱を招くことがあります。通常、フォロワーは導出可能な一番左のタイムスタンプを取得しますが、エントリ内に複数のタイムスタンプがある場合、最初に試すフォーマットを指定すると便利です。"Timestamp-Format-Override"は、フォロワーが特定のフォーマットを最初に試すように指示します。 以下のようなタイムスタンプフォーマットがあります:
 
 * AnsiC
 * Unix
@@ -251,19 +252,19 @@ Data values may contain multiple timestamps which can cause some confusion when 
 * SyslogVariant
 * UnpaddedDateTime
 
-Refer to [the timegrinder documentation](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder) for a full list of possible overrides, with examples.
+可能なオーバーライドの全リストとその例については、[TimeGrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder)を参照してください。
 
-To force the follower to first look for timestamps that match the RFC3339 specification, add `Timestamp-Format-Override=RFC3339` to the follower. Note that if it is unable to find an RFC3339 timestamp, it will attempt to match against other formats too.
+RFC3339の仕様にマッチするタイムスタンプを最初に探すようにフォロワーに強制するには、フォロワーに `Timestamp-Format-Override=RFC3339`を追加します。なお、RFC3339のタイムスタンプが見つからない場合は、他のフォーマットにもマッチさせようとします。
 
 ### Timestamp-Regex and Timestamp-Format-String
 
-The `Timestamp-Regex` and `Timestamp-Format-String` options may be used in tandem to specify an additional timestamp format for use when parsing timestamps for this follower. For example, if you are ingesting logs containing Oracle WebLogic timestamps (e.g. "Sep 18, 2020 12:26:48,992 AM EDT"), you would add the following to your configuration:
+`Timestamp-Regex`と`Timestamp-Format-String`オプションは、このフォロワーのタイムスタンプを解析する際に使用する追加のタイムスタンプフォーマットを指定するために、同時に使用することができます。例えば、Oracle WebLogicのタイムスタンプ（例："Sep 18, 2020 12:26:48,992 AM EDT"）を含むログを取り込む場合は、以下を設定に追加します:
 
 ```
 	Timestamp-Regex=`[JFMASOND][anebriyunlgpctov]+\s+\S{1,2},\s+\d{4}\s+\d{1,2}:\d\d:\d\d,\d+\s+\S{2}\s+\S+`
 	Timestamp-Format-String="Jan _2, 2006 3:04:05,999 PM MST"
 ```
 
-The `Timestamp-Format-String` parameter should be a Go-style timestamp format as defined [in this document](https://golang.org/pkg/time/). The `Timestamp-Regex` parameter should be a regular expression which can match the timestamps you wish to extract; note that it must also be able to match the `Timestamp-Format-String` and will return an error if it does not match.
+`Timestamp-Format-String`パラメータは、[このドキュメント](https://golang.org/pkg/time/)で定義されているGoスタイルのタイムスタンプフォーマットでなければなりません。`Timestamp-Regex`パラメータは、抽出したいタイムスタンプにマッチする正規表現でなければなりません。これは、`Timestamp-Format-String`にもマッチしなければならず、マッチしない場合はエラーを返します。
 
-The format defined using these options will be inserted at the top of the list of formats used by timegrinder, meaning it will be checked first, but if a valid timestamp is not found with the user-defined format, the rest of the timegrinder formats will also be tried.
+これらのオプションを使って定義されたフォーマットは、タイムグラインダーが使用するフォーマットのリストの一番上に挿入され、最初にチェックされますが、ユーザー定義のフォーマットで有効なタイムスタンプが見つからない場合は、タイムグラインダーの他のフォーマットも試されることになります。

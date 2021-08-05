@@ -1,95 +1,95 @@
-# Gravwell Clusters
+# Gravwellクラスター
 
-While Gravwell will happily run entirely contained on a single node, environments with large quantities of data may be best served with a cluster. In a Gravwell cluster, one or more webservers control one or more indexers, all on separate servers.
+Gravwellは単一ノードで完全に実行されますが、大量のデータを含む環境はクラスターで最適に処理される場合があります。 Gravwellクラスターでは、1つ以上のWebサーバーが1つ以上のインデクサーを制御し、すべて別々のサーバー上にあります。
 
-The Gravwell architecture is described in detail in [this document](#!architecture/architecture.md); this article deals more concretely with details of configuration for clustering.
+Gravwellアーキテクチャの詳細は、[このドキュメント](#!architecture/architecture.md)で説明されています。 この記事では、クラスタリングの構成の詳細をより具体的に扱います。
 
-The following are all valid Gravwell configurations:
+以下はすべて有効なGravwell構成です。
 
-* One webserver and one indexer, both running on the same system. This is the default installation; we do not consider it a cluster because the webserver and indexer are on the same machine.
-* One webserver and one indexer, each on its own server. This is the simplest possible cluster.
-* One webserver and multiple indexers, each on their own servers.
-* [Multiple webservers](#!distributed/frontend.md) and multiple indexers.
+* 1つのWebサーバーと1つのインデクサー、両方が同じシステムで実行されている。 これがデフォルトのインストールです。 Webサーバーとインデクサーが同じマシン上にあるため、クラスターとは見なしません。
+* それぞれ独自のサーバー上の1つのWebサーバーと1つのインデクサー。 これは、可能な限り単純なクラスターです。
+* 1つのWebサーバーと複数のインデクサー、それぞれ独自のサーバー上。
+*  [複数のWebサーバー](#!distributed/frontend.md)および複数のインデクサー。
 
-We will discuss configuring a cluster with a single webserver and one or more indexers. If you want multiple webservers, we recommend following the steps outlined here to first configure a single-webserver cluster, then using the information in [this document](#!distributed/frontend.md) to add additional webservers later. You will likely also want to set up [load balancing](loadbalancer.md) to most effectively utilize all webservers.
+単一のWebサーバーと1つ以上のインデクサーを使用してクラスターを構成する方法について説明します。 複数のWebサーバーが必要な場合は、ここで説明する手順に従って最初に単一のWebサーバークラスターを構成し、[このドキュメント](#!distributed/frontend.md)の情報を使用してWebサーバーを後で追加することをお勧めします。また、すべてのウェブサーバーを効果的に利用するためには、[ロードバランシング](loadbalancer.md)の設定も必要になるでしょう。
 
-## Planning Your Cluster
+## クラスターの計画
 
-There are several things to keep in mind while planning your cluster:
+クラスターを計画する際に留意すべき点がいくつかあります。
 
-* Your Gravwell license -- how many nodes does it allow?
-* Type and number of servers available
-* Network interconnect
-* Quantity of data you wish to ingest
+* Gravwellライセンス-いくつのノードが許可されていますか？
+* 利用可能なサーバーの種類と数
+* ネットワーク相互接続
+* 取り込みたいデータの量
 
-The last point is tricky, because the number of indexers required to store a given amount of data depends heavily on the hardware available (how much RAM per node, NVME vs SSD vs spinning disk, etc.) and how much querying you intend to do. We recommend contacting [Gravwell support](mailto:support@gravwell.io) for help in planning your cluster.
+一定量のデータを保存するために必要なインデクサーの数は、使用可能なハードウェア（ノードあたりのRAMの量、NVME対SSD対回転ディスクなど）とクエリの実行量に大きく依存するため、最後の点は注意が必要です。クラスターの計画については、[Gravwellサポート](mailto:support@gravwell.io) に連絡することをお勧めします。
 
-Before beginning, it is useful to know the specific IP addresses or hostnames which will be used for the webserver and the indexers. Also, review the ports in [this document](#!configuration/networking.md) to ensure that your network is configured to allow necessary connections between Gravwell components; in brief, you'll want to make sure the webserver can reach port 9404 on the indexers, that users can reach port 80 and 443 on the webserver, and that your ingesters will be able to reach ports 4023 and 4024 on the indexers.
+開始する前に、Webサーバーとインデクサーに使用される特定のIPアドレスまたはホスト名を知っておくと役立ちます。 また、[このドキュメント](#!configuration/networking.md)のポートを確認して、Gravwellコンポーネント間の必要な接続を許可するようにネットワークが構成されていることを確認してください。 簡単に説明すると、Webサーバーがインデクサーのポート9404に到達できること、ユーザーがWebサーバーのポート80および443に到達できること、インジェスターがインデクサーのポート4023および4024に到達できることを確認する必要があります。
 
-**Do I need multiple webservers?** Most likely, no. Multiple webservers make your cluster more complex. In general, we recommend setting up a single webserver, then adding more if the load is too high in use. 
+**複数のWebサーバーが必要ですか？** ほとんどの場合に、複数のWebサーバーを使用すると、クラスターがより複雑になります。 一般に、単一のWebサーバーをセットアップし、使用中の負荷が高すぎる場合は追加することをお勧めします。
 
-### Planning Tags and Wells
+### タグとウェルの計画
 
-If you know you will be ingesting netflow, packet capture, syslogs, Apache logs, and Windows logs, you should consider putting each data class into its own storage well. By putting syslog into a separate well from high-volume sources such as raw packets, you'll improve the speed of your syslog queries. See [the advanced configuration article](#!configuration/configuration.md#Tags_and_Wells) for a more detailed discussion of tags and wells.
+ネットフロー、パケットキャプチャ、syslog、Apacheログ、およびWindowsログを取り込むことがわかっている場合は、各データクラスを独自のストレージに適切に配置することを検討する必要があります。 syslogを生パケットなどの大容量のソースとは別のウェルに配置することにより、syslogクエリの速度が向上します。 タグとウェルの詳細については、[高度な構成の記事](#!configuration/configuration.md#Tags_and_Wells)を参照してください。
 
-In the planning stage, it is useful to make a list of each data source, which tag you'll apply to it, and which well you intend to use for storing it. If you're not yet sure what data you'll be ingesting, you can use the default well configuration and make adjustments once real data begins flowing in.
+計画段階では、各データソース、適用するタグ、および保存に使用するタグのリストを作成すると便利です。 取り込むデータがまだわからない場合は、デフォルトのウェル構成を使用して、実際のデータが流入し始めたら調整することができます。
 
-Also consider [ageout](#!configuration/ageout.md) needs at this time. How long do you want to retain system logs? Packet captures? Netflow records? For example, if you're ingesting 100 gigabytes of packets per day and your cluster has 10 TB of storage in total, you could store about 100 days of uncompressed packet data, but any data older than that will need to be aged out.
+また、この時点で[ageout](#!configuration/ageout.md)のニーズも考慮してください。 システムログをどのくらいの期間保持しますか？ パケットキャプチャ？ Netflowレコード？ たとえば、1日あたり100ギガバイトのパケットを取り込み、クラスターに合計10 TBのストレージがある場合、約100日間の非圧縮パケットデータを保存できますが、それより古いデータはエージングアウトする必要があります。
 
-## Installing the Webserver
+## Webサーバーのインストール
 
-We recommend starting your installation with the webserver. This will generate a `gravwell.conf` you can use as a starting point for configuring the indexers. Follow the instructions below to install the webserver using one of the two available methods.
+Webサーバーでインストールを開始することをお勧めします。 これにより、インデクサーを設定するための開始点として使用できる`gravwell.conf`が生成されます。 以下の手順に従って、使用可能な2つの方法のいずれかを使用してWebサーバーをインストールします。
 
-### Installing webserver via shell installer
+### シェルインストーラーを介したWebサーバーのインストール
 
-To install only the webserver and search agent using the [standalone shell installer](#!quickstart/downloads.md), run the following command (the version will likely differ for you):
+[スタンドアロンシェルインストーラー](#!quickstart/downloads.md)を使用してWebサーバーと検索エージェントのみをインストールするには、次のコマンドを実行します（バージョンは異なる場合があります）。
 
 ```
 root@headnode# bash gravwell_3.2.0.sh --no-indexer
 ```
 
-### Installing webserver via Debian package
+### Debianパッケージ経由でWebサーバーをインストールする
 
-Setting up a webserver-only node from the Debian package requires a few additional steps. Set up the repository and install the Gravwell package as described in [the quickstart document](#!quickstart/quickstart.md#Debian_repository). You can allow the installer to auto-generate secret tokens for you when prompted.
+DebianパッケージからWebサーバーのみのノードをセットアップするには、いくつかの追加手順が必要です。 [クイックスタート](#!quickstart/quickstart.md#Debian_repository)の説明に従って、リポジトリをセットアップし、Gravwellパッケージをインストールします。 プロンプトが表示されたら、インストーラーが秘密トークンを自動生成できるようにすることができます。
 
-After installing the `gravwell` package, you'll need to disable the indexer:
+`gravwell`パッケージをインストールした後、インデクサーを無効にする必要があります。
 
 ```
 root@headnode# systemctl stop gravwell_indexer.service
 root@headnode# systemctl disable gravwell_indexer.service
 ```
 
-## Building the Config File
+## 構成ファイルの構築
 
-Now that the webserver is installed, we will build the configuration file to be used by the indexers. Copy `/opt/gravwell/etc/gravwell.conf` from the webserver to a local directory, then open it in an editor. By using the `gravwell.conf` file from the webserver, we will ensure that all indexers share the exact same set of authentication tokens.
+Webサーバーがインストールされたので、インデクサーが使用する構成ファイルを作成します。`/opt/gravwell/etc/gravwell.conf` をWebサーバーからローカルディレクトリにコピーし、エディターで開きます。 Webサーバーから`gravwell.conf`ファイルを使用することにより、すべてのインデクサーがまったく同じ認証トークンのセットを共有するようにします。
 
-Delete any lines which begin with `Indexer-UUID`. If you installed the webserver using the shell installer, there may not be any Indexer-UUID line; this is fine.
+`Indexer-UUID`で始まる行を削除します。 シェルインストーラーを使用してWebサーバーをインストールした場合、Indexer-UUID行がない可能性があります。 これは結構です。
 
-Next, define your storage wells. At the time of writing, the default configuration creates separate wells for Linux syslogs, Windows event logs, web server logs (Apache, nginx, etc.), netflow/ipfix records, and "raw" data such as packet capture. You should feel free to delete or modify any of the `Storage-Well` definitions to match your planned tag/well configuration, but please note that the configuration **must** contain a `Default-Well` definition, so don't delete it! Now is a good time to define [data retention and ageout policies](#!configuration/ageout.md) for each well, per the guidelines you chose during the planning stage.
+次に、ストレージウェルを定義します。 執筆時点では、デフォルトの構成により、Linux syslog、Windowsイベントログ、Webサーバーログ（Apache、nginxなど）、netflow/ipfixレコード、およびパケットキャプチャなどの "raw" データ用に個別のウェルが作成されます。 計画したタグ/ウェル設定に一致するように `Storage-Well`定義のいずれかを自由に削除または変更する必要がありますが、設定には**必ず** `Default-Well`定義が含まれている必要があるため、 消して！ ここで、計画段階で選択したガイドラインに従って、各ウェルの[データ保持およびエージアウトポリシー](#!configuration/ageout.md)を定義します。
 
-If you intend to use [data replication](#!configuration/replication.md), in which indexers replicate each other's stored entries to prevent data loss in case of hardware failure, this is also the time to add it to the configuration. See the [replication article](#!configuration/replication.md) for instructions on how to configure replication.
+[データレプリケーション](#!configuration/replication.md)を使用する場合は、インデクサーが相互に保存されたエントリをレプリケートし、ハードウェア障害の場合のデータの損失を防ぎます。 レプリケーションの構成方法については、[レプリケーション記事](#!configuration/replication.md)を参照してください。
 
-## Installing the Indexers
+## インデクサーのインストール
 
-Having written the indexer config file, you should now copy it to the servers you will use as indexers. We will assume you have put the file in `/tmp/indexer.conf` on every indexer server.
+インデクサー構成ファイルを作成したら、それをインデクサーとして使用するサーバーにコピーする必要があります。 すべてのインデクサーサーバーのファイルを `/tmp/indexer.conf` に配置したと仮定します。
 
-### Installing indexer via shell installer
+### シェルインストーラーによるインデクサーのインストール
 
-To install only the indexer using the [standalone shell installer](#!quickstart/downloads.md), run the following command on every indexer server:
+[スタンドアロンシェルインストーラー](#!quickstart/downloads.md)を使用してインデクサーのみをインストールするには、すべてのインデクサーサーバーで次のコマンドを実行します。
 
 ```
 root@indexer0# bash gravwell_3.2.0.sh  --no-webserver --no-searchagent --use-config /tmp/indexer.conf
 ```
 
-This will copy your config file to its proper location in /opt/gravwell/etc/gravwell.conf, so you can delete /tmp/indexer.conf after installation if desired.
+これにより、構成ファイルが/opt/gravwell/etc/gravwell.confの適切な場所にコピーされるため、必要に応じてインストール後に/tmp/indexer.confを削除できます。
 
-### Installing indexer via Debian package
+### Debianパッケージを介したインデクサーのインストール
 
-Setting up an indexer-only node from the Debian package requires a few additional steps. Follow these steps on every indexer server.
+Debianパッケージからインデクサー専用ノードをセットアップするには、いくつかの追加手順が必要です。 すべてのインデクサーサーバーで次の手順を実行します。
 
-Set up the repository and install the Gravwell package as described in [the quickstart document](#!quickstart/quickstart.md#Debian_repository). You can allow the installer to auto-generate secret tokens for you when prompted, because we will be replacing the config file with our own.
+[クイックスタート](#!quickstart/quickstart.md#Debian_repository)の説明に従って、リポジトリをセットアップし、Gravwellパッケージをインストールします。 構成ファイルを独自のもので置き換えるため、プロンプトが表示されたときにインストーラーが秘密トークンを自動生成できるようにすることができます。
 
-After installing the `gravwell` package, we want to stop all Gravwell services:
+`gravwell`パッケージをインストールした後、すべてのGravwellサービスを停止します:
 
 ```
 root@indexer0# systemctl stop gravwell_indexer.service
@@ -97,30 +97,30 @@ root@indexer0# systemctl stop gravwell_webserver.service
 root@indexer0# systemctl stop gravwell_searchagent.service
 ```
 
-Then install the customized config file:
+次に、カスタマイズされた構成ファイルをインストールします。
 
 ```
 root@indexer0# cp /tmp/indexer.conf /opt/gravwell/etc/gravwell.conf
 ```
 
-Disable the webserver and search agent components:
+Webサーバーおよび検索エージェントコンポーネントを無効にします。
 
 ```
 root@indexer0# systemctl disable gravwell_webserver.service
 root@indexer0# systemctl disable gravwell_searchagent.service
 ```
 
-And finally restart the indexer service:
+最後に、インデクサーサービスを再起動します。
 
 ```
 root@indexer0# systemctl start gravwell_indexer.service
 ```
 
-## Final Webserver Configuration
+## 最終的なWebサーバーの構成
 
-At this point, you should have the webserver running on one node and indexer processes running on several other nodes. The final step is to inform the webserver of the newly-configured indexers.
+この時点で、1つのノードでWebサーバーを実行し、他の複数のノードでインデクサープロセスを実行する必要があります。 最後のステップは、新しく構成されたインデクサーをWebサーバーに通知することです。
 
-Connect to the webserver and edit `/opt/gravwell/etc/gravwell.conf`. Find the line beginning with `Remote-Indexers`; it will probably look like `Remote-Indexers=net:127.0.0.1:9404`. Delete that, then add one Remote-Indexers line *per indexer*; for example, if your indexers are at 10.0.1.1 through 10.0.1.5, your webserver's gravwell.conf should contain the following:
+Webサーバーに接続し、`/opt/gravwell/etc/gravwell.conf`を編集します。`Remote-Indexers`で始まる行を見つけます。 おそらく`Remote-Indexers=net:127.0.0.1:9404`のようになります。 それを削除してから、*インデクサーごと*に1つのRemote-Indexers行を追加します。 たとえば、インデクサーが10.0.1.1から10.0.1.5にある場合、Webサーバーのgravwell.confには以下が含まれている必要があります。
 
 ```
 Remote-Indexers=net:10.0.1.1:9404
@@ -130,20 +130,20 @@ Remote-Indexers=net:10.0.1.4:9404
 Remote-Indexers=net:10.0.1.5:9404
 ```
 
-Note: You can use hostnames instead of IP addresses if you wish.
+注：必要に応じて、IPアドレスの代わりにホスト名を使用できます。
 
-Once the webserver's gravwell.conf is updated, restart the webserver process:
+ウェブサーバーのgravwell.confが更新されたら、ウェブサーバープロセスを再起動します。
 
 ```
 root@headnode# systemctl restart gravwell_webserver.service
 ```
 
-You can now point your web browser at the webserver and upload a license file when prompted. The webserver will automatically distribute the license file to the indexers.
+これで、WebブラウザでWebサーバーを指定し、プロンプトが表示されたらライセンスファイルをアップロードできます。 Webサーバーは、ライセンスファイルをインデクサーに自動的に配布します。
 
 ## Administration
 
-For the most part, administration of a Gravwell cluster is the same as administration of a single-node Gravwell instance. If an indexer is down, a high-priority notification will be shown in the Gravwell UI. If any indexer's disk becomes overly full, it will send a notification message.
+Gravwellクラスターの管理は、ほとんどの場合、単一ノードのGravwellインスタンスの管理と同じです。 インデクサーが停止している場合、優先度の高い通知がGravwell UIに表示されます。 インデクサーのディスクが過剰にいっぱいになると、通知メッセージを送信します。
 
-## Caveats
+## 注意事項
 
-Be aware that if an indexer is down, you can still run searches, but the results of the search will lack any entries which are stored on that indexer. If your ingesters distribute entries equally across 10 indexers, but one indexer goes down, your searches will only contain 90% of the results which can lead to inaccurate statistics.
+インデクサーがダウンしている場合でも検索を実行できますが、検索の結果にはそのインデクサーに格納されているエントリが不足することに注意してください。 インジェスターが10個のインデクサーに均等にエントリを分散しているが、1つのインデクサーがダウンした場合、検索結果の90％しか含まれないため、統計が不正確になる可能性があります。

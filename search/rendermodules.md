@@ -1,27 +1,28 @@
-# Renderer Modules
+# レンダラーモジュール
 
-Renderer modules are in charge of receiving data from the search module pipeline and organizing it for display to the user. When possible, the renderers provide for a second order temporal index. This allows for moving around and zeroing in on time spans within the original search. Renderers can optionally save search results, which can be reopened and viewed or even passed to another instance of Gravwell. This is useful for archiving a view of data or saving the results which survive well after stored data is expired or purposefully deleted.
+レンダラーモジュールは、検索モジュールパイプラインからデータを受信し、ユーザーに表示するためにデータを整理する役割を担っています。可能な場合、レンダラーは 2 次の時間インデックスを提供します。これにより、元の検索内のタイムスパンを移動して０にすることができます。レンダラーはオプションで検索結果を保存することができ、検索結果を再度開いて表示したり、Gravwellの別のインスタンスに渡すこともできます。これは、データビューを保存したり、保存されているデータが期限切れや意図的に削除された後にも生き残っている結果を保存したりするのに便利です。
 
-Every search module has universal enumerated values for records.
+すべての検索モジュールは、レコードに対して普遍的な列挙値を持っています。
 
-* SRC -- the source of the data.
-* TAG -- the Tag attached to the data.
-* TIMESTAMP -- the timestamp associated with the entry
 
-## Renderer Module list
+* SRC -- データのソース。
+* TAG -- データに添付されたタグ。
+* TIMESTAMP -- エントリに関連付けられたタイムスタンプ。
 
-### Charts, Graphs, and Gauges
-* [chart](chart/chart.md) - Render data as line graphs, bar graphs, etc.
-* [fdg](fdg/fdg.md) - Force-directed graphs.
-* [stackgraph](stackgraph/stackgraph.md) - Stack graphs.
-* [gauge/numbercard](gauge/gauge.md) - Gauges and numeric cards.
+## レンダラーモジュール一覧
 
-### Tables and Text
-* [table](table/table.md) - Display tables of enumerated values.
-* [text](text/text.md) - Output the body of entries with minimal formatting.
-* [raw](raw/raw.md) - Output data completely unformatted.
-* [pcap](pcap/pcap.md) - Show an overview of the contents of network packets.
+### チャート、グラフ、ゲージ
+* [chart](chart/chart.md) - グラフを折れ線グラフや棒グラフなどの形式で表示する。
+* [fdg](fdg/fdg.md) - 強制的に指示されたグラフを表示します。
+* [stackgraph](stackgraph/stackgraph.md) - 積層グラフを作成します。
+* [gauge](gauge/gauge.md) - ゲージと数値カード。
 
-### Maps
-* [pointmap / heatmap](map/map.md) - Display heatmaps or individual points on a map.
-* [point2point](point2point/point2point.md) - Display data entries which have both a source and a destination.
+### 表とテキスト
+* [table](table/table.md) - 列挙された値の表を表示します。
+* [text](text/text.md) - 最小限の書式でエントリの本文を出力します。
+* [raw](raw/raw.md) - データを完全にフォーマットせずに出力します。
+* [pcap](pcap/pcap.md) - ネットワークパケットの内容の概要を表示します。
+
+### マップ
+* [pointmap / heatmap](map/map.md) - 地図上にヒートマップや個々のポイントを表示します。
+* [point2point](point2point/point2point.md) - 送信元と送信先の両方を持つデータエントリを表示する。

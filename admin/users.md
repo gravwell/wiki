@@ -1,75 +1,75 @@
-# Managing Users and Groups
+# ユーザーとグループの管理
 
-Gravwell implements a system of users and groups very similar to Unix's. Each user is assigned a unique user ID number (UID), and each group has a unique group ID number (GID). A given user may belong to zero or more groups.
+Gravwellは、UNIXに非常によく似たユーザーとグループのシステムを実装しています。 各ユーザーには一意のユーザーID番号（UID）が割り当てられ、各グループには一意のグループID番号（GID）があります。 特定のユーザーは、0個以上のグループに属する場合があります。
 
-Resources, dashboards, search results, and other things within Gravwell are typically owned by a user and optionally shared with a list of groups. A resource, for instance, may be owned by UID 3 and shared with several groups, the members of which may read but not modify that resource. Administrator users can read, modify, or delete anything.
+Gravwell内のリソース、ダッシュボード、検索結果などは通常、ユーザーが所有し、オプションでグループのリストと共有されます。 たとえば、リソースはUID 3によって所有され、複数のグループと共有されます。グループのメンバーは、そのリソースを読み取りますが、変更はできません。 管理者ユーザーは、何でも読み取り、変更、または削除できます。
 
-The user and group management pages are located in the Administration section of the main menu, near the bottom:
+ユーザーおよびグループ管理ページは、メインメニューの下部近くにある管理セクションにあります。
 
 ![](usermenu.png)
 
-## Managing Users
+## ユーザーの管理
 
-On a newly-installed system, selecting the Users page should show only one user: the administrator.
+新しくインストールしたシステムでは、[ユーザー]ページを選択すると、管理者という1人のユーザーのみが表示されます。
 
 ![](users1.png)
 
-### Adding a User
+### ユーザーを追加する
 
-Clicking the 'Add' button brings up a dialog box containing fields to define the new user.
+[追加]ボタンをクリックすると、新しいユーザーを定義するフィールドを含むダイアログボックスが表示されます。
 
 ![](newuser.png)
 
-Note the "Permissions Groups" section at the bottom; this allows you to add the user to groups at creation time. Checking the 'Administrator' box will give the user permissions equivalent to the 'admin' user; take great care when making a user an administrator!
+下部の「許可グループ」セクションに注意してください。 これにより、作成時にユーザーをグループに追加できます。 [管理者]ボックスをオンにすると、ユーザーに[管理者]ユーザーと同等の権限が付与されます。 ユーザーを管理者にする場合は細心の注意を払ってください！
 
-### Locking/Unlocking a User Account
+### ユーザーアカウントのロック/ロック解除
 
-Administrators can temporarily disable a user's account by selecting the lock icon on the user's card.
+管理者は、ユーザーのカードのロックアイコンを選択して、ユーザーのアカウントを一時的に無効にすることができます。
 
 ![](locked.png)
 
-The user will then be marked as "locked" and the lock icon will change to an unlock icon as shown above.
+ユーザーは「ロック済み」とマークされ、ロックアイコンは上記のようにロック解除アイコンに変わります。
 
-When a user account is locked, the user is immediately logged out of all sessions and cannot log in until the account is unlocked.
+ユーザーアカウントがロックされると、ユーザーはすべてのセッションから直ちにログアウトされ、アカウントがロック解除されるまでログインできません。
 
-### Editing a User Account
+### ユーザーアカウントの編集
 
-Selecting the pencil icon for a user will open a dialog where the account attributes can be changed:
+ユーザーの鉛筆アイコンを選択すると、アカウント属性を変更できるダイアログが開きます。
 
 ![](edituser.png)
 
-### Viewing a User's Search History
+### ユーザーの検索履歴を表示する
 
-Clicking on the clock icon for a user (in the lower-right corner of the user's tile) will display that user's search history:
+ユーザーの時計アイコン（ユーザーのタイルの右下隅）をクリックすると、そのユーザーの検索履歴が表示されます。
 
 ![](userhist.png)
 
-From this page the administrator can re-run a given query if necessary; this is useful when debugging problems with users.
+このページから、管理者は必要に応じて特定のクエリを再実行できます。 これは、ユーザーの問題をデバッグするときに役立ちます。
 
-### Deleting a User
+### ユーザーを削除する
 
-A user can be deleted by clicking the trash can icon on their user tile. The system will prompt for confirmation before deleting. Note that because deletion is permanent, you should consider locking user accounts as an alternative to deletion; locking the account preserves data associated with that account which may be useful.
+ユーザーを削除するには、ユーザータイルのゴミ箱アイコンをクリックします。 システムは、削除する前に確認を求めます。 削除は永続的であるため、削除の代わりにユーザーアカウントのロックを検討する必要があることに注意してください。 アカウントをロックすると、そのアカウントに関連付けられている有用なデータが保持されます。
 
-## Managing Groups
+## グループを管理する
 
-Selecting the `Groups` page will list any existing groups; by default, Gravwell includes no groups. This screenshot shows a single group:
+「グループ」ページを選択すると、既存のグループがリストされます。 デフォルトでは、Gravwellにはグループが含まれていません。 このスクリーンショットは、単一のグループを示しています。
 
 ![](groups.png)
 
-### Adding a Group
+### グループを追加する
 
-Add a group by clicking the 'Add' button and populating the fields:
+[追加]ボタンをクリックし、フィールドに入力してグループを追加します。
 
 ![](newgroup.png)
 
-Note that you can add existing users to this group at creation time.
+作成時に既存のユーザーをこのグループに追加できることに注意してください。
 
-### Editing a Group
+### グループを編集する
 
-Clicking on the pencil icon for a group will open a dialog to edit the group. Note that the group name and description can always be changed; groups are internally referenced by GID only.
+グループの鉛筆アイコンをクリックすると、グループを編集するためのダイアログが開きます。 グループ名と説明はいつでも変更できることに注意してください。 グループはGIDによってのみ内部的に参照されます。
 
 ![](editgroup.png)
 
-### Deleting a Group
+### グループを削除する
 
-A group can be deleted by clicking the trash can icon. The system will prompt for confirmation before deletion. Note that after a group has been deleted, its GID will never be reused.
+グループを削除するには、ごみ箱アイコンをクリックします。 システムは、削除する前に確認を求めます。 グループが削除された後、そのGIDは再利用されないことに注意してください。

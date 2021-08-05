@@ -1,6 +1,6 @@
-# Labels and Filtering
+# ラベルとフィルタリング
 
-Objects in Gravwell such as dashboards, resources, macros, etc. can be *labeled* for organizational purposes. Some objects distributed in kits may be pre-labeled for convenience. The following object types can be labeled:
+Gravwellでは、ダッシュボード、リソース、マクロなどのオブジェクトには、整理のために*ラベルを付けることができます。また、キットとして配布されているオブジェクトの中には、利便性のためにあらかじめラベルが付けられているものもあります。以下の種類のオブジェクトにラベルを付けることができます。
 
 * Extractors
 * Dashboards
@@ -14,37 +14,38 @@ Objects in Gravwell such as dashboards, resources, macros, etc. can be *labeled*
 * Query Library entries
 * User files
 
-## Defining Labels
 
-Labels are added or deleted in the edit dialog for a given object. While the exact layout of the dialog varies for each object type, they will all have a section for Labels. Labels are added by typing the label into the text bar and hitting enter. Multiple labels can be added in succession in this manner. In this screenshot, the user has added three labels, "network", "asn", and "lookup" to a resource:
+## ラベルの定義
+
+ラベルの追加と削除は、オブジェクトの編集ダイアログで行います。ダイアログの正確なレイアウトはオブジェクトの種類によって異なりますが、いずれも「ラベル」のセクションがあります。ラベルを追加するには、テキストバーにラベルを入力してエンターキーを押します。このようにして、複数のラベルを連続して追加することができます。このスクリーンショットでは、"network"、"asn"、"lookup "の3つのラベルをリソースに追加しています。
 
 ![](resource-labels.png)
 
-To delete a label, click the 'x' icon next to label.
+ラベルを削除するには、ラベルの横にある'x'アイコンをクリックします。
 
-## Filtering
+## フィルタリング
 
-The GUI can filter objects based on their labels. At the top of many screens is a bar containing a "Filters" button, as shown below.
+GUIでは、ラベルに基づいてオブジェクトをフィルタリングすることができます。多くの画面の上部には、以下のような"Filters"ボタンを含むバーがあります。
 
 ![](filters-menu.png)
 
-Clicking that button brings up a menu with several options for filtering:
+そのボタンをクリックすると、フィルタリングのためのいくつかのオプションを持つメニューが表示されます:
 
 ![](filters-options.png)
 
-Note: All the filters described below can be combined with each other. A blue "X" button will appear on the Filters button when a filter is set; click it to clear all filters.
+注：以下に説明するすべてのフィルターは、相互に組み合わせることができます。フィルターが設定されると、フィルターボタンに青い'X'ボタンが表示され、クリックするとすべてのフィルターが解除されます。
 
-### Filter by label
+### ラベルによるフィルタ
 
-The left-most dropdown, "Filter by label or kit", allows you to select one or more labels or kits; clicking the Apply button will then show only those objects with the specified labels or installed by the specified kits. The screenshots below show the user selecting the "lookup" label, which reduces the display down to just three resources:
+左端のドロップダウン"Filter by label or kit"では、1つまたは複数のラベルやキットを選択することができます。「Apply」ボタンをクリックすると、指定したラベルを持つ、または指定したキットでインストールされたオブジェクトのみが表示されます。以下のスクリーンショットでは、ユーザーが"lookup"ラベルを選択し、3つのリソースだけに絞って表示されています。
 
 ![](filter-labels.png)
 
 ![](filter-labels-applied.png)
 
-### Filter by owner
+### オーナーによるフィルタリング
 
-By default, most interfaces will show all objects the user has access to, regardless of owner. Another filter option can make it show only objects owned by a particular set of users. The screenshots below show the user filtering macros to show only those macros owned by the user "John":
+デフォルトでは、ほとんどのインターフェースでは、所有者に関係なく、ユーザーがアクセスできるすべてのオブジェクトが表示されます。別のフィルターオプションを使用すると、特定のユーザーが所有するオブジェクトのみを表示することができます。以下のスクリーンショットは、ユーザーがマクロをフィルタリングして、ユーザー"John"が所有するマクロのみを表示しています。
 
 ![](filter-owner.png)
 
@@ -52,26 +53,26 @@ By default, most interfaces will show all objects the user has access to, regard
 
 ### Show hidden
 
-Objects with the special label "hidden" are not displayed by default. This is a convenience function which can keep displays clear of rarely-accessed objects. Click the "Show hidden record" toggle to show hidden objects. In the screenshot below, toggling "Show hidden record" reveals an additional hidden macro:
+"hidden"という特別なラベルが付いたオブジェクトは、デフォルトでは表示されません。これは、あまりアクセスされないオブジェクトを表示しないようにするための便利な機能です。隠されたオブジェクトを表示するには、"Show hidden record "のトグルをクリックします。下のスクリーンショットでは、"隠されたレコードを表示"を切り替えると、さらに隠されたマクロが表示されます。
 
 ![](filter-hidden.png)
 
 ![](filter-hidden-applied.png)
 
-## Special Labels
+## スペシャルラベル
 
-Gravwell defines a handful of special labels and label prefixes for particular operations.
+Gravwellでは、特定の操作のためにいくつかのスペシャルラベルやラベルプレフィックスを定義しています。
 
 ### Hidden
 
-The string "hidden" is a special label; applying it to an object will prevent the object from being displayed by default. To see the object, toggle the "Show hidden record" option in the filter menu, as detailed above.
+オブジェクトに "hidden "という文字列を付けると、デフォルトではそのオブジェクトは表示されません。オブジェクトを表示するには、上述のようにフィルタメニューの"Show hidden record"オプションを切り替えます。
 
-### Kit Label Prefixes
+### キットのラベルのプレフィックス
 
-Three label *prefixes* are used to manage Gravwell-internal information about objects which were installed as part of a kit. You should **never** manually apply kit labels to objects; these labels are documented to prevent users from accidentally applying a conflicting label to an object. The following are considered reserved kit label prefixes:
+キットの一部としてインストールされたオブジェクトに関する Gravwell 内部の情報を管理するために、3 つのラベル *prefix* があります。これらのラベルは、ユーザーが誤って相反するラベルをオブジェクトに適用することを防ぐために文書化されています。
 
 * `kit/`
 * `kit/dependency:`
 * `kit/configuration:`
 
-Users should not create labels beginning with these strings, e.g. "kit/foo" or "kit/dependency:bar". These labels are managed internally by Gravwell.
+これらの文字列で始まるラベル、例えば "kit/foo"や "kit/dependency:bar"などを作成してはいけません。これらのラベルはGravwellが内部的に管理しています。

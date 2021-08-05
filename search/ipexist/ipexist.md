@@ -1,37 +1,37 @@
 # IPexist
 
-The ipexist module is designed to perform simple existence checks on IP addresses as fast as possible. It uses Gravwell's [ipexist library](https://github.com/gravwell/ipexist) to manage sets of IP addresses and quickly query the existence of a given IP within the set. Users specify one or more enumerated values to match against the set; by default, if all enumerated values match addresses within the set, the entry is passed.
+ipexistモジュールは、IPアドレスの簡単な存在チェックをできるだけ早く実行するように設計されています。   Gravwellの[ipexistライブラリ](https://github.com/gravwell/ipexist)を使用してIPアドレスのセットを管理し、そのセット内の特定のIPの存在をすばやく照会します。   ユーザーは、セットと照合するために1つ以上の列挙値を指定します。   デフォルトでは、列挙されたすべての値がセット内のアドレスと一致すると、エントリが渡されます。
 
-## Supported Options
+## サポートされているオプション
 
-* `-r <resource>`: The "-r" flag specifies the name of a resource containing an ipexist-formatted lookup set. This flag may be specified multiple times to attempt lookups across multiple resources. See below for more information on creating these sets.
-* `-v`: The "-v" flag tells the ipexist module to operate in an inverse mode. Thus, where the query `ipexist -r ips SrcIP` would normally pass through any entries whose SrcIP matches an ip in the resource, `ipexist -v -r ips SrcIP` would instead drop those entries and pass all others.
-* `-or`: The "-or" flag specifies that the ipexist module should allow an entry to continue down the pipeline if ANY of the filters are successful.
+* `-r <resource>`: "-r"フラグは、ipexist形式のルックアップセットを含むリソースの名前を指定します。   このフラグは、複数のリソースにまたがって検索を試みるために複数回指定することができます。   これらのセットの作成に関する詳細については、下記を参照してください。
+* `-v`: "-v"フラグは、ipexistモジュールに逆モードで動作するように指示します。   したがって、クエリipexist -r ips SrcIPが通常、SrcIPがリソース内のipと一致するすべてのエントリを通過させる場合、ipexist -v -r ips SrcIPは代わりにそれらのエントリを削除し、他のすべてのエントリを通過させます。
+* `-or`: "-or"フラグは、すべてのフィルタが成功した場合に、ipexistモジュールがエントリをパイプラインに沿って続行することを許可することを指定します。
 
-## Creating IP sets
+## IPセットを作成する
 
-The ipexist module uses a specific format to store sets of IPv4 addresses that is designed to allow fast lookups while also remaining relatively space-efficient. This format is implemented in the [ipexist library](https://github.com/gravwell/ipexist), which includes a tool to generate the sets at the command line.
+ipexistモジュールは特定のフォーマットを使用してIPv4アドレスのセットを格納します。  これは、高速検索を可能にしながら、比較的スペース効率を維持するように設計されています。  この形式は、コマンドラインでセットを生成するためのツールを含む[ipexistライブラリ](https://github.com/gravwell/ipexist)に実装されています。
 
-First, fetch the tool:
+まず、ツールを取得します:
 
 	go get github.com/gravwell/ipexist/textinput
 
-Then populate a text file with the list of ip addresses you wish to have in the set, one IP per line. Ordering does not matter:
+それから、セットに入れたいIPアドレスのリストを1行に1つのIPアドレスでテキストファイルに入力してください。  順序は関係ありません:
 
 	10.0.0.2
 	192.168.3.77
 	10.3.2.1
 	8.8.8.8
 
-Then run the textinput tool, giving it the path to the input file and a path for the output:
+次にtextinputツールを実行し、入力ファイルへのパスと出力へのパスを指定します:
 
 	$GOPATH/bin/textinput -i /path/to/inputfile -o /path/to/outputfile
 
-This should produce a properly-formatted output file which can be uploaded as a resource for use with the ipexist module.
+これにより、ipexistモジュールで使用するためのリソースとしてアップロードできる適切にフォーマットされた出力ファイルが作成されます。
 
-## Example Usage
+## 使用例
 
-Assuming packets are captured under the `pcap` tag, the following query will only pass those packets whose source IP address matches an IP in the `ips` resource:
+パケットがpcapタグの下でキャプチャされると仮定すると、次のクエリはソースIPアドレスがipsリソース内のIPと一致するパケットのみを通過させます:
 
 ```
 tag=pcap packet ipv4.SrcIP | ipexist -r ips SrcIP | table SrcIP
@@ -39,23 +39,23 @@ tag=pcap packet ipv4.SrcIP | ipexist -r ips SrcIP | table SrcIP
 
 ![](ipexist1.png)
 
-This query will pass any entry whose SrcIP **and** DstIP is found in the resource:
+このクエリは、SrcIPとDstIPがリソースにあるエントリをすべて渡します:
 
 ```
 tag=pcap packet ipv4.SrcIP ipv4.DstIP | ipexist -r ips SrcIP DstIP | table SrcIP DstIP
 ```
 
-Adding the `-or` flag makes the query more relaxed; it will pass any entry whose SrcIP **or** DstIP is found in the resource:
+`-or`フラグを追加すると、照会が緩和されます。   SrcIPまたはDstIPがリソースに見つかったエントリをすべて渡します:
 
 ```
 tag=pcap packet ipv4.SrcIP ipv4.DstIP | ipexist -or -r ips SrcIP DstIP | table SrcIP DstIP
 ```
 
-## Inverting queries
+## 反転クエリ
 
-The `-v` flag inverts the query: if you add `-v` to a query, any entry which would normally be dropped will be passed and vice versa.
+`-v`フラグはクエリを反転します。  クエリに-vを追加した場合、通常削除されるエントリはすべて渡され、その逆も同様です。
 
-This query *drops* those entries whose source IP addresses are found in the resource:
+このクエリは、ソースIPアドレスがリソース内に見つかったエントリを削除します:
 
 ```
 tag=pcap packet ipv4.SrcIP | ipexist -v -r ips SrcIP | table SrcIP
@@ -63,21 +63,21 @@ tag=pcap packet ipv4.SrcIP | ipexist -v -r ips SrcIP | table SrcIP
 
 ![](ipexist2.png)
 
-In the following query, any entry whose SrcIP **and** DstIP exist in the resource will be *dropped*. This query essentially says, "show me every packet whose source or destination is not in the known list".
+次のクエリでは、SrcIPとDstIPがリソースに存在するエントリはすべて削除されます。   この問い合わせは本質的に、「送信元または宛先が既知のリストにないすべてのパケットを表示する」となります。
 
 ```
 tag=pcap packet ipv4.SrcIP ipv4.DstIP | ipexist -v -r ips SrcIP DstIP | table SrcIP DstIP
 ```
 
-When combined with the `-or` flag, the module drops any entry where even one of the given enumerated values is found in the resource. In the example below, only those entries whose source IP **and** destination IP are *not* found in the resource will pass down the pipeline.
+`-or`フラグと組み合わせると、モジュールは、指定された列挙値の1つでもリソース内に見つかったエントリをすべて削除します。   以下の例では、ソースIPと宛先IPがリソースに見つからないエントリだけがパイプラインを通過します。
 
 ```
 tag=pcap packet ipv4.SrcIP ipv4.DstIP | ipexist -or -r ips SrcIP DstIP | table SrcIP DstIP
 ```
 
-### Multiple resources
+### 複数のリソース
 
-Multiple unique IP sets may be specified by repeating the `-r` flag. The ipexists module will essentially treat them as one large set.
+`-r`フラグを繰り返すことによって、複数の固有IPセットを指定できます。   ipexistsモジュールは本質的にそれらを1つの大きなセットとして扱います。
 
 ```
 tag=pcap packet ipv4.SrcIP | ipexist -r ips -r externalips SrcIP | table SrcIP

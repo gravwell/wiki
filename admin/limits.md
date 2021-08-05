@@ -1,11 +1,10 @@
-# Controlling System Resource Usage
+# システムリソース使用量の制御
 
-This section describes how you can tune the Gravwell system's consumption of system resources.
+このセクションでは、Gravwellシステムのシステムリソースの消費を調整する方法について説明します。
 
-## Webserver Renderer Storage
+## Webサーバーレンダラーストレージ
+チャートやテーブルなどのレンダリングモジュールは、Webサーバー上のディスクに結果を保存します。 検索によっては、結果が大量のディスク容量を消費する場合があります。 ユーザーが過剰なクエリでディスクをいっぱいにしないようにするには、ウェブサーバーのgravwell.confファイルで `Render-Store-Limit`パラメーターを使用します。 たとえば、 `Render-Store-Limit = 64`を設定すると、クエリごとに64 MBのオンディスクストレージの制限が設定されます。
 
-Render modules such as chart and table store their results on-disk on the webserver. Depending on the search, the results may consume significant amounts of disk space. To prevent users from filling up the disk with over-large queries, use the `Render-Store-Limit` parameter in the webserver's gravwell.conf file. Setting `Render-Store-Limit=64`, for instance, would set a limit of 64 MB of on-disk storage per query.
+## Gravwellリソースサイズの制限
 
-## Limiting Gravwell Resource Size
-
-User-created [resources](#!resources/resources.md) can take up a lot of space on disk, on both the webserver and the indexers. The `Resource-Max-Size` parameter in gravwell.conf specifies a limit, in bytes, for resource size. Thus, setting `Resource-Max-Size=20971520` will limit resources to no more than 20 megabytes.
+ユーザーが作成した[リソース](＃！resources / resources.md) は、Webサーバーとインデクサーの両方で、ディスク上の多くのスペースを占有します。 gravwell.confの `Resource-Max-Size`パラメーターは、リソースサイズの制限をバイト単位で指定します。 したがって、`Resource-Max-Size = 20971520`を設定すると、リソースは20メガバイト以下に制限されます。

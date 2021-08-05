@@ -1,18 +1,19 @@
-# Cloud Archive
+﻿# クラウドアーカイブ
 
-Gravwell supports an ageout mechanism called Cloud Archive.  Cloud archive is a remote service where data can be remotely archived prior to deleting.  Gravwell Cloud Archive is an excellent method for long term archival storage for data that does not need to be actively searchable but must be retained.  The Cloud Archive service can be hosted on a variety of storage platforms and is designed to provide a remote, low cost storage platform.  Cloud Archive configuration can be enabled on a per-well basis, which means you can decide which data sets warrant long term archival.
+Gravwellはクラウドアーカイブと呼ばれるエイジアウトの仕組みをサポートしています。クラウドアーカイブは、データを削除する前にリモートでアーカイブできるリモートサービスです。Gravwell Cloud Archiveは、積極的に検索する必要はないけれども、保持しておく必要があるというデータを長期的にアーカイブ保存するための優れた方法です。クラウドアーカイブサービスは、様々なストレージプラットフォーム上でホストすることができ、リモートで低コストのストレージプラットフォームを提供するように設計されています。クラウド・アーカイブの設定は、ウェル単位で有効にすることができ、どのデータ・セットが長期アーカイブを保証するかを決めることができます。
 
-The archive system ensures that data is successfully uploaded to the archive server before it is deleted during normal ageout.
+アーカイブシステムでは、通常のエイジアウト中にデータが削除される前に、アーカイブサーバーにデータが正常にアップロードされることが保証されています。
 
-Attention: Indexers will not delete data until they have successfully uploaded it to the archive server.  If the indexer cannot upload due to connectivity issues, misconfigurations, or poor network throughput they will not delete data.  The inability to delete data may cause indexers to run out of storage and cease ingesting new data.  If a Cloud Archive upload fails to complete the user interface will display a notification with the failure.
+注意：インデクサーは、アーカイブサーバーへのアップロードに成功するまでデータを削除しません。接続の問題や設定ミス、ネットワークのスループットの低下などの理由でインデクサがアップロードできなかった場合、データは削除されません。データを削除できない状態では、インデクサーがストレージを使い果たして新しいデータの取り込みができなくなってしまう可能性があります。クラウドアーカイブのアップロードが完了しなかった場合は、ユーザーインターフェースに失敗の通知が表示されます。
 
-Attention: The Cloud Archive system compresses data while in transit which requires some CPU resources when uploading.  Pushing data to a remote system also requires time, depending on available bandwidth and CPU.  Be sure to leave yourself a little headroom when defining ageout parameters to account for additional time consumed by Cloud Archive.
+注意：クラウドアーカイブシステムは、転送中にデータを圧縮するため、アップロード時に多少のCPUリソースを必要とします。データをリモートシステムにプッシュする際にも、利用可能な帯域幅と CPU に応じて時間がかかります。クラウドアーカイブがこれら追加的な時間を必要とすることを考慮し、エイジアウトのパラメーターを設定する際には、少し余裕を持たせておくようにしてください。
 
-## Configuring Indexers
+## インデクサーの設定
 
-Every indexer has a global Cloud Archive configuration block which specifies the remote archive server and authentication token. The configuration block is specified using the "[cloud-archive]" header in the global section.  To enable Cloud Archive on a well, add the "Archive-Deleted-Shards=true" directive within the well.
+すべてのインデクサーには、リモートアーカイブサーバーと認証トークンを指定するグローバルなクラウドアーカイブ設定ブロックがあります。設定ブロックは、グローバルセクションの "[cloud-archive]" ヘッダを使用して指定します。ウェルをクラウドアーカイブ有効に設定するには、ウェル内に "Archive-Deleted-Shards=true" ディレクティブを追加してください。
 
-Here is an example configuration with three wells:
+
+以下に、3つのウェルを使用した構成例を示します:
 
 ```
 [global]
@@ -46,10 +47,10 @@ Ingest-Port=4023
 	Tags=pcap
 ```
 
-The above example has 3 configured wells (default, netflow, and raw).  The default well uses both a hot and cold storage tier which means that data is archived when it would normally roll out of the cold storage tier.  The netflow well contains only a hot storage tier, its data will be uploaded when it would normally be deleted after 7 days.  The raw well does not have Cloud Archive enabled (Archive-Deleted-Shards=false), its data will not be uploaded.
+上記の例では、設定された3つのウェル（デフォルト、ネットフロー、および 生データ）があります。デフォルトのウェルは、ホットストレージ層とコールドストレージ層の両方を使用しており、データは通常コールドストレージ層から ロールアウトされるときにアーカイブされます。netflow用ウェルにはホット ストレージ層のみが含まれており、そのデータは通常 7 日後に削除されるときにアップロードされます。生データのウェルは、クラウドアーカイブを有効にしていない（Archive-Deleted-Shards=false）ため、そのウェルのデータはアップロードされません。
 
-## Hosting Cloud Archive
+## クラウドアーカイブのホスティング
 
-The Cloud Archive service is a module service designed to be self-hosted and potentially integrated into other larger infrastructures.  If you are interested in hosting your own Cloud Archive service or would like to remotely archive your data, contact sales@gravwell.io.
+クラウドアーカイブサービスは、セルフホスティング型で、他の大規模なインフラに統合することも可能なモジュールサービスです。クラウドアーカイブサービスのユーザーご自身でホスティングしたい場合や、リモートでご自身のデータをアーカイブしたい場合は、sales@gravwell.io までご連絡ください。
 
-Note: Indexers will authenticate to the cloud archive service using the customer license number *on the indexer*. In an [overwatch](#!distributed/overwatch.md) configuration, this number may be different from the license number deployed on the *webservers*.
+注意：インデクサーは、*インデクサーに*割り当てられた顧客ライセンス番号を使用してクラウドアーカイブサービスへの認証を行います。[オーバーウォッチ](#!distributed/overwatch.md)の構成の場合、この顧客ライセンス番号は*ウェブサーバーに*割り当てられているライセンス番号とは異なる場合があります。

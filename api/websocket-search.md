@@ -1,33 +1,36 @@
 # Search websocket
 
-Websocket URL: /api/ws/search
+WebソケットのURL：/api/ws/search
 
-This page documents the websocket protocol for searches. A full example of JSON transferred between client and server when initiating a "grep foo" search, complete with entry data retrieval, can be found at the [Websocket Search Example](websocket-search-example.md) page.
+このページでは、検索用のWebsocketプロトコルについて説明します。「grep foo」検索を開始したときにクライアントとサーバーとの間で転送されるJSONの完全な例は、[Websocket Search Example](websocket-search-example.md)ページで見ることができます。
 
-## Ping/Pong keepalive
 
-The search websocket is used for checking queries, sending searches, and receiving search results and search stats.  The search websocket expects to use the RoutingWebsocket system to handle message "types".  `/api/ws/search` expects the following message "subtypes" or "types" to be registered at startup: PONG, parse, search, attach.
+## Ping/Pongキープアライブ
 
-Note: Message "types" are sometimes referred to as "SubProto" due to legacy naming. This is likely to change in the future but if developing against this API, be aware that "SubProto" refers to the "type" value sent with a message and not the RFC Websocket subprotocol spec.
+検索ウェブソケットは、クエリの確認、検索の送信、および検索結果と検索統計の受信に使用されます。 検索ウェブソケットは、RoutingWebsocketシステムを使用してメッセージの「タイプ」を処理することを想定しています。 `/api/ws/search` は、起動時に次のメッセージ「サブタイプ」または「タイプ」が登録されていることを期待しています：PONG、parse、search、attach。
 
-The PONG type is a keepalive system, and the client should periodically send PING/PONG requests.
 
-This could be used so that if a user is sitting at a search prompt or whatever that you can tell the user if the conn to the back is healthy. This may not be necessary at all as we can just probe to see if the websocket itself is alive.
+<span style="color:red; ">注：メッセージの「タイプ」は、従来の命名法のために「SubProto」と呼ばれることがあります。これは将来変更される可能性がありますが、このAPIに対して開発している場合、 "SubProto"はRFC Websocketサブプロトコル仕様ではなくメッセージと共に送信される "type"値を指すことに注意してください。</span>
 
-## Parsing searches
+PONGタイプはキープアライブシステムであり、クライアントは定期的にPINGPONG要求を送信する必要があります。
 
-The "parse" websocket type is used for rapidly testing the validity of queries without invoking any of the search backend.
+これは、ユーザーが検索プロンプトに座っている場合や、後ろへの接続が正常であるかどうかをユーザーに知らせることができる場合に使用できます。WebSocket自体が生きているかどうかを調べるためだけに調べることができるので、これはまったく必要ないかもしれません。
 
-An example request with a valid query and response would result in the following JSON:
+## 構文解析検索
 
-request from frontend:
+"parse" WebSocketタイプは、検索バックエンドを呼び出さずにクエリの有効性を迅速にテストするために使用されます。
+
+有効なクエリと応答を含むリクエストの例は、次のJSONになります。
+
+フロントエンドからのリクエスト：
 ```json
 {
         SearchString: "tag=apache grep firefox | regex "Firefox(<version>[0-9]+) .+" | count by version""
+
 }
 ```
 
-response from backend:
+バックエンドからの応答：
 ```
 {
         GoodQuery: true,
@@ -36,16 +39,16 @@ response from backend:
 }
 ```
 
-An example request with an invalid query and response would result in the following JSON:
+無効なクエリと応答を含むリクエストの例では、次のようなJSONになります。
 
-request from frontend:
+フロントエンドからのリクエスト：
 ```
 {
         SearchString: "tag=apache grep firefox | MakeRainbows",
 }
 ```
 
-response from backend:
+バックエンドから応答する
 ```
 {
         GoodQuery: false,
@@ -54,20 +57,20 @@ response from backend:
 }
 ```
 
-## Initiating searches
-All searches are initiated through websockets and require that the "parse", "PONG", "search", and "attach" subtypes are requested at start.  
+## 検索を開始する
+すべての検索はWebSocketを介して開始され、「parse」、「PONG」、「search」、および「attach」の各サブタイプが開始時に要求される必要があります。
 
-This is done by sending the following JSON upon websocket establishment:
+これは、websocketの確立時に次のJSONを送信することによって行われます。
 ```
 {"Subs":["PONG","parse","search","attach"]}
 ```
 
 
-The SearchString member should contain the actual query which will invoke the search.
+SearchStringメンバには、検索を実行する実際のクエリを含める必要があります。
 
-SearchStart and SearchEnd should be the time ranges that the query will operate over.  The time ranges should be formatted in the RFC3339Nano format which looks like "2006-01-02T15:04:05.999999999Z07:00"
+SearchStartとSearchEndは、クエリが動作する時間範囲です。時間範囲は、 "2006-01-02T15：04：05.999999999Z07：00"のように見えるRFC3339Nano形式でフォーマットする必要があります。
 
-An example search request with a good query would contain the following JSON:
+適切なクエリを含む検索リクエストの例には、次のJSONが含まれます。
 ```
 {
        SearchString: "tag=apache grep firefox | nosort",
@@ -77,10 +80,10 @@ An example search request with a good query would contain the following JSON:
 }
 ```
 
-//server responds yay/nay plus new subtypes if the search is cool
-//searchStart and searchEnd should be strings in RFC3339Nano format
+//検索がクールな場合、//サーバーはyay / nayと新しいサブタイプを応答します
+// // searchStartとsearchEndは、RFC 3339ナノ形式の文字列にする必要があります。
 
-The response to a good query would contain the following JSON:
+適切なクエリに対する応答には、次のJSONが含まれます。
 ```
 {
         SearchString: "tag=apache grep firefox | nosort",
@@ -95,16 +98,16 @@ The response to a good query would contain the following JSON:
 }
 ```
 
-On error the JSON response would be:
+エラーが発生した場合、JSONレスポンスは次のようになります。
 ```
 {
         Error: "Search error: The parameter "ChuckTesta" is invalid",
 }
 ```
 
-On a good search request response the client must response with a search ACK. The Ack must respond with the either a true or false.  A false response may be used when the backend requests a render module that the front end doesn't understand, which may happen when there is a version mismatch between the frontend and backend.
+良い検索要求応答では、クライアントは検索ACKで応答しなければなりません。Ackは真偽のどちらかで返答しなければなりません。フロントエンドが理解できないレンダリングモジュールをバックエンドが要求したときに誤った応答が使用されることがあります。これはフロントエンドとバックエンドの間にバージョンの不一致があるときに起こることがあります。
 
-The following JSON would represent an affirmative ACK to the previous response example:
+次のJSONは、前の応答例に対する肯定的なACKを表します。
 ```
 {
        Ok: True,
@@ -112,20 +115,20 @@ The following JSON would represent an affirmative ACK to the previous response e
 }
 ```
 
-After the ACK is sent the backend will fire up the search and begin providing search results on the new subtypes.  The original search, parse, and PONG subtypes stay active and can be used by the frontend to check new queries, or kick off additional searches.  All interaction with active queries needs to occur via the newly negotiated search specific subtypes though.
+ACKが送信された後、バックエンドは検索を起動し、新しいサブタイプに関する検索結果の提供を開始します。元の検索、解析、およびPONGサブタイプはアクティブのままであり、フロントエンドが新しいクエリをチェックしたり、追加の検索を開始したりするために使用できます。ただし、アクティブなクエリとのやり取りはすべて、新しくネゴシエートされた検索固有のサブタイプを介して行われる必要があります。
 
-## Notes
-All searches are fully asynchronous, however, if a client disconnects or the connection crashes without requesting that a search be placed in a background state, the active search will terminate and the data will be garbage collected.  This is to prevent resource exhaustion.  A user must EXPLICITLY request a background search.
+## ノート
+すべての検索は完全に非同期ですが、検索をバックグラウンド状態にすることを要求せずにクライアントが切断したり接続がクラッシュしたりすると、アクティブ検索は終了し、データはガベージコレクションされます。これはリソースの枯渇を防ぐためです。ユーザーはバックグラウンド検索を明示的に要求する必要があります。
 
-Searches can have multiple consumers.  For example Bob can kick off a search and Janet may attach to it and see the results.  A non-backgrounded search will only terminate and cleanup if ALL consumers disconnect.  So if Bob kicks off a search and Janet attaches, but Bob then navigates away or closes his browser the search will not terminate.  Janet can continue to interact with it.  However, if Janet also navigates away or closes her browser the search will then terminate and garbage collect.
+検索は複数の消費者を持つことができます。たとえば、Bobが検索を開始し、Janetがそれにアタッチして結果を見ることがあります。非バックグラウンド検索は、すべてのコンシューマが切断された場合にのみ終了してクリーンアップします。そのため、Bobが検索を開始してJanetがアタッチしても、Bobがブラウザから離れたりブラウザを閉じたりした場合、検索は終了しません。ジャネットはそれと対話し続けることができます。ただし、Janetも自分のブラウザにアクセスするかブラウザを閉じると、検索は終了し、ガベージコレクトされます。
 
-## Stats output during an active search
+## アクティブ検索中の統計出力
 
-Stats are requested via the stats IDs
+統計は統計IDを介して要求されます
 
-## Request/Response ID reference
+## 要求/応答IDの参照
 
-The list of request and response ID codes is:
+要求および応答IDコードのリストは以下のとおりです。
 ```
 {
     req: {
@@ -142,8 +145,8 @@ The list of request and response ID codes is:
         REQ_GET_ENTRIES: 0x10, //1048578
         REQ_STREAMING: 0x11,
         REQ_TS_RANGE: 0x12,
-		REQ_GET_EXPLORE_ENTRIES: 0xf010,
-		REQ_EXPLORE_TS_RANGE: 0xf012,
+	REQ_GET_EXPLORE_ENTRIES: 0xf010,
+	REQ_EXPLORE_TS_RANGE: 0xf012,
         SEARCH_CTRL_CMD_DELETE: 'delete',
         SEARCH_CTRL_CMD_ARCHIVE: 'archive',
         SEARCH_CTRL_CMD_BACKGROUND: 'background',
@@ -163,8 +166,8 @@ The list of request and response ID codes is:
         RESP_GET_ENTRIES: 0x10,
         RESP_STREAMING: 0x11,
         RESP_TS_RANGE: 0x12,
-		RESP_GET_EXPLORE_ENTRIES: 0xf010,
-		RESP_EXPLORE_TS_RANGE: 0xf012,
+	RESP_GET_EXPLORE_ENTRIES: 0xf010,
+	RESP_EXPLORE_TS_RANGE: 0xf012,
         RESP_ERROR: 0xFFFFFFFF,
         SEARCH_CTRL_CMD_DELETE: 'delete',
         SEARCH_CTRL_CMD_ARCHIVE: 'archive',

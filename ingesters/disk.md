@@ -1,26 +1,26 @@
-# Disk Monitor
+# ディスクモニター
 
-The diskmonitor ingester is designed to take periodic samples of disk activity and ship the samples to gravwell.  The disk monitor is extremely useful in identifying storage latency issues, looming disk failures, and other potential storage problems.  We at Gravwell actively monitor our own storage infrastructure with the disk monitor to study how queries are operating and to identify when the storage infrastructure is behaving badly.  We were able to identify a RAID array that transitioned to write-through mode via a latency plot even when the RAID controller failed to mention it in the diagnostic logs.
+ディスクモニターインジェスターは、ディスクアクティビティのサンプルを定期的に採取し、Gravwellに送信するように設計されています。 ディスクモニターは、ストレージのレイテンシーの問題、ディスク障害の危険性、その他の潜在的なストレージの問題を特定するのに非常に役立ちます。 Gravwellでは、ディスクモニターを使って自社のストレージインフラを積極的に監視し、クエリがどのように動作しているかを調べたり、ストレージインフラの動作が悪いときにそれを特定したりしています。一例として、RAIDコントローラが診断ログで言及していなくても、レイテンシープロットでライトスルーモードに移行したRAIDアレイを特定できました。
 
-The disk monitor ingester is available on [github](https://github.com/gravwell/ingesters).
+ディスクモニターインジェスターは[github](https://github.com/gravwell/ingesters)で公開されています。
 
 ![diskmonitor](diskmonitor.png)
 
-## Basic Configuration
+## 基本設定
 
-The Disk Monitor ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, Disk Monitor supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+ディスクモニターインジェスターは、[インジェスター](#!ingesters/ingesters.md#Global_Configuration_Parameters)で説明されている統一されたグローバル設定ブロックを使用します。 他の多くのGravwellインジェスターと同様に、ディスクモニターは複数のアップストリームインデクサー、TLS、クリアテキスト、名前付きパイプ接続、ローカルキャッシュ、ローカルロギングをサポートしています。
 
-## Session Ingester
+## セッションインジェスター
 
-The session ingester is a specialized tool used to ingest larger, single records. The ingester listens on a given port and upon receiving a connection from a client it will aggregate any data received into a single entry.
+セッションインジェスターは、より大きな単一のレコードをインジェストするために使用される特殊なツールです。インジェスターは指定されたポートで待機し、クライアントからの接続を受信すると、受信したすべてのデータを1つのエントリに集約します。
 
-This enables behavior such as indexing all of your Windows executable files:
+これにより、すべてのWindows実行ファイルにインデックスを付けるなどの動作が可能になります。:
 
 ```
 for i in `ls /path/to/windows/exes`; do cat $i | nc 192.168.1.1 7777 ; done
 ```
 
-The session ingester is driven via command line parameters rather than a persistent configuration file.
+セッション・インジェスターは、永続的な設定ファイルではなく、コマンドライン・パラメーターによって駆動されます。
 
 ```
 Usage of ./session:
@@ -48,7 +48,7 @@ Usage of ./session:
         Path to remote public key to verify against
 ```
 
-## Notes
+## 注
 
-The session ingester is not formally supported, nor is there an installer available.  The source code for the session ingester is available on [github](https://github.com/gravwell/ingesters).
+セッションインジェスターは正式にはサポートされておらず、インストーラーもありません。 セッションインジェスターのソースコードは[github](https://github.com/gravwell/ingesters)で公開されています。
 

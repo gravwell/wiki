@@ -1,13 +1,13 @@
-# Logging APIs
+# ロギング API
 
-The API provides utilities for admin users to manage logging and inject log entries into Gravwell's on-disk log files.
+APIは、管理者ユーザーがログを管理し、Gravwellのディスク上のログファイルにログエントリを注入するためのユーティリティを提供します。
 
-## Show/set webserver logging level
+## ウェブサーバのログレベルの表示/設定
 
-This API allows admins to show current logging level as well as available logging levels.
-An admin can change the logging level at will via this API.
+このAPIにより、管理者は現在のロギングレベルと利用可能なロギングレベルを表示することができます。
+管理者はこのAPIを介してロギングレベルを自由に変更することができます。
 
-To get the current logging level as well as available logging levels perform a GET request to `/api/logging`. The request will return a structure like this:
+現在のロギングレベルと利用可能なロギングレベルを取得するには、`/api/logging`にGETリクエストを実行してください。リクエストは以下のような構造体を返します。
 
 ```
 {
@@ -16,7 +16,7 @@ To get the current logging level as well as available logging levels perform a G
 }
 ```
 
-To set the log level perform a PUT to `/api/logging` setting the "Level" field:
+ログレベルを設定するには、「Level」フィールドを設定して「`/api/logging`」にPUTを実行します。
 
 ```
 {
@@ -24,11 +24,11 @@ To set the log level perform a PUT to `/api/logging` setting the "Level" field:
 }
 ```
 
-## Inject logs
+## ログのインジェクト
 
-Admin users can insert log entries by sending POST requests to the appropriate URLs. These logs will be written out to the Gravwell webserver's on-disk log files.
+管理者ユーザーは、適切な URLにPOSTリクエストを送信することで、ログエントリを挿入することができます。これらのログは、Gravwellウェブサーバーのディスク上のログファイルに書き出されます。
 
-The URLs are:
+URLは：
 
 ```
 /api/logging/access
@@ -37,7 +37,7 @@ The URLs are:
 /api/logging/error
 ```
 
-The POST request body should contain a JSON structure with a field named 'Body' containing the desired log message:
+POSTリクエストのボディには、希望するログメッセージを含む'Body'という名前のフィールドを持つJSON構造体が含まれていなければなりません。
 
 ```
 {
@@ -45,4 +45,4 @@ The POST request body should contain a JSON structure with a field named 'Body' 
 }
 ```
 
-The server will return boolean 'true' on success.
+成功した場合、サーバはブール値'true'を返します。

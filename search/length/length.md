@@ -1,22 +1,22 @@
 ## Length
 
-The `length` module calculates the length (in bytes) of either the entry data or an enumerated value. The syntax is:
+`length`モジュールは、エントリデータまたは列挙値のいずれかの長さ（バイト単位）を算出します。  構文は次のとおりです:
 
 ```
 length [-t target] [source]
 ```
 
-The `source` parameter is an optional enumerated value name on which to operate; if no source is specified, length will use the raw entry data. By default, the length of the data or enumerated value is written to an enumerated value named "length". Specifying a `target` will instead write the length out to an enumerated value of that name.
+`source`パラメータが動作する上の任意の列挙値の名前です。  ソースが指定されていない場合、lengthは生のエントリデータを使用します。  既定では、データまたは列挙値の長さは "length"という列挙値に書き込まれます。  `target`を指定すると、代わりにその名前の列挙値に長さが書き込まれます。
 
-### Supported Options
+### サポートされているオプション
 
-* `-t <target>`: Write the computed length to a specified enumerated value instead of the default named "length".
+* `-t <target>`: 算された長さをデフォルトの "length"という名前ではなく、指定された列挙値に書き込みます。
 
-### Example Usage
+### 使用例
 
-| Command | Description |
+| Command | 説明 |
 |---------|-------------|
-| length | Get the length in bytes of the entry data and store the result in the default enumerated value `length` |
-| length -t foo | Calculate the length of the entry data and store the result in an enumerated value named `foo` instead of `length` |
-| length Payload | Find the length of the enumerated value `Payload` and store it in an enumerated value named `length` |
-| length -t foo Payload | Find the length of the enumerated value `Payload` and store it in `foo` |
+| length | エントリデータの長さをバイト数で取得し、その結果をデフォルトの列挙値`length`に格納します。 |
+| length -t foo | エントリデータの長さを計算し、`length`の代わりに指定の名前（ここでは`foo`)の列挙値に結果を格納します。  |
+| length Payload | 列挙値`Payload`の長さを、`length`という名前の列挙値に格納します。   |
+| length -t foo Payload | 列挙値`Payload`の長さを、列挙値`foo`に保存します。  |

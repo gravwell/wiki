@@ -1,68 +1,71 @@
-# Common Problems & Caveats
+# 一般的なトラブルと警告
 
-There are a few issues which can crop up in the course of configuring and using Gravwell. This document attempts to cover some of the most common.
+Gravwellの設定と使用中に発生する可能性のある問題がいくつかあります。このドキュメントでは、最も一般的な問題のいくつかを取り上げようとしています。
 
-## Clock Source Warning
+## クロックソースについての警告
 
-When running Gravwell in a virtualized environment such as KVM, you may see a notification like this:
+KVMなどの仮想化環境でGravwellを実行していると、以下のような通知が表示されることがあります。:
 
 ```
 Detected potentially slow clock source acpi_pm. Consider changing webservers and indexers to one of the following: tsc, kvm-clock
 ```
+（遅い可能性のあるクロックソース acpi_pm を検出しました。ウェブサーバとインデクサを以下のいずれかに変更することを検討してください: tsc, kvm-clock）
 
-Because Gravwell is a heavily time-oriented system, it needs to check the current time frequently. Some clock sources are significantly slower than others, which can lead to a noticeable slowdown in Gravwell queries.
+Gravwellは時刻に深く根ざしたシステムなので、現在時刻を頻繁にチェックする必要があります。いくつかのクロックソース（基準用時計）は、他のものよりも著しく遅いため、Gravwell クエリで顕著な速度低下を引き起こす可能性があります。
 
-To modify the clock source, [follow the directions here](https://aws.amazon.com/premiumsupport/knowledge-center/manage-ec2-linux-clock-source/).
+クロックリソースを変更するには, [この指導書](https://aws.amazon.com/premiumsupport/knowledge-center/manage-ec2-linux-clock-source/)を参照してください。
 
-Note: If you are unable to modify the clock source, this notification is only visible to the default 'admin' user, not to any other users, and can be ignored if necessary.
+注意: クロックソースを変更できなくても、この通知はデフォルトの'admin'ユーザーにのみ表示され、他のユーザーには表示されないので、実情に応じて無視することができます。
 
-## Cannot Reach Gravwell Interface
+## Gravwell のインターフェースに到達できない
 
-After installing Gravwell, you may find that your web browser cannot reach the webserver, or that the webserver is not connecting to any indexers. This is frequently a result of closed firewall ports. Gravwell uses a number of TCP ports which must be opened for proper operation. Please refer to [the networking considerations page](networking.md) for more information on which ports must be opened.
+Gravwellをインストールした後、WebブラウザがWebサーバに到達できなかったり、Webサーバがどのインデクサーにも接続していなかったりすることが分かることがあるかもしれません。これはファイアウォールのポートが閉じていることが原因であることが多いです。Gravwell を適切な運用するためには、いくつかの TCP ポートを開いて通すようにしておかなければれなりません。どのポートを開いておくべきかという詳細は、[ネットワークの考慮事項](networking.md)のページを参照してください。
 
-## Configuring HTTPS and Secure Listeners
 
-By default, Gravwell does not include or generate TLS certificates. If you intend to use Gravwell on the Internet or any other untrusted network, we strongly recommend you install certificates as soon as possible. See [the certificates page](certificates.md) for instructions.
+## HTTPS とセキュアリスナーの設定
 
-Note: Gravwell requires certificates that are compatible with TLS 1.2 or later.
+デフォルトでは、Gravwell には TLS 証明書は含まれていませんし、生成もされていません。インターネットやその他の信頼されていないネットワーク上で Gravwell を使用する場合は、火急的に証明書をインストールすることを強くお勧めします。手順については、[証明書](certificates.md)のページを参照してください。
 
-## Gravwell Processes Won't Start
+注：Gravwellは、TLS 1.2以降と互換性のある証明書を必要とします。
 
-There are a few reasons that Gravwell components (webserver, indexers, searchagent, ingesters, etc.) may refuse to start.
+## Gravwellプロセスが起動しない
 
-### Invalid Configuration
+Gravwellコンポーネント(ウェブサーバー、インデクサー、サーチエージェント、インジェスターなど)が起動を拒否する場合について、いくつかありがちな原因があります。
 
-An invalid configuration file will usually lead to the failure of the associated component. There are a few places you can look for more information.
+### 設定が不適正
 
-* `/dev/shm/` usually contains the stderr output of the process in question, for example the webserver component will output to `/dev/shm/gravwell_webserver`.
-* `/opt/gravwell/log` contains log files from some components.
-* Depending on the precise nature of the misconfiguration, ingesters may log errors or warnings to the `gravwell` tag.
+不適正な設定ファイルは、大抵その設定に関連するコンポーネントの不具合動作につながります。原因について詳しい情報が得られる場所がいくつかあります。
 
-### Ownership Issues
+* `/dev/shm/` には通常、問題のプロセスの標準エラー出力が置かれています。例えば、ウェブサーバーコンポーネントは `/dev/shm/gravwell_webserver` に出力します。
+* `/opt/gravwell/log` には、いくつかのコンポーネントのログファイルが置かれてます。
+* 設定の誤り内容によっては、インジェスターが `gravwell` タグでその誤りのエラーや警告を記録していることがあります。
 
-The Gravwell components are intended to run as user "gravwell". If the root user runs a Gravwell component manually, it may create or modify essential files and mark them as belonging to root. When run under the "gravwell" account later, the processes will not be able to access the files. You can use `chown` to reassign these files to the gravwell user, but take care *not* to modify anything in `/opt/gravwell/bin` as this can conflict with SELinux flags!
+### 管理権限の問題
 
-Warning: Do not modify permissions or ownership of files in `/opt/gravwell/bin` unless explicitly instructed by Gravwell support.
+Gravwell コンポーネントは、ユーザー "gravwell "として実行されるものとして設計されています。ルートユーザーが手動でGravwellコンポーネントを実行すると、重要なファイルを作成したり修正したりして、それをルートユーザーに属するものとしてマークすることがあります。後で "gravwell "アカウントで実行すると、プロセスはファイルにアクセスできなくなります。これらのファイルを`chown` を使って gravwell ユーザに再割り当てすることができるとはいうものの、`/opt/gravwell/bin` の中は何も変更しないように注意してください。というのも、その変更内容は SELinux フラグの設定と衝突する可能性があるからです!
 
-### SELinux Issues
+警告：Gravwell のサポートから明示的に指示がない限り、`/opt/gravwell/bin`内のファイルのパーミッションや所有権を変更しないでください。
 
-Gravwell makes an attempt to properly flag files in `/opt/gravwell` for SELinux compatibility, but careless use of the `chown` and `chmod` commands in `/opt/gravwell/bin` can clear these flags. See [the SELinux section of the hardening document](hardening.md) for more information.
+### SELinux の問題
 
-## Gravwell Consumes Too Much Memory/CPU
+GravwellはSELinux互換性のために`/opt/gravwell`内のファイルを適切なフラグに設定するようになっていますが、`/opt/gravwell/bin`内のファイルに`chown`や`chmod`コマンドを不注意に使用すると、これらのフラグがクリアされてしまう可能性があります。詳細は [SELinuxの強化](hardening.md)のページを参照してください。
 
-Because Gravwell often has to deal with huge quantities of data, we do not restrict how much memory or CPU time it can consume. If, however, you must run Gravwell on the same system as some other important software, you may wish to restrict its access to resources. In that case, see the "systemd Unit Files" section of the [system hardening document](hardening.md).
+## GravwellがメモリやCPUを過剰に消費する問題
 
-## Gravwell and Virtual Memory Areas
+Gravwellは膨大な量のデータを処理しなければならないことが多いため、Gravwellが消費するメモリやCPUの時間は制限設定はなされていません。しかし、Gravwell を他の重要なソフトウェアと同じシステム上で実行しなければならない場合などには、リソースへのアクセスを制限したいことあるかもしれません。その場合は、[システム強化](hardening.md)のページの"SystemD Unit Files"の項を参照してください。
 
-Gravwell indexers use memory mapped (mmap) files to access stored data. Every mapped file counts against the indexer's maximum number of memory mapped files, as dictated by the Linux Kernel. On some systems, and depending on the amount and granularity of data in your indexer, you may have to increase the allowed number of memory mapped files to avoid crashes. Crashes caused by exhausting the available number of memory mapped files usually appear as a `malloc` failure. On most modern Linux distributions, the default number of allowed memory mapped files is 65536.
+## Gravwellと仮想記憶領域
 
-To increase the number of allowed memory mapped files, use `sysctl`:
+Gravwellのインデクサは、保存されたデータにアクセスできるようにメモリマップされた(mmap)ファイルを使用します。マップされたファイルは、インデクサーのメモリマップがファイルされる毎に増え、Linux カーネルによって許容されるファイル最大数まで増加します。システムによっては、またインデクサのデータ量や粒度によっては、メモリマップされたファイルの許容数をクラッシュ回避のために増やす必要があるかもしれません。利用可能なメモリマップされたファイル数を使い果たすと、通常 `malloc` の失敗となってクラッシュします。ほとんどの最新の Linux ディストリビューションでは、デフォルトのメモリマップされたファイルの許容数は 65536 です。
+
+
+メモリマップファイルの許容数を増やすには、`sysctl`コマンドを使います:
 
 ```
 sysctl -w vm.max_map_count=262144
 ```
 
-To permanently change the allowed number of memory mapped files, add the `sysctl` parameter to `sysctl.conf`:
+メモリマップされるファイルの数の変更を永続的に保つには、`sysctl` パラメータを `sysctl.conf` に追加します:
 
 ```
 echo vm.max_map_count=262144 >> /etc/sysctl.conf

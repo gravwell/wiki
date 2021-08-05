@@ -1,26 +1,27 @@
 ## Slice
 
-The slice module is a powerful but very low-level tool for extracting bytes from entries or enumerated values by simply specifying offsets within the entry/enumerated value and optionally casting those bytes to specific type.  Slice can reference bytes via relative indexing, including negative numbers.
+スライスモジュールは、エントリ/列挙値内のオフセットを指定し、オプションでそれらのバイトを特定の型にキャストすることで、エントリまたは列挙値からバイトを抽出するための強力で非常に低レベルのツールです。  スライスは、負の数を含む相対インデックスを介してバイトを参照できます。
 
-The following search extracts the RPM from canbus messages on a Toyota vehicle by reading the first two bytes of the "data" enumerated value and parsing it as a 16-bit big-endian integer.
+次の検索では、 "data"列挙値の最初の2バイトを読み取り、それを16ビットビッグエンディアン整数として解析することによって、トヨタ車のキャンバスメッセージからRPMを抽出します。
 
 ```
 tag=CAN canbus ID=0x2C4 | slice uint16be(data[0:2]) as RPM | mean RPM | chart mean
 ```
 
-Slice can extract from raw entry contents, or it can operate on an enumerated value. The extracted bytes can optionally be parsed into a different type, such as an integer or a string. Some examples:
+スライスは生のエントリの内容から抽出することも、列挙値を操作することもできます。  抽出されたバイトは、整数や文字列など、オプションで別の型に解析できます。  いくつかの例:
 
-| Command | Description |
+| コマンド | 説明 |
 |---------|-------------|
-| `slice [0:4] as foo` | Extract the first 5 bytes directly from the entry's data and place them into an enumerated value "foo" |
-| `slice Payload[9] as tenth` | Extract the tenth byte from the enumerated value "Payload" |
-| `slice uint16le(Payload[9:10]) as value` | Pull two bytes from the enumerated value "Payload", parse them as an unsigned 16-bit little-endian integer, and store it as "value" |
-| `slice uint16be(Payload[-2:]) as value` | Pull the last two bytes from "Payload", parse them as an unsigned 16-bit big-endian integer, and store it as "value" |
-| `slice uint16be(Payload[-4:-2]) as value2` | Pull the two bytes preceding the last two bytes of "Payload", parse them as an unsigned 16-bit big-endian integer, and store as "value2"
+| `slice [0:4] as foo` | エントリのデータから最初の5バイトを直接抽出し、列挙値"foo"に配置します |
+| `slice Payload[9] as tenth` |  列挙値"Payload"から10バイト目を抽出します |
+| `slice uint16le(Payload[9:10]) as value` | 列挙値"Payload"から2バイトを引き出し、符号なし16ビットリトルエンディアンとして解析し、"value"として保存します。 |
+| `slice uint16be(Payload[-2:]) as value` | "Payload"から最後の2バイトを取り出し、符号なし16ビットビッグエンディアン整数として解析し、"value"として保存します。 |
+| `slice uint16be(Payload[-4:-2]) as value2` | "Payload"の最後の2バイトに先行する2バイトをプルし、それらを符号なし16ビットビッグエンディアン整数として解析し、"value2"として格納します。
 
-### Supported Types
+### サポートされている型
 
-An integral function of the slice module is casting the data to the appropriate type.  By default, data is extracted as a byte slice, but the option cast allows us to transform it into a type.  Types that have a suffix of "be" indicate a [Big Endian](https://en.wikipedia.org/wiki/Endianness) bit order, those without a "be" suffix use a Little Endian bit order.
+スライスモジュールの不可欠な機能は、データを適切な型にキャストすることです。  デフォルトでは、データはバイトスライスとして抽出されますが、オプションcastを使用すると、データを型に変換できます。  「be」の接尾辞を持つ型は[ビッグエンディアン](https://en.wikipedia.org/wiki/Endianness)のビット順を示し、「be」接尾辞のないものはリトルエンディアンのビット順を使用します。
+
 
 * byte
 * int16
@@ -50,24 +51,24 @@ An integral function of the slice module is casting the data to the appropriate 
 * array
 * string
 
-### Inline filtering
+### インラインフィルタリング
 
-The slice module supports inline filtering which allows for very fast processing of binary data.  Every type does not support every filter operation.  For example attempting to find a subset in a floating point number does not make any sense, nor does applying "less than" to a byte slice.  Below is the complete list of filter operators and a table showing which operators can be applied to which types:
+スライスモジュールは、バイナリデータの非常に高速な処理を可能にするインラインフィルタリングをサポートします。  すべてのタイプがすべてのフィルタ操作をサポートするわけではありません。  たとえば、浮動小数点数からサブセットを見つけようとしても意味がなく、バイトスライスに「小なり」を適用しても意味がありません。  以下は、フィルタ演算子の完全なリストと、どの演算子をどのタイプに適用できるかを示す表です:
 
-#### Filter Operators
+#### フィルタ演算子
 
-| Operator | Name | Description |
-|----------|------|-------------|
-| == | Equal | Field must be equal
-| != | Not equal | Field must not be equal
-| ~ | Subset | Field contains the value
-| !~ | Not Subset | Field does NOT contain the value
-| < | Less Than | Numeric value of field is less than
-| <= | Less Than or Equal to | Numeric value of field is less than or equal to
-| > | Greater Than | Numeric value of field is greater than
-| >= | Greater Than or Equal to | Numeric value of field is greater than or equal to
+| オペレーター | 名 | 説明
+|----------|------|-------------
+| == | 等しい | フィールドは等しくなければなりません
+| != | 等しくない | フィールドは等しくてはいけません
+| < | 未満 | フィールドはより小さい
+| > | より大きい | フィールドはより大きくなければなりません
+| <= | 以下 | フィールドは以下でなければなりません
+| >= | 以上 | フィールドは以上でなければなりません
+| ~ | サブセット | フィールドはメンバーでなければなりません
+| !~ | サブセットではない | フィールドはメンバーであってはいけません
 
-#### Supported Operators by Type
+#### タイプ別サポート演算子
 
 Type     | == | != | ~ | !~ | < | <= | > | >=
 ----------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:

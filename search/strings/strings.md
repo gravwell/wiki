@@ -1,23 +1,23 @@
-## Strings
+## 文字列
 
-The strings module finds strings of at least a minimum length in either the entry data or an enumerated value. It converts non-printable characters into periods and drops any entries which contain no strings of the required length. The syntax is:
+文字列モジュールは、入力データまたは列挙値のいずれかで、少なくとも最小の長さの文字列を見つけます。出力不可能な文字をピリオドに変換し、必要な長さの文字列を含まないエントリを削除します。構文は次のとおりです。
 
 ```
 strings [-t target] [-n length] [source]
 ```
 
-The `source` parameter is an optional enumerated value name on which to operate; if no source is specified, strings will use the raw entry data. By default, the converted data is written back to the source. Specifying a `target` will instead write the converted data out to an enumerated value of that name. The `length` parameter allows the user to select the minimum string length; the default is 6 characters.
+`source` パラメータは、操作の対象となる列挙値の名前です。source が指定されていない場合、string は生の入力データを使用します。デフォルトでは、変換されたデータは source に書き戻されます。`target` を指定すると、変換されたデータはその名前の列挙値に書き出されます。`length` パラメータでは、文字列の最小長を選択できます。デフォルトは6文字です。
 
-### Supported Options
+### サポートされているオプション
 
-* `-t <target>`: Write converted strings data to a specified enumerated value
-* `-n <len>`: Select minimum string length (default 6 characters)
+* `-t <target>`: 変換された文字列データを指定された列挙値に書き込みます。
+* `-n <len>`: 最小の文字列長を選択します（デフォルトは6文字）。
 
-### Example Usage
+### 使用例
 
-| Command | Description |
+| コマンド | 説明 |
 |---------|-------------|
-| strings | Operate directly on the entry data |
-| strings -n 10 | Operate directly on the entry data, minimum string length 10 |
-| strings -t foo | Convert the entry data and store the result in `foo`, rather than modifying the data |
-| strings -t foo Payload | Convert the data in the enumerated value `Payload` and store it in `foo` |
+| strings | 入力データを直接操作します |
+| strings -n 10 | 最小文字列長10で入力データを直接操作します |
+| strings -t foo | データを修正するのではなく、エントリーデータを変換して、その結果を `foo` に格納します |
+| strings -t foo Payload | 列挙値 `Payload` のデータを変換して `foo` に格納します |

@@ -1,33 +1,33 @@
-# Search Macros
+# 検索マクロ
 
-Search macros are a powerful feature that can help you use Gravwell more effectively. Macros can turn long, repetitive search queries into easily-remembered shortcuts.
+検索マクロは、Gravwellをより効果的に使うための強力な機能です。マクロは、長くて反復的な検索クエリを、覚えやすいショートカットに変えることができます。
 
-## Macro Basics
+## マクロの基礎
 
-Macros are essentially string replacement rules which are applied to the search query string. The macro maps a short, name (like $MYMACRO) to a longer string. When Gravwell parses the search query, it looks for macro names (defined as a dollar sign followed by at least one capital letter or number) and does the replacement before launching the search. The GUI will show the expanded version of the query when you use a macro.
+マクロは、基本的には検索クエリの文字列に適用される文字列置換ルールです。マクロは、短い名前($MYMACRO のような)を長い文字列にマッピングします。Gravwellが検索クエリを解析するとき、マクロ名(ドル記号の後に少なくとも1つの大文字または数字が続くように定義されている)を探し、検索を開始する前に置換を行います。マクロを使用すると、GUIにはクエリの拡張バージョンが表示されます。
 
-For example, you may define a macro named `$DHCPACK` which expands to `regex "DHCPACK on (?P<ip>\S+) to (?P<mac>\S+) via (?P<iface>\S+)`. You can then use that macro in place of the regex invocation, e.g. `tag=syslog $DHCPACK | unique ip mac | table ip mac`.
+例えば、`$DHCPACK`というマクロを定義すると、`regex "DHCPACK on (?P<ip>\S+) to (?P<mac>\S+) via (?P<iface>S+)`に展開されます。例えば、`tag=syslog $DHCPACK | unique ip mac | table ip mac`のように、そのマクロをregex呼び出しの代わりに使うことができます。
 
-A macro can contain any part of a regular Gravwell query: the tag specification, search modules, or render modules. A macro can even contain an entire query, although you may find the search library a more useful tool for storing entire queries.
+マクロは、タグ指定、検索モジュール、レンダリングモジュールなど、通常の Gravwell クエリの任意の部分を含むことができます。マクロはクエリ全体を含むこともできますが、クエリ全体を格納するには検索ライブラリの方が便利なツールです。
 
-### Macro arguments
+### マクロ引数
 
-Macros can be defined with arguments. To define a macro that takes arguments, put replacement directives in the format `%%1%%`, `%%2%%`, etc. in the query string. Those directives will be replaced by the arguments given at run-time. For example, we might define a macro named `HTTPUSER` which expands to `tag=bro-http ax user_agent~"%%1%%"`. Later, we can pass arguments to the macro as though it were a C or Python function:
+マクロは引数を使って定義することができます。引数を取るマクロを定義するには、クエリ文字列の中に `%%1%%`, `%%2%%` などの形式の置換ディレクティブを入れます。これらのディレクティブは、実行時に与えられた引数に置き換えられます。例えば、`tag=bro-http ax user_agent~"%%1%%"`と展開する `HTTPUSER` というマクロを定義するとします。後で、CやPythonの関数のように引数をマクロに渡すことができます。
 
 ![](macro-args.png)
 
-### Nested macros
+### ネストされたマクロ
 
-A macro can contain another macro. We can define a macro `$FOO` which expands to `tag=foo json timestamp $BAR`; when you use the macro, Gravwell will see that the expansion contains another macro and will in turn expand the $BAR macro as well.
+マクロは別のマクロを含むことができます。マクロ `$FOO` を定義して `tag=foo json timestamp $BAR` に展開することができます; マクロを使用すると、Gravwell はその展開に別のマクロが含まれていることを認識し、順番に $BAR マクロも展開します。
 
-Gravwell will continue expanding macros for several iterations, although it will catch infinite recursion if a macro loop exists.
+Gravwellは、マクロループが存在する場合には無限の再帰をキャッチしますが、数回の反復のためにマクロを展開し続けます。
 
-## Defining a Macro
+## マクロの定義
 
-The macro management page is found in the main Gravwell menu:
+マクロ管理ページは、Gravwellのメインメニューにあります。
 
 ![](macro-page.png)
 
-To add a new macro, select the Add button in the upper right. A window will pop up prompting for the macro name and the query string; the screenshot below shows a definition of the DHCPACK macro described previously:
+新しいマクロを追加するには、右上の「追加」ボタンを選択します。マクロ名とクエリ文字列の入力を求めるウィンドウが表示されます。
 
 ![](macro-dhcpack.png)

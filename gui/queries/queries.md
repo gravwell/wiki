@@ -1,165 +1,165 @@
-# The Search Bar & Query Interfaces
+# 検索バーとクエリインターフェイス
 
-Although investigations may begin with an email alert from an automated script, or when the user notices something strange on a dashboard, actual *data exploration* typically involves running queries manually, iterating over different timeframes and queries to drill down to the information of interest. This document describes the **user interfaces** Gravwell provides for building and running queries; for discussion of how to actually build the queries, see [the search documentation](#!search/search.md).
+データの調査は、自動化されたスクリプトからのアラートメールや、ダッシュボード上でユーザーが異変に気付いた時に始まるかもしれませんが、実際の*データ調査*では、通常、手動でクエリを実行し、異なる時間枠やクエリを繰り返して、興味のある情報を掘り下げていきます。このドキュメントでは、Gravwellが提供するクエリを構築・実行するための**ユーザーインターフェース**について説明します。実際にクエリを構築する方法については、[検索ドキュメント](#!search/search.md)を参照してください。
 
-## New Search Page
+## 新規検索ページ
 
-The New Search page is the default homepage for Gravwell users. It can also be reached by clicking the Gravwell logo in the upper left of the UI, or by opening the main menu and selecting "New Search".
+新規検索ページはGravwellユーザーのデフォルトのホームページです。また、UI左上のGravwellロゴをクリックするか、メインメニューを開いて「新規検索」を選択することでもアクセスできます。
 
-![](searchbar.png)
+![](検索バー.png)
 
-From this page, you can enter a new search entirely from scratch, re-run previous searches, or load a search from the Query Library. You can also select the desired timeframe and optionally enable live updates for the query.
+このページでは、ゼロから新しい検索を入力したり、過去の検索を再実行したり、クエリライブラリから検索を読み込むことができます。また、希望のタイムフレームを選択したり、オプションでクエリのライブアップデートを有効にすることもできます。
 
-### Entering a search manually
+### 手動で検索を行う
 
-To run a search entirely from scratch, simply begin typing. Once a valid query, such as `tag=* stats count by TAG | chart count by TAG`, has been entered, the "Search Now" and "Background Search" buttons will be enabled. At this point you can launch the query by either clicking one of those buttons or by hitting "Enter".
+最初から検索を実行するには、単純に入力を開始します。`tag=* stats count by TAG | chart count by TAG`のような有効なクエリを入力すると、"Search Now"と"Background Search"のボタンが有効になります。この時点では、これらのボタンをクリックするか、「Enter」キーを押すことで、クエリを起動することができます。
 
-### Accessing search history
+## 検索履歴の確認
 
-To re-run a previous search, either hit the down-arrow or click the list icon on the far-right side of the search bar:
+以前の検索を再実行するには、下矢印を押すか、検索バーの右端にあるリストアイコンをクリックします。
 
 ![](search-hist.png)
 
-Click the desired search from the history list. This will collapse the history dropdown; click "Search Now" to run the search.
+履歴リストから目的の検索をクリックします。これにより、履歴のドロップダウンが折りたたまれ、"今すぐ検索" をクリックして検索を実行します。
 
-### Accessing the query library
+### クエリライブラリへのアクセス
 
-The queries stored in the query library are also available through the search bar. Click the list icon on the far-right side of the search bar as when accessing search history, *then* click "Query library" at the bottom of the dropdown to switch views:
+クエリライブラリに保存されているクエリは、検索バーからも利用できます。検索履歴の場合と同様に、検索バーの右端にあるリストのアイコンをクリックし、ドロップダウンの 下部にある [クエリライブラリ] をクリックして表示を切り替えます。
 
 ![](search-library.png)
 
-## Selecting a Timeframe
+## タイムフレームの選択
 
-By default, queries run over the last hour of data. This is easily changed through the Timeframe dropdown below the query bar:
+デフォルトでは、クエリは直近1時間のデータを対象に実行されます。これは、クエリバーの下にあるTimeframeドロップダウンで簡単に変更できます。
 
 ![](timeframe.png)
 
-Selecting "Last hour" will run the query over the span of time from the current second back through exactly one hour previous. If the search is launched at 9:22, the query will run over the data from 8:22 through 9:22. "Last 24 hours", "Last 7 days", and so on operate similarly.
+"Last hour"を選択すると、現在の時刻からちょうど1時間前までの時間を対象に検索が行われます。9:22に検索を開始した場合、クエリは8:22から9:22までのデータを対象とします。"過去24時間"、"過去7日間"なども同様です。
 
-Selecting "This hour", on the other hand, will run the search from *the top of the most recent hour* to the present. Thus if the search is launched at 9:22, the query will run over data from 9:00 through 9:22. "Today", "This week", "This month", and so on operate similarly. "Yesterday" is a special case which runs from 00:00 through 23:59 of the previous calendar day.
+一方、"This hour"を選択すると、直近の*1時間*の先頭から現在までのデータが検索されます。つまり、9:22に検索を開始した場合、9:00から9:22までのデータを検索します。"Today"、"This week"、"This month "なども同様に動作します。"Yesterday "は特別なケースで、前日の00:00から23:59までのデータを検索します。
 
-The "Date range" option brings up selectors for the start and end date/times, as shown below.
+"Date range"オプションを選択すると、以下のように開始日と終了日/時間のセレクタが表示されます。
 
 ![](daterange.png)
 
-Similarly, "Unix timestamp" provides fields where you can enter Unix timestamps (seconds since the epoch) manually, which may be useful when referencing other data which uses Unix timestamps:
+同様に、"Unix timestamp"では、Unixタイムスタンプ（エポックからの秒数）を手動で入力できるフィールドが用意されており、Unixタイムスタンプを使用する他のデータを参照する際に便利です。
 
 ![](unix.png)
 
-"Custom duration" lets you enter how many years, months, days, hours, minutes, and seconds into the past the search should run. In the screenshot below, the user has indicated that they wish to search over the last 2 days, 3 hours, and 12 minutes:
+"Custom duration "では、何年、何ヶ月、何日、何時間、何分、何秒前に検索を実行するかを入力します。以下のスクリーンショットでは、ユーザーが過去2日、3時間、12分を検索したいと指定しています。
 
 ![](custom.png)
 
-Finally, "ISO 8601 duration" allows you to specify a duration in [ISO-8601 format](https://en.wikipedia.org/wiki/ISO_8601#Durations). In the screenshot below, the user has entered "P13DT", meaning the last 13 days:
+最後に、「ISO 8601 duration」では、[ISO-8601 format](https://en.wikipedia.org/wiki/ISO_8601#Durations)で期間を指定することができます。下のスクリーンショットでは、ユーザーが「P13DT」と入力していますが、これは過去13日間を意味しています。
 
 ![](iso8601.png)
 
-Note: "Date range" and "Unix timestamp" can be used to search into the future, which is useful if data has been ingested with bad timestamps.
+注："Date range"と"Unix timestamp"は、未来を検索するために使用することができ、これは不正なタイムスタンプでデータが取り込まれた場合に便利です。
 
-## Search Results Page
+## 検索結果ページ
 
-When you run a query, Gravwell displays the *search results page* to show the output. From this page, you can drill down into subsections of the results, modify & re-run the query, change the timeframe, save the results, and more.
+クエリを実行すると、Gravwellは出力結果を表示する*検索結果ページ*を表示します。このページでは、結果のサブセクションへのドリルダウン、クエリの修正と再実行、タイムフレームの変更、結果の保存などを行うことができます。
 
 ![](results.png)
 
-As seen in the screenshot above, the search results page shows the current query at the top of the page. You can edit the query in this box, then click the magnifying glass icon to re-run the query. If you want to use a different timeframe, use the calendar icon to select a different timeframe before re-running.
+上のスクリーンショットにあるように、検索結果ページでは、現在のクエリがページの上部に表示されます。このボックスでクエリを編集し、虫眼鏡のアイコンをクリックしてクエリを再実行することができます。別のタイムフレームを使用したい場合は、カレンダーアイコンで別のタイムフレームを選択してから再実行します。
 
-You can also use the history/library dropdown icon to completely change the query to one from either the search history or the query library; this can be useful after you have selected a sub-region of the timeframe (see the Timeframe sub-selection section).
+また、履歴/ライブラリドロップダウンアイコンを使って、検索履歴またはクエリライブラリのいずれかからクエリを完全に変更することもできます。これは、タイムフレームのサブリージョンを選択した後に便利です（「タイムフレームのサブセレクション」セクションを参照）。
 
-The results page also has a menu of additional actions for the search results, accessible by clicking the three vertical dots on the right side of the page as shown below. The individual options in this menu are covered in the following subsections.
+検索結果ページには、検索結果に対する追加アクションのメニューがあり、下図のようにページの右側にある3つの縦のドットをクリックするとアクセスできます。このメニューの各オプションについては、以下のサブセクションで説明します。
 
 ![](menu.png)
 
-### Save results
+### 結果の保存
 
-This option marks the search as SAVED. The results will be accessible in the [Persistent Searches](#!gui/persistent/persistent.md) page until the search is deleted by the user.
+このオプションは検索結果を保存したことを示します。検索結果は、ユーザーが検索を削除するまで、[永続的な検索](#!gui/persistent/persistent.md)ページでアクセス可能になります。
 
-### Save query
+### クエリの保存
 
-Saves the current search in the query library for later reuse.
+現在の検索結果をクエリライブラリに保存し、後で再利用できるようにします。
 
 ![](savequery.png)
 
-### Add to dashboard
+### ダッシュボードに追加
 
-This option lets you add the search to an existing dashboard, or create a new dashboard with this search as the first tile. You can use the "Find dashboard" field to filter your existing dashboards to find the right one.
+このオプションを使用すると、既存のダッシュボードに検索結果を追加したり、この検索結果を最初のタイルとして新しいダッシュボードを作成したりすることができます。ダッシュボードの検索」フィールドを使用して、既存のダッシュボードをフィルタリングし、適切なダッシュボードを見つけることができます。
 
 ![](add-to-dash.png)
 
-### Send to background
+### 背景に送る
 
-This option is useful when a search is taking longer than expected to complete. Clicking "send to background" will make the search continue running in the background even after you navigate away from the results page; this allows you to do other things while the search completes. You can monitor the search's status and view the completed results from the [Persistent Searches](#!gui/persistent/persistent.md) page. Note that backgrounded searches do *not* persist across webserver restarts; to keep results around permanently, use the "Save results" option.
+このオプションは、検索の完了までに予想以上の時間がかかっている場合に便利です。バックグラウンドに送信」をクリックすると、検索結果ページから移動した後も検索がバックグラウン ドで実行され、検索が完了するまでの間、他の作業を行うことができます。検索の状態を監視したり、完了した検索結果を表示するには、[Persistent Searches](#!gui/persistent/persistent.md)ページを参照してください。バックグラウンドでの検索はウェブサーバの再起動後も持続しないことに注意してください。
 
-### Schedule
+### スケジュール
 
-Clicking "Schedule" takes you to the New Scheduled Search page, with the current query pre-populated in the query field. The timeframe selector will also be set to match your most recently-run timeframe, if possible. Simply give the scheduled search a name, description, and schedule, then click save.
+スケジュール」をクリックすると、「新規スケジュール検索」のページが表示され、クエ リフィールドに現在の検索結果があらかじめ入力されます。また、タイムフレームセレクタには、可能であれば直近に実行したタイムフレームが設定されます。スケジュールされた検索に名前、説明、スケジュールを与えて、「保存」をクリックするだけです。
 
 ![](schedule.png)
 
-### Download
+### ダウンロード
 
-The "Download" menu gives options for downloading the search results in various formats. 
+"Download"メニューでは、検索結果をさまざまな形式でダウンロードすることができます。
 
 ![](download.png)
 
-Different renderers will give different download formats; in the screenshot above, the chart renderer offers JSON and CSV formats. You may find it useful to download a chart in CSV format and import it into a spreadsheet, for instance.
+上のスクリーンショットでは、チャートのレンダラーがJSON形式とCSV形式のダウンロードを提供しています。例えば、チャートをCSV形式でダウンロードして、表計算ソフトに取り込むことができると便利です。
 
-One particularly useful combination is downloading JSON results from the [raw renderer](#!search/raw/raw.md). The resulting file can be used with Gravwell's [reimport ingester](https://github.com/gravwell/gravwell/tree/master/ingesters/reimport) to re-ingest the same entries into a different Gravwell instance. If you email Gravwell support about a problem, they may request that you send entries in this format for testing.
+特に便利な組み合わせは、[raw renderer](#!search/raw/raw.md)からJSON形式の結果をダウンロードすることです。その結果のファイルをGravwellの[reimport ingester](https://github.com/gravwell/gravwell/tree/master/ingesters/reimport)を使って、同じエントリーを別のGravwellインスタンスに再インジェストすることができます。Gravwellのサポートに問題をメールで伝えると、テストのためにこの形式でエントリを送るように要求されることがあります。
 
-### Share Query URL
+### クエリURLの共有
 
-The "Share Query URL" option brings up a dialog showing a URL which you can copy and paste to another user. Opening the URL will re-run the same query you just ran. This is a convenient way to show some data to another person when they can't come look at your screen.
+"Share Query URL"を選択すると、他のユーザーにコピー＆ペーストできる URL が表示されます。この URL を開くと、先ほど実行したのと同じクエリが再実行されます。画面を見ることができない相手にデータを見せる場合に便利な方法です。
 
 ![](share.png)
 
 ### Start a template
 
-The "Start a template" option opens the New Template page with the current query pre-populated. Templates are essentially stored queries in Gravwell which contain a *variable*. They are used to build investigative dashboards or in combination with actionables to launch a query based on a portion of the results of a previous search. Templates, actionables, and investigative dashboards are documented elsewhere.
+"Start a template"オプションを選択すると、現在のクエリがあらかじめ入力されたNew Template pageページが開きます。テンプレートとは、基本的には変数*を含むGravwellの保存されたクエリです。テンプレートは、調査用ダッシュボードの構築や、アクショナブルと組み合わせて、以前の検索結果の一部に基づいてクエリを起動するために使用されます。テンプレート、アクショナブル、調査用ダッシュボードについては別の場所で説明しています。
 
 ![](template.png)
 
-## Timeframe sub-selection
+## タイムフレームのサブセレクション
 
-For many queries, Gravwell will display a timeframe sub-selection interface above the search results. This is a small chart, where the x-axis covers the query's timeframe and the y-axis represents the number of entries.
+Gravwellでは、多くのクエリで検索結果の上にタイムフレームサブセレクションのインターフェイスが表示されます。これは小さなチャートで、X軸はクエリのタイムフレーム、Y軸はエントリー数を表しています。
 
 ![](timeframe.png)
 
-In the screenshot above, we see that entries were pretty uniformly distributed across the timeframe (16:41 Jun 7 through 14:41 Jun 8). The following screenshot shows a more sparse distribution of entries, with some stretches of time where no entries appear at all:
+上のスクリーンショットでは、エントリーがタイムフレーム（6月7日16:41～6月8日14:41）全体にかなり均一に分布していることがわかります。次のスクリーンショットでは、エントリの分布がよりまばらで、エントリがまったく表示されない時間帯もあります。
 
 ![](timeframe-sparse.png)
 
-You can use the timeframe selector to zoom in on a portion of the search results. For instance, here is a search run over the last hour:
+timeframeセレクターを使って、検索結果の一部を拡大することができます。たとえば、ここでは過去1時間の検索結果を表示しています。
 
 ![](dhcp-top.png)
 
-By clicking and holding the left mouse button on the timeframe selector, we can highlight a portion of the timeframe. Releasing the mouse button will cause Gravwell to zoom in on the selected portion, re-calculating the appropriate results *without* re-running the query:
+タイムフレームセレクターの上でマウスの左ボタンをクリックしたままにすると、タイムフレームの一部をハイライトすることができます。マウスボタンを離すと、Gravwellは選択された部分を拡大し、クエリを再実行することなく、適切な結果を再計算します。
 
 ![](dhcp-zoomed.png)
 
-You can zoom in multiple times, down to a minimum zoom level (determined by the original query's timeframe). At this point the GUI adds two new buttons on the timeframe selector. The arrow button will step out by one zoom level; this is useful if you have zoomed in multiple times and wish to go back. The "x" button will cancel the zoom entirely and return you to the original query's timeframe.
+ズームインは複数回行うことができ、最小のズームレベル（元のクエリのタイムフレームによって決定される）まで行うことができます。この時点で、GUIはタイムフレームセレクタに2つの新しいボタンを追加します。矢印ボタンは、ズームレベルを1段階下げます。これは、複数回ズームインした後に戻りたい場合に便利です。"x"ボタンはズームを完全にキャンセルし、元のクエリのタイムフレームに戻ります。
 
-Note that the timeframe button on the query bar now has a dot on it. This indicates that if you re-run the query at this time, it will run over *the currently selected timeframe*. This is extremely useful when you're starting from a wide set of results and want to drill down into one particular area.
+クエリバーのタイムフレームボタンには、ドットが付いています。これは、この時点でクエリを再実行した場合、現在選択されているタイムフレーム*で実行されることを示しています。これは、広範囲の結果から始めて、ある特定の領域を掘り下げたい場合に非常に便利です。
 
-Note: Not all queries will display the timeframe selector. Some modules or module options (like the table renderer's `-nt` flag) force Gravwell into *non-temporal mode*, which disallows zooming.
+注：すべてのクエリでタイムフレームセレクタが表示されるわけではありません。モジュールやモジュールオプションの中には（テーブルレンダラーの`-nt`フラグのように）、Gravwellを強制的に*non-temporal mode*にしてしまうものがあり、ズームができなくなってしまいます。
 
-## Live Update Queries
+## ライブアップデートクエリ
 
-If you want to track a particular query, updating the results as new entries come into Gravwell, you can use the Live Update function. Either click the "Live update" toggle button on the new search page, or use the timeframe dropdown menu in the search results page to turn it on and re-run the search.
+ある特定のクエリを追跡し、新しいエントリがGravwellに入ってくるたびに検索結果を更新したい場合は、ライブアップデート機能を使うことができます。新規検索ページの"Live update"ボタンをクリックするか、検索結果ページの時間枠ドロップダウンメニューを使ってライブアップデートをオンにし、検索を再実行してください。
 
 ![](live-new.png)
 
 ![](live-results.png)
 
-A search with live updating turned on will re-execute on a given interval, updating the results. Note that this *does* require running the whole search again, so searches involving large quantities of data (which take a long time to run) may not be suitable for live updating.
+ライブアップデートをオンにした検索は、一定の間隔で再実行され、結果が更新されます。この場合、検索全体を再度実行する必要があるため、大量のデータを含む（実行に時間がかかる）検索は、ライブアップデートに適していない可能性があることに注意してください。
 
-When a search has live updating enabled, the search results page adds two new buttons:
+ライブアップデートが有効になっている検索では、検索結果ページに2つの新しいボタンが追加されます。
 
-![](live-buttons.png)
+![](livebuttons.png)
 
-The left button, labeled "pause updates", will temporarily disable live updating. Clicking it again will re-enable updates.
+"pause updates"と書かれた左のボタンは、ライブアップデートを一時的に無効にします。再度クリックすると、ライブアップデートが再び有効になります。
 
-The right button lets you change how often the live update occurs:
+右側のボタンは、ライブアップデートの頻度を変更できます:
 
 ![](live-options.png)
 
-By default, the search updates every minute. You can update as frequently as every 10 seconds, or as infrequently as you wish.
+デフォルトでは、検索結果は1分ごとに更新されます。10秒ごとに更新することもできますし、必要に応じて不定期に更新することもできます。
