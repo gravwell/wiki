@@ -1,4 +1,4 @@
-# Gravwellドキュメント
+# Soliton NKドキュメント
 
 [ホーム](index.md)
 [チェンジログ](changelog/list.md)

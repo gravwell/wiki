@@ -1,6 +1,6 @@
-#
+# 
 
-# Soliton NK
+# Soliton NK Docs
 
 このサイトには、Soliton NKのドキュメントと、その他にChangelogsなどのリソースが含まれています。
 
