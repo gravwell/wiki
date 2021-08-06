@@ -1,8 +1,6 @@
 # 
 
-![](logo-name.png)
-
-# Gravwell
+# Gravwell Docs
 
 このサイトには、Gravwellのドキュメントと、その他にChangelogsなどのリソースが含まれています。
 
@@ -44,7 +42,7 @@ Gravwellは、無料の[コミュニティ版](https://www.gravwell.io/download)
     * [ファイルフォロワーインジェスター](ingesters/file_follow.md)
 
     * [シンプルリレーインジェスター](ingesters/simple_relay.md)
-    
+
     * [Windows イベントインジェスター](ingesters/ingesters.md#Windows_Event_Service)
 
     * [Netflow/IPFIX インジェスター](ingesters/ingesters.md#Netflow_Ingester)
