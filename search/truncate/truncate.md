@@ -6,11 +6,11 @@ The `truncate` module preserves only the first N characters (or bytes when using
 tag=data json IP Message | truncate -e Message 20 | table
 ```
 
-`truncate` only operates string and byte slice enumerated values and by default assumes data is UTF-8 encoded. You can override this behavior by using the `-binary` flag.
+`truncate` only operates on string and byte slice enumerated values and by default assumes data is UTF-8 encoded. You can override this behavior by using the `-binary` flag.
 
 ### Supported Options
 
-* `-ellipsis`: Optional. Add an ellipsis (three character ...) to the string after truncating, meaning all truncated values will be three characters longer than specified.
+* `-ellipsis`: Optional. Add an ellipsis (three character, "...") to the string *after* truncating, meaning all truncated values will be three characters longer than specified.
 * `-binary`: Optional. Treat data as byte slices instead of UTF-8 strings.
 
 ### Example
