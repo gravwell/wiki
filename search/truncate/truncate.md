@@ -10,7 +10,7 @@ tag=data json IP Message | truncate -e Message 20 | table
 
 ### Supported Options
 
-* `-ellipsis`: Optional. Add an ellipsis (three character, "...") to the string *after* truncating, meaning all truncated values will be three characters longer than specified.
+* `-ellipsis`: Optional. Add an ellipsis (three period characters, "...") to the string *after* truncating, meaning all truncated values will be three characters longer than specified.
 * `-binary`: Optional. Treat data as byte slices instead of UTF-8 strings.
 
 ### Example
