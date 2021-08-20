@@ -202,11 +202,24 @@ The following functions are deprecated but still available, allowing emails to b
 
 ## Creating Notifications
 
-Scripts may create notifications targeted at the script owner. A notification consists of an integer ID, a string message, an optional HTTP link, and an expiration. If the expiration is in the past, or more than 24 hours in the future, Gravwell will instead set the expiration to be 12 hours.
+Scripts may create notifications targeted at the script owner. A notification consists of an integer ID, a string message, an optional HTTP link, and an expiration.
 
-	addSelfTargetedNotification(7, "This is my notification", "https://gravwell.io", time.Now().Add(3 * time.Hour)
+* `addSelfTargetedNotification(uint32, string, string, time.Time) error`
 
-The notification ID uniquely identifies the notification. This allows the user to update existing notifications by calling the function again with the same notification ID, but it also allows the user to add multiple simultaneous notifications by specifying different IDs.
+If the expiration is in the past, or more than 24 hours in the future, Gravwell will instead set the expiration to be 12 hours. The notification ID uniquely identifies the notification. This allows the user to update existing notifications by calling the function again with the same notification ID, but it also allows the user to add multiple simultaneous notifications by specifying different IDs.
+
+### Example Notification Creation Script
+
+This script will create a notification that is targeted at the current user, it contains a link and expires 12 hours after the notification is created.
+
+```
+var time = import("time")
+MSG=`This is my notification`
+ID=0x7
+LINK="https://gravwell.io"
+EXPIRES=time.Now().Add(3*time.Hour)
+return addSelfTargetedNotification(ID, MSG, LINK, EXPIRES)
+```
 
 ## Creating and Ingesting Entries
 
