@@ -49,6 +49,8 @@ An integral function of the slice module is casting the data to the appropriate 
 * float64be
 * array
 * string
+* IPv4
+* IPv6
 
 ### Inline filtering
 
@@ -71,31 +73,34 @@ The slice module supports inline filtering which allows for very fast processing
 
 Type     | == | != | ~ | !~ | < | <= | > | >=
 ----------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:
-byte     | X | X |  |  | X | X | X | X 
-int16    | X | X |  |  | X | X | X | X
-int16le  | X | X |  |  | X | X | X | X
-int16be  | X | X |  |  | X | X | X | X
-uint16   | X | X |  |  | X | X | X | X
-uint16le | X | X |  |  | X | X | X | X
-uint16be | X | X |  |  | X | X | X | X 
-int32    | X | X |  |  | X | X | X | X
-int32le  | X | X |  |  | X | X | X | X
-int32be  | X | X |  |  | X | X | X | X
-uint32   | X | X |  |  | X | X | X | X
-uint32le | X | X |  |  | X | X | X | X
-uint32be | X | X |  |  | X | X | X | X
-int64    | X | X |  |  | X | X | X | X
-int64le  | X | X |  |  | X | X | X | X
-int64be  | X | X |  |  | X | X | X | X
-uint64   | X | X |  |  | X | X | X | X
-uint64le | X | X |  |  | X | X | X | X
-uint64be | X | X |  |  | X | X | X | X
-float32  | X | X |  |  | X | X | X | X
-float32le| X | X |  |  | X | X | X | X
-float32be| X | X |  |  | X | X | X | X
-float64  | X | X |  |  | X | X | X | X
-float64le| X | X |  |  | X | X | X | X
-float64be| X | X |  |  | X | X | X | X
-array    | X | X | X | X |  |  |  |
-string   | X | X | X | X |  |  |  |
+byte     | X | X |   |   | X | X | X | X 
+int16    | X | X |   |   | X | X | X | X
+int16le  | X | X |   |   | X | X | X | X
+int16be  | X | X |   |   | X | X | X | X
+uint16   | X | X |   |   | X | X | X | X
+uint16le | X | X |   |   | X | X | X | X
+uint16be | X | X |   |   | X | X | X | X 
+int32    | X | X |   |   | X | X | X | X
+int32le  | X | X |   |   | X | X | X | X
+int32be  | X | X |   |   | X | X | X | X
+uint32   | X | X |   |   | X | X | X | X
+uint32le | X | X |   |   | X | X | X | X
+uint32be | X | X |   |   | X | X | X | X
+int64    | X | X |   |   | X | X | X | X
+int64le  | X | X |   |   | X | X | X | X
+int64be  | X | X |   |   | X | X | X | X
+uint64   | X | X |   |   | X | X | X | X
+uint64le | X | X |   |   | X | X | X | X
+uint64be | X | X |   |   | X | X | X | X
+float32  | X | X |   |   | X | X | X | X
+float32le| X | X |   |   | X | X | X | X
+float32be| X | X |   |   | X | X | X | X
+float64  | X | X |   |   | X | X | X | X
+float64le| X | X |   |   | X | X | X | X
+float64be| X | X |   |   | X | X | X | X
+array    | X | X | X | X |   |   |   |
+string   | X | X | X | X |   |   |   |
+IPv4     | X | X | X | X |   |   |   |
+IPv6     | X | X | X | X |   |   |   |
 
+Note: The `IPv4` and `IPv6` operators expect 4 and 16 byte network encoded values, text encoding of IP addresses will not extract appropriately.
