@@ -45,6 +45,7 @@
 * [min](math/math.md#Min)
 * [namedfields](namedfields/namedfields.md)
 * [netflow](netflow/netflow.md)
+* [nosort](nosort/nosort.md)
 * [numbercard](gauge/gauge.md)
 * [packet](packet/packet.md)
 * [packetlayer](packetlayer/packetlayer.md)
