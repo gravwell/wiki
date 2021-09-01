@@ -57,6 +57,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [max](math/math.md#Max)
 * [mean](math/math.md#Mean)
 * [min](math/math.md#Min)
+* [nosort](nosort/nosort.md)
 * [packetlayer](packetlayer/packetlayer.md)
 * [regex](regex/regex.md)
 * [require](require/require.md)
