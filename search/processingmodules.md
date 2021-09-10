@@ -37,7 +37,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [diff](diff/diff.md)
 * [dns](dns/dns.md)
 * [enrich](enrich/enrich.md)
-* [entropy](math/math.md#Entropy)
+* [entropy](entropy/entropy.md)
 * [eval](eval/eval.md)
 * [first/last](firstlast/firstlast.md)
 * [geoip](geoip/geoip.md)

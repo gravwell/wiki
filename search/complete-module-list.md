@@ -15,7 +15,7 @@
 * [dns](dns/dns.md)
 * [dump](dump/dump.md)
 * [enrich](enrich/enrich.md)
-* [entropy](math/math.md#Entropy)
+* [entropy](entropy/entropy.md)
 * [eval](eval/eval.md)
 * [fdg](fdg/fdg.md)
 * [fields](fields/fields.md)
