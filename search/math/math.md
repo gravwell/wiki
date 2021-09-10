@@ -100,25 +100,3 @@ tag=pcap packet tcp.DstPort tcp.DstIP | eval DstPort < 1024 | unique DstPort Dst
 ```
 
 The search above will output every unique combination of IP + port, provided the port is less than 1024. This is a useful way to find servers on a network, for instance.
-
-## Entropy
-
-The entropy module calculates the Entropy of field values over time.  Specifying `entropy` without any arguments will generate the entropy of all entries data sections across the search range.  The entropy module supports temporal search mode allowing for charting of entropy over time.  Entropy can also operate on enumerated values and group using multiple keys similar to other math modules.  Entropy output values are between 0 and 1.
-
-An example query which calculates and charts the entropy of TCP packet payloads based on port:
-
-```
-tag=pcap packet tcp.Port tcp.Payload | entropy Payload by Port | chart entropy by Port
-```
-
-An example query which calculates the entropy of URLS by host and sorts the list based on highest entropy value:
-
-```
-tag=pcap packet tcp.Port==80 ipv4.IP !~ 10.0.0.0/8 tcp.Payload | grep -e Payload GET PUT HEAD POST | regex -e Payload "[A-Z]+\s(?P<url>\S+)\sHTTP\/" | entropy url by IP | table IP entropy
-```
-
-The entropy module can take the `-p` flag, which tells it to calculate entropy *per entry*, rather than over a window as normal. The following will calculate the entropy of each windows log entry and display the entropy plus the data:
-
-```
-tag=winlog entropy -p | table DATA entropy
-```
