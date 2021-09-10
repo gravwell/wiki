@@ -629,12 +629,10 @@ func isChangeLogRef(pg string) bool {
 
 func isDirectSearchRef(pg string, terms []string) (ok bool) {
 	for _, term := range terms {
-		pgSnippet := `search/`+term+`/`
+		pgSnippet := `search/` + term + `/`
 		if ok = strings.Contains(pg, pgSnippet); ok {
 			break
 		}
 	}
 	return
 }
-
-
