@@ -8,12 +8,6 @@ lookup -r <resource name> <enumerated value> <column to match> <column to extrac
 
 Note: If you do NOT provide an ```as <valuename>``` addition to the syntax, lookup will create an enumerated value with the name of the "extracting" column.
 
-Multiple lookup operations can be specified in a single invocation of the lookup module by stringing together additional operations:
-
-```
-lookup -r mytable A B C as foo D E F
-```
-
 You can also extract multiple columns for each match. The following example matches the contents of enumerated value A against the values in column B; when a match is found, it extracts both columns C and D:
 
 ```
