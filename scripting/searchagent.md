@@ -1,6 +1,6 @@
-# The Search Agent
+# Gravwell Searchagent
 
-The search agent is the component which runs [automated searches](scheduledsearch.md). The search agent is included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the search agent. The search agent is installed automatically by the Gravwell Debian package.
+The search agent is the component which runs [automations](scheduledsearch.md). The search agent is included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the search agent. The search agent is installed automatically by the Gravwell Debian package.
 
 You can verify the search agent is running with the following command:
 
@@ -78,3 +78,21 @@ The `Log-File` parameter tells the search agent where it should output its logs.
 **Log-Level**
 
 The `Log-Level` parameter tells the search agent the minimum level of severity which should be logged. The options are INFO, WARN, ERROR, or OFF. Selecting WARN means that logs of severity WARN or ERROR will be logged. Selecting INFO logs everything. Selecting OFF logs nothing.
+
+### Environment Variable Configuration
+
+Many of the `searchagent.conf` configuration variables can be provided via runtime environment variables.  Configuration using environment variables can be useful in docker deployments.
+
+An environment variable can only be used if the configuration value is not set in the config file at all.  This means that any configuration value set in the `searchagent.conf` file will override any value provided in an environment variable.
+
+Here is a list of available configuration variables that can be set using environment variables:
+
+| Environment Variable Name | Configuration Parameter | Notes |
+|---------------------------|-------------------------|-------|
+| GRAVWELL_SEARCHAGENT_UUID | Searchagent-UUID        | |
+| GRAVWELL_SEARCHAGENT_AUTH | Search-Agent-Auth       | |
+| GRAVWELL_WEBSERVER_ADDRESS | Webserver_Address      | Multiple addresses may be provided as a comma seperated list |
+| GRAVWELL_SEARCHAGENT_DISABLE_NETWORK_SCRIPTS | Disable-Network-Script-Functions | boolean value |
+| GRAVWELL_SEARCHAGENT_HTTP_PROXY | HTTP-Proxy | |
+| GRAVWELL_SEARCHAGENT_INSECURE_SKIP_TLS_VERIFY | Insecure-Skip-TLS-Verify | boolean value |
+| GRAVWELL_SEARCHAGENT_INSECURE_USE_HTTP | Insecure-Use-HTTP | boolean value |
