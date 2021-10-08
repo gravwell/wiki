@@ -222,6 +222,8 @@ The following variables are pre-defined for anko scripts:
 
 * `START`: the start time of the query.
 * `END`: the end time of the query.
+* `DURATION`: the duration of a query.
+* `MAX_RUN_TIME`: the maximum amount of time the script can execute for.
 * `TAGMAP`: a map of string tag names to entry.EntryTag tag numbers. This only contains tags used in the current query, so if you say `tag=default,foo` TAGMAP will contain 'default'→0 and 'foo'→1. Use this in conjunction with the `cloneEntry` or `newEntry` functions.
 
 ## Available packages
