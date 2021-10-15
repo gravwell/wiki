@@ -1,6 +1,6 @@
 # Gravwell System Architecture
 
-The Gravwell system architecture section is designed to provide information about how Gravwell is is deployed and operated from an architecture perspective.  Anyone wishing to run a simple single node instance of Gravwell with all ingesters pointed directly at the single indexer can safely ignore this section.  The system architecture section is for system administrators, DevOps engineers, and cloud architects that need to understand more about the underlying topology and architecture of Gravwell in order to deploy larger more complicated instances.
+The Gravwell system architecture section is designed to provide information about how Gravwell is deployed and operated from an architecture perspective.  Anyone wishing to run a simple single node instance of Gravwell with all ingesters pointed directly at the single indexer can safely ignore this section.  The system architecture section is for system administrators, DevOps engineers, and cloud architects that need to understand more about the underlying topology and architecture of Gravwell in order to deploy larger more complicated instances.
 
 ## Cluster Topology
 
