@@ -6,7 +6,7 @@ The Gravwell system architecture section is designed to provide information abou
 
 Gravwell is a highly concurrent distributed storage and search system designed to move fast and reduce the cognitive overhead required to effectively extract information from data streams.  Effectively storing, searching, and managing volumes of data that may approach hundreds of terabytes per day requires multiple machines utilizing a large array of storage devices.  It simply isn’t possible to stand up one machine with one disk and deal with enterprise throughput requirements.
 
-Gravwell’s base architecture is designed around indexers, ingesters, and webservers.  None of the relationships are one to one and every component (sans the webserver) is designed to load balance, be fault tolerant, and maximize usage of the available hardware. For illustrative purposes, the assumption is that this is a very simple organization monitoring data from a single point; perhaps, a small ISP with Bro running on their edge router that is capturing flows and sending them to Gravwell.
+Gravwell’s base architecture is designed around indexers, ingesters, and webservers.  None of the relationships are one to one and every component (sans the webserver) is designed to load balance, be fault tolerant, and maximize usage of the available hardware. For illustrative purposes, the assumption is that this is a very simple organization monitoring data from a single point; perhaps, a small ISP with Zeek running on their edge router that is capturing flows and sending them to Gravwell.
 
 ![A simple cluster](SimpleCluster.png)
 
