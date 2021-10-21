@@ -1,11 +1,11 @@
 # Changelogs for recent version updates
 
 ## Current Version 
-
-[4.2.4](4.2.4.md)
+[4.2.5](4.2.5.md)
 
 ## Previous Versions
 
+* [4.2.4](4.2.4.md)
 * [4.2.3](4.2.3.md)
 * [4.2.2](4.2.2.md)
 * [4.2.1](4.2.1.md)
