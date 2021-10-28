@@ -15,14 +15,16 @@ Gravwell is distributed in four ways: via a Docker container, via a distribution
 
 ### Debian repository
 
-Installing from the Debian repository is quite simple. We need to take a few steps first to add Gravwell's PGP signing key and Debian package repository, but then it's just a matter of installing the `gravwell` package:
+Installing from the Debian repository is quite simple. We need to take a few steps first to add Gravwell's PGP signing key and Debian package repository, but then it's just a matter of installing the `gravwell` package.
+
+Run the following commands as the `root` user:
 
 ```
-sudo apt install apt-transport-https gnupg curl
-curl https://update.gravwell.io/debian/update.gravwell.io.gpg.key | sudo apt-key add -
-echo 'deb [ arch=amd64 ] https://update.gravwell.io/debian/ community main' | sudo tee /etc/apt/sources.list.d/gravwell.list
-sudo apt-get update
-sudo apt-get install gravwell
+apt install apt-transport-https gnupg wget
+wget -O /usr/share/keyrings/gravwell.asc https://update.gravwell.io/debian/update.gravwell.io.gpg.key
+echo 'deb [ arch=amd64 signed-by=/usr/share/keyrings/gravwell.asc ] https://update.gravwell.io/debian community main' > /etc/apt/sources.list.d/gravwell.list
+apt update
+apt install gravwell
 ```
 
 The installation process will prompt to set some shared secret values used by components of Gravwell. We strongly recommend allowing the installer to generate random values (the default) for security.
