@@ -2,8 +2,6 @@
 
 The fields module is used to extract and filter data from search entries into enumerated values for later use.  The fields module is designed to be extremely flexible in capturing and filtering data where data items are delimited by a constant set of bytes.  Formats that are comma delimited (CSV), tab delimited, or space delimited are easily processed using the fields module.  More complicated structures which multi-byte delimiters and/or binary formats with known fields separators can use the fields system to extract on arbitrary field boundaries.  Example data producers that can benefit from the fields module are [bro](https://www.bro.org/) with its tab delimited format or the CSV output format from snort.
 
-Because specifying numeric field offsets can be cumbersome when used frequently, the [namedfields](#!search/namedfields/namedfields.md) module uses user-uploaded resources to assign friendly names to field indexes.
-
 ### Specifying Extraction Fields
 
 Fields are extracted by specifying an index into data from a base of zero.  An index is specified using a positive integer surrounded by square brackets.  Multiple fields can be extracted by providing multiple directives.  Field extraction indexes do not need be be specified in order.
