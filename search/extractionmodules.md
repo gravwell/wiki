@@ -50,7 +50,6 @@ Note: The modules listed here have a primary function of extraction. They may al
 * [j1939](j1939/j1939.md)
 * [json](json/json.md)
 * [kv](kv/kv.md)
-* [namedfields](namedfields/namedfields.md)
 * [netflow](netflow/netflow.md)
 * [packet](packet/packet.md)
 * [packetlayer](packetlayer/packetlayer.md)
