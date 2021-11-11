@@ -2,8 +2,6 @@
 
 The csv module is designed to extract and filter data from comma separated values.  The csv module can be thought of as an enhanced fields module that is designed to accommodate some additional rules related to csv values such as the ability to quote columns that may contain commas, or escape commas, or surround columns with white space.
 
-Because specifying numeric field offsets can be cumbersome when used frequently, the [namedfields](#!search/namedfields/namedfields.md) module uses user-uploaded resources to assign friendly names to field indexes.
-
 ### Specifying Extraction Fields
 
 Fields are extracted by specifying an index into data from a base of zero.  An index is specified using a positive integer surrounded by square brackets.  Multiple columns can be extracted by providing multiple directives.  Column extraction indexes do not need be be specified in order.
