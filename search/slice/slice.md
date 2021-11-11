@@ -50,6 +50,8 @@ tag=CAN canbus ID=0x2C4 | slice uint16be(data[0:2]) as RPM | mean RPM | chart me
 * float64be
 * array
 * string
+* IPv4
+* IPv6
 
 ### インラインフィルタリング
 
@@ -72,31 +74,35 @@ tag=CAN canbus ID=0x2C4 | slice uint16be(data[0:2]) as RPM | mean RPM | chart me
 
 Type     | == | != | ~ | !~ | < | <= | > | >=
 ----------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:
-byte     | X | X |  |  | X | X | X | X 
-int16    | X | X |  |  | X | X | X | X
-int16le  | X | X |  |  | X | X | X | X
-int16be  | X | X |  |  | X | X | X | X
-uint16   | X | X |  |  | X | X | X | X
-uint16le | X | X |  |  | X | X | X | X
-uint16be | X | X |  |  | X | X | X | X 
-int32    | X | X |  |  | X | X | X | X
-int32le  | X | X |  |  | X | X | X | X
-int32be  | X | X |  |  | X | X | X | X
-uint32   | X | X |  |  | X | X | X | X
-uint32le | X | X |  |  | X | X | X | X
-uint32be | X | X |  |  | X | X | X | X
-int64    | X | X |  |  | X | X | X | X
-int64le  | X | X |  |  | X | X | X | X
-int64be  | X | X |  |  | X | X | X | X
-uint64   | X | X |  |  | X | X | X | X
-uint64le | X | X |  |  | X | X | X | X
-uint64be | X | X |  |  | X | X | X | X
-float32  | X | X |  |  | X | X | X | X
-float32le| X | X |  |  | X | X | X | X
-float32be| X | X |  |  | X | X | X | X
-float64  | X | X |  |  | X | X | X | X
-float64le| X | X |  |  | X | X | X | X
-float64be| X | X |  |  | X | X | X | X
-array    | X | X | X | X |  |  |  |
-string   | X | X | X | X |  |  |  |
+byte     | X | X |   |   | X | X | X | X 
+int16    | X | X |   |   | X | X | X | X
+int16le  | X | X |   |   | X | X | X | X
+int16be  | X | X |   |   | X | X | X | X
+uint16   | X | X |   |   | X | X | X | X
+uint16le | X | X |   |   | X | X | X | X
+uint16be | X | X |   |   | X | X | X | X 
+int32    | X | X |   |   | X | X | X | X
+int32le  | X | X |   |   | X | X | X | X
+int32be  | X | X |   |   | X | X | X | X
+uint32   | X | X |   |   | X | X | X | X
+uint32le | X | X |   |   | X | X | X | X
+uint32be | X | X |   |   | X | X | X | X
+int64    | X | X |   |   | X | X | X | X
+int64le  | X | X |   |   | X | X | X | X
+int64be  | X | X |   |   | X | X | X | X
+uint64   | X | X |   |   | X | X | X | X
+uint64le | X | X |   |   | X | X | X | X
+uint64be | X | X |   |   | X | X | X | X
+float32  | X | X |   |   | X | X | X | X
+float32le| X | X |   |   | X | X | X | X
+float32be| X | X |   |   | X | X | X | X
+float64  | X | X |   |   | X | X | X | X
+float64le| X | X |   |   | X | X | X | X
+float64be| X | X |   |   | X | X | X | X
+array    | X | X | X | X |   |   |   |
+string   | X | X | X | X |   |   |   |
+IPv4     | X | X | X | X |   |   |   |
+IPv6     | X | X | X | X |   |   |   |
+
+注意：`IPv4`と`IPv6`の演算子は、4バイトと16バイトのネットワークエンコードされた値を想定しており、テキストエンコードされたIPアドレスは適切に抽出できません。
 
