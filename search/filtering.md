@@ -16,30 +16,6 @@ tag=pcap packet ipv4.DstIP ~ 10.0.0.0/8 tcp.DstPort == 22
 
 DstIPとDstPortが指定されたフィルタと一致しないエントリは、**dropped**されます。
 
-以下のモジュールがフィルタリングをサポートしています。
-
-* [ax](ax/ax.md)
-* [canbus](canbus/canbus.md)
-* [cef](cef/cef.md)
-* [csv](csv/csv.md)
-* [fields](fields/fields.md)
-* [grok](grok/grok.md)
-* [ip](ip/ip.md)
-* [ipfix](ipfix/ipfix.md)
-* [j1939](j1939/j1939.md)
-* [json](json/json.md)
-* [kv](kv/kv.md)
-* [namedfields](namedfields/namedfields.md)
-* [netflow](netflow/netflow.md)
-* [packet](packet/packet.md)
-* [packetlayer](packetlayer/packetlayer.md)
-* [regex](regex/regex.md)
-* [slice](slice/slice.md)
-* [subnet](subnet/subnet.md)
-* [syslog](syslog/syslog.md)
-* [winlog](winlog/winlog.md)
-* [xml](xml/xml.md)
-
 ## フィルタリング操作とデータタイプ
 
 Gravwell検索パイプラインの中では、列挙された値は、文字列、整数、IPアドレスなど、様々な異なる*types*になる可能性があります。あるIPアドレスが他のIPアドレスより "less than" かどうかを尋ねるのは特に有用ではありません! Gravwellがサポートするフィルタリング操作は以下の通りです。
