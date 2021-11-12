@@ -1,35 +1,35 @@
 # ダウンロード
 
-注 : debianリポジトリは、これらのスタンドアロンインストーラよりも保守が容易で、推奨されるインストール方法です。[クイックスタートの手順](#!quickstart/quickstart.md) を参照してください。
+注：DebianおよびRHELリポジトリは、これらのスタンドアロンインストーラーよりもメンテナンスが容易であり、推奨されるインストール方法です。[クイックスタート説明書](#!quickstart/quickstart.md)をご覧ください。
 
 ## Gravwellコア
 
 Gravwell Coreインストーラーには、インデクサーとウェブサーバーフロントエンドが含まれており、ライセンスが必要です。Community Editionのフリーライセンスを取得するか、商用オプションについては info@gravwell.io に連絡してください。
 
-[Gravwell Core インストーラーのダウンロード](https://update.gravwell.io/archive/4.1.9/installers/gravwell_4.1.9.sh) (SHA256: 92fb647d6adfc3ed0329631b3be4be5533f416a97444e880ce89dec472ef1652)
+[Gravwell Core インストーラのダウンロード](https://update.gravwell.io/archive/4.2.5/installers/gravwell_4.2.5.sh) (SHA256: ce19966d194ddf0fbe69cd7b5a4d6b606641e052fe392b27de1914aa14d1220e)
 
 ## インジェスター
 
-インジェスターのコアスイートは、インストール可能なパッケージとしてダウンロードできます。 Linux マシン上で動作するように設計されたインジェスターは、通常、ホストのパッケージ管理システムに依存しない (NetworkCapture インジェスターを除いて) セルフ・インクルードで、静的にリンクされた実行可能ファイルです。 Windows ベースのインジェスターは、実行可能な MSI パッケージとして配布されます。 多くのインジェスターのソースコードは [Github](https://github.com/gravwell/gravwell/tree/master/ingesters) にあります。
+インジェスターのコア・スイートは、インストール可能なパッケージとしてダウンロードできます。Linuxマシン上で動作するように設計されたインジェスターは、通常、ホストのパッケージ管理システムに依存しない、自己完結型の静的にリンクされた実行ファイルです（NetworkCaptureインジェスターを除く）。 Windowsベースのインゲスターは、実行可能なMSIパッケージとして配布されます。 多くのインゲスターのソースコードは、[Gravwell Github](https://github.com/gravwell/gravwell/tree/master/ingesters)のリポジトリにあります。
 
 ### 現在リリースされているインジェスター
 | インジェスター | SHA256 | 詳細情報 |
 |:--------:|-------:|----------:|
-| [Simple Relay](https://update.gravwell.io/archive/4.1.9/installers/gravwell_simple_relay_installer_4.1.9.sh) | ``a30e40ef9c662f52aed0dc778931cdb9e539ed78ac19fa643e24063aa866d9dd`` | [Documentation](#!ingesters/ingesters.md#Simple_Relay)|
-| [File Follower](https://update.gravwell.io/archive/4.1.9/installers/gravwell_file_follow_installer_4.1.9.sh) | ``ee6ee1e8b57d83ea6d18730d34fabd96eadbb75aaa174582322a2710f8c489aa`` | [Documentation](#!ingesters/ingesters.md#File_Follower) |
-| [HTTP Ingester](https://update.gravwell.io/archive/4.1.9/installers/gravwell_http_ingester_installer_4.1.9.sh) | ``c88e3748dedc03b57fc6f88f8f4ba5f85908b1c5c93dfc9ca8a78cdc56a752f8`` | [Documentation](#!ingesters/ingesters.md#HTTP_POST) |
-| [IPMI Ingester](https://update.gravwell.io/archive/4.1.9/installers/gravwell_ipmi_installer_4.1.9.sh) | ``1bb0205a60b7f5c8ec2de6d606af0bebff95065b0b74d3a57354c5b1d156dd06`` | [Documentation](#!ingesters/ingesters.md#IPMI_Ingester)|
-| [Netflow Capture](http://update.gravwell.io/archive/4.1.9/installers/gravwell_netflow_capture_installer_4.1.9.sh) | ``97b53c8daf5c910b239d249ebf4a93318d8296518e82e687e637fe3fd98fbe3b`` | [Documentation](#!ingesters/ingesters.md#Netflow_Ingester) |
-| [Network Capture](https://update.gravwell.io/archive/4.1.9/installers/gravwell_network_capture_installer_4.1.9.sh) | ``24585a12550a93d303416fc954eb2dcb10fcdc3862a215b3993603f3d36519d4`` | [Documentation](#!ingesters/ingesters.md#Network_Ingester) |
-| [Collectd Collector](https://update.gravwell.io/archive/4.1.9/installers/gravwell_collectd_installer_4.1.9.sh) | ``13cfb75462ea428b276637f8b7f2504aae42f3074f6ca9ac534a616d4e31564b`` | [Documentation](#!ingesters/ingesters.md#collectd) |
-| [Ingest Federator](https://update.gravwell.io/archive/4.1.9/installers/gravwell_federator_installer_4.1.9.sh) | ``1fecd4b1f3fbe904c780a19fa000dae10521a7d31f9c1e21b962582fd5b4abf3`` | [Documentation](#!ingesters/ingesters.md#Federator_Ingester) |
-| [Windows Events](https://update.gravwell.io/archive/4.1.9/installers/gravwell_win_events_4.1.9.msi) | ``37227530d67eca34d8e98f975cd325d523f6f9a29d0c2247b059169855c609ee`` | [Documentation](#!ingesters/ingesters.md#Windows_Event_Service) |
-| [Windows File Follower](https://update.gravwell.io/archive/4.1.9/installers/gravwell_file_follow_4.1.9.msi) | ``8040d8f925bedb09500defcf1b71017243e35651805a38ebd16dad1443a8ffc5`` | [Documentation](#!ingesters/ingesters.md#File_Follower) |
-| [Apache Kafka](https://update.gravwell.io/archive/4.1.9/installers/gravwell_kafka_installer_4.1.9.sh) | ``7c121df8258b75c0ae9dcbd23abc7127dcd4086c964f7a483f78231ef785449f`` | [Documentation](#!ingesters/ingesters.md#Kafka)|
-| [Amazon Kinesis](https://update.gravwell.io/archive/4.1.9/installers/gravwell_kinesis_ingest_installer_4.1.9.sh) | ``aa690a87a72f05e3fa5251babcb288bdf6117cd70ab6267b4ba04fd0a6ca5e14`` | [Documentation](#!ingesters/ingesters.md#Kinesis_Ingester)|
-| [Google PubSub](https://update.gravwell.io/archive/4.1.9/installers/gravwell_pubsub_ingest_installer_4.1.9.sh) | ``711aafcbc2fc217acfbfe443f0d0fbab00cad20ea123ab972adeb79e244799b3`` | [Documentation](#!ingesters/ingesters.md#GCP_PubSub)|
-| [Office 365 Logs](https://update.gravwell.io/archive/4.1.9/installers/gravwell_o365_installer_4.1.9.sh) | ``7c90c6d7390cc769fbb98d20b09a90ddf5bd9bae0a60411c635a9c313e3ed75c`` | [Documentation](#!ingesters/ingesters.md#Office_365_Log_Ingester)|
-| [Microsoft Graph API](https://update.gravwell.io/archive/4.1.9/installers/gravwell_msgraph_installer_4.1.9.sh) | ``d160278ac418c02704813821a511c59d8f698224bef58f901a42872349061f48`` | [Documentation](#!ingesters/ingesters.md#Microsoft_Graph_API_Ingester)|
+| [Simple Relay](https://update.gravwell.io/archive/4.2.5/installers/gravwell_simple_relay_installer_4.2.5.sh) | ``bba544d1ea36995507f84ef920318dfa1a8d9c738ac5c2455e953a94785ef3b6`` | [Documentation](#!ingesters/ingesters.md#Simple_Relay)|
+| [File Follower](https://update.gravwell.io/archive/4.2.5/installers/gravwell_file_follow_installer_4.2.5.sh) | ``cc98c54d7c3027beeb5d67e8a05a5dd79b7c04b3ad6f95c271ba8a42c0de0c2f`` | [Documentation](#!ingesters/ingesters.md#File_Follower) |
+| [HTTP Ingester](https://update.gravwell.io/archive/4.2.5/installers/gravwell_http_ingester_installer_4.2.5.sh) | ``a06b9b81b98a1e7be283e1a0f70eac143a61a9c9e790442bf926910b5e0d36d0`` | [Documentation](#!ingesters/ingesters.md#HTTP_POST) |
+| [IPMI Ingester](https://update.gravwell.io/archive/4.2.5/installers/gravwell_ipmi_installer_4.2.5.sh) | ``0512135760151d2b42f7ff472e0a02723b3822b1ec81773af30783b346df0cc5`` | [Documentation](#!ingesters/ingesters.md#IPMI_Ingester)|
+| [Netflow Capture](http://update.gravwell.io/archive/4.2.5/installers/gravwell_netflow_capture_installer_4.2.5.sh) | ``8dda34863480db2ef424684692b12b1a8b3f0860b524a25e335fde37067a4b02`` | [Documentation](#!ingesters/ingesters.md#Netflow_Ingester) |
+| [Network Capture](https://update.gravwell.io/archive/4.2.5/installers/gravwell_network_capture_installer_4.2.5.sh) | ``41a863a78d94fb890df6f184d24ac05b6f2cad638ac99da7b34e3b9d9d42af63`` | [Documentation](#!ingesters/ingesters.md#Network_Ingester) |
+| [Collectd Collector](https://update.gravwell.io/archive/4.2.5/installers/gravwell_collectd_installer_4.2.5.sh) | ``c95a996a6eadf784f7dce85b28a0391a405936d79e0e3fcc144c4dcaaa593f9a`` | [Documentation](#!ingesters/ingesters.md#collectd) |
+| [Ingest Federator](https://update.gravwell.io/archive/4.2.5/installers/gravwell_federator_installer_4.2.5.sh) | ``4879436357b389e48303819f15be35973b6f63e823a725f51a223bb0b66d8cad`` | [Documentation](#!ingesters/ingesters.md#Federator_Ingester) |
+| [Windows Events](https://update.gravwell.io/archive/4.2.5/installers/gravwell_win_events_4.2.5.msi) | ``a4acb14730290a39bfe97034f9861a6138954190585523a5763401d5229738b2`` | [Documentation](#!ingesters/ingesters.md#Windows_Event_Service) |
+| [Windows File Follower](https://update.gravwell.io/archive/4.2.5/installers/gravwell_file_follow_4.2.5.msi) | ``2609436520c450393267af77b8cf3775fe653c6c4870dac399e65ded3da84c83`` | [Documentation](#!ingesters/ingesters.md#File_Follower) |
+| [Apache Kafka](https://update.gravwell.io/archive/4.2.5/installers/gravwell_kafka_installer_4.2.5.sh) | ``cd11b10f469c12edf98020783d65c8546dd6fa8874d3790a915755280edb3a09`` | [Documentation](#!ingesters/ingesters.md#Kafka)|
+| [Amazon Kinesis](https://update.gravwell.io/archive/4.2.5/installers/gravwell_kinesis_ingest_installer_4.2.5.sh) | ``b1a94162500945ebf686b9df84cd8e738e22a3419a542f86b660904a04788711`` | [Documentation](#!ingesters/ingesters.md#Kinesis_Ingester)|
+| [Google PubSub](https://update.gravwell.io/archive/4.2.5/installers/gravwell_pubsub_ingest_installer_4.2.5.sh) | ``c7a25b8ba6d1fb5bff279e30924d0e59b9ed81c5440bf6128a88cb8a0d8d92f3`` | [Documentation](#!ingesters/ingesters.md#GCP_PubSub)|
+| [Office 365 Logs](https://update.gravwell.io/archive/4.2.5/installers/gravwell_o365_installer_4.2.5.sh) | ``5093e850c8eba92c748c711539a0ac475fb4a45d36c325d21e3205fe66cbb572`` | [Documentation](#!ingesters/ingesters.md#Office_365_Log_Ingester)|
+| [Microsoft Graph API](https://update.gravwell.io/archive/4.2.5/installers/gravwell_msgraph_installer_4.2.5.sh) | ``ef29f55978798baf16c6cc8ffc8b3aef35798a05cc751c5c543522dfcb28e30a`` | [Documentation](#!ingesters/ingesters.md#Microsoft_Graph_API_Ingester)|
 
 ## その他のダウンロード
 
@@ -37,7 +37,7 @@ Gravwellコンポーネントの中には、検索エージェントやデータ
 
 | コンポーネント | SHA256 | 詳細情報 |
 |:---------:|:------:|----------:|
-| [Datastore](https://update.gravwell.io/archive/4.1.9/installers/gravwell_datastore_installer_4.1.9.sh) | ``6360a936569b709bd9afc6b919b892cd308c7cc30a4092c44aacddc3410b5fab`` | [Documentation](#!distributed/frontend.md) |
-| [Offline Replicator](https://update.gravwell.io/archive/4.1.9/installers/gravwell_offline_replication_installer_4.1.9.sh) | ``74a410b9bbb7637e385cd559ed89a9091b08030fce97594fb898728e02011f66`` | [Documentation](#!configuration/replication.md) |
-| [Load Balancer](https://update.gravwell.io/archive/4.1.9/installers/gravwell_loadbalancer_installer_4.1.9.sh) | ``381afa4d9bad0005517d287f6feb386473c523418b6f5c54c6232cb1ae9008e1`` | |
+| [Datastore](https://update.gravwell.io/archive/4.2.5/installers/gravwell_datastore_installer_4.2.5.sh) | ``9d4bc47fd8352b4be16fedd67ad1fad9345dab64db6c10a55d645fb5b6382e00`` | [Documentation](#!distributed/frontend.md) |
+| [Offline Replicator](https://update.gravwell.io/archive/4.2.5/installers/gravwell_offline_replication_installer_4.2.5.sh) | ``04a9830564cbf4c1251e12aa1801139412b271bfb5dd1afa14915f6c513db56e`` | [Documentation](#!configuration/replication.md) |
+| [Load Balancer](https://update.gravwell.io/archive/4.2.5/installers/gravwell_loadbalancer_installer_4.2.5.sh) | ``92c83b61ad649fd41b0a7e1978bbafd9256f4901a1df6819e82e94eddcd00a22`` | |
 

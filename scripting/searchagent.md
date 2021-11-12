@@ -1,16 +1,16 @@
-# サーチエージェント
+# Gravwell サーチエージェント
 
-サーチエージェントは[自動検索](scheduledsearch.md)を実行するコンポーネントです。サーチエージェントはGravwellのインストールパッケージに含まれており、デフォルトでインストールされます。ウェブサーバコンポーネントを `--no-webserver` フラグで無効にするか、`--no-searchagent` フラグを設定すると、サーチエージェントのインストールが無効になります。サーチエージェントは、Gravwell Debianパッケージによって自動的にインストールされます。
+サーチエージェントは、[automations](schedulesearch.md)を実行するコンポーネントです。サーチエージェントはGravwellの主要なインストールパッケージに含まれており、デフォルトでインストールされます。ウェブサーバコンポーネントを `--no-webserver` フラグで無効にしたり、`--no-searchagent` フラグを設定するとサーチエージェントはインストールされなくなります。サーチエージェントはGravwellのDebianパッケージによって自動的にインストールされます。
 
-サーチエージェントが動作しているかどうかは、以下のコマンドで確認することができます:
+サーチエージェントが動作しているかどうかは以下のコマンドで確認できます。
 
 ```
 $ ps aux | grep gravwell_searchagent
 ```
 
-## サーチエージェントを無効にする
+## サーチエージェントを無効にします
 
-サーチエージェントはデフォルトでインストールされていますが、必要に応じて以下のように実行することで無効にすることができます:
+検索エージェントはデフォルトでインストールされていますが、必要に応じて以下を実行して無効にすることができます：
 
 ```
 systemctl stop gravwell_searchagent.service
@@ -19,7 +19,7 @@ systemctl disable gravwell_searchagent.service
 
 ## サーチエージェントの設定
 
-サーチエージェントは `/opt/gravwell/etc/searchagent.conf` で設定することができます。設定例は以下:
+サーチエージェントの設定は、`/opt/gravwell/etc/searchagent.conf`で行います。設定例を以下に示します：
 ```
 [global]
 Webserver-Address=127.0.0.1:80
@@ -76,4 +76,21 @@ Webserver-Address=gravwell2.example.org:443
 
 **Log-Level**
 
-`Log-Level`パラメータは、検索エージェントがログに記録すべき深刻度の最小レベルを指定する。オプションはINFO、WARN、ERROR、またはOFFである。WARNを選択すると、深刻度WARNまたはERRORのログが記録されることを意味する。INFO を選択すると、すべてのログが記録されます。OFF を選択すると何も記録されません。
+`Log-Level`パラメータは、検索エージェントがログに記録すべき深刻度の最小レベルを指定します。オプションはINFO、WARN、ERROR、またはOFFである。WARNを選択すると、深刻度WARNまたはERRORのログが記録されることを意味します。INFO を選択すると、すべてのログが記録されます。OFF を選択すると何も記録されません。
+
+### 環境変数の設定
+
+「searchagent.conf」の設定変数の多くは、実行時の環境変数で提供することができます。 環境変数を使った設定は、dockerのデプロイメントで便利です。
+
+環境変数は、その設定値が設定ファイルに全く設定されていない場合にのみ使用できます。 つまり、`searchagent.conf`ファイルで設定された設定値は、環境変数で提供された値よりも優先されるということです。
+
+以下に、環境変数を使って設定可能なコンフィグレーション変数の一覧を示します
+| 環境変数名 | 設定パラメータ | 注意事項 | 
+|---------------------------|-------------------------|-------|
+| GRAVWELL_SEARCHAGENT_UUID | Searchagent-UUID | |
+| GRAVWELL_SEARCHAGENT_AUTH | Search-Agent-Auth | |
+| GRAVWELL_WEBSERVER_ADDRESS | ウェブサーバ・アドレス | 複数のアドレスをカンマで区切って指定することができます。|
+| GRAVWELL_SEARCHAGENT_DISABLE_NETWORK_SCRIPTS | Disable-Network-Script-Functions | ブール値|
+| GRAVWELL_SEARCHAGENT_HTTP_PROXY | HTTP-Proxy |  | 
+| GRAVWELL_SEARCHAGENT_INSECURE_SKIP_TLS_VERIFY | Insecure-Skip-TLS-Verify | 真偽値|
+| GRAVWELL_SEARCHAGENT_INSECURE_USE_HTTP | Insecure-Use-HTTP | 真偽値 | 

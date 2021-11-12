@@ -1,4 +1,4 @@
-＃Gravwellベータプログラム
+# Gravwellベータプログラム
 
 ご挨拶
 

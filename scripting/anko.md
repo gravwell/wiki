@@ -2,11 +2,11 @@
 
 [検索モジュールのドキュメント](#!search/searchmodules.md#Anko)で紹介されているように、Gravwellのankoモジュールは検索パイプライン内の汎用スクリプトツールである。これにより、スクリプト作成者にとっては複雑さを犠牲にしても、非常に柔軟に検索エントリを操作することができます。しかし、一度作成したスクリプトは、他のユーザーと簡単に共有することができます。
 
-この言語自体の詳細については、[Anko スクリプト言語ドキュメント](scripting.md) で使用されているスクリプト言語の一般的な説明を参照してください。
+言語自体の詳細については、[Ankoスクリプト言語ドキュメント](scripting.md)で使用されているスクリプト言語の一般的な説明を参照してください。
 
 ### anko スクリプトでのネットワーク機能の無効化
 
-デフォルトでは、ankoスクリプトはhttpやnetライブラリ、sftp、sshなどのネットワークユーティリティの使用を許可されています。Gravwellユーザーにネットワークアクセスを与えたくない場合は、`/opt/gravwell/etc/gravwell.conf`のオプション`Disable-Network-Script-Functions=true'を設定することで、この機能を無効にすることができます。
+デフォルトでは、ankoスクリプトはhttpやnetライブラリ、sftp、sshなどのネットワークユーティリティの使用を許可されています。オプション `Disable-Network-Script-Functions=true` を `/opt/gravwell/etc/gravwell.conf` に設定することで、この機能を無効にすることができます。
 
 ## ankoスクリプトの管理
 
@@ -36,15 +36,15 @@ anko スクリプトは、`Process` という名前の関数か、`Main` とい�
 
 スクリプトには `Parse` と `Finalize` という名前の関数を含めることができます。
 
-`Parse`関数は `Process` や `Main` の前に呼び出され、コマンドライン引数を引数の配列として与えられます。Parse`関数は引数が正常に処理されたことをnilを返すことで示します。nil以外の値が返された場合にはエラーとして扱われ、ユーザに提示されます。スクリプトの引数を解析する方法のサンプルは、以下のサンプルスクリプトをご覧ください。
+`Parse`関数は `Process` や `Main` の前に呼び出され、コマンドライン引数を引数の配列として与えられます。`Parse`関数は引数が正常に処理されたことをnilを返すことで示します。nil以外の値が返された場合にはエラーとして扱われ、ユーザに提示されます。スクリプトの引数を解析する方法のサンプルは、以下のサンプルスクリプトをご覧ください。
 
-注意 Parse関数は、明示的に値を返さなければなりません。nilを返すと解析が成功したことになり、それ以外の値を返すとエラーになります。エラーが発生した場合には、問題を説明する文字列を返すことをお勧めします。
+注意:Parse関数は、明示的に値を返さなければなりません。nilを返すと解析が成功したことになり、それ以外の値を返すとエラーになります。エラーが発生した場合には、問題を説明する文字列を返すことをお勧めします。
 
 `Finalize`関数は`Process`や`Main`が完了した後に呼び出されます。この関数はスクリプトの最後に実行されるコードで、必要に応じてリソースを作成するのに適した場所です。
 
 ### Process()関数を使用したサンプルスクリプト
 
-このサンプルスクリプトでは、スクリプトの引数で指定した2つのモードで動作します。build」モードでは、パケットモジュールから抽出した「SrcIP」フィールドを用いて、現在の検索で見られるIPアドレスのリストを構築し、そのリストをリソースとして保存します。適用」モードでは、以前に構築したテーブルを使用し、以前に見た「SrcIP」フィールドを含むエントリをすべて削除します。このスクリプトは、ネットワーク上の新しいデバイスを探すために使用されていましたが、現在では `lookup` モジュールが同じ機能をより柔軟に提供しています。
+このサンプルスクリプトでは、スクリプトの引数で指定した2つのモードで動作します。「build」モードでは、パケットモジュールから抽出した「SrcIP」フィールドを用いて、現在の検索で見られるIPアドレスのリストを構築し、そのリストをリソースとして保存します。「適用」モードでは、以前に構築したテーブルを使用し、以前に見た「SrcIP」フィールドを含むエントリをすべて削除します。このスクリプトは、ネットワーク上の新しいデバイスを探すために使用されていましたが、現在では `lookup` モジュールが同じ機能をより柔軟に提供しています。
 
 ```
 table = make(map[string]interface)
@@ -174,7 +174,9 @@ func Main() {
 
 ## ユーティリティー関数
 
-Ankoはビルトインのユーティリティー関数を提供しており、以下のように `functionName(<functionArgs>) <returnValues>` という形式でリストアップされています。以下の関数は任意のAnkoスクリプトで使用できます。
+Ankoはビルトインのユーティリティー関数を提供しており、以下のように `functionName(<functionArgs>) <returnValues>` という形式でリストアップされています。
+
+以下の関数は任意のAnkoスクリプトで使用できます：
 
 * `getResource(name) []byte, error` は、指定されたリソースのコンテンツであるバイトのスライスを返し、エラーはリソースのフェッチ中に発生したあらゆるエラーです。
 * `setResource(name, value) error` は、`name` という名前のリソースを（必要に応じて）作成し、`value` の内容で更新し、エラーが発生した場合はエラーを返します。
@@ -218,10 +220,12 @@ Ankoはビルトインのユーティリティー関数を提供しており、�
 
 ## 組み込み変数
 
-以下の変数は anko スクリプト用にあらかじめ定義されています。:
+以下の変数は anko スクリプト用にあらかじめ定義されています:
 
 * `START`: クエリの開始時刻です。
 * `END`: クエリの終了時刻です。
+* `DURATION`: クエリの実行時間です。
+* `MAX_RUN_TIME`: スクリプトが実行できる最大時間です。
 * `TAGMAP`: 文字列のタグ名からentry.EntryTagのタグ番号へのマップ。これは現在のクエリで使用されているタグのみを含むので、`tag=default,foo`とすると、TAGMAPには'default'→0と'foo'→1が含まれます。これは `cloneEntry` や `newEntry` 関数と組み合わせて使用します。
 
 ## 利用可能なパッケージ
@@ -234,7 +238,7 @@ var json = import("encoding/json")
 
 セキュリティ上の理由から、ankoモジュールは、Ankoスクリプト言語に含まれるすべての*パッケージへのアクセスを許可していません。以下のパッケージが anko スクリプトで使用できます:
 
-* [bytes](https://golang.org/pkg/bytes): バイトスライスを扱う。
+* [bytes](https://golang.org/pkg/bytes): バイトスライスを扱います。
 * [crypto/md5](https://golang.org/pkg/crypto/md5), [crypto/sha1](https://golang.org/pkg/crypto/sha1), [crypto/sha256](https://golang.org/pkg/crypto/sha256), [crypto/sha512](https://golang.org/pkg/crypto/sha512): 暗号のハッシュ化
 * [crypto/tls](https://golang.org/pkg/crypto/tls): 限定的な TLS 機能
 * [encoding/base64](https://golang.org/pkg/encoding/base64): 制限付き base64 機能
@@ -248,6 +252,7 @@ var json = import("encoding/json")
 * [github.com/google/uuid](https://github.com/google/uuid): UUIDの生成と検査
 * [github.com/gravwell/ipexist](https://github.com/gravwell/ipexist): GravwellのIPヘルパー機能
 * [github.com/RackSec/srslog](https://github.com/RackSec/srslog): golang の標準ライブラリに代わる syslog パッケージです。
+* [github.com/RackSec/srslog](https://github.com/RackSec/srslog)：Goの標準ライブラリの代替syslogパッケージ
 * [io](https://golang.org/pkg/io): 基本的な I/O プリミティブ
 * [io/util](https://golang.org/pkg/io/util): `ioutil.ReadAll` 関数のみ (後述)
 * [math](https://golang.org/pkg/math): 数学関数
@@ -314,7 +319,7 @@ var json = import("encoding/json")
 
 ### encoding/csv
 
-`encoding/csv` は CSV のイニシャライザのみをエクスポートします。:
+`encoding/csv` は CSV のイニシャライザのみをエクスポートします:
 
 - `csv.NewReader` (実際には、LazyQuotesオプションをtrueに設定して、`csv.NewReader`を呼び出します)
 - `csv.NewWriter`
@@ -334,7 +339,7 @@ var json = import("encoding/json")
 
 ### encoding/hex
 
-`encoding/hex`は、イニシャライザとラッパのサブセットをエクスポートします
+`encoding/hex`は、イニシャライザとラッパのサブセットをエクスポートします：
 
 - `hex.Decode`
 - `hex.DecodeString`
@@ -349,7 +354,7 @@ var json = import("encoding/json")
 
 ### encoding/xml
 
-`encoding/exml` は、イニシャライザ、ラッパー、およびエンコーディングオプションのサブセットをエクスポートします:
+`encoding/xml` は、イニシャライザ、ラッパー、およびエンコーディングオプションのサブセットをエクスポートします:
 
 - `xml.Escape`
 - `xml.EscapeText`
@@ -507,7 +512,7 @@ var json = import("encoding/json")
 
 関数 `NewRequest(operation, url, body) (Request, error)` は、指定されたURL文字列に対して、指定された操作("PUT", "POST", "GET", "DELETE")を行う新しいhttp.Requestを準備します。bodyはPUTおよびPOSTリクエストで使用するオプションのパラメータで、'nil'またはio.Readerのいずれかに設定する必要があります。
 
-ほとんどの場合、NewRequest関数でリクエストを作成し、http.DefaultClientを使用してそのリクエストを実行します。:
+ほとんどの場合、NewRequest関数でリクエストを作成し、http.DefaultClientを使用してそのリクエストを実行します:
 
 ```
 req, _ = http.NewRequest("GET", "http://example.org/foo", nil)
@@ -530,5 +535,5 @@ resp, _ = http.DefaultClient.Do(req)
 resp.Body.Close()
 ```
 
-警告: 上の図のように、終了時には http.Response の Body フィールドを *必ず* 閉じなければなりません。Bodyを開いたままにしておくと、ネットワーク接続が開いたままになり、最終的にサーチエージェントのソケットが足りなくなってしまいます。httpGet`と`httpPost`関数は自動的にBodyを閉じますので、可能な限りこれらの使用を検討してください。
+警告: 上の図のように、終了時には http.Response の Body フィールドを *必ず* 閉じなければなりません。Bodyを開いたままにしておくと、ネットワーク接続が開いたままになり、最終的にサーチエージェントのソケットが足りなくなってしまいます。`httpGet`と`httpPost`関数は自動的にBodyを閉じますので、可能な限りこれらの使用を検討してください。
 
