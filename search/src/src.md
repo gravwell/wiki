@@ -8,13 +8,13 @@ sourceモジュールは、IP、サブネット、整数、ベース16の整数�
 
 ### 使用例
 
-特定のソースからのエントリーを排除します。
+特定のソースからのエントリーを排除します：
 
 ```
 tag=syslog,apache,pcap src != 192.168.1.1 | count by TAG | chart count by TAG
 ```
 
-特定のサブネットからのエントリーのみを選択します。
+特定のサブネットからのエントリーのみを選択します：
 
 ```
 tag=syslog,apache,pcap src ~ 192.168.1.0/24 | count by SRC | chart count by SRC

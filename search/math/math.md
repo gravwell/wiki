@@ -25,13 +25,13 @@ tag=CAN canbus ID=0x2C4 | slice uint16BE(data[0:2]) as RPM | mean RPM | chart me
 
 カウントモジュールは、レコードのインスタンスをカウントします。レコード内のデータに対する演算処理は行いません。
 
-Linuxマシンからsudoコマンドをカウントする検索例です。
+Linuxマシンからsudoコマンドをカウントする検索例です：
 
 ```
 grep sudo | regex "COMMAND=(?P<command>\S+)" | count by command | chart count by command
 ```
 
-これは、あるMACアドレスがネットワーク上で何個のパケットを送信したかを示す検索例です（sumモジュールの例で示した各パケットのサイズとは異なります）。
+これは、あるMACアドレスがネットワーク上で何個のパケットを送信したかを示す検索例です（sumモジュールの例で示した各パケットのサイズとは異なります）：
 
 ```
 tag=pcap eth.SrcMAC eth.Length | sum Length by SrcMAC | chart sum by SrcMAC
@@ -41,7 +41,7 @@ tag=pcap eth.SrcMAC eth.Length | sum Length by SrcMAC | chart sum by SrcMAC
 
 最大値モジュールは、見られる最大値を返します。
 
-フリート全体の各車両の最大回転数を表にした検索例がこちらです。
+フリート全体の各車両の最大回転数を表にした検索例がこちらです：
 
 ```
 tag=CAN canbus ID=0x2C4 | slice uint16BE(data[0:2]) as RPM | max RPM by SRC | table SRC max
@@ -51,7 +51,7 @@ tag=CAN canbus ID=0x2C4 | slice uint16BE(data[0:2]) as RPM | max RPM by SRC | ta
 
 最小値モジュールは、見られる最小値を返します。
 
-フリート全体の各車両の最低回転数の表を表示した検索例がこちらです。
+フリート全体の各車両の最低回転数の表を表示した検索例がこちらです：
 
 ```
 tag=CAN canbus ID=0x2C4 | slice uint16BE(data[0:2]) as RPM | min RPM by SRC | table SRC min
@@ -71,9 +71,9 @@ tag=CAN canbus ID=0x2C1 | slice byte(data[6:7]) as throttle | variance throttle 
 
 標準偏差です。
 
-stddev モジュールは、レコードの標準偏差情報を返します。これは変則的なイベントを強調するのに便利です。
+stddevモジュールは、レコードの標準偏差情報を返します。これは変則的なイベントを強調するのに便利です。
 
-外れ値であるRPM信号をグラフ化する検索の例がこちらです。
+外れ値であるRPM信号をグラフ化する検索の例がこちらです：
 
 ```
 tag=CAN canbus ID=0x2C4 | slice uint16BE(data[0:2]) as RPM | stddev RPM | chart stddev
@@ -81,7 +81,7 @@ tag=CAN canbus ID=0x2C4 | slice uint16BE(data[0:2]) as RPM | stddev RPM | chart 
 
 ## unique
 
-unique モジュールは、クエリデータの中の重複したエントリを排除します。単に `unique` を指定すると、各エントリのデータのハッシュに基づいて重複エントリをチェックします。一方、1つ以上の列挙型の値の名前を指定すると、unique は列挙型の値だけでフィルタリングを行います。この違いを説明すると、次のようになります。
+unique モジュールは、クエリデータの中の重複したエントリを排除します。単に `unique` を指定すると、各エントリのデータのハッシュに基づいて重複エントリをチェックします。一方、1つ以上の列挙型の値の名前を指定すると、unique は列挙型の値だけでフィルタリングを行います。この違いを説明すると、次のようになります：
 
 ```
 tag=pcap packet tcp.DstPort | unique
