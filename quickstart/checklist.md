@@ -4,17 +4,17 @@
 
 このチェックリストは、シングルノード、スタンドアロンのGravwellインスタンスを設定するための一般的な操作手順を示します。手順の詳細は[クイックスタート](quickstart.md)を参照してください。
 
-自己解凍型インストーラ、Debian/Redhatパッケージ、またはDockerコンテナでGravwellをインストールする（[クイックスタート](quickstart.md)参照）。
+自己解凍型インストーラ、Debian/Redhatパッケージ、またはDockerコンテナでGravwellをインストールしてください（[クイックスタート](quickstart.md)参照）。
 
-□ ファイアウォールで[Gravwellが使用するポート](#!configuration/networking.md)への着信を許可することを確認する。
+□ ファイアウォールで[Gravwellが使用するポート](#!configuration/networking.md)への着信を許可することを確認してください。
 
-Webブラウザで新しいGravwellにアクセスし、`http://gravwell.example.org/`のように表示されたらライセンスファイルをアップロードする。
+□ Webブラウザで新しいGravwellにアクセスし、`http://gravwell.example.org/`のように表示されたらライセンスファイルをアップロードしてください。
 
-管理者（admin）とパスワード（changeme）でログインします。デフォルトのパスワードは右上のユーザーアイコンから変更できます。
+□ 管理者（admin）とパスワード（changeme）でログインします。デフォルトのパスワードは右上のユーザーアイコンから変更できます。
 
-必要に応じて追加のストレージウェルを設定します。[Gravwell configuration](#!configuration/configuration.md) および [detail configuration parameters](#!configuration/parameters.md) を参照してください。
+□ 必要に応じて追加のストレージウェルを設定します。[Gravwell configuration](#!configuration/configuration.md) および [detail configuration parameters](#!configuration/parameters.md) を参照してください。
 
-□ ディスク容量が不足しないように、ウェルに[ageout](#!configuration/ageout.md)を設定する。
+□ ディスク容量が不足しないように、ウェルに[ageout](#!configuration/ageout.md)を設定してください。
 
 □ オプションです。ユーザーのアクセスとインゲスターの接続に[TLSの設定](#!configuration/certificates.md)を行います。
 
@@ -26,29 +26,29 @@ Webブラウザで新しいGravwellにアクセスし、`http://gravwell.example
 
 ### 準備
 
-どのノードがインデクサーになり、どのノードがウェブサーバーになるかを決定します。複数の Web サーバを導入する場合は、検索エージェントを実行する Web サーバを 1 つ選択します。
+□ どのノードがインデクサーになり、どのノードがウェブサーバーになるかを決定します。複数の Web サーバを導入する場合は、検索エージェントを実行する Web サーバを 1 つ選択します。
 
-分散フロントエンド](#!distributed/frontend.md)を使用する場合は、*データストア*用に追加のシステムを用意してください。データストアは、インデクサやウェブサーバプロセスと同居することはできないので注意が必要です。
+□ 分散フロントエンド](#!distributed/frontend.md)を使用する場合は、*データストア*用に追加のシステムを用意してください。データストアは、インデクサやウェブサーバプロセスと同居することはできないので注意が必要です。
 
-Webサーバとインデクサの各ノードにGravwellをインストールする（[クイックスタート](quickstart.md)参照）。
+□ Webサーバとインデクサの各ノードにGravwellをインストールしてください（[クイックスタート](quickstart.md)参照）。
 
-□ 必要に応じてデータストアをインストールする。これはコアシェルインストーラーに含まれているが、Debian と Redhat では別のパッケージになっている。
+□ 必要に応じてデータストアをインストールしてください。これはコアシェルインストーラーに含まれているが、Debian と Redhat では別のパッケージになっています。
 
-必要に応じてロードバランサーをインストールしてください。
+□ 必要に応じてロードバランサーをインストールしてください。
 
-TLS 証明書を Web サーバ、データストア、ロードバランサーに適宜導入する。証明書を `/opt/gravwell/etc/cert.pem` に、秘密鍵を `/opt/gravwell/etc/key.pem` にコピーすることをお勧めします。
+□ TLS 証明書を Web サーバ、データストア、ロードバランサーに適宜導入してください。証明書を `/opt/gravwell/etc/cert.pem` に、秘密鍵を `/opt/gravwell/etc/key.pem` にコピーすることをお勧めします。
 
 ### 構成
 
-設定のベースとなるノードの `gravwell.conf` ファイルをコピーします。Webserver-UUID "行や "Indexer-UUID "行を削除してください。
+□ 設定のベースとなるノードの `gravwell.conf` ファイルをコピーします。Webserver-UUID "行や "Indexer-UUID "行を削除してください。
 
 #### Indexer Config
 
-インデクサーに使用するコンフィグのコピーを作成する。
+□ インデクサーに使用するコンフィグのコピーを作成してください。
 
-このドキュメント](#!configuration/configuration.md)を参照してください） □ インデクサーのコンフィグに必要なWellを定義する。
+□ インデクサーのコンフィグに必要なWellを定義してください。([このドキュメント](#!configuration/configuration.md)を参照してください）
 
-□ 各ウェルに[ageout configuration](#!configuration/ageout.md)を設定する。
+□ 各ウェルに[ageout configuration](#!configuration/ageout.md)を設定してください。
 
 #### ウェブサーバの設定
 
@@ -61,15 +61,15 @@ Remote-Indexers=ネット:インデクサー1.example.net:9404
 2.Remote-Indexers=net:indexer2.example.net:9404
 ```
 
-データストアを使用する場合は、[distributed frontends](#!distributed/frontend.md)に記載されている通り、gravwell.confの`Datastore`と`External-Addr`オプションを設定してください。
+□ データストアを使用する場合は、[distributed frontends](#!distributed/frontend.md)に記載されている通り、gravwell.confの`Datastore`と`External-Addr`オプションを設定してください。
 
-TLS](#!configuration/certificates.md)の`Certificate-File`と`Key-File`フィールドを設定してください。
+□ [TLS](#!configuration/certificates.md)の`Certificate-File`と`Key-File`フィールドを設定してください。
 
 ### デプロイメント
 
-systemd を使用して必要のない Gravwell プロセスを無効にする。インデクサでは Web サーバと searchagent を、Web サーバでは indexer を無効にする。インデクサでは webserver と searchagent を、web サーバでは indexer を無効にする。searchagent プロセスは 1 つの web サーバでのみ有効にする。
+□ systemd を使用して必要のない Gravwell プロセスを無効にしてください。インデクサでは Web サーバと searchagent を、Web サーバでは indexer を無効にしてください。インデクサでは webserver と searchagent を、web サーバでは indexer を無効にしてください。searchagent プロセスは 1 つの web サーバでのみ有効にしてください。
 
-インデクサーの設定をインデクサーに、ウェブサーバーの設定をウェブサーバーにコピーする。
+□ インデクサーの設定をインデクサーに、ウェブサーバーの設定をウェブサーバーにコピーしてください。
 
-全ノードの gravwell プロセスを再起動します。
+□ 全ノードの gravwell プロセスを再起動してください。
 -->
