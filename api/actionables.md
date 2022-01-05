@@ -1,35 +1,35 @@
 # Actionables API
 
-Actionables (previously called "pivots"), are objects stored in Gravwell which the web GUI uses to pivot from search result data. For instance, an actionable could define a set of queries which can be run on an IP address, along with a regular expression which *matches* IP addresses. When the user runs a query that includes IP addresses in the results, those addresses will be clickable, bringing up a menu to launch the pre-defined queries.
+Actionables (以前は "pivots" と呼ばれていました) は、Gravwell に保存されているオブジェクトで、Web GUI が検索結果データからピボットするために使用します。例えば、actionableはIPアドレスに実行できるクエリのセットを定義し、IPアドレスに*マッチする*正規表現と一緒にすることができます。ユーザーがIPアドレスを含むクエリを実行すると、それらのアドレスがクリック可能になり、定義済みのクエリを起動するためのメニューが表示されます。
 
-## Data Structure
+## データ構造
 
-The actionable structure contains the following fields:
+アクショナブル構造体は、以下のフィールドを含みます：
 
-* GUID: A global reference for the actionable. Persists across kit installation. (see next section)
-* ThingUUID: A unique ID for this particular actionable instance. (see next section)
-* UID: The numeric ID of the actionable's owner.
-* GIDs: An array of numeric group IDs with which this actionable is shared.
-* Global: A boolean, set to true if the actionable should be visible to all users (admin only).
-* Name: The actionable's name.
-* Description: A more detailed description of the actionable.
-* Updated: A timestamp representing the last update time for the actionable.
-* Labels: An array of strings containing [labels](#!gui/labels/labels.md).
-* Disabled: A boolean value indicating if the actionable has been disabled.
-* Contents: The actual definition of the actionable itself (see below).
-  * Contents.menuLabel: Optional. If not present, the first 20 characters of the name will be used in the dropdown menu.
-  * Contents.actions: Array of actions that can be executed from this actionable.
-    * Contents.actions\[n].name: Action name.
-    * Contents.actions\[n].description: Optional action description.
-    * Contents.actions\[n].placeholder: Placeholder will be replaced with the value of the trigger or cursor highlight. Defaults to "\_VALUE_".
-    * Contents.actions\[n].start: Optional ActionableTimeVariable (see interface below) with definitions to handle the start date variable.
-    * Contents.actions\[n].end: Optional ActionableTimeVariable (see interface below) with definitions to handle the end date variable.
-    * Contents.actions\[n].command: ActionableCommand (see interface below) with definitions for the action execution.
-  * Contents.triggers: Array of triggers for this actionable.
-    * Contents.triggers\[n].pattern: Serialized regular expression pattern for the actionable to match on.
-    * Contents.triggers\[n].hyperlink: True if the actionable can be activated with clicks and text selection. False if it can only be activated with text selection.
+* GUID: アクショナブルのグローバルリファレンスです。キットのインストールをまたいで永続化します。(次のセクションを参照)
+* ThingUUID: この特定のアクション可能なインスタンスのための一意のID。(次のセクションを参照)
+* UID: アクション可能な所有者の数値ID。
+* GIDs: このアクショナブルが共有されるグループIDの数値の配列
+* Global: ブール値で、操作対象がすべてのユーザーに見えるようにする場合はtrueに設定されます（管理者のみ）。
+* Name: アクショナブルの名前です。
+* Description: アクショナブルをより詳しく説明したものです。
+* Updated: アクション可能なものの最終更新時刻を表すタイムスタンプ
+* Labels:[labels](#!gui/labels/labels.md)を含む文字列の配列です。
+* Disabled: 操作可能が無効になっているかどうかを示すブーリアン値
+* Contents:アクショナブルの実際の定義自体（下記参照）
+  * Contents.menuLabel: オプションです。存在しない場合、名前の最初の20文字がドロップダウンメニューに使用されます。
+  * Contents.actions: このアクショナブルから実行可能なアクションの配列です。
+    * Contents.actions\[n].name: アクション名
+    * Contents.actions\[n].description: オプションでアクションの説明を記述します。
+    * Contents.actions\[n].placeholder: プレースホルダーは、トリガーまたはカーソルのハイライトの値に置き換えられます。 デフォルトは「\ _VALUE_」です。
+    * Contents.actions\[n].start: 開始日変数を処理するための定義を持つオプションのActionableTimeVariable（以下のインターフェースを参照）。
+    * Contents.actions\[n].end: オプションの ActionableTimeVariable (以下のインターフェイスを参照) は、終了日変数を処理するための定義があります。
+    * Contents.actions\[n].command: アクション実行のための定義を持つ ActionableCommand（以下のインターフェイスを参照）。
+  * Contents.triggers: このアクション可能なトリガーの配列です。
+    * Contents.triggers\[n].pattern: アクションがマッチするためのシリアル化された正規表現パターン
+    * Contents.triggers\[n].hyperlink: クリックとテキスト選択で操作可能な場合はTrue。テキスト選択のみで有効な場合はFalse。
 
-Although the webserver does not care what goes into the `Contents` field (except that it should be valid JSON), there is a particular format which the **GUI** uses. Below is a complete Typescript definition of the actionable structure, including the Contents field and descriptions for the various types used.
+ウェブサーバは `Contents` フィールドに何が入るかを気にしませんが (有効な JSON であることを除いて)、 **GUI** が使用する特定のフォーマットが存在します。以下は、Contents フィールドと、使用される様々な型の説明を含む、アクション可能な構造体の完全な Typescript の定義です。
 
 ```
 interface Actionable {
@@ -79,21 +79,21 @@ type ActionableCommand =
     | { type: 'url'; reference: string; options: { modal?: boolean; modalWidth?: string } };
 ```
 
-## Naming: GUIDs and ThingUUIDs
+## ネーミング GUIDとThingUUID
 
-Actionables have two different IDs attached to them: a GUID, and a ThingUUID. They are both UUIDs, which can be confusing--why have two identifiers for one object? We will attempt to clarify in this section.
+アクショナブルには、GUIDとThingUUIDという2種類のIDが付与されています。どちらもUUIDですが、これは混乱を招く可能性があります。このセクションでは、その理由を説明します。
 
-Consider an example: I create the actionable from scratch, so it gets assigned a random GUID, `e80293f0-5732-4c7e-a3d1-2fb779b91bf7`, and a random ThingUUID, `c3b24e1e-5186-4828-82ee-82724a1d4c45`. I then bundle the actionable into a kit. Another user on the same system then installs this kit for themselves, which instantiates an actionable with the **same** GUID (`e80293f0-5732-4c7e-a3d1-2fb779b91bf7`) but a **random** ThingUUID (`f07373a8-ea85-415f-8dfd-61f7b9204ae0`).
+例を考えてみましょう。アクションをゼロから作成し、ランダムなGUID、 `e80293f0-5732-4c7e-a3d1-2fb779b91bf7` とランダムなThingUUID、 `c3b24e1e-5186-4828-82ee-82724a1d4c45` が割り当てられました。そして、実行可能なものをキットにバンドルします。同じシステムの別のユーザーがこのキットを自分用にインストールすると、**same**  GUID (`e80293f0-5732-4c7e-a3d1-2fb779b91bf7`) で **random** ThingUUID (`f07373a8-ea85-415f-8dfd-61f7b9204ae0`) の actionable がインスタンス化されるのですが、このキットには **same** という名前のついた GUID はありません。
 
-This system is identical to the one used in [templates](templates.md). Templates use GUIDs and ThingUUIDs so that dashboards can refer to templates by GUID, but multiple users can still install the same kit (with the sample template) at the same time without conflict. Although no Gravwell components reference actionables in the same way dashboards reference templates, we have included the behavior as future-proofing.
+このシステムは [templates](templates.md) で使われているものと同じです。テンプレートはGUIDとThingUUIDを使用しているので、ダッシュボードはGUIDでテンプレートを参照できますが、複数のユーザーが同時に同じキット（サンプルテンプレート付き）をインストールしても衝突することはありません。ダッシュボードがテンプレートを参照するのと同じように、Gravwellコンポーネントがactionableを参照することはありませんが、将来の対策としてこの挙動を含めました。
 
-### Accessing Actionables via GUID vs ThingUUID
+### GUID と ThingUUID を使用した Actionables へのアクセス
 
-Regular users must always access actionables by GUID. Admin users may refer to an actionable by ThingUUID instead, but the `?admin=true` parameter must be set in the request URL.
+一般ユーザーは常にGUIDでactionableにアクセスする必要があります。管理者ユーザーは、代わりにThingUUIDでactionableを参照することができますが、`?admin=true`パラメータをリクエストURLに設定する必要があります。
 
-## Create an actionable
+## アクショナブルを作成する
 
-To create an actionable, issue a POST to `/api/pivots`. The body should be a JSON structure with a 'Contents' field, and optionally a GUID, Labels, Name, and Description. For example:
+アクションを作成するには、 `/api/pivots` に POST してください。ボディはJSON構造で、'Contents'フィールドと、オプションでGUID、Labels、Name、Descriptionが必要です。例えば：
 
 ```
 {
@@ -133,13 +133,13 @@ To create an actionable, issue a POST to `/api/pivots`. The body should be a JSO
 }
 ```
 
-The API will respond with the GUID of the newly-created actionable. If a GUID is specified in the request, that GUID will be used. If no GUID is specified, a random GUID will be generated.
+APIは新しく作成されたactionableのGUIDで応答します。リクエストでGUIDが指定された場合、そのGUIDが使用されます。GUIDが指定されない場合、ランダムなGUIDが生成されます。
 
-Note: At this time, the `UID`, `GIDs`, and `Global` fields cannot be set during actionable creation. They must instead be set via an update call (see below).
+注意: 現時点では、`UID`、`GIDs`、`Global` フィールドは、アクション可能の作成中に設定することはできません。代わりに、updateコールで設定する必要があります(下記参照)。
 
-## List actionables
+## 実行可能なリスト
 
-To list all actionables available to a user, do a GET on `/api/pivots`. The result will be an array of actionables:
+ユーザーが利用できるすべてのアクションをリストアップするには、 `/api/pivots` を GET してください。その結果、actionablesの配列が生成されます：
 
 ```
 [
@@ -271,9 +271,9 @@ To list all actionables available to a user, do a GET on `/api/pivots`. The resu
 ]
 ```
 
-## Fetch a single actionable
+## 実行可能な単一のフェッチ
 
-To fetch a single actionable, issue a GET request to `/api/pivots/<guid>`. The server will respond with the contents of that actionable, for instance a GET on `/api/pivots/afba4f9b-f66a-4f9f-9c58-f45b3db6e474` might return:
+一つのアクションを取得するには、 `/api/pivots/<guid>` にGETリクエストを発行してください。例えば、 `/api/pivots/afba4f9b-f66a-4f9f-9c58-f45b3db6e474` にGETすると、サーバーはそのアクションの内容で応答するでしょう。
 
 ```
 {
@@ -322,31 +322,31 @@ To fetch a single actionable, issue a GET request to `/api/pivots/<guid>`. The s
 
 ```
 
-Note that an administrator can fetch this particular actionable explicitly by using the ThingUUID and the admin parameter, e.g. `/api/pivots/196a3cc3-ec9e-11ea-bfde-7085c2d881ce?admin=true`.
+管理者は、ThingUUIDとadminパラメータを使用して、明示的にこの特定のactionableを取得できることに注意してください、例`/api/pivots/196a3cc3-ec9e-11ea-bfde-7085c2d881ce?admin=true`。
 
-## Update an actionable
+## アクションの更新
 
-To update an actionable, issue a PUT request to `/api/pivots/<guid>`. The request body should be identical to that returned by a GET on the same path, with any desired elements changed. Note that the GUID and ThingUUID cannot be changed; only the following fields may be modified:
+アクションを更新するには、 `/api/pivots/<guid>` にPUTリクエストを発行してください。リクエストのボディは、同じパスのGETで返されるものと同じでなければなりませんが、必要な要素は変更されます。GUIDとThingUUIDは変更できないことに注意してください。変更できるのは以下のフィールドのみです：
 
-* Contents: The actual body/contents of the actionable
-* Name: Change the name of the actionable
-* Description: Change the actionable's description
-* GIDs: May be set to an array of 32-bit integer group IDs, e.g. `"GIDs":[1,4]`
-* UID: (Admin only) Set to a 32-bit integer
-* Global: (Admin only) Set to a boolean true or false; Global actionables are visible to all users.
+* コンテンツ: アクショナブルの実際のボディ/コンテンツ
+* Name: アクションの名前を変更します。
+* Description: アクションの説明を変更します。
+* GIDs:  32ビット整数のグループIDの配列を設定することができます。
+* UID: （管理者のみ）32ビット整数に設定
+* Global:  (管理者のみ) true または false のブール値に設定します; Global actionables はすべてのユーザーから見えます。
 
-Note: Leaving any of these field blank will result in the actionable being updated with a null value for that field!
+注：これらのフィールドのいずれかを空白にすると、そのフィールドのNULL値で実行可能ファイルが更新されます。
 
-## Delete an actionable
+## アクションの削除
 
-To delete an actionable, issue a DELETE request to `/api/pivots/<guid>`.
+アクションを削除するには、`/api/pivots/<guid>` に DELETE リクエストを発行してください。
 
-## Admin actions
+## 管理者の行動
 
-Admin users may occasionally need to view all actionables on the system, modify them, or delete them. Because GUIDs are not necessarily unique, the admin API must refer instead to the unique UUID Gravwell uses internally to store the items. Note that the example actionable listings above include a field named "ThingUUID". This is the internal, unique identifier for that actionable.
+管理者ユーザーは、システム上のすべてのactionableを表示、変更、または削除する必要がある場合があります。GUIDは必ずしも一意ではないので、管理者APIは代わりにGravwellがアイテムを保存するために内部で使用する一意のUUIDを参照する必要があります。上記のアクション可能なリストの例では、"ThingUUID "というフィールドがあることに注意してください。これは、そのアクション可能な内部でユニークな識別子です。
 
-An administrator user may obtain a global listing of all actionables in the system with a GET request on `/api/pivots?admin=true`.
+管理者ユーザーは、`/api/pivots?admin=true`のGETリクエストで、システム内のすべてのactionableのグローバルリストを取得することができます。
 
-The administrator may then update a particular actionable with a PUT to `/api/pivots/<ThingUUID>?admin=true`, substituting in the ThingUUID value for the desired actionable. The same pattern applies to deletion.
+次に管理者は、`/api/pivots/<ThingUUID>?admin=true`へのPUTで特定のactionableを更新し、希望のactionableのThingUUID値に代入することができます。同じパターンが削除にも適用されます。
 
-An administrator may access or delete a particular actionable with a GET or DELETE request (respectively) on `/api/pivots/<ThingUUID>?admin=true`.
+管理者は `/api/pivots/<ThingUUID>?admin=true` に対して GET と DELETE リクエスト（それぞれ）で特定のアクショナブルにアクセスしたり削除したりすることができます。
