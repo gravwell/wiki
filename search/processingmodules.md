@@ -9,7 +9,7 @@
 フラグの中には、複数の異なる検索モジュールに表示され、同じ意味を持つものがあります。
 
 * `-e <ソース名>` は、モジュールがエントリーのデータフィールドからではなく、与えられた列挙値から入力データを読み取ろうとすることを指定します。これは、[json](json/json.md) のようなモジュールで、JSON エンコードされたデータがより大きなデータレコードから抽出されている場合に便利です。例えば、以下の検索は、HTTP パケットのペイロードから JSON フィールドを読み取ろうとします： `tag=pcap packet tcp.Payload | json -e Payload user.email`
-* `-r <リソース名>` は、[resources](#!resources/resources.md) システムのリソースを指定します。これは一般的に、[geoip](geoip/geoip.md) モジュールが使用する GeoIP マッピングテーブルのように、モジュールが使用する追加データを格納するために使用されます。
+* `-r <resource name>` は、[resources](#!resources/resources.md) システムのリソースを指定します。これは一般的に、[geoip](geoip/geoip.md) モジュールが使用する GeoIP マッピングテーブルのように、モジュールが使用する追加データを格納するために使用されます。
 * `-v` は、通常のパス/ドロップのロジックを反転させることを意味します。例えば、[grep](grep/grep.md) モジュールは、通常、与えられたパターンにマッチしたエントリーを通過させ、マッチしないエントリーをドロップしますが、`-v` フラグを指定すると、マッチしたエントリーをドロップし、マッチしないエントリーを通過させます。
 * `-s` は strict モードを示します。モジュールが通常、いくつかの条件のうちどれかひとつが満たされていれば、エントリーをパイプラインで進めることができる場合、strict  フラグを設定すると、すべての条件が満たされている場合にのみエントリーを進めることができます。たとえば、[require](require/require.md) モジュールは、通常は、必要な列挙型の値のいずれかが含まれていればエントリーを通過させますが、`-s` フラグが使用されると、指定された列挙型の値がすべて含まれているエントリーのみを通過させます。
 * `-p` は permissive モードを示します。 パターンやフィルターがマッチしないときに、通常モジュールがエントリーをドロップする場合、permissive フラグはモジュールを通すように指示します。 [regex](regex/regex.md) モジュールや [grok](grok/grok.md) モジュールは、この permissive フラグが有効な例です。
@@ -31,11 +31,13 @@
 * [abs](abs/abs.md)
 * [alias](alias/alias.md)
 * [anko](anko/anko.md)
+* [anonymize](anonymize/anonymize.md)
 * [base64](base64/base64.md)
 * [count](math/math.md#Count)
 * [diff](diff/diff.md)
+* [dns](dns/dns.md)
 * [enrich](enrich/enrich.md)
-* [entropy](math/math.md#Entropy)
+* [entropy](entropy/entropy.md)
 * [eval](eval/eval.md)
 * [first/last](firstlast/firstlast.md)
 * [geoip](geoip/geoip.md)
@@ -55,6 +57,7 @@
 * [max](math/math.md#Max)
 * [mean](math/math.md#Mean)
 * [min](math/math.md#Min)
+* [nosort](nosort/nosort.md)
 * [packetlayer](packetlayer/packetlayer.md)
 * [regex](regex/regex.md)
 * [require](require/require.md)
@@ -70,6 +73,7 @@
 * [taint](taint/taint.md)
 * [time](time/time.md)
 * [transaction](transaction/transaction.md)
+* [truncate](truncate/truncate.md)
 * [unique](math/math.md#Unique)
 * [upper](upperlower/upperlower.md)
 * [variance](math/math.md#Variance)

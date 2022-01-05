@@ -2,12 +2,18 @@
 
 axモジュールは、他のモジュールの機能を呼び出すことによってデータからフィールドを抽出するために事前抽出規則を使用するラッパーモジュールです。自己記述型、標準型、または構造化されていないデータを使用するクエリを大幅に簡略化できます。
 
-以下のAXプロセッサが使用可能です:
+リリース4.2.0では、以下のAXプロセッサが使用可能です:
 
 * [CSV](../csv/csv.md)
-* [Fields](../fields/fields.md)
-* [Regex](../regex/regex.md)
-* [Slice](../slice/slice.md)
+* [fields](../fields/fields.md)
+* [ipfix](../ipfix/ipfix.md)
+* [json](../json/json.md)
+* [KV](../kv/kv.md)
+* [netflow](../netflow/netflow.md)
+* [regex](../regex/regex.md)
+* [slice](../slice/slice.md)
+* [syslog](../syslog/syslog.md)
+* [winlog](../winlog/winlog.md)
 
 AXエクストラクタの設定に関する完全なドキュメントについては、[autoextractorセクション](../../configuration/autoextractors.md)を参照してください。
 

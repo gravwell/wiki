@@ -49,7 +49,7 @@ Web-Store-Path=/opt/gravwell/etc/webstore.db
 
 [Default-Well]
 	Location=/opt/gravwell/storage/default/
-	Accelerator-Name=fulltext #fulltext is the most resilent to varying data types
+	Accelerator-Name=fulltext #fulltext is the most resilient to varying data types
 	Accelerator-Engine-Override=bloom #The bloom engine is effective and fast with minimal disk overhead
 	Disable-Compression=true
 
@@ -58,7 +58,7 @@ Web-Store-Path=/opt/gravwell/etc/webstore.db
 	Tags=syslog
 	Tags=kernel
 	Tags=dmesg
-	Accelerator-Name=fulltext #fulltext is the most resilent to varying data types
+	Accelerator-Name=fulltext #fulltext is the most resilient to varying data types
 	Accelerator-Args="-ignoreTS" #tell the fulltext accelerator to not index timestamps, syslog entries are easy to ID
 ```
 
@@ -224,6 +224,12 @@ Web-Store-Path=/opt/gravwell/etc/webstore.db
 設定例:`Disable-Access-Log=true`
 設定内容:`Disable-Access-Log` パラメータは、ウェブサーバーのアクセスログ生成を無効にするために使用されます。 アクセスログ機能は、個々のページアクセスを記録します。これらのアクセスログを持つことは、Gravwellアクセスを監査し、潜在的な問題をデバッグするために上で一般的には価値がありますが、多くのユーザーがいる環境ではアクセスログがあまりに大きくなる可能性があるので、それらを無効にすることが望ましいこともあるでしょう。
 
+**Disable-Self-Ingest**
+適用対象：ウェブサーバー、インデクサー
+デフォルト値：`false`
+設定例: `Disable-Self-Ingest=true`
+設定内容：Disable-Self-Ingest パラメーターは、ウェブサーバーとインデクサーがログを`gravwell`タグに取り込まないようにします。
+
 **Persist-Web-Logins**
 適用対象:ウェブサーバー
 デフォルト値:`true`
@@ -352,7 +358,8 @@ Web-Store-Path=/opt/gravwell/etc/webstore.db
 適用対象:インデクサーとウェブサーバー
 デフォルト値:`2`
 設定例:`Search-Pipeline-Buffer-Size=8`
-設定内容:Search-Pipeline-Buffer-Sizeは、検索中に各モジュール間で転送できるブロックの数を指定します。サイズを大きくすると、常駐メモリの使用量を犠牲にして、バッファリングが向上し、スループットが向上する可能性があります。インデクサーはパイプラインのサイズに対してより敏感ですが、システムが自由にメモリを削除して再インスタンス化できる共有メモリ技術も使用します。ウェブサーバ－は通常、パイプラインを移動するときにすべてのエントリを常駐させ、メモリの負荷を軽減するためにモジュールの圧縮に依存します。システムが回転ディスクなどの待ち時間の長いストレージシステムを使用している場合は、このバッファーサイズを増やすと有利な場合があります。このパラメーターを増やすと、検索のパフォーマンスが向上する可能性がありますが、システムが一度に処理できる実行中の検索の数に直接影響します。ビデオフレーム、PE実行可能ファイル、オーディオファイルなどの非常に大きなエントリを保存していることがわかっている場合は、常駐メモリの使用を制限するためにバッファサイズを減らす必要がある場合があります。ホストカーネルがメモリ不足（OOM）を呼び出して、Gravwellプロセスを起動および強制終了しているのを確認した場合、これが最初に回すノブです。
+設定内容:Search-Pipeline-Buffer-Sizeは、検索中に各モジュール間で転送できるブロックの数を指定します。 サイズが大きいほどバッファリングが良くなり、常駐メモリの使用量を犠牲にしても高スループットの検索が可能になります。 インデクサはパイプラインのサイズに敏感ですが、システムが自由にメモリを退避・再設定できる共有メモリ技術を使用しています。ウェブサーバは通常、パイプラインを移動する際にすべてのエントリを常駐させ、モジュールを凝縮してメモリ負荷を軽減します。 回転ディスクのような待ち時間の長いストレージシステムを使用している場合は、このバッファサイズを大きくすることが有利になります。
+このパラメータを大きくすると、検索のパフォーマンスが向上しますが、システムが一度に処理できる実行中の検索数に直接影響を与えます。 ビデオフレーム、PE実行ファイル、オーディオファイルなどの非常に大きなエントリを保存している場合は、バッファサイズを小さくして常駐メモリの使用量を制限する必要があります。ホストカーネルがOut Of Memory (OOM)を起動してGravwellプロセスを強制終了させた場合、これが最初に回すべきツマミとなる。
 
 **Search-Relay-Buffer-Size**
 適用対象:ウェブサーバ－
@@ -395,7 +402,6 @@ Web-Store-Path=/opt/gravwell/etc/webstore.db
 デフォルト値:`false`
 設定例:`Prebuff-Sort-On-Consume=true`
 設定内容:Prebuff-Sort-On-Consumeパラメーターは、データをディスクにプッシュする前に、データのロックをソートするようにプリバッファーに指示します。並べ替えプロセスは個々のブロックにのみ適用され、パイプラインに入るときにデータが並べ替えられることを保証するものではありません。ストレージの前にブロックを並べ替えると、取り込み時にパフォーマンスが大幅に低下します。ほとんどすべてのインストールでは、この値をfalseのままにしておく必要があります。
-
 
 **Max-Block-Size**
 適用対象:インデクサー
@@ -462,6 +468,12 @@ Web-Store-Path=/opt/gravwell/etc/webstore.db
 デフォルト値:`false`
 設定例:`Disable-Update-Notification=false`
 設定内容:Disable-Update-Notificationがtrueに設定されている場合、Gravwellの新しいバージョンが利用可能になったときにWebUIは通知を表示しません。
+
+**Disable-Feature-Popups**
+適用対象：ウェブサーバ
+デフォルト値：`false`
+設定例：`Disable-Feature-Popups=true`
+設定内容：Disable-Feature-Popupsがtrueに設定されている場合、Gravwell UIは新機能が追加されたときにポップアップ通知を表示しなくなります。
 
 **Disable-Stats-Report**
 適用対象: Webserver
@@ -589,22 +601,28 @@ Gravwell-Kit-Server = "http://gravwell.mycompany.com/kits" #内部ミラーを�
 `` `
 
 **Kit-Verification-Key**
-適用対象: Webserver
+適用対象: ウェブサーバ－
 デフォルト値:
 設定例: `Kit-Verification-Key=/opt/gravwell/etc/kits-pub.pem`
 設定内容:キットサーバーからキットを検証するときに使用する公開鍵を含むファイルを指定します。代替のGravwell-Kit-Serverを指定した場合は、この値を設定します。Gravwellの公式キットサーバーを使用する場合は必要ありません。キットの署名に適したキーは、[gencert](https://github.com/gravwell/gencert)ユーティリティを使用して生成できます。
 
 **Disable-User-Ingester-Config-Reporting**
-適用対象: Webserver
+適用対象: ウェブサーバ－
 デフォルト値: false
 設定例: `Disable-User-Ingester-Config-Reporting=true`
 設定内容:インジェスターの状態更新の設定フィールドについて(管理者ではない)一般ユーザーが受信すべきではないことをウェブサーバに通知します。設定にはインジェストシークレットやその他の「機密」項目は含まれていませんが、それでも一般ユーザーには設定全体を秘密にしておきたいという場合もあるでしょう。そのような時にこのオプション設定を使ってください。
 
 **Disable-Ingester-Config-Reporting**
-適用対象: Webserver
+適用対象: ウェブサーバ－
 デフォルト値: false
 設定例: `Disable-Ingester-Config-Reporting=true`
 設定内容:インジェスターの状態更新の設定フィールドについて全ユーザーが受信すべきではないことをウェブサーバに通知します。設定にはインジェストシークレットやその他の「機密」項目は含まれていませんが、それでもユーザーには設定全体を秘密にしておきたいという場合もあるでしょう。そのような時にこのオプション設定を使ってください。
+
+**Disable-Indexer-Overload-Warning**
+適用対象: Indexer
+デフォルト値：false
+設定例：`Disable-Indexer-Overload-Warning=true`（インデクサーのオーバーロードを無効にする）。
+設定内容：このパラメータが設定されていると、インデクサーは自身が「オーバーロード」であると判断したときに通知を送信しません。
 
 ## パスワード制御
 
@@ -937,7 +955,7 @@ Gravwell-Kit-Server = "http://gravwell.mycompany.com/kits" #内部ミラーを�
 **Groups-Attribute**
 デフォルト値:"http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"
 設定例:`Groups-Attribute="groups"`
-設定内容:ーザーが属するグループのリストを含むSAML属性を定義します。通常、グループリストを送信するようにSSOプロバイダーを明示的に構成する必要があります。
+設定内容:ユーザーが所属するグループのリストを含むSAML属性を定義します。通常、グループリストを送信するようにSSOプロバイダを明示的に設定する必要があります。
 
 **Group-Mapping**
 デフォルト値:

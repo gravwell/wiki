@@ -1,6 +1,6 @@
 ## netflow
 
-netflow プロセッサは、生の netflow データフレームを抽出してフィルタリングするように設計されており、ネットワークフローの迅速な識別、ポートでのフィルタリング、または一般的なアグリゲートフローの動作の監視を可能にします。 Gravwell にはネイティブの netflow インジェスターがあり、オープンソースで、https://github.com/gravwell/ingesters または [quickstart section](#!quickstart/downloads.md) にあるインストーラーで入手できます。
+ネットフロープロセッサは、生のネットフローデータフレームを抽出してフィルタリングするように設計されており、ネットワークフローの迅速な識別、ポートでのフィルタリング、または一般的なアグリゲートフローの動作の監視を可能にします。 Gravwellにはネイティブのネットフロー・インジェスターがあり、オープンソースで、https://github.com/gravwell/ingesters または[quickstart section](#!quickstart/downloads.md)にあるインストーラーとして入手可能です。
 
 ### サポートされているオプション
 
@@ -33,13 +33,13 @@ netflow 検索モジュールは、生の netflow フレームを処理するよ
 | Count | netflow フレーム内のレコード数 | > < <= >= == != | Count >= 10
 | Version | Netflow フレームのバージョン | > < <= >= == != | Version == 5
 | Uptime | netflow センサーがアクティブだった秒数 | > < <= >= == != | Uptime > 0x100000
-| Sec | 検知デバイスの現在の Unix タイムスタンプ | > < <= >= == != | Sec == 1526511023
+| Sec|センシングデバイスの現在のUnixタイムスタンプ|> < <= >= == != |Sec == 1526511023
 | NSec | 検知デバイスの現在時刻に対する残差ナノ秒 | > < <= >= == != | Nsec > 0x100101
 | Sequence | 検知デバイスの総フローのシーケンスカウンタ | > < <= >= == != | Sequence == 1
 | EngineType | フロースイッチ・エンジンの種類 | > < <= >= == != | EngineType == 0x1A
 | EngineID | フローセンシングエンジンの ID | > < <= >= == != | EngineID == 0x00
 | SampleMode | センシングエンジンのサンプリングモードを表す 2 ビットの ID | > < <= >= == != | SampleMode == 0x01
-| SampleInterval | センシングエンジンのサンプリング間隔を表す 14 ビットの値 | > < <= >= == != | SampleInterval > 0x100
+| SampleInterval|センシングエンジンのサンプリング間隔を表す14ビットの値|> < <= >= ==| SampleInterval > 0x100
 | Timestamp | Sec と NSec をフレンドリーなタイムスタンプ値に変換するヘルパー抽出器。フィルタリングはサポートされていません。 | |
 
 #### Netflow v5 レコードデータ項目
@@ -63,7 +63,7 @@ netflow 検索モジュールは、生の netflow フレームを処理するよ
 | Protocol | フローのプロトコル番号 (TCP = 6, UDP = 17 | > < <= >= == != | Protocol == 17
 | ToS | フローの IP タイプ | > < <= >= == != | ToS == 19
 | SrcAs | フローの送信元自律システム番号 | > < <= >= == != | SrcAS == 15169
-| DstAs | ソース自律システムフローの数値 | > < <= >= == != | DstAs != 15169
+| DstAs | フローのソース自律システム番号 | > < <= >= == != | DstAs != 15169
 | SrcMask | ソース IPv4 アドレスのマスクビット | > < <= >= == != | SrcMask > 24
 | DstMask | 送信先 IPv4 アドレスマスクビット | > < <= >= == != | DstMask <= 16
 | Duration | UptimeFirst と UptimeLast を期間に変換するヘルパー値 | > < <= >= == != | Duration > 100ms

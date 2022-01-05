@@ -8,20 +8,19 @@
 tag=CAN canbus ID=0x2C4 | slice uint16be(data[0:2]) as RPM | mean RPM | chart mean
 ```
 
-スライスは生のエントリの内容から抽出することも、列挙値を操作することもできます。  抽出されたバイトは、整数や文字列など、オプションで別の型に解析できます。  いくつかの例:
+スライスは生のエントリの内容から抽出することも、列挙値を操作することもできます。抽出されたバイトは、整数や文字列など、オプションで別の型に解析できます。  いくつかの例:
 
 | コマンド | 説明 |
 |---------|-------------|
-| `slice [0:4] as foo` | エントリのデータから最初の5バイトを直接抽出し、列挙値"foo"に配置します |
-| `slice Payload[9] as tenth` |  列挙値"Payload"から10バイト目を抽出します |
+| `slice [0:4] as foo` | エントリのデータから最初の5バイトを直接抽出し、列挙値"foo"に配置します。 |
+| `slice Payload[9] as tenth` |  列挙値"Payload"から10バイト目を抽出します。 |
 | `slice uint16le(Payload[9:10]) as value` | 列挙値"Payload"から2バイトを引き出し、符号なし16ビットリトルエンディアンとして解析し、"value"として保存します。 |
 | `slice uint16be(Payload[-2:]) as value` | "Payload"から最後の2バイトを取り出し、符号なし16ビットビッグエンディアン整数として解析し、"value"として保存します。 |
-| `slice uint16be(Payload[-4:-2]) as value2` | "Payload"の最後の2バイトに先行する2バイトをプルし、それらを符号なし16ビットビッグエンディアン整数として解析し、"value2"として格納します。
+| `slice uint16be(Payload[-4:-2]) as value2` | "Payload"の最後の2バイトに先行する2バイトをプルし、それらを符号なし16ビットビッグエンディアン整数として解析し、"value2"として格納します。|
 
 ### サポートされている型
 
-スライスモジュールの不可欠な機能は、データを適切な型にキャストすることです。  デフォルトでは、データはバイトスライスとして抽出されますが、オプションcastを使用すると、データを型に変換できます。  「be」の接尾辞を持つ型は[ビッグエンディアン](https://en.wikipedia.org/wiki/Endianness)のビット順を示し、「be」接尾辞のないものはリトルエンディアンのビット順を使用します。
-
+スライスモジュールの不可欠な機能は、データを適切な型にキャストすることです。  デフォルトでは、データはバイトスライスとして抽出されますが、オプションcastを使用すると、データを型に変換できます。  「be」の接尾辞を持つ型は[ビッグエンディアン](https://en.wikipedia.org/wiki/Endianness)のビット順を示し、「be」接尾辞のないものはリトルエンディアンのビット順を使用します。    
 
 * byte
 * int16
@@ -50,6 +49,8 @@ tag=CAN canbus ID=0x2C4 | slice uint16be(data[0:2]) as RPM | mean RPM | chart me
 * float64be
 * array
 * string
+* IPv4
+* IPv6
 
 ### インラインフィルタリング
 
@@ -60,43 +61,48 @@ tag=CAN canbus ID=0x2C4 | slice uint16be(data[0:2]) as RPM | mean RPM | chart me
 | オペレーター | 名 | 説明
 |----------|------|-------------
 | == | 等しい | フィールドは等しくなければなりません
-| != | 等しくない | フィールドは等しくてはいけません
-| < | 未満 | フィールドはより小さい
-| > | より大きい | フィールドはより大きくなければなりません
-| <= | 以下 | フィールドは以下でなければなりません
-| >= | 以上 | フィールドは以上でなければなりません
-| ~ | サブセット | フィールドはメンバーでなければなりません
-| !~ | サブセットではない | フィールドはメンバーであってはいけません
+| != | 等しくない | フィールドが等しくないこと
+| ~ | サブセット | フィールドに値が含まれる
+| !~ | サブセットではない | フィールドに値が含まれていない
+| < | 未満 | フィールドの数値より小さい
+| <= | 以下または等しい | フィールドの数値が以下である
+| > | より大きい | フィールドの数値はより大きい
+| >= | 以上 | フィールドの数値が以上である
+
 
 #### タイプ別サポート演算子
 
 Type     | == | != | ~ | !~ | < | <= | > | >=
 ----------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:
-byte     | X | X |  |  | X | X | X | X 
-int16    | X | X |  |  | X | X | X | X
-int16le  | X | X |  |  | X | X | X | X
-int16be  | X | X |  |  | X | X | X | X
-uint16   | X | X |  |  | X | X | X | X
-uint16le | X | X |  |  | X | X | X | X
-uint16be | X | X |  |  | X | X | X | X 
-int32    | X | X |  |  | X | X | X | X
-int32le  | X | X |  |  | X | X | X | X
-int32be  | X | X |  |  | X | X | X | X
-uint32   | X | X |  |  | X | X | X | X
-uint32le | X | X |  |  | X | X | X | X
-uint32be | X | X |  |  | X | X | X | X
-int64    | X | X |  |  | X | X | X | X
-int64le  | X | X |  |  | X | X | X | X
-int64be  | X | X |  |  | X | X | X | X
-uint64   | X | X |  |  | X | X | X | X
-uint64le | X | X |  |  | X | X | X | X
-uint64be | X | X |  |  | X | X | X | X
-float32  | X | X |  |  | X | X | X | X
-float32le| X | X |  |  | X | X | X | X
-float32be| X | X |  |  | X | X | X | X
-float64  | X | X |  |  | X | X | X | X
-float64le| X | X |  |  | X | X | X | X
-float64be| X | X |  |  | X | X | X | X
-array    | X | X | X | X |  |  |  |
-string   | X | X | X | X |  |  |  |
+byte     | X | X |   |   | X | X | X | X 
+int16    | X | X |   |   | X | X | X | X
+int16le  | X | X |   |   | X | X | X | X
+int16be  | X | X |   |   | X | X | X | X
+uint16   | X | X |   |   | X | X | X | X
+uint16le | X | X |   |   | X | X | X | X
+uint16be | X | X |   |   | X | X | X | X 
+int32    | X | X |   |   | X | X | X | X
+int32le  | X | X |   |   | X | X | X | X
+int32be  | X | X |   |   | X | X | X | X
+uint32   | X | X |   |   | X | X | X | X
+uint32le | X | X |   |   | X | X | X | X
+uint32be | X | X |   |   | X | X | X | X
+int64    | X | X |   |   | X | X | X | X
+int64le  | X | X |   |   | X | X | X | X
+int64be  | X | X |   |   | X | X | X | X
+uint64   | X | X |   |   | X | X | X | X
+uint64le | X | X |   |   | X | X | X | X
+uint64be | X | X |   |   | X | X | X | X
+float32  | X | X |   |   | X | X | X | X
+float32le| X | X |   |   | X | X | X | X
+float32be| X | X |   |   | X | X | X | X
+float64  | X | X |   |   | X | X | X | X
+float64le| X | X |   |   | X | X | X | X
+float64be| X | X |   |   | X | X | X | X
+array    | X | X | X | X |   |   |   |
+string   | X | X | X | X |   |   |   |
+IPv4     | X | X | X | X |   |   |   |
+IPv6     | X | X | X | X |   |   |   |
+
+注意：`IPv4`と`IPv6`の演算子は、4バイトと16バイトのネットワークエンコードされた値を想定しており、テキストエンコードされたIPアドレスは適切に抽出できません。
 

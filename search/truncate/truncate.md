@@ -23,7 +23,7 @@ tag=dns json Question.Hdr.Name | table
 
 ![Example 1](example1.png)
 
-`truncate`モジュールを使って、省略文字を切り詰めたり、戻したりすることができます: 
+`Truncate`モジュールを使って、省略文字を切り詰めたり、戻したりすることができます: 
 
 ```
 tag=dns json Question.Hdr.Name 
