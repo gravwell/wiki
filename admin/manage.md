@@ -3,7 +3,7 @@
 ユーザーは、Gravwellシステム内でさまざまなオブジェクトを作成できます:
 
 * リソース
-* 保存/バックグラウンド検索
+* 保存された検索/バックグラウンド検索
 * スケジュールされた検索/スクリプト
 * ダッシュボード
 * テンプレート
@@ -59,7 +59,7 @@ sync_extractions    Force a sync of installed autoextractors to indexers
 resource            Create and manage resources
 scheduled_search    Manage scheduled searches
 templates           Manage templates
-pivots              Manage pivots
+pivots              Manage actionables
 userfiles           Manage user files
 kits                Manage and upload kits
 admin>
@@ -112,9 +112,9 @@ delete              	Delete a scheduled search
 
 管理者は、このメニューから、自分の検索だけでなく、システム上の*すべての*スケジュールされた検索を管理できます。
 
-## テンプレート/ピボットの管理
+## テンプレート/アクショナブルの管理
 
-テンプレートとピボットにはそれぞれ、管理者メニュー内にサブメニュー（`templates`と`pivots`）があり、管理者向けの同じコマンドセットがあります。
+テンプレートとアクションテーブル（ここでは「ピボット」と呼びます）は、それぞれ管理メニュー内にサブメニュー（`templates`と`pivots`）があり、管理者向けの同じコマンド群が用意されています。
 
 ```
 admin>  templates
@@ -128,12 +128,12 @@ updatemeta          	Update template metadata
 template>  quit
 admin>  pivots
 pivot>  help
-list                	List pivots
-create              	Create a new pivot
-update              	Upload new contents to a pivot
-delete              	Delete a pivot
-print               	Print pivot contents
-updatemeta          	Update pivot metadata
+list                	List actionables
+create              	Create a new actionable
+update              	Upload new contents to an actionable
+delete              	Delete an actionable
+print               	Print actionable contents
+updatemeta          	Update actionabl metadata
 pivot>
 ```
 
