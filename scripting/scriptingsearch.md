@@ -31,7 +31,7 @@ Library-Repository="https://github.com/foobar/baz" #override the default library
 Library-Commit=da4467eb8fe22b90e5b2e052772832b7de464d63
 ```
 
-Library-Repository は、Gravwell ウェブサーバープロセスが読めるローカルフォルダにすることもできます。 たとえば、完全にエアギャップされた環境で Gravwell を実行している場合でも、lib にアクセスして更新できるようにしたいと思うかもしれません。 git リポジトリを解凍して `Library-Repository`をそのパスに設定するだけです。
+Library-Repository は、Gravwell ウェブサーバープロセスが読み取り可能なローカルフォルダを使用することもできます。 たとえば、完全にエアギャップされた環境で Gravwell を実行している場合でも、lib にアクセスして更新できるようにしたいと思うかもしれません。 git リポジトリを解凍して `Library-Repository`をそのパスに設定するだけです。
 
 ```
 Library-Repository="/opt/gitstuff/gravwell/libs"
@@ -206,6 +206,19 @@ email(`user@example.com`, `bob@accounting.org`, subj, body, mp)
 	addSelfTargetedNotification(7, "これは私の通知です", "https://gravwell.io", time.Now().Add(3 * time.Hour)
 
 通知IDは、通知を一意に識別します。 これにより、ユーザーは同じ通知IDで関数を再度呼び出すことで既存の通知を更新できますが、異なるIDを指定して複数の通知を同時に追加することもできます。
+
+### 通知作成スクリプトの例
+
+このスクリプトは、現在のユーザーを対象とした通知を作成し、それはリンクを含み、通知が作成された後12時間有効です。
+
+```
+var time = import("time")
+MSG=`This is my notification`
+ID=0x7
+LINK="https://gravwell.io"
+EXPIRES=time.Now().Add(3*time.Hour)
+return addSelfTargetedNotification(ID, MSG, LINK, EXPIRES)
+```
 
 ## エントリの作成と取り込み
 
@@ -655,7 +668,7 @@ if err != nil {
 return setResource("csv", buff)
 ```
 
-## SQL Usage
+## SQLの使用法
 
 Gravwellスクリプトシステムでは、自動化スクリプトが外部のSQLデータベースと対話できるように、SQLデータベースパッケージを公開しています。 SQLライブラリを使用するには、Gravwellバージョン4.1.6以降が必要です。
 
