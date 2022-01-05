@@ -1,55 +1,55 @@
 ## Geoip
 
-geoipモジュールは[MaxMind](https://maxmind.com/)GeoIPデータベースを使用して、IPアドレスに関する位置情報を抽出します。おおよその緯度/経度、都市名、国名、大陸名を抽出できます。また、ASN番号とIPに関連付けられたASN組織を抽出することもできます。
+geoipモジュールは[MaxMind](https://maxmind.com/) GeoIPデータベースを使用して、IPアドレスに関する位置情報を抽出します。おおよその緯度/経度、都市名、国名、大陸名を抽出できます。また、ASN番号とIPに関連付けられたASN組織を抽出することもできます。
 
 ### データベースのセットアップ
 
-geoipモジュールを使用する前に、MaxMindデータベースを含む[リソース](#!resources/resources.md)をインストールする必要があります。[無料のデータベースをダウンロードする](https://dev.maxmind.com/geoip/geoip2/geolite2/)か、エンタープライズバージョンを購入することができます。 CityデータベースとASNデータベースの両方をインストールすることをお勧めします。 Webサイトで、以下に示すようにMaxMind DBバージョンを選択し、結果のtarファイルを解凍して、必要なファイル（GeoLite2-City.mmdbおよびGeoLite2-ASN.mmdb）を見つけます。
+geoipモジュールを使用する前に、MaxMindのデータベースを含む[resources](#!resources/resources.md)をインストールする必要があります。無料の制限付きデータベースをダウンロード](https://dev.maxmind.com/geoip/geoip2/geolite2/)するか、エンタープライズバージョンを購入することができます。CityデータベースとASNデータベースの両方をインストールすることをお勧めします。ウェブサイト上で、以下のようにMaxMind DBのバージョンを選択し、入手したtarファイルを解凍すると、必要なファイル (GeoLite2-City.mmdbとGeoLite2-ASN.mmdb) が見つかります。
 
-注：必ずバイナリバージョンをダウンロードし、tar.gzファイルから.mmdbファイルを抽出してください。 Gravwellは、ネイティブのMaxmindDB形式を使用して、優れたスループットを保証します。
+注意: 必ずバイナリ版をダウンロードして、tar.gzファイルから.mmdbファイルを解凍してください。 SolitonNKはネイティブのMaxMindDBフォーマットを採用しており、優れたスループットを実現しています。
 
-[![Maxmind Download](download.png "Example download options")](https://dev.maxmind.com/geoip/geoip2/geolite2/)
+[![MaxMind Download](download.png "Example download options")](https://dev.maxmind.com/geoip/geoip2/geolite2/)
 
-デフォルトでは、geoipモジュールはMaxMind "city"データベース（GeoLite2-City.mmdb）が "maxmind"という名前のリソースにあることを想定しています。これにより、リソース名を明示的に指定せずにGeoIP抽出を行うことができます。
+デフォルトでは、geoip モジュールは MaxMind "city" データベースが "maxmind" という名前のリソースにあることを想定しています。これにより、リソース名を明示的に指定することなく、GeoIP抽出を行うことができます。
 
 ![](maxmind.png)
 
-SNデータベースにはデフォルトの名前はありませんが、入力を減らすために"asn"のような単純な名前を付けることをお勧めします:
+ASNデータベースにはデフォルトの名前はありませんが、タイプミスを減らすために"asn"のようなシンプルな名前をつけることをお勧めします:
 
 ![](asn.png)
 
 ### サポートされているオプション
 
-* `-r <arg>`: “ -r”オプションは、Maxmind geoipデータベースを含むリソース名またはUUIDを指定します。  "-r"が指定されていない場合、geoipモジュールはデフォルトの "maxmind" リソース名を使用します。
-* `-s`:-s”オプションは、geoipモジュールが厳密モードで動作することを指定します。  ストリクトモードでは、指定されたオペレータのいずれかがIPを解決できない場合、エントリはドロップされます。
+* `-r <arg>`: "-r"オプションは、MaxMind geoip データベースを含むリソース名または UUID を指定します。 "-r"が指定されていない場合、geoipモジュールはデフォルトの "maxmind"リソース名を使用します。
+* `-s`: "-s"オプションは、geoipモジュールを厳密モードで動作させることを指定します。 厳密モードでは、指定された演算子のいずれかがIPを解決できない場合、そのエントリーはドロップされます。
 
-### 演算子
+### 処理演算子
 
-geoipエクストラクタは、geoipモジュールで非常に高速なフィルタリングを可能にする直接演算子をサポートします。  Tこれらのフィルタは、場所、ISP、所有者などに基づくエントリの高速フィルタリングを可能にします。  各オペレータによってサポートされるフィルタは、抽出されたアイテムのデータタイプによって決定されます。  整数値や浮動小数点数が完全な数値比較演算子をサポートする場合、ISP、国、都市などの文字列は、（!=）と等しい（==）だけをサポートします。  Locationエクストラクタは、経度と緯度の両方で構成されるデータ構造を生成し、フィルタ演算子をサポートしません。  geoipモジュールの1回の呼び出しで複数の演算子を指定でき、出力された列挙値の名前は "as"ディレクティブを使って変更できます。  これにより、1つのエントリで2つのIPアドレスに関連付けられている国を取得し、結果に2つの異なる列挙値を入力できます。
+geoipエクストラクタは、geoipモジュールで非常に高速なフィルタリングを可能にする直接演算子をサポートしています。 これらのフィルタにより、場所、ISP、所有者などに基づくエントリの高速フィルタリングが可能になります。 各演算子でサポートされるフィルタは、抽出されたアイテムのデータタイプによって決まります。 ISP、国、都市などの文字列は、equal to (==)とnot equal to (!=)のみをサポートし、整数と浮動小数点は完全な数値比較演算子をサポートします。 Locationエクストラクタは、LongitudeとLatitudeの両方からなるデータ構造を生成し、フィルタリング演算子はサポートしていません。 geoipモジュールの1回の起動で複数の演算子を指定することができ、出力される列挙値の名前は "as"ディレクティブで変更することができます。 これにより、1つのエントリで2つのIPアドレスに関連する国を取得し、その結果を2つの異なる列挙値に入力することができます。
 
-| 演算子 | 名 | 説明
+| 演算子 | 名前 | 説明
 |----------|------|-------------
-| == | 等しい | フィールドは等しくなければなりません
-| != | 等しくない | フィールドは等しくてはいけません
-| < | 未満 | フィールドはより小さい
-| > | より大きい | フィールドはより大きくなければなりません
-| <= | 以下 | フィールドは以下でなければなりません
-| >= | 以上 | フィールドは以上でなければなりません
-| ~ | サブセット | フィールドはメンバーでなければなりません
-| !~ | サブセットではない | フィールドはメンバーであってはいけません
+| == | 等しい | フィールドは等しい
+| != | 等しくない | フィールドは等しくない
+| < | 未満 | フィールドはその値より小さい
+| > | より大きい | フィールドはその値より大きい
+| <= | 以下 | フィールドはその値以下
+| >= | 以上 | フィールドはその値以上
+| ~ | 含む | フィールドはその値を含む
+| !~ | 含まない | フィールドはその値を含まない
 
 ### データ項目抽出
 
-標準のMaxMind GeoIPデータベースでは、次の抽出が可能です。
+標準のMaxMind GeoIPデータベースでは、次の抽出が可能です:
 
-| 抽出器 | オペレータ | 説明 | 例 
+| エクストラクタ | 演算子 | 説明 | 例 
 |-----------|-----------|-------------|----------
-| ISP | == != | IPを所有するISP（MaxMindエンタープライズデータベースでのみ使用可能） | SrcIP.ISP != Comcast
+| ISP | == != | IP を所有する ISP (MaxMind エンタープライズデータベースでのみ利用可能) | SrcIP.ISP != Comcast
 | Country | == != | IPの国コード | DstIP.Country == "US"
 | CountryName | == != | IPの国名 | SrcIP.CountryName != "United States"
 | City |  == != | IPの都市名 | DstIP.City
-| Continent |  == != | IPの大陸| SrcIP.Continent == NA
-| ContinentName |  == != | IP大陸名 | DstIP.ContinentName != "North America"
+| Continent |  == != | IPの大陸 | SrcIP.Continent == NA
+| ContinentName |  == != | IPの大陸名 | DstIP.ContinentName != "North America"
 | TZ |  == != | IPのタイムゾーン | SrcIP.TZ != "MST"
 | Location |  | IPの緯度/経度 | SrcIP.Location
 | Lat | > < <= >= == != | IPの緯度 | DstIP.Lat < 22.5432
@@ -57,11 +57,10 @@ geoipエクストラクタは、geoipモジュールで非常に高速なフィ�
 
 以下には、個別のASNデータベース（-rフラグで指定）が必要です:
 
-| 抽出器 | オペレータ | 説明 | 例 
+| エクストラクタ | 演算子 | 説明 | 例 
 |-----------|-----------|-------------|----------
 | ASNOrg |  == != | IPの自律システム番号組織の所有者 | DstIP.ASNOrg != Google
-| ASN |  > < <= >= == != |  自律システム番号 | DstIP.ASN >= 1024
-
+| ASN |  > < <= >= == != | 自律システム番号 | DstIP.ASN >= 1024
 
 ### 例
 
@@ -73,7 +72,7 @@ tag=pcap packet IPv4.SrcIP ~ 10.0.0.0/16 IPv4.DstIP | geoip -s DstIP.Country == 
 
 ![chart of traffic by American city](chartByCity.png)
 
-#### IP国別トラフィックの表示
+#### IPの国別トラフィックの表示
 
 ```
 tag=pcap packet ipv4.SrcIP ~ 10.10.10.0/24 ipv4.DstIP !~ 10.0.0.0/8 ipv4.Length  | geoip DstIP.Country as DestCountry | sum Length by SrcIP,DestCountry | stackgraph DestCountry SrcIP sum
@@ -94,4 +93,3 @@ tag=pcap packet ipv4.SrcIP !~ PRIVATE | geoip -r asn SrcIP.ASNOrg | table
 ```
 
 ![](asnorg.png)
-

@@ -1,37 +1,37 @@
 # IPexist
 
-ipexistモジュールは、IPアドレスの簡単な存在チェックをできるだけ早く実行するように設計されています。   Gravwellの[ipexistライブラリ](https://github.com/gravwell/ipexist)を使用してIPアドレスのセットを管理し、そのセット内の特定のIPの存在をすばやく照会します。   ユーザーは、セットと照合するために1つ以上の列挙値を指定します。   デフォルトでは、列挙されたすべての値がセット内のアドレスと一致すると、エントリが渡されます。
+ipexistモジュールは、IPアドレスの簡単な存在チェックを可能な限り高速に実行するように設計されています。SolitonNK	の[ipexistライブラリ](https://github.com/gravwell/ipexist)を使用して、IPアドレスのセットを管理し、そのセット内の指定されたIPの存在を素早く照会します。デフォルトでは、すべての列挙値がセット内のアドレスに一致した場合、そのエントリはパスされます。
 
 ## サポートされているオプション
 
-* `-r <resource>`: "-r"フラグは、ipexist形式のルックアップセットを含むリソースの名前を指定します。   このフラグは、複数のリソースにまたがって検索を試みるために複数回指定することができます。   これらのセットの作成に関する詳細については、下記を参照してください。
-* `-v`: "-v"フラグは、ipexistモジュールに逆モードで動作するように指示します。   したがって、クエリipexist -r ips SrcIPが通常、SrcIPがリソース内のipと一致するすべてのエントリを通過させる場合、ipexist -v -r ips SrcIPは代わりにそれらのエントリを削除し、他のすべてのエントリを通過させます。
+* `-r <resource>`: "-r"フラグは、ipexist形式のルックアップ・セットを含むリソースの名前を指定します。このフラグを複数回指定することで、複数のリソースからの検索を試みることができます。これらのセットの作成に関する詳細は以下を参照してください。
+* `-v`: "-v"フラグは、ipexist モジュールに逆のモードで動作するように指示します。したがって、`ipexist -r ips SrcIP` というクエリは、通常、SrcIP がリソースの ip に一致するエントリをすべて通過させますが、`ipexist -v -r ips SrcIP` では、代わりにそれらのエントリを削除し、他のすべてのエントリを通過させます。
 * `-or`: "-or"フラグは、すべてのフィルタが成功した場合に、ipexistモジュールがエントリをパイプラインに沿って続行することを許可することを指定します。
 
-## IPセットを作成する
+## IPセットを作成
 
-ipexistモジュールは特定のフォーマットを使用してIPv4アドレスのセットを格納します。  これは、高速検索を可能にしながら、比較的スペース効率を維持するように設計されています。  この形式は、コマンドラインでセットを生成するためのツールを含む[ipexistライブラリ](https://github.com/gravwell/ipexist)に実装されています。
+ipexistモジュールは、IPv4アドレスのセットを格納するために特定のフォーマットを使用しています。このフォーマットは、比較的スペースを有効に利用しつつ、高速な検索ができるように設計されています。このフォーマットは[ipexistライブラリ](https://github.com/gravwell/ipexist)に実装されており、コマンドラインでセットを生成するツールも含まれています。
 
 まず、ツールを取得します:
 
 	go get github.com/gravwell/ipexist/textinput
 
-それから、セットに入れたいIPアドレスのリストを1行に1つのIPアドレスでテキストファイルに入力してください。  順序は関係ありません:
+次に、セットに入れたいIPアドレスのリストをテキストファイルに入力し、1行に1つのIPを入力します。順序は関係ありません:
 
 	10.0.0.2
 	192.168.3.77
 	10.3.2.1
 	8.8.8.8
 
-次にtextinputツールを実行し、入力ファイルへのパスと出力へのパスを指定します:
+次にtextinputツールを実行し、入力ファイルのパスと出力ファイルのパスを指定します:
 
 	$GOPATH/bin/textinput -i /path/to/inputfile -o /path/to/outputfile
 
-これにより、ipexistモジュールで使用するためのリソースとしてアップロードできる適切にフォーマットされた出力ファイルが作成されます。
+これにより、適切にフォーマットされた出力ファイルが作成され、ipexistモジュールで使用するリソースとしてアップロードできるようになります。
 
 ## 使用例
 
-パケットがpcapタグの下でキャプチャされると仮定すると、次のクエリはソースIPアドレスがipsリソース内のIPと一致するパケットのみを通過させます:
+パケットが `pcap` タグでキャプチャされているとすると、以下のクエリは、ソースIPアドレスが `ips` リソースのIPに一致するパケットのみを通過させます:
 
 ```
 tag=pcap packet ipv4.SrcIP | ipexist -r ips SrcIP | table SrcIP
@@ -39,13 +39,13 @@ tag=pcap packet ipv4.SrcIP | ipexist -r ips SrcIP | table SrcIP
 
 ![](ipexist1.png)
 
-このクエリは、SrcIPとDstIPがリソースにあるエントリをすべて渡します:
+このクエリは、 **SrcIPとDstIP** がリソースで見つかったすべてのエントリを渡します:
 
 ```
 tag=pcap packet ipv4.SrcIP ipv4.DstIP | ipexist -r ips SrcIP DstIP | table SrcIP DstIP
 ```
 
-`-or`フラグを追加すると、照会が緩和されます。   SrcIPまたはDstIPがリソースに見つかったエントリをすべて渡します:
+`-or`フラグを追加すると、照会が緩和されます。 **SrcIPまたはDstIP** がリソースに見つかったエントリをすべて渡します:
 
 ```
 tag=pcap packet ipv4.SrcIP ipv4.DstIP | ipexist -or -r ips SrcIP DstIP | table SrcIP DstIP
@@ -53,9 +53,9 @@ tag=pcap packet ipv4.SrcIP ipv4.DstIP | ipexist -or -r ips SrcIP DstIP | table S
 
 ## 反転クエリ
 
-`-v`フラグはクエリを反転します。  クエリに-vを追加した場合、通常削除されるエントリはすべて渡され、その逆も同様です。
+`-v`フラグはクエリを反転させます。クエリに`-v`を追加すると、通常は削除されるエントリがパスされ、その逆も同様です。
 
-このクエリは、ソースIPアドレスがリソース内に見つかったエントリを削除します:
+このクエリは、ソースIPアドレスがリソースに見つかったエントリを*削除*します:
 
 ```
 tag=pcap packet ipv4.SrcIP | ipexist -v -r ips SrcIP | table SrcIP
@@ -63,13 +63,13 @@ tag=pcap packet ipv4.SrcIP | ipexist -v -r ips SrcIP | table SrcIP
 
 ![](ipexist2.png)
 
-次のクエリでは、SrcIPとDstIPがリソースに存在するエントリはすべて削除されます。   この問い合わせは本質的に、「送信元または宛先が既知のリストにないすべてのパケットを表示する」となります。
+次のクエリでは、 **SrcIPおよびDstIP** がリソースに存在するエントリはすべて*削除*されます。このクエリは基本的に「送信元または宛先が既知のリストにないすべてのパケットを表示する」というものです。
 
 ```
 tag=pcap packet ipv4.SrcIP ipv4.DstIP | ipexist -v -r ips SrcIP DstIP | table SrcIP DstIP
 ```
 
-`-or`フラグと組み合わせると、モジュールは、指定された列挙値の1つでもリソース内に見つかったエントリをすべて削除します。   以下の例では、ソースIPと宛先IPがリソースに見つからないエントリだけがパイプラインを通過します。
+`-or`フラグと組み合わせると、モジュールは、与えられた列挙値のうち1つでもリソース内で見つかったエントリをすべて削除します。以下の例では、**送信元IPと宛先IP**がリソースに*見つからない*エントリだけがパイプラインを通過します。
 
 ```
 tag=pcap packet ipv4.SrcIP ipv4.DstIP | ipexist -or -r ips SrcIP DstIP | table SrcIP DstIP
@@ -77,7 +77,7 @@ tag=pcap packet ipv4.SrcIP ipv4.DstIP | ipexist -or -r ips SrcIP DstIP | table S
 
 ### 複数のリソース
 
-`-r`フラグを繰り返すことによって、複数の固有IPセットを指定できます。   ipexistsモジュールは本質的にそれらを1つの大きなセットとして扱います。
+`-r` フラグを繰り返すことで、複数の固有IPセットを指定できます。ipexists モジュールは、基本的にこれらをひとつの大きなセットとして扱います。
 
 ```
 tag=pcap packet ipv4.SrcIP | ipexist -r ips -r externalips SrcIP | table SrcIP
