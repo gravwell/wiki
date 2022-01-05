@@ -10,5 +10,4 @@ tag=pcap packet ipv4.SrcIP | ip SrcIP ~ PRIVATE | alias SrcIP src_host | lookup 
 
 エイリアスモジュールは、一つ以上の*pairs*の引数である source と destination を受け取ります。したがって、上の例では、既存の列挙された 'SrcIP' は 'src_host' にエイリアスされています。ルックアップモジュールがその結果を列挙された 'src_host' に書き込むとき、元の 'SrcIP' の値は変更されません。
 
-複数のエイリアスを同時に作ることができます。
-`alias foo bar X Y` は "foo" を "bar" に、"X" を "Y" にエイリアスします。
+複数のエイリアスを同時に作ることができます。`alias foo bar X Y` は "foo" を "bar" に、"X" を "Y" にエイリアスします。

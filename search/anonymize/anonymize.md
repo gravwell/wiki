@@ -1,22 +1,22 @@
 ## anonymize
 
-The `anonymize` module is used replace the contents of specified enumerated values with anonymized values. For example, to replace the IP address in a dataset with anonymized addresses:
+`anonymize` モジュールは、指定された列挙値の内容を匿名化された値に置き換えるために使用します。例えば、データセットに含まれる IP アドレスを匿名化されたアドレスに置き換えることができます:
 
 ```
 tag=data json IP Message | anonymize IP | table
 ```
 
-This query will map each entry's IP enumerated value with a random IP address. This way, if the same IP address is seen again, it will receive the same anonymized value. 
+このクエリは、各エントリーのIP列挙値をランダムなIPアドレスにマッピングします。こうすることで、同じ IP アドレスが再び現れたときに、 同じ匿名化された値を受け取ることができます。
 
-The `anonymize` module supports strings, byte arrays, IP addresses, MAC addresses, integers, floating point numbers, and locations. 
+`anonymize` モジュールは、文字列、バイト配列、IP アドレス、MAC アドレス、整数、浮動小数点数、およびロケーションをサポートしています。 
 
-### Supported Options
+### サポートされているオプション
 
-The `anonymize` module takes no flags. Simply specify the enumerated values to anonymize. 
+`anonymize` モジュールはフラグを使用しません。匿名化するために列挙された値を指定するだけでよいのです。
 
-### Example
+### 例
 
-In this example, we extract request/response pairs from DNS:
+この例では、DNSからリクエスト/レスポンスペアを抽出します:
 
 ```
 tag=dns json Question.Hdr.Name~google.com Question.A | require A | table
@@ -24,7 +24,7 @@ tag=dns json Question.Hdr.Name~google.com Question.A | require A | table
 
 ![Example 1](example1.png)
 
-We can anonymize the IP addresses by simply adding the `anonymize` module:
+`anonymize` モジュールを追加するだけで、IP アドレスを匿名化することができます:
 
 ```
 tag=dns json Question.Hdr.Name~google.com Question.A | require A | anonymize IP | table
@@ -32,7 +32,7 @@ tag=dns json Question.Hdr.Name~google.com Question.A | require A | anonymize IP 
 
 ![Example 2](example2.png)
 
-The `anonymize` module can also anonymize text. In this example, we extract fields from webserver logs, and anonymize the user agent field. The anonymized text is the same length as the original value. 
+`anonymize` モジュールは、テキストを匿名化することもできます。この例では、ウェブサーバのログからフィールドを抽出し、ユーザエージェントフィールドを匿名化します。匿名化されたテキストは、元の値と同じ長さになります。 
 
 ```
 tag=apache grok "%{COMBINEDAPACHELOG}" | anonymize agent | table timestamp verb response agent
