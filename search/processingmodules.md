@@ -74,6 +74,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [time](time/time.md)
 * [transaction](transaction/transaction.md)
 * [truncate](truncate/truncate.md)
+* [unescape](unescape/unescape.md)
 * [unique](math/math.md#Unique)
 * [upper](upperlower/upperlower.md)
 * [variance](math/math.md#Variance)
