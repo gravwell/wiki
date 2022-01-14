@@ -51,6 +51,7 @@
 * [pcap](pcap/pcap.md)
 * [pointmap / heatmap](map/map.md)
 * [point2point](point2point/point2point.md)
+* [printf](printf/printf.md)
 * [raw](raw/raw.md)
 * [regex](regex/regex.md)
 * [require](require/require.md)

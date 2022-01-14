@@ -59,6 +59,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [min](math/math.md#Min)
 * [nosort](nosort/nosort.md)
 * [packetlayer](packetlayer/packetlayer.md)
+* [printf](printf/printf.md)
 * [regex](regex/regex.md)
 * [require](require/require.md)
 * [slice](slice/slice.md)
