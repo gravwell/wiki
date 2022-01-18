@@ -46,4 +46,4 @@ Gravwell runs on most common Linux distributions which support [SystemD](https:/
 
 ### Version Locking
 
-Beginning in Gravwell 4.1.0, the Gravwell Indexer, Webserver, Search Agent, and Datastore components are version locked. That means there are occasional API changes between those components that require all of the components to be at the same version. Breaking API changes are noted in the release notes for a given version. 
+Beginning in Gravwell 4.1.0, the Gravwell Indexer, Webserver, Search Agent, and Datastore components are version locked. That means there are occasional API changes between those components that require all of the components to be at the same version. Breaking API changes are noted in the release notes for a given version.  Ingesters are *NOT* version locked and should remain highly compatible.
