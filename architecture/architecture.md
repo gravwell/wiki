@@ -37,3 +37,13 @@ The Gravwell ingest API is designed to be fast and simple.  The API and many of 
 The core ingest mechanic requires only three data items: a byte array, timestamp, and a tag (which is provided by the API).  Simple installations might have a few ingesters talking directly to indexers where more complicated ingesters might have multiple levels of federation as data is shuffled up from untrusted enclaves to high security enclaves.  Visibility is key to security, analytics, and hunt operations.  Segregating data or forcing multiple installations where operators must manually correlate data is not acceptable.  Gravwell achieves federation via ingest relay ingesters, which speak the ingest API on both sides and allow dual homed machines to aggregate and relay data.
 
 ![An example of a complex ingest structure](IngestRelay.png)
+
+## Compatibility 
+
+### Minimum Software Requirements
+
+Gravwell runs on most common Linux distributions which support [SystemD](https://en.wikipedia.org/wiki/Systemd). A minimum Linux kernel version of 3.2 and a 64bit X86 architecture are required.
+
+### Version Locking
+
+Beginning in Gravwell 4.1.0, the Gravwell Indexer, Webserver, Search Agent, and Datastore components are version locked. That means there are occasional API changes between those components that require all of the components to be at the same version. Breaking API changes are noted in the release notes for a given version.  Ingesters are *NOT* version locked and should remain highly compatible.

@@ -16,13 +16,15 @@ Installing from the Debian repository is quite simple:
 
 ```
 # Get our signing key
-curl https://update.gravwell.io/debian/update.gravwell.io.gpg.key | sudo apt-key add -
+apt install apt-transport-https gnupg wget
+wget -O /usr/share/keyrings/gravwell.asc https://update.gravwell.io/debian/update.gravwell.io.gpg.key
+
 # Add the repository
-echo 'deb [ arch=amd64 ] https://update.gravwell.io/debian/ community main' | sudo tee /etc/apt/sources.list.d/gravwell.list
-sudo apt-get install apt-transport-https
-sudo apt-get update
+echo 'deb [ arch=amd64 signed-by=/usr/share/keyrings/gravwell.asc ] https://update.gravwell.io/debian community main' > /etc/apt/sources.list.d/gravwell.list
+
 # Install the package
-sudo apt-get install gravwell
+apt update
+apt install gravwell
 ```
 
 The installation process will prompt to set some shared secret values used by components of Gravwell. We strongly recommend allowing the installer to generate random values (the default) for security.
