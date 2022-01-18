@@ -42,8 +42,8 @@ The core ingest mechanic requires only three data items: a byte array, timestamp
 
 ### Minimum Software Requirements
 
-Gravwell runs on most common Linux distributions. A minimum kernel version of 3.2 and SystemD are required.
+Gravwell runs on most common Linux distributions which support [SystemD](https://en.wikipedia.org/wiki/Systemd). A minimum Linux kernel version of 3.2 and a 64bit X86 architecture are required.
 
 ### Version Locking
 
-Beginning in Gravwell 4.1.0, the Gravwell Indexer, Webserver, Search Agent, and Datastore components are version locked. That means there are occasional API changes between those components that require all of the components to be at the same version. Breaking API changes are noted in the release notes for a given version. 
+Beginning in Gravwell 4.1.0, the Gravwell Indexer, Webserver, Search Agent, and Datastore components are version locked. That means there are occasional API changes between those components that require all of the components to be at the same version. Breaking API changes are noted in the release notes for a given version.  Ingesters are *NOT* version locked and should remain highly compatible.
