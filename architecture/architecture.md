@@ -42,7 +42,7 @@ The core ingest mechanic requires only three data items: a byte array, timestamp
 
 ### Minimum Software Requirements
 
-Gravwell runs on most common Linux distributions. A minimum kernel version of 3.2 and SystemD are required.
+Gravwell runs on most common Linux distributions which support [SystemD](https://en.wikipedia.org/wiki/Systemd). A minimum Linux kernel version of 3.2 and a 64bit X86 architecture are required.
 
 ### Version Locking
 
