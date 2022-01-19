@@ -56,7 +56,7 @@ By default, the right-hand side of the script editing page will show the "Info" 
 
 ## Viewing Search Results
 
-To see the last results of a scheduled search, click the 'View Results' icon:
+To see the last results of a scheduled search, click the 'Results' link:
 
 ![](results.png)
 

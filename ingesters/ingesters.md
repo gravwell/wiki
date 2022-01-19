@@ -18,7 +18,6 @@ Attention: The [replication system](#!configuration/replication.md) does not rep
 |----------|-------------|
 | [Amazon SQS](#!ingesters/sqs.md) | Subscribe and ingest from Amazon SQS queues. |
 | [collectd](#!ingesters/collectd.md) | Ingest collectd samples. |
-| [Disk Monitor](#!ingesters/disk.md) | Periodically sample disk activity. |
 | [File Follower](#!ingesters/file_follow.md) | Watch and ingest files on disk, such as logs. |
 | [GCP PubSub](#!ingesters/pubsub.md) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
 | [HTTP](#!ingesters/http.md) | Create HTTP listeners on multiple URL paths. |
