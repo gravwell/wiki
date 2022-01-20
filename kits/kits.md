@@ -68,10 +68,6 @@ Gravwell will periodically push updates to the official kit server. When one of 
 
 ![](upgradekit.png)
 
-Clicking the button will launch an upgrade wizard similar to the installation wizard. The most important difference is the **Backup** option. If you have modified any of the items which were included in the kit, the wizard will notify you and provide options for copying or downloading the modified items. In the screenshot below, we see that three resources were changed and the wizard is offering download links for them. Other objects, like dashboards, can be "cloned" during the upgrade rather than downloaded.
-
-![](backup.png)
-
 If there are no items which have been modified, the Backup step will not be shown. The rest of the wizard is identical to the installation wizard, although defaults such as group access should be already set for you.
 
 Attention: The upgrading a kit to a new version involves the *complete deletion* of the previous version's contents. Do not click the "Deploy" button at the end of the wizard until you are prepared for this to happen!
