@@ -5,7 +5,7 @@ Gravwell is a structure-on-read data lake and the search pipeline is the core of
 The search pipeline is the core of Gravwell's functionality and operates in a similar fashion to the Linux/Unix command line. The Gravwell search query syntax assembles a processing pipeline to search and transform raw data into results. The pipeline modules often consist of at least one extraction module, one or more filtering or processing modules, and a rendering module. For example, the following query fetches data tagged "weather", uses the json module to extract a temperature and location name, then uses the eval module to filter out any entries with temperatures below 50 degrees, then finally uses the table renderer to display the contents of the name and temp fields:
 
 ```
-tag=weather json main.temp name | eval temp > 50 | table name temp
+tag=weather json main.temp name | eval temp > 20 | table name temp
 ```
 
 ![](weather-extract.png)
