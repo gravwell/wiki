@@ -59,7 +59,7 @@ dump -r devlookup | table
 Dump an entire resource where the Host column contains "Chrome"
 
 ```
-dump -r devlookup Host ~ Chrome | table
+dump -r devlookup host ~ chrome | table
 ```
 
 ![Table produced from resource with filters](dump_filter_table.png)
@@ -67,7 +67,7 @@ dump -r devlookup Host ~ Chrome | table
 Dump resource and operate on entries with other modules:
 
 ```
-dump -r devlookup Host ~ Chrome | maclookup -r mac_prefixes MAC.Manufacturer MAC.Country | table
+dump -r devlookup host ~ chrome | maclookup -r mac_prefixes MAC.Manufacturer MAC.Country | table
 ```
 
 ![Table produced dump and maclookup](dump_filter_lookup_table.png)
