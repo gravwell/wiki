@@ -4,19 +4,9 @@ The geoip module uses [MaxMind](https://maxmind.com/) GeoIP databases to extract
 
 ### Setting Up Databases
 
-Before using the geoip module, you must install [resources](#!resources/resources.md) containing the MaxMind databases. You can either [download the free, limited databases](https://dev.maxmind.com/geoip/geoip2/geolite2/) or purchase their enterprise versions. We recommend installing both the City and ASN databases. On the website, select the MaxMind DB versions as shown below and unpack the resulting tar files to find the requisite files (GeoLite2-City.mmdb and GeoLite2-ASN.mmdb).
+Before using the geoip module, you must install the Network Enrichment kit. The Network Enrichment kit contains maxmind ans ASN databases for use with the geoip module.
 
-Note: Make sure you download the binary version and extract the .mmdb file from tar.gz file.  Gravwell uses the native MaxMindDB format to ensure great throughput.
-
-[![MaxMind Download](download.png "Example download options")](https://dev.maxmind.com/geoip/geoip2/geolite2/)
-
-By default, the geoip module expects the MaxMind "city" database (GeoLite2-City.mmdb) to be in a resource named "maxmind". This will allow you to do GeoIP extractions without specifying the resource name explicitly.
-
-![](maxmind.png)
-
-While there is no default name for the ASN database, we recommend naming it something simple like "asn" to reduce typing:
-
-![](asn.png)
+![Network Enrichment Kit](network-enrichment.png)
 
 ### Supported Options
 
@@ -67,7 +57,7 @@ The following require the separate ASN database (specified with the -r flag):
 #### Filtering on country and requiring that city is resolved
 
 ```
-tag=pcap packet IPv4.SrcIP ~ 10.0.0.0/16 IPv4.DstIP | geoip -s DstIP.Country == US DstIP.City | count by City | chart count by City
+tag=pcap packet IPv4.SrcIP IPv4.DstIP | geoip -s DstIP.Country == US DstIP.City | count by City | chart count by City
 ```
 
 ![chart of traffic by American city](chartByCity.png)
@@ -75,7 +65,7 @@ tag=pcap packet IPv4.SrcIP ~ 10.0.0.0/16 IPv4.DstIP | geoip -s DstIP.Country == 
 #### Showing Per IP Country Traffic
 
 ```
-tag=pcap packet ipv4.SrcIP ~ 10.10.10.0/24 ipv4.DstIP !~ 10.0.0.0/8 ipv4.Length  | geoip DstIP.Country as DestCountry | sum Length by SrcIP,DestCountry | stackgraph DestCountry SrcIP sum
+tag=pcap packet ipv4.SrcIP ipv4.DstIP ipv4.Length  | geoip DstIP.Country as DestCountry | sum Length by SrcIP,DestCountry | stackgraph DestCountry SrcIP sum
 ```
 
 ![stackgraph of traffic to country by IP](stackgraphByCountry.png)
