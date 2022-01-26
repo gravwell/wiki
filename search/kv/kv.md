@@ -66,7 +66,7 @@ tag=syslog kv -q url method | table
 ```
 ![](syslog1.png)
 
-This query will drop all entries whose method is not contain "GET":
+This query will drop all entries whose method is not "GET":
 
 ```
 tag=syslog kv -q url method != "GET" | table
