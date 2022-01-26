@@ -35,11 +35,7 @@ You can also pass latitude and longitude separately, or mix the use of lat/long 
 tag=netflow netflow Src Dst | geoip Src.Lat as slat Src.Long as slong Dst.Location as dst | point2point -srclat slat -srclong slong -dstloc dst
 ```
 
-Selecting the options menu allows you to toggle between animated and non-animated map display:
-
-![](p2p-anim.png)
-
-And selecting the 'globe' button switches to a 3d globe display:
+Selecting the 'globe' button switches to a 3d globe display:
 
 ![](globe.png)
 

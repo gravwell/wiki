@@ -94,7 +94,7 @@ The stats module can perform operations with complex keying, this means that you
 For example, here is a query that performs a sum of packet sizes by IP but also provides a baseline sum across all packets:
 
 ```
-tag=pcap packet ipv4.IP ~ 10.10.10.0/24 | length | stats sum(length) by IP sum(length) as total | chart total sum by IP 
+tag=pcap packet ipv4.IP ~ 192.168.1.0/24 | length | stats sum(length) by IP sum(length) as total | chart total sum by IP 
 ```
 
 ![complex keys](complexkey.png)
