@@ -19,10 +19,10 @@ Note: Because some filters incorporate extremely strict and complex patterns, th
 
 The following query takes advantage of a resource to implement a complex pattern to strictly process Apache2.0 combined access logs.  The `COMBINEDAPACHELOG` pattern is part of the very large pattern set provided by Gravwell on [github](https://raw.githubusercontent.com/gravwell/resources/master/grok/all.grok).  Download the pattern set and upload it as a resource name `grok` to gain access to a massive suite of predefined grok patterns.
 
-The following query finds all Apache logs for "PUT" requests and parses them out into their components:
+The following query finds all Apache logs for "GET" requests and parses them out into their components:
 
 ```
-tag=apache words PUT | grok "%{COMBINEDAPACHELOG}" | table
+tag=apache words GET | grok "%{COMBINEDAPACHELOG}" | table
 ```
 
 ![](apache.png)
@@ -31,10 +31,10 @@ Note: This query may take some time if you have millions of entries since the CO
 
 ### Filtering
 
-We can build on the previous query to return only those entries whose "clientip" field matches a particular IP and uses the PUT method:
+We can build on the previous query to return only those entries whose "clientip" field matches a particular IP and uses the GET method:
 
 ```
-tag=apache words PUT 128.10.247.36 | grok "%{COMBINEDAPACHELOG}" clientip=="128.10.247.36" verb==PUT | table clientip
+tag=apache words GET | grok "%{COMBINEDAPACHELOG}" clientip=="10.200.4.40" verb==GET | table clientip
 ```
 
 ![](apache-filter.png)
