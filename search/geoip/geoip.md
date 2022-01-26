@@ -4,7 +4,7 @@ The geoip module uses [MaxMind](https://maxmind.com/) GeoIP databases to extract
 
 ### Setting Up Databases
 
-Before using the geoip module, you must install the Network Enrichment kit. The Network Enrichment kit contains maxmind ans ASN databases for use with the geoip module.
+Before using the geoip module, you must install the Network Enrichment kit. The Network Enrichment kit contains maxmind and ASN databases for use with the geoip module.
 
 ![Network Enrichment Kit](network-enrichment.png)
 
