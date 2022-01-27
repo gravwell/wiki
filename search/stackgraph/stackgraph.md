@@ -25,19 +25,3 @@ tag=netflow netflow Src ~ PRIVATE Dst  Bytes as traffic Port |  geoip Dst.Countr
 ```
 
 ![Country Traffic by Port](CountryPortTraffic.png)
-
-### Failed SSH Logins by Country and Attempted User
-
-```
-tag=syslog grep sshd | regex "Failed password for (?P<user>\S+) from (?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) " | geoip ip.Country | count by user,Country | stackgraph Country user count
-```
-
-![Failed SSH Logins by Country](SSHUserCountry.png)
-
-### Failed SSH Logins by Country and Attempted User (China removed)
-
-```
-tag=syslog grep sshd | regex "Failed password for (?P<user>\S+) from (?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) " | geoip ip.Country != CN | count by user,Country | stackgraph Country user count
-```
-
-![Failed SSH Logins by Country Without China](SSHUserCountryNoChina.png)
