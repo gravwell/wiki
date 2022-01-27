@@ -6,7 +6,7 @@ Attention: The Debian and RHEL repositories are more easily maintained than thes
 
 The Gravwell core installer contains the indexer and webserver frontend. You'll need a license; either get a Community Edition free license, or contact info@gravwell.io for commercial options.
 
-[Download Gravwell Core Installer](https://update.gravwell.io/archive/4.2.8/installers/gravwell_4.2.8.sh) (SHA256: 1a3338cc664c0dac926b415ecf4cfc7c1e8281945ff7ed2320467c41968d5750)
+[Download Gravwell Core Installer](https://update.gravwell.io/archive/4.2.8/installers/gravwell_4.2.8.sh) (SHA256: 54ef8726117a9c82ecb0ce310b90766df86c19c15a7594199c5aa1b56dc9103f)
 
 ## Ingesters
 
@@ -15,21 +15,21 @@ The core suite of ingesters are available for download as installable packages. 
 ### Current Ingester Releases
 | Ingester | SHA256 | More Info |
 |:--------:|-------:|----------:|
-| [Simple Relay](https://update.gravwell.io/archive/4.2.8/installers/gravwell_simple_relay_installer_4.2.8.sh) | ``befa815047f1fa70c086854fcdaeea2811259e1a688bba23bc981cd2cbad224d`` | [Documentation](#!ingesters/ingesters.md#Simple_Relay)|
-| [File Follower](https://update.gravwell.io/archive/4.2.8/installers/gravwell_file_follow_installer_4.2.8.sh) | ``5097648dd63b58e56e0cee3b6bb40a64d5780a2c987fe8e002844da29490994c`` | [Documentation](#!ingesters/ingesters.md#File_Follower) |
-| [HTTP Ingester](https://update.gravwell.io/archive/4.2.8/installers/gravwell_http_ingester_installer_4.2.8.sh) | ``e5452624528f28971de877cb36728fcac6748f31b38d7b7496d49884c8bd1357`` | [Documentation](#!ingesters/ingesters.md#HTTP_POST) |
-| [IPMI Ingester](https://update.gravwell.io/archive/4.2.8/installers/gravwell_ipmi_installer_4.2.8.sh) | ``0d94e010783345523ff42221467a3a234f09dabc5acad6eb9d2a931e1d2b2bf7`` | [Documentation](#!ingesters/ingesters.md#IPMI_Ingester)|
-| [Netflow Capture](http://update.gravwell.io/archive/4.2.8/installers/gravwell_netflow_capture_installer_4.2.8.sh) | ``6ec462226fe7f5b60a165da98c1debac82b1b886e5d0ed9c00982392075477ea`` | [Documentation](#!ingesters/ingesters.md#Netflow_Ingester) |
-| [Network Capture](https://update.gravwell.io/archive/4.2.8/installers/gravwell_network_capture_installer_4.2.8.sh) | ``0b91f9ca0b82e003308835e90584d48bb9366d5146b30b620d5349262ae0e03f`` | [Documentation](#!ingesters/ingesters.md#Network_Ingester) |
-| [Collectd Collector](https://update.gravwell.io/archive/4.2.8/installers/gravwell_collectd_installer_4.2.8.sh) | ``c6f8b89f03f46acaffac227d9db1e19da132473bedb1d0b14ab340487ed26ea6`` | [Documentation](#!ingesters/ingesters.md#collectd) |
-| [Ingest Federator](https://update.gravwell.io/archive/4.2.8/installers/gravwell_federator_installer_4.2.8.sh) | ``fe383c2e0a2529d77d6ba1bd043c22128cb061f709ab81b4612fb42f16974581`` | [Documentation](#!ingesters/ingesters.md#Federator_Ingester) |
-| [Windows Events](https://update.gravwell.io/archive/4.2.8/installers/gravwell_win_events_4.2.8.msi) | ``1a795884390e89c742092ea8642527746e738059aa8bcc8888eae0860a8979a3`` | [Documentation](#!ingesters/ingesters.md#Windows_Event_Service) |
-| [Windows File Follower](https://update.gravwell.io/archive/4.2.8/installers/gravwell_file_follow_4.2.8.msi) | ``ba4e980762ea4701c067ab3ca28b72d5a08cc649bee5b13afbe3c48678de8004`` | [Documentation](#!ingesters/ingesters.md#File_Follower) |
-| [Apache Kafka](https://update.gravwell.io/archive/4.2.8/installers/gravwell_kafka_installer_4.2.8.sh) | ``ba64f0f32aecc52e7a59aa4755ee9f13ff6118657fce69eb02c9732d4cc2e38b`` | [Documentation](#!ingesters/ingesters.md#Kafka)|
-| [Amazon Kinesis](https://update.gravwell.io/archive/4.2.8/installers/gravwell_kinesis_ingest_installer_4.2.8.sh) | ``58e4e85bd69c4642397df3e4a3d548c98643e234de328fc845205bb6a819fa1d`` | [Documentation](#!ingesters/ingesters.md#Kinesis_Ingester)|
-| [Google PubSub](https://update.gravwell.io/archive/4.2.8/installers/gravwell_pubsub_ingest_installer_4.2.8.sh) | ``7ee53543044c63ae5413b91a3b04da1f49c08b2e7ffbe65a696218983163bf9d`` | [Documentation](#!ingesters/ingesters.md#GCP_PubSub)|
-| [Office 365 Logs](https://update.gravwell.io/archive/4.2.8/installers/gravwell_o365_installer_4.2.8.sh) | ``20a47fab01763df6deac6ab95a1b6e293725f600fa1dabe8043125c1fc30e68a`` | [Documentation](#!ingesters/ingesters.md#Office_365_Log_Ingester)|
-| [Microsoft Graph API](https://update.gravwell.io/archive/4.2.8/installers/gravwell_msgraph_installer_4.2.8.sh) | ``78d300bfd7d641127f2abd056de798094d77073a5a74005e15ce4c679f55a52d`` | [Documentation](#!ingesters/ingesters.md#Microsoft_Graph_API_Ingester)|
+| [Simple Relay](https://update.gravwell.io/archive/4.2.8/installers/gravwell_simple_relay_installer_4.2.8.sh) | ``33fba507831503829dfb8bbb3ced740953001967fdf820ef980bf1625e209dab`` | [Documentation](#!ingesters/ingesters.md#Simple_Relay)|
+| [File Follower](https://update.gravwell.io/archive/4.2.8/installers/gravwell_file_follow_installer_4.2.8.sh) | ``571116aae80d2b024022288de89c8fcd852205718a933c5ac809c428369eee52`` | [Documentation](#!ingesters/ingesters.md#File_Follower) |
+| [HTTP Ingester](https://update.gravwell.io/archive/4.2.8/installers/gravwell_http_ingester_installer_4.2.8.sh) | ``8930aa2ce74a598b8c9735bad98b1288095ef68414caf4e41153f4f4391d3535`` | [Documentation](#!ingesters/ingesters.md#HTTP_POST) |
+| [IPMI Ingester](https://update.gravwell.io/archive/4.2.8/installers/gravwell_ipmi_installer_4.2.8.sh) | ``a5c4726746b24cf822a70d7b447d020894e00caf636d2a226da53be5dfa76eb2`` | [Documentation](#!ingesters/ingesters.md#IPMI_Ingester)|
+| [Netflow Capture](http://update.gravwell.io/archive/4.2.8/installers/gravwell_netflow_capture_installer_4.2.8.sh) | ``ac91dbe2d94f50d9c667b42d66f3e3177bc7c1c06f455cdf8645dbc4aa970758`` | [Documentation](#!ingesters/ingesters.md#Netflow_Ingester) |
+| [Network Capture](https://update.gravwell.io/archive/4.2.8/installers/gravwell_network_capture_installer_4.2.8.sh) | ``33030de6386496131bf131b40bfb0de907e0351eebb2c2cb1cb917c5180e6fa7`` | [Documentation](#!ingesters/ingesters.md#Network_Ingester) |
+| [Collectd Collector](https://update.gravwell.io/archive/4.2.8/installers/gravwell_collectd_installer_4.2.8.sh) | ``16ec045a0dea3b2689954fb3fde5584619ea0e751516af6d7de88b2218f45df4`` | [Documentation](#!ingesters/ingesters.md#collectd) |
+| [Ingest Federator](https://update.gravwell.io/archive/4.2.8/installers/gravwell_federator_installer_4.2.8.sh) | ``c3bfbcd28731c6a69e8af0aacb313a5b8445a8d42b2e7ad49b4c4ed47a2b4128`` | [Documentation](#!ingesters/ingesters.md#Federator_Ingester) |
+| [Windows Events](https://update.gravwell.io/archive/4.2.8/installers/gravwell_win_events_4.2.8.msi) | ``8a44636579d748f354c7078b08e1f9b5e08928492eae7a32620ac785f0143f85`` | [Documentation](#!ingesters/ingesters.md#Windows_Event_Service) |
+| [Windows File Follower](https://update.gravwell.io/archive/4.2.8/installers/gravwell_file_follow_4.2.8.msi) | ``0fea740797cb44768b1e8fb831466f7f3a945e4731467a9983e2c4245fe3a439`` | [Documentation](#!ingesters/ingesters.md#File_Follower) |
+| [Apache Kafka](https://update.gravwell.io/archive/4.2.8/installers/gravwell_kafka_installer_4.2.8.sh) | ``b444fdab5275f09e3a5435d0965a9dd811a69fae85adbb3e0dfac48b0c07d6fb`` | [Documentation](#!ingesters/ingesters.md#Kafka)|
+| [Amazon Kinesis](https://update.gravwell.io/archive/4.2.8/installers/gravwell_kinesis_ingest_installer_4.2.8.sh) | ``314a69d0ae13f92ac9f14dc674e9a352670b391560047e8b22def9b09ac6a7b1`` | [Documentation](#!ingesters/ingesters.md#Kinesis_Ingester)|
+| [Google PubSub](https://update.gravwell.io/archive/4.2.8/installers/gravwell_pubsub_ingest_installer_4.2.8.sh) | ``a08c86d13b62d7ee068b8e44745d44fe7e58f98c15d3393a2e47f26ee7e4670d`` | [Documentation](#!ingesters/ingesters.md#GCP_PubSub)|
+| [Office 365 Logs](https://update.gravwell.io/archive/4.2.8/installers/gravwell_o365_installer_4.2.8.sh) | ``2424e26b227b0a8b68905c5616b35c46dd442221f8bd7a944f4f3580e1081a8a`` | [Documentation](#!ingesters/ingesters.md#Office_365_Log_Ingester)|
+| [Microsoft Graph API](https://update.gravwell.io/archive/4.2.8/installers/gravwell_msgraph_installer_4.2.8.sh) | ``fc7ddc2fa140de555d8abb3bca287598d490ab474b82f0cf5ea946070e2cdda6`` | [Documentation](#!ingesters/ingesters.md#Microsoft_Graph_API_Ingester)|
 
 ## Other downloads
 
@@ -37,6 +37,6 @@ Some Gravwell components are distributed as optional additional installers, such
 
 | Component | SHA256 | More Info |
 |:---------:|:------:|----------:|
-| [Datastore](https://update.gravwell.io/archive/4.2.8/installers/gravwell_datastore_installer_4.2.8.sh) | ``d3b2d0664affe74434183422c3f8ef0ba5d8e61521f91e295bf8d9f0475dcf24`` | [Documentation](#!distributed/frontend.md) |
-| [Offline Replicator](https://update.gravwell.io/archive/4.2.8/installers/gravwell_offline_replication_installer_4.2.8.sh) | ``ff91a02e05631859badb3290bab89e35cc33964a4f4b8ca659f42d8bf63ea3d2`` | [Documentation](#!configuration/replication.md) |
-| [Load Balancer](https://update.gravwell.io/archive/4.2.8/installers/gravwell_loadbalancer_installer_4.2.8.sh) | ``04b07415948f2db4156a781c20a4432e8b6493f3965ba04f04daba881b99a47a`` | |
+| [Datastore](https://update.gravwell.io/archive/4.2.8/installers/gravwell_datastore_installer_4.2.8.sh) | ``cd5a129f477b41933f21f9ba9ace59b1d83b1d3a2a2319def5ff9a72d7f3269b`` | [Documentation](#!distributed/frontend.md) |
+| [Offline Replicator](https://update.gravwell.io/archive/4.2.8/installers/gravwell_offline_replication_installer_4.2.8.sh) | ``8985459e31532b1f799dba49de73a826e739178dca47a0c0af79c55eb52b774d`` | [Documentation](#!configuration/replication.md) |
+| [Load Balancer](https://update.gravwell.io/archive/4.2.8/installers/gravwell_loadbalancer_installer_4.2.8.sh) | ``25f015fedc42f4e10b1f2b4aba62c85c20ae5816d1d5fc0be283ee496d7a3a59`` | |
