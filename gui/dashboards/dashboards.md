@@ -63,10 +63,6 @@ After selecting a query, we click "Apply" and are taken back to the first page o
 
 ![](new-tile-render.png)
 
-After clicking "Save", we see our new tile in the dashboard:
-
-![](new-tile-final.png)
-
 ## Tile Actions
 
 Hovering the mouse over a tile will bring up four icons:
