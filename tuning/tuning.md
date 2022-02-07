@@ -23,10 +23,12 @@ The most important observation when creating a query is that *all* data emitted 
 tag=* grep bar | alias DATA myData | json -e myData foo==bar baz | stats count(foo) | table count
 ```
 
+NOTE: This is an intentionally bad query meant to force poor performance for illustrative purposes.
+
 This query counts the number of entries that are valid JSON with a member "foo" that contains the contents "bar". There are a number of things about this query that decrease performance:
 
 * `tag=*` - This reads from all tags on the system. You likely do not need to do this. Instead, make sure you only query tags you expect to extract data from (such as `tag=json`).
-* `grep bar | alias DATA myData` - These two modules filter data down to just those that have the word "bar" anywhere in the DATA portion, and then alias the DATA to an enumerated value. The filter in the following JSON module already does this, and can take advantage of indexer acceleration if simply used directly (and without the `-e` flag).
+* `grep bar | alias DATA myData` - These two modules filter data down to just those that have the bytes "bar" anywhere in the DATA portion, and then alias the DATA to an enumerated value. The filter in the following JSON module already does this, and can take advantage of indexer acceleration if simply used directly (and without the `-e` flag). Additionally, the `grep` module does not support acceleration. 
 * `json -e myData foo=bar baz` - The JSON module extracts "baz", but that field is never used. This is an optimization that Gravwell can detect and simply remove for you, but depending on your usage, you could still incur an extraction performance penalty for doing so. Avoid unused extractions.
 
 A much faster and equivalent query could be:
@@ -34,6 +36,8 @@ A much faster and equivalent query could be:
 ```
 tag=jsonData json foo==bar | stats count(foo) | table count
 ```
+
+In this rewritten version, two key optimizations take place. First, the JSON module can hint to the indexer that it is looking for the keyword "bar". If the indexer has acceleration data for that tag, only entries containing "bar" will be sent to the pipeline. This greatly reduces pipeline processing overhead. Second, only data intended for processing and rendering is sent down the pipeline. By removing the "baz" extraction, less data is being needlessly transmitted.
 
 The following subsections describe in greater detail additional query optimizations you can employ to maximize performance.
 
@@ -45,13 +49,13 @@ Gravwell stores data in "wells", logical groupings of data, on disk according to
 [Storage-Well "syslog"]
 	Location=/opt/gravwell/storage/syslog
 	Tags=syslog
-	Tags=remotesyslog
+	Tags=gravwell
 ```
 
-This declaration creates a well named "syslog" that in turn stores data belonging to both the "syslog" and "remotesyslog" tags. When issuing a search on a tag, Gravwell will read from the well containing the given tag(s) and read from it. If you were using the declaration above and issued the following query:
+This declaration creates a well named "syslog" that in turn stores data belonging to both the "syslog" and "gravwell" tags. When issuing a search on a tag, Gravwell will read from the well containing the given tag(s) and read from it. If you were using the declaration above and issued the following query:
 
 ```
-tag=syslog syslog Appname==sshd
+tag=gravwell syslog Appname==indexer
 ```
 
 Gravwell would have to read all entries in the given timeframe and send them to the syslog module to be filtered. Gravwell can accelerate data by _indexing_ entries in wells. Acceleration is a complex topic, and a detailed description of how to configure acceleration can be found in the [Acceleration documentation](#!configuration/accelerators.md).
@@ -62,17 +66,21 @@ For now though, let's rewrite the configuration to simply perform "fulltext" acc
 [Storage-Well "syslog"]
 	Location=/opt/gravwell/storage/syslog
 	Tags=syslog
-	Tags=remotesyslog
+	Tags=gravwell
 	Accelerator-Name=fulltext 
 ```
 
 By enabling acceleration, Gravwell creates an index of all text fragments in the ingested data, with references to where in the well that fragment can be found. Let's look at the query again:
 
 ```
-tag=syslog syslog Appname==sshd
+tag=gravwell syslog Appname==indexer
 ```
 
-With acceleration enabled, the syslog module can tell the indexer when the query starts that it is looking for entries where Appname equals "sshd". The indexer can use this "hint" to look into the index for references to "sshd". From there, it can use those references to go to the exact location on disk where that data is. Only entries containing the fragment "sshd" end up getting put on the pipeline. 
+With acceleration enabled, the syslog module can tell the indexer when the query starts that it is looking for entries where Appname equals "indexer". The indexer can use this "hint" to look into the index for references to "indexer". From there, it can use those references to go to the exact location on disk where that data is. Only entries containing the fragment "indexer" end up getting put on the pipeline. 
+
+![](accel.png)
+
+In the screenshot above, you can see the same query issues on two systems. The one on the left has acceleration enabled, and the one on the right does not. The one on the right had to process nearly 100k entries to get the same result, while the one on the left only had to process the entries containing the search filter "indexer". 
 
 Using acceleration can improve query performance by several orders of magnitude and is the most important optimization you can make when configuring your Gravwell system.
 
@@ -119,16 +127,16 @@ This query simply asks all indexers to extract "value" from JSON data and show i
 Now consider:
 
 ```
-tag=default json value foo bar | stats mean(value) | length foo | upper bar | table mean foo bar
+tag=default json value subxml | stats mean(value) | xml -e subxml Name | stats unique_count(Name) | table mean unique_count
 ```
 
-This query performs a mean operation on "value" early in the pipeline. In order to calculate the mean, the stats module must have all instances of "value". This causes the query to "condense" at the stats module, meaning that the indexers no longer run in parallel, but instead send their data to the webserver after extraction, and the remaining query is performed on the webserver. It is best to put condensing modules as late in a query as possible so that indexers can continue to run in parallel. Since no other modules except for table depend on the mean, we can simply rearrange this query:
+This query performs a mean operation on "value" early in the pipeline. In order to calculate the mean, the stats module must have all instances of "value". This causes the query to "condense" at the stats module, meaning that the indexers no longer run in parallel, but instead send their data to the webserver after extraction, and the remaining query is performed on the webserver. It is best to put condensing modules as late in a query as possible so that indexers can continue to run in parallel. Since no other modules except for table depend on the mean, we can simply rearrange this query. Additionally, the stats module can perform multiple operation in a single invocation:
 
 ```
-tag=default json value foo bar | length foo | upper bar | stats mean(value) | table mean foo bar
+tag=default json value subxml | xml -e subxml Name | stats mean(value) unique_count(Name) | table mean unique_count
 ```
 
-In this form of the query, the indexers perform the length and upper operations locally at each indexer, and then send the data to the webserver to perform the stats operation. 
+In this form of the query, the indexers perform the extractions locally at each indexer, and then send the data to the webserver to perform the stats operations.
 
 ## Tuning Options for Gravwell Indexers
 
@@ -144,13 +152,15 @@ NOTE: See the [Detailed configuration document](#!configuration/parameters.md) f
 
 Example: `Search-Scratch=/tmp/path/to/scratch`
 
-The Search-Scratch parameter specifies a storage location that search modules can use for temporary storage during an active search. Some search modules may need to use temporary storage due to memory constraints. For example, the sort module may need to sort 5GB of data but the physical machine may only have 4GB of physical RAM. The module can intelligently use the scratch space to sort the large dataset without invoking the host's swap (which would penalize all modules, not just sort). At the end of each search, scratch space is destroyed.
+The Search-Scratch parameter specifies a storage location that search modules can use for temporary storage during an active search. Some search modules may need to use temporary storage due to memory constraints. For example, the sort module may need to sort 5GB of data but the physical machine may only have 4GB of physical RAM. The module can intelligently use the scratch space to sort the large dataset without invoking the host's swap (which would penalize all modules, not just sort). At the end of each search, scratch space is destroyed. 
+
+`Search-Scratch` should point to high speed storage, if available, in order to improve query performance.
 
 ##### Render-Store
 
 Example: `Render-Store=/tmp/path/to/render`
 
-The Render-Store parameter specifies where renderer modules store the results of a search. Render-Store locations are temporary storage locations and typically represent reasonably small data sets. When a search is actively running or dormant and interacting with a client, the Render-Store is where the renderer will store and retrieve its data set. Render-Store should be on high speed storage such as flash-based or XPoint SSDs. When a search is abandoned the Render-Store is deleted (unless the search is saved).
+The Render-Store parameter specifies where renderer modules store the results of a search. Render-Store locations are temporary storage locations and typically represent reasonably small data sets. When a search is actively running or dormant and interacting with a client, the Render-Store is where the renderer will store and retrieve its data set. Like `Search-Scratch`, `Render-Store` should be on high speed storage to improve query performance.
 
 ##### Search-Pipeline-Buffer-Size
 
@@ -194,7 +204,7 @@ The Prebuff-Tick-Interval parameter specifies in seconds how often the prebuffer
 
 Example: `Prebuff-Sort-On-Consume=true`
 
-The Prebuff-Sort-On-Consume parameter tells the prebuffer to sort locks of data prior to pushing them to disk. The sorting process is only applied to the individual block, and does NOT guarantee that data is sorted when entering the pipeline. Sorting blocks prior to storage also incurs a significant performance penalty in ingestion. Almost all installations should leave this value as false.
+The Prebuff-Sort-On-Consume parameter tells the prebuffer to sort blocks of data prior to pushing them to disk. The sorting process is only applied to the individual block, and does NOT guarantee that data is sorted when entering the pipeline. Sorting blocks prior to storage also incurs a significant performance penalty in ingestion. Almost all installations should leave this value as false.
 
 ##### Max-Block-Size
 
@@ -216,17 +226,13 @@ Example: `Enable-Transparent-Compression=true`
 
 These parameters control kernel-level, transparent compression of data in the wells. If enabled, Gravwell can instruct the `btrfs` filesystem to transparently compress data. This is more efficient than user-mode compression. Setting `Enable-Transparent-Compression` true automatically turns off user-mode compression. Note that setting `Disable-Compression=true` will disable transparent compression.
 
+Additionally, transparent compression also has performance benefits by taking advantage of memory de-duplication, if you need the best possible performance from Gravwell, combining transparent compression with a well tuned BTFS file system is the best way to achieve it.
+
 ##### Acceleration
 
 As mentioned above, utilizing well acceleration can dramatically improve performance. See the [Acceleration documentation](#!configuration/accelerators.md) for more information.
 
 ### Linux Kernel and System Tuning
-
-#### Disable swap
-
-If possible, disable swap support on any Gravwell indexer node. Swap helps alleviate memory pressure at the expense of writing data to disk. A busy Gravwell indexer is likely to create _thrashing_ in the swap subsystem. 
-
-Various Linux distributions have different ways to disable swap. To immediately disable swap on your system, `swapoff -a` (run as root), should work. Refer to your distribution documentation for more information.
 
 #### MMAP settings
 
