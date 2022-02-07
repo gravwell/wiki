@@ -70,6 +70,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Common Problems & Caveats](configuration/caveats.md)
 
+  * [Performance Tuning](tuning/tuning.md)
+
 ## Query Acceleration, Auto-Extraction, and Data Management
   
   * [Setting up Auto-extractors](configuration/autoextractors.md)
