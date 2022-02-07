@@ -1,8 +1,8 @@
-# Performance Tuning
+# Performance tuning
 
 Gravwell is capable of taxing the disk, network, and CPU resources of even the most performant systems. Gravwell is optimized to work well on a variety of hardware and software configurations. That said, there are a number of query optimizations, configuration options, and Linux system parameters that can dramatically improve ingest and search performance. 
 
-## Query Tuning
+## Query tuning
 
 A Gravwell query, when read left to right, represents the flow of data from one module to the next. For example:
 
@@ -84,7 +84,7 @@ In the screenshot above, you can see the same query issues on two systems. The o
 
 Using acceleration can improve query performance by several orders of magnitude and is the most important optimization you can make when configuring your Gravwell system.
 
-### Minimize Extractions
+### Minimize extractions
 
 Consider the query:
 
@@ -98,7 +98,7 @@ The above query uses the packet module to extract 6 fields and only uses one (Po
 tag=pcap packet tcp.Port | max Port | table max
 ```
 
-### Filter Early
+### Filter early
 
 Consider the query:
 
@@ -112,7 +112,7 @@ The above query extracts json data, performs some processing on every instace of
 tag=default json UUID=="cd656e75-d54d-4e80-ac13-bc77abdde0ad" foo | lookup -r data foo bar baz | table`
 ```
 
-### Condensing Modules
+### Condensing modules
 
 NOTE: This subsection applies only to Gravwell deployments with multiple indexers. 
 
@@ -138,15 +138,15 @@ tag=default json value subxml | xml -e subxml Name | stats mean(value) unique_co
 
 In this form of the query, the indexers perform the extractions locally at each indexer, and then send the data to the webserver to perform the stats operations.
 
-## Tuning Options for Gravwell Indexers
+## Tuning options for Gravwell indexers
 
 As the main storage and search component of a Gravwell deployment, indexers can require significant system resources in order to operate at peak performance. While Gravwell is optimized to run well on most Linux systems, there are various Gravwell configuration and Linux system options that can be used to fine tune your system. 
 
-### Gravwell Configuration
+### Gravwell configuration
 
 NOTE: See the [Detailed configuration document](#!configuration/parameters.md) for a list of all Gravwell configuration options.
 
-#### Global Configuration Options
+#### Global configuration options
 
 ##### Search-Scratch
 
@@ -232,7 +232,7 @@ Additionally, transparent compression also has performance benefits by taking ad
 
 As mentioned above, utilizing well acceleration can dramatically improve performance. See the [Acceleration documentation](#!configuration/accelerators.md) for more information.
 
-### Linux Kernel and System Tuning
+### Linux kernel and system tuning
 
 #### MMAP settings
 
@@ -244,7 +244,7 @@ In order to increase the mmap limit, set the `vm.max_map_count` setting using `s
 sysctl -w vm.max_map_count=300000
 ```
 
-## Tuning Options for Gravwell Ingesters
+## Tuning options for Gravwell ingesters
 
 Like indexers, Gravwell ingesters are optimized to perform well on a wide variety of systems and networks. However, remote nodes that may be running ingesters, slow or unreliable network connections, and other distributed system artifacts can greatly impact the performance of the Gravwell ingest dataflow. A number of global and ingester specific configuration parameters are available to fine tune Gravwell ingesters to run best in the environment they are deployed in.
 
@@ -269,7 +269,7 @@ The cache is configured with four flags:
 	Cache-Mode=always
 ```
 
-### Ingester Specific Tuning
+### Ingester specific tuning
 
 Some ingesters have specific flags for tuning performance related to the type of data they ingest.
 
@@ -294,11 +294,21 @@ The Network Capture ingester can be tuned in two ways -- limit the amount of dat
 
 These flags map to the equivalent tuning parameters in most packet capture programs. 
 
-## Throttling Considerations
+## Throttling considerations
 
 So far this document has focused on increasing performance (ingest rate, search speed, etc.). By default, Gravwell will use any available resources when needed in order to run as quickly as possible. It is easy to exaust the disk, CPU, and memory resources on indexer and ingester nodes, as well as saturate network links with busy ingesters. The rest of this document focuses on *throttling* Gravwell resource utilization in order to reduce contention.
 
-### The `Rate-Limit` flag
+### Indexer throttling
+
+#### Ingest-Throttle-Threshold
+
+Example: `Ingest-Throttle-Threshold=75`
+
+The Ingest-Throttle-Threshold parameter specifies at what percentage used disk space the indexer should begin throttling data ingest. If data age out parameters are set, the indexer forces a check to see if any data can be deleted according to the age out rules. Regardless of age out parameters, until free disk space drops below the threshold, data ingest is stopped.
+
+### Ingester throttling
+
+#### `Rate-Limit`
 
 The Rate-Limit parameter sets a maximum bandwidth which the ingester can consume. This can be useful when configuring a "bursty" ingester that talks to the indexer over a slow connection, so the ingester doesn't consume all the available bandwidth when it is trying to send a lot of data.
 
