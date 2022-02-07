@@ -348,7 +348,7 @@ Description:        The Render-Store parameter specifies where renderer modules 
 Applies to:        Webserver
 Default Value:        `/opt/gravwell/saved`
 Example:        `Saved-Store=/path/to/saved/searches`
-Description:        The Saved-Store parameter specifies where saved searches will be stored.  Saved searches represent the output state of a search and can be useful for auditing and situations where users want to be able to consult search results again later without relaunching the search.  Saved searches must be explicitly deleted and the data is not subject to shard age out policies.  Saved searches are entirely atomic, which means that the underlying data for a saved search can be completely aged out and even deleted and users can still re-open and examine the saved search.  Saved searches can also be shared, meaning users can pack up and share saved searches with other instances of Gravwell.
+Description:        The Saved-Store parameter specifies where saved searches will be stored.  Saved searches represent the output state of a search and can be useful for auditing and situations where users want to be able to consult search results again later without relaunching the search.  Saved searches must be explicitly deleted and the data is not subject to shard ageout policies.  Saved searches are entirely atomic, which means that the underlying data for a saved search can be completely aged out and even deleted and users can still re-open and examine the saved search.  Saved searches can also be shared, meaning users can pack up and share saved searches with other instances of Gravwell.
 
 ####**Search-Pipeline-Buffer-Size**
 Applies to:        Indexer and Webserver
@@ -482,6 +482,13 @@ Applies to:		Webserver
 Default Value:	`/opt/gravwell/tmp`
 Example:		`Temp-Dir=/tmp/gravtmp`
 Description:	The Temp-Dir parameter specifies a directory which can be used for temporary Gravwell files without risk of interference from other processes. It is used to store uploaded kits before installation, among other uses.
+
+####**Ingest-Throttle-Threshold**
+Applies to:		Indexer
+Default Value:	`90`
+Example: `Ingest-Throttle-Threshold=75`
+
+The Ingest-Throttle-Threshold parameter specifies at what percentage used disk space the indexer should begin throttling data ingest. If data ageout parameters are set, the indexer forces a check to see if any data can be deleted according to the ageout rules. Regardless of ageout parameters, until free disk space drops below the threshold, data ingest is stopped.
 
 ####**Insecure-User-Unsigned-Kits-Allowed**
 Applies to:		Webserver

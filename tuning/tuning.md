@@ -304,7 +304,7 @@ So far this document has focused on increasing performance (ingest rate, search 
 
 Example: `Ingest-Throttle-Threshold=75`
 
-The Ingest-Throttle-Threshold parameter specifies at what percentage used disk space the indexer should begin throttling data ingest. If data age out parameters are set, the indexer forces a check to see if any data can be deleted according to the age out rules. Regardless of age out parameters, until free disk space drops below the threshold, data ingest is stopped.
+The Ingest-Throttle-Threshold parameter specifies at what percentage used disk space the indexer should begin throttling data ingest. If data ageout parameters are set, the indexer forces a check to see if any data can be deleted according to the ageout rules. Regardless of ageout parameters, until free disk space drops below the threshold, data ingest is stopped.
 
 ### Ingester throttling
 
