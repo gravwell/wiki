@@ -20,6 +20,7 @@
 * [fdg](fdg/fdg.md)
 * [fields](fields/fields.md)
 * [first/last](firstlast/firstlast.md)
+* [fuse](fuse/fuse.md)
 * [gauge](gauge/gauge.md)
 * [geoip](geoip/geoip.md)
 * [grep](grep/grep.md)
