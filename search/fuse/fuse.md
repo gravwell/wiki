@@ -5,6 +5,10 @@ The fuse module can do basic data fusion in the pipeline, without requiring [com
 * *Store*: If all of the data enumerated values exist on the entry, it places the contents of those enumerated values into an in-memory lookup table, keyed off the contents of the key enumerated values.
 * *Load*: If the data enumerated values are not set, it checks the lookup table, keying off the contents of the key enumerated values. If there are values stored in the lookup table, it copies them into the current entry.
 
+Fuse tracks only the most-recently-seen set of data enumerated values for any given set of key enumerated values.
+
+For instance, you might combine DHCP logs with Netflow records in order to attach MAC addresses to the Netflow. As soon as the fuse module sees a DHCP log associating the MAC address "00:11:22:33:44:55" with the IP address 10.0.0.1, it can start attaching an enumerated value containing 00:11:22:33:44:55 to each Netflow record with IP address 10.0.0.1. However, because the fuse module is highly temporal, this means that any Netflow records which show up *before* the DHCP log arrives will *not* get the MAC address attached.
+
 You can think of fuse like a simpler version of [lookup](#!search/lookup/lookup.md), where the lookup table is built on the fly in the pipeline rather than ahead of time.
 
 ## Syntax
