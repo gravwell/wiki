@@ -49,14 +49,6 @@ Use DHCP logs to build a lookup table containing IP to MAC mappings:
 tag=syslog regex "DHCPACK on (?P<ip>\S+) to (?P<mac>\S+)" | unique ip mac | table -save ip2mac ip mac
 ```
 
-and then use the lookup table to find the MACs associated with SSH logins:
-
-```
-tag=syslog grep sshd | regex "Accepted .* for (?P<user>\S+) from (?P<ip>\S+)" | lookup -r ip2mac ip ip mac as mac |table user ip mac
-```
-
-![](table-ipmac.png)
-
 ### Using -format with -save
 
 When using the `-save` flag, you can optionally specify the format of the destination resource, detailed below.
@@ -69,10 +61,10 @@ When using the `-save` flag, you can optionally specify the format of the destin
 
 In this example, we build a table containing IP addresses seen on the local network, then update it with more.
 
-First, we construct a table that contains all unique private IPv4 addresses seen on the 192.168.2.0/24 network:
+First, we construct a table that contains all unique private IPv4 addresses seen on the 192.168.1.0/24 network:
 
 ```
-tag=pcap packet ipv4.SrcIP ~ PRIVATE | unique SrcIP | subnet SrcIP /24 | eval subnet == toIP("192.168.2.0") | table -save test -csv SrcIP
+tag=pcap packet ipv4.SrcIP ~ PRIVATE | unique SrcIP | subnet SrcIP /24 | eval subnet == toIP("192.168.1.0") | table -save test -csv SrcIP
 ```
 
 ![](update1.png)
@@ -81,17 +73,17 @@ Downloading the resulting resource (named 'test') shows the expected table:
 
 ```
 SrcIP
-192.168.2.1
-192.168.2.52
-192.168.2.60
-192.168.2.51
-192.168.2.61
+192.168.1.131
+192.168.1.153
+192.168.1.149
+192.168.1.150
+192.168.1.100
 ```
 
-Next, we run another search to *add* IPs seen in the 192.168.0.0/24 subnet:
+Next, we run another search to *add* IPs seen in the 172.224.77.0/24 subnet:
 
 ```
-tag=pcap packet ipv4.SrcIP ~ PRIVATE | unique SrcIP | subnet SrcIP /24 | eval subnet == toIP("192.168.0.0") | table -update SrcIP -save test -csv SrcIP
+tag=pcap packet ipv4.SrcIP ~ PRIVATE | unique SrcIP | subnet SrcIP /24 | eval subnet == toIP("172.224.77.0") | table -update SrcIP -save test -csv SrcIP
 ```
 
 ![](update2.png)
@@ -100,21 +92,15 @@ Although the table that is *displayed* only shows the new IP addresses, the reso
 
 ```
 SrcIP
-192.168.0.50
-192.168.0.60
-192.168.0.1
-192.168.0.71
-192.168.0.30
-192.168.0.2
-192.168.0.73
-192.168.0.70
-192.168.0.42
-192.168.0.72
-192.168.2.1
-192.168.2.52
-192.168.2.60
-192.168.2.51
-192.168.2.61
+192.168.1.131
+192.168.1.153
+192.168.1.149
+192.168.1.150
+192.168.1.100
+172.224.77.8
+172.224.77.5
+172.224.77.13
+172.224.77.11
 ```
 
 We passed 'SrcIP' as the argument to -update. This is used for deduplication; any rows in the old table whose SrcIP match a row in the new table are not included in the updated resource.

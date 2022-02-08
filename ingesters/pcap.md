@@ -85,7 +85,7 @@ If the ingester is on a different system than the indexer, meaning entries must 
 The following search looks for TCP packets with the RST flag set which do not originate from the IP 10.0.0.0/24 class C subnet and then graphs them by IP.  This query can be used to rapidly identify outbound port scans from a network.
 
 ```
-tag=pcap packet tcp.RST==TRUE ipv4.SrcIP !~ 10.0.0.0/24 | count by SrcIP | chart count by SrcIP limit 10
+tag=pcap packet tcp.RST==TRUE ipv4.SrcIP ~ 192.168.0.0/16 | count by SrcIP | chart count by SrcIP limit 10
 ```
 
 ![](portscan.png)
@@ -119,7 +119,7 @@ tag=pcap packet eth.DstMAC eth.Length > 0 | count by DstMAC | sort by count desc
 It may be desirable to identify HTTP traffic operating on non-standard HTTP ports.  This can be achieved by exercising the filtering options and passing payloads to other modules.  For example, looking for outbound traffic that is not TCP port 80 and is originating from a specific subnet and then looking for HTTP requests in the packet payload allows us to identify abnormal HTTP traffic:
 
 ```
-tag=pcap packet ipv4.SrcIP ipv4.DstIP tcp.DstPort !=80 ipv4.SrcIP ~ 10.0.0.0/24 tcp.Payload | regex -e Payload "(?P<method>[A-Z]+)\s+(?P<url>[^\s]+)\s+HTTP/\d.\d" | table method url SrcIP DstIP DstPort
+tag=pcap packet ipv4.DstIP tcp.DstPort !=80 ipv4.SrcIP tcp.Payload | regex -e Payload "(?P<method>[A-Z]+)\s+(?P<url>[^\s]+)\s+HTTP/\d.\d" | table method url SrcIP DstIP DstPort
 ```
 
 ![](nonstandardhttp.png)

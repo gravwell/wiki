@@ -40,7 +40,7 @@ taint -f <known value> <src> <dest>
 If we were to assume that a vicious new infection vector was found which could arbitrarily infect DNS servers by embedding a payload in their lookup cache, we could use the taint module to identify which top level domain names may have been attacked.  The following search starts with a known patient zero, and generates a force directed graph showing all future propagation of tainted domains in a small network.
 
 ```
-tag=dns json Remote Answer.Hdr.Name |  regex -e Name "(?P<tld>[^\.]+\.[^\.]+)\.$" | regex -e Remote "(?P<ip>[\d\.]+):\d+" | taint -b -pz 10.0.0.99 ip tld | fdg -b ip tld
+tag=dns json Remote Answer.Hdr.Name |  regex -e Name "(?P<tld>[^\.]+\.[^\.]+)\.$" | regex -e Remote "(?P<ip>[\d\.]+):\d+" | taint -b -pz 192.168.1.122 ip tld | fdg -b ip tld
 ```
 
 ![DNS Infection Propagation From Known Patient Zero](taintPatientZero.png)
@@ -48,7 +48,7 @@ tag=dns json Remote Answer.Hdr.Name |  regex -e Name "(?P<tld>[^\.]+\.[^\.]+)\.$
 Reversing the work flow, the following search shows how a hunter might start with a known infection and work backwards to a potential patient zero.
 
 ```
-tag=dns json Remote Answer.Hdr.Name |  regex -e Name "(?P<tld>[^\.]+\.[^\.]+)\.$" | regex -e Remote "(?P<ip>[\d\.]+):\d+" | taint -b -f google.com tld ip | fdg -b ip tld
+tag=dns json Remote Answer.Hdr.Name |  regex -e Name "(?P<tld>[^\.]+\.[^\.]+)\.$" | regex -e Remote "(?P<ip>[\d\.]+):\d+" | taint -b -f apple.com tld ip | fdg -b ip tld
 ```
 
 ![DNS Infection Propagation From Known End Point](taintBacktrack.png)

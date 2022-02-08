@@ -37,10 +37,10 @@ tag=default split -clean
 
 ### Specifying a delimiter
 
-Some of the entries contain tabs. We can split on that using the `-d` flag:
+Some of the entries contain spaces. We can split on that using the `-d` flag:
 
 ```
-tag=default split -d "\t"
+tag=default split -d " "
 ```
 
 ![](s3.png)
@@ -57,14 +57,14 @@ tag=default split -d custom
 
 ## Example Usage with Enumerated Values
 
-For this example, we will use entries from the [JSON generator](https://github.com/gravwell/generators) to demonstrate how the split module can operate on enumerated values.
+For this example, we will use Apache webserver log entries.
 
 ![](ev.png)
 
-We can extract the 'useragent' field from the JSON structure, then split it on commas:
+We can extract the 'useragent' field from the apache structure, then split it on commas:
 
 ```
-tag=json json useragent | split useragent | table useragent
+tag=apache ax useragent | split useragent | table useragent
 ```
 
 ![](evdata.png)
@@ -72,7 +72,7 @@ tag=json json useragent | split useragent | table useragent
 Note that the raw *contents* of the entries are not modified:
 
 ```
-tag=json json useragent | split useragent | table useragent DATA
+tag=apache ax useragent | split useragent | table useragent DATA
 ```
 
 ![](evcontents.png)

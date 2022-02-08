@@ -70,10 +70,10 @@ The netflow search module is designed to process raw netflow frames.  A single n
 
 ### Examples
 
-#### Number of HTTP flows by Source IP over time
+#### Number of HTTP flows by Destination IP over time
 
 ```
-tag=netflow netflow Src Dst Port==80 | count by Src | chart count by Src limit 24
+tag=netflow netflow Src Dst Port==80 | count by Dst | chart count by Dst
 ```
 
 ![Number of flows by ip](flowcounts.png)
@@ -81,7 +81,7 @@ tag=netflow netflow Src Dst Port==80 | count by Src | chart count by Src limit 2
 #### Total traffic by IP and Protocol
 
 ```
-tag=netflow netflow IP Protocol Bytes as traffic | sum traffic by IP,Protocol | stackgraph IP Protocol sum
+tag=netflow netflow IP~192.168.0.0/16 Protocol Bytes as traffic | sum traffic by IP Protocol | stackgraph IP Protocol sum
 ```
 
 ![Traffic by protocol per IP](IPProtoTrafficStackgraph.png)

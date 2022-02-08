@@ -1,12 +1,12 @@
 # Gravwell System Architecture
 
-The Gravwell system architecture section is designed to provide information about how Gravwell is is deployed and operated from an architecture perspective.  Anyone wishing to run a simple single node instance of Gravwell with all ingesters pointed directly at the single indexer can safely ignore this section.  The system architecture section is for system administrators, DevOps engineers, and cloud architects that need to understand more about the underlying topology and architecture of Gravwell in order to deploy larger more complicated instances.
+The Gravwell system architecture section is designed to provide information about how Gravwell is deployed and operated from an architecture perspective.  Anyone wishing to run a simple single node instance of Gravwell with all ingesters pointed directly at the single indexer can safely ignore this section.  The system architecture section is for system administrators, DevOps engineers, and cloud architects that need to understand more about the underlying topology and architecture of Gravwell in order to deploy larger more complicated instances.
 
 ## Cluster Topology
 
 Gravwell is a highly concurrent distributed storage and search system designed to move fast and reduce the cognitive overhead required to effectively extract information from data streams.  Effectively storing, searching, and managing volumes of data that may approach hundreds of terabytes per day requires multiple machines utilizing a large array of storage devices.  It simply isn’t possible to stand up one machine with one disk and deal with enterprise throughput requirements.
 
-Gravwell’s base architecture is designed around indexers, ingesters, and webservers.  None of the relationships are one to one and every component (sans the webserver) is designed to load balance, be fault tolerant, and maximize usage of the available hardware. For illustrative purposes, the assumption is that this is a very simple organization monitoring data from a single point; perhaps, a small ISP with Bro running on their edge router that is capturing flows and sending them to Gravwell.
+Gravwell’s base architecture is designed around indexers, ingesters, and webservers.  None of the relationships are one to one and every component (sans the webserver) is designed to load balance, be fault tolerant, and maximize usage of the available hardware. For illustrative purposes, the assumption is that this is a very simple organization monitoring data from a single point; perhaps, a small ISP with Zeek running on their edge router that is capturing flows and sending them to Gravwell.
 
 ![A simple cluster](SimpleCluster.png)
 
@@ -37,3 +37,13 @@ The Gravwell ingest API is designed to be fast and simple.  The API and many of 
 The core ingest mechanic requires only three data items: a byte array, timestamp, and a tag (which is provided by the API).  Simple installations might have a few ingesters talking directly to indexers where more complicated ingesters might have multiple levels of federation as data is shuffled up from untrusted enclaves to high security enclaves.  Visibility is key to security, analytics, and hunt operations.  Segregating data or forcing multiple installations where operators must manually correlate data is not acceptable.  Gravwell achieves federation via ingest relay ingesters, which speak the ingest API on both sides and allow dual homed machines to aggregate and relay data.
 
 ![An example of a complex ingest structure](IngestRelay.png)
+
+## Compatibility 
+
+### Minimum Software Requirements
+
+Gravwell runs on most common Linux distributions which support [SystemD](https://en.wikipedia.org/wiki/Systemd). A minimum Linux kernel version of 3.2 and a 64bit X86 architecture are required.
+
+### Version Locking
+
+Beginning in Gravwell 4.1.0, the Gravwell Indexer, Webserver, Search Agent, and Datastore components are version locked. That means there are occasional API changes between those components that require all of the components to be at the same version. Breaking API changes are noted in the release notes for a given version.  Ingesters are *NOT* version locked and should remain highly compatible.

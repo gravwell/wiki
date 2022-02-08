@@ -64,7 +64,7 @@ We will assume that the CSV data is tagged "testcsv" and the unstructured data i
 Using AX and the ax module we can specify both tags ("testregex" and "testcsv") and extract the common fields and unify them into a single view:
 
 ```
-tag=testregex,testcsv ax app src dst | ip src as IP | subnet IP /3 | count by subnet | sort by count desc | table -nt subnet count
+tag=testregex,testcsv ax app src dst | ip src as IP | subnet IP /16 | count by subnet | sort by count desc | table -nt subnet count
 ```
 
 ![Subnet Counts](subcounts.png)
@@ -80,7 +80,7 @@ tag=testregex,testcsv ax | table
 We can also add filtering to specify that we only want entries which match the given filters:
 
 ```
-tag=testregex,testcsv ax dstport==80 | table app src dst
+tag=testregex,testcsv ax dstport==1381 | table app src dst
 ```
 
 ![AX Extract Filter](axfilter.png)

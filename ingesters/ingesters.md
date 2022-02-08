@@ -2,7 +2,7 @@
 
 This section contains more detailed instruction for configuring and running Gravwell ingesters.
 
-The Gravwell-created ingesters are released under the BSD open source license and can be found on [Github](https://github.com/gravwell/ingesters). The ingest API is also open source, so you can create your own ingesters for unique data sources, performing additional normalization or pre-processing, or any other manner of things. The ingest API code [is located here](https://github.com/gravwell/ingest).
+The Gravwell-created ingesters are released under the BSD open source license and can be found on [Github](https://github.com/gravwell/gravwell/tree/master/ingesters). The ingest API is also open source, so you can create your own ingesters for unique data sources, performing additional normalization or pre-processing, or any other manner of things. The ingest API code [is located here](https://github.com/gravwell/gravwell/tree/master/ingest).
 
 In general, for an ingester to send data to Gravwell, the ingester will need to know the “Ingest Secret” of the Gravwell instance, for authentication. This can be found by viewing the `/opt/gravwell/etc/gravwell.conf` file on the Gravwell server and finding the entry for `Ingest-Auth`. If the ingester is running on the same system as Gravwell itself, the installer will usually be able to detect this value and set it automatically.
 
@@ -18,7 +18,6 @@ Attention: The [replication system](#!configuration/replication.md) does not rep
 |----------|-------------|
 | [Amazon SQS](#!ingesters/sqs.md) | Subscribe and ingest from Amazon SQS queues. |
 | [collectd](#!ingesters/collectd.md) | Ingest collectd samples. |
-| [Disk Monitor](#!ingesters/disk.md) | Periodically sample disk activity. |
 | [File Follower](#!ingesters/file_follow.md) | Watch and ingest files on disk, such as logs. |
 | [GCP PubSub](#!ingesters/pubsub.md) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
 | [HTTP](#!ingesters/http.md) | Create HTTP listeners on multiple URL paths. |
@@ -415,7 +414,7 @@ Common configuration errors for the Federator include:
 
 The Gravwell ingest API and core ingesters are fully open source under the BSD 2-Clause license.  This means that you can write your own ingesters and integrate Gravwell entry generation into your own products and services.  The core ingest API is written in Go, but the list of available API languages is under active expansion.
 
-[API code](https://github.com/gravwell/ingest)
+[API code](https://github.com/gravwell/gravwell/tree/master/ingest)
 
 [API documentation](https://godoc.org/github.com/gravwell/ingest)
 

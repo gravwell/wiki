@@ -51,10 +51,6 @@ Heatmap and Pointmap also have 3D renderings, just click the "Globe" selector in
 
 ![](selector.png)
 
-Running the exact same heatmap query, but rendered using the Globe system shows the following:
-
-![](map5.png)
-
-But there is one more super nifty trick, we can add rotation so that all your bosses know you are definitely thinking in real-time about all the global threats.
+Running the exact same heatmap query, but rendered using the Globe system shows the following (The map rotates automatically so that all your bosses know you are definitely thinking in real-time about all the global threats):
 
 ![](rotation.gif)
