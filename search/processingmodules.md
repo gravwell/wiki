@@ -40,6 +40,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [entropy](entropy/entropy.md)
 * [eval](eval/eval.md)
 * [first/last](firstlast/firstlast.md)
+* [fuse](fuse/fuse.md)
 * [geoip](geoip/geoip.md)
 * [grep](grep/grep.md)
 * [hexlify](hexlify/hexlify.md)
