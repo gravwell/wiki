@@ -5,7 +5,7 @@ The winlog processor is a special-purpose extractor for XML-formatted Windows lo
 ## Supported Options
 
 * `-e`: The “-e” option specifies that the winlog module should operate on an enumerated value.  Operating on enumerated values can be useful when you have extracted log entries using upstream modules.
-* `-or`: The "-or" flag specifies that the winlog module should allow an entry to continue down the pipeline if ANY of the extractions or filters are successful.
+* `-s`: Strict mode. When using strict mode, winlog will drop entries that have any extractions fail. 
 
 ## Processing Operators
 
@@ -76,9 +76,11 @@ The following fields can be extracted
 | Channel | Event.System.Channel | bytes | == != ~ !~ |
 | Computer | Event.System.Computer | bytes | == != ~ !~ |
 | Correlation | Event.System.Correlation | bytes | == != ~ !~ |
+| ActivityID | Event.System.Correlation[ActivityID] | bytes | == != ~ !~ |
 | UserID | Event.System.Security[UserID] | uint | == != < <= > >= |
+| Binary | Event.EventData.Binary | bytes | == != ~ !~ |
 
-Specifying a field not listed above will cause the winlog module to attempt to extract `Event.Data[Name]==<field>`. For example, the SubjectLogonId in the example above (0x3e3) can be extracted by simply specifying `SubjectLogonId` to the winlog module.
+Specifying a field not listed above will cause the winlog module to attempt to extract `Event.EventData.Data[Name]==<field>`. For example, the SubjectLogonId in the example above (0x3e3) can be extracted by simply specifying `SubjectLogonId` to the winlog module.
 
 ### Data Field Filtering
 
