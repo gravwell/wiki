@@ -5,6 +5,7 @@
 * [anko](anko/anko.md)
 * [anonymize](anonymize/anonymize.md)
 * [ax](ax/ax.md)
+* [awk](awk/awk.md)
 * [base64](base64/base64.md)
 * [canbus](canbus/canbus.md)
 * [cef](cef/cef.md)

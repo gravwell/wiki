@@ -32,6 +32,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [alias](alias/alias.md)
 * [anko](anko/anko.md)
 * [anonymize](anonymize/anonymize.md)
+* [awk](awk/awk.md)
 * [base64](base64/base64.md)
 * [count](math/math.md#Count)
 * [diff](diff/diff.md)
