@@ -52,6 +52,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [langfind](langfind/langfind.md)
 * [length](length/length.md)
 * [limit](limit/limit.md)
+* [location](location/location.md)
 * [lookup](lookup/lookup.md)
 * [lower](upperlower/upperlower.md)
 * [maclookup](maclookup/maclookup.md)
