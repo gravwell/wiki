@@ -1,10 +1,11 @@
 # Changelogs for recent version updates
 
 ## Current Version 
-[4.2.9](4.2.9.md)
+[4.2.10](4.2.10.md)
 
 ## Previous Versions
 
+* [4.2.9](4.2.9.md)
 * [4.2.8](4.2.8.md)
 * [4.2.7](4.2.7.md)
 * [4.2.6](4.2.6.md)
