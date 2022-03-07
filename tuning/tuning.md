@@ -277,7 +277,7 @@ Some ingesters have specific flags for tuning performance related to the type of
 
 The File Follower ingester has an additional global parameter `Max-Files-Watched` that allows you to set the maximum number of open file handles to keep at any point. When files are updated or new files are created, the ingester maintains a least-recently-updated queue of file handles. By setting this parameter too low you can induce frequent file open/close behavior which can have a negative impact on performance. Conversely, setting this value too high can induce significant memory overhead. The default value is 64.
 
-On Linux, File Follower uses the inotify kernel subsystem. If you are seeing filesystem notification errors in File Follow, consider increasing the depth of the inotify event queue. You can do this by setting the depth with sysctl: `sysctl -w fs.inotify.max_queued_events=32768`. 
+On Linux, File Follower uses the inotify kernel subsystem. If you are seeing filesystem notification errors in File Follow, consider increasing the depth of the inotify event queue. You can do this by setting the depth with sysctl: `sysctl -w fs.inotify.max_queued_events=32768`. Additionally, the maximum number of files allowed to be watched is controlled by the kernel. You can increase this value with sysctl: `sysctl -w fs.inotify.max_user_watches=32768`. 
 
 #### Kafka Consumer
 
