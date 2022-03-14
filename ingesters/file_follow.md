@@ -10,6 +10,10 @@ Attention: On RHEL/CentOS, `/var/log` belongs to the "root" group, not "adm" as 
 
 On Linux, File Follower uses the inotify kernel subsystem. If you are seeing filesystem notification errors in File Follow, consider increasing the depth of the inotify event queue. You can do this by setting the depth with sysctl: `sysctl -w fs.inotify.max_queued_events=32768`. Additionally, the maximum number of files allowed to be watched is controlled by the kernel. You can increase this value with sysctl: `sysctl -w fs.inotify.max_user_watches=32768`. 
 
+## Startup considerations
+
+At startup, file follower will ingest any existing data in the tracked paths before servicing inotify events. If you are starting file follower to ingest a large amount of existing data, it is recommended that you do not write to the tracked paths until the initial ingest is complete. Writing to tracked paths during initial ingest could result in overflowing the kernel inotify buffer.
+
 ## Basic Configuration
 
 The File Follower configuration file is by default located in `/opt/gravwell/etc/file_follow.conf` on Linux and `C:\Program Files\gravwell\file_follow.cfg` on Windows.
