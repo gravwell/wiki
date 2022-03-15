@@ -10,6 +10,10 @@ The Email node sends an email message to a list of one or more recipients, with 
 * `Body`, required: The body text of the email message. Enter a string manually, or select a variable containing suitable text. The [Text Template](template.md) node provides powerful tools for formatting text in the flow.
 * `Attachments`: An optional array of items to add as attachments on the email. The Email node makes a best-effort attempt at determining the appropriate file type on the attachment. Consider using the output of the [PDF](pdf.md) node as an attachment.
 
+## Output
+
+The node adds nothing to the payload.
+
 ## Example
 
 The screenshot below shows a complex flow using the Email node:
