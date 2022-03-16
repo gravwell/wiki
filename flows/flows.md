@@ -52,3 +52,8 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 ## Node list
 
 * [Email](nodes/email.md): send email.
+* [HTTP](nodes/http.md): do HTTP requests.
+
+The following nodes tend to be needed only in particular advanced cases:
+
+* [Get Table Results](nodes/gettableresults.md): get results from a search using the table renderer.
