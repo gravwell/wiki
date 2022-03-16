@@ -53,7 +53,10 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 
 * [Email](nodes/email.md): send email.
 * [HTTP](nodes/http.md): do HTTP requests.
+* [If](nodes/if.md): perform logical operations.
+* [Run a Query](nodes/runquery.md): run a Gravwell query.
 
 The following nodes tend to be needed only in particular advanced cases:
 
 * [Get Table Results](nodes/gettableresults.md): get results from a search using the table renderer.
+* [Get Text Results](nodes/gettextresults.md): get results from a search using the text renderer.
