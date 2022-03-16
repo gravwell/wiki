@@ -34,7 +34,7 @@ The node inserts an object into the payload, using the key set in the `Output Va
 
 This example uses the Get Table Results and Text Template nodes to generate a very simplistic table representation of query results. Note that this is rarely needed, as many output nodes can generate an acceptable formatting of queries on their own.
 
-The Query node is configured to run the following queyr over the last hour:
+The Query node is configured to run the following query over the last hour:
 
 	tag=gravwell syslog Hostname Appname | stats count by Hostname Appname | table
 
