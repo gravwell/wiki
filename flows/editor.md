@@ -53,3 +53,21 @@ You should specify a name and description for the flow, then define a schedule. 
 ![](scheduling.png)
 
 Once the schedule is set, toggle the "Disable scheduling" option to enable scheduled executions of the flow. The search agent will then automatically run it on the given schedule.
+
+## In-Flow "Sticky" Notes
+
+The "Note" node is a special node used to annotate flows. Unlike other nodes, it plays no role in the execution of the flow; notes exist purely for the convenience of users.
+
+When dragged from the palette, a Note node starts out in a minimized state:
+
+![](note-minimized.png)
+
+When clicked, the note expands and text can be entered:
+
+![](note-open.png)
+
+Clicking the "X" will minimize the note, leaving the start of the text visible:
+
+![](note-minimized-2.png)
+
+![](notes-multiple.png)

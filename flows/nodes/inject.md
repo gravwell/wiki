@@ -1,4 +1,4 @@
-# Set Variables
+# Set Variables Node
 
 This node manually injects variables into the payload. This can be used to set a long string, such as a Gravwell query, in one place, then use it in several other nodes.
 
