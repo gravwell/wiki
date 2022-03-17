@@ -52,9 +52,13 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 ## Node list
 
 * [Email](nodes/email.md): send email.
+* [Gravwell Indexers](nodes/indexerinfo.md): get information about Gravwell indexers.
+* [Gravwell Ingesters](nodes/ingesterinfo.md): get information about Gravwell ingesters.
 * [HTTP](nodes/http.md): do HTTP requests.
 * [If](nodes/if.md): perform logical operations.
+* [Ingest](nodes/ingest.md): ingest data into Gravwell.
 * [Run a Query](nodes/runquery.md): run a Gravwell query.
+* [Set Variables](nodes/inject.md): inject variables into the payload.
 
 The following nodes tend to be needed only in particular advanced cases:
 
