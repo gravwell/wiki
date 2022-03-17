@@ -59,6 +59,7 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 * [If](nodes/if.md): perform logical operations.
 * [Ingest](nodes/ingest.md): ingest data into Gravwell.
 * [Nest Merge](nodes/nestmerge.md): join multiple input payloads into one.
+* [PDF](nodes/pdf.md): create PDF documents.
 * [Run a Query](nodes/runquery.md): run a Gravwell query.
 * [Set Variables](nodes/inject.md): inject variables into the payload.
 * [Stack Merge](nodes/stackmerge.md): join multiple input payloads into one.
