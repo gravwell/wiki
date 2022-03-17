@@ -61,6 +61,7 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 * [Nest Merge](nodes/nestmerge.md): join multiple input payloads into one.
 * [Run a Query](nodes/runquery.md): run a Gravwell query.
 * [Set Variables](nodes/inject.md): inject variables into the payload.
+* [Stack Merge](nodes/stackmerge.md): join multiple input payloads into one.
 
 The following nodes tend to be needed only in particular advanced cases:
 

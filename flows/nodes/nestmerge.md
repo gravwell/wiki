@@ -9,6 +9,8 @@ This node combines multiple input payloads into a single output payload. Each in
 }
 ```
 
+Contrast this node to the [Stack Merge](stackmerge.md) node.
+
 ## Configuration
 
 The Nest Merge node has no "configuration" settings in the same sense as most nodes; instead, it has a variable number of input sockets, each with a user-specified name. Initially, there are no input sockets:
