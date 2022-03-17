@@ -52,6 +52,8 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 ## Node list
 
 * [Email](nodes/email.md): send email.
+* [Flow Storage Read](nodes/storageread.md): read items from a persistent storage.
+* [Flow Storage Write](nodes/storagewrite.md): write items into a persistent storage.
 * [Gravwell Indexers](nodes/indexerinfo.md): get information about Gravwell indexers.
 * [Gravwell Ingesters](nodes/ingesterinfo.md): get information about Gravwell ingesters.
 * [Gravwell Notification](nodes/notification.md): set Gravwell notifications.
