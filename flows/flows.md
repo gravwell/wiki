@@ -54,11 +54,14 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 * [Email](nodes/email.md): send email.
 * [Gravwell Indexers](nodes/indexerinfo.md): get information about Gravwell indexers.
 * [Gravwell Ingesters](nodes/ingesterinfo.md): get information about Gravwell ingesters.
+* [Gravwell Notification](nodes/notification.md): set Gravwell notifications.
 * [HTTP](nodes/http.md): do HTTP requests.
 * [If](nodes/if.md): perform logical operations.
 * [Ingest](nodes/ingest.md): ingest data into Gravwell.
+* [Nest Merge](nodes/nestmerge.md): join multiple input payloads into one.
 * [Run a Query](nodes/runquery.md): run a Gravwell query.
 * [Set Variables](nodes/inject.md): inject variables into the payload.
+* [Stack Merge](nodes/stackmerge.md): join multiple input payloads into one.
 
 The following nodes tend to be needed only in particular advanced cases:
 
