@@ -62,9 +62,13 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 * [Ingest](nodes/ingest.md): ingest data into Gravwell.
 * [Nest Merge](nodes/nestmerge.md): join multiple input payloads into one.
 * [PDF](nodes/pdf.md): create PDF documents.
+* [Rename](nodes/rename.md): rename variables in the payload.
 * [Run a Query](nodes/runquery.md): run a Gravwell query.
 * [Set Variables](nodes/inject.md): inject variables into the payload.
+* [Sleep](nodes/sleep.md): pause flow execution for a given period of time.
 * [Stack Merge](nodes/stackmerge.md): join multiple input payloads into one.
+* [Teams Message](nodes/teams.md): send a Microsoft Teams message.
+* [Text Template](nodes/template.md): format text.
 
 The following nodes tend to be needed only in particular advanced cases:
 
