@@ -28,58 +28,58 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 
 ## Search module documentation
 
-* [abs](abs/abs.md)
-* [alias](alias/alias.md)
-* [anko](anko/anko.md)
-* [anonymize](anonymize/anonymize.md)
-* [awk](awk/awk.md)
-* [base64](base64/base64.md)
-* [count](math/math.md#Count)
-* [diff](diff/diff.md)
-* [dns](dns/dns.md)
-* [enrich](enrich/enrich.md)
-* [entropy](entropy/entropy.md)
-* [eval](eval/eval.md)
-* [first/last](firstlast/firstlast.md)
-* [fuse](fuse/fuse.md)
-* [geoip](geoip/geoip.md)
-* [grep](grep/grep.md)
-* [hexlify](hexlify/hexlify.md)
-* [ip](ip/ip.md)
-* [ipexist](ipexist/ipexist.md)
-* [iplookup](iplookup/iplookup.md)
-* [join](join/join.md)
-* [langfind](langfind/langfind.md)
-* [length](length/length.md)
-* [limit](limit/limit.md)
-* [location](location/location.md)
-* [lookup](lookup/lookup.md)
-* [lower](upperlower/upperlower.md)
-* [maclookup](maclookup/maclookup.md)
-* [Math (list of math modules)](math/math.md)
-* [max](math/math.md#Max)
-* [mean](math/math.md#Mean)
-* [min](math/math.md#Min)
-* [nosort](nosort/nosort.md)
-* [packetlayer](packetlayer/packetlayer.md)
-* [printf](printf/printf.md)
-* [regex](regex/regex.md)
-* [require](require/require.md)
-* [slice](slice/slice.md)
-* [sort](sort/sort.md)
-* [split](split/split.md)
-* [src](src/src.md)
-* [stats](stats/stats.md)
-* [stddev](math/math.md#Stddev)
-* [strings](strings/strings.md)
-* [subnet](subnet/subnet.md)
-* [sum](math/math.md#Sum)
-* [taint](taint/taint.md)
-* [time](time/time.md)
-* [transaction](transaction/transaction.md)
-* [truncate](truncate/truncate.md)
-* [unescape](unescape/unescape.md)
-* [unique](math/math.md#Unique)
-* [upper](upperlower/upperlower.md)
-* [variance](math/math.md#Variance)
-* [words](words/words.md)
+* [abs](abs/abs.md) - calculate the absolute value of an enumerated value.
+* [alias](alias/alias.md) - create copies of enumerated values with new names.
+* [anko](anko/anko.md) - run arbitrary code in the pipeline.
+* [anonymize](anonymize/anonymize.md) - anonymize IP addresses.
+* [awk](awk/awk.md) - execute AWK code.
+* [base64](base64/base64.md) - execute AWK code.
+* [count](math/math.md#Count) - count entries.
+* [diff](diff/diff.md) - compare fields between entries.
+* [dns](dns/dns.md) - do DNS and reverse DNS lookups.
+* [enrich](enrich/enrich.md) - manually attach enumerated values to entries.
+* [entropy](entropy/entropy.md) - calculate entropy of enumerated values.
+* [eval](eval/eval.md) - evaluate arbitrary logic expressions.
+* [first/last](firstlast/firstlast.md) - take the first or last entry.
+* [fuse](fuse/fuse.md) - join data from disparate data sources.
+* [geoip](geoip/geoip.md) - look up GeoIP locations.
+* [grep](grep/grep.md) - search for strings in entries.
+* [hexlify](hexlify/hexlify.md) - encode data into ASCII hex representation, or vice versa.
+* [ip](ip/ip.md) - convert & filter IP addresses.
+* [ipexist](ipexist/ipexist.md) - check if IP address exists in a lookup table.
+* [iplookup](iplookup/iplookup.md) - enrich entries by looking up IP addresses in a table which can contain CIDR subnets rather that individual IPs.
+* [join](join/join.md) - join two or more enumerated values into a single enumerated value.
+* [langfind](langfind/langfind.md) - classify the language of text.
+* [length](length/length.md) - compute the length of entries or enumerated values.
+* [limit](limit/limit.md) - limit the number of entries which will pass further down the pipeline.
+* [location](location/location.md) - convert individual lat/lon enumerated values into a single Gravwell Location enumerated value.
+* [lookup](lookup/lookup.md) - enrich entries by looking up keys in a table.
+* [lower](upperlower/upperlower.md) - convert text to lower-case.
+* [maclookup](maclookup/maclookup.md) - look up manufacturer, address, and country information based on a MAC address.
+* [Math (list of math modules)](math/math.md) - perform math operations.
+* [max](math/math.md#Max) - find a maximum value.
+* [mean](math/math.md#Mean) - find a mean value.
+* [min](math/math.md#Min) - find a minimum value.
+* [nosort](nosort/nosort.md) - disable sorting in the pipeline.
+* [packetlayer](packetlayer/packetlayer.md) - parse portions of a packet.
+* [printf](printf/printf.md) - format text in the pipeline.
+* [regex](regex/regex.md) - match and extract data using regular expressions.
+* [require](require/require.md) - drop any entries which lack a given enumerated value.
+* [slice](slice/slice.md) - low-level binary parsing & extraction.
+* [sort](sort/sort.md) - sort entries by a given key.
+* [split](split/split.md) - split a single entry into multiple entries.
+* [src](src/src.md) - filter based on the SRC field of entries.
+* [stats](stats/stats.md) - perform math operations.
+* [stddev](math/math.md#Stddev) - calculate standard deviation.
+* [strings](strings/strings.md) - find strings from binary data.
+* [subnet](subnet/subnet.md) - extract & filter based on IP subnets.
+* [sum](math/math.md#Sum) - sum up enumerated values.
+* [taint](taint/taint.md) - taint tracking.
+* [time](time/time.md) - convert strings to time enumerated values, and vice versa.
+* [transaction](transaction/transaction.md) - group multiple entries into single-entry "transactions" based on keys.
+* [truncate](truncate/truncate.md) - truncate entries or enumerated values to a specified number of characters.
+* [unescape](unescape/unescape.md) - convert escaped text into an unescaped representation.
+* [unique](math/math.md#Unique) - eliminate duplicate entries.
+* [upper](upperlower/upperlower.md) - convert text to upper-case.
+* [variance](math/math.md#Variance) - find variance of enumerated values.
+* [words](words/words.md) - highly optimized search for individual words.
