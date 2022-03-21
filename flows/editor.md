@@ -2,6 +2,8 @@
 
 Although the Gravwell flow editor can be intimidating at first glance, a few minutes' worth of experimentation and exploration should be enough to get started building flows. This section will go through the various components of the UI, explaining each component.
 
+Note: If you're not yet familiar with the basic components of a flow (nodes, sockets, payloads), refer to the [top-level Flow documentation](flows.md) for an overview.
+
 You can access the flow editor from the Query & Dev Studio interface, found in the Main Menu. Select "Flows" from the left-hand side, as shown in the screenshot below. From there, you can either start a new blank flow ("Start a New Flow") or instantiate one of the "starter flows" provided by Gravwell.
 
 ![dev studio interface](dev-studio.png)
@@ -9,6 +11,23 @@ You can access the flow editor from the Query & Dev Studio interface, found in t
 Selecting either option will take you into the flow editor, the parts of which are marked in the screenshot below. The **palette** provides a list of available nodes, which can be dragged out into the **canvas**. The **console** provides information about problems with the flow and output from any test runs.
 
 ![](editor.png)
+
+Nodes are instantiated by dragging them from the palette onto the canvas. Once on the canvas, node input and output sockets can be connected, nodes can be re-arranged, etc. Note that the scroll wheel can be used to zoom in and out of the canvas view.
+
+The toolbar contains buttons for quick access to editor functionality. From left to right:
+
+* Flow Designer: shows the flow canvas (default view).
+* Info & Scheduling: shows options to set flow name, description, scheduling, sharing, etc.
+* Disable scheduling: toggle to quickly enable/disable automatic execution of the flow.
+* Save: save the flow.
+* Debug: run the flow
+* Clear selection: deselects any currently-selected node.
+* Delete: delete the selected node.
+* Delete all: delete all nodes (requires confirmation).
+* Export flow: download the flow specification, for backup or sharing.
+* Import flow: upload a previously-exported flow spec.
+* Fit all nodes on screen: zoom & center the canvas so that *all* nodes are visible.
+* Fullscreen: puts the editor into fullscreen mode.
 
 ## Configuring Nodes
 
