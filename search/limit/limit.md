@@ -18,3 +18,14 @@ To look at packets 5 to 10:
 tag=pcap packet tcp.Payload | limit 5 10 | table Payload
 ```
 
+Limit can also key any number of fields. If you want to allow 5 entries for each value of the enumerated value "foo", for example:
+
+```
+tag=default ax | limit 5 by foo
+```
+
+You can specify any number of keyed fields. To allow 5 entries for each combination of enumerated values "foo", "bar", and "baz", for example:
+
+```
+tag=default ax | limit 5 by foo bar baz
+```
