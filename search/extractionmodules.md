@@ -38,25 +38,25 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 
 Note: The modules listed here have a primary function of extraction. They may also perform filtering and/or processing.
 
-* [ax](ax/ax.md)
-* [canbus](canbus/canbus.md)
-* [cef](cef/cef.md)
-* [csv](csv/csv.md)
-* [dump](dump/dump.md)
-* [fields](fields/fields.md)
-* [grok](grok/grok.md)
-* [ip](ip/ip.md)
-* [ipfix](ipfix/ipfix.md)
-* [j1939](j1939/j1939.md)
-* [json](json/json.md)
-* [kv](kv/kv.md)
-* [netflow](netflow/netflow.md)
-* [packet](packet/packet.md)
-* [packetlayer](packetlayer/packetlayer.md)
-* [regex](regex/regex.md)
-* [slice](slice/slice.md)
-* [strings](strings/strings.md)
-* [subnet](subnet/subnet.md)
-* [syslog](syslog/syslog.md)
-* [winlog](winlog/winlog.md)
-* [xml](xml/xml.md)
+* [ax](ax/ax.md) - automatically extract fields from entries.
+* [canbus](canbus/canbus.md) - decode CANBUS data.
+* [cef](cef/cef.md) - decode CEF data.
+* [csv](csv/csv.md) - extract fields from CSV data.
+* [dump](dump/dump.md) - dump entries from a resource into the pipeline.
+* [fields](fields/fields.md) - extract data from entries using arbitrary field separators.
+* [grok](grok/grok.md) - extract data from complicated text structures using pre-defined regular expressions.
+* [ip](ip/ip.md) - convert & filter IP addresses.
+* [ipfix](ipfix/ipfix.md) - extract data from IPFIX records.
+* [j1939](j1939/j1939.md) - parse J1939 data.
+* [json](json/json.md) - extract elements from JSON data.
+* [kv](kv/kv.md) - parse key-value data.
+* [netflow](netflow/netflow.md) - parse Netflow records.
+* [packet](packet/packet.md) - parse raw packets.
+* [packetlayer](packetlayer/packetlayer.md) - parse portions of a packet.
+* [regex](regex/regex.md) - match and extract data using regular expressions.
+* [slice](slice/slice.md) - low-level binary parsing & extraction.
+* [strings](strings/strings.md) - find strings from binary data.
+* [subnet](subnet/subnet.md) - extract & filter based on IP subnets.
+* [syslog](syslog/syslog.md) - parse and extract syslog entries.
+* [winlog](winlog/winlog.md) - parse Windows logs.
+* [xml](xml/xml.md) - parse XML data.
