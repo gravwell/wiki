@@ -31,6 +31,8 @@ A flow is a collection of *nodes*, linked together to define an order of executi
 
 All nodes have a single output socket. Most have only a single input socket, but some nodes which merge *payloads* (see below) have multiple input sockets.
 
+One node's output socket may be connected to the *inputs* of multiple other nodes, but each input socket can only take one connection.
+
 ### Payloads
 
 *Payloads* are collections of data passed from node to node, representing the state of execution. For instance, the "Run a Query" node will insert an item named "search" into the payload, containing things like the query results and metadata about the search. The PDF node can *read* that "search" item, format it into a nice PDF document, and insert the PDF file back into the payload with a name like "gravwell.pdf". Then the Email node can be configured to attach "gravwell.pdf" to the outgoing email.
