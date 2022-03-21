@@ -13,6 +13,9 @@ The Query Log Ingest node is an advanced node which generates *alert entries* ba
 * `Search`, required: the search query to pull results from.
 * `Output`: the generated alerts will be placed into the output payload under this name.
 
+### Note
+The default `_alert` tag should probably used, most Gravwell kits and embedded applications expect Gravwell generated alerts to be in this tag.
+
 ## Output
 
 The node will insert the generated alerts into the outgoing payload under the name specified in the `Output` config value.
