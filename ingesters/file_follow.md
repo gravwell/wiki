@@ -153,6 +153,16 @@ Ignore-Line-Prefix="#"
 Ignore-Line-Prefix="//"
 ```
 
+### Ignore-Glob
+
+The ingester will drop (not ingest) any lines that match the given glob pattern. Globs are text patterns containing wildcards (such as `*`). For example, to drop any line that contains the word "foo" anywhere in the line:
+
+```
+Ignore-Glob="*foo*"
+```
+
+Ignore-Glob can be specified multiple times and supports the same wildcard syntax as the File-Filter option.
+
 ### Regex-Delimiter
 
 The `Regex-Delimiter` option allows the user to specify a regular expression which will be used to split entries, rather than newlines. Thus, if your input files look like this:
