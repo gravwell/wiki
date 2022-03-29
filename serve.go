@@ -73,7 +73,7 @@ func main() {
 	}
 	mx := http.NewServeMux()
 	mx.Handle("/", noCacheLoggingHandler(http.FileServer(http.Dir(*sdir))))
-	mx.HandleFunc("/.git", notFound) // I am so tired of these garbage security "reports"
+	mx.HandleFunc("/.git/", notFound) // I am so tired of these garbage security "reports"
 	mx.HandleFunc("/api/search", srv.search)
 	srv.Handler = mx
 
