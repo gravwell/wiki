@@ -17,8 +17,6 @@ Insecure-Disable-HTTPS=true
 Remote-Indexers=net:127.0.0.1:9404
 Persist-Web-Logins=True
 Session-Timeout-Minutes=1440
-Login-Fail-Lock-Count=4
-Login-Fail-Lock-Duration=5
 
 ### Ingester settings
 Ingest-Port=4023
@@ -313,18 +311,6 @@ Applies to:        Webserver
 Default Value:
 Example:        `Web-Listen-Address=10.0.0.1`
 Description:        The Web-Listen-Address parameter specifies the address the webserver should bind to and serve from.  By default the parameter is empty, meaning the webserver binds to all interfaces and addresses.
-
-####**Login-Fail-Lock-Count**
-Applies to:        Webserver
-Default Value:        `5`
-Example:        `Login-Fail-Lock-Count=10`
-Description:        The Login-Fail-Lock-Count parameter specifies the number of sequential failed logins against a user account can occur before brute-force protection is enabled on the account.  For example, if the value is set to 4 and a user provides a bad password 4 times in a row, additional login attempts will take longer to complete, slowing down an attacker. Note: Gravwell previously locked an account after a specific number of failures; it now engages a less aggressive brute-force protection, but for legacy reasons the configuration parameter retains the 'Lock' name.
-
-####**Login-Fail-Lock-Duration**
-Applies to:        Webserver
-Default Value:        `5`
-Example:        `Login-Fail-Lock-Duration=10`
-Description:        The Login-Fail-Lock-Duration parameter specifies the window (in minutes) used when calculating if the Login-Fail-Lock-Count has been exceeded. Note: Gravwell previously locked an account after a specific number of failures; it now engages a less aggressive brute-force protection, but for legacy reasons the configuration parameter retains the 'Lock' name.
 
 ####**Remote-Indexers**
 Applies to:        Webserver

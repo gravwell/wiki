@@ -92,6 +92,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
 ## Automation
 
+  * [Flows](flows/flows.md)
+
   * [Scheduled Searches & Scripts](scripting/scheduledsearch.md)
 
     * [Automation Script APIs & Examples](scripting/scriptingsearch.md)
