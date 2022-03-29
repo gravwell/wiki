@@ -32,7 +32,7 @@ Token permissions are defined using specific allowances, you select exactly whic
 
 Permissions on tokens are an overlay on the users existing permissions.  This means that if the current user cannot access an API or feature, then the token cannot either.  Tokens can only restrict access, they cannot grant access that a user does not currently have.
 
-NOTE: The `Token write` permission can be particularly dangerous, if you grant a token the ability to write to the token API it can create new tokens with any permission it wants.  Token permissions are not transitive, tokens that create other tokens do not inherit their parents permission set.
+NOTE: The `Token write` permission can be particularly dangerous. If you grant a token the ability to write to the token API it can create new tokens with any permission it wants.  Token permissions are not transitive, tokens that create other tokens do not inherit their parent's permission set.
 
 ## Restrictions
 
