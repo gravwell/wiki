@@ -47,6 +47,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Data Migration](ingesters/migrate/migrate.md)
 
+  * [Federator](ingesters/federator.md)
+
 ## Advanced Gravwell Installation and Configuration
 
   * [Installing and Configuring Gravwell](configuration/configuration.md)

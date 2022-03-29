@@ -34,6 +34,10 @@ Attention: The [replication system](#!configuration/replication.md) does not rep
 | [Simple Relay](#!ingesters/simple_relay.md) | Ingest any text over TCP/UDP, syslog, and more. |
 | [Windows Events](#!ingesters/winevent.md) | Collect Windows events. |
 
+## Federator and Kafka Federator
+
+Gravwell also provides a [Federator](#!ingesters/federator.md) and [Kafka Federator](#!ingesters/kafkafederator.md) that allow connecting ingesters to indexers in more complex topologies. 
+
 ## Tags
 
 Tags are an essential Gravwell concept. Every entry has a single tag associated with it; these tags allow us to separate and categorize data at a basic level. For example, we may chose to apply the "syslog" tag to entries read from a Linux system's log files, apply "winlog" to Windows logs, and "pcap" to raw network packets. The ingesters determine which tags are applied to the entries.
@@ -318,136 +322,6 @@ The "Source-Override" parameter instructs the consumer to ignore the source of t
 Source-Override=192.168.1.1
 Source-Override=127.0.0.1
 Source-Override=[fe80::899:b3ff:feb7:2dc6]
-```
-
-## The Gravwell Federator
-
-The Federator is an entry relay: ingesters connect to the Federator and send it entries, then the Federator passes those entries to an indexer.  The Federator can act as a trust boundary, securely relaying entries across network segments without exposing ingest secrets or allowing untrusted nodes to send data for disallowed tags.  The Federator upstream connections are configured like any other ingester, allowing multiplexing, local caching, encryption, etc.
-
-![](federatorDiagram.png)
-
-### IngestListener Examples
-
-```
-[IngestListener "enclaveA"]
-	Ingest-Secret = CustomSecrets
-	TLS-Bind = 0.0.0.0:4024
-	TLS-Certfile = /opt/gravwell/etc/cert.pem
-	TLS-Keyfile = /opt/gravwell/etc/key.pem
-	Tags=windows
-	Tags=syslog-*
-
-[IngestListener "enclaveB"]
-	Ingest-Secret = OtherIngestSecrets
-	Cleartext-Bind = 0.0.0.0:4023
-	Tags=apache
-	Tags=bash
-```
-
-
-### Use Cases
-
- * Ingesting data across geographically diverse regions when there may not be robust connectivity
- * Providing an authentication barrier between network segments
- * Reducing the number of connections to an indexer
- * Controlling the tags an data source group can provide
-
-### Installation
-
-If you're using the Gravwell Debian repository, installation is just a single apt command:
-
-```
-apt-get install gravwell-federator
-```
-
-Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the Federator:
-
-```
-root@gravserver ~ # bash gravwell_federator_installer.sh
-```
-
-The Federator will almost certainly require configuration for your specific setup; please refer to the following section for more information. The configuration file can be found at `/opt/gravwell/etc/federator.conf`.
-
-### Example Configuration
-
-The following example configuration connects to two upstream indexers in a *protected* network segment and provides ingest services on two *untrusted* network segments.  Each untrusted ingest point has a unique Ingest-Secret, with one serving TLS with a specific certificate and key pair. The configuration file also enables a local cache, making the Federator act as a fault-tolerant buffer between the Gravwell indexers and the untrusted network segments.
-
-```
-[Global]
-	Ingest-Secret = SuperSecretUpstreamIndexerSecret
-	Connection-Timeout = 0
-	Insecure-Skip-TLS-Verify = false
-	Encrypted-Backend-target=172.20.232.105:4024
-	Encrypted-Backend-target=172.20.232.106:4024
-	Ingest-Cache-Path=/opt/gravwell/cache/federator.cache
-	Max-Ingest-Cache=1024 #1GB
-	Log-Level=INFO
-
-[IngestListener "BusinessOps"]
-        Ingest-Secret = CustomBusinessSecret
-        Cleartext-Bind = 10.0.0.121:4023
-        Tags=windows
-        Tags=syslog
-
-[IngestListener "DMZ"]
-       Ingest-Secret = OtherRandomSecret
-       TLS-Bind = 192.168.220.105:4024
-       TLS-Certfile = /opt/gravwell/etc/cert.pem
-       TLS-Keyfile = /opt/gravwell/etc/key.pem
-       Tags=apache
-       Tags=nginx
-```
-
-Ingesters in the DMZ can connect to the Federator at 192.168.220.105:4024 using TLS encryption. These ingesters are **only** allowed to send entries tagged with the `apache` and `nginx` tags. Ingesters in the business network segment can connect via cleartext to 10.0.0.121:4023 and send entries tagged `windows` and `syslog`. Any mis-tagged entries will be rejected by the Federator; acceptable entries are passed to the two indexers specified in the Global section.
-
-### Troubleshooting
-
-Common configuration errors for the Federator include:
-
-* Incorrect Ingest-Secret in the Global configuration
-* Incorrect Backend-Target specification(s)
-* Invalid or already-taken Bind specifications
-* Enforcing certification validation when upstream indexers or Federators do not have certificates signed by a trusted certificate authority (see the `Insecure-Skip-TLS-Verify` option)
-* Mismatched Ingest-Secret for downstream ingesters
-
-## Kafka Federator
-
-Gravwell also provides a Kafka Federator, that behaves exactly like the Federator, except that it uses Kafka as an upstream transport. Ingesters can connect to it just with Federator, and ingested entries will be put into Kafka Topics as messages. 
-
-![](kafkaFederatorDiagram.png)
-
-The Kafka Federator can be paired with the [Kafka Consumer](#!ingesters/kafka.md) to read messages from a topic and ingest them into a Gravwell indexer.
-
-### Configuration
-
-Kafka Federator defines listeners and Kafka headers. A listener is similar to a Federator listener, in which ingesters may connect and send entries. Listeners also define what topic to publish messages on. A header sets arbitrary key value pairs in the generated Kafka header. 
-
-Additionally, the global section defines a group leader to connect to and a partition.
-
-### Example
-
-This example generates a single listener that allows tags "windows" and "syslog". Messages are published to the "testing" Kafka topic. A header is also defined that sets several key/value pairs. Note that the special `$TAG`, `$SRC` values are available for use in setting values in a Kafka header.
-
-```
-[Global]
-Leader=10.10.0.1:9092                           #point at the kafka group leader
-Partition=0                                     #set partition, default to 0 if not specified
-Log-Level=INFO                                  #set log level to INFO, OFF disable log out put
-Log-File=/opt/gravwell/log/kafka_federator.log  #specify a log file, delete to disable log file
-
-[IngestListener "enclaveA"]
-	Ingest-Secret = CustomSecrets
-	Cleartext-Bind = 0.0.0.0:4423
-	Tags=windows
-	Tags=syslog
-	Topic=testing
-	Kafka-Header-Set=headers
-
-[KafkaHeaders "headers"]
-	TAG=$TAG
-	SRC=$SRC
-	source=$SRC
-	foo=bar
 ```
 
 ## Ingest API
