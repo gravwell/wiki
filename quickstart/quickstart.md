@@ -19,13 +19,27 @@ Installing from the Debian repository is quite simple. We need to take a few ste
 
 Run the following commands as the `root` user:
 
+#### Install Prerequisite Packages
+
 ```
 apt install apt-transport-https gnupg wget
-wget -O /usr/share/keyrings/gravwell.asc https://update.gravwell.io/debian/update.gravwell.io.gpg.key
-echo 'deb [ arch=amd64 signed-by=/usr/share/keyrings/gravwell.asc ] https://update.gravwell.io/debian community main' > /etc/apt/sources.list.d/gravwell.list
-apt update
-apt install gravwell
 ```
+
+#### Get the Gravwell Repository Signing Key
+```
+wget -O /usr/share/keyrings/gravwell.asc https://update.gravwell.io/debian/update.gravwell.io.gpg.key
+```
+
+#### Install the Gravwell Repository
+```
+echo 'deb [ arch=amd64 signed-by=/usr/share/keyrings/gravwell.asc ] https://update.gravwell.io/debian community main' > /etc/apt/sources.list.d/gravwell.list
+```
+
+#### Update Apt and Install Gravwell
+```
+apt update && apt install gravwell
+```
+
 
 The installation process will prompt to set some shared secret values used by components of Gravwell. We strongly recommend allowing the installer to generate random values (the default) for security.
 
