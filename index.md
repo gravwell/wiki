@@ -26,6 +26,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Alphabetical List of All Pipeline Modules](search/complete-module-list.md)
 
+  * [Direct Query REST API](search/directquery/directquery.md)
+
 ## System Architecture
 
   * [Gravwell System Architecture](architecture/architecture.md)
@@ -110,12 +112,16 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
     * [Labels and Filtering](gui/labels/labels.md)
 
     * [Kits](kits/kits.md)
+    
+    * [Tokens](tokens/tokens.md)
 
   * [Command-Line Client](cli/cli.md)
 
 ## API
 
   * [API](api/api.md)
+
+  * [REST Query API](api/query.md)
 
 ## Misc
 
