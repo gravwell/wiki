@@ -73,6 +73,7 @@ func main() {
 	}
 	mx := http.NewServeMux()
 	mx.Handle("/", noCacheLoggingHandler(http.FileServer(http.Dir(*sdir))))
+	mx.HandleFunc("/.git", notFound) // I am so tired of these garbage security "reports"
 	mx.HandleFunc("/api/search", srv.search)
 	srv.Handler = mx
 
@@ -617,6 +618,10 @@ func sortLinks(r []ref, terms []string) {
 
 		return r[i].pageName < r[j].pageName
 	})
+}
+
+func notFound(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotFound)
 }
 
 func isSearchRef(pg string) bool {
