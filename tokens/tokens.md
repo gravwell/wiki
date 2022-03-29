@@ -14,7 +14,7 @@ When creating a new token you will need to provide a name, description, set of p
 
 ![Token Expiration](expires.png)
 
-Permissions can be selected in groups or as fine controls.  For example, you can select the "Search and Data" group which will automatically fill in all the API permissions required to interact with the search system.  This includes executing searches, getting the search history, downloading, saving, and attaching to searches.  It is also possible to pick specific functionality within search groups such as the ability to read actionables but not write them.  This example shows a token that is subscribed to the "Search and Data" group and also allows for reading Actionables and Extractors but cannot write either.
+Permissions can be selected in groups or as fine controls.  For example, you can select the "Search and Data" group which will automatically fill in all the API permissions required to interact with the search system.  This includes executing searches, getting the search history, downloading, saving, and attaching to searches.  It is also possible to pick specific functionality within search groups such as the ability to read actionables but not write them.  This example shows a token that is subscribed to the "Search and Data" group and also allows for reading Actionables and Extractors but cannot write to either.
 
 ![Populated Token](populated.png)
 
