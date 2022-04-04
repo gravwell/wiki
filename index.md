@@ -125,7 +125,7 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [API](api/api.md)
 
-  * [REST Query API](api/query.md)
+  * [REST QUery API](search/directquery/directquery.md)
 
 ## Misc
 
