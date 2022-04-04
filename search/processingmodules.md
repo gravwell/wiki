@@ -42,6 +42,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [eval](eval/eval.md) - evaluate arbitrary logic expressions.
 * [first/last](firstlast/firstlast.md) - take the first or last entry.
 * [fuse](fuse/fuse.md) - join data from disparate data sources.
+* [geodist](geodist/geodist.md) - compute distance between locations.
 * [geoip](geoip/geoip.md) - look up GeoIP locations.
 * [grep](grep/grep.md) - search for strings in entries.
 * [hexlify](hexlify/hexlify.md) - encode data into ASCII hex representation, or vice versa.

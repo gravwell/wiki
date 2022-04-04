@@ -15,6 +15,7 @@ Every search module has universal enumerated values for records.
 * [fdg](fdg/fdg.md) - Force-directed graphs.
 * [stackgraph](stackgraph/stackgraph.md) - Stack graphs.
 * [gauge/numbercard](gauge/gauge.md) - Gauges and numeric cards.
+* [wordcloud](wordcloud/wordcloud.md) - Word clouds.
 
 ### Tables and Text
 * [table](table/table.md) - Display tables of enumerated values.

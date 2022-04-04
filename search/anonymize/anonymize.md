@@ -12,7 +12,7 @@ The `anonymize` module supports strings, byte arrays, IP addresses, MAC addresse
 
 ### Supported Options
 
-The `anonymize` module takes no flags. Simply specify the enumerated values to anonymize. 
+* `-prefix <prefix>`: anonymized text will be prefixed with this string. Defaults to `anonymized_`.
 
 ### Example
 

@@ -23,6 +23,7 @@
 * [first/last](firstlast/firstlast.md) - take the first or last entry.
 * [fuse](fuse/fuse.md) - join data from disparate data sources.
 * [gauge](gauge/gauge.md) - render gauges.
+* [geodist](geodist/geodist.md) - compute distance between locations.
 * [geoip](geoip/geoip.md) - look up GeoIP locations.
 * [grep](grep/grep.md) - search for strings in entries.
 * [grok](grok/grok.md) - extract data from complicated text structures using pre-defined regular expressions.
@@ -80,5 +81,6 @@
 * [upper](upperlower/upperlower.md) - convert text to upper-case.
 * [variance](math/math.md#Variance) - find variance of enumerated values.
 * [winlog](winlog/winlog.md) - parse Windows logs.
+* [wordcloud](wordcloud/wordcloud.md) - render word clouds.
 * [words](words/words.md) - highly optimized search for individual words.
 * [xml](xml/xml.md) - parse XML data.
