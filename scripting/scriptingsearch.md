@@ -24,6 +24,26 @@ Version 3.3.1 of Gravwell now allows automation scripts to include external scri
 
 Both `include` and `require` can optionally specify an exact repository or commitid.  If the `repo` argument is omitted the Gravwell default library repo of `https://github.com/gravwell/libs` is used.  If the `commitid` is omitted then the `HEAD` commit is used.  Repos should be accessible by the Gravwell webserver via the schema defined (either `http://`, `https://`, or `git://`) in the repo path.  The scripting system will automatically go get repos as needed: if a commit id is requested that isn't currently known Gravwell will attempt to update the repo.
 
+```
+require("email/htmlEmail.ank")
+em = htmlEmail
+em.SetTitle("Infrastructure Monitoring Alert!")
+em.AddSubTitle("Results from Gravwell infrastructure monitoring script")
+from = "gravwell@example.com"
+to = "recipient@example.com"
+subject = "This is the subject line"
+em.AddBodyData("This is the body of my message")
+em.SendEmail(from, to, subject)
+```
+
+```
+err = include(`email/htmlEmail.ank`, `df2c1a8792d12be066fec5ea7146ba5325bbaa1d`)
+if err != nil {
+	return err
+}
+...
+```
+
 If you are in an airgapped system, or otherwise do not want Gravwell to have access to GitHub, you can specify an internal mirror and/or default commit in the `gravwell.conf` file using the `Library-Repository` and `Library-Commit` configuration variables.  For example:
 
 ```

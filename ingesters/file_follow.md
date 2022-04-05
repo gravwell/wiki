@@ -6,6 +6,14 @@ The most common use case for File Follower is monitoring a directory containing 
 
 Attention: On RHEL/CentOS, `/var/log` belongs to the "root" group, not "adm" as we assume. File Follower runs in the adm group by default, so if you want it to read `/var/log` you need to `chgrp -R adm /var/log` OR change the group in the systemd unit file.
 
+## Kernel parameter tuning
+
+On Linux, File Follower uses the inotify kernel subsystem. If you are seeing filesystem notification errors in File Follow, consider increasing the depth of the inotify event queue. You can do this by setting the depth with sysctl: `sysctl -w fs.inotify.max_queued_events=32768`. Additionally, the maximum number of files allowed to be watched is controlled by the kernel. You can increase this value with sysctl: `sysctl -w fs.inotify.max_user_watches=32768`. 
+
+## Startup considerations
+
+At startup, file follower will ingest any existing data in the tracked paths before servicing inotify events. If you are starting file follower to ingest a large amount of existing data, it is recommended that you do not write to the tracked paths until the initial ingest is complete. Writing to tracked paths during initial ingest could result in overflowing the kernel inotify buffer.
+
 ## Basic Configuration
 
 The File Follower configuration file is by default located in `/opt/gravwell/etc/file_follow.conf` on Linux and `C:\Program Files\gravwell\file_follow.cfg` on Windows.
@@ -144,6 +152,16 @@ The following indicates that lines beginning with `#` or `//` should not be inge
 Ignore-Line-Prefix="#"
 Ignore-Line-Prefix="//"
 ```
+
+### Ignore-Glob
+
+The ingester will drop (not ingest) any lines that match the given glob pattern. Globs are text patterns containing wildcards (such as `*`). For example, to drop any line that contains the word "foo" anywhere in the line:
+
+```
+Ignore-Glob="*foo*"
+```
+
+Ignore-Glob can be specified multiple times and supports the same wildcard syntax as the File-Filter option.
 
 ### Regex-Delimiter
 
