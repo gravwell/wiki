@@ -1,12 +1,40 @@
+<script>
+function calculate(){
+	var ingest = document.getElementById("ingest").value;
+	var cores = Math.ceil(ingest / 30);
+	var memory = Math.ceil(ingest / 6);
+	if (cores < 2) { cores = 2; }
+	if (memory < 4) { memory = 4; }
+	document.getElementById("corecount").innerHTML = cores;
+	document.getElementById("memsize").innerHTML = memory;
+}
+calculate()
+</script>
+
 # Quick Start Instructions
 
-This section contains basic “quick start” instructions for getting Gravwell up and running.  These instructions support the most common use case and act as an introduction to Gravwell.  Please note, the “Quick Start” instructions do not take advantage of the more advanced Gravwell features regarding distributed search and storage that are available in the Cluster Edition. If you require a more advanced setup, please review the Advanced Topics section of this guide.
+This section contains basic “quick start” instructions for getting Gravwell up and running on a single server.  These instructions support the most common use case and act as an introduction to Gravwell.  Please note, the “Quick Start” instructions do not take advantage of the more advanced Gravwell features regarding distributed search and storage that are available in the Cluster Edition. If you require a more advanced setup, please review the Advanced Topics section of this guide.
 
 This guide is suitable for Community Edition users as well as users with a paid single-node Gravwell subscription.
 
 You may find the [installation checklist](checklist.md) a useful companion to this document.
 
 Note: Community Edition users will need to obtain their own license from [https://www.gravwell.io/download](https://www.gravwell.io/download) before beginning installation. Paid users should already have received a license file via email.
+
+## System Requirements
+
+### Hardware
+
+We strongly recommend at least 4GB of RAM and 2 CPU cores to run Gravwell Community Edition; this should be sufficient up to the CE ingest limit. If you have a paid license, you should scale up your hardware as your daily data ingest increases. In general, we recommend the following rule of thumb:
+
+* One CPU core per 30 GB/day ingest.
+* 1 GB of RAM per 6 GB/day ingest.
+
+We provide a basic calculator below; just enter your expected daily ingest in gigabytes:
+
+<table border="1"><tr><td>**Expected Ingest Per Day (GB):** <input type='number' id='ingest' onInput='calculate()' placeholder="Gigabytes"/>
+**Recommended CPU Core Count:** <span id="corecount"></span>
+**Recommended RAM:** <span id="memsize"></span>GB</td></tr></table>
 
 ## Installation
 Installing Gravwell on a single machine is quite simple--just follow the instructions in this section. For more advanced environments involving multiple systems, review the Advanced Topics section.
