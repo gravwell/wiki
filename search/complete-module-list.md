@@ -10,6 +10,7 @@
 * [canbus](canbus/canbus.md) - decode CANBUS data.
 * [cef](cef/cef.md) - decode CEF data.
 * [chart](chart/chart.md) - render charts.
+* [communityid](communityid/communityid.md) - calculate Zeek community ID values.
 * [count](math/math.md#Count) - count entries.
 * [csv](csv/csv.md) - extract fields from CSV data.
 * [diff](diff/diff.md) - compare fields between entries.
