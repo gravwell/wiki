@@ -1,6 +1,6 @@
 ## Path
 
-The path module extracts portions of pathnames, including the directory, filename, extension, and volume. It works with both Windows (including UNC paths) and Linux/Unix style paths. 
+The path module extracts and filters path names.  It can process individual portions of a path, including the directory, filename, extension, and volume. It works with both Windows (including UNC paths) and Linux/Unix style paths. 
 
 ### Supported Options
 
