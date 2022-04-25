@@ -53,6 +53,7 @@
 * [numbercard](gauge/gauge.md) - display number cards.
 * [packet](packet/packet.md) - parse raw packets.
 * [packetlayer](packetlayer/packetlayer.md) - parse portions of a packet.
+* [path](path/path.md) - extract portions of pathnames.
 * [pcap](pcap/pcap.md) - render human-friendly representations of entire packets.
 * [pointmap / heatmap](map/map.md) - display point maps or heatmaps.
 * [point2point](point2point/point2point.md) - display a point-to-point map.
