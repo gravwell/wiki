@@ -6,6 +6,8 @@ This guide is suitable for Community Edition users as well as users with a paid 
 
 You may find the [installation checklist](checklist.md) a useful companion to this document.
 
+If you are interested in a complete training package checkout the [complete training PDF](https://github.com/gravwell/training/releases/download/v5.0.1/Gravwell_Training_5.0.1.pdf).  The Gravwell training PDF is the complete training manual which is paired with labs and exercises, the exercises are built from the open source [Gravwell Training](https://github.com/gravwell/training) repository.
+
 Note: Community Edition users will need to obtain their own license from [https://www.gravwell.io/download](https://www.gravwell.io/download) before beginning installation. Paid users should already have received a license file via email.
 
 ## Installation
