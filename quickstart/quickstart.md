@@ -472,3 +472,16 @@ Remote-Indexers=net:indexer2.example.net:9404
 ```
 
 Restart the webserver with the command `systemctl restart gravwell_webserver`. Now, when you view the "Systems Stats" page and click on the "Hardware" tab, you should see entries for each of the 4 indexer processes.
+
+### Uninstalling Gravwell
+
+If you decide you no longer want Gravwell installed on a particular system, the removal process is relatively straightforward.
+
+On Redhat and Debian systems, uninstalling the package should disable the services and remove the Gravwell binaries. It is then your choice to remove the rest of `/opt/gravwell`; note that if you delete the storage directories, any data that was ingested into your Gravwell system will be lost!
+
+* Debian: `apt-get remove gravwell gravwell-crash-reporter`
+* Redhat: `yum remove gravwell gravwell-crash-reporter`
+
+On Docker systems, use `docker kill` and `docker rm` to remove your Gravwell container. You may need to delete any persistent volumes you created.
+
+Newer versions of the self-contained shell installer have a `--uninstall` flag, which disables the `gravwell_webserver`, `gravwell_indexer`, `gravwell_searchagent`, and `gravwell_crash_reporter` services but does not actually delete any data. You can also manually disable those services, then delete `/opt/gravwell` if desired.
