@@ -53,6 +53,7 @@ Note: The modules listed here have a primary function of extraction. They may al
 * [netflow](netflow/netflow.md) - parse Netflow records.
 * [packet](packet/packet.md) - parse raw packets.
 * [packetlayer](packetlayer/packetlayer.md) - parse portions of a packet.
+* [path](path/path.md) - extract portions of pathnames.
 * [regex](regex/regex.md) - match and extract data using regular expressions.
 * [slice](slice/slice.md) - low-level binary parsing & extraction.
 * [strings](strings/strings.md) - find strings from binary data.
