@@ -66,6 +66,7 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 * [Nest Merge](nodes/nestmerge.md): join multiple input payloads into one.
 * [PDF](nodes/pdf.md): create PDF documents.
 * [Query Log Ingest](nodes/queryalert.md): convert search results to alert entries & ingest.
+* [Read Macros](nodes/macroget.md): read Gravwell macros.
 * [Rename](nodes/rename.md): rename variables in the payload.
 * [Run a Query](nodes/runquery.md): run a Gravwell query.
 * [Set Variables](nodes/inject.md): inject variables into the payload.
