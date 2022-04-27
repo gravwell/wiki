@@ -62,6 +62,7 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 * [HTTP](nodes/http.md): do HTTP requests.
 * [If](nodes/if.md): perform logical operations.
 * [Ingest](nodes/ingest.md): ingest data into Gravwell.
+* [JavaScript](nodes/javascript.md): run JavaScript code.
 * [Nest Merge](nodes/nestmerge.md): join multiple input payloads into one.
 * [PDF](nodes/pdf.md): create PDF documents.
 * [Query Log Ingest](nodes/queryalert.md): convert search results to alert entries & ingest.
