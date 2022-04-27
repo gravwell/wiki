@@ -122,9 +122,11 @@ After clicking "Save" and "Back to tiles", the dashboard should now begin automa
 
 ![](pause-updates.png)
 
-## Templates
+## Investigative Dashboards
 
-Gravwell supports a particular kind of saved query called a *template*, which defines variables in the query string itself. If you use a template query in a dashboard tile, the dashboard will prompt you for values for each variable when you load it. Below, observe the highlighted variables in the queries when viewing a list of templates:
+Gravwell supports a particular kind of saved query called a [*template*](/gui/templates/templates.md), which defines variables in the query string itself. If you use a template query in a dashboard tile, the dashboard will prompt you for values for each variable when you load it. A dashboard containing templates is called an *investigative dashboard*, because it can investigate a particular IP address, hostname, UUID, etc.
+
+Below, observe the highlighted variables in the queries when viewing a list of templates:
 
 ![](templates.png)
 
