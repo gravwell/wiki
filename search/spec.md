@@ -29,10 +29,17 @@ json foo bar | table
 extracts `foo` and `bar` from some JSON input, then passes the extractions to the `table` renderer. To use whitespace and the `|` character, both of which have special meaning, as the input to the `json` module, use a quoted string.
 
 ```
+{
+	"TS":"2022-05-06T09:48:41.371259747-06:00",
+	"foo bar | table":"data!"
+}
+```
+
+```
 json "foo bar | table"
 ```
 
-This example extracts a field named `foo bar | table` from the JSON input.
+This example would extract a field named `foo bar | table` from the above JSON. 
 
 All other lexical definitions below are implied to be interpreted outside of a quoted string, except for escaped productions, which are always interpreted.
 
