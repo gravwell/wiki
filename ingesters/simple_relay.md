@@ -234,7 +234,7 @@ We will see three entries: "foo", "bar", and "baz".
 Note that sometimes, you'll wish to keep portions of the delimiter. In the Windows event log example given earlier, we match on the trailing `</Event>` tag on the log, but we need to include that in the outgoing entry! The regex listener will look for two special [named capture groups](https://www.regular-expressions.info/refcapture.html) in the `Regex` parameter: "prefix" and "suffix". The contents of the "suffix" group will be attached at the end of the current entry; in the example above, that means that `</Event>` will be included at the end. The contents of the "prefix" group are stored and attached at the *start* of the *next* entry; this is useful if you're matching on the start of the next entry, for instance for multi-line syslogs:
 
 ```
-	Regex=`(?P<prefix><\d+>1 \d{4}-\d{1,2}-\d{1,2}T)`
+Regex=`(?P<prefix><\d+>1 \d{4}-\d{1,2}-\d{1,2}T)`
 ```
 
 #### Trim-Whitespace Parameter
