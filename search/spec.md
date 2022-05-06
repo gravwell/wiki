@@ -1,8 +1,8 @@
-# The Gravwell Query Language Specification
+# The grav.y Specification
 
 ## Introduction
 
-This is the formal specification the Gravwell query language syntax. A query is made up of indexer and webserver directives, modules, a pipeline, and a renderer. This document provides documentation for how input text is interpreted and tokenized. Some lexical meaning of input is also defined here. Specific modules can sometimes have context-specific semantics that differ between modules (such as numbers being implied to be strings). The user should read the [search module](#!search/complete-module-list.md) documentation for more information on module-specific considerations.
+This is the formal specification the Gravwell query language syntax (grav.y). A query is made up of indexer and webserver constraints, modules, a pipeline, and a renderer. This document provides documentation for how input text is interpreted and tokenized. Some lexical meaning of input is also defined here. Specific modules can sometimes have context-specific semantics that differ between modules (such as numbers being implied to be strings). The user should read the [search module](#!search/complete-module-list.md) documentation for more information on module-specific considerations.
 
 ## Text Encoding 
 
@@ -132,14 +132,14 @@ Modules individually specify how values are typed. For example, the `json` modul
 
 ![](query.png)
 
-A query is made up of any number of query directives (such as which tags to pull data from), search modules (arranged in a pipeline), and a render module. Additionally, multiple queries can be packed into a _compound query_.
+A query is made up of any number of query constraints (such as which tags to pull data from), search modules (arranged in a pipeline), and a render module. Additionally, multiple queries can be packed into a _compound query_.
 
-### Query directives
+### Query constraints 
 
-All input before the first module in a query represents the query directives. Usually this is just the tag(s) to extract. Query directives are a whitespace-delimited list of key=value pairs. The following directives are supported.
+All input before the first module in a query represents the query constraints. Usually this is just the tag(s) to extract. Query constraints are a whitespace-delimited list of key=value pairs. The following constraints are supported.
 
-| Directive | Description | Example |
-|-----------|-------------|---------|
+| Constraint | Description | Example |
+|------------|-------------|---------|
 | tag | The tag(s) to extract. Supports comma separated lists and wildcards. Defaults to "tag=default" if omitted. | tag=dns,zeek* |
 
 ### Modules
