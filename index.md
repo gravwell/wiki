@@ -26,6 +26,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Alphabetical List of All Pipeline Modules](search/complete-module-list.md)
 
+  * [Query syntax specification](search/spec.md)
+
   * [Direct Query REST API](search/directquery/directquery.md)
 
 ## System Architecture
