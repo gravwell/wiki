@@ -150,7 +150,7 @@ To accept syslog messages over stateless UDP via port 514 the listener would loo
 ```
 [Listener "syslog"]
 	Bind-String=udp://0.0.0.0:514
-	Reader-Type=RFC524
+	Reader-Type=RFC5424
 ```
 
 RFC5424 reader types also support a parameter named "Keep-Priority" which is set to true by default.  A typical syslog message is prepended by a priority identifier, however some users may wish to discard the priority from stored messages.  This is accomplished by added "Keep-Priority=false" to an RFC5424 based listener.  Line based listeners ignore the "Keep-Priority" parameter.
@@ -166,7 +166,7 @@ An example listener specification which removes the priority tag from entries:
 ```
 [Listener "syslog"]
 	Bind-String=udp://0.0.0.0:514
-	Reader-Type=RFC524
+	Reader-Type=RFC5424
 	Keep-Priority=false
 ```
 
