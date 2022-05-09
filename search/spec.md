@@ -103,8 +103,57 @@ Tokens cannot contain the following reserved characters, unless quoted:
 | ; | Compound query delimiter |
 | = | Assignment operator |
 | ==, <, >, <=, >=, ~, !=, !~ | Comparison operators |
-| !, #, $, %, ^, &, *, (, ), [, ], ? | Other reserved characters |
-| . | Dot. Unless used in the right hand side of a filter operation ( foo == 1.23 ) |
+| ., !, :, #, $, %, ^, &, *, (, ), [, ], ? | Other reserved characters |
+
+### Tokenizing in the R-value of a filter
+
+When filtering, tokenizing in the R-value (the value of the filter) of the filter behaves differently. All reserved characters except `|[](){}` will be considered part of the token until the next whitespace character. This means that while `uint16(Data[2:5])` is split into 9 tokens (all reserved characters cause token splitting), the filter value in `foo == ::!!!.50` is a single token.
+
+### Tokenizing in `eval` and implied HOC modules
+
+Gravwell syntax supports inline code fragments for filtering and other operations. This is accomplished with either the `eval` module, followed by the code fragment, or a module stage wrapped in parenthesis. For example,
+
+```
+tag=default json foo-bar baz | eval baz > 10 | table
+```
+
+has the code fragment `baz > 10`. This is easily parsed using the tokenizing rules described above. This same query can be written as
+
+```
+tag=default json foo-bar baz | (baz>10) | table
+```
+
+However, the code fragment syntax supports C-style notation for bitwise and logic operations, so Gravwell parses these fragments differently than the regular token stream. For example,
+
+```
+tag=default json foo-bar foo bar | ( foo-bar > 10 ) | table
+```
+
+has a code fragment `foo-bar > 10`, but it is unclear if the user meant "foo minus bar is greater than 10" or "the enumerated value 'foo-bar' is greater than 10". This is because hyphens are allowed in the tokenizing in the `json` module preceding the code fragment. 
+
+Another example,
+
+```
+tag=default json foo bar | ( baz = foo | bar ) | table
+```
+
+has an interior `|` character, which would otherwise cause a module split, but the intended use here is to perform a bitwise-or of the two enumerated values "foo" and "bar".
+
+To reconcile this behavior, `eval` and implied HOC code fragments tokenize in a different way:
+
+- String literals are all alphanumeric, with the addition of the underscore `_` strings. All other characters cause a token split (such as hyphen). 
+- Numeric literals are all forms of numbers, floating point numbers, hexadecimal syntax (eg 0xfa), and binary (eg 0b0010).
+- `|` and `||` are treated as bitwise and logical OR operations, respectively.
+
+This form of tokenizing occurs until the outermost parenthesis is in the code fragment is closed.
+
+For example,
+
+```
+tag=default json foo-bar foo bar | ( if ("foo-bar" + foo > 5 || foo-bar == 0) { output = "success!" } ) | table
+```
+
+tokenizes normally until the second module. At that point it tokenizes as a code fragment until the outermost parenthesis closes.
 
 ### Operators and filters
 
