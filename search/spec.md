@@ -109,7 +109,7 @@ Tokens cannot contain the following reserved characters, unless quoted:
 
 When filtering, tokenizing in the R-value (the value of the filter) of the filter behaves differently. All reserved characters except `|[](){}` will be considered part of the token until the next whitespace character. This means that while `uint16(Data[2:5])` is split into 9 tokens (all reserved characters cause token splitting), the filter value in `foo == ::!!!.50` is a single token.
 
-### Tokenizing in `eval` and implied HOC modules
+### Tokenizing in `eval` and code fragments
 
 Gravwell syntax supports inline code fragments for filtering and other operations. This is accomplished with either the `eval` module, followed by the code fragment, or a module stage wrapped in parenthesis. For example,
 
@@ -139,21 +139,16 @@ tag=default json foo bar | ( baz = foo | bar ) | table
 
 has an interior `|` character, which would otherwise cause a module split, but the intended use here is to perform a bitwise-or of the two enumerated values "foo" and "bar".
 
-To reconcile this behavior, `eval` and implied HOC code fragments tokenize in a different way:
+To reconcile this behavior, `eval` and implied code fragments tokenize in a different way:
 
-- String literals are all alphanumeric, with the addition of the underscore `_` strings. All other characters cause a token split (such as hyphen). 
+- Enumerated value names are limited to alphanumeric characters, with the addition of the underscore `_` strings. All other characters cause a token split (such as hyphen). 
+- String literals must be quoted.
 - Numeric literals are all forms of numbers, floating point numbers, hexadecimal syntax (eg 0xfa), and binary (eg 0b0010).
 - `|` and `||` are treated as bitwise and logical OR operations, respectively.
 
+NOTE: Enumerated values containing reserved characters or whitespace cannot be used in code fragments. These variables must be renamed or aliased.
+
 This form of tokenizing occurs until the outermost parenthesis is in the code fragment is closed.
-
-For example,
-
-```
-tag=default json foo-bar foo bar | ( if ("foo-bar" + foo > 5 || foo-bar == 0) { output = "success!" } ) | table
-```
-
-tokenizes normally until the second module. At that point it tokenizes as a code fragment until the outermost parenthesis closes.
 
 ### Operators and filters
 
