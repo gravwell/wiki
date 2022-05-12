@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is the formal specification the Gravwell query language syntax (grav.y). A query is made up of indexer and webserver constraints, modules, a pipeline, and a renderer. This document provides documentation for how input text is interpreted and tokenized. Some lexical meaning of input is also defined here. Specific modules can sometimes have context-specific semantics that differ between modules (such as numbers being implied to be strings). The user should read the [search module](#!search/complete-module-list.md) documentation for more information on module-specific considerations.
+This is the reference specification the Gravwell query language syntax (grav.y). A query is made up of indexer and webserver constraints, modules, a pipeline, and a renderer. This document provides documentation for how input text is interpreted and tokenized. Some lexical meaning of input is also defined here. Modules have context-specific semantics that differ between modules (such as numbers being implied to be strings). The user should read the [search module](#!search/complete-module-list.md) documentation for more information on module-specific considerations.
 
 ## Text Encoding 
 
@@ -12,11 +12,11 @@ This is the formal specification the Gravwell query language syntax (grav.y). A 
 
 A "character" is any of the Unicode points in the "General Category" of the Unicode specification, ([The Unicode Standard 8.0, Section 4.5](https://www.unicode.org/versions/Unicode8.0.0/)). This includes letters, numbers, marks, symbols, and punctuation. 
 
-Digits are the subset of letters belonging to the Unicode Numeric Value category. 
-
 ## Lexical grammar
 
-This section defines the syntax of a Gravwell query. Token semantics can be module-specific, so the user should read the [search module](#!search/complete-module-list.md) documentation for more information on module-specific considerations.
+This section defines the syntax of a Gravwell query. Token semantics are module-specific, so the user should read the [search module](#!search/complete-module-list.md) documentation for more information on module-specific considerations.
+
+Note: The grammar is specified in Extended Backus-Naur Form (EBNF).
 
 ### Quotes
 
@@ -43,6 +43,14 @@ This example will extract a field named `foo bar | table` from the above JSON.
 
 All other lexical definitions below are implied to be interpreted outside of a quoted string, except for escaped productions, which are always interpreted.
 
+A quoted string is defined as 
+
+```
+quoted_string 	= '"' { unicode_print | whitespace } '"' 
+whitespace 	= Characters from Unicode's whitespace category and Unicode category Z
+unicode_print 	= Characters from Unicode categories L, M, N, P, and S
+```
+
 ### Escaped input
 
 Escaped text follows the same rules as described in the [Rune Literals](https://go.dev/ref/spec#Rune_literals) section of the Go programming language specification. See that document for more information.
@@ -67,6 +75,12 @@ json "foo bar"
 
 is made up of two tokens `json`, and `foo bar`. The `json` module in this case would extract a single enumerated value named `foo bar`.
 
+Whitespace is defined as
+
+```
+whitespace = Characters from Unicode's whitespace category and Unicode category Z
+```
+
 ### Comments
 
 A comment is any input between ANSI-C style comment specifiers `/* */`, and is not considered part of the input to Gravwell. 
@@ -83,7 +97,15 @@ is implicitly reduced to
 kv myKey | table
 ```
 
-### Tokens
+A comments is defined as
+
+```
+comment 	= '/' '*' { unicode_print | whitespace } '*' '/' 
+whitespace 	= Characters from Unicode's whitespace category and Unicode category Z
+unicode_print 	= Characters from Unicode categories L, M, N, P, and S
+```
+
+### Module tokens
 
 Tokens make up the "vocabulary" of the Gravwell query language. Tokens are groups of characters separated by whitespace (as defined above) and reserved characters (such as `|`), unless grouped in a quoted string. The semantic meaning of a token depends on the position the token occurs in the _token stream_. For example,
 
@@ -103,15 +125,32 @@ Tokens cannot contain the following reserved characters, unless quoted:
 | ; | Compound query delimiter |
 | = | Assignment operator |
 | ==, <, >, <=, >=, ~, !=, !~ | Comparison operators |
-| ., !, :, #, $, %, ^, &, *, (, ), [, ], ? | Other reserved characters |
+| ., !, #, $, %, ^, &, *, (, ), [, ], ? | Other reserved characters |
 
 ### Tokenizing in the R-value of a filter
 
 When filtering, tokenizing in the R-value (the value of the filter) of the filter behaves differently. All reserved characters except `|[](){}` will be considered part of the token until the next whitespace character. This means that while `uint16(Data[2:5])` is split into 9 tokens (all reserved characters cause token splitting), the filter value in `foo == ::!!!.50` is a single token.
 
+The grammar of a module token is
+
+```
+token 		= string | r_string (after an operator) | special 
+special 	= "@" | "|" | "{" | "}" | ";" | "=" | "==" | "<" | ">" | "<=" |
+		  ">=" | "~" | "!=" | "!~" | "!" | "%" | "^" | "&" | "*" | "(" |
+		  ")" | "," | "." | "#" | "$" | "?" 
+string 		= normal_print { normal_print } | quoted_string 
+r_string	= quoted_string | r_print { r_print } 
+normal_print	= unicode_print // except special and " "
+r_print 	= unicode_print // except |{}()[]
+quoted_string 	= '"' { unicode_print | whitespace } '"' 
+whitespace 	= Characters from Unicode's whitespace category and Unicode category Z
+unicode_print 	= Characters from Unicode categories L, M, N, P, and S
+```
+
+
 ### Tokenizing in `eval` and code fragments
 
-Gravwell syntax supports inline code fragments for filtering and other operations. This is accomplished with either the `eval` module, followed by the code fragment, or a module stage wrapped in parenthesis. For example,
+Gravwell syntax supports inline code fragments for filtering and other operations. This is accomplished with either the `eval` module, followed by the code fragment, or a module stage wrapped in parentheses. For example,
 
 ```
 tag=default json foo-bar baz | eval baz > 10 | table
@@ -141,14 +180,44 @@ has an interior `|` character, which would otherwise cause a module split, but t
 
 To reconcile this behavior, `eval` and implied code fragments tokenize in a different way:
 
-- Enumerated value names are limited to alphanumeric characters, with the addition of the underscore `_` strings. All other characters cause a token split (such as hyphen). 
+- Enumerated value names (identifiers in the grammar below) are limited to unquoted strings beginning with a non-number, and not containing any of the special characters in the grammar below.
 - String literals must be quoted.
 - Numeric literals are all forms of numbers, floating point numbers, hexadecimal syntax (eg 0xfa), and binary (eg 0b0010).
 - `|` and `||` are treated as bitwise and logical OR operations, respectively.
 
 NOTE: Enumerated values containing reserved characters or whitespace cannot be used in code fragments. These variables must be renamed or aliased.
 
-This form of tokenizing occurs until the outermost parenthesis is in the code fragment is closed.
+This form of tokenizing occurs until the outermost parenthetical group in the code fragment is closed.
+
+The grammar of a token in a code fragment is:
+
+```
+token 			= identifier | string | int_lit | float_lit | special .
+special 		= "|" | "{" | "}" | ";" | "=" | "==" | "<" | ">" | "<=" | ">=" |
+		  	  "~" | "!=" | "!~" | "!" | "%" | "^" | "&" | "*" | "(" | ")" |
+		  	  "&&" | "||" | "/" | "<<" | ">>" | "+=" | "-=" | "++" | "--" |
+		  	  "," | "+" | "-" 
+string			= quoted_string 
+identifier 		= code_print_not_number { code_print } 
+code_print_not_number 	= code_print // except unicode_numbers
+code_print		= unicode_print // except special and " "
+int_lit        		= decimal_digits | binary_lit | hex_lit 
+decimal_digits 		= decimal_digit { decimal_digit } 
+binary_lit     		= "0" ( "b" | "B" ) binary_digits 
+hex_lit        		= "0" ( "x" | "X" ) hex_digits 
+binary_digits  		= binary_digit { binary_digit } 
+hex_digits     		= hex_digit { hex_digit } 
+binary_digit		= "0" | "1" 
+hex_digit		= "0…9" | "a…f" | "A…F" 
+decimal_digit		= "0…9" 
+float_lit 		= decimal_digits "." [ decimal_digits ] [ decimal_exponent ] |
+                    	  decimal_digits decimal_exponent |
+                    	  "." decimal_digits [ decimal_exponent ] 
+exponent	  	= ( "e" | "E" ) [ "+" | "-" ] decimal_digits 
+quoted_string 		= '"' { unicode_print | whitespace } '"' 
+whitespace 		= Characters from Unicode's whitespace category and Unicode category Z
+unicode_print 		= Characters from Unicode categories L, M, N, P, and S
+```
 
 ### Operators and filters
 
@@ -185,6 +254,15 @@ All input before the first module in a query represents the query constraints. U
 | Constraint | Description | Example |
 |------------|-------------|---------|
 | tag | The tag(s) to extract. Supports comma separated lists and wildcards. Defaults to "tag=default" if omitted. | tag=dns,zeek* |
+
+A query constraint uses the following grammar:
+
+```
+constraint 		= token "=" token 
+token 			= constraint_graphic { constraint_graphic } 
+constraint_print 	= unicode_print // except ", =, and " "
+unicode_print		= Characters from Unicode categories L, M, N, P, and S
+```
 
 ### Modules
 
@@ -235,4 +313,3 @@ Multiple modules can be grouped into a single _compound query_ using the [compou
 Where `@foo`, `@bar` represent the names of "inner" queries. The `@` is required. Any query can be specified in the inner query body, enclosed in `{}`, but the renderer must be the `table` renderer. Any number of inner queries can be specified. Inner queries and the main query (the final query in the list of queries, which is not wrapped in the `@{}` notation) are separated by semicolons. 
 
 Queries are executed in order, and any later query (including other inner queries) can use the output of an earlier inner query anywhere that a tabular resource can be used (such as the `lookup` module), by referencing the query by name with the `@` symbol. 
-
