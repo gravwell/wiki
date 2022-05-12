@@ -46,9 +46,9 @@ All other lexical definitions below are implied to be interpreted outside of a q
 A quoted string is defined as 
 
 ```
-quoted_string 	= '"' { unicode_print | whitespace } '"' 
-whitespace 	= Characters from Unicode's whitespace category and Unicode category Z
-unicode_print 	= Characters from Unicode categories L, M, N, P, and S
+quoted_string = '"' { unicode_print | whitespace } '"' 
+whitespace    = Characters from Unicode's whitespace category and Unicode category Z
+unicode_print = Characters from Unicode categories L, M, N, P, and S
 ```
 
 ### Escaped input
@@ -100,9 +100,9 @@ kv myKey | table
 A comments is defined as
 
 ```
-comment 	= '/' '*' { unicode_print | whitespace } '*' '/' 
-whitespace 	= Characters from Unicode's whitespace category and Unicode category Z
-unicode_print 	= Characters from Unicode categories L, M, N, P, and S
+comment       = '/' '*' { unicode_print | whitespace } '*' '/' 
+whitespace    = Characters from Unicode's whitespace category and Unicode category Z
+unicode_print = Characters from Unicode categories L, M, N, P, and S
 ```
 
 ### Module tokens
@@ -134,17 +134,17 @@ When filtering, tokenizing in the R-value (the value of the filter) of the filte
 The grammar of a module token is
 
 ```
-token 		= string | r_string (after an operator) | special 
-special 	= "@" | "|" | "{" | "}" | ";" | "=" | "==" | "<" | ">" | "<=" |
-		  ">=" | "~" | "!=" | "!~" | "!" | "%" | "^" | "&" | "*" | "(" |
-		  ")" | "," | "." | "#" | "$" | "?" 
-string 		= normal_print { normal_print } | quoted_string 
-r_string	= quoted_string | r_print { r_print } 
-normal_print	= unicode_print // except special and " "
-r_print 	= unicode_print // except |{}()[]
-quoted_string 	= '"' { unicode_print | whitespace } '"' 
-whitespace 	= Characters from Unicode's whitespace category and Unicode category Z
-unicode_print 	= Characters from Unicode categories L, M, N, P, and S
+token         = string | r_string (after an operator) | special 
+special       = "@" | "|" | "{" | "}" | ";" | "=" | "==" | "<" | ">" | "<=" |
+                ">=" | "~" | "!=" | "!~" | "!" | "%" | "^" | "&" | "*" | "(" |
+                ")" | "," | "." | "#" | "$" | "?" 
+string        = normal_print { normal_print } | quoted_string 
+r_string      = quoted_string | r_print { r_print } 
+normal_print  = unicode_print // except special and " "
+r_print       = unicode_print // except |{}()[]
+quoted_string = '"' { unicode_print | whitespace } '"' 
+whitespace    = Characters from Unicode's whitespace category and Unicode category Z
+unicode_print = Characters from Unicode categories L, M, N, P, and S
 ```
 
 
@@ -192,31 +192,31 @@ This form of tokenizing occurs until the outermost parenthetical group in the co
 The grammar of a token in a code fragment is:
 
 ```
-token 			= identifier | string | int_lit | float_lit | special .
-special 		= "|" | "{" | "}" | ";" | "=" | "==" | "<" | ">" | "<=" | ">=" |
-		  	  "~" | "!=" | "!~" | "!" | "%" | "^" | "&" | "*" | "(" | ")" |
-		  	  "&&" | "||" | "/" | "<<" | ">>" | "+=" | "-=" | "++" | "--" |
-		  	  "," | "+" | "-" 
-string			= quoted_string 
-identifier 		= code_print_not_number { code_print } 
-code_print_not_number 	= code_print // except unicode_numbers
-code_print		= unicode_print // except special and " "
-int_lit        		= decimal_digits | binary_lit | hex_lit 
-decimal_digits 		= decimal_digit { decimal_digit } 
-binary_lit     		= "0" ( "b" | "B" ) binary_digits 
-hex_lit        		= "0" ( "x" | "X" ) hex_digits 
-binary_digits  		= binary_digit { binary_digit } 
-hex_digits     		= hex_digit { hex_digit } 
-binary_digit		= "0" | "1" 
-hex_digit		= "0…9" | "a…f" | "A…F" 
-decimal_digit		= "0…9" 
-float_lit 		= decimal_digits "." [ decimal_digits ] [ decimal_exponent ] |
-                    	  decimal_digits decimal_exponent |
-                    	  "." decimal_digits [ decimal_exponent ] 
-exponent	  	= ( "e" | "E" ) [ "+" | "-" ] decimal_digits 
-quoted_string 		= '"' { unicode_print | whitespace } '"' 
-whitespace 		= Characters from Unicode's whitespace category and Unicode category Z
-unicode_print 		= Characters from Unicode categories L, M, N, P, and S
+token                 = identifier | string | int_lit | float_lit | special .
+special               = "|" | "{" | "}" | ";" | "=" | "==" | "<" | ">" | "<=" | ">=" |
+                        "~" | "!=" | "!~" | "!" | "%" | "^" | "&" | "*" | "(" | ")" |
+                        "&&" | "||" | "/" | "<<" | ">>" | "+=" | "-=" | "++" | "--" |
+                        "," | "+" | "-" 
+string                = quoted_string 
+identifier            = code_print_not_number { code_print } 
+code_print_not_number = code_print // except unicode_numbers
+code_print            = unicode_print // except special and " "
+int_lit               = decimal_digits | binary_lit | hex_lit 
+decimal_digits        = decimal_digit { decimal_digit } 
+binary_lit            = "0" ( "b" | "B" ) binary_digits 
+hex_lit               = "0" ( "x" | "X" ) hex_digits 
+binary_digits         = binary_digit { binary_digit } 
+hex_digits            = hex_digit { hex_digit } 
+binary_digit          = "0" | "1" 
+hex_digit             = "0…9" | "a…f" | "A…F" 
+decimal_digit         = "0…9" 
+float_lit             = decimal_digits "." [ decimal_digits ] [ decimal_exponent ] |
+                        decimal_digits decimal_exponent |
+                        "." decimal_digits [ decimal_exponent ] 
+exponent              = ( "e" | "E" ) [ "+" | "-" ] decimal_digits 
+quoted_string         = '"' { unicode_print | whitespace } '"' 
+whitespace            = Characters from Unicode's whitespace category and Unicode category Z
+unicode_print         = Characters from Unicode categories L, M, N, P, and S
 ```
 
 ### Operators and filters
@@ -258,10 +258,10 @@ All input before the first module in a query represents the query constraints. U
 A query constraint uses the following grammar:
 
 ```
-constraint 		= token "=" token 
-token 			= constraint_graphic { constraint_graphic } 
-constraint_print 	= unicode_print // except ", =, and " "
-unicode_print		= Characters from Unicode categories L, M, N, P, and S
+constraint       = token "=" token 
+token            = constraint_graphic { constraint_graphic } 
+constraint_print = unicode_print // except ", =, and " "
+unicode_print    = Characters from Unicode categories L, M, N, P, and S
 ```
 
 ### Modules
