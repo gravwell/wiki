@@ -3,7 +3,7 @@ Gravwell provides an interactive tool for migrating text files and Splunk data i
 
 ## Installation
 
-As the migration tool is still in early development, you’ll need to compile it yourself (or contact Gravwell for a binary file). Make sure you have [Go](https://golang.org) installed, then check out the repository and build the tool:
+Make sure you have [Go](https://golang.org) installed, then check out the repository and build the tool:
 
     git clone https://github.com/gravwell/gravwell
     cd gravwell/ingesters/migrateTUI
@@ -125,3 +125,7 @@ Having defined mappings from Splunk index+sourcetype to Gravwell tag, you may no
 ![Migration jobs](migratejobs.png)
 
 You can launch multiple migrations at once. Note that Splunk migrations may take a while; if you exit the migrate tool while a Splunk migration is running, the job will be halted as soon as possible and the most recent timestamp will be stored to resume later–we make every effort to avoid data duplication\!
+
+### Quitting the Tool
+
+You can exit the migration tool at any time by hitting Ctrl-C, or by backing all the way up to the top-level menu and pressing `q`. The tool will gracefully shut down all in-progress migrations and save its state. Note that if a particularly data-heavy Splunk migration job is in progress, it may take several seconds for the data to finish transferring; the UI will notify you that it is still waiting on some jobs and will quit when all are done.
