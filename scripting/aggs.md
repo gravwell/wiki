@@ -4,6 +4,8 @@ Although Gravwell queries are fast, some questions, like "how much data did we i
 
 Our recommended solution? Ingest some more stuff; specifically, ingest periodic *statistics* about your data. We call these "aggregates", or just "aggs". Gravwell includes a pre-built aggregate [flow](#!flows/flows.md) which does basic aggregation with zero configuration required on the user's part, and you can build your own flows to generate custom aggs. This page shows how to deploy the pre-built aggregate flow, how to query aggs, and gives some hints on building your own agg flows.
 
+Note: By convention, aggregates are ingested into tags beginning with `_aggs`, e.g. `_aggs_tags`, `_aggs_userstats`, etc. The default `gravwell.conf` configuration includes a separate well specifically for aggregates for the sake of performance and retention.
+
 ## The pre-built agg flow
 
 To instantiate & begin using the pre-built aggregates flow, open the Query Studio, select the Flows tab, and click on "Tag Aggregates Flow" under the "Starter Flows" section, as seen below:
