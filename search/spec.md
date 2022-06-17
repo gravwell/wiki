@@ -1,8 +1,8 @@
-# The grav.y Specification
+# Gravwell Query Specification
 
 ## Introduction
 
-This is the reference specification the Gravwell query language syntax (grav.y). A query is made up of indexer and webserver constraints, modules, a pipeline, and a renderer. This document provides documentation for how input text is interpreted and tokenized. Some lexical meaning of input is also defined here. Modules have context-specific semantics that differ between modules (such as numbers being implied to be strings). The user should read the [search module](#!search/complete-module-list.md) documentation for more information on module-specific considerations.
+This is the reference specification the Gravwell query language syntax. A query is made up of indexer and webserver constraints, modules, a pipeline, and a renderer. This document provides documentation for how input text is interpreted and tokenized. Some lexical meaning of input is also defined here. Modules have context-specific semantics that differ between modules (such as numbers being implied to be strings). The user should read the [search module](#!search/complete-module-list.md) documentation for more information on module-specific considerations.
 
 ## Text Encoding 
 
@@ -16,7 +16,19 @@ A "character" is any of the Unicode points in the "General Category" of the Unic
 
 This section defines the syntax of a Gravwell query. Token semantics are module-specific, so the user should read the [search module](#!search/complete-module-list.md) documentation for more information on module-specific considerations.
 
-Note: The grammar is specified in Extended Backus-Naur Form (EBNF).
+Note: The grammar is specified using [pbpg](https://github.com/gravwell/pbpg), which is similar to Extended Backus–Naur form. pbpg is itself specified with pbpg and contains the following rules:
+
+```
+Production  = Name "=" [ Expression ] "." 
+Expression  = Alternative { "|" Alternative } .	
+Alternative = Term { Term } .		
+Term        = Lex | Name | Literal | Group | Option | Repetition .
+Group       = "(" Expression ")" .		
+Option      = "[" Expression "]" .	
+Repetition  = "{" Expression "}" .
+Lex         = "lex" "(" LexFunction ")" .
+Literal     = "\"" String "\"" .	
+```
 
 ### Quotes
 
@@ -107,13 +119,13 @@ unicode_print = Characters from Unicode categories L, M, N, P, and S
 
 ### Module tokens
 
-Tokens make up the "vocabulary" of the Gravwell query language. Tokens are groups of characters separated by whitespace (as defined above) and reserved characters (such as `|`), unless grouped in a quoted string. The semantic meaning of a token depends on the position the token occurs in the _token stream_. For example,
+Tokens are groups of characters separated by whitespace (as defined above) and reserved characters (such as `|`), unless grouped in a quoted string. The semantic meaning of a token depends on the position the token occurs in the input. For example,
 
 ```
 tag=default json tag
 ```
 
-extracts the enumerated value `tag`, using the `json` module, all from the default Gravwell tag. While the token `tag` shows up twice, the meaning is different based on the position in the token stream. The first occurrence tells Gravwell to pull data from the default tag. The second occurrence tells the `json` module to extract a value named `tag`.
+extracts the enumerated value `tag`, using the `json` module, all from the default Gravwell tag. While the token `tag` shows up twice, the meaning is different based on the position in the input. The first occurrence tells Gravwell to pull data from the default tag. The second occurrence tells the `json` module to extract a value named `tag`.
 
 Tokens cannot contain the following reserved characters, unless quoted:
 
@@ -130,23 +142,6 @@ Tokens cannot contain the following reserved characters, unless quoted:
 ### Tokenizing in the R-value of a filter
 
 When filtering, tokenizing in the R-value (the value of the filter) of the filter behaves differently. All reserved characters except `|[](){}` will be considered part of the token until the next whitespace character. This means that while `uint16(Data[2:5])` is split into 9 tokens (all reserved characters cause token splitting), the filter value in `foo == ::!!!.50` is a single token.
-
-The grammar of a module token is
-
-```
-token         = string | r_string (after an operator) | special 
-special       = "@" | "|" | "{" | "}" | ";" | "=" | "==" | "<" | ">" | "<=" |
-                ">=" | "~" | "!=" | "!~" | "!" | "%" | "^" | "&" | "*" | "(" |
-                ")" | "," | "." | "#" | "$" | "?" 
-string        = normal_print { normal_print } | quoted_string 
-r_string      = quoted_string | r_print { r_print } 
-normal_print  = unicode_print // except special and " "
-r_print       = unicode_print // except |{}()[]
-quoted_string = '"' { unicode_print | whitespace } '"' 
-whitespace    = Characters from Unicode's whitespace category and Unicode category Z
-unicode_print = Characters from Unicode categories L, M, N, P, and S
-```
-
 
 ### Tokenizing in `eval` and code fragments
 
@@ -189,36 +184,6 @@ NOTE: Enumerated values containing reserved characters or whitespace cannot be u
 
 This form of tokenizing occurs until the outermost parenthetical group in the code fragment is closed.
 
-The grammar of a token in a code fragment is:
-
-```
-token                 = identifier | string | int_lit | float_lit | special .
-special               = "|" | "{" | "}" | ";" | "=" | "==" | "<" | ">" | "<=" | ">=" |
-                        "~" | "!=" | "!~" | "!" | "%" | "^" | "&" | "*" | "(" | ")" |
-                        "&&" | "||" | "/" | "<<" | ">>" | "+=" | "-=" | "++" | "--" |
-                        "," | "+" | "-" 
-string                = quoted_string 
-identifier            = code_print_not_number { code_print } 
-code_print_not_number = code_print // except unicode_numbers
-code_print            = unicode_print // except special and " "
-int_lit               = decimal_digits | binary_lit | hex_lit 
-decimal_digits        = decimal_digit { decimal_digit } 
-binary_lit            = "0" ( "b" | "B" ) binary_digits 
-hex_lit               = "0" ( "x" | "X" ) hex_digits 
-binary_digits         = binary_digit { binary_digit } 
-hex_digits            = hex_digit { hex_digit } 
-binary_digit          = "0" | "1" 
-hex_digit             = "0…9" | "a…f" | "A…F" 
-decimal_digit         = "0…9" 
-float_lit             = decimal_digits "." [ decimal_digits ] [ decimal_exponent ] |
-                        decimal_digits decimal_exponent |
-                        "." decimal_digits [ decimal_exponent ] 
-exponent              = ( "e" | "E" ) [ "+" | "-" ] decimal_digits 
-quoted_string         = '"' { unicode_print | whitespace } '"' 
-whitespace            = Characters from Unicode's whitespace category and Unicode category Z
-unicode_print         = Characters from Unicode categories L, M, N, P, and S
-```
-
 ### Operators and filters
 
 Operators are reserved characters that are used when applying filters in certain modules. Filters, and their operators, are always in the form of
@@ -254,15 +219,6 @@ All input before the first module in a query represents the query constraints. U
 | Constraint | Description | Example |
 |------------|-------------|---------|
 | tag | The tag(s) to extract. Supports comma separated lists and wildcards. Defaults to "tag=default" if omitted. | tag=dns,zeek* |
-
-A query constraint uses the following grammar:
-
-```
-constraint       = token "=" token 
-token            = constraint_graphic { constraint_graphic } 
-constraint_print = unicode_print // except ", =, and " "
-unicode_print    = Characters from Unicode categories L, M, N, P, and S
-```
 
 ### Modules
 
@@ -313,3 +269,47 @@ Multiple modules can be grouped into a single _compound query_ using the [compou
 Where `@foo`, `@bar` represent the names of "inner" queries. The `@` is required. Any query can be specified in the inner query body, enclosed in `{}`, but the renderer must be the `table` renderer. Any number of inner queries can be specified. Inner queries and the main query (the final query in the list of queries, which is not wrapped in the `@{}` notation) are separated by semicolons. 
 
 Queries are executed in order, and any later query (including other inner queries) can use the output of an earlier inner query anywhere that a tabular resource can be used (such as the `lookup` module), by referencing the query by name with the `@` symbol. 
+
+## Query Grammar
+
+Below is the pbpg representation of the query grammar. 
+
+
+```
+Query 			= [ QueryStructure | CompoundQuery ] .
+QueryStructure 		= { Constraint } [ Module { "|" Module } ] .
+CompoundQuery 		= InnerQuery { InnerQuery } QueryStructure .			
+InnerQuery 		= "@" String "{" QueryStructure "}" ";" .			
+
+Constraint 		= ConstraintString "=" ConstraintString.					
+Module 			= { Constraint } (Hoc | RegularModule) .					
+RegularModule 		= String { Token } .						
+Token 			= QuotedString | String | (Op (RString | QuotedString)) | Special .			
+
+Hoc 			= ( [ "eval" ] "(" HocFragment ")") | ( "eval" EvalFragment ) .					
+HocFragment 		= { HocToken } .					
+HocToken 		= Identifier | Operator | QuotedString | Number |
+
+Identifier 		= Letter { Letter | Digit } .					
+Letter			= # Unicode letter category
+Digit			= # Unicode digit category
+
+Operator		= "<<" | ">>" | "+=" | "-=" | "&&" | "||" |
+			  "++" | "--" | "==" | "!=" | "+"  | "-"  |
+			  "*"  | "/"  | "%"  | "&"  | "^"  | "<"  |
+			  ">"  | "="  | "!"  | "["  | "]"  | "{"  |
+			  "}"  | ","  | ";"  | "."  | ":" .				
+
+Number			= Digit { Digit } [ "." { Digit } ] .				
+
+Special 		= "{" | "}" | "(" | ")" | ";" | "=" | "<" | "!" |
+			  ">" | "~" | "%" | "^" | "&" | "*" | "," | "+" |
+			  "." | ":" | "[" | "]" .						
+
+Op 			= "<=" | ">=" | "==" | "!=" | "~" | "!~" | "<" | ">" .			
+
+String 			= # All printable Unicode codepoints except for whitespace, the Specials rule, and "|".
+QuotedString 		= # All printable Unicode codepoints, including whitespace, surrounded by double quotes '"'.
+ConstraintString	= # Same as String, but "[", "]", "*", and "," are allowed.
+RString 		= # Same as String, but "." and ":" are allowed.
+```
