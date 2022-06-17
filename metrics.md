@@ -112,6 +112,7 @@ Here's an example that was sent by a Gravwell employee's home system:
     "DashboardCount": 5,
     "DashboardLoadCount": 13,
     "DistributedFrontends": false,
+    "FlowCount": 3,
     "ForeignDashboardLoadCount": 0,
     "ForeignSearchLoadCount": 0,
     "Groups": 2,
@@ -120,6 +121,11 @@ Here's an example that was sent by a Gravwell employee's home system:
         {
             "CPUCount": 12,
             "HostHash": "90578d2dcc5bea54614528e1b2c5a25c261cdd7c945f763d2387f309bdd38816",
+            "LoadAverage": {
+                "Load1": 0.52,
+                "Load5": 1.14,
+                "Load15": 0.73
+            },
             "ProcessHeapAllocation": 47899944,
             "ProcessSysReserved": 282423040,
             "TotalMemory": 67479150592,
@@ -129,6 +135,11 @@ Here's an example that was sent by a Gravwell employee's home system:
         {
             "CPUCount": 12,
             "HostHash": "90578d2dcc5bea54614528e1b2c5a25c261cdd7c945f763d2387f309bdd38816",
+            "LoadAverage": {
+                "Load1": 0.52,
+                "Load5": 1.14,
+                "Load15": 0.73
+            },
             "ProcessHeapAllocation": 66157568,
             "ProcessSysReserved": 282554112,
             "TotalMemory": 67479150592,
@@ -138,6 +149,11 @@ Here's an example that was sent by a Gravwell employee's home system:
         {
             "CPUCount": 12,
             "HostHash": "90578d2dcc5bea54614528e1b2c5a25c261cdd7c945f763d2387f309bdd38816",
+            "LoadAverage": {
+                "Load1": 0.52,
+                "Load5": 1.14,
+                "Load15": 0.73
+            },
             "ProcessHeapAllocation": 58577296,
             "ProcessSysReserved": 351827712,
             "TotalMemory": 67479150592,
@@ -147,6 +163,11 @@ Here's an example that was sent by a Gravwell employee's home system:
         {
             "CPUCount": 12,
             "HostHash": "90578d2dcc5bea54614528e1b2c5a25c261cdd7c945f763d2387f309bdd38816",
+            "LoadAverage": {
+                "Load1": 0.52,
+                "Load5": 1.14,
+                "Load15": 0.73
+            },
             "ProcessHeapAllocation": 58304584,
             "ProcessSysReserved": 282226432,
             "TotalMemory": 67479150592,
@@ -334,6 +355,11 @@ Here's an example that was sent by a Gravwell employee's home system:
     "WebserverNodeInfo": {
         "CPUCount": 12,
         "HostHash": "90578d2dcc5bea54614528e1b2c5a25c261cdd7c945f763d2387f309bdd38816",
+        "LoadAverage": {
+            "Load1": 0.52,
+            "Load5": 1.14,
+            "Load15": 0.73
+        },
         "ProcessHeapAllocation": 311618224,
         "ProcessSysReserved": 420052881,
         "TotalMemory": 67479150592,
@@ -355,6 +381,7 @@ The structure is large, in part because this webserver is connected to 4 indexer
 * `DashboardCount`: The number of dashboards that exist.
 * `DashboardLoadCount`: The number of types any dashboard has been opened by any user.
 * `DistributedFrontends`: Set to true if [distributed webservers](#!distributed/frontend.md) are enabled.
+* `FlowCount`: the number of flows on the system.
 * `ForeignDashboardLoadCount`: The number of times users have viewed dashboards owned by another user (helps us determine if our dashboard sharing options are sufficiently flexible)
 * `ForeignSearchLoadCount`: The number of times users have viewed searches owned by another user (helps us determine if our search sharing options are sufficiently flexible)
 * `Groups`: The number of user groups on the system.
@@ -362,6 +389,7 @@ The structure is large, in part because this webserver is connected to 4 indexer
 * `IndexerNodeInfo`: An array of structures, one per indexer, briefly describing the statistics of each indexer:
 	- `CPUCount`: The number of CPU cores on the indexer.
 	- `HostHash`: A non-reversible hash (see [github.com/denisbrodbeck/machineid](https://github.com/denisbrodbeck/machineid)) that uniquely identifies the host machine running the indexer. Note that in this example, the indexers are all running on a single Docker host, so they all have the same HostHash.
+	- `LoadAverage`: Unix load averages for the system.
 	- `ProcessHeapAllocation`: The amount of heap memory allocated by the indexer process.
 	- `ProcessSysReserved`: The total amount of memory the indexer process has reserved from the OS.
 	- `TotalMemory`: The size of the system's main memory.
@@ -373,9 +401,14 @@ The structure is large, in part because this webserver is connected to 4 indexer
 		* `Data`: The number of bytes of data in this well.
 		* `Entries`: The number of entries in this well.
 * `IngesterCount`: The number of unique ingesters attached to the system.
+* `KitCount`: The number of kits installed on the system.
+* `UnsignedKitCount`: The number of kits installed without a signing key.
+* `LastDayData`: The number of bytes ingested in the last 24 hours.
+* `LastDayCount`: The number of entries ingested in the last 24 hours.
 * `LicenseHash`: The MD5 sum of the license in use.
 * `LicenseTimeLeft`: The number of seconds remaining in the license.
 * `ManualSearchCount`: The number of searches executed manually.
+* `OEM`: A string identifying your OEM provider, if any.
 * `ResourceUpdates`: The number of times any resource has been modified.
 * `ResourcesCount`: The number of resources on the system.
 * `SKU`: The SKU of the license in use.
@@ -394,6 +427,7 @@ The structure is large, in part because this webserver is connected to 4 indexer
 * `WebserverNodeInfo`: A brief description of the system running the webserver process:
 	- `CPUCount`: The number of CPU cores on the webserver.
 	- `HostHash`: A non-reversible hash (see [github.com/denisbrodbeck/machineid](https://github.com/denisbrodbeck/machineid)) that uniquely identifies the host machine running the webserver.
+	- `LoadAverage`: Unix load averages for the system.
 	- `ProcessHeapAllocation`: The amount of heap memory allocated by the webserver process.
 	- `ProcessSysReserved`: The total amount of memory the webserver process has reserved from the OS.
 	- `TotalMemory`: The size of the system's main memory.

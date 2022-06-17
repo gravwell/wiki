@@ -57,7 +57,7 @@ Note: The `Keep-Priority` field is necessary if you plan to analyze syslog entri
 
 ## Listeners
 
-Each listener contains a set of universal configuration values, regardless of whether the listener is a line reader, RFC5424 reader, or JSON Listener.
+Each listener contains a set of universal configuration values, regardless of whether the listener is a line reader, RFC5424 reader, regex reader, or JSON Listener.
 
 ## Universal Listener Configuration Parameters
 
@@ -150,7 +150,7 @@ To accept syslog messages over stateless UDP via port 514 the listener would loo
 ```
 [Listener "syslog"]
 	Bind-String=udp://0.0.0.0:514
-	Reader-Type=RFC524
+	Reader-Type=RFC5424
 ```
 
 RFC5424 reader types also support a parameter named "Keep-Priority" which is set to true by default.  A typical syslog message is prepended by a priority identifier, however some users may wish to discard the priority from stored messages.  This is accomplished by added "Keep-Priority=false" to an RFC5424 based listener.  Line based listeners ignore the "Keep-Priority" parameter.
@@ -166,11 +166,84 @@ An example listener specification which removes the priority tag from entries:
 ```
 [Listener "syslog"]
 	Bind-String=udp://0.0.0.0:514
-	Reader-Type=RFC524
+	Reader-Type=RFC5424
 	Keep-Priority=false
 ```
 
 Note: The priority portion of a syslog message is codified in the RFC specification.  Removing the priority means that the Gravwell [syslog](#!search/syslog/syslog.md) search module will be unable to properly parse the values.  Paid Gravwell licenses are all unlimited and we recommend that the priority field is left in syslog messages.  The syslog search module is also dramatically faster than attempting to hand parse syslog messages with regular expressions.
+
+## Regex Listeners
+
+The regex listener type is a very flexible listener which can split entries based on arbitrary regular expressions. For instance, there may be existing infrastructure which forwards Windows XML event logs over a plain TCP connection (one Gravwell customer actually does this):
+
+```
+<Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
+  <System>
+    <Provider Name="Microsoft-Windows-Security-Auditing" Guid="{543496D5-5478-49A4-A5BA-3E3B0428E31D}"/>
+    <EventID>4689</EventID>
+    <Version>0</Version>
+    <Level>0</Level>
+    <Task>13313</Task>
+    <Opcode>0</Opcode>
+    <Keywords>0x8020000000000000</Keywords>
+    <TimeCreated SystemTime="2018-11-26T20:42:07.323695200Z"/>
+    <EventRecordID>1624709</EventRecordID>
+    <Correlation/>
+    <Execution ProcessID="4" ThreadID="4392"/>
+    <Channel>Security</Channel>
+    <Computer>MY-PC</Computer>
+    <Security/>
+  </System>
+  <EventData>
+    <Data Name="SubjectUserSid">S-1-2-14</Data>
+    <Data Name="SubjectUserName">GRAVUSER$</Data>
+    <Data Name="SubjectDomainName">WORKGROUP</Data>
+    <Data Name="SubjectLogonId">0x3e3</Data>
+    <Data Name="Status">0x0</Data>
+    <Data Name="ProcessId">0x1384</Data>
+    <Data Name="ProcessName">C:\Windows\servicing\TrustedInstaller.exe</Data>
+  </EventData>
+</Event>
+```
+
+Because the event logs can span multiple lines, it is not safe to use the basic listener. However, we can create a *regex* listener which splits entries apart using the trailing `</Event>` tag. The following is a regex listener definition which can split on Windows event logs like the one above:
+
+```
+[RegexListener "windows"]
+	Bind-String="0.0.0.0:6666"
+	Tag-Name="winevent"
+	Regex=`(?P<suffix></Event>)`
+```
+
+The behavior of the Regex parameter is discussed below.
+
+### Regex Listener Configuration Parameters
+
+The regex listener blocks implement the universal listener types as documented above. Additional parameters specify the regular expression to use as a delimiter, options for dealing with whitespace, and a maximum buffer size.
+
+#### Regex Parameter
+
+The `Regex` parameter specifies a regular expression to be used as the delimiter. The ingester will read incoming data and buffer it until it finds a match for the regular expression. It then takes all the buffered data *up to but not including* the delimiter and ingests it as an entry. The delimiter itself is *discarded*. Thus, if we define `Regex="X"` and send the following:
+
+```
+fooXbarXbaz
+```
+
+We will see three entries: "foo", "bar", and "baz".
+
+Note that sometimes, you'll wish to keep portions of the delimiter. In the Windows event log example given earlier, we match on the trailing `</Event>` tag on the log, but we need to include that in the outgoing entry! The regex listener will look for two special [named capture groups](https://www.regular-expressions.info/refcapture.html) in the `Regex` parameter: "prefix" and "suffix". The contents of the "suffix" group will be attached at the end of the current entry; in the example above, that means that `</Event>` will be included at the end. The contents of the "prefix" group are stored and attached at the *start* of the *next* entry; this is useful if you're matching on the start of the next entry, for instance for multi-line syslogs:
+
+```
+Regex=`(?P<prefix><\d+>1 \d{4}-\d{1,2}-\d{1,2}T)`
+```
+
+#### Trim-Whitespace Parameter
+
+If `Trim-Whitespace` is set to true, any preceding or trailing whitespace on the outgoing entry data will be removed.
+
+#### Max-Buffer Parameter
+
+The Max-Buffer parameter specifies, in bytes, how much data the regex listener should buffer as it looks for a matching regular expression. The default is 8 MB. If the listener reads more data than that without finding a match for the regex delimiter, it will ingest an entry containing the first `Max-Buffer` stored bytes; although the entries may end up malformed, we consider it more appropriate to ingest questionable data than to throw it away.
 
 ## JSON Listeners
 

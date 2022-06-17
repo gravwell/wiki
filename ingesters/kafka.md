@@ -64,10 +64,34 @@ The Gravwell Kafka ingester can subscribe to multiple topics and even multiple K
 | Key-As-Source | boolean | Gravwell producers will often put the data source address in a message key, if set the ingester will attempt to interpret the message key as a Source address.  If the key structure is not correct the ingester will apply the override (if set) or the default source. | NO - default is false |
 | Synchronous | boolean | The ingester will perform a sync on the ingest connection every time a Kafka batch is written. | NO - default is false |
 | Batch-Size | integer | The number of entries to read from Kafka before forcing a write to the ingest connection | NO - default is 512 |
+| Auth-Type | string | Enable SASL authentiation and specify mechanism |
+| Username | string | Specify username for SASL authentication |
+| Password | string | Specify password for SASL authentication |
 
 Warning: Setting any consumer as synchronous causes that consumer to continually Sync the ingest pipeline.  It will have significant performance implications for ALL consumers.
 
 Notice: Setting a large `Batch-Size` when using `Synchronous=true` can help with performance under heavy load.
+
+### Authentication
+
+The Kafka ingester supports the following SASL authentication mechanisms: `PLAIN`, `SCRAMSHA256`, and `SCRAMSHA512`.  To enable authentication set the `Auth-Type` configuration parameter to the desired authentication type and provide a `Username` and `Password`.  Each consumer must set its own authentication.
+
+The following is a valid configuration snippet from a listener named `tester` using plaintext authentication:
+
+```
+[Consumer "tester"]
+	Leader="127.0.0.1"
+	Default-Tag=default   #send bad tag names to default tag
+	Tags=*                #allow all tags
+	Topic=default
+	Auth-Type=plain
+	Username=TheDude
+	Password="a super secret password"
+```
+
+Valid `Auth-Type` options are `plain`, `scramsha256`, and `scramsha512`.
+
+
 
 ### Example Configuration
 
