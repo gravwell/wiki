@@ -33,7 +33,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [anko](anko/anko.md) - run arbitrary code in the pipeline.
 * [anonymize](anonymize/anonymize.md) - anonymize IP addresses.
 * [awk](awk/awk.md) - execute AWK code.
-* [base64](base64/base64.md) - execute AWK code.
+* [base64](base64/base64.md) - encodes or decodes base64 strings.
 * [communityid](communityid/communityid.md) - calculate Zeek community ID values.
 * [count](math/math.md#Count) - count entries.
 * [diff](diff/diff.md) - compare fields between entries.
