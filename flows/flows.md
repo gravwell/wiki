@@ -63,6 +63,8 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 * [If](nodes/if.md): perform logical operations.
 * [Ingest](nodes/ingest.md): ingest data into Gravwell.
 * [JavaScript](nodes/javascript.md): run JavaScript code.
+* [JSON Encode/Decode](nodes/json.md): encode and decode JSON.
+* [Mattermost Message](nodes/mattermost.md): send a Mattermost message.
 * [Nest Merge](nodes/nestmerge.md): join multiple input payloads into one.
 * [PDF](nodes/pdf.md): create PDF documents.
 * [Query Log Ingest](nodes/queryalert.md): convert search results to alert entries & ingest.
@@ -76,6 +78,7 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 * [Stack Merge](nodes/stackmerge.md): join multiple input payloads into one.
 * [Teams Message](nodes/teams.md): send a Microsoft Teams message.
 * [Text Template](nodes/template.md): format text.
+* [Throttle](nodes/throttle.md): limit execution frequency of certain nodes within a flow.
 
 The following nodes tend to be needed only in particular advanced cases:
 
