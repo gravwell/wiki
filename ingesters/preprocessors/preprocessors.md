@@ -273,6 +273,45 @@ webserver-dev.example.org
 
 This new preprocessor extracts the `EventID` and `System` fields from every entry which makes it past the first filter. It then compares them against the values in the files. Because we set `Match-Logic=and`, it considers an entry a match if *both* field values are found in the files. Because we set `Match-Action=drop`, any entry which matches on both fields will be dropped. Thus, an entry with EventID=220 and System=webserver-dev.example.org is dropped, while one with EventID=220 and System=email-server-01.example.org will *not* be dropped.
 
+## CSV Router Preprocessor
+
+The CSV router preprocessor can route entries to different tags based on the contents of a specified CSV column in the entry. The configuration specifies a column index (zero indexed), the contents of which are then tested against user-defined routing rules.
+
+The CSV Router preprocessor Type is `csvrouter`.
+
+### Supported Options
+
+* `Route-Extraction` (int, required): This parameter specifies the column index (beginning with 0), of the CSV which will contain the string used to compare against routes.
+* `Route` (string, required): At least one `Route` definition is required. This consists of two strings separated by a colon, e.g. `Route=sshd:sshlogtag`. The first string ('sshd') is matched against the value extracted via `Route-Extraction`, and the second string defines the name of the tag to which matching entries should be routed. If the second string is left blank, entries matching the first string *will be dropped*.
+* `Drop-Misses` (boolean, optional): By default, entries which are not valid CSV do not contain enough columns to extract the `Route-Extraction` column will be passed through unmodified. Setting `Drop-Misses` to true will make the ingester drop any entries which 1) are not valid CSV, or 2) do not contain enough columns to extract the `Route-Extraction` column.
+
+### Example: Routing based on the Third Column
+
+Given the input:
+
+```
+0,fritz,employee
+1,kris,boss
+```
+
+We can use the CSV router to route entries based on the user role, located in the 3rd column of the CSV.
+
+Below is a partial Simple Relay configuration that will route the above CSV to two different tags, based on the contents of the 3rd column.
+
+```
+[Listener "csv"]
+        Bind-String="0.0.0.0:2601" #we are binding to all interfaces, with TCP implied
+        Tag-Name=default
+        Preprocessor=role
+
+[preprocessor "role"]
+        Type = csvrouter
+        Drop-Misses=false
+        Route-Extraction=2 # csv is zero-indexed, so 2 is the 3rd column
+        Route=employee:csvemployees
+	Route=boss:csvbosses
+```
+
 ## Regex Router Preprocessor
 
 The regex router preprocessor is a flexible tool for routing entries to different tags based on the contents of the entries. The configuration specifies a regular expression containing a [named capturing group](https://www.regular-expressions.info/named.html), the contents of which are then tested against user-defined routing rules.
