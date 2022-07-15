@@ -1,10 +1,11 @@
 # Changelogs for recent version updates
 
 ## Current Version 
-* [5.0.3](5.0.3.md)
+* [5.0.4](5.0.4.md)
 
 ## Previous Versions
 
+* [5.0.3](5.0.3.md)
 * [5.0.2](5.0.2.md)
 * [5.0.1](5.0.1.md)
 * [5.0.0](5.0.0.md)
