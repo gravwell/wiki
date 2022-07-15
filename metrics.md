@@ -94,6 +94,7 @@ Here's an example that was sent by a Gravwell employee's home system:
 
 ```
 {
+    "ABACActive": false,
     "ApiVer": {
         "Major": 0,
         "Minor": 1
@@ -346,9 +347,11 @@ Here's an example that was sent by a Gravwell employee's home system:
     "SystemMemory": 67479150592,
     "SystemProcs": 3,
     "SystemUptime": 1920449,
+    "TagCount": 55,
     "TimeStamp": "2020-04-02T22:11:23Z",
     "TotalData": 185614443921,
     "TotalEntries": 494907311,
+    "UniqueIngesterCount": 3,
     "Uptime": 300,
     "UserLoginCount": 27,
     "Users": 2,
@@ -373,6 +376,7 @@ Here's an example that was sent by a Gravwell employee's home system:
 
 The structure is large, in part because this webserver is connected to 4 indexers which each get their own set of information. Here's a breakdown of the fields in detail:
 
+* `ABACActive`: Set to true if any ABAC or tag access rules are in place on the system.
 * `ApiVer`: An internal Gravwell API versioning number.
 * `AutomatedSearchCount`: The number of searches which have been executed "automatically" (by the search agent, or by loading a dashboard).
 * `BuildVer`: A structure describing the particular build of Gravwell on this system.
@@ -400,7 +404,7 @@ The structure is large, in part because this webserver is connected to 4 indexer
 		* `Cold`: Whether or not this is a "cold" well.
 		* `Data`: The number of bytes of data in this well.
 		* `Entries`: The number of entries in this well.
-* `IngesterCount`: The number of unique ingesters attached to the system.
+* `IngesterCount`: The number of ingesters attached to the system.
 * `KitCount`: The number of kits installed on the system.
 * `UnsignedKitCount`: The number of kits installed without a signing key.
 * `LastDayData`: The number of bytes ingested in the last 24 hours.
@@ -418,9 +422,11 @@ The structure is large, in part because this webserver is connected to 4 indexer
 * `SystemMemory`: How many bytes of memory are installed on the webserver's host system.
 * `SystemProcs`: The number of processes running on the host system.
 * `SystemUptime`: Number of seconds the host system has been running.
+* `TagCount`: Total number of tags on the system.
 * `TimeStamp`: The time at which this report was generated.
 * `TotalData`: The number of bytes across all wells on all indexers.
 * `TotalEntries`: The number of entries across all wells on all indexers.
+* `UniqueIngesterCount`: The number of unique ingester types attached to the system. If you have 3 Simple Relay ingesters and a Netflow ingester attached, the value will be 2.
 * `Uptime`: The number of seconds since the webserver process started.
 * `UserLoginCount`: The number of times users have logged in.
 * `Users`: The number of users on the system.
