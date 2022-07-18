@@ -302,7 +302,19 @@ The Simple Relay ingester and the HTTP ingester define "Listeners"; File Follow 
 
 Note how it specifies the data source (via the `Base-Directory` and `File-Filter` rules), which tag to use (via `Tag-Name`), and an additional rule for parsing timestamps in the incoming data (`Assume-Local-Timezone`).
 
-## Time Parsing Overrides
+## Time
+
+### Timestamp Extraction
+
+All ingesters attach a timestamp to each entry sent to an indexer. Most ingesters extract timestamps from the data being ingested, such as the timestamp field in Syslog, and ingesters will extract timestamps as appropriate to the data. When an ingester cannot extract a timestamp, or the input data does not have a timestamp at a known position in the input data, the ingester will attempt to find a timestamp (see the [list of timestamp formats](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#Format)) using a number of formats. 
+
+If the ingester still cannot find a valid timestamp, the current time will be applied to the entry. 
+
+When an ingester attempts to find a timestamp based on the list of timestamp formats, it will always try the last successful format first. For example, if an entry has a timestamp `02 Jan 06 15:04 MST`, the ingester will attempt to parse the next entry with the same timestamp format. If it does not match, then the ingester will attempt all other timestamp formats. 
+
+There are several ways to change the behavior of how timestamps are parsed, detailed in the next section. Additionally, fully custom timestamp formats can be provided in [some ingesters](#!ingesters/customtime/customtime.md).
+
+### Time Parsing Overrides
 
 Most ingesters attempt to apply a timestamp to each entry by extracting a timestamp from the data. There are several options which can be applied to each *data consumer* for fine-tuning of this timestamp extraction:
 
