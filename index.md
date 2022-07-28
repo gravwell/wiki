@@ -96,6 +96,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Data Archiving](configuration/archive.md)
 
+  * [Aggregates](scripting/aggs.md)
+
 ## Automation
 
   * [Flows](flows/flows.md)
