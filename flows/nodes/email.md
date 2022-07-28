@@ -6,6 +6,8 @@ The Email node sends an email message to a list of one or more recipients, with 
 
 * `Sender`, required: This is the address which will appear in the "From" header of the email.
 * `Recipients`, required: The email will be sent to this address or addresses.
+* `CC`: An optional list of CC recipients.
+* `BCC`: An optional list of BCC recipients.
 * `Subject`, required: The subject line of the email.
 * `Body`, required: The body text of the email message. Enter a string manually, or select a variable containing suitable text. The [Text Template](template.md) node provides powerful tools for formatting text in the flow.
 * `Attachments`: An optional array of items to add as attachments on the email. The Email node makes a best-effort attempt at determining the appropriate file type on the attachment. Consider using the output of the [PDF](pdf.md) node as an attachment.
