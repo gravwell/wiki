@@ -2,6 +2,8 @@
 
 The json module is used to extract and filter data from search entries into enumerated values for later use.  JSON is an excellent data format for dynamic exploration as the data is self-describing.  The JSON module can extract items and rename them, or filter based on the extracted value.  Filtering directly within the JSON module provides a very high speed and intuitive way to select data of a specific format.
 
+Note: The `json` module does not unescape extracted fields that may have been escaped in order to adhere to the JSON specification. You can use the [unescape](#!search/unescape/unescape.md) module to unescape extracted fields.
+
 ## Supported Options
 
 * `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.

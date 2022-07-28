@@ -8,13 +8,13 @@ Not all ingesters support custom time formats.  One-off or standalone ingesters 
 
 The following ingesters support the inclusion of custom time formats:
 
-* [Simple Relay](#!ingesters/ingesters.md#Simple_Relay)
-* [File Follower](#!ingesters/ingesters.md#File_Follower)
-* [HTTP Ingester](#!ingesters/ingesters.md#HTTP)
-* [Amazon Kinesis](#!ingesters/ingesters.md#Kinesis_Ingester)
-* [Microsoft Graph API](#!ingesters/ingesters.md#Microsoft_Graph_API_Ingester)
-* [Office 365](#!ingesters/ingesters.md#Office_365_Log_Ingester)
-* [Kafka](#!ingesters/ingesters.md#Kafka)
+* [Simple Relay](#!ingesters/simple_relay.md)
+* [File Follower](#!ingesters/file_follow.md)
+* [HTTP Ingester](#!ingesters/http.md)
+* [Amazon Kinesis](#!ingesters/kinesis.md)
+* [Microsoft Graph API](#!ingesters/msg.md)
+* [Office 365](#!ingesters/o365.md)
+* [Kafka](#!ingesters/kafka.md)
 
 ## Defining a Custom Format
 
