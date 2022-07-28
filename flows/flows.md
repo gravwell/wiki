@@ -75,6 +75,7 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 * [Slack File](nodes/slackfile.md): upload a file to a Slack channel.
 * [Slack Message](nodes/slackmessage.md): send a message to a Slack channel.
 * [Sleep](nodes/sleep.md): pause flow execution for a given period of time.
+* [Splunk Query](nodes/splunkquery.md): run a Splunk query.
 * [Stack Merge](nodes/stackmerge.md): join multiple input payloads into one.
 * [Teams Message](nodes/teams.md): send a Microsoft Teams message.
 * [Text Template](nodes/template.md): format text.
