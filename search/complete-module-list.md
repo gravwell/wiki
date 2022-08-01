@@ -19,6 +19,7 @@
 * [enrich](enrich/enrich.md) - manually attach enumerated values to entries.
 * [entropy](entropy/entropy.md) - calculate entropy of enumerated values.
 * [eval](eval/eval.md) - evaluate arbitrary logic expressions.
+* [filetype](filetype/filetype.md) - detect filetypes of binary data.
 * [fdg](fdg/fdg.md) - generate Force Directed Graphs.
 * [fields](fields/fields.md) - extract data from entries using arbitrary field separators.
 * [first/last](firstlast/firstlast.md) - take the first or last entry.
