@@ -1,6 +1,6 @@
 # Ingesters
 
-This section contains more detailed instruction for configuring and running Gravwell ingesters.
+This section contains more detailed instruction for configuring and running Gravwell ingesters, which gather incoming data, package it into Gravwell entries, and ship it to Gravwell indexers for storage. The ingesters described in these pages are primarily designed to capture *live* data as it is generated; if you have existing data you want to import, check out the [migration documents](migrate/migrate.md).
 
 The Gravwell-created ingesters are released under the BSD open source license and can be found on [Github](https://github.com/gravwell/gravwell/tree/master/ingesters). The ingest API is also open source, so you can create your own ingesters for unique data sources, performing additional normalization or pre-processing, or any other manner of things. The ingest API code [is located here](https://github.com/gravwell/gravwell/tree/master/ingest).
 
