@@ -36,7 +36,8 @@ The core suite of ingesters are available for download as installable packages. 
 Some Gravwell components are distributed as optional additional installers, such as the search agent and the datastore.
 
 | Component | SHA256 | More Info |
-|:---------:|:------:|----------:|
+|:---------:|:------:|----------|
 | [Datastore](https://update.gravwell.io/archive/5.0.5/installers/gravwell_datastore_installer_5.0.5.sh) | ``256f90f3636479ad9838ca1d2968b90eab476715c545e1a7100d9e046547395f`` | [Documentation](#!distributed/frontend.md) |
 | [Offline Replicator](https://update.gravwell.io/archive/5.0.5/installers/gravwell_offline_replication_installer_5.0.5.sh) | ``b7c3d818cfe6398c45172ebb462d127f518f9ff4c2c0b52f1dfc5883486d374c`` | [Documentation](#!configuration/replication.md) |
 | [Load Balancer](https://update.gravwell.io/archive/5.0.5/installers/gravwell_loadbalancer_installer_5.0.5.sh) | ``6a4339988b5ceee96d14877eb535807b718e6deb9ba322a0403cb3292dec38b9`` | |
+| [Gravwell Tools](https://update.gravwell.io/archive/5.0.5/installers/gravwell_tools_5.0.5.sh) | ``b4e61b6f60a362cb609393ecb7c71bd6a24821740009715d41fa0929bb7b6fe5`` | Additional tools, including [migrate](#!/migrate/migrate.md) |

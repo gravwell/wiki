@@ -1,3 +1,0 @@
-This is an experiment in using pandoc to generate wiki documentation *and* a standalone PDF guide from the same source document.
-
-To make changes, edit `migrate.pandoc`, then run `make wiki` to update the wiki markdown page.

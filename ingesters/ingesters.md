@@ -24,7 +24,6 @@ Attention: The [replication system](#!configuration/replication.md) does not rep
 | [IPMI](#!ingesters/ipmi.md) | Periodically collect SDR and SEL records from IPMI devices. |
 | [Kafka](#!ingesters/kafka.md) | Create a Kafka Consumer that ingests into Gravwell. Can be paired with the Gravwell Kafka Federator. |
 | [Kinesis](#!ingesters/kinesis.md) | Ingest from Amazon's [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) service. |
-| [Mass File](#!ingesters/massfile.md) | Ingest large numbers of static files. |
 | [Microsoft Graph API](#!ingesters/msg.md) | Ingest from Microsoft's Graph API. |
 | [Netflow](#!ingesters/netflow.md) | Collect Netflow and IPFIX records. |
 | [Network Capture](#!ingesters/pcap.md) | Ingest PCAP on the wire. |
