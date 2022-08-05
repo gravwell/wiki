@@ -4,6 +4,8 @@ The File Follower ingester is the best way to ingest files on the local filesyst
 
 The most common use case for File Follower is monitoring a directory containing log files which are actively being updated, such as /var/log. It intelligently handles log rotation, detecting when `logfile` has been moved to `logfile.1` and so on. It can be configured to ingest files matching a specific pattern in a directory, optionally recursively descending into the subdirectories of that top-level directory.
 
+Note that if you instead wish to ingest existing/archive files (which will not be updated), the File Follower is not the most efficient option; please see the [migration documentation](migrate/migrate.md) instead.
+
 Attention: On RHEL/CentOS, `/var/log` belongs to the "root" group, not "adm" as we assume. File Follower runs in the adm group by default, so if you want it to read `/var/log` you need to `chgrp -R adm /var/log` OR change the group in the systemd unit file.
 
 ## Kernel parameter tuning
