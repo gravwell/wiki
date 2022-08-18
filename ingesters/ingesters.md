@@ -17,6 +17,7 @@ Attention: The [replication system](#!configuration/replication.md) does not rep
 | Ingester | Description |
 |----------|-------------|
 | [Amazon SQS](#!ingesters/sqs.md) | Subscribe and ingest from Amazon SQS queues. |
+| [Azure Event Hubs](#!ingesters/eventhubs.md) | Consume from Azure Event Hubs. |
 | [collectd](#!ingesters/collectd.md) | Ingest collectd samples. |
 | [File Follower](#!ingesters/file_follow.md) | Watch and ingest files on disk, such as logs. |
 | [GCP PubSub](#!ingesters/pubsub.md) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
