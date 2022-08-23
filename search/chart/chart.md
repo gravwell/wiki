@@ -81,7 +81,7 @@ The chart renderer runs a pre-scan at the beginning of every query in order to d
 
 ### Example Other
 
-Consider the query `tag=netflow netflow IP~PRIVATE Bytes | stats sum(Bytes) by IP | chart sum by IP` where we sum up the total bytes per private IP in netflow records and chart it.  Even small networks will contain more than hosts which will mean that the chart module will create an other bucket.  Here is how that query looks by default:
+Consider the query `tag=netflow netflow IP~PRIVATE Bytes | stats sum(Bytes) by IP | chart sum by IP` where we sum up the total bytes per private IP in netflow records and chart it.  Even small networks will contain more than 8 hosts which will mean that the chart module will create an other bucket.  Here is how that query looks by default:
 
 ![Chart with other](chart_other1.png)
 
