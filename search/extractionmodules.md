@@ -8,15 +8,15 @@ Search extraction modules extract fields from data which "ride along" with the r
 
 ## Query Accelerators
 
-Extraction and some filtering modules can make use of [query accelerators](configuration/accelerators.md) (like full text indexing, JSON indexing, etc) when filtering is used with a given module. For example, using the module `netflow Src Dst Port==22` can use a properly configured accelerator to dramatically reduce search time because not all records need to be evaluated.  Some filtering modules (such as [words](words/words.md)) can also invoke query acceleration by passing hints to the underlying accelerator.
+Extraction modules can make use of [query accelerators](configuration/accelerators.md) (like full text indexing, JSON indexing, etc) when filtering is used with a given module. For example, using the module `netflow Src Dst Port==22` can use a properly configured accelerator to dramatically reduce search time because not all records need to be evaluated.  Some filtering modules (such as [words](words/words.md)) can also invoke query acceleration by passing hints to the underlying accelerator.
 
-Not all query modules are compatible with all query acceleration configuration.  For example, the `netflow` tag is configured to be accelerated using the netflow accelerator the [words](words/words.md) module will not be able to invoke query acceleration; this is because the netflow accelerator is expecting to operate on binary data and apply a specific structure to data during indexing where the words module is designed to operate on a fulltext acceleration.
+Not all query modules are compatible with all query accelerators.  For example, the `netflow` tag is configured to be accelerated using the netflow accelerator, but the [words](words/words.md) module will not be able to invoke netflow query acceleration. This is because the netflow accelerator is expecting to operate on binary data and apply a specific structure to data during indexing where the words module is designed to operate on a fulltext acceleration.
 
-Gravwell will intelligently examine query parameters and invoke the acceleration system whenever possible, but there are some caveats to be aware of.
+Gravwell will intelligently examine query parameters and invoke the acceleration system whenever possible, but there are some caveats to be aware of:
 
 1. Query acceleration that uses specific structure (such as netflow, ipfix, packet, fields, regex, etc) requires that the query parameters match exactly.
 
-For example, if you customize your accelerator for a given tag so that it uses regular expressions to apply structure then you must use the exact regular expression in your query in order to benefit from the accelerator.  This means that if your accelerator regular expression is `(?P<ip>\S+)\s(?P<description>(\S+\s+)+` and your query is `regex "(?P<ip>\d+\.\d+\.\d+\.\d+)\s" ip=="1.2.3.4"` the system will not engage query acceleration because it cannot guarantee that the query regular expression is a direct subset of the accelerator regular expression.
+For example, if you customize your accelerator for a given tag so that it uses regular expressions to apply structure, then you must use the exact regular expression in your query in order to benefit from the accelerator.  This means that if your accelerator regular expression is `(?P<ip>\S+)\s(?P<description>(\S+\s+)+` and your query is `regex "(?P<ip>\d+\.\d+\.\d+\.\d+)\s" ip=="1.2.3.4"` the system will not engage query acceleration because it cannot guarantee that the query regular expression is a direct subset of the accelerator regular expression.
 
 2. Query acceleration may accelerate on subsets of your query.
 
@@ -28,9 +28,9 @@ Modules which can accelerate queries will hint about their ability to accelerate
 
 4. Query acceleration is on a shard-by-shard basis.
 
-Gravwell does not require tag accelerators to be consistent across all time, you can setup acceleration, ingest some data, and then change that acceleration configuration without re-indexing data.  When you issue a query the acceleration hits are handed to each shard of data across time and the compatibility of acceleration is checked on each shard.  Gravwell will automatically invoke acceleration wherever possible, this means that as your query moves over historical data it may be engaging acceleration in different ways transparently.  From the an outside observer you may notice that a query is fast on some sections of data and slower on others.  That is just the system engaging acceleration where it can.
+Gravwell does not require tag accelerators to be consistent across all time. You can setup acceleration, ingest some data, and then change that acceleration configuration without re-indexing data.  When you issue a query, the acceleration hints are handed to each shard of data across time and the compatibility of acceleration is checked on each shard.  Gravwell will automatically invoke acceleration wherever possible; this means that as your query moves over historical data, it may be engaging acceleration in different ways transparently.  You may notice that a query is fast on some sections of data and slower on others.  That is just the system engaging acceleration where it can.
 
-A side affect of this per-shard acceleration calculation is that Gravwell can still query accurately in the event of catastrophic index corruption.  For example, if you suffer a filesystem corruption or hardware failure where an index is entirely corrupted but the underlying data is still intact Gravwell will determine that it cannot use the index and ignore it.  Your queries will still complete albeit slower.
+A side affect of this per-shard acceleration calculation is that Gravwell can still query accurately in the event of catastrophic index corruption.  For example, if you suffer a filesystem corruption or hardware failure where an index is entirely corrupted but the underlying data is still intact, Gravwell will determine that it cannot use the index and ignore it.  Your queries will still complete albeit slower.
 
 5. Query acceleration operates on positive matches.
 
