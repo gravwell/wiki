@@ -78,3 +78,15 @@ tag=pcap packet ipv4.IP ~ 192.168.0.0/16 tcp.Port | length | stats mean(length) 
 The charting renderer will automatically limit the plotted lines or bar groups to 8 values. If you would like to see many more lines you can add the `limit <n>` argument which tells the charting library to not introduce the “other” grouping until it exceeds the given limit of `n` values. The user interface for charting allows for a rapid transition between line, area, bar, pie, and donut charts.  If there are more groups than the allowable limits, chart generates an `other` group that is comprised of everything not in the displayed groups.  The limit maximum specifies the total number of data sets for a category; if the limit is 4 there may be 3 keyed sets and 1 other group.
 
 The chart renderer runs a pre-scan at the beginning of every query in order to determine which data sets will be drawn and which will be grouped into the `other` group.  Chart will scan until either 1/3 of the query timespan is covered, or it receives enough data to make a decision.  If multiple data sets are being drawn, chart creates an other group for each category of data if needed.  For example, if we were running a query with the following chart parameters `chart foo bar baz by X` there might be three other groups, one for each category `foo`, `bar`, `baz`. 
+
+### Example Other
+
+Consider the query `tag=netflow netflow IP~PRIVATE Bytes | stats sum(Bytes) by IP | chart sum by IP` where we sum up the total bytes per private IP in netflow records and chart it.  Even small networks will contain more than hosts which will mean that the chart module will create an other bucket.  Here is how that query looks by default:
+
+![Chart with other](chart_other1.png)
+
+We can modify the query to allow for more data groups by appending the limit keywords `tag=netflow netflow IP~PRIVATE Bytes | stats sum(Bytes) by IP | chart sum by IP limit 32`.  Note that there are many more data groups in the chart, but overall the chart does not look substantially different.
+
+![Chart with other](chart_other2.png)
+
+The "other" bucket calculates results and generates an output using the same math as other data buckets.  This means that if you had 1000 IPs all creating about 1KB/s of data then the "other" data set will be substantially larger than the other lines because it is the summation of 992 IPs.  This is to say that an "other" bucket is properly calculated using the same math as named data buckets and not just a mean of all other outputs.
