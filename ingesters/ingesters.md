@@ -314,6 +314,14 @@ When an ingester attempts to find a timestamp based on the list of timestamp for
 
 There are several ways to change the behavior of how timestamps are parsed, detailed in the next section. Additionally, fully custom timestamp formats can be provided in [some ingesters](#!ingesters/customtime/customtime.md).
 
+### Time Zones
+
+Dealing with time zones can be one of the most challenging and frustrating aspects of ingestion. If a log's timestamp includes an explicit UTC offset (e.g. "-0700"), things are relatively easy, but many log formats do not include any time zone information at all! Sometimes, the system *generating* the log entry is in a local time zone, while the Gravwell ingester's system is set to UTC, or vice versa.
+
+If you believe you have configured your ingester properly, but you're not seeing any data in a query, try expanding your query timeframe to include the future using the "Date Range" timeframe selection: just set the End Date to some time tomorrow. If the Gravwell ingest system is set to a US time zone, but the logs are in UTC time with no offset included, the incoming data will be ingested in the "future".
+
+The `Timezone-Override` parameter (described below) is the surest way to fix time zone problems. If your data has a UTC timestamp but the system clock is set to another time zone, set `Timezone-Override="Etc/UTC"`. If your data is in US Eastern time, but the system clock is set to UTC, set `Timezone-Override="America/New_York"`, and so on.
+
 ### Time Parsing Overrides
 
 Most ingesters attempt to apply a timestamp to each entry by extracting a timestamp from the data. There are several options which can be applied to each *data consumer* for fine-tuning of this timestamp extraction:
