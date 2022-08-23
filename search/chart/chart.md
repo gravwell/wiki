@@ -81,7 +81,7 @@ The chart renderer runs a pre-scan at the beginning of every query in order to d
 
 ### Example Other
 
-Consider the query `tag=netflow netflow IP~PRIVATE Bytes | stats sum(Bytes) by IP | chart sum by IP` where we sum up the total bytes per private IP in netflow records and chart it.  Even small networks will contain more than 8 hosts which will mean that the chart module will create an other bucket.  Here is how that query looks by default:
+Consider the query `tag=netflow netflow IP~PRIVATE Bytes | stats sum(Bytes) by IP | chart sum by IP` where we sum up the total bytes per private IP in netflow records and chart it.  Even small networks will contain more than 8 hosts, which means that the chart module will create an other bucket.  Here is how that query looks by default:
 
 ![Chart with other](chart_other1.png)
 
@@ -89,4 +89,4 @@ We can modify the query to allow for more data groups by appending the limit key
 
 ![Chart with other](chart_other2.png)
 
-The "other" bucket calculates results and generates an output using the same math as other data buckets.  This means that if you had 1000 IPs all creating about 1KB/s of data then the "other" data set will be substantially larger than the other lines because it is the summation of 997 IPs.  This is to say that an "other" bucket is properly calculated using the same math as named data buckets and not just a mean of all other outputs.
+The "other" bucket calculates results and generates an output using the same math as other data buckets.  This means that if you had 1000 IPs all creating about 1KB/s of data then the "other" data set will be substantially larger than the other lines because it is the summation of 993 IPs.  This is to say that an "other" bucket is properly calculated using the same math as named data buckets and not just a mean of all other outputs.
