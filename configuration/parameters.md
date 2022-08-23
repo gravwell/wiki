@@ -423,7 +423,7 @@ Description:	The Datastore-Resource-Store parameter specifies where the datastor
 
 ####**Resource-Max-Size**
 Applies to:		Webserver, Datastore, and Indexer
-Default Value:	`134217728`
+Default Value:	`536870912`
 Example:		`Resource-Max-Size=1000000000`
 Description:	The Resource-Max-Size parameter specifies the maximum size of resources in bytes.
 
