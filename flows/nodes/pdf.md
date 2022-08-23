@@ -13,7 +13,7 @@ The PDF node generates PDF documents based on items pulled from the payload. Thi
 * `Output Variable Name`: sets the name for the output PDF in the payload.
 * `Text Font Size`: Sets the font size for text sections in the PDF.
 * `Table Font Size`: Sets the font size for text inside formatted tables in the PDF.
-* `Disable Table Scaling`: Disables the automatic table scaling for tables in Sets the font size for text inside formatted tables in the PDF.
+* `Disable Table Scaling`: Disables the automatic table scaling for tables in the PDF.
 
 ## Example
 
