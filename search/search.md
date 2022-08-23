@@ -212,6 +212,8 @@ This gives us a table of just connections that didn't have a corresponding DNS q
 
 ![](compound-ex2.png)
 
+Note: Compound queries create ephemeral resources that exist only during the query, however those resources can and do consume disk space and are restricted by the [Resource-Max-Size](https://docs.gravwell.io/#!configuration/parameters.md#Resource-Max-Size)` global configuration variable which defaults to 512MB.  If the ephemeral resource is larger than the specified size the query will fail.
+
 ## Comments
 
 Queries support C-Style comments anywhere in the query text. Comments are saved in the search history, and are useful for debugging queries and adding inline notes. For example:
