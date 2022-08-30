@@ -8,6 +8,7 @@ The base64 module is useful for encoding and decoding base64 values.  Most web t
 * `-raw`: Assume RAW base64 encoding/decoding, excluding any padding = characters
 * `-s`: Enforce strict mode, drop entry if entire field cannot be decoded.
 * `-t <arg>`: Assign encoded or decoded values to an enumerated value
+* `-u`: Use URL-safe encoding variant instead of the default. May be used in combination with the `-d` and `-raw` flags. See [RFC 4648](https://datatracker.ietf.org/doc/html/rfc4648#section-3.5) for more information.
 
 ### Example
 

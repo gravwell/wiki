@@ -1,6 +1,6 @@
 # Ingesters
 
-This section contains more detailed instruction for configuring and running Gravwell ingesters.
+This section contains more detailed instruction for configuring and running Gravwell ingesters, which gather incoming data, package it into Gravwell entries, and ship it to Gravwell indexers for storage. The ingesters described in these pages are primarily designed to capture *live* data as it is generated; if you have existing data you want to import, check out the [migration documents](migrate/migrate.md).
 
 The Gravwell-created ingesters are released under the BSD open source license and can be found on [Github](https://github.com/gravwell/gravwell/tree/master/ingesters). The ingest API is also open source, so you can create your own ingesters for unique data sources, performing additional normalization or pre-processing, or any other manner of things. The ingest API code [is located here](https://github.com/gravwell/gravwell/tree/master/ingest).
 
@@ -17,6 +17,7 @@ Attention: The [replication system](#!configuration/replication.md) does not rep
 | Ingester | Description |
 |----------|-------------|
 | [Amazon SQS](#!ingesters/sqs.md) | Subscribe and ingest from Amazon SQS queues. |
+| [Azure Event Hubs](#!ingesters/eventhubs.md) | Consume from Azure Event Hubs. |
 | [collectd](#!ingesters/collectd.md) | Ingest collectd samples. |
 | [File Follower](#!ingesters/file_follow.md) | Watch and ingest files on disk, such as logs. |
 | [GCP PubSub](#!ingesters/pubsub.md) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
@@ -24,7 +25,6 @@ Attention: The [replication system](#!configuration/replication.md) does not rep
 | [IPMI](#!ingesters/ipmi.md) | Periodically collect SDR and SEL records from IPMI devices. |
 | [Kafka](#!ingesters/kafka.md) | Create a Kafka Consumer that ingests into Gravwell. Can be paired with the Gravwell Kafka Federator. |
 | [Kinesis](#!ingesters/kinesis.md) | Ingest from Amazon's [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) service. |
-| [Mass File](#!ingesters/massfile.md) | Ingest large numbers of static files. |
 | [Microsoft Graph API](#!ingesters/msg.md) | Ingest from Microsoft's Graph API. |
 | [Netflow](#!ingesters/netflow.md) | Collect Netflow and IPFIX records. |
 | [Network Capture](#!ingesters/pcap.md) | Ingest PCAP on the wire. |
@@ -313,6 +313,14 @@ If the ingester still cannot find a valid timestamp, the current time will be ap
 When an ingester attempts to find a timestamp based on the list of timestamp formats, it will always try the last successful format first. For example, if an entry has a timestamp `02 Jan 06 15:04 MST`, the ingester will attempt to parse the next entry with the same timestamp format. If it does not match, then the ingester will attempt all other timestamp formats. 
 
 There are several ways to change the behavior of how timestamps are parsed, detailed in the next section. Additionally, fully custom timestamp formats can be provided in [some ingesters](#!ingesters/customtime/customtime.md).
+
+### Time Zones
+
+Dealing with time zones can be one of the most challenging and frustrating aspects of ingestion. If a log's timestamp includes an explicit UTC offset (e.g. "-0700"), things are relatively easy, but many log formats do not include any time zone information at all! Sometimes, the system *generating* the log entry is in a local time zone, while the Gravwell ingester's system is set to UTC, or vice versa.
+
+If you believe you have configured your ingester properly, but you're not seeing any data in a query, try expanding your query timeframe to include the future using the "Date Range" timeframe selection: just set the End Date to some time tomorrow. If the Gravwell ingest system is set to a US time zone, but the logs are in UTC time with no offset included, the incoming data will be ingested in the "future".
+
+The `Timezone-Override` parameter (described below) is the surest way to fix time zone problems. If your data has a UTC timestamp but the system clock is set to another time zone, set `Timezone-Override="Etc/UTC"`. If your data is in US Eastern time, but the system clock is set to UTC, set `Timezone-Override="America/New_York"`, and so on.
 
 ### Time Parsing Overrides
 

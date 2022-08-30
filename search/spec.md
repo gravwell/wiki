@@ -260,7 +260,7 @@ If no renderer is specified, the text renderer is implied.
 
 ### Compound queries
 
-Multiple modules can be grouped into a single _compound query_ using the [compound query notation](#!search/complete-module-list.md). A compound query takes the form of
+Multiple modules can be grouped into a single _compound query_ using the [compound query notation](#!search/search.md#Compound_Queries). A compound query takes the form of
 
 ```
 @foo{tag=default ...}; @bar{tag=default ...}; tag=default lookup -r @foo | ...

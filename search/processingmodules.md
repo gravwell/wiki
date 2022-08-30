@@ -41,6 +41,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [enrich](enrich/enrich.md) - manually attach enumerated values to entries.
 * [entropy](entropy/entropy.md) - calculate entropy of enumerated values.
 * [eval](eval/eval.md) - evaluate arbitrary logic expressions.
+* [filetype](filetype/filetype.md) - detect filetypes of binary data.
 * [first/last](firstlast/firstlast.md) - take the first or last entry.
 * [fuse](fuse/fuse.md) - join data from disparate data sources.
 * [geodist](geodist/geodist.md) - compute distance between locations.
