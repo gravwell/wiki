@@ -80,7 +80,7 @@ The JSON Extraction preprocessor Type is `jsonextract`.
 
 * `Extractions` (string, required): This specifies the field or fields (comma-separated) to be extracted from the JSON. Given an input of `{"foo":"a", "bar":2, "baz":{"frog": "womble"}}`, you could specify `Extractions=foo`, `Extractions=foo,bar`, `Extractions=baz.frog,foo`, etc.
 * `Force-JSON-Object` (boolean, optional): By default, if a single extraction is specified the preprocessor will replace the entry contents with the contents of that extension; thus selecting `Extraction=foo` will change an entry containing `{"foo":"a", "bar":2, "baz":{"frog": "womble"}}` to simply contain `a`. If this option is set, the preprocessor will always output a full JSON structure, e.g. `{"foo":"a"}`.
-* `Passthrough-Misses` (boolean, optional): If set to true, the preprocessor will pass along entries for which it was unable to extract the requested fields. By default, these entries are dropped.
+* `Drop-Misses` (boolean, optional): If set to true, the preprocessor will drop entries for which it was unable to extract the requested fields. By default, these entries are passed.
 * `Strict-Extraction` (boolean, optional): By default, the preprocessor will pass along an entry if at least one of the extractions succeeds. If this parameter is set to true, it will require that all extractions succeed.
 
 ### Common Use Cases
@@ -93,7 +93,7 @@ Many data sources may provide additional metadata related to transport and/or st
 [Preprocessor "json"]
 	Type=jsonextract
 	Extractions=IP,Alert.ID,Message
-	Passthrough-Misses=true
+	Drop-Misses=false
 ```
 
 ## JSON Array Split Preprocessor
@@ -111,7 +111,7 @@ The JSON Array Split preprocessor Type is `jsonarraysplit`.
 ### Supported Options
 
 * `Extraction` (string): specifies the JSON field containing a struct which should be split, e.g. `Extraction=Users`, `Extraction=foo.bar`. If you do not set `Extraction`, the preprocessor will attempt to treat the entire object as an array to split.
-* `Passthrough-Misses` (boolean, optional): If set to true, the preprocessor will pass along entries for which it was unable to extract the requested field. By default, these entries are dropped.
+* `Drop-Misses` (boolean, optional): If set to true, the preprocessor will drop entries for which it was unable to extract the requested field. By default, these entries are passed along.
 * `Force-JSON-Object` (boolean, optional): By default, the preprocessor will emit entries with each containing one item in the list and nothing else; thus extracting `foo` from `{"foo": ["a", "b"]}` would result in two entries containing "a" and "b" respectively. If this option is set, that same entry would result in two entries containing `{"foo": "a"}` and `{"foo": "b"}`.
 * `Additional-Fields` (string, optional): A comma delimited list of additional fields outside the array to be split that will be extracted and included in each entry, e.g. `Additional-Fields="foo,bar, foo.bar.baz"`.
 
@@ -536,7 +536,7 @@ The Regex Extraction preprocessor Type is `regexextract`.
 
 ### Supported Options
 
-* Passthrough-Misses (boolean, optional): This parameter specifies whether the preprocessor should pass the record through unchanged if the regular expression does not match.
+* Drop-Misses (boolean, optional): This parameter specifies whether the preprocessor should drop the entry if the regular expression does not match, by default the entry is passed along.
 * Regex (string, required): This parameter defines the regular expression for extraction
 * Template (string, required): This parameter defines the output form of the record.
 
@@ -845,7 +845,7 @@ The Cisco ISE logging system is designed to split a single message across multip
 
 ### Supported Options
 
-* `Passthrough-Misses` (boolean, optional): If set to true, the preprocessor will pass along entries for which it was unable to extract a valid ISE message. By default, these entries are dropped.
+* `Drop-Misses` (boolean, optional): If set to true, the preprocessor will drop entries for which it was unable to extract a valid ISE message. By default, these entries are passed along.
 * `Enable-Multipart-Reassembly` (boolean, optional): If set to true the preprocessor will attempt to reassemble messages that contain a Cisco remote message header.
 * `Max-Multipart-Buffer` (uint64, optional): Specifies a maximum in-memory buffer to use when reassembling multipart messages, when the buffer is exceeded the oldest partially reassembled message will be sent to Gravwell.  The default buffer size is 8MB.
 * `Max-Multipart-Latency` (string, optional): Specifies a maximum time duration that a partially reassembled multipart message will be held before it is sent.  Time spans should be specified in `ms` and `s` values.
@@ -861,7 +861,7 @@ The following `cisco_ise` preprocessor configuration is designed to re-assemble 
 ```
 [preprocessor "iseCEF"]
     Type=cisco_ise
-    Passthrough-Misses=false #if its malformed just drop it
+    Drop-Misses=true #if its malformed just drop it
     Enable-Multipart-Reassembly=true
     Attribute-Drop-Filters="Step*"
     Attribute-Strip-Header=true
@@ -879,7 +879,7 @@ The following `cisco_ise` preprocessor configuration is achieves a similar resul
 ```
 [preprocessor "iseCEF"]
     Type=cisco_ise
-    Passthrough-Misses=false #if its malformed just drop it
+    Drop-Misses=true #if its malformed just drop it
     Enable-Multipart-Reassembly=true
     Attribute-Drop-Filters="Step*"
     Attribute-Strip-Header=true
