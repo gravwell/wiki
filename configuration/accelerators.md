@@ -18,9 +18,10 @@ Accelerators must operate on the direct data portion of an entry (with the excep
 
 The engine is the system that actually stores the extracted acceleration data.  Gravwell supports two acceleration engines. Each engine provide different benefits depending on desired ingest rates, disk overhead, search performance, and data volumes.  The acceleration engine is entirely independent from the accelerator extractor itself (as specified with the Accelerator-Name configuration option).
 
-The default engine is the "index" engine.  The "index" engine is a full indexing system designed to be fast across all query types.  The index engine typically consumes considerably more disk space than the bloom engine but is significantly faster when operating on very large data volumes or queries that may touch a significant portion of the total data.  It is not uncommon for the index engine to consume as much space as the compressed data in heavily-indexed systems.
+The default engine is the "bloom" engine.  The bloom engine uses bloom filters to indicate whether or not a piece of data exists in a given block.  The bloom engine typically has very little disk overhead and works well with needle-in-haystack style queries, for example finding logs where a specific IP showed up.  The bloom engine performs poorly on filters where filtered entries occur regularly.
 
-The bloom engine uses bloom filters to indicate whether or not a piece of data exists in a given block.  The bloom engine typically has very little disk overhead and works well with needle-in-haystack style queries, for example finding logs where a specific IP showed up.  The bloom engine performs poorly on filters where filtered entries occur regularly.  The bloom engine is also a poor choice when combined with the fulltext accelerator.
+The "index" engine is a full indexing system designed to be fast across all query types.  The index engine typically consumes considerably more disk space than the bloom engine but is significantly faster when operating on very large data volumes or queries that may touch a significant portion of the total data.  It is not uncommon for the index engine to consume as much space as the compressed data in heavily-indexed systems.
+
 
 
 ### Optimizing the Index Engine
