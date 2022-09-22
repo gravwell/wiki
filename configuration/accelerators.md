@@ -344,7 +344,7 @@ This configuration extracts four fields from a comma-separated entry. Note the u
 
 ## CSV
 
-The CSV accelerator is designed to operate on comma-separated value data, automatically removing surrounding whitespace and double quotes from data.  See the [CSV search module](#!search/csv/csv.md) section for more information on column extraction.
+The CSV accelerator is designed to operate on comma-separated value data, automatically removing surrounding white space and double quotes from data.  See the [CSV search module](#!search/csv/csv.md) section for more information on column extraction.
 
 ### Example Well Configuration
 
@@ -371,6 +371,8 @@ The regex accelerator allows complicated extractions at ingest time in order to 
 ```
 
 Note: Remember to escape backslashes '\\' when specifying regular expressions in the gravwell.conf file.  The regex argument '\\w' will become '\\\\w'.
+
+Warning: The regex accelerator requires very precise matches during query, this means that regular expression specified in an accelerator must match the regular expression provided in a query bit-for-bit.  It is not possible to determine if two regular expressions are equivalent, so Gravwell checks that the regular expression strings are exact matches before engaging acceleration.  The regex accelerator is rarely what you want.
 
 ## Winlog
 
@@ -474,7 +476,7 @@ tag=app src dead::beef | fields -d "," [1]=="security" [2]="process" [5]="domain
 
 ## Acceleration Performance and Benchmarking
 
-To understand the benefits and drawbacks of acceleration it is best to see how it impacts storage use, ingest performance, and query performance.  We will use some apache combined access logs that are generated using a generator available on [github](https://github.com/kiritbasu/Fake-Apache-Log-Generator).  Our dataset is 10 million Apache combined access logs that are spread out over approximately 24 hours; the total data is 2.1GB.  We will define 4 wells with 4 different configurations.  We will be taking a fairly naive approach to indexing this data, as there are many parameters that don't make a lot of sense to index on, such as the number of returned bytes.
+To understand the benefits and drawbacks of acceleration it is best to see how it impacts storage use, ingest performance, and query performance.  We will use some Apache combined access logs that are generated using a generator available on [github](https://github.com/kiritbasu/Fake-Apache-Log-Generator).  Our data set is 10 million Apache combined access logs that are spread out over approximately 24 hours; the total data is 2.1GB.  We will define 4 wells with 4 different configurations.  We will be taking a fairly naive approach to indexing this data, as there are many parameters that don't make a lot of sense to index on, such as the number of returned bytes.
 
 
 
@@ -493,12 +495,21 @@ The well configurations are:
 	Tags=raw
 	Enable-Transparent-Compression=true
 
-[Storage-Well "fulltext"]
-	Location=/opt/gravwell/storage/fulltext
-	Tags=fulltext
+[Storage-Well "fulltextbloom"]
+	Location=/opt/gravwell/storage/fulltextbloom
+	Tags=fulltextbloom
 	Enable-Transparent-Compression=true
 	Accelerator-Name=fulltext
 	Accelerator-Args="-ignoreTS -min 2"
+	Accelerator-Engine-Override=bloom
+
+[Storage-Well "fulltextindex"]
+	Location=/opt/gravwell/storage/fulltextindex
+	Tags=fulltextindex
+	Enable-Transparent-Compression=true
+	Accelerator-Name=fulltext
+	Accelerator-Args="-ignoreTS -min 2"
+	Accelerator-Engine-Override=index
 
 [Storage-Well "regexindex"]
 	Location=/opt/gravwell/storage/regexindex
@@ -506,7 +517,7 @@ The well configurations are:
 	Enable-Transparent-Compression=true
 	Accelerator-Name=regex
 	Accelerator-Engine-Override=index
-	Accelerator-Args="^(?P<ip>\\S+) (?P<ident>\\S+) (?P<username>\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(?P<method>\\S+)\\s?(?P<url>\\S+)?\\s?(?P<proto>\\S+)?\" (?P<resp>\\d{3}|-) (?P<bytes>\\d+|-)\\s?\"?(?P<referer>[^\"]*)\"?\\s?\"?(?P<useragent>[^\"]*)?\"?$"
+	Accelerator-Args=`^(?P<ip>\S+) (?P<ident>\S+) (?P<username>\S+) \[([\w:/]+\s[+\-]\d{4})\] \"(?P<method>\S+)\s?(?P<url>\S+)?\s?(?P<proto>\S+)?\" (?P<resp>\d{3}|-) (?P<bytes>\d+|-)\s?\"?(?P<referer>[^\"]*)\"?\s?"?(?P<useragent>[^\"]*)?\"?$`
 
 [Storage-Well "regexbloom"]
 	Location=/opt/gravwell/storage/regexbloom
@@ -514,53 +525,55 @@ The well configurations are:
 	Enable-Transparent-Compression=true
 	Accelerator-Name=regex
 	Accelerator-Engine-Override=bloom
-	Accelerator-Args="^(?P<ip>\\S+) (?P<ident>\\S+) (?P<username>\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(?P<method>\\S+)\\s?(?P<url>\\S+)?\\s?(?P<proto>\\S+)?\" (?P<resp>\\d{3}|-) (?P<bytes>\\d+|-)\\s?\"?(?P<referer>[^\"]*)\"?\\s?\"?(?P<useragent>[^\"]*)?\"?$"
+	Accelerator-Args=`^(?P<ip>\S+) (?P<ident>\S+) (?P<username>\S+) \[([\w:/]+\s[+\-]\d{4})\] \"(?P<method>\S+)\s?(?P<url>\S+)?\s?(?P<proto>\S+)?\" (?P<resp>\d{3}|-) (?P<bytes>\d+|-)\s?\"?(?P<referer>[^\"]*)\"?\s?"?(?P<useragent>[^\"]*)?\"?$`
 ```
 
 ### Test Machine
 
-Query, ingest, and storage performance characteristics will vary with each dataset and hardware platform, but for this test we are using the following hardware:
+Query, ingest, and storage performance characteristics will vary with each data set and hardware platform, but for this test we are using the following hardware:
 
 | Component | Description |
 |-----------|-------------|
-| CPU       |  AMD Ryzen 1700 |
-| Memory    | 16GB DDR4-2400 |
+| CPU       | AMD Ryzen 3700X |
+| Memory    | 16GB DDR4-3200 |
 | Disk      | Samsung 960 EVO NVME |
-| Filesystem | BTRFS with zstd transparent compression |
+| Filesystem | BTRFS with zstd transparent compression at level 10 |
 
-These tests were conducted using Gravwell version `3.1.5`
+These tests were conducted using Gravwell version `5.1.0` on a Linux 5.13.5 kernel.
 
 ### Ingest Performance
 
 For ingest we will use the singleFile ingester.  The singleFile ingester is designed to ingest a single newline delimited file, deriving timestamps as it goes.  Because the ingester is deriving timestamps, it requires some CPU resources.  The singleFile ingester is available on our [GitHub page](https://github.com/gravwell/ingesters/). The exact invocation of the singleFile ingester is:
 
 ```
-./singleFile -i apache_fake_access_10M.log -clear-conns 172.17.0.3 -block-size 1024 -timeout=10 -tag-name=fulltext
+./singleFile -i apache_fake_access_10M.log -clear-conns 172.17.0.2 -block-size 1024 -timeout=10 -tag-name=fulltext
 ```
 
 |  Well      | Entries Per Second | Data Rate  |
 |------------|--------------------|------------|
-| raw        | 313.54 KE/s        | 65.94 MB/s |
-| regexbloom | 112.91 KE/s        | 23.75 MB/s |
-| regexindex | 57.58  KE/s        | 12.11 MB/s |
-| fulltext   | 26.37  KE/s        |  5.55 MB/s |
+| raw             | 342.65 KE/s   | 72.06 MB/s |
+| regexbloom      | 157.38 KE/s   | 33.10 MB/s |
+| regexindex      | 81.92  KE/s   | 17.23 MB/s |
+| fulltextbloom   | 246.99  KE/s  |  51.94 MB/s |
+| fulltextindex   | 95.72  KE/s   |  20.13 MB/s |
 
-We can see from the ingest performance that the fulltext acceleration system dramatically reduces the ingest performance.  While 5.55MB/s seems like poor ingest performance, it is worth mentioning that this is still about 480GB of data and 2.3 billion entries per day.
+We can see from the ingest performance that the index acceleration engine reduces ingest performance, this is due to the increased complexity of indexing and additional storage usage.  However the index engine can often be much faster at query time for needle-in-haystack type queries.
 
 ### Storage Usage
 
-Outside of ingest performance and some additional memory requirements, the main penalty to enabling acceleration is usage.  We can see that the index engine for each extraction methodology consumed over 50% more storage, while the bloom engine consumed an additional 4%.  The storage usage is very dependent on data consumed, but on average the indexing system will consume significantly more storage.
+Outside of ingest performance and some additional memory requirements, the main penalty to enabling acceleration is storage usage.  We can see that the index engine for each extraction methodology consumed over 50% more storage, while the bloom engine consumed an additional 4%.  The storage usage is very dependent on data consumed, but on average the indexing system will consume significantly more storage.
 
-|  Well      | Used Storage | Diff From Raw |
+|  Well      | Used Storage | Acceleration Storage Overhead |
 |------------|--------------|---------------|
-| raw        | 2.49GB       | 0%            |
-| fulltext   | 3.83GB       | 53%           |
-| regexindex | 3.76GB       | 51%           |
-| regexbloom | 2.60GB       | 4%            |
+| raw             | 2.43GB       | 0%       |
+| regexbloom      | 2.45GB       | 4.6%     |
+| fulltextbloom   | 2.47GB       | 8.7%      |
+| regexindex      | 3.79GB       | 60%      |
+| fulltextindex   | 4.04GB       | 70%      |
 
 ### Query Performance
 
-To demonstrate the differences in query performance we will execute two queries which can be categorized as sparse and dense.  The sparse query will look for a specific IP in the data set, returning just a handful of entries.  The dense query will look for a specific url that is reasonably common in the data set.  To simplify the queries we will install an ax module for the regexindex and regexbloom tags that matches the acceleration system.  The dense query will retrieve roughly 12% of the entries in the data set, while the sparse query will retrieve approximately 0.01%.
+To demonstrate the differences in query performance we will execute two queries which can be categorized as sparse and dense.  The sparse query will look for a specific IP in the data set, returning just a handful of entries.  The dense query will look for a specific URL that is reasonably common in the data set.  To simplify the queries we will install an ax module for the regexindex and regexbloom tags that matches the acceleration system.  The dense query will retrieve roughly 12% of the entries in the data set, while the sparse query will retrieve approximately 0.01%.
 
 The sparse and dense queries are:
 
@@ -575,30 +588,34 @@ Prior to executing each query, we will drop the system caches by executing the f
 echo 3 > /proc/sys/vm/drop_caches
 ```
 
-|  Well      | Query Type | Query Time | Processed Entries Percentage | Speedup |
+|  Well      | Query Type | Query Time | Processed Entries | Speedup |
 |------------|------------|------------|------------------------------|---------|
-| raw        | sparse     | 71.5s      |  100%                        | 0X      |
-| regexbloom | sparse     | 397ms      |  0.00389%                    | 180X    |
-| regexindex | sparse     | 190ms      |  0.000001%                   | 386X    |
-| fulltext   | sparse     | 195ms      |  0.000001%                   | 376X    |
-| raw        | dense      | 73.5s      |  100%                        | 0X      |
-| regexbloom | dense      | 71.5s      |  100%                        | 1.02X   |
-| regexindex | dense      | 14.2s      |  13%                         | 5.17X   |
-| fulltext   | dense      | 24.6s      |  30%                         | 2.98X   |
+| raw             | sparse     | 51.8s |  10M              | 0X      |
+| regexbloom      | sparse     | 0.259s |                  | 208     |
+| regexindex      | sparse     | 0.144s | 1                | 359X    |
+| fulltextindex   | sparse     | 0.182s  | 1               | 284X    |
+| fulltextbloom   | sparse     | 0.339s | 90               | 152X    |
+| raw             | dense      | 52.9s | 10M               | 0X      |
+| regexbloom      | dense      | 52.6s | 10M               | 0X   |
+| regexindex      | dense      | 17.7s | 1.3M              | 2.92X   |
+| fulltextindex   | dense      | 30.2s | 3M                | 1.71X   |
+| fulltextbloom   | dense      | 20.5s | 10M               | 2.52X   |
 
-Note: The regex search module/autoextractor is not fully compatible with the fulltext accelerator, so we have to modify the queries slightly to engage the accelerators.  They are ```grep -w "106.218.21.57"``` and ```grep -w list | ax url=="/list" method | count by method | chart count by method```
+You can see that the dense query did not benefit from the bloom filter at all due to the high collision rate and regular occurrence of the filtered data where the index system was able to make modest gains by limiting the amount of data that had to be extracted from the disk.
+
+Note: The regex search module/autoextractor is not fully compatible with the fulltext accelerator, so we have to modify the queries slightly to engage the accelerators.  They are ```words "106.218.21.57"``` and ```words list | ax url=="/list" method | count by method | chart count by method```
 
 #### Fulltext
 
-The above benchmarks make it very apparent that the fulltext accelerator has significant ingest and storage penalties and the example queries don't appear to justify those expenses.  If your data is entirely token based such as tab delimited, csv, or json and every token is entirely discreet (single words, numbers, IPs, values, etc...) the fulltext accelerator doesn't make much sense.  However, if your data has complex components the fulltext accelerator can do things the other accelerators cannot.  We have been using Apache combined access logs, lets look at a query that allows the fulltext accelerator to really shine.
+The above benchmarks make it very apparent that the fulltext accelerator can have significant ingest and storage penalties and the dense example query does not appear to justify those expenses, especially when paired with the bloom engine.  This is because the word "list" occurs so regularly that the index and bloom engines do very little to help.  However, if your data has complex components the fulltext accelerator can do things the other accelerators cannot.  We have been using Apache combined access logs, lets look at a query that allows the fulltext accelerator to really shine.
 
-We are going to look at sub-components of the URL and get a chart of users that are browsing our the `/apps` subdirectory using a PowerPC Macintosh computer.  The regular expressions in the above examples index on full fields within the Apache log.  They cannot drill down and use parts of those fields for acceleration, fulltext can.
+We are going to look at sub-components of the URL and get a chart of users that are browsing our the `/apps` sub directory using a PowerPC Macintosh computer.  The regular expressions in the above examples index on full fields within the Apache log.  They cannot drill down and use parts of those fields for acceleration, fulltext can.
 
-We will optimized the query for both the fulltext indexer and the others so that we can be fair, however both queries will work on either of the datasets.
+We will optimized the query for both the fulltext indexer and the others so that we can be fair, however both queries will work on either of the data sets.
 
 The fulltext accelerator optimized query:
 ```
-grep -s -w apps Macintosh PPC | ax url~"/apps" useragent~"Macintosh; U; PPC" | count | chart count
+words apps Macintosh PPC | ax url~"/apps" useragent~"Macintosh; U; PPC" | count | chart count
 ```
 
 The query optimized for non-fulltext:
@@ -610,10 +627,11 @@ The results show why fulltext may often be worth the storage and ingest penalty:
 
 |  Well      | Query Time | Speedup |
 |------------|------------|---------|
-| raw        | 71.7s      | 0X      |
-| regexbloom | 72.6s      | ~0X     |
-| regexindex | 72.6       | ~0X     |
-| fulltext   | 5.73s      | 12.49X  |
+| raw        | 58s      | 0X      |
+| regexbloom | 57s      | ~0X     |
+| regexindex | 57s       | ~0X     |
+| fulltextindex   | 2.99s      | 12.49X  |
+| fulltextbloom   | 3.40s      | 12.49X  |
 
 
 #### Query AX modules
