@@ -1,8 +1,8 @@
 ## Drop Preprocessor
 
-The drop preprocessor does exactly what the name implies, it simple drops entries from the ingest pipeline, effectively throwing them away.
+The drop preprocessor does exactly what the name implies: it drops entries from the ingest pipeline, effectively throwing them away.
 
-This processor can be useful if an ingest stream is to be primarily handled by another set of preprocessors.  For example, if you want to send data to a remote system using the forwarder preprocessor but NOT ingest it upstream into a Gravwell indexer, you could add a final `drop` preprocessor which will simply discard all entries that it sees.
+This processor can be useful if an ingest stream is to be primarily handled by another set of preprocessors.  For example, if you want to send data to a remote system using the forwarder preprocessor but *not* ingest it upstream into a Gravwell indexer, you could add a final `drop` preprocessor which will simply discard all entries that it sees.
 
 ### Supported Options
 
@@ -25,7 +25,7 @@ This example has a single preprocessor `drop` which just discards all entries on
 
 ### Example: Forward Entries and Drop
 
-This example forwards entries via a TCP forwarder then drops them.
+This example forwards entries to another system via a TCP forwarder, then drops them before they can be ingested into Gravwell.
 
 ```
 [Listener "default"]              
