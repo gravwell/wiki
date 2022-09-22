@@ -10,7 +10,7 @@ The GZIP preprocessor Type is `gzip`.
 
 ### Common Use Cases
 
-Many cloud data bus providers will ship entries and/or package in a compressed form.  This preprocessor can decompress the data stream in the ingester rather than routing through a cloud lambda function can incur costs.
+Many cloud data bus providers will package data in a compressed form.  This preprocessor can decompress the data stream in the ingester rather than routing through a cloud lambda function (which can incur additional costs).
 
 ### Example: Decompressing compressed entries
 
