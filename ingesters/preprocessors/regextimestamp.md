@@ -1,6 +1,6 @@
 ## Regex Timestamp Extraction Preprocessor
 
-Ingesters will typically attempt to extract a timestamp from an entry by looking for the first thing which appears to be a valid timestamp and parsing it. In combination with additional ingester configuration rules for parsing timestamps (specifying a specific timestamp format to look for, etc.) this is usually sufficient to properly extract the appropriate timestamp, but some data sources may defy these straightforward methods. Consider a situation where a network device may send CSV-formatted event logs wrapped in syslog--a situation we have seen at Gravwell!
+Ingesters will typically attempt to extract a timestamp from an entry by looking for the first thing which appears to be a valid timestamp and parsing it. In combination with additional ingester configuration rules for parsing timestamps (specifying a specific timestamp format to look for, etc.) this is usually sufficient to properly extract the appropriate timestamp, but some data sources may defy these straightforward methods. Consider a situation where a network device may send CSV-formatted event logs wrapped in syslog--a situation we have seen at Gravwell! The regex timestamp extractor can be used to skip the timestamp in the syslog header and instead extract the timestamp contained in the CSV logs.
 
 The Regex Timestamp Extraction preprocessor Type is `regextimestamp`.
 
@@ -46,7 +46,7 @@ The Regex Timestamp Extraction preprocessor Type is `regextimestamp`.
 
 ### Common Use Cases
 
-Many data streams may have multiple timestamps or values that can easily be interpreted as timestamps.  The regextimestamp preprocessor allows you to force timegrinder to examine a specific timestamp within a log stream.  A good example is a log stream that is transported via syslog using an application that includes it's own timestamp but does not relay that timestamp to the syslog API.  The syslog wrapper will have a well formed timestamp which, but the actual data stream may need to use some internal field for the accurate timestamp.
+Many data streams may have multiple timestamps or values that can easily be interpreted as timestamps.  The regextimestamp preprocessor allows you to force timegrinder to examine a specific timestamp within a log stream.  A good example is a log stream that is transported via syslog using an application that includes its own timestamp but does not relay that timestamp to the syslog API.  The syslog wrapper will have a well-formed timestamp of its own, but it will necessarily be after the correct timestamp in the actual log entry.
 
 ### Example: Wrapped Syslog Data
 
