@@ -1,15 +1,15 @@
 ## Corelight JSON to TSV Preprocessor
 
-Corelight is the commercial version of the highly popular network monitoring tool Zeek, Gravwell provides a robust Zeek kit which is designed to provide fast and flexible access to the TSV formated Zeek data.  Rather than replicate the entire Zeek kit for Corelight JSON data which would require additional storage and perform worse than the standard TSV formatted data which comes from Zeek.  This preprocessor is designed to recieve entries from Corelight via their JSON over TCP export option and translate them into Zeek standard TSV data.  As a result you can use the Gravwell Zeek kit and integrations with a commercial Corelight deployment.
+Corelight is the commercial version of the highly popular network monitoring tool Zeek. Gravwell provides a robust Zeek kit which is designed to provide fast and flexible access to the TSV formated Zeek data.  Rather than replicate the entire Zeek kit for Corelight JSON data, which would require additional storage and perform worse than the standard TSV formatted data which comes from Zeek, we prefer to convert the JSON data to TSV. This preprocessor is designed to recieve entries from Corelight via their JSON-over-TCP export option and translate them into Zeek standard TSV data.  As a result you can use the Gravwell Zeek kit and integrations with a commercial Corelight deployment.
 
 The Corelight JSON to TSV preprocessor type is "corelight".
 
 ### Supported Options
 
-* Prefix (string, optional): This parameter specifies the tag prefix attached to entries.  The default is "zeek".
-* Custom-Format (string, optional): This parameter allows for specifying custom path and header values.  A Custom-Format can be a wholly new format or override an existing format.
+* `Prefix` (string, optional): This parameter specifies the tag prefix attached to entries.  The default is "zeek".
+* `Custom-Format` (string, optional): This parameter specifies custom path and header values.  A Custom-Format can be a wholly new format or override an existing format.
 
-Multiple `Custom-Format` options can be specified in a single preprocessor block, this allows for translating output from Corelight plugins or overriding an existing default handler.  Formats are specified as: `<tag suffix>:<TSV headers>`.
+Multiple `Custom-Format` options can be specified in a single preprocessor block, for translating output from Corelight plugins or overriding an existing default handler.  Formats are specified as: `<tag suffix>:<TSV headers>`.
 
 For example, here is a format specification which looks for the S7Comm Zeek plugin:
 
@@ -69,7 +69,7 @@ Here is a basic [Simple Relay](/#!ingesters/simple_relay.md) example which liste
 
 #### Example: Custom Handlers and Prefix
 
-This example shows how to set a custom prefix and inject a custom handler, using the Prefix override we are setting all the routed tags to prepend `core` instead of `zeek`:
+This example shows how to set a custom prefix and inject a custom handler. Using the Prefix override, we are setting all the routed tags to prepend `core` instead of `zeek`:
 
 ```
 [Listener "corelight"]
