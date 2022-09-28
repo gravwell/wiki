@@ -57,11 +57,23 @@ Note: The `Keep-Priority` field is necessary if you plan to analyze syslog entri
 
 ## Listeners
 
-Each listener contains a set of universal configuration values, regardless of whether the listener is a line reader, RFC5424 reader, regex reader, or JSON Listener.
-
-## Universal Listener Configuration Parameters
+Each listener contains a set of universal configuration values, regardless of whether the listener is a line, RFC5424, RFC6587, regex, or JSON reader.
 
 Listeners support several configuration parameters which allow for specifying protocols, listening interfaces and ports, and fine tuning ingest behavior.
+
+| Parameter     | Type    | Default Value     | Description |
+|---------------|---------|-------------------|-------------|
+| Tag-Name      | string  |                   | Tag to be assigned to data ingested on this listener |
+| Bind-String   | string  |                   | Define optional interface and port to bind to |
+| Ignore-Timestamps | Boolean | false   | Do not attempt to resolve timestamps from entries, instead use the time of collection |
+| Assume-Local-Timezone | Boolean | false | Assume timestamps that do not contain a timezone are located in the local timezone |
+| Timezone-Override | string |  | Override the timezone for timestamps that do not contain timezone data |
+| Source-Override |   string |  | Override the source IP assigned to entries ingested on the listener |
+| Timestamp-Format-Override | string | | Override the timestamp format used to derive timestamps from ingested data |
+| Cert-File | string | | Path to an X509 public certificate file for use in TLS listeners |
+| Key-File  | string | | Path to an X509 private key file for use in TLS listeners |
+| Preprocessor | string | | Name of a preprocessor to apply to ingested data, many Preprocessor parameters can be applied |
+
 
 ### Bind-String
 
@@ -106,6 +118,9 @@ Simple relay supports the following types of basic readers which are useful in d
 
 * line reader
 * RFC5424
+* RFC6587
+* json
+* regex
 
 The basic listeners are specified via the "Listener" block and support line delimited and RFC5424 reader types.  Each Listener must have a unique name and a unique bind port (two different listeners cannot bind to the same protocol, address, and port).  The reader type for a basic listener is controlled by the "Reader-Type" parameter.  Currently there are two types of listeners (line and RFC5424).  If no Reader-Type is specified the line reader type is assumed.
 
@@ -137,7 +152,15 @@ The most basic Listener requires only one the "Bind-String" argument which tells
 
 ## RFC5424 Listener
 
-A listener designed to accept structured syslog messages based on either RFC5424 or RFC3164 enables Simple Relay to act as a syslog aggregation point.  To enable a listener that expects syslog messages using a reliable TCP connection on port 601 set the "Reader-Type" to "RFC5424.
+A listener designed to accept structured syslog messages based on either [RFC5424](https://www.rfc-editor.org/rfc/rfc5424) or [RFC3164](https://www.rfc-editor.org/rfc/rfc3164) enables Simple Relay to act as a syslog aggregation point.  To enable a listener that expects syslog messages using a reliable TCP connection on port 601 set the "Reader-Type" to "RFC5424.
+
+Additional RFC5424 listener configuration parameters:
+
+| Parameter     | Type    | Default Value     | Description |
+|---------------|---------|-------------------|-------------|
+| Drop-Priority | Boolean | false             | Removes the `<nnn>` priority header in RFC5424 messages |
+
+### RFC5424 Examples
 
 ```
 [Listener "syslog"]
@@ -167,14 +190,70 @@ An example listener specification which removes the priority tag from entries:
 [Listener "syslog"]
 	Bind-String=udp://0.0.0.0:514
 	Reader-Type=RFC5424
-	Keep-Priority=false
+	Drop-Priority=true
 ```
 
-Note: The priority portion of a syslog message is codified in the RFC specification.  Removing the priority means that the Gravwell [syslog](#!search/syslog/syslog.md) search module will be unable to properly parse the values.  Paid Gravwell licenses are all unlimited and we recommend that the priority field is left in syslog messages.  The syslog search module is also dramatically faster than attempting to hand parse syslog messages with regular expressions.
+Note: The priority portion of a syslog message is codified in the RFC specification.  Removing the priority means that the Gravwell [syslog](#!search/syslog/syslog.md) search module will be unable to properly parse the values, the syslog search module is dramatically faster than attempting to hand parse syslog messages with regular expressions.  However, some systems use an RFC5424-like header to send non-syslog data (such as the Fortinet products), in which case the data is not syslog at all and dropping the priority is appropriate.
+
+## RFC6587 Listener
+
+A listener designed to perform octet counting on TCP streams of data with optional framing, the [RFC6587](https://www.rfc-editor.org/rfc/rfc6587) listener is designed to parse incoming messages that contain an octet (byte) count header which defines the length of the message.  Properly formatted RFC6587 messages contain a header with an ASCII base 10 number indicating the length of the message, each message is then terminated with an optional newline (0xa), null (0x0), or newline and carriage return (0xa 0xd).  The RFC6587 reader will process the framed messages and remove the octet count header and any optional framing.
+
+Additional RFC6587 listener configuration parameters:
+
+| Parameter     | Type    | Default Value     | Description |
+|---------------|---------|-------------------|-------------|
+| Drop-Priority | Boolean | false             | Removes the `<nnn>` priority header in RFC5424-like messages |
+
+
+A common source of RFC6587 data is the Fortinet series of firewalls and switches when transmitting logs using the "reliable" mode, an example RFC6587 message is shown below:
+
+```
+464 <185>date=2022-09-28 time=08:49:59 devname="fortigate" devid="FGT60E4Q16015706" eventtime=1664380199448569680 tz="-0700" logid="0100032002" type="event" subtype="system" level="alert" vd="root" logdesc="Admin login failed" sn="0" user="admin" ui="ssh(192.168.1.100)" method="ssh" srcip=192.168.1.100 dstip=192.168.1.99 action="login" status="failed" reason="ssh_key_invalid" msg="Administrator admin login failed from ssh(192.168.1.100) because of invalid ssh key"
+```
+
+Note: RFC6587 listeners are not compatible with UDP transports.
+
+### RFC6587 Examples
+
+A basic listener which expects RFC6587 data on TCP port 601.
+
+```
+[Listener "switch logs"]
+	Bind-String=0.0.0.0:601
+	Reader-Type=rfc6587
+```
+
+An example listener designed to accept "reliable" mode data from a Fortinet device and strip the priority header to create clean key/value data.
+
+```
+[Listener "fortinet"]
+	Bind-String=tcp://0.0.0.0:601
+	Reader-Type=rfc6587
+	Drop-Priority=true
+```
+
+The previously shown example would be ingested as:
+
+```
+date=2022-09-28 time=08:49:59 devname="fortigate" devid="FGT60E4Q16015706" eventtime=1664380199448569680 tz="-0700" logid="0100032002" type="event" subtype="system" level="alert" vd="root" logdesc="Admin login failed" sn="0" user="admin" ui="ssh(192.168.1.100)" method="ssh" srcip=192.168.1.100 dstip=192.168.1.99 action="login" status="failed" reason="ssh_key_invalid" msg="Administrator admin login failed from ssh(192.168.1.100) because of invalid ssh key"
+```
 
 ## Regex Listeners
 
-The regex listener type is a very flexible listener which can split entries based on arbitrary regular expressions. For instance, there may be existing infrastructure which forwards Windows XML event logs over a plain TCP connection (one Gravwell customer actually does this):
+The regex listener type is a very flexible listener which can split entries based on arbitrary regular expressions. This can be useful when log sources do not adhere to standard formats like RFC5424 or RFC6587.
+
+
+Additional Regex listener configuration parameters:
+
+| Parameter     | Type    | Default Value     | Description |
+|---------------|---------|-------------------|-------------|
+| Regex | string | | Regular expression used to detect the start of an entry |
+| Trim-Whitespace | Boolean | false | remove extra whitespace around entries after an extraction takes place |
+| Max-Buffer | integer | 8MB | The maximum amount of data to be read before an entry is forced out |
+
+
+For instance, there may be existing infrastructure which forwards Windows XML event logs over a plain TCP connection (one Gravwell customer actually does this):
 
 ```
 <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
@@ -217,11 +296,7 @@ Because the event logs can span multiple lines, it is not safe to use the basic 
 
 The behavior of the Regex parameter is discussed below.
 
-### Regex Listener Configuration Parameters
-
-The regex listener blocks implement the universal listener types as documented above. Additional parameters specify the regular expression to use as a delimiter, options for dealing with whitespace, and a maximum buffer size.
-
-#### Regex Parameter
+#### Regex Parameter Details
 
 The `Regex` parameter specifies a regular expression to be used as the delimiter. The ingester will read incoming data and buffer it until it finds a match for the regular expression. It then takes all the buffered data *up to but not including* the delimiter and ingests it as an entry. The delimiter itself is *discarded*. Thus, if we define `Regex="X"` and send the following:
 
@@ -251,11 +326,19 @@ The JSON Listener type enables some mild JSON processing at the time of ingest. 
 
 A great example use case is the JSON over TCP data export functionality found in many Bro sensor appliances.  The appliances export all Bro log data over a single TCP stream, however there are multiple data types within the stream built by different modules.  Using the JSON Listener we can derive the data type from the module field and apply a unique tag.  this allows us to do things like keep the Bro conn logs in one well, the Bro DNS logs in another, and all other Bro logs in yet another.  As a result, we can differentiate the data types with different tags and take advantage of Gravwell Wells when multiple JSON data types are coming in via a single stream.
 
-### JSON Listener Configuration Parameters
+Additional JSON listener configuration parameters:
+
+| Parameter     | Type    | Default Value     | Description |
+|---------------|---------|-------------------|-------------|
+| Extractor     | string  |  | A JSON path which specifies the object to extract from the JSON object for use in tag assignment |
+| Tag-Match     | string list | | A set of key/value specifications used to match against the Extractor parameter and lookup a tag for assignment, many Tag-Match parameters can be defined |
+| Default-Tag   | string  |  | The tag to assign to the entry if no match can be made using the set of Tag-Match parameters |
+
+### JSON Parameter Details
 
 The JSON Listener blocks implement the universal listener types as documented above.  Additional parameters allow for specifying which field we wish to pivot on to define a tag.
 
-#### Extractor Parameter
+#### Extractor Parameter Details
 
 The "Extractor" parameter specifies a JSON extraction string which is used to pull a field from a JSON entry.  The Extraction string follows the same syntax as the Gravwell [json](#!search/json/json.md) search module minus any inline filtering.
 
