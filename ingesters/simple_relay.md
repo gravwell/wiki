@@ -253,7 +253,7 @@ Additional Regex listener configuration parameters:
 | Max-Buffer | integer | 8MB | The maximum amount of data to be read before an entry is forced out |
 
 
-For instance, there may be existing infrastructure which forwards Windows XML event logs over a plain TCP connection (one Gravwell customer actually does this):
+For instance, there may be existing infrastructure which forwards Windows XML event logs over a plain TCP connection:
 
 ```
 <Event xmlns="http://schemas.microsoft.com/win/2004/08/events/event">
