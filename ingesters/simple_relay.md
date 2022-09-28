@@ -152,7 +152,7 @@ The most basic Listener requires only one the "Bind-String" argument which tells
 
 ## RFC5424 Listener
 
-A listener designed to accept structured syslog messages based on either [RFC5424](https://www.rfc-editor.org/rfc/rfc5424) or [RFC3164](https://www.rfc-editor.org/rfc/rfc3164) enables Simple Relay to act as a syslog aggregation point.  To enable a listener that expects syslog messages using a reliable TCP connection on port 601 set the "Reader-Type" to "RFC5424.
+A listener designed to accept structured syslog messages based on either [RFC5424](https://www.rfc-editor.org/rfc/rfc5424) or [RFC3164](https://www.rfc-editor.org/rfc/rfc3164) enables Simple Relay to act as a syslog aggregation point.  To enable a listener that expects syslog messages using a reliable TCP connection on port 601 set the "Reader-Type" to "RFC5424".
 
 Additional RFC5424 listener configuration parameters:
 
