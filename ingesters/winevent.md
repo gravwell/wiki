@@ -4,7 +4,7 @@ The Gravwell Windows events ingester runs as a service on a Windows machine and 
 
 ## Basic Configuration
 
-The Windows Event ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the Windows Evenet ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+The Windows Event ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the Windows Event ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 ## EventChannel Examples
 
@@ -23,6 +23,7 @@ The Windows Event ingester uses the unified global configuration block described
 	Tag-Name=winApp #Apply a new tag name
 	Provider=Windows System #Only look for the provider "Windows System"
 	EventID=1000-4000 #Only look for event IDs 1000 through 4000
+	EventID=1,2,3,4 #also look for events 1, 2, 3, and 4
 	Level=verbose #Only look for verbose entries
 	Max-Reachback=72h #start looking for logs up to 72 hours in the past
 	Request_Buffer=16 #use a large 16MB buffer for high throughput
@@ -48,7 +49,16 @@ Download the Gravwell Windows ingester installer from the [Downloads page](#!qui
 
 Run the .msi installation wizard to install the Gravwell events service.  On first installation the installation wizard will prompt to configure the indexer endpoint and ingest secret.  Subsequent installations and/or upgrades will identify a resident configuration file and will not prompt.
 
+![](winevent_msi_1.png)
+
+![](winevent_msi_2.png)
+
+Note: The Log Level selection is for internal logging only, it does not affect which Windows events are captured by the ingester.  Setting the level to Information will cause the ingester to emit log events when it starts, stops, and attaches to event Channels.
+
+![](winevent_msi_3.png)
+
 The ingester is configured with the `config.cfg` file located at `%PROGRAMDATA%\gravwell\eventlog\config.cfg`.  The configuration file follows the same form as other Gravwell ingesters with a `[Global]` section configuring the indexer connections and multiple `EventChannel` definitions.
+
 
 To modify the indexer connection or specify multiple indexers, change the connection IP address to the IP of your Gravwell server and set the Ingest-Secret value.  This example shows configuring an encrypted transport:
 
@@ -82,9 +92,25 @@ Or
 msiexec.exe /i gravwell_win_events_3.3.12.msi /quiet CONFIGFILE=\\share\gravwell_config.cfg
 ```
 
+## Troubleshooting
+
+You can verify the Windows ingester connectivity by navigating to the Ingester page on the web interface.  If the Windows ingester is not present, check the status of the service either via the windows GUI or by running `sc query GravwellEvents` at the command line.
+
+![](querystatus.png)
+
+![](querystatusgui.png)
+
+If the ingester has successfully connected you can navigate to the Ingesters & Federators page and look for the ingester in the list.  It will be labeled under the "winevent" section.
+
+![](winevent_health_1.png)
+
+Clicking on the listed ingester will show the functional configuration as well as some additional data about the Event channels being monitored.
+
+![](winevent_health_1.png)
+
 ## Optional Sysmon Integration
 
-The Sysmon utility, part of the sysinternals suite, is an effective and popular tool for monitoring Windows systems. There are plenty of resources with examples of good sysmon configuration files. At Gravwell, we like to use the config created by infosec Twitter personality @InfosecTaylorSwift.
+The Sysmon utility, part of the sysinternals suite, is an effective and popular tool for monitoring Windows systems. There are plenty of resources with examples of good sysmon configuration files. At Gravwell, we like to use the modular sysmon config on [github from olafhartong](https://github.com/olafhartong/sysmon-modular).
 
 Edit the Gravwell Windows agent config file located at `%PROGRAMDATA%\gravwell\eventlog\config.cfg` and add the following lines:
 
@@ -95,7 +121,7 @@ Edit the Gravwell Windows agent config file located at `%PROGRAMDATA%\gravwell\e
         Channel=Microsoft-Windows-Sysmon/Operational
 ```
 
-[Download the excellent sysmon configuration file by SwiftOnSecurity](https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml)
+[Download the default sysmon configuration file](https://raw.githubusercontent.com/olafhartong/sysmon-modular/master/sysmonconfig.xml)
 
 [Download sysmon](https://technet.microsoft.com/en-us/sysinternals/sysmon)
 
@@ -136,13 +162,26 @@ Restart the Gravwell service via standard windows service management.
         Channel=Microsoft-Windows-Sysmon/Operational
 ```
 
-## Troubleshooting
+## Windows Event Forwarding
 
-You can verify the Windows ingester connectivity by navigating to the Ingester page on the web interface.  If the Windows ingester is not present, check the status of the service either via the windows GUI or by running `sc query GravwellEvents` at the command line.
+The Gravwell Winevent ingester can be combined with Windows Event Forwarding (WEF) to simplify deployments and reduce the number of endpoints the ingester must be installed on.  Windows Event Forwarding is an integrated Windows service that allows for forwarding events to a central collection point using integrated Windows functionality.  More information on WEF can be found on [several](https://learn.microsoft.com/en-us/windows/security/threat-protection/use-windows-event-forwarding-to-assist-in-intrusion-detection) [Microsoft](https://social.technet.microsoft.com/wiki/contents/articles/33895.windows-event-forwarding-survival-guide.aspx) [resources](https://learn.microsoft.com/en-us/defender-for-identity/configure-event-forwarding).
 
-![](querystatus.png)
+Configuring Windows Event Forwarding is beyond the scope of this document, but actually collecting the forwarded events is very simple.
 
-![](querystatusgui.png)
+First you will need to install the winevent ingester on the Windows system that will be receiving the forwarded events.  Then you will want to validate the name of the channel that is configured to receive the forwarded events on the collection box.  Typically that is `ForwardedEvents`.
+
+![](winevent_wef_1.png)
+
+Note: Forwarded events will still contain the correct `Channel` in their logs.
+
+
+To enable the collection of forwarded events first we need to open the winevent configuration file located at `%PROGRAMDATA%\gravwell\eventlog\config.cfg` as an Administrator and insert a new Listener stanza that is pointed at the WEF collection channel:
+
+```
+[EventChannel "WEF Events"]
+        Tag-Name=windows
+        Channel=ForwardedEvents
+```
 
 ## Example Windows Searches
 
@@ -158,25 +197,27 @@ To see ALL Windows events in their entirety run:
 tag=windows
 ```
 
-For the following searches we can use the `winlog` search module to filter and extract specific events and fields.  To see all network creation by non-standard processes:
+For the following searches we can use the `winlog` search module to filter and extract specific events and fields.  To see all network connection rates per computer using sysmon data:
 
 ```
-tag=sysmon regex winlog EventID==3 Image SourceHostname DestinationIp DestinationPort |
-table TIMESTAMP SourceHostname Image DestinationIP DestinationPort
+tag=sysmon winlog Provider == "Microsoft-Windows-Sysmon" EventID == 3 Protocol |
+stats count by Protocol |
+chart count by Protocol
 ```
 
-To chart network creation by source host:
+![](winevent_example_1.png)
+
+
+To show all successful logons across all logon types (including service logons) using standard Windows logs:
 
 ```
-tag=sysmon regex winlog EventID==3 Image SourceHostname DestinationIp DestinationPort |
-count by SourceHostname |
-chart count by SourceHostname limit 10
+tag=windows words User32 4624
+| winlog Provider=="Microsoft-Windows-Security-Auditing" EventID==4624 LogonType LogonProcessName=="User32 " 
+  TargetUserName Computer TargetDomainName
+| lookup -r windows_login_types LogonType logon_type name as LogonType
+| table TargetUserName Computer TargetDomainName LogonType TIMESTAMP
 ```
 
-To see suspicious file creation:
+Note: The above query needs to have the `windows_login_types` resource that is provided by the Windows Resource kit.
 
-```
-tag=sysmon winlog EventID==11 Image TargetFilename |
-count by TargetFilename |
-chart count by TargetFilename
-```
+![](winevent_example_2.png)
