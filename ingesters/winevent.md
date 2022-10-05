@@ -4,7 +4,7 @@ The Gravwell Windows events ingester runs as a service on a Windows machine and 
 
 ## Basic Configuration
 
-The Windows Event ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the Windows Event ingester supports multiple upstream indexers, TLS, clear text, and named pipe connections, a local cache, and local logging.
+The Windows Event ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the Windows Event ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 ## EventChannel Examples
 
@@ -58,7 +58,6 @@ Note: The Log Level selection is for internal logging only, it does not affect w
 ![](winevent_msi_3.png)
 
 The ingester is configured with the `config.cfg` file located at `%PROGRAMDATA%\gravwell\eventlog\config.cfg`.  The configuration file follows the same form as other Gravwell ingesters with a `[Global]` section configuring the indexer connections and multiple `EventChannel` definitions.
-
 
 
 To modify the indexer connection or specify multiple indexers, change the connection IP address to the IP of your Gravwell server and set the Ingest-Secret value.  This example shows configuring an encrypted transport:
@@ -169,7 +168,7 @@ The Gravwell Winevent ingester can be combined with Windows Event Forwarding (WE
 
 Configuring Windows Event Forwarding is beyond the scope of this document, but actually collecting the forwarded events is very simple.
 
-First you will need to install the winevent ingester on the Windows system that will be receiving the forwarded events.  Then you will want to validate the name of the channel that is configured to receive the forwarded events on the collection box.  Typically that is ForwardedEvents`.
+First you will need to install the winevent ingester on the Windows system that will be receiving the forwarded events.  Then you will want to validate the name of the channel that is configured to receive the forwarded events on the collection box.  Typically that is `ForwardedEvents`.
 
 ![](winevent_wef_1.png)
 
