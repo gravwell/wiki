@@ -6,8 +6,8 @@ The invocation for the "packetlayer" module is identical to the "packet" module,
 
 ### Supported Options
 
-* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record. For example, the packet processing engine can operate on extracted values such as analyzing layer 2 tunnels.`
-* `-m : The “-m” option tells the packetlayer processor to continue extracting the specified layers until no data is available (multi-extract).  This option is useful for extracting Layer 4+ messages`
+* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record. For example, the packet processing engine can operate on extracted values such as analyzing layer 2 tunnels.
+* `-m`: The “-m” option tells the packetlayer processor to continue extracting the specified layers until no data is available (multi-extract).  This option is useful for extracting Layer 4+ messages
 
 ### Layer 4+ Protocol Extraction
 
