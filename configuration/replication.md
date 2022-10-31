@@ -10,6 +10,8 @@ Replication connections are encrypted by default and require that indexers have 
 
 Replication storage nodes (nodes which receive replicated data) are allotted a specific amount of storage and will not delete data until that storage is exhausted.  If a remote client node deletes data as part of normal ageout, the data shard is marked as deleted and prioritized for deletion when the replication node hits its storage limit.  The replication system prioritizes deleted shards first, cold shards second, and oldest shards last.  All replicated data is compressed; if a cold storage location is provided it is usually recommended that the replication storage location have the same storage capacity as the cold and hot storage combined.
 
+Note: By default, the replication engine uses port 9406.
+
 Attention: Entries larger than 999MB will **not** be replicated. They can be ingested and searched as normal, but are omitted from replication.
 
 ## Basic Online Deployment
@@ -66,6 +68,16 @@ Nodes in Region 2 are configured to replicate to Region 1:
 	Storage-Location=/opt/gravwell/replication_storage
 	Connect-Wait-Timeout=60
 ```
+
+You can also use IPv6 addresses for replication peers. For example:
+
+```
+[Replication]
+	Peer=2001:4860:4860::5555
+	Storage-Location=/opt/gravwell/replication_storage
+	Connect-Wait-Timeout=60
+```
+
 
 ## Offline Deployment
 
