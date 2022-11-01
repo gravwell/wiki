@@ -8,6 +8,7 @@ The Mattermost Message node sends a message to a Mattermost channel.
 * `Message Text`, required: the body of the message you wish to send.
 * `Mattermost Username`: the webhook is configured to send messages with a default username; this setting will override that default.
 * `Mattermost Channel`: the webhook is configured to send messages to a default channel; this setting overrides the channel to which the message is sent.
+* `Icon URL`: set an icon URL for message post.
 
 ## Output
 
