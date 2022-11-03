@@ -273,6 +273,49 @@ The fulltext accelerator supports a few options which allow for refining the typ
 
 NOTE: Make sure you understand your data before enabling the `-acceptTS` and `-acceptFloat` flags as these can dramatically bloat the index when using the index engine.  The Bloom engine is less impacted by orthogonal data such as timestamps and floating point numbers.
 
+### Fulltext word extraction
+
+The Fulltext accelerator indexes words within text logs. It does this by extracting any word that is surrounded by any of the below non-word characters, or the beginning or end of the text. For example, the message `foo%bar` will extract "foo" and "bar" in the same way as `foo bar`, since `%` is a split character. 
+
+The following table lists all the split characters used by the Fulltext accelerator.
+
+| Character | Unicode escape code |
+| --------- | ------------------- |
+| Unprintable ASCII control characters (ie NUL, backspace) | \u0000 - \u001F |
+| Space | \u0020 |
+| ! | \u0021 | 
+| " | \u0022 |
+| # | \u0023 |
+| $ | \u0024 |
+| % | \u0025 |
+| & | \u0026 |
+| ' | \u0027 |
+| ( | \u0028 |
+| ) | \u0029 |
+| * | \u002A |
+| + | \u002B |
+| , | \u002C |
+| / | \u002F |
+| ; | \u003B |
+| < | \u003C |
+| = | \u003D |
+| > | \u003E |
+| ? | \u003F |
+| [ | \u005B |
+| \ | \u005C |
+| ] | \u005D |
+| ^ | \u005E |
+| ` | \u0060 |
+| { | \u007B |
+| &vert; | \u007C |
+| } | \u007D |
+| ~ | \u007E |
+| DEL | \u007F |
+| NSBP | \u00A0 |
+| × | \u00D7 |
+| Unprintable Unicode whitespace characters | \u2000 - \u200a, \u1680, \u2028, \u2029, \u202f, \u205f, \u3000, \u0085 |
+
+
 ### Example Well Configuration
 
 The following well configuration performs fulltext acceleration using the `index` engine.  We are attempting to identify and ignore timestamps, UUIDs, and require that all tokens be at least 2 bytes in length.

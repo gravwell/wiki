@@ -69,6 +69,7 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 * [PDF](nodes/pdf.md): create PDF documents.
 * [Query Log Ingest](nodes/queryalert.md): convert search results to alert entries & ingest.
 * [Read Macros](nodes/macroget.md): read Gravwell macros.
+* [Read Resources](nodes/resourceget.md): read Gravwell resources.
 * [Rename](nodes/rename.md): rename variables in the payload.
 * [Run a Query](nodes/runquery.md): run a Gravwell query.
 * [Set Variables](nodes/inject.md): inject variables into the payload.
@@ -80,6 +81,7 @@ Flows are created using the flow editor. Please refer to the [flow editor docume
 * [Teams Message](nodes/teams.md): send a Microsoft Teams message.
 * [Text Template](nodes/template.md): format text.
 * [Throttle](nodes/throttle.md): limit execution frequency of certain nodes within a flow.
+* [Update Resources](nodes/resourceupdate.md): create or update Gravwell resources.
 
 The following nodes tend to be needed only in particular advanced cases:
 
