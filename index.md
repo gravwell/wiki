@@ -14,6 +14,8 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 
   * [Downloads](quickstart/downloads.md)
 
+  * [Ingesters](ingesters/ingesters.md#Ingesters)
+
   * [Splunk Migration](migrate/migrate.md)
 
 ## Searching with Gravwell
