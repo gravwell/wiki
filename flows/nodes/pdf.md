@@ -14,6 +14,7 @@ The PDF node generates PDF documents based on items pulled from the payload. Thi
 * `Text Font Size`: Sets the font size for text sections in the PDF.
 * `Table Font Size`: Sets the font size for text inside formatted tables in the PDF.
 * `Disable Table Scaling`: Disables the automatic table scaling for tables in the PDF.
+* `Page Orientation`: Change the page orientation. The default is Portrait.
 
 ## Example
 
@@ -39,6 +40,6 @@ The PDF node is designed to perform a best effort formatting of data, this inclu
 
 ![](pdf-example5.png)
 
-By default, both text and tables in a PDF will use a 12 pt font.  Tables will automatically size up or down if the data within a table allows it.  For example, if a query only has two columns of data with relatively small data sizes the table will scale up the font (up to 18pt) to make the table more readable.  If a table has many columns of data or long strings in cells the table will be automatically scaled down to try and fit as much data as possible.  If the table cannot fit all of the columns, even with font scaling, the table may omit columns and add a note at the base of the table indicating that some columns were omitted due to size.  Here is an example of a PDF with a table that simply cannot fit the data:
+By default, both text and tables in a PDF will use a 12 pt font.  Tables will automatically size up or down if the data within a table allows it.  For example, if a query only has two columns of data with relatively small data sizes the table will scale up the font (up to 18pt) to make the table more readable.  If a table has many columns of data or long strings in cells the table will be automatically scaled down to try and fit as much data as possible.  If the table cannot fit all of the columns, even with font scaling, the table may omit columns and add a note at the base of the table indicating that some columns were omitted due to size. Additionally, you can specify portrait or landscape page orientation. Here is an example of a PDF with a table that simply cannot fit the data:
 
 ![](pdf-example6.png)
