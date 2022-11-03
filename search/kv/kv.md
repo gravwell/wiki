@@ -24,12 +24,12 @@ x:1|y:2|z:3|foo:bar
 
 ## Supported Options
 
-* `-e <arg>`: The "-e" option operates on an enumerated value instead of on the entire record.
-* `-sep <separator>`: The "-sep" flag allows the user to specify the separator. This can be one or more characters, for example `-sep EQUALS`.
-* `-d <delimiters>`: The "-d" flag specifies the delimiters to use. You can specify multiple delimiters characters; for example, to use double-quote, tab, and space as delimiters, set `-d "\" \t"`.
-* `-s`: The "-s" option puts the module into strict mode. In strict mode, an entry will be dropped unless *all* specified extractions succeed.
-* `-q`: The "-q" option enables quoted values. This allows values to contain the delimiter characters, e.g. `key="this is the value"`
-* `-noclean`: The "-noclean" option will disable trimming left whitespace on extracted tokens, even if the whitespace is contained in the delimiters field. For example `key=   value` would be extracted with the leading 3 spaces intact.
+* `-e <arg>` (optional): The "-e" option operates on an enumerated value instead of on the entire record.
+* `-sep <separator>` (optional): The "-sep" flag allows the user to specify the separator (default "="). This can be one or more characters, for example `-sep EQUALS`.
+* `-d <delimiters>` (optional): The "-d" flag specifies the delimiters to use (defaults to the space and tab characters). You can specify multiple delimiters characters; for example, to use double-quote, tab, and space as delimiters, set `-d "\" \t"`.
+* `-s` (optional): The "-s" option puts the module into strict mode. In strict mode, an entry will be dropped unless *all* specified extractions succeed.
+* `-q` (optional): The "-q" option enables quoted values. This allows values to contain the delimiter characters, e.g. `key="this is the value"`
+* `-noclean` (optional): The "-noclean" option will disable trimming left whitespace on extracted tokens, even if the whitespace is contained in the delimiters field. For example `key=   value` would be extracted with the leading 3 spaces intact.
 
 ```
 x= 1 y = 2 z=3 foo    =  bar
@@ -53,26 +53,27 @@ The kv module can filter based on string equality. If a filter is enabled that s
 
 ## Examples
 
-Given syslog entries similar to:
+Here's a sample of a log entry from a Fortigate firewall:
 
 ```
-<14>1 2022-01-25T11:30:00.007605-07:00 15ea885e7f50 webserver 20000069 webserver/bgSearch.go:722 [gw@1 searchid="43289156989" uid="1" query="tag=gravwell syslog Appname==webserver method==POST url==\"/api/login\" status elapsed | sort by elapsed desc | table status elapsed TIMESTAMP" start="2021-07-25 10:56:25 -0600 MDT" end="2022-01-25 10:56:25 -0700 MST" elapsed="14.220625144s"] Search finished
+date=2022-09-26 time=10:57:08 devname="fortigate" devid="FGT60E4Q16015706" eventtime=1664215028981468505 tz="-0700" logid="0100041001" type="event" subtype="system" level="critical" vd="root" logdesc="FortiGate update failed" status="update" msg="Fortigate scheduled update failed"
 ```
 
-The following query will extract the url and method fields and show them in a table:
+It's nicely formatted, using the equals sign as the separator and spaces as delimiters, which are the defaults for the kv module. The following query will extract the devname, level, logdesc, and msg fields and show them in a table:
 
 ```
-tag=syslog kv -q url method | table
-```
-![](syslog1.png)
-
-This query will drop all entries whose method is not "GET":
-
-```
-tag=syslog kv -q url method != "GET" | table
+tag=syslog kv -q devname level logdesc msg | table
 ```
 
-![](syslog2.png)
+![](fortigate1.png)
+
+This query will show only "critical" entries:
+
+```
+tag=syslog kv -q devname level=="critical" logdesc msg | table
+```
+
+![](fortigate2.png)
 
 ### Changing the separator
 
