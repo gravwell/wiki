@@ -20,6 +20,7 @@ Attention: The [replication system](#!configuration/replication.md) does not rep
 | [Azure Event Hubs](#!ingesters/eventhubs.md) | Consume from Azure Event Hubs. |
 | [collectd](#!ingesters/collectd.md) | Ingest collectd samples. |
 | [File Follower](#!ingesters/file_follow.md) | Watch and ingest files on disk, such as logs. |
+| [Windows File Follower](#!ingesters/win_file_follow.md) | Watch and ingest files on Windows, such as logs and EVTX files. |
 | [GCP PubSub](#!ingesters/pubsub.md) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
 | [HTTP](#!ingesters/http.md) | Create HTTP listeners on multiple URL paths. |
 | [IPMI](#!ingesters/ipmi.md) | Periodically collect SDR and SEL records from IPMI devices. |
