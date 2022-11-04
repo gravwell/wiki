@@ -4,7 +4,7 @@
 
 Actionables provide a way to create custom menus that key on any text rendered in a query; users can take different actions on that text by selecting options in the menus. Similar to an HTML hyperlink, actionables can be used to open external URLs that key on data, but actionables can also be leveraged to submit new Gravwell queries, launch dashboards, and execute templates.
 
-Actionables are created by specifying one or more regular expressions, along with one or more actions. Gravwell automatically parses all text rendered with the [table](#!/search/table/table.md) and [chart](#!/search/chart/chart.md) renderers and creates menus for any corresponding triggers.
+Actionables are created by specifying one or more regular expressions, along with one or more actions. Gravwell automatically parses all text rendered with the [table](/search/table/table) and [chart](/search/chart/chart) renderers and creates menus for any corresponding triggers.
 
 ![](actionables-overview.png)
 

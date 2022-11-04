@@ -27,7 +27,7 @@ An example response when not in distributed mode:
 }
 ```
 
-
+(api_performing_a_system_backup)=
 ### Performing a system backup
 
 Admin users may request a system backup which will provide a backup file containing all content related to the state of Gravwell.

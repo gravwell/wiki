@@ -20,14 +20,14 @@ While anko can do anything, eval has several important restrictions:
 
 This document describes the Anko programming language itself. Documentation for the two search modules is maintained on separate pages:
 
-* [`anko` documentation](anko.md) (anko is also briefly described in [the search modules documentation](#!search/searchmodules.md#Anko))
-* [`eval` documentation](eval.md) (eval is also briefly described in [the search modules documentation](#!search/searchmodules.md#Eval))
+* [`anko` documentation](anko.md) (anko is also briefly described in [the search modules documentation](searchmodule_list))
+* [`eval` documentation](eval.md) (eval is also briefly described in [the search modules documentation](searchmodule_list))
 
 ## Search Scripts
 
 Where the `anko` and `eval` modules run scripts *inside* search pipelines, Gravwell also supports scripts which *launch* searches of their own and operate on the results. This is useful for automated queries, e.g. a script which runs every morning at 6 a.m. to look for particular suspicious network behavior.
 
-These scripts can be either run on a schedule (see [automation scripts](#!scripting/scheduledsearch.md)) or run by hand using the [command line client](#!cli/cli.md). The scripting language is the same in both cases, although scripts run on a schedule cannot use `print` functions to display output.
+These scripts can be either run on a schedule (see [automation scripts](/scripting/scheduledsearch)) or run by hand using the [command line client](/cli/cli). The scripting language is the same in both cases, although scripts run on a schedule cannot use `print` functions to display output.
 
 The [automation script](scriptingsearch.md) documentation provides more information on how to write this type of script, including examples.
 

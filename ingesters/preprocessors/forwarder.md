@@ -1,4 +1,4 @@
-## Forwarding Preprocessor
+# Forwarding Preprocessor
 
 The forwarding preprocessor is used to split a log stream and forward it to another endpoint.  This can be extremely useful when standing up additional logging tools or when feeding data to external archive processors.  The Forwarding preprocessor is a forking preprocessor.  This means that it will not alter the data stream; it only forwards a copy of the data on to additional endpoints.
 
@@ -10,7 +10,7 @@ Multiple forwarding preprocessors can be specified, allowing for a specific log 
 
 The Forwarding preprocessor Type is `forwarder`.
 
-### Supported Options
+## Supported Options
 
 * `Target` (string, required): Endpoint for forwarded data.  Should be a host:port pair unless using the `unix` protocol.
 * `Protocol` (string, required): Protocol to use when forwarding data.  Options are `tcp`, `udp`, `unix`, and `tls`.
@@ -24,7 +24,7 @@ The Forwarding preprocessor Type is `forwarder`.
 * `Non-Blocking` (boolean, optional): True specifies that the forwarder will make a best effort to forward data, but will not block ingestion.
 * `Insecure-Skip-TLS-Verify` (boolean, optional): Specifies that TLS-based connections can ignore invalid TLS certificates.
 
-### Example: Forwarding syslog from a specific set of hosts
+## Example: Forwarding syslog from a specific set of hosts
 
 For this example we are using the SimpleRelay ingester to ingest syslog messages and forward them in their raw form to another endpoint.  We are using the `Source` filter in the `forward` preprocessor to *only* forward logs that have the source field from either the `192.168.0.1` IP or within the `192.168.1.0/24` subnet.  The logs are forwarded on in their original format with a newline between each:
 
@@ -47,7 +47,7 @@ For this example we are using the SimpleRelay ingester to ingest syslog messages
 	Non-Blocking=false
 ```
 
-### Example: Forwarding Specific Windows Event Logs
+## Example: Forwarding Specific Windows Event Logs
 
 For this example we are using the Federator to forward data streams from potentially many downstream ingesters.  We are using both the `Tag` and `Regex` filters to capture a specific set of entries and forward them on.  Note that we are using the `syslog` format, which means that we will send data to the endpoint with an RFC5424 header and the data in the body of the syslog message.  Forwarded data using the syslog format uses `gravwell` as the Hostname and the entry TAG as the Appname.
 
@@ -76,7 +76,7 @@ The `Regex` filters are used so that we only get event data from specific Channe
 ```
 
 
-### Example: Forwarding logs to multiple hosts
+## Example: Forwarding logs to multiple hosts
 
 For this example we are using the Gravwell Federator to forward subsets of logs to different endpoints using different formats.  Because the forwarder preprocessor can be stacked the same way as any other preprocessor, we can specify multiple forwarding preprocessors with their own filters, endpoints, and formats.
 

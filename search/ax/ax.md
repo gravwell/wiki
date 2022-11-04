@@ -63,7 +63,7 @@ We will assume that the CSV data is tagged "testcsv" and the unstructured data i
 
 Using AX and the ax module we can specify both tags ("testregex" and "testcsv") and extract the common fields and unify them into a single view:
 
-```
+```gravwell
 tag=testregex,testcsv ax app src dst | ip src as IP | subnet IP /16 | count by subnet | sort by count desc | table -nt subnet count
 ```
 
@@ -71,7 +71,7 @@ tag=testregex,testcsv ax app src dst | ip src as IP | subnet IP /16 | count by s
 
 AX does not *require* arguments.  If no arguments are given to ax, the module will extract all fields specified with the extractions.  Given the same two data sets with the same extraction configurations we can issue the extremely simple query:
 
-```
+```gravwell
 tag=testregex,testcsv ax | table
 ```
 
@@ -79,7 +79,7 @@ tag=testregex,testcsv ax | table
 
 We can also add filtering to specify that we only want entries which match the given filters:
 
-```
+```gravwell
 tag=testregex,testcsv ax dstport==1381 | table app src dst
 ```
 

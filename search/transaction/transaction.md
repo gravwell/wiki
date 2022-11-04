@@ -20,7 +20,7 @@ All flags are optional.
 
 The `transaction` module groups entries into single entries based on a provided set of keys. For example, given a dataset with enumerated values "host", "message", and "action", the query:
 
-```
+```gravwell
 tag=data kv host action message | transaction -fsep " -- " host | table
 ```
 
@@ -44,7 +44,7 @@ Entry 2: transaction="login -- Host bar login"
 
 To specify exactly which EVs to group, you can use one or more `-e` flags in the query. EVs will be grouped in the order provided. For example:
 
-```
+```gravwell
 tag=data kv host action message user group | transaction -e action -e message host | table
 ```
 
@@ -52,7 +52,7 @@ Will only group EVs "action" and "message", ignoring "user" and "group".
 
 Multiple keys can be provided, and records will be created based on the grouping of all provided keys. For example:
 
-```
+```gravwell
 tag=data kv host action message user group | transaction host action user | table
 ```
 

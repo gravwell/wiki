@@ -138,5 +138,5 @@ Dashboards with template queries can also be used in conjunction with *actionabl
 
 ![](actionable-dashboard.png)
 
-See the [documentation on actionables](#!gui/actionables/actionables.md) for more information.
+See the [documentation on actionables](/gui/actionables/actionables) for more information.
 

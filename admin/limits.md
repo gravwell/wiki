@@ -8,4 +8,4 @@ Render modules such as chart and table store their results on-disk on the webser
 
 ## Limiting Gravwell Resource Size
 
-User-created [resources](#!resources/resources.md) can take up a lot of space on disk, on both the webserver and the indexers. The `Resource-Max-Size` parameter in gravwell.conf specifies a limit, in bytes, for resource size. Thus, setting `Resource-Max-Size=20971520` will limit resources to no more than 20 megabytes.
+User-created [resources](/resources/resources) can take up a lot of space on disk, on both the webserver and the indexers. The `Resource-Max-Size` parameter in gravwell.conf specifies a limit, in bytes, for resource size. Thus, setting `Resource-Max-Size=20971520` will limit resources to no more than 20 megabytes.

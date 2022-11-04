@@ -2,9 +2,9 @@
 
 With pre-built Docker images available in the Docker Hub, it is very easy to deploy Gravwell in Docker for experimentation or long-term use. In this document, we show how to set up a Gravwell environment within Docker.
 
-If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, contact support@gravwell.io for help. We also have some information about deploying a custom Docker instance [on this wiki](#!configuration/custom-docker.md) and [on our blog](https://www.gravwell.io/blog/gravwell-docker-deployment).
+If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, contact support@gravwell.io for help. We also have some information about deploying a custom Docker instance [on this wiki](/configuration/custom-docker) and [on our blog](https://www.gravwell.io/blog/gravwell-docker-deployment).
 
-Once you have set up Gravwell, check out the [quickstart](#!quickstart/quickstart.md) for some starting points on *using* Gravwell.
+Once you have set up Gravwell, check out the [quickstart](/quickstart/quickstart) for some starting points on *using* Gravwell.
 
 Note: Users running Docker on MacOS should be aware that the MacOS host does not have direct IP access to containers, as explained [here](https://docs.docker.com/docker-for-mac/networking/). Be prepared to forward additional ports if you need to access container network services from the host.
 
@@ -22,7 +22,7 @@ The Gravwell indexer and webserver frontend, plus the Simple Relay ingester, are
 
 Note that the new container is named `gravwell`; we will use this when pointing ingesters to the indexer.
 
-We have set several environment variables which bear examination. They set shared secrets used to communicate between components of Gravwell. Normally these are set in [configuration files](#!configuration/parameters.md), but we can also set them via [environment variables](#!configuration/environment-variables.md) for a more dynamic, Docker-friendly config. We'll use the `GRAVWELL_INGEST_SECRET=MyIngestSecret` value later for ingesters too. The variables we set are:
+We have set several environment variables which bear examination. They set shared secrets used to communicate between components of Gravwell. Normally these are set in [configuration files](/configuration/parameters), but we can also set them via [environment variables](/configuration/environment-variables) for a more dynamic, Docker-friendly config. We'll use the `GRAVWELL_INGEST_SECRET=MyIngestSecret` value later for ingesters too. The variables we set are:
 
 * `GRAVWELL_INGEST_AUTH=MyIngestSecret` tells the *indexer* to use MyIngestSecret to authenticate ingesters.
 * `GRAVWELL_INGEST_SECRET=MyIngestSecret` tells the *Simple Relay ingester* to use MyIngestSecret to authenticate to the indexer. This **must** match the value of GRAVWELL_INGEST_AUTH!
@@ -65,7 +65,7 @@ Log in with the default credentials **admin** / **changeme**. You're now in Grav
 
 ## Add some data to test
 
-The gravwell/gravwell Docker image ships with the Simple Relay [ingester](#!ingesters/ingesters.md) pre-installed. It listens on the following ports:
+The gravwell/gravwell Docker image ships with the Simple Relay [ingester](/ingesters/ingesters) pre-installed. It listens on the following ports:
 
 * TCP 7777 for line-delimited logs (tagged 'default')
 * TCP 601 for syslog messages (tagged 'syslog')
@@ -172,7 +172,7 @@ To make changes to the Netflow ingester container we launched above, we can laun
 
 	docker exec -it netflow sh
 
-Then we can use vi to edit `/opt/gravwell/etc/netflow_capture.conf` as described in [the ingesters documentation](#!ingesters/ingesters.md). Once our modifications are made, we simply restart the whole container:
+Then we can use vi to edit `/opt/gravwell/etc/netflow_capture.conf` as described in [the ingesters documentation](/ingesters/ingesters). Once our modifications are made, we simply restart the whole container:
 
 	docker restart netflow
 
@@ -180,7 +180,7 @@ Then we can use vi to edit `/opt/gravwell/etc/netflow_capture.conf` as described
 
 If you refer back to the original command we used to launch the `gravwell/gravwell` image, you'll note that we forwarded ports 4023 and 4024 to the host. These are respectively the cleartext and TLS-encrypted ingest ports for the indexer. If you have an ingester running on another system (perhaps gathering log files on a Linux server somewhere), you can set the `Cleartext-Backend-target` or `Encrypted-Backend-target` fields in the ingester config file to point at your Docker host and ingest data into the Gravwell instance there.
 
-Refer to [the ingesters documentation](#!ingesters/ingesters.md) for more information on configuring ingesters.
+Refer to [the ingesters documentation](/ingesters/ingesters) for more information on configuring ingesters.
 
 ## Security considerations
 
@@ -191,11 +191,11 @@ If you intend to expose the forwarded container ports to the Internet, it is **c
 
 ## Crash Reporting and Metrics
 
-The Gravwell software has automated crash reporting & metrics reporting built in. For more information about what gets sent back to us at Gravwell, and how to opt out, see the [crash reporting and metrics page](#!metrics.md).
+The Gravwell software has automated crash reporting & metrics reporting built in. For more information about what gets sent back to us at Gravwell, and how to opt out, see the [crash reporting and metrics page](/metrics).
 
 
 ## More Info
 
-With Gravwell running, refer to [the rest of the documentation](#!index.md) for more information on how to use the system.
+With Gravwell running, refer to [the rest of the documentation](/index) for more information on how to use the system.
 
-If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, contact support@gravwell.io for help. We also have some information about deploying a custom Docker instance [on this wiki](#!configuration/custom-docker.md) and [on our blog](https://www.gravwell.io/blog/gravwell-docker-deployment).
+If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, contact support@gravwell.io for help. We also have some information about deploying a custom Docker instance [on this wiki](/configuration/custom-docker) and [on our blog](https://www.gravwell.io/blog/gravwell-docker-deployment).

@@ -120,7 +120,7 @@ The supported filter operators are:
 
 This example uses the `filetype` module to list the image types in the "images" tag. It additionally filters to display just images.
 
-```
+```gravwell
 tag=images filetype type~image | table
 ```
 

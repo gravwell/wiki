@@ -4,7 +4,7 @@ The maclookup module uses a custom MAC prefix database to extract Manufacturer, 
 
 ### Setting Up Databases
 
-Before using the maclookup module, you must install a [resource](#!resources/resources.md) containing the macdb database. 
+Before using the maclookup module, you must install a [resource](/resources/resources) containing the macdb database. 
 
 By default, the maclookup module expects the macdb database to be in a resource named "macdb". This will allow you to do extractions without specifying the resource name explicitly.
 
@@ -40,7 +40,7 @@ The following extractions are possible with the maclookup database:
 
 ### Listing all manufacturers from PCAP with from the US.
 
-```
+```gravwell
 tag=pcap packet eth.MAC | maclookup MAC.Manufacturer MAC.Country == US | table
 ```
 
@@ -48,7 +48,7 @@ tag=pcap packet eth.MAC | maclookup MAC.Manufacturer MAC.Country == US | table
 
 ### Pie chart of manufacturers from PCAP.
 
-```
+```gravwell
 tag=pcap packet eth.MAC | maclookup mac.Manufacturer | count by Manufacturer | chart count by Manufacturer
 ```
 

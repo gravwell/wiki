@@ -6,19 +6,19 @@ This checklist gives a general order of operation for configuring a single-node,
 
 □ Install Gravwell via self-extracting installer, Debian/Redhat package, or Docker container (see [Quickstart](quickstart.md)).
 
-□ Verify firewall rules allow incoming traffic on [ports used by Gravwell](#!configuration/networking.md).
+□ Verify firewall rules allow incoming traffic on [ports used by Gravwell](/configuration/networking).
 
 □ Use a web browser to access the new Gravwell instance, e.g. `http://gravwell.example.org/`, and upload your license file when prompted.
 
 □ Login as "admin", password "changeme". Change the default admin password by clicking user icon in upper right.
 
-□ Configure any additional storage wells if desired. (See [Gravwell configuration](#!configuration/configuration.md) and [detailed configuration parameters](#!configuration/parameters.md) documentation)
+□ Configure any additional storage wells if desired. (See [Gravwell configuration](/configuration/configuration) and [detailed configuration parameters](/configuration/parameters) documentation)
 
-□ Set up [ageout](#!configuration/ageout.md) on your wells to avoid running out of disk space.
+□ Set up [ageout](/configuration/ageout) on your wells to avoid running out of disk space.
 
-□ Optional: [configure TLS](#!configuration/certificates.md) for user access and ingester connections.
+□ Optional: [configure TLS](/configuration/certificates) for user access and ingester connections.
 
-□ [Configure ingesters](#!ingesters/ingesters.md) to bring data into Gravwell.
+□ [Configure ingesters](/ingesters/ingesters) to bring data into Gravwell.
 
 
 <!-- TODO: this is a complex process that's difficult to capture in a linear checklist, because there are lots of options you may or may not be using. Leaving this here because it collects at least some of the steps.
@@ -28,7 +28,7 @@ This checklist gives a general order of operation for configuring a single-node,
 
 □ Determine which nodes will be indexers and which will be webservers. If you intend to deploy more than one webserver, select one webserver to run the search agent.
 
-□ If you intend to use [distributed frontends](#!distributed/frontend.md), provision an additional system for the *datastore*. Note that the datastore cannot be co-resident with an indexer or webserver process.
+□ If you intend to use [distributed frontends](/distributed/frontend), provision an additional system for the *datastore*. Note that the datastore cannot be co-resident with an indexer or webserver process.
 
 □ Install Gravwell on each of the webserver and indexer nodes (see [Quickstart](quickstart.md)).
 
@@ -46,9 +46,9 @@ This checklist gives a general order of operation for configuring a single-node,
 
 □ Make a copy of the config to be used for the indexers.
 
-□ Define desired wells in the indexer config (see [this document](#!configuration/configuration.md).
+□ Define desired wells in the indexer config (see [this document](/configuration/configuration).
 
-□ Set [ageout configuration](#!configuration/ageout.md) for each well.
+□ Set [ageout configuration](/configuration/ageout) for each well.
 
 #### Webserver Config
 
@@ -61,9 +61,9 @@ Remote-Indexers=net:indexer1.example.net:9404
 Remote-Indexers=net:indexer2.example.net:9404
 ```
 
-□ If using a datastore, set the `Datastore` and `External-Addr` options in gravwell.conf as described in the [distributed frontends](#!distributed/frontend.md) document.
+□ If using a datastore, set the `Datastore` and `External-Addr` options in gravwell.conf as described in the [distributed frontends](/distributed/frontend) document.
 
-□ Set up [TLS](#!configuration/certificates.md) by setting the `Certificate-File` and `Key-File` fields.
+□ Set up [TLS](/configuration/certificates) by setting the `Certificate-File` and `Key-File` fields.
 
 ### Deployment
 

@@ -4,7 +4,7 @@ By default, everything in the Gravwell search pipeline is temporally sorted. The
 
 The sort module, however, allows the user to sort on other values. This can be very useful for organizing information. For example, a query to display a table of the top domains requested from the dnsmasq daemon might look like:
 
-```
+```gravwell
 tag=syslog grep dnsmasq | regex ".*query\[A\]\s(?P<dnsquery>[a-zA-Z0-9\.\-]+)" | count by dnsquery | sort by count desc | table dnsquery count
 ```
 

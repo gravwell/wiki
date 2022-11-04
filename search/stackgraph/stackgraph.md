@@ -12,7 +12,7 @@ The best way to describe a stackgraph is to show a couple.
 
 ### Traffic Volumes by IP and Port
 
-```
+```gravwell
 tag=netflow netflow Src ~ PRIVATE Port < 1024 Bytes as traffic |  sum traffic by Src,Port | stackgraph Src Port sum
 ```
 
@@ -20,7 +20,7 @@ tag=netflow netflow Src ~ PRIVATE Port < 1024 Bytes as traffic |  sum traffic by
 
 ### Traffic Volumes by Port and Country
 
-```
+```gravwell
 tag=netflow netflow Src ~ PRIVATE Dst  Bytes as traffic Port |  geoip Dst.CountryName | sum traffic by Port, CountryName | stackgraph CountryName Port sum
 ```
 

@@ -128,7 +128,7 @@ Then click the 'Invalid' link under 'Certificate'. A Certificate Viewer window s
 
 Select the 'Export' button. Chrome will display a file dialog to save the certificate; save it somewhere and remember the location.
 
-Now, enter [chrome://settings](chrome://settings) in your address bar or open Settings from the Chrome browser menu. Scroll to the bottom and click the Advanced button:
+Now, enter `chrome://settings` in your address bar or open Settings from the Chrome browser menu. Scroll to the bottom and click the Advanced button:
 
 ![](chrome-advanced.png)
 

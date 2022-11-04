@@ -21,7 +21,7 @@ This example checks if the number of authentication failures is increasing; it i
 
 The [Run Query](runquery.md) node runs the following query:
 
-```
+```gravwell
 tag=gravwell syslog Message=="Authentication failure"
 ```
 

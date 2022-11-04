@@ -1,6 +1,6 @@
 # The anko module
 
-As introduced in [the search modules documentation](#!search/searchmodules.md#Anko), Gravwell's anko module is a general-purpose scripting tool within the search pipeline. It allows extremely flexible manipulations of search entries, at the cost of complexity for the script creator. Once a script is created, though, it can be easily shared with other users.
+As introduced in [the search modules documentation](searchmodule_list), Gravwell's anko module is a general-purpose scripting tool within the search pipeline. It allows extremely flexible manipulations of search entries, at the cost of complexity for the script creator. Once a script is created, though, it can be easily shared with other users.
 
 See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting.md) for more details about the language itself.
 
@@ -10,7 +10,7 @@ By default, anko scripts are allowed to use network utilities such as the http a
 
 ## Managing anko scripts
 
-In order to run an anko script in a search, the text file containing the script must be uploaded as a resource. See the [resources section](#!resources/resources.md) for information on how to create and upload a resource.
+In order to run an anko script in a search, the text file containing the script must be uploaded as a resource. See the [resources section](/resources/resources) for information on how to create and upload a resource.
 
 At this time, to make a change to a script you must edit the script in the original text file, then re-upload the file to the resource. Future versions of Gravwell will include an integrated text editor to make scripting simpler.
 

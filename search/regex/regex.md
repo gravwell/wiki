@@ -35,7 +35,7 @@ The regex module supports inline filtering to allow for down-selecting data dire
 
 #### Filtering Examples
 
-```
+```gravwell
 tag=syslog regex "shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" user==root ip ~ "192.168"
 ```
 
@@ -44,6 +44,6 @@ tag=syslog regex "shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0
 regex <argument list> <regular expression> <filter arguments>
 ```
 ### Example Search
-```
+```gravwell
 tag=syslog grep sshd | regex *shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)"
 ```

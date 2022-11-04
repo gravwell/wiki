@@ -42,7 +42,7 @@ In some situations, multiple webservers may be connected to the same set of inde
 
 In order to prevent this problem, webservers can be configured with a *domain*. The domain is a number which essentially provides an additional namespace for resources. The domain is specified using the `Webserver-Domain` config parameter in `gravwell.conf`; the default value is 0. In the overwatch example described above, the service provider may chose to leave the customer clusters configured in domain 0, and set up their overwatch webserver in domain 1. This allows multiple non-synchronized webservers to communicate with the same set of indexers without interfering with each others' resources.
 
-Note: Webservers configured as [distributed webservers using the datastore](#!distributed/frontend.md) do not experience this problem, because they coordinate and synchronize resources between each other. All webservers which connect to the same datastore should be in the same domain, though.
+Note: Webservers configured as [distributed webservers using the datastore](/distributed/frontend) do not experience this problem, because they coordinate and synchronize resources between each other. All webservers which connect to the same datastore should be in the same domain, though.
 
 ## Managing resources with the GUI
 
@@ -66,7 +66,7 @@ To create a new resource, select the "Add" button in the upper right:
 
 Set the resource name and description as desired and select any groups which should be able to read the resource, then select a file to upload. Note that the resource will not be created or uploaded until you hit the 'Save' button!
 
-You can optionally add [labels](#!gui/labels/labels.md) at this point, or tag the resource as part of an installed kit.
+You can optionally add [labels](/gui/labels/labels) at this point, or tag the resource as part of an installed kit.
 
 ### Editing resources
 
@@ -101,7 +101,7 @@ lookup -r <resource name> <enumerated value> <column to match> <column to extrac
 
 Applying our example of mac->hostname lookup we would have a query like:
 
-```
+```gravwell
 tag=pcap packet eth.SrcMAC | count by SrcMAC | lookup -r macnames SrcMAC mac hostname as devicename |  table SrcMAC devicename count
 ```
 

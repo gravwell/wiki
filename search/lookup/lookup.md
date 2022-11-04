@@ -39,9 +39,9 @@ Lookup data can be downloaded from compatible render modules (e.g. the table mod
 
 ![Lookup Download](lookup-download.png)
 
-The [table renderer](#!search/table/table.md) also provides a `-save` option, which will automatically save the search result table as a resource for later use by lookup:
+The [table renderer](/search/table/table) also provides a `-save` option, which will automatically save the search result table as a resource for later use by lookup:
 
-```
+```gravwell
 tag=syslog regex "DHCPACK on (?P<ip>\S+) to (?P<mac>\S+)" | unique ip mac | table -save ip2mac ip mac
 ```
 
@@ -66,7 +66,7 @@ desktop-2,64:bc:0c:87:9a:11
 
 Then we issue a search off of packet data and use the lookup module to enrich our data stream to include hostnames, which in this case we are assigning to the "devicename" enumerated value.
 
-```
+```gravwell
 tag=pcap packet eth.SrcMAC | count by SrcMAC | lookup -r macresolution SrcMAC mac hostname as devicename |  table SrcMAC devicename count
 ```
 
@@ -83,7 +83,7 @@ This results in a table containing the following:
 
 Using the same "macresolution" table shown above:
 
-```
+```gravwell
 tag=pcap packet eth.SrcMAC | count by SrcMAC | lookup -v -s -r macresolution SrcMAC mac hostname |  table SrcMAC count
 ```
 
@@ -109,7 +109,7 @@ Sacramento,38.527,-121.347
 
 Given the name of a city, we'd like to be able to extract both latitude and longitude values. Assuming we're working with JSON entries with contain a "City" field, the following query will do exactly that:
 
-```
+```gravwell
 tag=default json City | lookup -r places City name (lat long) | table
 ```
 

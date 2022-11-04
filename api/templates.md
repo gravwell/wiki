@@ -14,7 +14,7 @@ The template structure contains the following fields:
 * Name: The template's name.
 * Description: A more detailed description of the template.
 * Updated: A timestamp representing the last update time for the template.
-* Labels: An array of strings containing [labels](#!gui/labels/labels.md).
+* Labels: An array of strings containing [labels](/gui/labels/labels).
 * Contents: The actual definition of the template itself (see below).
   * Contents.query: The template query.
   * Contents.variable: Variable name in query.

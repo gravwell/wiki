@@ -35,30 +35,30 @@ The fields module allows for a filtering based on equality.  If a filter is enab
 
 Extract the URL field from a tab delimited bro http.log feed and name it "url".
 
-```
+```gravwell
 tag=brohttp fields -d "\t" [9] as url
 ```
 
 Extract the URL and requester field from a tab delimited bro http.log feed and filter for only entries where the URL contains a space and outputting the results in a table.
 
-```
+```gravwell
 tag=brohttp fields -d "\t" [9] ~ " " as url [2] as requester | table url requester
 ```
 
 Extract the 4th, 5th, and 6th fields using a delimiter of "|" and clean white space from extracted fields.
 
-```
+```gravwell
 tag=default fields -clean -d "|" [3] [4] [5] | table 3 4 5
 ```
 
 Extract a URI from a bro http log stream and separate the URI into a path and PUT arguments components then calculate the entropy of the args for each path and chart the results.
 
-```
+```gravwell
 tag=brohttp fields -d "\t" [9] ~ "?" as uri |  regex -e uri "^(?P<path>[^\?;]+)\?(?P<args>.+)" | entropy args by path | chart entropy by path
 ```
 
 Find HTTP packets with JPEG structures that have more than one stream (e.g. main image and thumbnail)
 
-```
+```gravwell
 tag=pcap packet tcp.Port==80 tcp.Payload | fields -s -e Payload -d "\xd8\xff" [1]~"JFIF"  [2]~"JFIF" | slice 1[0:10] 2[0:10] | table 1, 2
 ```

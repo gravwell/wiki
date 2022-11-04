@@ -1,6 +1,6 @@
 # Gravwell Community Edition
 
-Attention: This document has been deprecated in favor of the [universal quickstart](#!quickstart/quickstart.md). We have left this intact to keep existing links functional but will not be updating it.
+Attention: This document has been deprecated in favor of the [universal quickstart](/quickstart/quickstart). We have left this intact to keep existing links functional but will not be updating it.
 
 Gravwell's Community Edition is a free licensing program intended for personal use. Unlike regular Gravwell licenses, Community Edition licenses are restricted to 2GB of ingested data per day. In our experience, we've found this to be more than enough for any home network applications (unless you decide to capture all packets and then start streaming Netflix!)
 
@@ -37,7 +37,7 @@ The installation process will prompt to set some shared secret values used by co
 
 ### Docker Container
 
-Gravwell is available on Dockerhub as a single container including both the webserver and indexer. Refer to [the Docker installation instructions](#!configuration/docker.md) for detailed instructions on installing Gravwell in Docker.
+Gravwell is available on Dockerhub as a single container including both the webserver and indexer. Refer to [the Docker installation instructions](/configuration/docker) for detailed instructions on installing Gravwell in Docker.
 
 ### Self-contained Installer
 
@@ -72,7 +72,7 @@ A freshly installed Gravwell instance, by itself, is boring. You'll want some in
 
 The ingesters available in the Debian repository can be viewed by running `apt-cache search gravwell`:
 
-```
+```console
 root@debian:~# apt-cache search gravwell
 gravwell - Gravwell community edition (gravwell.io)
 gravwell-federator - Gravwell ingest federator
@@ -82,7 +82,7 @@ gravwell-network-capture - Gravwell packet ingester
 gravwell-simple-relay - Gravwell simple relay ingester
 ```
 
-If you install them on the same node as the main Gravwell instance, they should be automatically configured to connect to the indexer, but you'll need to set up data sources for most. See the [ingester configuration documents](#!ingesters/ingesters.md) for instructions on that.
+If you install them on the same node as the main Gravwell instance, they should be automatically configured to connect to the indexer, but you'll need to set up data sources for most. See the [ingester configuration documents](/ingesters/ingesters) for instructions on that.
 
 We highly recommend installing the File Follow ingester (gravwell-file-follow) as a first experiment; it comes pre-configured to ingest Linux log files, so you should be able to see some entries immediately by issuing a search such as `tag=auth`:
 
@@ -98,9 +98,9 @@ Additional information about installing and configuring each ingester can be fou
 
 Gravwell is a powerful and complex product. It will take time to build expertise, but by starting with simple queries and looking up more complex concepts as needed, you can start answering useful questions immediately!
 
-We recommend starting out with the continued section of the [Standard version Quickstart document](quickstart.md#Feeding_Data), particularly the [Searching section](quickstart.md#Searching), for some ideas on how to get started. You may need to refer to the [ingester configuration documents](#!ingesters/ingesters.md) to get the data you want into the system.
+We recommend starting out with the continued section of the [Standard version Quickstart document](quickstart_feeding_data), particularly the [Searching section](quickstart_searching), for some ideas on how to get started. You may need to refer to the [ingester configuration documents](/ingesters/ingesters) to get the data you want into the system.
 
-The [search documentation](#!search/search.md) is the ultimate resource for building search queries; the [Search Modules](#!search/searchmodules.md) and [Render Modules](#!search/rendermodules.md) sections have lots of examples and exhaustive descriptions of the options for each module.
+The [search documentation](/search/search) is the ultimate resource for building search queries; the [Search Modules](/search/processingmodules) and [Render Modules](/search/rendermodules) sections have lots of examples and exhaustive descriptions of the options for each module.
 
 Finally, the [Gravwell blog](https://www.gravwell.io/blog) has case studies and examples showing real-world applications of Gravwell that may serve as inspiration.
 

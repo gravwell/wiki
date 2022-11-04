@@ -1,6 +1,6 @@
 # IPFIX and Netflow V9
 
-The ipfix processor is designed to extract and filter raw IPFIX and Netflow V9 data frames, allowing you to quickly identify network flows, filter on ports, or generally monitor the behavior of aggregate flows.  Gravwell has a native IPFIX + Netflow ingester which is open source and available at https://github.com/gravwell/ingesters or as an installer in the [quickstart section](/#!quickstart/downloads.md).
+The ipfix processor is designed to extract and filter raw IPFIX and Netflow V9 data frames, allowing you to quickly identify network flows, filter on ports, or generally monitor the behavior of aggregate flows.  Gravwell has a native IPFIX + Netflow ingester which is open source and available at https://github.com/gravwell/ingesters or as an installer in the [quickstart section](/quickstart/downloads).
 
 ## A Note About Templates
 
@@ -112,7 +112,7 @@ You can also specify fields by giving an enterprise ID and field ID separated by
 
 ### Number of HTTPS flows by Source IP over time
 
-```
+```gravwell
 tag=ipfix ipfix destinationIPv4Address as Dst destinationTransportPort==443 | count by Dst | chart count by Dst
 ```
 
@@ -120,7 +120,7 @@ tag=ipfix ipfix destinationIPv4Address as Dst destinationTransportPort==443 | co
 
 ### Find out which IPs are using port 80
 
-```
+```gravwell
 tag=ipfix ipfix port==80 ip ~ PRIVATE | unique ip | table ip
 ```
 
@@ -128,13 +128,13 @@ tag=ipfix ipfix port==80 ip ~ PRIVATE | unique ip | table ip
 
 This example filters down to only Netflow v9 records, then extracts the protocol and counts how many flows appeared for each.
 
-```
+```gravwell
 tag=v9 ipfix Version==9 PROTOCOL | count by PROTOCOL | table PROTOCOL count
 ```
 
 ### Extract a list of fields in each data record
 
-```
+```gravwell
 tag=ipfix ipfix -f | table FIELDS
 ```
 

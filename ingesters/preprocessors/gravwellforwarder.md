@@ -6,7 +6,7 @@ The Gravwell Forwarding preprocessor Type is `gravwellforwarder`.
 
 ### Supported Options
 
-See the [Global Configuration Parameters](#!ingesters/ingesters.md#Global_Configuration_Parameters) section for full details on all the Gravwell ingester options.  Most global ingester configuration options are supported by the Gravwell Forwarder preprocessor.
+See the [Global Configuration Parameters](ingesters_global_configuration_parameters) section for full details on all the Gravwell ingester options.  Most global ingester configuration options are supported by the Gravwell Forwarder preprocessor.
 
 ### Example: Duplicating Data In a Federator
 

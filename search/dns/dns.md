@@ -6,7 +6,7 @@ The `dns` module is used to perform DNS lookups on hostnames and store the resul
 
 The syntax simply takes one or more pairs of values, an enumerated value to perform the lookup on, and a target enumerated value to produce. For example, to perform a lookup on the EV "Computer", generating the result IP in an EV "ip":
 
-```
+```gravwell
 tag=windows winlog Computer | dns Computer ip | table
 ```
 
@@ -21,7 +21,7 @@ Both forward and reverse lookups can generate multiple results. If a lookup gene
 
 In this example, we extract hostnames from a dataset, and simply do DNS lookups on each hostname:
 
-```
+```gravwell
 tag=dns json Question.Hdr.Name | limit 10 | dns Name ip | table
 ```
 
@@ -29,7 +29,7 @@ tag=dns json Question.Hdr.Name | limit 10 | dns Name ip | table
 
 We can also perform reverse lookups. In this example, we extract IP addresses and issue a similar query as above, but with the `-reverse` flag set:
 
-```
+```gravwell
 tag=dns json Question.A~"185.199" | require A | limit 10 | dns -reverse A hostname | table
 ```
 

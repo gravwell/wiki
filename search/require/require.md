@@ -13,24 +13,24 @@ By default, given a list of enumerated values the require module will pass an en
 
 The following search takes packet entries and eliminates any which do not have a "SrcPort" enumerated value set, then counts how many times each source port appeared. This has the effect of eliminating all packets which are not TCP traffic:
 
-```
+```gravwell
 tag=pcap packet tcp.SrcPort | require SrcPort | count by SrcPort | table SrcPort count
 ```
 
 The following search looks for DNS requests which do not have a successful IPv4 resolution by dropping all entries where the A field is present in an enumerated value:
 
-```
+```gravwell
 tag=dns json Question.Hdr.Name Question.A | require -v A | count by Name | table Name count
 ```
 
 This search passes through any packet which has *either* a TCP source port or a UDP source port specified:
 
-```
+```gravwell
 tag=pcap packet tcp.SrcPort as tsp udp.SrcPort as usp | require tsp usp | table tsp usp
 ```
 
 This search drops any packet which does not have *both* an IPv4 source IP *and* a TCP source port:
 
-```
+```gravwell
 tag=pcap packet tcp.SrcPort ipv4.SrcIP | require -s SrcPort SrcIP | table SrcPort SrcIP
 ```

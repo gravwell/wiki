@@ -17,6 +17,7 @@ These components are discussed below.
 
 * `-b`: This flag tells the stats module to always preserve the original body of the entry. For example, saying `tag=* length | stats max(length) | text` would normally cause the output entry's body to be overwritten with the maximum length seen, for convenient display with the text renderer. Adding the `-b` flag (`tag=* length | stats -b max(length) | text`) would preserve the original body, meaning the renderer will instead display the *contents* of the longest entry seen.
 
+(math_operations_specification)=
 ## Math Operations Specification
  
 An operation consists of the operation name, the "source" enumerated value contained in parentheses, and optionally a different name for the output enumerated value.
@@ -93,7 +94,7 @@ The stats module can perform operations with complex keying, this means that you
 
 For example, here is a query that performs a sum of packet sizes by IP but also provides a baseline sum across all packets:
 
-```
+```gravwell
 tag=pcap packet ipv4.IP ~ 192.168.1.0/24 | length | stats sum(length) by IP sum(length) as total | chart total sum by IP 
 ```
 
@@ -123,7 +124,7 @@ The `sum` and `total` operators behave exactly the same in every context except 
 
 The behavior difference is best demonstrated in a screenshot generated using the following query:
 
-```
+```gravwell
 tag=zeekconn fields -d "\t" [8] as dur
 | stats sum(dur) total(dur)
 | chart sum total

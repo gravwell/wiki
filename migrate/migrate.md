@@ -4,7 +4,7 @@ Gravwell provides an interactive tool for migrating text files and Splunk data i
 
 ## Installation
 
-The `migrate` tool is included in the `gravwell-tools` package for Debian and Redhat, and is also available as a standalone shell installer on [our downloads page](#!/quickstart/downloads.md). Once installed, the program is located at `/usr/local/sbin/gravwell_migrate`.
+The `migrate` tool is included in the `gravwell-tools` package for Debian and Redhat, and is also available as a standalone shell installer on [our downloads page](/quickstart/downloads). Once installed, the program is located at `/usr/local/sbin/gravwell_migrate`.
 
 ## Basic Configuration
 

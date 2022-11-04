@@ -384,7 +384,7 @@ The structure is large, in part because this webserver is connected to 4 indexer
 * `CustomerUUID`: The UUID of the license on this system.
 * `DashboardCount`: The number of dashboards that exist.
 * `DashboardLoadCount`: The number of types any dashboard has been opened by any user.
-* `DistributedFrontends`: Set to true if [distributed webservers](#!distributed/frontend.md) are enabled.
+* `DistributedFrontends`: Set to true if [distributed webservers](/distributed/frontend) are enabled.
 * `FlowCount`: the number of flows on the system.
 * `ForeignDashboardLoadCount`: The number of times users have viewed dashboards owned by another user (helps us determine if our dashboard sharing options are sufficiently flexible)
 * `ForeignSearchLoadCount`: The number of times users have viewed searches owned by another user (helps us determine if our search sharing options are sufficiently flexible)

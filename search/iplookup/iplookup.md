@@ -47,7 +47,7 @@ The iplookup module can be used for creating whitelists (`-s` flag), blacklists 
 
 The `iplookup` module is often used for categorizing IPs and enriching IPs.  Some useful queries might group traffic by business unit, or system tier.  It can also provide a simple means to apply geolocation to private subnets where you know the exact coordinates of a machine based on its subnet.  Here we show using the iplookup module to enrich netflow to perform traffic accounting using a business unit.  In this case we have a segmented network and can see the traffic volumes by each segment.
 
-```
+```gravwell
 tag=netflow netflow IP~PRIVATE Bytes |
 iplookup -r subnets -e IP network |
 stats sum(Bytes) by network |
@@ -62,7 +62,7 @@ The iplookup module can be used to perform blacklist checks, where we can ensure
 
 Here is an example query that uses the iplookup system to ensure that there are no flows between our 172.17.0.0/16 subnet and a set of defined subnets specified in the `controlsubnets` resource.  Here we use the `-s` flag to ONLY look at flows with a Dst address in the specified resource.
 
-```
+```gravwell
 tag=netflow
 netflow Src~172.17.0.0/16 Dst DstPort |
 iplookup -s -r controlsubnets -e Dst |

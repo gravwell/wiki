@@ -10,13 +10,13 @@ entropy [enumerated value] [by ...] [over <duration>]
 
 The `entropy` module syntax allows for specifying an enumerated value to calculate entropy over. If not specified, `entropy` will calculate entropy over the entire DATA field. The module also supports specifying one or more arguments to group by, using the `by` keyword. For example, to calcaulte entropy on the enumerated value `foo`, grouped by `bar` and `baz`:
 
-```
+```gravwell
 tag=gravwell entropy foo by bar baz
 ```
 
 Queries can be temporally grouped over arbitrary time windows using the `over` keyword:
 
-```
+```gravwell
 tag=gravwell entropy over 10m
 ```
 
@@ -30,12 +30,12 @@ All arguments are optional.
 
 This query calculates and charts the entropy of TCP packet payloads based on port:
 
-```
+```gravwell
 tag=pcap packet tcp.Port tcp.Payload | entropy Payload by Port | chart entropy by Port
 ```
 
 An example query which calculates the entropy of URLS by host and sorts the list based on highest entropy value:
 
-```
+```gravwell
 tag=pcap packet tcp.Port==80 ipv4.IP !~ 10.0.0.0/8 tcp.Payload | grep -e Payload GET PUT HEAD POST | regex -e Payload "[A-Z]+\s(?P<url>\S+)\sHTTP\/" | entropy url by IP | table IP entropy
 ```

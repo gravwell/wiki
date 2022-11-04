@@ -60,27 +60,27 @@ The output would look as follows (notice the lack of quotes or surrounding white
 
 Extract a URL column from a CSV http.log feed and name it "url".
 
-```
+```gravwell
 tag=brohttp csv [9] as url
 ```
 
 
 Extract the URL and requester field from a CSV bro http.log feed and filter for only entries where the URL contains a space and outputting the results in a table.
 
-```
+```gravwell
 tag=brohttp csv [9] ~ " " as url [2] as requester | table url requester
 ```
 
 
 Extract the 4th, 5th, and 6th columns where the 6th column must not be "stuff" and the 4th column must contain "things.
 
-```
+```gravwell
 tag=default csv [5]!=stuff [4] [3]~"things" | table 3 4 5
 ```
 
 
 Extract a URI from an apache access log and then parse the "DATA" parameter as a CSV.
 
-```
+```gravwell
 tag=apache tag=apache regex "GET\s(?P<base>[^\s\?]+)\?(?P<params>\S+)\s" | regex -e params "DATA\=(?P<dataparam>[^\s&]+)" | csv -e dataparam [0] [1] [2] | table 0 1 2
 ```

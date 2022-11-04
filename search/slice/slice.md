@@ -4,7 +4,7 @@ The slice module is a powerful but very low-level tool for extracting bytes from
 
 The following search extracts the RPM from canbus messages on a Toyota vehicle by reading the first two bytes of the "data" enumerated value and parsing it as a 16-bit big-endian integer.
 
-```
+```gravwell
 tag=CAN canbus ID=0x2C4 | slice uint16be(data[0:2]) as RPM | mean RPM | chart mean
 ```
 

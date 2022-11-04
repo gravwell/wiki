@@ -13,7 +13,7 @@ The dashboard api is essentially a generic CRUD api for managing json blobs used
 * Global: A boolean, set to true if dashboard should be visible to all users (admin only).
 * Created: The timestamp at which the dashboard was created.
 * Updated: The timestamp at which the dashboard was last updated.
-* Labels: An array of strings containing [labels](#!gui/labels/labels.md).
+* Labels: An array of strings containing [labels](/gui/labels/labels).
 * Data: The actual definition of the dashboard contents (see below).
 
 Note that every dashboard has both an `ID` field and a `GUID` field. This is because dashboards may be packed in kits along with actionables which *refer* to those dashboards. A dashboard packed into a kit includes its existing GUID, and that GUID is preserved when the kit is installed, so it is safe for actionables to refer to the dashboard by its GUID. The ID field, on the other hand, is randomly generated whenever a dashboard is created or installed. A given system may actually have several dashboards with the same GUID (installed by different users, typically) but each dashboard will have its own unique ID.

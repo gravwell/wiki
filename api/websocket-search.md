@@ -2,7 +2,7 @@
 
 Websocket URL: /api/ws/search
 
-This page documents the websocket protocol for searches. A full example of JSON transferred between client and server when initiating a "grep foo" search, complete with entry data retrieval, can be found at the [Websocket Search Example](websocket-search-example.md) page.
+This page documents the websocket protocol for searches. A full example of JSON transferred between client and server when initiating a "grep foo" search, complete with entry data retrieval, can be found at the [Websocket Search Example](websocket-search-example) page.
 
 ## Ping/Pong keepalive
 
@@ -23,34 +23,34 @@ An example request with a valid query and response would result in the following
 request from frontend:
 ```json
 {
-        SearchString: "tag=apache grep firefox | regex "Firefox(<version>[0-9]+) .+" | count by version""
+        "SearchString": "tag=apache grep firefox | regex \"Firefox(<version>[0-9]+) .+\" | count by version"
 }
 ```
 
 response from backend:
-```
+```json
 {
-        GoodQuery: true,
-        ParseQuery: "tag=apache grep firefox | regex "Firefox(<version>[0-9]+) .+" | count by version"",
-        ModuleIndex: 0,
+        "GoodQuery": true,
+        "ParseQuery": "tag=apache grep firefox | regex \"Firefox(<version>[0-9]+) .+\" | count by version",
+        "ModuleIndex": 0,
 }
 ```
 
 An example request with an invalid query and response would result in the following JSON:
 
 request from frontend:
-```
+```json
 {
-        SearchString: "tag=apache grep firefox | MakeRainbows",
+        "SearchString": "tag=apache grep firefox | MakeRainbows",
 }
 ```
 
 response from backend:
-```
+```json
 {
-        GoodQuery: false,
-        ParseError: "ModuleError: MakeRainbows is not a valid module",
-        ModuleIndex: 1,
+        "GoodQuery": false,
+        "ParseError": "ModuleError: MakeRainbows is not a valid module",
+        "ModuleIndex": 1,
 }
 ```
 
@@ -58,7 +58,7 @@ response from backend:
 All searches are initiated through websockets and require that the "parse", "PONG", "search", and "attach" subtypes are requested at start.  
 
 This is done by sending the following JSON upon websocket establishment:
-```
+```json
 {"Subs":["PONG","parse","search","attach"]}
 ```
 
@@ -68,12 +68,12 @@ The SearchString member should contain the actual query which will invoke the se
 SearchStart and SearchEnd should be the time ranges that the query will operate over.  The time ranges should be formatted in the RFC3339Nano format which looks like "2006-01-02T15:04:05.999999999Z07:00"
 
 An example search request with a good query would contain the following JSON:
-```
+```json
 {
-       SearchString: "tag=apache grep firefox | nosort",
-       SearchStart:  "2015-01-01T12:01:00.0Z07:00",
-       SearchEnd:    "2015-01-01T12:01:30.0Z07:00",
-       Background:   false,
+       "SearchString": "tag=apache grep firefox | nosort",
+       "SearchStart":  "2015-01-01T12:01:00.0Z07:00",
+       "SearchEnd":    "2015-01-01T12:01:30.0Z07:00",
+       "Background":   false,
 }
 ```
 
@@ -81,34 +81,34 @@ An example search request with a good query would contain the following JSON:
 //searchStart and searchEnd should be strings in RFC3339Nano format
 
 The response to a good query would contain the following JSON:
-```
+```json
 {
-        SearchString: "tag=apache grep firefox | nosort",
-        RenderModule: "text",
-        RenderCmd:    "text",
-        OutputSearchSubproto:  "searchSDF8973",
-        OutputStatsSubproto:   "statsSDF8973",
-        SearchID:              "skdlfjs9098",
-		SearchStartRange:      "2015-01-01T12:01:00.0Z07:00",
-        SearchEndRange:        "2015-01-01T12:01:30.0Z07:00",
-        Background:            false,
+        "SearchString": "tag=apache grep firefox | nosort",
+        "RenderModule": "text",
+        "RenderCmd":    "text",
+        "OutputSearchSubproto":  "searchSDF8973",
+        "OutputStatsSubproto":   "statsSDF8973",
+        "SearchID":              "skdlfjs9098",
+		"SearchStartRange":      "2015-01-01T12:01:00.0Z07:00",
+        "SearchEndRange":        "2015-01-01T12:01:30.0Z07:00",
+        "Background":            false,
 }
 ```
 
 On error the JSON response would be:
-```
+```json
 {
-        Error: "Search error: The parameter "ChuckTesta" is invalid",
+        "Error": "Search error: The parameter \"ChuckTesta\" is invalid",
 }
 ```
 
 On a good search request response the client must response with a search ACK. The Ack must respond with the either a true or false.  A false response may be used when the backend requests a render module that the front end doesn't understand, which may happen when there is a version mismatch between the frontend and backend.
 
 The following JSON would represent an affirmative ACK to the previous response example:
-```
+```json
 {
-       Ok: True,
-       OutputSearchSubproto: "searchSDF8973"
+       "Ok": true,
+       "OutputSearchSubproto": "searchSDF8973"
 }
 ```
 

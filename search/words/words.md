@@ -21,25 +21,25 @@ words <argument list> <search parameter>
 
 To find any Apache logs containing the words `Mozilla` and `Firefox`:
 
-```
+```gravwell
 tag=apache words Mozilla Firefox
 ```
 
 To find packets destined for port 80 whose payloads DO NOT contain the words HTTP or 1.1:
 
-```
+```gravwell
 tag=pcap packet tcp.Port==80 tcp.Payload | words -e Payload -v HTTP 1.1
 ```
 
 Match any Reddit post which contains words `Gravwell` or `gravwell`:
 
-```
+```gravwell
 tag=reddit json Body | words -e Body -or Gravwell gravwell
 ```
 
 Grab only user agents that contain Mozilla and Windows
 
-```
+```gravwell
 tag=apache words Mozilla Windows
 ```
 

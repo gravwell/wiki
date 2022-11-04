@@ -107,6 +107,7 @@ WEB PUT /api/searchctrl/010985768/stop:
 null
 ```
 
+(api_importing_saved_search_archive)=
 ## Importing a saved search archive
 
 An optional download format for a search is an `archive`.  An archive represents a fully self-contained search that can be imported into another Gravwell instance.  The import API accepts the saved search archives as an upload and unpacks the search into the saved search system.  Users can then attach to the search as if it were saved on the local system.

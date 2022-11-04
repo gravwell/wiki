@@ -126,7 +126,7 @@ The point2point module returns an array of entries containing DstLocation, SrcLo
 
 This query:
 
-```
+```gravwell
 tag=pcap packet tcp.Port ipv4.SrcIP ipv4.DstIP ipv4.Length | geoip SrcIP.Location as srcloc DstIP.Location as dstloc | sum Length by srcloc dstloc | point2point -srcloc srcloc -dstloc dstloc -mag sum SrcIP DstIP
 ```
 

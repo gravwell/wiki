@@ -28,7 +28,7 @@ This example runs a query counting failed login attempts by user. If there were 
 
 The [Run Query](runquery.md) node is configured to run the following query:
 
-```
+```gravwell
 tag=gravwell syslog Message=="Authentication failure" user as User
 | stats count as FailedLogins by User 
 | table User FailedLogins

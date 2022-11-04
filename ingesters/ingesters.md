@@ -10,35 +10,41 @@ The Gravwell GUI has an Ingesters page (under the System menu category) which ca
 
 ![](remote-ingesters.png)
 
-Attention: The [replication system](#!configuration/replication.md) does not replicate entries larger than 999MB. Larger entries can still be ingested and searched as usual, but they are omitted from replication. This is not a concern for 99.9% of use cases, as all the ingesters detailed in this page tend to create entries no larger than a few kilobytes.
+Attention: The [replication system](/configuration/replication) does not replicate entries larger than 999MB. Larger entries can still be ingested and searched as usual, but they are omitted from replication. This is not a concern for 99.9% of use cases, as all the ingesters detailed in this page tend to create entries no larger than a few kilobytes.
 
+(ingesters_list)=
 ## Ingesters
 
-| Ingester | Description |
-|----------|-------------|
-| [Amazon SQS](#!ingesters/sqs.md) | Subscribe and ingest from Amazon SQS queues. |
-| [Azure Event Hubs](#!ingesters/eventhubs.md) | Consume from Azure Event Hubs. |
-| [collectd](#!ingesters/collectd.md) | Ingest collectd samples. |
-| [File Follower](#!ingesters/file_follow.md) | Watch and ingest files on disk, such as logs. |
-| [Windows File Follower](#!ingesters/win_file_follow.md) | Watch and ingest files on Windows, such as logs and EVTX files. |
-| [GCP PubSub](#!ingesters/pubsub.md) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
-| [HTTP](#!ingesters/http.md) | Create HTTP listeners on multiple URL paths. |
-| [IPMI](#!ingesters/ipmi.md) | Periodically collect SDR and SEL records from IPMI devices. |
-| [Kafka](#!ingesters/kafka.md) | Create a Kafka Consumer that ingests into Gravwell. Can be paired with the Gravwell Kafka Federator. |
-| [Kinesis](#!ingesters/kinesis.md) | Ingest from Amazon's [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) service. |
-| [Microsoft Graph API](#!ingesters/msg.md) | Ingest from Microsoft's Graph API. |
-| [Netflow](#!ingesters/netflow.md) | Collect Netflow and IPFIX records. |
-| [Network Capture](#!ingesters/pcap.md) | Ingest PCAP on the wire. |
-| [Office 365](#!ingesters/o365.md) | Ingest Microsoft o365 Logs. |
-| [Packetfleet](#!ingesters/packetfleet.md) | Issue queries and ingest data from Google Stenographer. |
-| [Session](#!ingesters/session.md) | Ingest large records into a single entry. |
-| [Shodan](#!ingesters/shodan.md) | Ingest Shodan streaming API events. |
-| [Simple Relay](#!ingesters/simple_relay.md) | Ingest any text over TCP/UDP, syslog, and more. |
-| [Windows Events](#!ingesters/winevent.md) | Collect Windows events. |
+```{toctree}
+Amazon SQS -  Subscribe and ingest from Amazon SQS queues.  <sqs>
+Azure Event Hubs -  Consume from Azure Event Hubs.  <eventhubs>
+collectd -  Ingest collectd samples.  <collectd>
+File Follower -  Watch and ingest files on disk, such as logs.  <file_follow>
+Windows File Follower -  Watch and ingest files on Windows, such as logs and EVTX files.  <win_file_follow>
+GCP PubSub -  Fetch and ingest entries from Google Compute Platform PubSub Streams.  <pubsub>
+HTTP -  Create HTTP listeners on multiple URL paths.  <http>
+IPMI -  Periodically collect SDR and SEL records from IPMI devices.  <ipmi>
+Kafka -  Create a Kafka Consumer that ingests into Gravwell. Can be paired with the Gravwell Kafka Federator.  <kafka>
+Kinesis -  Ingest from Amazon's Kinesis Data Streams service.  <kinesis>
+Microsoft Graph API -  Ingest from Microsoft's Graph API.  <msg>
+Netflow -  Collect Netflow and IPFIX records.  <netflow>
+Network Capture -  Ingest PCAP on the wire.  <pcap>
+Office 365 -  Ingest Microsoft o365 Logs.  <o365>
+Packetfleet -  Issue queries and ingest data from Google Stenographer.  <packetfleet>
+Session -  Ingest large records into a single entry.  <session>
+Shodan -  Ingest Shodan streaming API events.  <shodan>
+Simple Relay -  Ingest any text over TCP/UDP, syslog, and more.  <simple_relay>
+Windows Events -  Collect Windows events.  <winevent>
+```
 
 ## Federator and Kafka Federator
 
-Gravwell also provides a [Federator](#!ingesters/federator.md) and [Kafka Federator](#!ingesters/kafkafederator.md) that allow connecting ingesters to indexers in more complex topologies. 
+Gravwell also provides a [Federator](/ingesters/federator) and [Kafka Federator](/ingesters/kafkafederator) that allow connecting ingesters to indexers in more complex topologies. 
+
+```{toctree}
+Federator <federator>
+Kafka Federator <kafkafederator>
+```
 
 ## Tags
 
@@ -64,7 +70,7 @@ For instance, if you are collecting system logs from five servers, of which two 
 * syslog-file-server2
 * syslog-email-server1
 
-This will allow your [queries](#!search/search.md) greater flexibility in selecting logs. You can search over all system logs by specifying `tag=syslog-*`. You can search over all HTTP server logs by specifying `tag=syslog-http-*`, or you can select a single server by saying `tag=syslog-http-server1`. You can also select multiple wildcard groups, e.g. `tag=syslog-http-*,syslog-email-*`.
+This will allow your [queries](/search/search) greater flexibility in selecting logs. You can search over all system logs by specifying `tag=syslog-*`. You can search over all HTTP server logs by specifying `tag=syslog-http-*`, or you can select a single server by saying `tag=syslog-http-server1`. You can also select multiple wildcard groups, e.g. `tag=syslog-http-*,syslog-email-*`.
 
 ### Tag Internals
 
@@ -74,6 +80,7 @@ Internally, Gravwell *indexers* store tags as 16-bit integers. Each indexer main
 
 When an *ingester* connects to an indexer, it sends a list of tag names it intends to use. The indexer then responds with the mapping of tag name to tag numbers. Whenever the ingester sends an entry to that indexer, it will add the appropriate *tag number* to the entry.
 
+(ingesters_global_configuration_parameters)=
 ## Global Configuration Parameters
 
 Most of the core ingesters support a common set of global configuration parameters.  The shared Global configuration parameters are implemented using the [ingest config](https://godoc.org/github.com/gravwell/ingest/config#IngestConfig) package.  Global configuration parameters should be specified in the Global section of each Gravwell ingester config file.  The following Global ingester parameters are available:
@@ -268,6 +275,7 @@ Source-Override=0.0.0.0
 Source-Override=DEAD:BEEF::FEED:FEBE
 ```
 
+(ingesters_log-source-override)=
 ### Log-Source-Override
 
 Many ingesters can emit entries on the `gravwell` tag for the purposes of auditing, health and status, and general ingest infrastructure logging.  Typically, these entries will use the source IP address of the ingester as seen from the indexer for the SRC field.  However, it can be useful to override the source IP field for only the entries that are actually generated by the ingester.  A good example would be using the `Log-Source-Override` on the Gravwell Federator to change the SRC field for health and status entries, but not every entry that transits the Federator.
@@ -303,6 +311,7 @@ The Simple Relay ingester and the HTTP ingester define "Listeners"; File Follow 
 
 Note how it specifies the data source (via the `Base-Directory` and `File-Filter` rules), which tag to use (via `Tag-Name`), and an additional rule for parsing timestamps in the incoming data (`Assume-Local-Timezone`).
 
+(ingesters_time)=
 ## Time
 
 ### Timestamp Extraction
@@ -313,7 +322,7 @@ If the ingester still cannot find a valid timestamp, the current time will be ap
 
 When an ingester attempts to find a timestamp based on the list of timestamp formats, it will always try the last successful format first. For example, if an entry has a timestamp `02 Jan 06 15:04 MST`, the ingester will attempt to parse the next entry with the same timestamp format. If it does not match, then the ingester will attempt all other timestamp formats. 
 
-There are several ways to change the behavior of how timestamps are parsed, detailed in the next section. Additionally, fully custom timestamp formats can be provided in [some ingesters](#!ingesters/customtime/customtime.md).
+There are several ways to change the behavior of how timestamps are parsed, detailed in the next section. Additionally, fully custom timestamp formats can be provided in [some ingesters](/ingesters/customtime/customtime).
 
 ### Time Zones
 
@@ -323,6 +332,7 @@ If you believe you have configured your ingester properly, but you're not seeing
 
 The `Timezone-Override` parameter (described below) is the surest way to fix time zone problems. If your data has a UTC timestamp but the system clock is set to another time zone, set `Timezone-Override="Etc/UTC"`. If your data is in US Eastern time, but the system clock is set to UTC, set `Timezone-Override="America/New_York"`, and so on.
 
+(time_parsing_overrides)=
 ### Time Parsing Overrides
 
 Most ingesters attempt to apply a timestamp to each entry by extracting a timestamp from the data. There are several options which can be applied to each *data consumer* for fine-tuning of this timestamp extraction:
@@ -334,7 +344,7 @@ Most ingesters attempt to apply a timestamp to each entry by extracting a timest
 
 The Kinesis and Google Pub/Sub ingesters do not provide the `Ignore-Timestamps` option. Kinesis and Pub/Sub include an arrival timestamp with every entry; by default, the ingesters will use that as the Gravwell timestamp. If `Parse-Time=true` is specified in the data consumer definition, the ingester will instead attempt to extract a timestamp from the message body. See these ingesters' respective sections for additional information.
 
-Custom timestamp formats are supported on many ingesters, see [Custom Time Formats](#!ingesters/customtime/customtime.md) for more information.
+Custom timestamp formats are supported on many ingesters, see [Custom Time Formats](/ingesters/customtime/customtime) for more information.
 
 ## Source-Override
 

@@ -14,7 +14,7 @@ The actionable structure contains the following fields:
 * Name: The actionable's name.
 * Description: A more detailed description of the actionable.
 * Updated: A timestamp representing the last update time for the actionable.
-* Labels: An array of strings containing [labels](#!gui/labels/labels.md).
+* Labels: An array of strings containing [labels](/gui/labels/labels).
 * Disabled: A boolean value indicating if the actionable has been disabled.
 * Contents: The actual definition of the actionable itself (see below).
   * Contents.menuLabel: Optional. If not present, the first 20 characters of the name will be used in the dropdown menu.

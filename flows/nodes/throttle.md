@@ -20,7 +20,7 @@ Note that in the screenshot above, the Throttle node has blocked further executi
 
 The [Run Query](runquery.md) node is configured to run the following query over the last hour:
 
-```
+```gravwell
 tag=gravwell syslog Hostname Message~"Ingest routine exiting" Structured.ingester Structured.ingesterversion Structured.ingesteruuid Structured.client 
 | alias Hostname indexer 
 | regex -p -e client "://(?P<client>.+):\d+" 

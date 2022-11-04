@@ -44,7 +44,7 @@ The configuration file provides a simple host/port, username, and password field
 
 ## Basic Configuration
 
-The IPMI ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the IPMI ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+The IPMI ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the IPMI ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 ## Configuration Options
 
@@ -63,4 +63,4 @@ IPMI uses the default set of Global configuration options. IPMI devices are conf
 
 The IPMI stanza is simple, only taking one or more Targets (the IP:PORT of the IPMI device), username, password, tag, and a poll rate, in seconds. The default poll rate is 60 seconds. Optionally, you can set a source override to force the SRC field on all ingested entries to another IP. By default, the SRC field is set to the IP of the IPMI device. 
 
-Additionally, all IPMI stanzas can use the "Preprocessor" options, as described [here](https://docs.gravwell.io/#!ingesters/preprocessors/preprocessors.md).
+Additionally, all IPMI stanzas can use the "Preprocessor" options, as described [here](/ingesters/preprocessors/preprocessors.md).

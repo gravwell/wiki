@@ -6,6 +6,6 @@ The upper and lower modules convert text to upper or lower case. Simply invoking
 
 This example uses the `upper` module to normalize Shodan data prior to counting.
 
-```
+```gravwell
 tag=shodan json location.region_code | upper region_code | count by region_code | table region_code count
 ```

@@ -10,7 +10,7 @@ The unescape module converts escaped control characters, regular characters, and
 
 This example unescapes a string "foo":
 
-```
+```gravwell
 tag=default alias DATA foo | unescape foo | table DATA foo
 ```
 

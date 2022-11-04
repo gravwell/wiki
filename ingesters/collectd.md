@@ -4,7 +4,7 @@ The collectd ingester is a fully standalone [collectd](https://collectd.org/) co
 
 ## Basic Configuration
 
-The collectd ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the collectd ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+The collectd ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the collectd ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 ## Collector Examples
 
@@ -31,9 +31,9 @@ If you're using the Gravwell Debian repository, installation is just a single ap
 apt-get install gravwell-collectd
 ```
 
-Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+Otherwise, download the installer from the [Downloads page](/quickstart/downloads). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
 
-```
+```console
 root@gravserver ~ # bash gravwell_collectd_installer.sh
 ```
 

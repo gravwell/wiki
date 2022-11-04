@@ -10,36 +10,36 @@ Note: The source field can be used by the acceleration/indexing system to help s
 
 Eliminate entries coming from a specific source:
 
-```
+```gravwell
 tag=syslog,apache,pcap src != 192.168.1.1 | count by TAG | chart count by TAG
 ```
 
 Select only those entries coming from a specific subnet:
 
-```
+```gravwell
 tag=syslog,apache,pcap src ~ 192.168.1.0/24 | count by SRC | chart count by SRC
 ```
 
 Eliminate entries from a specific subnet
 
-```
+```gravwell
 tag=syslog src !~ 192.168.0.0/16
 ```
 
 Select only entries with a src representing an integer ID
 
-```
+```gravwell
 tag=syslog src == 1
 ```
 
 Eliminate entries with a src representing a hex encoded ID
 
-```
+```gravwell
 tag=syslog src != 0xfeadbeef
 ```
 
 Search for entries with src as a hex string
 
-```
+```gravwell
 tag=syslog src == 1234567890ABCDEF0011223344556677
 ```

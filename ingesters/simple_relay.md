@@ -11,7 +11,7 @@ Some common use cases for Simple Relay are:
 
 ## Basic Configuration
 
-The Simple Relay ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters Simple Relay supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+The Simple Relay ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters Simple Relay supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 An example configuration for the Simple Relay ingester, configured to listen on several ports and apply a unique tag to each is as follows:
 
@@ -53,7 +53,7 @@ Log-File=/opt/gravwell/log/simple_relay.log
 	Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
 ```
 
-Note: The `Keep-Priority` field is necessary if you plan to analyze syslog entries with the [syslog search module](#!search/syslog/syslog.md).
+Note: The `Keep-Priority` field is necessary if you plan to analyze syslog entries with the [syslog search module](/search/syslog/syslog).
 
 ## Listeners
 
@@ -193,7 +193,7 @@ An example listener specification which removes the priority tag from entries:
 	Drop-Priority=true
 ```
 
-Note: The priority portion of a syslog message is codified in the RFC specification.  Removing the priority means that the Gravwell [syslog](#!search/syslog/syslog.md) search module will be unable to properly parse the values, the syslog search module is dramatically faster than attempting to hand parse syslog messages with regular expressions.  However, some systems use an RFC5424-like header to send non-syslog data (such as the Fortinet products), in which case the data is not syslog at all and dropping the priority is appropriate.
+Note: The priority portion of a syslog message is codified in the RFC specification.  Removing the priority means that the Gravwell [syslog](/search/syslog/syslog) search module will be unable to properly parse the values, the syslog search module is dramatically faster than attempting to hand parse syslog messages with regular expressions.  However, some systems use an RFC5424-like header to send non-syslog data (such as the Fortinet products), in which case the data is not syslog at all and dropping the priority is appropriate.
 
 ## RFC6587 Listener
 
@@ -340,7 +340,7 @@ The JSON Listener blocks implement the universal listener types as documented ab
 
 #### Extractor Parameter Details
 
-The "Extractor" parameter specifies a JSON extraction string which is used to pull a field from a JSON entry.  The Extraction string follows the same syntax as the Gravwell [json](#!search/json/json.md) search module minus any inline filtering.
+The "Extractor" parameter specifies a JSON extraction string which is used to pull a field from a JSON entry.  The Extraction string follows the same syntax as the Gravwell [json](/search/json/json) search module minus any inline filtering.
 
 Given the following JSON:
 

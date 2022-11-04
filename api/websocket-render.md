@@ -1,12 +1,12 @@
 # The render module API
 
-The render modules provide an API for retrieving information about a search, the actual entries of the search, and statistics about the search. API commands are sent as JSON over the websocket subprotocol established when the search is launched; see the [search API documentation](#!api/websocket-search.md) for information on subprotocols and launching searches.
+The render modules provide an API for retrieving information about a search, the actual entries of the search, and statistics about the search. API commands are sent as JSON over the websocket subprotocol established when the search is launched; see the [search API documentation](/api/websocket-search) for information on subprotocols and launching searches.
 
 Beyond the contents of these articles, the easiest way to see how the render module commands work is via a web browser's console (F12 in Chrome). Find the section which shows Websocket traffic and browse the messages sent/received:
 
 ![](webconsole.png)
 
-Another way to observe websocket traffic is by running the [Gravwell CLI client](#!cli/cli.md) with the `-debug` flag. The flag takes a filename as an argument; JSON messages sent to and read from the websocket will be written to that file.
+Another way to observe websocket traffic is by running the [Gravwell CLI client](/cli/cli) with the `-debug` flag. The flag takes a filename as an argument; JSON messages sent to and read from the websocket will be written to that file.
 
 ## Operation IDs universal to all render modules
 
@@ -605,7 +605,7 @@ Response:
 
 This message requests a high-level survey of enumerated values which passed through the pipeline. Below a sample query and an example of the sort of metadata which may be generated:
 
-```
+```gravwell
 tag=syslog syslog Hostname Appname |
      length |
      stats sum(length) count by Hostname Appname |

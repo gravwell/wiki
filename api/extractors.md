@@ -1,6 +1,6 @@
 # Autoextractor API
 
-The extractor web API provides methods for accessing, modifying, adding, and deleting autoextractor definitions. For more information about autoextractors and their configuration, see the [Auto-Extractors](/#!configuration/autoextractors.md) section.
+The extractor web API provides methods for accessing, modifying, adding, and deleting autoextractor definitions. For more information about autoextractors and their configuration, see the [Auto-Extractors](/configuration/autoextractors) section.
 
 ## Data Structure
 
@@ -12,7 +12,7 @@ Autoextractors contain the following fields:
 * Module: The module to use ("csv", "fields", "regex", or "slice").
 * Params: Extraction module parameters.
 * Args: Extraction module arguments.
-* Labels: An array of strings containing [labels](#!gui/labels/labels.md).
+* Labels: An array of strings containing [labels](/gui/labels/labels).
 * UID: The numeric ID of the dashboard's owner.
 * GIDs: An array of numeric group IDs with which this dashboard is shared.
 * Global: A boolean, set to true if dashboard should be visible to all users (admin only).

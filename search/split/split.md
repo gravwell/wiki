@@ -19,7 +19,7 @@ For these examples, we will consider the following example entries:
 
 Specifying the split module with no additional arguments will split the entries based on the default delimiter, the comma:
 
-```
+```gravwell
 tag=default split
 ```
 
@@ -29,7 +29,7 @@ tag=default split
 
 If we add the `-clean` flag, we note that trailing/leading quote marks and whitespace are eliminated:
 
-```
+```gravwell
 tag=default split -clean
 ```
 
@@ -39,7 +39,7 @@ tag=default split -clean
 
 Some of the entries contain spaces. We can split on that using the `-d` flag:
 
-```
+```gravwell
 tag=default split -d " "
 ```
 
@@ -49,7 +49,7 @@ Note that one entry, `a	b	c` was cleanly split into 3 entries because it had a t
 
 We can also specify arbitrary strings to use as delimiters:
 
-```
+```gravwell
 tag=default split -d custom
 ```
 
@@ -63,7 +63,7 @@ For this example, we will use Apache webserver log entries.
 
 We can extract the 'useragent' field from the apache structure, then split it on commas:
 
-```
+```gravwell
 tag=apache ax useragent | split useragent | table useragent
 ```
 
@@ -71,7 +71,7 @@ tag=apache ax useragent | split useragent | table useragent
 
 Note that the raw *contents* of the entries are not modified:
 
-```
+```gravwell
 tag=apache ax useragent | split useragent | table useragent DATA
 ```
 

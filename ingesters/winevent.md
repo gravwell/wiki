@@ -4,7 +4,7 @@ The Gravwell Windows events ingester runs as a service on a Windows machine and 
 
 ## Basic Configuration
 
-The Windows Event ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the Windows Event ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+The Windows Event ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the Windows Event ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 ## EventChannel Examples
 
@@ -45,7 +45,7 @@ The Windows Event ingester uses the unified global configuration block described
 
 ## Installation
 
-Download the Gravwell Windows ingester installer from the [Downloads page](#!quickstart/downloads.md).
+Download the Gravwell Windows ingester installer from the [Downloads page](/quickstart/downloads).
 
 Run the .msi installation wizard to install the Gravwell events service.  On first installation the installation wizard will prompt to configure the indexer endpoint and ingest secret.  Subsequent installations and/or upgrades will identify a resident configuration file and will not prompt.
 
@@ -187,19 +187,19 @@ To enable the collection of forwarded events first we need to open the winevent 
 
 Assuming the default tag names are used, to see ALL sysmon entries in their entirety run this search:
 
-```
+```gravwell
 tag=sysmon
 ```
 
 To see ALL Windows events in their entirety run:
 
-```
+```gravwell
 tag=windows
 ```
 
 For the following searches we can use the `winlog` search module to filter and extract specific events and fields.  To see all network connection rates per computer using sysmon data:
 
-```
+```gravwell
 tag=sysmon winlog Provider == "Microsoft-Windows-Sysmon" EventID == 3 Protocol |
 stats count by Protocol |
 chart count by Protocol
@@ -210,7 +210,7 @@ chart count by Protocol
 
 To show all successful logons across all logon types (including service logons) using standard Windows logs:
 
-```
+```gravwell
 tag=windows words User32 4624
 | winlog Provider=="Microsoft-Windows-Security-Auditing" EventID==4624 LogonType LogonProcessName=="User32 " 
   TargetUserName Computer TargetDomainName

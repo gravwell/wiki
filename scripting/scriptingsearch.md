@@ -2,11 +2,12 @@
 
 Gravwell provides a robust scripting engine in which you can run searches, update resources, send alerts, or take action.  The engine can run searches and examine data automatically, taking action based on search results without the need to involve a human.  
 
-Automation scripts can be run [on a schedule](scheduledsearch.md) or by hand from the [command line client](#!cli/cli.md). Because the CLI allows the script to be re-executed interactively, we recommend developing and testing scripts in the CLI before creating a scheduled search. See the [Client](#!scripting/scriptingsearch.md#Gravwell_Client_Usage) example script below.
+Automation scripts can be run [on a schedule](scheduledsearch.md) or by hand from the [command line client](/cli/cli). Because the CLI allows the script to be re-executed interactively, we recommend developing and testing scripts in the CLI before creating a scheduled search. See the [Client](scripting_gravwell_client_usage) example script below.
 
+(scripting_built-in_functions)=
 ## Built-in functions
 
-Scripts can use built-in functions that mostly match those available for the [anko](#!scripting/anko.md) module, with some additions for launching and managing searches. The functions are listed below in the format `functionName(<functionArgs>) <returnValues>`.  These functions are provided as convenience wrappers for specific functionality, however the complete [Gravwell client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) is available using the `getClient` wrapper.  The `getClient` wrapper will return a client object that is signed in as the user executing the script. 
+Scripts can use built-in functions that mostly match those available for the [anko](/scripting/anko) module, with some additions for launching and managing searches. The functions are listed below in the format `functionName(<functionArgs>) <returnValues>`.  These functions are provided as convenience wrappers for specific functionality, however the complete [Gravwell client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) is available using the `getClient` wrapper.  The `getClient` wrapper will return a client object that is signed in as the user executing the script. 
 
 ## Controlling Versions
 
@@ -111,6 +112,7 @@ require(`alerts/email.ank`, cfg.email_lib_revision)
 * `typeOf(val) type` returns the type of val as a string, e.g. “string”, “bool”.
 * `hashItems(val...) (uint64, ok)` hashes one or more items into a uint64 using the siphash algorithm. 'ok' is true if at least one of the items could be hashed. Note that the hash function can really only hash scalars; passing slices or maps will typically not work.
 
+(scripting_search_management)=
 ## Search management
 
 Due to the way Gravwell's search system works, some of the functions in this section return Search structs (written as `search` in the parameters) while others return search IDs (written as `searchID` in the parameters). Each Search struct contains a search ID which can be accessed as `search.ID`.
@@ -429,6 +431,7 @@ c.Write("foo")
 c.Close()
 ```
 
+(scripting_system_management_functions)=
 ## Management Functions
 
 The scripting system also has access to management functions that can be used to automatically interact with various Gravwell APIs.
@@ -689,7 +692,7 @@ if err != nil {
 }
 return setResource("csv", buff)
 ```
-
+(scripting_sql_usage)=
 ## SQL Usage
 
 The Gravwell scripting system exposes SQL database packages so that automation scripts can interact with external SQL databases.  The SQL library requires Gravwell version 4.1.6 or newer.
@@ -778,7 +781,7 @@ return setResource("foobar", data)
 
 ## IPExist Datasets
 
-The [ipexist](#!search/ipexist/ipexist.md) search module is designed to test whether an IPv4 address exists in a set, this module is a simple filtering module that is designed for one thing and one thing only: speed.  Under the hood, `ipexist` uses a highly optimized bitmap system so that its possible for a modest machine to represent the entirety of the IPv4 address space in it's filter system.  IPExist is a great tool for holding threat lists and performing initial filtering operations on very large sets of data before performing more expensive lookups using the [iplookup](#!search/iplookup/iplookup.md) module.
+The [ipexist](/search/ipexist/ipexist) search module is designed to test whether an IPv4 address exists in a set, this module is a simple filtering module that is designed for one thing and one thing only: speed.  Under the hood, `ipexist` uses a highly optimized bitmap system so that its possible for a modest machine to represent the entirety of the IPv4 address space in it's filter system.  IPExist is a great tool for holding threat lists and performing initial filtering operations on very large sets of data before performing more expensive lookups using the [iplookup](/search/iplookup/iplookup) module.
 
 The Gravwell scripting system has access to the ipexist builder functions, enabling you to generate high speed ip membership tables from existing data.  The ipexist builder functions are open source and available on [github](https://github.com/gravwell/ipexist).  Below is a basic script which generates an ip membership resource using a query:
 
@@ -829,6 +832,7 @@ println("buffer", len(buff))
 return setResource("sshusers", buff)
 ```
 
+(scripting_gravwell_client_usage)=
 ## Gravwell Client Usage
 
 The `getClient` function will hand back a pointer to a new [Client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) object that is logged in and synchronized as the current user. Under normal operating conditions, the new client should be ready for immediate use.  However, it is possible for Gravwell webservers to become unavailable during script operations due to network failures or system upgrades.  We therefore recommend that scripts test the status of the client connection using the [TestLogin()](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client.TestLogin) method.

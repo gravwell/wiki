@@ -11,18 +11,27 @@ Every search module has universal enumerated values for records.
 ## Renderer Module list
 
 ### Charts, Graphs, and Gauges
-* [chart](chart/chart.md) - Render data as line graphs, bar graphs, etc.
-* [fdg](fdg/fdg.md) - Force-directed graphs.
-* [stackgraph](stackgraph/stackgraph.md) - Stack graphs.
-* [gauge/numbercard](gauge/gauge.md) - Gauges and numeric cards.
-* [wordcloud](wordcloud/wordcloud.md) - Word clouds.
+
+```{toctree}
+chart - Render data as line graphs, bar graphs, etc. <chart/chart.md>
+fdg - Force-directed graphs. <fdg/fdg.md>
+stackgraph - Stack graphs. <stackgraph/stackgraph.md>
+gauge/numbercard - Gauges and numeric cards. <gauge/gauge.md>
+wordcloud - Word clouds. <wordcloud/wordcloud.md>
+```
 
 ### Tables and Text
-* [table](table/table.md) - Display tables of enumerated values.
-* [text](text/text.md) - Output the body of entries with minimal formatting.
-* [raw](raw/raw.md) - Output data completely unformatted.
-* [pcap](pcap/pcap.md) - Show an overview of the contents of network packets.
+
+```{toctree}
+table - Display tables of enumerated values. <table/table.md>
+text - Output the body of entries with minimal formatting. <text/text.md>
+raw - Output data completely unformatted. <raw/raw.md>
+pcap - Show an overview of the contents of network packets. <pcap/pcap.md>
+```
 
 ### Maps
-* [pointmap / heatmap](map/map.md) - Display heatmaps or individual points on a map.
-* [point2point](point2point/point2point.md) - Display data entries which have both a source and a destination.
+
+```{toctree}
+pointmap / heatmap - Display heatmaps or individual points on a map. <map/map.md>
+point2point - Display data entries which have both a source and a destination. <point2point/point2point.md>
+```

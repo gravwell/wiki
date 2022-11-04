@@ -52,7 +52,7 @@ In addition, the following modifiers are available to many verbs:
 
 This example formats a simple string containing floating point numbers.
 
-```
+```gravwell
 tag=netflow netflow SrcPort DstPort 
 | printf "The source port is %v and the destination port is %v!" SrcPort DstPort 
 | table

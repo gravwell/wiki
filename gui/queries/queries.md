@@ -1,6 +1,6 @@
 # The Search Bar & Query Interfaces
 
-Although investigations may begin with an email alert from an automated script, or when the user notices something strange on a dashboard, actual *data exploration* typically involves running queries manually, iterating over different timeframes and queries to drill down to the information of interest. This document describes the **user interfaces** Gravwell provides for building and running queries; for discussion of how to actually build the queries, see [the search documentation](#!search/search.md).
+Although investigations may begin with an email alert from an automated script, or when the user notices something strange on a dashboard, actual *data exploration* typically involves running queries manually, iterating over different timeframes and queries to drill down to the information of interest. This document describes the **user interfaces** Gravwell provides for building and running queries; for discussion of how to actually build the queries, see [the search documentation](/search/search).
 
 ## New Search Page
 
@@ -72,7 +72,7 @@ The results page also has a menu of additional actions for the search results, a
 
 ### Save results
 
-This option marks the search as SAVED. The results will be accessible in the [Persistent Searches](#!gui/persistent/persistent.md) page until the search is deleted by the user.
+This option marks the search as SAVED. The results will be accessible in the [Persistent Searches](/gui/persistent/persistent) page until the search is deleted by the user.
 
 ### Save query
 
@@ -88,7 +88,7 @@ This option lets you add the search to an existing dashboard, or create a new da
 
 ### Send to background
 
-This option is useful when a search is taking longer than expected to complete. Clicking "send to background" will make the search continue running in the background even after you navigate away from the results page; this allows you to do other things while the search completes. You can monitor the search's status and view the completed results from the [Persistent Searches](#!gui/persistent/persistent.md) page. Note that backgrounded searches do *not* persist across webserver restarts; to keep results around permanently, use the "Save results" option.
+This option is useful when a search is taking longer than expected to complete. Clicking "send to background" will make the search continue running in the background even after you navigate away from the results page; this allows you to do other things while the search completes. You can monitor the search's status and view the completed results from the [Persistent Searches](/gui/persistent/persistent) page. Note that backgrounded searches do *not* persist across webserver restarts; to keep results around permanently, use the "Save results" option.
 
 ### Schedule
 
@@ -104,7 +104,7 @@ The "Download" menu gives options for downloading the search results in various 
 
 Different renderers will give different download formats; in the screenshot above, the chart renderer offers JSON and CSV formats. You may find it useful to download a chart in CSV format and import it into a spreadsheet, for instance.
 
-One particularly useful combination is downloading JSON results from the [raw renderer](#!search/raw/raw.md). The resulting file can be used with Gravwell's [reimport ingester](https://github.com/gravwell/gravwell/tree/master/ingesters/reimport) to re-ingest the same entries into a different Gravwell instance. If you email Gravwell support about a problem, they may request that you send entries in this format for testing.
+One particularly useful combination is downloading JSON results from the [raw renderer](/search/raw/raw). The resulting file can be used with Gravwell's [reimport ingester](https://github.com/gravwell/gravwell/tree/master/ingesters/reimport) to re-ingest the same entries into a different Gravwell instance. If you email Gravwell support about a problem, they may request that you send entries in this format for testing.
 
 ### Share Query URL
 

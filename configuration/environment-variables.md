@@ -67,7 +67,7 @@ FEDERATOR_base_INGEST_SECRET_FILE=/run/secrets/federator_base_secret /opt/gravwe
 
 ### Datastore-specific variables
 
-The [Datastore](#!distributed/frontend.md) can be configured at run-time by environment variables:
+The [Datastore](/distributed/frontend) can be configured at run-time by environment variables:
 
 | gravwell.conf variable | Environment variable | Example |
 |------------------------|----------------------|---------|

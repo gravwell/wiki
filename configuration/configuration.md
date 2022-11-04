@@ -31,7 +31,7 @@ If you already have your list of indexers with ingest and control shared secrets
 
 For example, to install the indexer component without installing the webserver or randomizing passwords, run:
 
-```
+```console
 root@gravserver# bash gravwell_installer.sh --no-questions --no-random-passwords --no-webserver
 ```
 
@@ -94,6 +94,7 @@ There are a few key configuration options in an indexer's gravwell.conf which af
 
 Indexers store their data in _wells_. Each well stores some number of tags. If a well contains 100GB of data tagged "pcap" and 10MB of data tagged "syslog", searching for syslog data means the indexer also has to read the pcap data from the disk, slowing down the search. For this reason we strongly suggest creating separate wells for tags you anticipate will contain a lot of data. See the 'Tags and Wells' section for more information.
 
+(configuration_tags_and_wells)=
 ## Tags and Wells
 
 **Tags** are used as a method to logically separate data of different types.  Tags are applied at ingest time by the ingesters (SimpleRelay, NetworkCapture, etc).  For example, it is useful to apply unique tags to syslog logs, Apache logs, network packets, video streams, audio streams, etc.  **Wells** are the storage groupings which actually organize and store the ingested data. Although users typically do not interact with them, the wells store data on-disk in **shards**, with each shard containing approximately 1.5 days of data.
@@ -134,6 +135,7 @@ A Gravwell cluster with multiple indexer nodes can be configured so that nodes r
 
 Gravwell supports the notion of "accelerators" for individual wells, which allow you apply parsers to data at ingest to generate optimization blocks.  Accelerators are just as flexible as query modules and are transparently engaged when performing queries.  Accelerators are extremely useful for needle-in-haystack style queries, where you need to zero in on data that has specific field values very quickly.  See the [Accelerators](accelerators.md) section for more information and configuration techniques.
 
+(password_complexity)=
 ## Password Complexity
 
 Gravwell supports the option to enforce password complexity on users when not in single sign on mode.  Enabling password complexity requirements is performed by adding the following structure to the `gravwell.conf` file:

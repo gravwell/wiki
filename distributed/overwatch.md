@@ -29,7 +29,7 @@ To install an Overwatch server, use the Gravwell installer to install only the w
 
 Next, the webserver should be configured in an **Overwatch Domain**. The domain is set with the `Webserver-Domain` parameter in gravwell.conf. Client webservers can safely be left in domain 0, but the Overwatch webserver should be set to a different number; this can be any integer between 0 and 32767.
 
-Those are the only essential configurations for the Overwatch webserver. You may wish to [configure TLS](#!configuration/certificates.md) or set other options, but at this point it should be safe to restart the webserver (`systemctl restart gravwell_webserver.service`) and begin use.
+Those are the only essential configurations for the Overwatch webserver. You may wish to [configure TLS](/configuration/certificates) or set other options, but at this point it should be safe to restart the webserver (`systemctl restart gravwell_webserver.service`) and begin use.
 
 ### Configuring Multiple Overwatch Servers
 

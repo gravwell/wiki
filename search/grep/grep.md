@@ -28,31 +28,31 @@ grep <argument list> <search parameter>
 
 To find any Apache logs containing the exact string "Mozilla\*Firefox" (no wildcards):
 
-```
+```gravwell
 tag=apache grep "Mozilla\*Firefox"
 ```
 
 To find packets over port 80 whose payloads begin with the bytes 0, 1, 2, 3:
 
-```
+```gravwell
 tag=pcap packet tcp.Port==80 tcp.Payload | grep -e Payload "\x01\x02\x03\x04"
 ```
 
 Match any Reddit post which contains words ending in "ing" or "ed":
 
-```
+```gravwell
 tag=reddit json Body | grep -e Body "*ing" "*ed"
 ```
 
 Drop any Reddit posts on subreddits beginning with "Ask" or containing "foo":
 
-```
+```gravwell
 tag=reddit json Subreddit | grep -v -e Subreddit "Ask*" "foo"
 ```
 
 Grab only user agents that contain Mozilla and Windows
 
-```
+```gravwell
 tag=apache grep -s Mozilla Windows
 ```
 

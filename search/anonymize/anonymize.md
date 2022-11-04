@@ -2,7 +2,7 @@
 
 The `anonymize` module is used replace the contents of specified enumerated values with anonymized values. For example, to replace the IP address in a dataset with anonymized addresses:
 
-```
+```gravwell
 tag=data json IP Message | anonymize IP | table
 ```
 
@@ -18,7 +18,7 @@ The `anonymize` module supports strings, byte arrays, IP addresses, MAC addresse
 
 In this example, we extract request/response pairs from DNS:
 
-```
+```gravwell
 tag=dns json Question.Hdr.Name~google.com Question.A | require A | table
 ```
 
@@ -26,7 +26,7 @@ tag=dns json Question.Hdr.Name~google.com Question.A | require A | table
 
 We can anonymize the IP addresses by simply adding the `anonymize` module:
 
-```
+```gravwell
 tag=dns json Question.Hdr.Name~google.com Question.A | require A | anonymize IP | table
 ```
 
@@ -34,7 +34,7 @@ tag=dns json Question.Hdr.Name~google.com Question.A | require A | anonymize IP 
 
 The `anonymize` module can also anonymize text. In this example, we extract fields from webserver logs, and anonymize the user agent field. The anonymized text is the same length as the original value. 
 
-```
+```gravwell
 tag=apache grok "%{COMBINEDAPACHELOG}" | anonymize agent | table timestamp verb response agent
 ```
 

@@ -1,6 +1,6 @@
 ## Netflow
 
-The netflow processor is designed to extract and filter raw netflow data frames, allowing for quickly identifying network flows, filtering on ports, or generally monitoring the behavior of aggregate flows.  Gravwell has a native netflow ingester which is open source and available at https://github.com/gravwell/ingesters or as an installer in the [quickstart section](#!quickstart/downloads.md).
+The netflow processor is designed to extract and filter raw netflow data frames, allowing for quickly identifying network flows, filtering on ports, or generally monitoring the behavior of aggregate flows.  Gravwell has a native netflow ingester which is open source and available at https://github.com/gravwell/ingesters or as an installer in the [quickstart section](/quickstart/downloads).
 
 ### Supported Options
 
@@ -72,7 +72,7 @@ The netflow search module is designed to process raw netflow frames.  A single n
 
 #### Number of HTTP flows by Destination IP over time
 
-```
+```gravwell
 tag=netflow netflow Src Dst Port==80 | count by Dst | chart count by Dst
 ```
 
@@ -80,7 +80,7 @@ tag=netflow netflow Src Dst Port==80 | count by Dst | chart count by Dst
 
 #### Total traffic by IP and Protocol
 
-```
+```gravwell
 tag=netflow netflow IP~192.168.0.0/16 Protocol Bytes as traffic | sum traffic by IP Protocol | stackgraph IP Protocol sum
 ```
 

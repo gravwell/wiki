@@ -5,9 +5,9 @@ Microsoft's Azure Active Directory service provides cloud-based authentication a
 To set up Azure AD SSO for Gravwell, you'll need the following:
 
 * An Azure Premium License or equivalent which allows the creation of Enterprise Applications & SSO (Contact Microsoft sales to determine your needs).
-* A Gravwell webserver configured with [TLS certificates and HTTPS](#!configuration/certificates.md).
+* A Gravwell webserver configured with [TLS certificates and HTTPS](/configuration/certificates).
 
-Additional Gravwell SSO configuration information can be found [here](#!configuration/sso.md) if needed.
+Additional Gravwell SSO configuration information can be found [here](/configuration/sso) if needed.
 
 Note: For the purposes of this document, we'll assume your Gravwell webserver's URL is `https://gravwell.example.com/`.
 
@@ -75,7 +75,7 @@ Log in as one of the users you set up to access the Gravwell application. Once l
 
 ## Notes on Groups
 
-Gravwell can automatically create groups and add SSO users to these groups as [documented on the main SSO page](#!configuration/sso.md). You can configure Azure AD to send a claim with groups by clicking 'Add a group claim' in the application's User Attributes & Claims configuration page:
+Gravwell can automatically create groups and add SSO users to these groups as [documented on the main SSO page](/configuration/sso). You can configure Azure AD to send a claim with groups by clicking 'Add a group claim' in the application's User Attributes & Claims configuration page:
 
 ![](groups.png)
 

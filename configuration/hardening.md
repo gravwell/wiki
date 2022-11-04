@@ -6,7 +6,7 @@ The [Linux Audit](https://linux-audit.com/linux-server-hardening-most-important-
 
 There are a few areas that may warrant some attention upon initial installation, such as TLS certificates.  We ship with a set of defaults that should satisfy most users but there are a few settings that you may want to tweak.
 
-We also highly recommend keeping up-to-date with the latest Gravwell releases and occasionally checking in on the [changelog](../#!changelog/list.md).  If we encounter a security issue we will document it there.  We will also notify customers of critical security issues via the prescribed point of contact.
+We also highly recommend keeping up-to-date with the latest Gravwell releases and occasionally checking in on the [changelog](/changelog/list).  If we encounter a security issue we will document it there.  We will also notify customers of critical security issues via the prescribed point of contact.
 
 ## Quickstart
 
@@ -15,10 +15,10 @@ Securing Gravwell is not much different than securing any other network-accessib
 If you are in a hurry and just want to hit the high points, do this:
 
 1. Change the password for the admin user
-2. Install a valid TLS Certificate and enable HTTPS [More Info](certificates.md)
+2. Install a valid TLS Certificate and enable HTTPS [More Info](certificates)
 3. Change the username for the admin user
-4. Ensure you use good secrets for ingesters and enable Ciphertext connections [More Info](../#!ingesters/ingesters.md)
-5. Enable [password complexity controls](#!configuration/configuration.md#Password_Complexity) or [Single Sign On](#!configuration/sso.md)
+4. Ensure you use good secrets for ingesters and enable Ciphertext connections [More Info](/ingesters/ingesters)
+5. Enable [password complexity controls](password_complexity) or [Single Sign On](/configuration/sso)
 6. Enable HTTPS communication in the Search Agent [More Info](certificates.md)
 7. Ensure communications between webservers and indexers are over a trusted network.
 
@@ -60,7 +60,7 @@ We start with a pretty aggressive bcrypt hash cost of 12 and routinely re-evalua
 
 By default, Gravwell is installed in `/opt/gravwell`.  The installers create the user and group `gravwell`:`gravwell`.  Neither the user nor the group is installed with login privileges.  All components execute under the `gravwell` user, and almost all execute under the `gravwell` group.
 
-The notable exception is the File Follower ingester which executes under the `admin` group so that it can tail log files in `/var/log`.  If you do not want *any* Gravwell component executing with elevated privileges we recommend not using the [File Follower](#!ingesters/ingesters.md#File_Follower) and instead configure syslog to send data to the [Simple Relay](#!ingesters/ingesters.md#Simple_Relay) ingester via TCP.  You may also alter the File Follower systemd unit file to execute using the `gravwell` group if you do not need to follow any controlled system log files.  Check out the system unit file section below for more info.
+The notable exception is the File Follower ingester which executes under the `admin` group so that it can tail log files in `/var/log`.  If you do not want *any* Gravwell component executing with elevated privileges we recommend not using the [File Follower](ingesters_list) and instead configure syslog to send data to the [Simple Relay](ingesters_list) ingester via TCP.  You may also alter the File Follower systemd unit file to execute using the `gravwell` group if you do not need to follow any controlled system log files.  Check out the system unit file section below for more info.
 
 Gravwell installers come in two forms: repository installation packages (either Debian `.deb` or RedHat `.rpm`) and shell-based self-extracting installers.  The repository installation packages are all signed using the published Gravwell [repository key](https://update.gravwell.io/debian/update.gravwell.io.gpg.key).  The self-extracting shell installers are always accompanied by MD5 hashes. Always validate the MD5 hashes and/or repository signatures before installing any package (Gravwell or otherwise).
 
@@ -123,9 +123,9 @@ Some components are installed with special capabilities that allow them to perfo
 * `CAP_NET_BIND_SERVICE` - allows non-root applications to bind to ports less than 1024.
 * `CAP_NET_RAW` - Allows a non-root application to open a raw socket.
 
-The `CAP_NET_RAW` capability is only used by the [Network Capture](/#!ingesters/ingesters.md#Network_Ingester) ingester so that it can capture raw packets from an interface without running as root.
+The `CAP_NET_RAW` capability is only used by the [Network Capture](ingesters_list) ingester so that it can capture raw packets from an interface without running as root.
 
-The `CAP_NET_BIND_SERVICE` capability is used by the [Simple Relay](/#!ingesters/ingesters.md#Simple_Relay) and the Webserver so that they can bind to low numbered ports such as 80, and 443 for the webserver and 601 and 514 for the Simple Relay ingester.
+The `CAP_NET_BIND_SERVICE` capability is used by the [Simple Relay](ingesters_list) and the Webserver so that they can bind to low numbered ports such as 80, and 443 for the webserver and 601 and 514 for the Simple Relay ingester.
 
 ## Search Scripting and Automation
 

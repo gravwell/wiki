@@ -134,7 +134,7 @@ There is a lot of data in there with no indication of which fields are what.  To
 
 If we were to manually extract and name each element, our query would be the following:
 
-```
+```gravwell
 tag=csvdata csv [0] as ts [1] as name [2] as id [3] as guid [4] as src [5] as srcport [6] as dst [7] as dstport [8] as data [9] as country [10] as city [11] as hash | table
 ```
 
@@ -151,7 +151,7 @@ With the following auto-extractor configuration declaration:
 
 That same query becomes:
 
-```
+```gravwell
 tag=csvdata ax | table
 ```
 
@@ -165,7 +165,7 @@ Note: The position of the names in the `params` variable indicates the field nam
 
 The fields module is an extremely flexible processing module that allows us to define arbitrary delimiters and field rules in order to extract data.  Many popular security applications like Bro/Zeek default to TSV (tab separated values) for data export.  Other custom applications may use weird separators like "|" or a series of bytes like "//".  With the fields extractor you can handle it all, and when combined with auto-extractors users don't have to worry about the details of the data format.
 
-Unlike other auto-extractor processors, the fields module has a variety of configuration arguments.  The list of arguments is fully documented in the [fields module documentation](/#!search/fields/fields.md).  Only the "-e" flag is unsupported.
+Unlike other auto-extractor processors, the fields module has a variety of configuration arguments.  The list of arguments is fully documented in the [fields module documentation](/search/fields/fields).  Only the "-e" flag is unsupported.
 
 Let's start with some tab delimited data:
 
@@ -175,7 +175,7 @@ Let's start with some tab delimited data:
 
 Using the fields module to extract each data item our query would be:
 
-```
+```gravwell
 tag=tabfields fields -d "\t" [0] as ts [1] as app [2] as src [3] as srcport [4] as dst [5] as dstport [6] as data | table
 ```
 
@@ -193,7 +193,7 @@ An auto-extraction configuration to accomplish the same thing is:
 
 Using the ax module and the configuration above, the query becomes:
 
-```
+```gravwell
 tag=tagfields ax | table
 ```
 
@@ -207,7 +207,7 @@ Note that the last field contains the delimiter. The system that generated this 
 
 Using the fields module our query would be:
 
-```
+```gravwell
 tag=barfields fields -d "|" -q -clean [0] as ts [1] as app [2] as src [3] as srcport [4] as dst [5] as dstport [6] as data 
 ```
 
@@ -263,13 +263,13 @@ Lets assume we want to extract every single data item and put them into a table.
 
 If we were to use regex, our query would be:
 
-```
+```gravwell
 tag=test regex "(?P<ts>\S+)\s\[(?P<app>\S+)\]\s<(?P<uuid>\S+)>\s(?P<src>\S+)\s(?P<srcport>\d+)\s(?P<dst>\S+)\s(?P<dstport>\d+)\s(?P<path>\S+)\s(?P<useragent>.+)\s\{(?P<email>\S+)\}$" | table
 ```
 
 However, with the auto-extractor and the ax module it can be:
 
-```
+```gravwell
 tag=test ax | table
 ```
 
@@ -279,13 +279,13 @@ The results are the same:
 
 If we want to filter on a field using the ax module, we can simply attach a filter directive to the named field on the ax module.  In this example we want to show all entries that have "test.org" in the email address while still rendering a table with all extracted fields.
 
-```
+```gravwell
 tag=test ax email~"test.org" | table
 ```
 
 If we only want specific fields, we can specify those fields which directs the ax module to only extract those specific fields, rather than extracting all fields by default.
 
-```
+```gravwell
 tag=test ax email~"test.org" app path | table
 ```
 
@@ -303,9 +303,9 @@ The slice AX processor is designed to cast data to specific types.  As such its 
 
 #### Examples
 
-To start, lets look at our data in hex format using the [hexlify](#!search/hexlify/hexlify.md) module:
+To start, lets look at our data in hex format using the [hexlify](/search/hexlify/hexlify) module:
 
-```
+```gravwell
 tag=keg hexlify
 ```
 
@@ -323,7 +323,7 @@ With some sleuthing we were able to identify that the packed binary structure co
 
 Which we were able to use to generate the following slice query to extract each data item:
 
-```
+```gravwell
 tag=keg slice uint16be([0:2]) as id int64be([2:10]) as sec uint64be([10:18]) as nsec float32be([18:22]) as temp [22:] as name | table
 ```
 
@@ -342,13 +342,13 @@ From our manual query we can then generate the following auto-extraction configu
 
 The complicated slice query now becomes:
 
-```
+```gravwell
 tag=keg ax | table
 ```
 
 Using filtering and some math modules we can take it a step further and generate a cool graph showing the maximum temperature for each of the probes:
 
-```
+```gravwell
 tag=keg ax id==0x1200 temp name | max temp by name | chart max by name
 ```
 
@@ -356,7 +356,7 @@ tag=keg ax id==0x1200 temp name | max temp by name | chart max by name
 
 We can use additional filtering to select only the keg temperatures and examine the temperature variance to see how well the control system is maintaining a constant temperature:
 
-```
+```gravwell
 tag=keg ax id==0x1200 temp name~Keg | stddev temp by name | chart stddev by name
 ```
 

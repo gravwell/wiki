@@ -11,13 +11,13 @@ The `enrich` module can add enumerated values to each entry in a pipeline; these
 
 The simplest use of `enrich` is to specify enumerated values and data within the query. For example, to add an enumerated value "foo" with the value "bar" to every entry, simply specify the name and content of the enumerated value, separated by whitespace:
 
-```
+```gravwell
 tag=jsondata json val | enrich foo bar | table val foo
 ```
 
 You can specify multiple enumerated value pairs as well. For example, to create enumerated values "foo" and "bar", each with different content:
 
-```
+```gravwell
 tag=jsondata json val | enrich foo "my data" bar "my other data" | table val foo bar
 ```
 
@@ -27,13 +27,13 @@ The `enrich` module can extract columns from a CSV or lookup table resource. Whe
 
 For example, to use columns "foo" and "bar" from a resource "data":
 
-```
+```gravwell
 tag=jsondata val | enrich -r data foo bar | table val foo bar
 ```
 
 Additionally, the name of the enumerated value can be different from the column name by using the `as` keyword. For example, to enrich with the column "foo", but name the resulting enumerated value "bar":
 
-```
+```gravwell
 tag=jsondata val | enrich -r data foo as bar | table val bar
 ```
 

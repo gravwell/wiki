@@ -2,18 +2,20 @@
 
 Most users will interact with Gravwell through the web GUI. This page describes a few high-level menus and interface concepts; the pages linked below go into detail on other topics.
 
-* [The Search Interface](queries/queries.md)
-* [Dashboards](dashboards/dashboards.md)
-* [Persistent Searches](persistent/persistent.md)
-* [Labels and Filtering](labels/labels.md)
-* [The Query Library](querylibrary/querylibrary.md)
-* [Resources](#!resources/resources.md)
-* [Auto-Extractors](#!configuration/autoextractors.md)
-* [Kits](#!kits/kits.md)
-* [Templates](templates/templates.md)
-* [Macros](#!search/macros.md)
-* [Actionables](actionables/actionables.md)
-* [Advanced GUI User Preferences](#!configuration/gui.md)
+```{toctree}
+The Search Interface <queries/queries.md>
+Dashboards <dashboards/dashboards.md>
+Persistent Searches <persistent/persistent.md>
+Labels and Filtering <labels/labels.md>
+The Query Library <querylibrary/querylibrary.md>
+Resources </resources/resources>
+Auto-Extractors </configuration/autoextractors>
+Kits </kits/kits>
+Templates <templates/templates.md>
+Macros </search/macros>
+Actionables <actionables/actionables.md>
+Advanced GUI User Preferences </configuration/gui>
+```
 
 ## GUI Introduction
 
@@ -81,7 +83,7 @@ The "Home Page" dropdown menu selects which page will be displayed after logging
 
 The "Search Group Visibility" option allows you to share the results of all searches with a given group; this can be a convenient way to collaborate. In the screenshot, the user has selected the group named "foo"; all members of that group will have access to the searches this user runs in the future.
 
-The "Advanced Preferences" section can be ignored by most users. Selecting "Developer mode" enables manual editing of JSON preferences (see [this page](!#configuration/gui.md) for more information), while toggling "Experimental Features" will enable the Experimental Features section in the main menu.
+The "Advanced Preferences" section can be ignored by most users. Selecting "Developer mode" enables manual editing of JSON preferences (see [this page](/configuration/gui.md) for more information), while toggling "Experimental Features" will enable the Experimental Features section in the main menu.
 
 ### Email Server
 

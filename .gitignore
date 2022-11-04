@@ -1,3 +1,5 @@
 *.sublime*
 wiki
 *.bak
+_build/
+__pycache__/

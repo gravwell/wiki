@@ -38,9 +38,9 @@ If you're using the Gravwell Debian repository, installation is just a single ap
 apt-get install gravwell-federator
 ```
 
-Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the Federator:
+Otherwise, download the installer from the [Downloads page](/quickstart/downloads). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the Federator:
 
-```
+```console
 root@gravserver ~ # bash gravwell_federator_installer.sh
 ```
 

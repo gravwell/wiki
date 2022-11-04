@@ -4,7 +4,7 @@ Gravwell also provides a Kafka Federator, that behaves exactly like the Federato
 
 ![](kafkaFederatorDiagram.png)
 
-The Kafka Federator can be paired with the [Kafka Consumer](#!ingesters/kafka.md) to read messages from a topic and ingest them into a Gravwell indexer.
+The Kafka Federator can be paired with the [Kafka Consumer](/ingesters/kafka) to read messages from a topic and ingest them into a Gravwell indexer.
 
 ## Configuration
 
