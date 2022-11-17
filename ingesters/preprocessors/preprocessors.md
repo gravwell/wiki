@@ -47,19 +47,39 @@ This configuration defines two data consumers (Simple Relay calls them "Listener
 ## Available Preprocessors
 
 ```{toctree}
-
-gzip -  Decompress gzipped data in entries  <gzip.md>
-jsonextract -  Parse and extract elements in JSON data  <jsonextract.md>
-jsonarraysplit -  Parse JSON array data and split the array into individual entries  <jsonarraysplit.md>
-jsonfilter -  Parse JSON data and filter based on field values  <jsonfilter.md>
-csvrouter -  Parse CSV data and route to specific tags based on column values  <csvrouter.md>
-regexrouter -  Route entries to specific tags based on regular expression matches  <regexrouter.md>
-srcrouter -  Route entries to specific tags based on source IP or value  <srcrouter.md>
-regextimestamp -  Perform complex timestamp processing using regular expressions  <regextimestamp.md>
-regexextract -  Perform data extractions and repacking using regular expressions  <regexextract.md>
-forwarder -  Forward entries using TCP or UDP connections  <forwarder.md>
-gravwellforwarder -  Forward entries using a Gravwell ingest connection  <gravwellforwarder.md>
-drop -  Simple dropping preprocessor, it stops all entries from moving through the preprocessor chain  <drop.md>
-ciscoise -  Cisco ISE multi-message reconstruction preprocessor  <ciscoise.md>
-corelight -  Preprocessor to adapt Corelight JSON logs to Zeek TSV data  <corelight.md>
+---
+maxdepth: 1
+hidden: true
+---
+gzip <gzip.md>
+jsonextract <jsonextract.md>
+jsonarraysplit <jsonarraysplit.md>
+jsonfilter <jsonfilter.md>
+csvrouter <csvrouter.md>
+regexrouter <regexrouter.md>
+srcrouter <srcrouter.md>
+regextimestamp <regextimestamp.md>
+regexextract <regexextract.md>
+forwarder <forwarder.md>
+gravwellforwarder <gravwellforwarder.md>
+drop <drop.md>
+ciscoise <ciscoise.md>
+corelight <corelight.md>
 ```
+
+| Preprocessor | Purpose |
+| -------------| -------- |
+| [gzip](gzip.md) | Decompress gzipped data in entries |
+| [jsonextract](jsonextract.md) | Parse and extract elements in JSON data |
+| [jsonarraysplit](jsonarraysplit.md) | Parse JSON array data and split the array into individual entries |
+| [jsonfilter](jsonfilter.md) | Parse JSON data and filter based on field values |
+| [csvrouter](csvrouter.md) | Parse CSV data and route to specific tags based on column values |
+| [regexrouter](regexrouter.md) | Route entries to specific tags based on regular expression matches |
+| [srcrouter](srcrouter.md) | Route entries to specific tags based on source IP or value |
+| [regextimestamp](regextimestamp.md) | Perform complex timestamp processing using regular expressions |
+| [regexextract](regexextract.md) | Perform data extractions and repacking using regular expressions |
+| [forwarder](forwarder.md) | Forward entries using TCP or UDP connections |
+| [gravwellforwarder](gravwellforwarder.md) | Forward entries using a Gravwell ingest connection |
+| [drop](drop.md) | Simple dropping preprocessor, it stops all entries from moving through the preprocessor chain |
+| [ciscoise](ciscoise.md) | Cisco ISE multi-message reconstruction preprocessor |
+| [corelight](corelight.md) | Preprocessor to adapt Corelight JSON logs to Zeek TSV data |

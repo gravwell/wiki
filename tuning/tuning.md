@@ -1,4 +1,4 @@
-# Performance tuning
+# Performance Tuning
 
 Gravwell is capable of taxing the disk, network, and CPU resources of even the most performant systems. Gravwell is optimized to work well on a variety of hardware and software configurations. That said, there are a number of query optimizations, configuration options, and Linux system parameters that can dramatically improve ingest and search performance. 
 

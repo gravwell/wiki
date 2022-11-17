@@ -4,7 +4,7 @@ This section documents the web API used between the GUI and the "frontend" webse
 
 The bulk of the API is RESTful. The exception to this rule is the searching API which uses websockets due to the nature of data exchange and transfer involved in launching and observing data from a search.
 
-## Basic APIs
+## APIs & Objects
 
 ```{toctree}
 ---
@@ -25,10 +25,6 @@ Miscellaneous APIs <misc.md>
 System Management <management.md>
 ```
 
-## Objects within Gravwell
-
-There are a variety of "things" which users may create and modify. Their APIs are listed in this section.
-
 ```{toctree}
 ---
 maxdepth: 1
@@ -46,8 +42,6 @@ Templates <templates.md>
 Actionables <actionables.md>
 User Files <userfiles.md>
 ```
-
-## Searching and Search Stats
 
 ```{toctree}
 ---
@@ -83,3 +77,12 @@ REST Stats API <stats-json.md>
 ## Test API
 
 The System contains a test API located at _/api/test_ which can be used to test if the webserver is alive and functioning.  The test API is entirely unauthenticated and always responds with a StatusOK 200 and an empty body.
+
+## Tokens
+```{toctree}
+---
+maxdepth: 1
+caption: API Tokens
+---
+API Tokens System <../tokens/tokens.md>
+```

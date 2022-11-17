@@ -1,4 +1,4 @@
-# Configuring TLS certificates
+# Configuring TLS Certificates
 
 Gravwell ships without TLS certificates by default, meaning all communications will be unencrypted until you set up certificates. We did this because using auto-generated self-signed certificates tends to both frighten users with the browser's warnings and provide a false sense of security. It is difficult to properly validate a self-signed certificate and there is a real risk of training users to simply accept potentially impersonated certificates.  This is compounded by the extremely fickle behavior of Chromium-based browsers, which timeout certificate exceptions in unpredictable ways (you are often forced to close EVERY Chromium/Chrome zygote process in order to re-accept the certificate).
 

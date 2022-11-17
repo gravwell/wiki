@@ -1,4 +1,4 @@
-# The Gravwell Load Balancer
+# Gravwell Load Balancer
 
 To make setting up your environment as easy as possible, Gravwell provides a custom load balancer specifically designed for use with Gravwell webservers. It can automatically discover Gravwell webservers, meaning you don't need to reconfigure the loadbalancer every time you add or remove a webserver--and if a webserver goes down, it will automatically direct users to another server.
 

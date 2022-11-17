@@ -1,50 +1,56 @@
-# Ingesters
-
-This section contains more detailed instruction for configuring and running Gravwell ingesters, which gather incoming data, package it into Gravwell entries, and ship it to Gravwell indexers for storage. The ingesters described in these pages are primarily designed to capture *live* data as it is generated; if you have existing data you want to import, check out the [migration documents](migrate/migrate.md).
-
-The Gravwell-created ingesters are released under the BSD open source license and can be found on [Github](https://github.com/gravwell/gravwell/tree/master/ingesters). The ingest API is also open source, so you can create your own ingesters for unique data sources, performing additional normalization or pre-processing, or any other manner of things. The ingest API code [is located here](https://github.com/gravwell/gravwell/tree/master/ingest).
-
-In general, for an ingester to send data to Gravwell, the ingester will need to know the “Ingest Secret” of the Gravwell instance, for authentication. This can be found by viewing the `/opt/gravwell/etc/gravwell.conf` file on the Gravwell server and finding the entry for `Ingest-Auth`. If the ingester is running on the same system as Gravwell itself, the installer will usually be able to detect this value and set it automatically.
-
-The Gravwell GUI has an Ingesters page (under the System menu category) which can be used to easily identify which remote ingesters are actively connected, for how long they have been connected, and how much data they have pushed.
-
-![](remote-ingesters.png)
-
-Attention: The [replication system](/configuration/replication) does not replicate entries larger than 999MB. Larger entries can still be ingested and searched as usual, but they are omitted from replication. This is not a concern for 99.9% of use cases, as all the ingesters detailed in this page tend to create entries no larger than a few kilobytes.
+# Ingesters List & Configuration
 
 (ingesters_list)=
-## Ingesters
+## Ingesters List
 
 ```{toctree}
-Amazon SQS -  Subscribe and ingest from Amazon SQS queues.  <sqs>
-Azure Event Hubs -  Consume from Azure Event Hubs.  <eventhubs>
-collectd -  Ingest collectd samples.  <collectd>
-File Follower -  Watch and ingest files on disk, such as logs.  <file_follow>
-Windows File Follower -  Watch and ingest files on Windows, such as logs and EVTX files.  <win_file_follow>
-GCP PubSub -  Fetch and ingest entries from Google Compute Platform PubSub Streams.  <pubsub>
-HTTP -  Create HTTP listeners on multiple URL paths.  <http>
-IPMI -  Periodically collect SDR and SEL records from IPMI devices.  <ipmi>
-Kafka -  Create a Kafka Consumer that ingests into Gravwell. Can be paired with the Gravwell Kafka Federator.  <kafka>
-Kinesis -  Ingest from Amazon's Kinesis Data Streams service.  <kinesis>
-Microsoft Graph API -  Ingest from Microsoft's Graph API.  <msg>
-Netflow -  Collect Netflow and IPFIX records.  <netflow>
-Network Capture -  Ingest PCAP on the wire.  <pcap>
-Office 365 -  Ingest Microsoft o365 Logs.  <o365>
-Packetfleet -  Issue queries and ingest data from Google Stenographer.  <packetfleet>
-Session -  Ingest large records into a single entry.  <session>
-Shodan -  Ingest Shodan streaming API events.  <shodan>
-Simple Relay -  Ingest any text over TCP/UDP, syslog, and more.  <simple_relay>
-Windows Events -  Collect Windows events.  <winevent>
+---
+maxdepth: 1
+hidden: true
+---
+Amazon SQS <sqs>
+Azure Event Hubs <eventhubs>
+collectd <collectd>
+File Follower <file_follow>
+Windows File Follower <win_file_follow>
+GCP PubSub <pubsub>
+HTTP <http>
+IPMI <ipmi>
+Kafka <kafka>
+Kinesis <kinesis>
+Microsoft Graph API <msg>
+Netflow <netflow>
+Network Capture <pcap>
+Office 365 <o365>
+Packetfleet <packetfleet>
+Session <session>
+Shodan <shodan>
+Simple Relay <simple_relay>
+Windows Events <winevent>
 ```
 
-## Federator and Kafka Federator
+| Ingester | Description |
+|----------|-------------|
+| [Amazon SQS](sqs.md) | Subscribe and ingest from Amazon SQS queues. |
+| [Azure Event Hubs](eventhubs.md) | Consume from Azure Event Hubs. |
+| [collectd](collectd.md) | Ingest collectd samples. |
+| [File Follower](file_follow.md) | Watch and ingest files on disk, such as logs. |
+| [Windows File Follower](win_file_follow.md) | Watch and ingest files on Windows, such as logs and EVTX files. |
+| [GCP PubSub](pubsub.md) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
+| [HTTP](http.md) | Create HTTP listeners on multiple URL paths. |
+| [IPMI](ipmi.md) | Periodically collect SDR and SEL records from IPMI devices. |
+| [Kafka](kafka.md) | Create a Kafka Consumer that ingests into Gravwell. Can be paired with the Gravwell Kafka Federator. |
+| [Kinesis](kinesis.md) | Ingest from Amazon's [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) service. |
+| [Microsoft Graph API](msg.md) | Ingest from Microsoft's Graph API. |
+| [Netflow](netflow.md) | Collect Netflow and IPFIX records. |
+| [Network Capture](pcap.md) | Ingest PCAP on the wire. |
+| [Office 365](o365.md) | Ingest Microsoft o365 Logs. |
+| [Packetfleet](packetfleet.md) | Issue queries and ingest data from Google Stenographer. |
+| [Session](session.md) | Ingest large records into a single entry. |
+| [Shodan](shodan.md) | Ingest Shodan streaming API events. |
+| [Simple Relay](simple_relay.md) | Ingest any text over TCP/UDP, syslog, and more. |
+| [Windows Events](winevent.md) | Collect Windows events. |
 
-Gravwell also provides a [Federator](/ingesters/federator) and [Kafka Federator](/ingesters/kafkafederator) that allow connecting ingesters to indexers in more complex topologies. 
-
-```{toctree}
-Federator <federator>
-Kafka Federator <kafkafederator>
-```
 
 ## Tags
 

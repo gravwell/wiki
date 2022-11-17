@@ -10,9 +10,9 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 ---
 hidden: true
 ---
-quickstart/quickstart.md
+start.md
+ingesters.md
 search/search.md
-configuration.md
 automation.md
 api/api.md
 changelog/list.md
@@ -21,21 +21,21 @@ changelog/list.md
 ::::{grid} 2
 
 :::{grid-item-card}
-:link: /quickstart/quickstart
+:link: start
 :link-type: doc
 
-# Quick Start
+# Launching: *Getting Started*
 
-{material-twotone}`directions_run;3em;sd-text-success`
+{material-twotone}`rocket;3em;sd-text-success`
 
 :::
 :::{grid-item-card}
-:link: /search/search
+:link: ingesters
 :link-type: doc
 
-# Search with Gravwell
+# Collecting: *Gravwell Ingesters*
 
-{material-twotone}`search;3em;sd-text-success;center`
+{material-twotone}`upload;3em;sd-text-success;center`
 
 :::
 ::::
@@ -43,21 +43,43 @@ changelog/list.md
 ::::{grid} 2
 
 :::{grid-item-card}
-:link: /quickstart/quickstart
+:link: /search/search
 :link-type: doc
 
-# System Configuration
+# Exploring: *Searching with Gravwell*
+
+{material-twotone}`search;3em;sd-text-success`
+
+:::
+:::{grid-item-card}
+:link: automation
+:link-type: doc
+
+# Cruising: *Gravwell Automation*
 
 {material-twotone}`settings;3em;sd-text-success`
 
 :::
+::::
+
+::::{grid} 2
+
 :::{grid-item-card}
-:link: /quickstart/quickstart
+:link: /api/api
 :link-type: doc
 
-# Help
+# Commanding: *API*
 
-{material-twotone}`help;3em;sd-text-success`
+{material-twotone}`api;3em;sd-text-success`
+
+:::
+:::{grid-item-card}
+:link: /api/api
+:link-type: doc
+
+# Mission Updates: *Release Notes*
+
+{material-twotone}`info;3em;sd-text-success`
 
 :::
 ::::

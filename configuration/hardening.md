@@ -28,7 +28,7 @@ Installing a valid TLS certificate and enabling HTTPS is only slightly less impo
 
 Without HTTPS enabled and valid TLS certificates attackers could sniff login credentials, so *never access Gravwell over the public Internet without HTTPS enabled!*
 
-# Gravwell Users and Groups
+## Gravwell Users and Groups
 
 Gravwell users and groups loosely follow the Unix patterns.  At a high level, Gravwell access controls boil down to the following rules:
 

@@ -1,3 +1,5 @@
+# Indexer Configuration
+
 The following is an example default configuration for a Gravwell indexer.
 
 ```
