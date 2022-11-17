@@ -1,6 +1,10 @@
 from pygments.lexer import RegexLexer, words
 from pygments.token import *
 
+macroToken = Name.Variable
+compoundQueryToken = Name.Variable
+identifierToken = Name
+
 
 class GravwellLexer(RegexLexer):
     name = "Example Lexer with states"
@@ -14,8 +18,8 @@ class GravwellLexer(RegexLexer):
             #
             # Module invocations
             #
-            (r"tag\s*=", Operator, ("pipeModuleInvocation", "tagModuleInvocation")),
-            (r"\|", Operator, "pipeModuleInvocation"),
+            (r"tag\s*=", Keyword, ("pipeModuleInvocation", "tagModuleInvocation")),
+            (r"\|", Punctuation, "pipeModuleInvocation"),
             #
             # Keywords (suffix \b says "must be standalone word")
             #
@@ -23,19 +27,19 @@ class GravwellLexer(RegexLexer):
             #
             # Macro
             #
-            (r"\$[\w]+", Name.Tag),
+            (r"\$[\w]+", macroToken),
             #
             # Compund Queries
             #
-            (r"@[\w]+", Name.Function),
+            (r"@[\w]+", compoundQueryToken),
             #
             # Flag
             #
-            (r"-[\w]+", Name.Variable),
+            (r"-[\w]+", identifierToken),
             #
             # Identifier
             #
-            (r"[\w]+", Name),
+            (r"[\w]+", identifierToken),
             #
             # Braces
             #
@@ -98,15 +102,15 @@ class GravwellLexer(RegexLexer):
             #
             # Macro
             #
-            (r"\$[\w]+", Name.Tag, "#pop"),
+            (r"\$[\w]+", macroToken, "#pop"),
             #
             # Compund Query
             #
-            (r"@[\w]+", Name.Function, "#pop"),
+            (r"@[\w]+", compoundQueryToken, "#pop"),
             #
             # Identifier
             #
-            (r"[\w]+", Name, "#pop"),
+            (r"[\w,]+", identifierToken, "#pop"),
         ],
         "pipeModuleInvocation": [
             #
@@ -116,11 +120,11 @@ class GravwellLexer(RegexLexer):
             #
             # Macro
             #
-            (r"\$[\w]+", Name.Tag, "#pop"),
+            (r"\$[\w]+", macroToken, "#pop"),
             #
             # SearchModule
             #
-            (r"\w+", Name.Class, "#pop"),
+            (r"\w+", Name.Function, "#pop"),
         ],
         "comment": [
             (r"[^/*]+", Comment.Multiline),
@@ -129,7 +133,7 @@ class GravwellLexer(RegexLexer):
             (r"[/*]", Comment.Multiline),
         ],
         "string": [
-            (r"\$[\w]+", Name.Tag),
+            (r"\$[\w]+", macroToken),
             (r'[^"]', String),
             (r'"', String.Delimiter, "#pop"),
         ],
