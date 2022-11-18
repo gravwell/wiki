@@ -1,3 +1,10 @@
+html[data-theme="light"],
+html[data-theme="dark"] {
+  --pst-font-family-base: Lato, var(--pst-font-family-base-system);
+  --pst-font-family-heading: Lato, var(--pst-font-family-base-system);
+  --pst-font-family-monospace: Courier, var(--pst-font-family-monospace-system);
+}
+
 html[data-theme="light"] {
   --pst-color-primary: #533485;
   --pst-color-warning: #fdbf32;
