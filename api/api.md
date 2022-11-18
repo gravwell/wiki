@@ -11,18 +11,18 @@ The bulk of the API is RESTful. The exception to this rule is the searching API 
 maxdepth: 1
 caption: Basic APIs
 ---
-Login <login.md>
-User Preferences <userprefs.md>
-User account controls <account.md>
-User group controls <groups.md>
-Notifications <notifications.md>
-Search Controls <searchctrl.md>
-Downloading Search Results <download.md>
-Search History <searchhistory.md>
-Logging <loglevel.md>
-Ingesting Entries <ingest.md>
-Miscellaneous APIs <misc.md>
-System Management <management.md>
+Login <login>
+User Preferences <userprefs>
+User account controls <account>
+User group controls <groups>
+Notifications <notifications>
+Search Controls <searchctrl>
+Downloading Search Results <download>
+Search History <searchhistory>
+Logging <loglevel>
+Ingesting Entries <ingest>
+Miscellaneous APIs <misc>
+System Management <management>
 ```
 
 ```{toctree}
@@ -30,17 +30,17 @@ System Management <management.md>
 maxdepth: 1
 caption: API Objects
 ---
-Auto-extractors <extractors.md>
-Dashboards <dashboards.md>
-Kits <kits.md>
-Macros <macros.md>
-Playbooks <playbooks.md>
-Resources <resources.md>
-Scheduled Searches <scheduledsearches.md>
-Search Library <searchlibrary.md>
-Templates <templates.md>
-Actionables <actionables.md>
-User Files <userfiles.md>
+Auto-extractors <extractors>
+Dashboards <dashboards>
+Kits <kits>
+Macros <macros>
+Playbooks <playbooks>
+Resources <resources>
+Scheduled Searches <scheduledsearches>
+Search Library <searchlibrary>
+Templates <templates>
+Actionables <actionables>
+User Files <userfiles>
 ```
 
 ```{toctree}
@@ -48,9 +48,10 @@ User Files <userfiles.md>
 maxdepth: 1
 caption: Search and Stats
 ---
-Search Websocket <websocket-search.md>
-Reattaching to Searches <websocket-search-attach.md>
-Interacting with Renderers <websocket-render.md>
+Gravwell Direct Query API <../search/directquery/directquery>
+Search Websocket <websocket-search>
+Reattaching to Searches <websocket-search-attach>
+Interacting with Renderers <websocket-render>
 ```
 ## System Stats
 
@@ -61,7 +62,7 @@ The system stats also use a websocket for communication. This contains all infor
 maxdepth: 1
 caption: System Stats (WebSocket)
 ---
-System Stats Websocket <websocket-stats.md>
+System Stats Websocket <websocket-stats>
 ```
 
 Some other stats may be accessed via REST calls.
@@ -71,7 +72,7 @@ Some other stats may be accessed via REST calls.
 maxdepth: 1
 caption: System Stats (REST)
 ---
-REST Stats API <stats-json.md>
+REST Stats API <stats-json>
 ```
 
 ## Test API
@@ -82,7 +83,7 @@ The System contains a test API located at _/api/test_ which can be used to test 
 ```{toctree}
 ---
 maxdepth: 1
-caption: API Tokens
+caption: API Tokens System
 ---
-API Tokens System <../tokens/tokens.md>
+API Tokens System <../tokens/tokens>
 ```

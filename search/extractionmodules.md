@@ -62,6 +62,36 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 
 Note: The modules listed here have a primary function of extraction. They may also perform filtering and/or processing.
 
+```{toctree}
+---
+maxdepth: 1
+hidden: true
+---
+ax <ax/ax>
+canbus <canbus/canbus>
+cef <cef/cef>
+csv <csv/csv>
+dump <dump/dump>
+fields <fields/fields>
+grok <grok/grok>
+ip <ip/ip>
+ipfix <ipfix/ipfix>
+j1939 <j1939/j1939>
+json <json/json>
+kv <kv/kv>
+netflow <netflow/netflow>
+packet <packet/packet>
+packetlayer <packetlayer/packetlayer>
+path <path/path>
+regex <regex/regex>
+slice <slice/slice>
+strings <strings/strings>
+subnet <subnet/subnet>
+syslog <syslog/syslog>
+winlog <winlog/winlog>
+xml <xml/xml>
+```
+
 * [ax](ax/ax.md) - automatically extract fields from entries.
 * [canbus](canbus/canbus.md) - decode CANBUS data.
 * [cef](cef/cef.md) - decode CEF data.

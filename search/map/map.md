@@ -1,4 +1,4 @@
-# Map modules
+# Pointmap & Heatmap
 
 The `pointmap` and `heatmap` renderer modules translate search results onto a map. Both place entries on the map based on locations in enumerated values. By default, the modules look for an enumerated value called 'Location', as set by the [geoip](/search/geoip/geoip) search module. Locations can also be specified explicitly using the following:
 

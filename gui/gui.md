@@ -3,6 +3,9 @@
 Most users will interact with Gravwell through the web GUI. This page describes a few high-level menus and interface concepts; the pages linked below go into detail on other topics.
 
 ```{toctree}
+---
+maxdepth: 1
+---
 The Search Interface <queries/queries.md>
 Dashboards <dashboards/dashboards.md>
 Persistent Searches <persistent/persistent.md>

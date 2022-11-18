@@ -10,12 +10,11 @@ Gravwell is pleased to announce our free [Community Edition](https://www.gravwel
 ---
 hidden: true
 ---
-start.md
-ingesters.md
-search/search.md
-automation.md
-api/api.md
-changelog/list.md
+start
+gravwell
+automation
+api/api
+changelog/list
 ```
 
 ::::{grid} 2
@@ -30,20 +29,7 @@ changelog/list.md
 
 :::
 :::{grid-item-card}
-:link: ingesters
-:link-type: doc
-
-# Collecting: *Gravwell Ingesters*
-
-{material-twotone}`upload;3em;sd-text-success;center`
-
-:::
-::::
-
-::::{grid} 2
-
-:::{grid-item-card}
-:link: /search/search
+:link: gravwell
 :link-type: doc
 
 # Exploring: *Searching with Gravwell*
@@ -51,6 +37,10 @@ changelog/list.md
 {material-twotone}`search;3em;sd-text-success`
 
 :::
+::::
+
+::::{grid} 2
+
 :::{grid-item-card}
 :link: automation
 :link-type: doc
@@ -60,10 +50,6 @@ changelog/list.md
 {material-twotone}`settings;3em;sd-text-success`
 
 :::
-::::
-
-::::{grid} 2
-
 :::{grid-item-card}
 :link: /api/api
 :link-type: doc
@@ -71,15 +57,6 @@ changelog/list.md
 # Commanding: *API*
 
 {material-twotone}`api;3em;sd-text-success`
-
-:::
-:::{grid-item-card}
-:link: /api/api
-:link-type: doc
-
-# Mission Updates: *Release Notes*
-
-{material-twotone}`info;3em;sd-text-success`
 
 :::
 ::::

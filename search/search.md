@@ -222,4 +222,3 @@ Queries support C-Style comments anywhere in the query text. Comments are saved 
 ```gravwell
 tag=foo json foo.bar /* a c-style comment that has no impact on the search */ baz | table
 ```
-

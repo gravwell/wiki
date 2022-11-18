@@ -29,6 +29,64 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 (searchmodule_list)=
 ## Search module documentation
 
+```{toctree}
+---
+maxdepth: 1
+hidden: true
+---
+abs <abs/abs>
+alias <alias/alias>
+anko <anko/anko>
+anonymize <anonymize/anonymize>
+awk <awk/awk>
+base64 <base64/base64>
+communityid <communityid/communityid>
+count <Count_module>
+diff <diff/diff>
+dns <dns/dns>
+enrich <enrich/enrich>
+entropy <entropy/entropy>
+eval <eval/eval>
+filetype <filetype/filetype>
+first/last <firstlast/firstlast>
+fuse <fuse/fuse>
+geodist <geodist/geodist>
+geoip <geoip/geoip>
+grep <grep/grep>
+hexlify <hexlify/hexlify>
+ip <ip/ip>
+ipexist <ipexist/ipexist>
+iplookup <iplookup/iplookup>
+join <join/join>
+langfind <langfind/langfind>
+length <length/length>
+limit <limit/limit>
+location <location/location>
+lookup <lookup/lookup>
+lower <upperlower/upperlower>
+maclookup <maclookup/maclookup>
+Math Modules (list) <math/math>
+nosort <nosort/nosort>
+packetlayer <packetlayer/packetlayer>
+printf <printf/printf>
+regex <regex/regex>
+require <require/require>
+slice <slice/slice>
+sort <sort/sort>
+split <split/split>
+src <src/src>
+stats <stats/stats>
+strings <strings/strings>
+subnet <subnet/subnet>
+taint <taint/taint>
+time <time/time>
+transaction <transaction/transaction>
+truncate <truncate/truncate>
+unescape <unescape/unescape>
+upper <upperlower/upperlower>
+words <words/words>
+```
+
 * [abs](abs/abs) - calculate the absolute value of an enumerated value.
 * [alias](alias/alias) - create copies of enumerated values with new names.
 * [anko](anko/anko) - run arbitrary code in the pipeline.
@@ -36,7 +94,6 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [awk](awk/awk) - execute AWK code.
 * [base64](base64/base64) - encodes or decodes base64 strings.
 * [communityid](communityid/communityid) - calculate Zeek community ID values.
-* [count](Count_module) - count entries.
 * [diff](diff/diff) - compare fields between entries.
 * [dns](dns/dns) - do DNS and reverse DNS lookups.
 * [enrich](enrich/enrich) - manually attach enumerated values to entries.
@@ -60,10 +117,15 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [lookup](lookup/lookup) - enrich entries by looking up keys in a table.
 * [lower](upperlower/upperlower) - convert text to lower-case.
 * [maclookup](maclookup/maclookup) - look up manufacturer, address, and country information based on a MAC address.
-* [Math (list of math modules)](math/math) - perform math operations.
-* [max](Max_module) - find a maximum value.
-* [mean](Mean_module) - find a mean value.
-* [min](Min_module) - find a minimum value.
+* [Math Modules (list)](math/math.md) - perform math operations.
+  * count - count entries.
+  * max - find a maximum value.
+  * mean - find a mean value.
+  * min - find a minimum value.
+  * stddev - calculate standard deviation.
+  * sum - sum up enumerated values.
+  * unique - eliminate duplicate entries.
+  * variance - find variance of enumerated values.
 * [nosort](nosort/nosort) - disable sorting in the pipeline.
 * [packetlayer](packetlayer/packetlayer) - parse portions of a packet.
 * [printf](printf/printf) - format text in the pipeline.
@@ -74,16 +136,12 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 * [split](split/split) - split a single entry into multiple entries.
 * [src](src/src) - filter based on the SRC field of entries.
 * [stats](stats/stats) - perform math operations.
-* [stddev](stddev_module) - calculate standard deviation.
 * [strings](strings/strings) - find strings from binary data.
 * [subnet](subnet/subnet) - extract & filter based on IP subnets.
-* [sum](Sum_module) - sum up enumerated values.
 * [taint](taint/taint) - taint tracking.
 * [time](time/time) - convert strings to time enumerated values, and vice versa.
 * [transaction](transaction/transaction) - group multiple entries into single-entry "transactions" based on keys.
 * [truncate](truncate/truncate) - truncate entries or enumerated values to a specified number of characters.
 * [unescape](unescape/unescape) - convert escaped text into an unescaped representation.
-* [unique](Unique_module) - eliminate duplicate entries.
 * [upper](upperlower/upperlower) - convert text to upper-case.
-* [variance](Variance_module) - find variance of enumerated values.
 * [words](words/words) - highly optimized search for individual words.

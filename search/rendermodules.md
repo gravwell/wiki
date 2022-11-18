@@ -13,25 +13,51 @@ Every search module has universal enumerated values for records.
 ### Charts, Graphs, and Gauges
 
 ```{toctree}
-chart - Render data as line graphs, bar graphs, etc. <chart/chart.md>
-fdg - Force-directed graphs. <fdg/fdg.md>
-stackgraph - Stack graphs. <stackgraph/stackgraph.md>
-gauge/numbercard - Gauges and numeric cards. <gauge/gauge.md>
-wordcloud - Word clouds. <wordcloud/wordcloud.md>
+---
+maxdepth: 1
+hidden: true
+---
+chart <chart/chart>
+fdg <fdg/fdg>
+stackgraph <stackgraph/stackgraph>
+gauge/numbercard <gauge/gauge>
+wordcloud <wordcloud/wordcloud>
 ```
+
+* [chart](chart/chart.md) - Render data as line graphs, bar graphs, etc.
+* [fdg](fdg/fdg.md) - Force-directed graphs.
+* [stackgraph](stackgraph/stackgraph.md) - Stack graphs.
+* [gauge/numbercard](gauge/gauge.md) - Gauges and numeric cards.
+* [wordcloud](wordcloud/wordcloud.md) - Word clouds.
 
 ### Tables and Text
 
 ```{toctree}
-table - Display tables of enumerated values. <table/table.md>
-text - Output the body of entries with minimal formatting. <text/text.md>
-raw - Output data completely unformatted. <raw/raw.md>
-pcap - Show an overview of the contents of network packets. <pcap/pcap.md>
+---
+maxdepth: 1
+hidden: true
+---
+table <table/table>
+text <text/text>
+raw <raw/raw>
+pcap <pcap/pcap>
 ```
+
+* [table](table/table.md) - Display tables of enumerated values.
+* [text](text/text.md) - Output the body of entries with minimal formatting.
+* [raw](raw/raw.md) - Output data completely unformatted.
+* [pcap](pcap/pcap.md) - Show an overview of the contents of network packets.
 
 ### Maps
 
 ```{toctree}
-pointmap / heatmap - Display heatmaps or individual points on a map. <map/map.md>
-point2point - Display data entries which have both a source and a destination. <point2point/point2point.md>
+---
+maxdepth: 1
+hidden: true
+---
+pointmap/heatmap <map/map>
+point2point <point2point/point2point>
 ```
+
+* [pointmap/heatmap](map/map.md) - Display heatmaps or individual points on a map.
+* [point2point](point2point/point2point.md) - Display data entries which have both a source and a destination.

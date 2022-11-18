@@ -49,55 +49,88 @@ Note that some nodes may block execution of downstream nodes. The **If** node is
 
 ## Flow editor
 
-Flows are created using the flow editor. Please refer to the [flow editor documentation](editor.md) for a detailed description of the editor, instructions on how to use it, and information about debugging & scheduling flows.
+Flows are created using the flow editor. Please refer to the [flow editor documentation](editor) for a detailed description of the editor, instructions on how to use it, and information about debugging & scheduling flows.
 
 ## Node list
 
 ```{toctree}
 ---
 maxdepth: 1
-caption: Flow Nodes
+hidden: true
 ---
 
-Email: send email <nodes/email.md>
-Flow Storage Read: read items from a persistent storage <nodes/storageread.md>
-Flow Storage Write: write items into a persistent storage <nodes/storagewrite.md>
-Gravwell Notification: set Gravwell notifications <nodes/notification.md>
-HTTP: do HTTP requests <nodes/http.md>
-If: perform logical operations <nodes/if.md>
-Indexer Info: get information about Gravwell indexers <nodes/indexerinfo.md>
-Ingest: ingest data into Gravwell <nodes/ingest.md>
-Ingester Info: get information about Gravwell ingesters <nodes/ingesterinfo.md>
-JavaScript: run JavaScript code <nodes/javascript.md>
-JSON Encode/Decode: encode and decode JSON <nodes/json.md>
-Mattermost Message: send a Mattermost message <nodes/mattermost.md>
-Nest Merge: join multiple input payloads into one <nodes/nestmerge.md>
-PDF: create PDF documents <nodes/pdf.md>
-Query Log Ingest: convert search results to alert entries & ingest <nodes/queryalert.md>
-Read Macros: read Gravwell macros <nodes/macroget.md>
-Read Resources: read Gravwell resources <nodes/resourceget.md>
-Rename: rename variables in the payload <nodes/rename.md>
-Run a Query: run a Gravwell query <nodes/runquery.md>
-Set Variables: inject variables into the payload <nodes/inject.md>
-Slack File: upload a file to a Slack channel <nodes/slackfile.md>
-Slack Message: send a message to a Slack channel <nodes/slackmessage.md>
-Sleep: pause flow execution for a given period of time <nodes/sleep.md>
-Splunk Query: run a Splunk query <nodes/splunkquery.md>
-Stack Merge: join multiple input payloads into one <nodes/stackmerge.md>
-Teams Message: send a Microsoft Teams message <nodes/teams.md>
-Text Template: format text <nodes/template.md>
-Throttle: limit execution frequency of certain nodes within a flow <nodes/throttle.md>
-Update Resources: create or update Gravwell resources <nodes/resourceupdate.md>
+Email <nodes/email>
+Flow Storage Read <nodes/storageread>
+Flow Storage Write <nodes/storagewrite>
+Gravwell Notification <nodes/notification>
+HTTP <nodes/http>
+If <nodes/if>
+Indexer Info <nodes/indexerinfo>
+Ingest <nodes/ingest>
+Ingester Info <nodes/ingesterinfo>
+JavaScript <nodes/javascript>
+JSON Encode/Decode <nodes/json>
+Mattermost Message <nodes/mattermost>
+Nest Merge <nodes/nestmerge>
+PDF <nodes/pdf>
+Query Log Ingest <nodes/queryalert>
+Read Macros <nodes/macroget>
+Read Resources <nodes/resourceget>
+Rename <nodes/rename>
+Run a Query <nodes/runquery>
+Set Variables <nodes/inject>
+Slack File <nodes/slackfile>
+Slack Message <nodes/slackmessage>
+Sleep <nodes/sleep>
+Splunk Query <nodes/splunkquery>
+Stack Merge <nodes/stackmerge>
+Teams Message <nodes/teams>
+Text Template <nodes/template>
+Throttle <nodes/throttle>
+Update Resources <nodes/resourceupdate>
 ```
+
+* [Email](nodes/email): send email.
+* [Flow Storage Read](nodes/storageread): read items from a persistent storage.
+* [Flow Storage Write](nodes/storagewrite): write items into a persistent storage.
+* [Gravwell Notification](nodes/notification): set Gravwell notifications.
+* [HTTP](nodes/http): do HTTP requests.
+* [If](nodes/if): perform logical operations.
+* [Indexer Info](nodes/indexerinfo): get information about Gravwell indexers.
+* [Ingest](nodes/ingest): ingest data into Gravwell.
+* [Ingester Info](nodes/ingesterinfo): get information about Gravwell ingesters.
+* [JavaScript](nodes/javascript): run JavaScript code.
+* [JSON Encode/Decode](nodes/json): encode and decode JSON.
+* [Mattermost Message](nodes/mattermost): send a Mattermost message.
+* [Nest Merge](nodes/nestmerge): join multiple input payloads into one.
+* [PDF](nodes/pdf): create PDF documents.
+* [Query Log Ingest](nodes/queryalert): convert search results to alert entries & ingest.
+* [Read Macros](nodes/macroget): read Gravwell macros.
+* [Read Resources](nodes/resourceget): read Gravwell resources.
+* [Rename](nodes/rename): rename variables in the payload.
+* [Run a Query](nodes/runquery): run a Gravwell query.
+* [Set Variables](nodes/inject): inject variables into the payload.
+* [Slack File](nodes/slackfile): upload a file to a Slack channel.
+* [Slack Message](nodes/slackmessage): send a message to a Slack channel.
+* [Sleep](nodes/sleep): pause flow execution for a given period of time.
+* [Splunk Query](nodes/splunkquery): run a Splunk query.
+* [Stack Merge](nodes/stackmerge): join multiple input payloads into one.
+* [Teams Message](nodes/teams): send a Microsoft Teams message.
+* [Text Template](nodes/template): format text.
+* [Throttle](nodes/throttle): limit execution frequency of certain nodes within a flow.
+* [Update Resources](nodes/resourceupdate): create or update Gravwell resources.
 
 The following nodes tend to be needed only in particular advanced cases:
 
 ```{toctree}
 ---
 maxdepth: 1
-caption: Flow Nodes
+hidden: true
 ---
 
-Get Table Results: get results from a search using the table renderer <nodes/gettableresults.md>
-Get Text Results: get results from a search using the text renderer <nodes/gettextresults.md>
+Get Table Results <nodes/gettableresults>
+Get Text Results <nodes/gettextresults>
 ```
+
+* [Get Table Results](nodes/gettableresults): get results from a search using the table renderer.
+* [Get Text Results](nodes/gettextresults): get results from a search using the text renderer.
