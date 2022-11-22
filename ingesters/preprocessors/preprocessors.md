@@ -51,6 +51,7 @@ This configuration defines two data consumers (Simple Relay calls them "Listener
 | [jsonextract](/ingesters/preprocessors/jsonextract.md) | Parse and extract elements in JSON data |
 | [jsonarraysplit](/ingesters/preprocessors/jsonarraysplit.md) | Parse JSON array data and split the array into individual entries |
 | [jsonfilter](/ingesters/preprocessors/jsonfilter.md) | Parse JSON data and filter based on field values |
+| [jsontimeextract](/ingesters/preprocessors/jsontimeextract.md) | Parse JSON data and extract timestamps from specific field values |
 | [csvrouter](/ingesters/preprocessors/csvrouter.md) | Parse CSV data and route to specific tags based on column values |
 | [regexrouter](/ingesters/preprocessors/regexrouter.md) | Route entries to specific tags based on regular expression matches |
 | [srcrouter](/ingesters/preprocessors/srcrouter.md) | Route entries to specific tags based on source IP or value |
