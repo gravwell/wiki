@@ -1,8 +1,8 @@
 ## JSON Time Extraction Preprocessor
 
-The JSON time extraction preprocessor is designed to parse a JSON object and perform time resolution on a specific field.  This preprocessor is particularly useful when a JSON record has multiple timestamps in it and a user needs to specific a specific field for use as the entry timestamp.
+The JSON time extraction preprocessor is designed to parse a JSON object and perform time resolution on a specific field.  This preprocessor is particularly useful when a JSON record has multiple timestamps in it and a user needs to specify a particular field for use as the entry timestamp.
 
-If the specified extraction is not present in an entry or the extracted field cannot be processed as a timestamp the entries timestamp is left unchanged.
+If the specified extraction is not present in an entry or the extracted field cannot be processed as a timestamp, the entry timestamp is left unchanged.
 
 The JSON Time Extraction preprocessor Type is `jsontimeextract`.
 
