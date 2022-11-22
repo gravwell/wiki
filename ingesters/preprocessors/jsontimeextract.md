@@ -16,7 +16,7 @@ The JSON Time Extraction preprocessor Type is `jsontimeextract`.
 
 Many JSON data sources may provide a few timestamps or contain raw data with timestamps in it.  The timestamp processor TimeGrinder will attempt to find the first timestamp it can in a data record and then lock on to that timestamp and/or format.  Depending on the data schema this may not be the correct timestamp.  This preprocessor allows for treating the data record as JSON and then manually specifying the field containing a timestamp.
 
-### Example: Condensing JSON Data Records
+### Example: Correcting Timestamp extraction on JSON Data Records
 
 Assuming the following data in an event:
 
