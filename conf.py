@@ -3,8 +3,8 @@ import sys
 
 sys.path.insert(0, os.path.abspath("."))
 
+from datetime import date
 from sphinx.highlighting import lexers
-
 from gravy_lexer import GravwellLexer
 
 # Configuration file for the Sphinx documentation builder.
@@ -16,7 +16,7 @@ from gravy_lexer import GravwellLexer
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "Gravwell"
-copyright = "2022, Gravwell, Inc."
+copyright = f'Gravwell, Inc. {date.today().year}'
 author = "Gravwell, Inc."
 release = "v5.1.2"
 
@@ -54,6 +54,7 @@ html_theme_options = {
         },
     ],
     "header_links_before_dropdown": 6,
+    "footer_items": ["copyright", "sphinx-version"],
 }
 
 

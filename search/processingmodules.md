@@ -41,7 +41,6 @@ anonymize <anonymize/anonymize>
 awk <awk/awk>
 base64 <base64/base64>
 communityid <communityid/communityid>
-count <Count_module>
 diff <diff/diff>
 dns <dns/dns>
 enrich <enrich/enrich>
@@ -63,7 +62,6 @@ length <length/length>
 limit <limit/limit>
 location <location/location>
 lookup <lookup/lookup>
-lower <upperlower/upperlower>
 maclookup <maclookup/maclookup>
 Math Modules (list) <math/math>
 nosort <nosort/nosort>
@@ -83,7 +81,7 @@ time <time/time>
 transaction <transaction/transaction>
 truncate <truncate/truncate>
 unescape <unescape/unescape>
-upper <upperlower/upperlower>
+upper/lower <upperlower/upperlower>
 words <words/words>
 ```
 
