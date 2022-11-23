@@ -21,7 +21,7 @@ The Scriggo engine is currently the only supported plugin engine, but we have hi
 
 #### Structure of a Scriggo Plugin
 
-A Scriggo plugin is a fully valid Go Program that uses an injected "gravwell" package which controls execution and provides some needed types.  A plugin must define and register a few functions then turn over execution control to the `gravwell.Execute` function, essentially making your Go program a callback handler, with the meat of the execution happening in the `gravwell` package.
+A Scriggo plugin is a fully valid Go Program that uses an injected "gravwell" package which controls execution and provides some needed types.  A plugin must define and register a few functions then turn over execution control to the `gravwell.Execute` function, essentially making your Go program a callback handler, with the meat of the execution happening in the `gravwell` package.  Execution begins in the `Main()` function just like a real Go program.
 
 The `gravwell` package is a sort of virtual package, in that it is not a real package you can go lookup on [pkg.go.dev](https://pkg.go.dev) but instead provides some interface definitions and some scaffolding.
 
@@ -123,6 +123,8 @@ func main() {
 
 
 #### Caveats
+
+The Scriggo engine is **NOT** a complete implementation of the Golang spec, there are limititations and missing features.  Some notable missing features is its lack of method declarations.  While you can execute methods on native types you cannot define methods for your own types.  For a complete list of limitations see the [Scriggo limitations page](https://scriggo.com/limitations).
 
 The plugin preprocessor incurs overhead and may not be as performant as a native preprocessor, in most cases the Gravwell ingest system is fast enough that simple plugins will not adversely affect ingest performance.  However, if you are performing complex operations or attempting to operate on a very high speed ingest pipeline we advise that you enable `Cache-Mode=always` on the ingester.
 
