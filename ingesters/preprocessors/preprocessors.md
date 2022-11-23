@@ -61,3 +61,4 @@ This configuration defines two data consumers (Simple Relay calls them "Listener
 | [drop](/ingesters/preprocessors/drop.md) | Simple dropping preprocessor, it stops all entries from moving through the preprocessor chain |
 | [ciscoise](/ingesters/preprocessors/ciscoise.md) | Cisco ISE multi-message reconstruction preprocessor |
 | [corelight](/ingesters/preprocessors/corelight.md) | Preprocessor to adapt Corelight JSON logs to Zeek TSV data |
+| [plugin](/ingesters/preprocessors/plugin.md) | Preprocessor that loads interpretted code to perform custom preprocessing actions |
