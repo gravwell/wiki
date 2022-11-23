@@ -10,7 +10,7 @@ The JSON Time Extraction preprocessor Type is `jsontimeextract`.
 
 * `Path` (string, required): This specifies the field to be extracted from the JSON. Given an input of `{"foo":"a", "bar":2, "baz":{"frog": "2022-12-31T12:00:00Z"}}`, you could specify `Path=baz.frog` to extract and process the timestamp `2022-12-31T12:00:00Z`.
 * `Assume-Local-Timezone` (Boolean, optional): By default, the timestamp processing code will assume UTC time zones if a timestamp does not contain a timezone.  This option can force the processing module to use the local machines timezone when no timezone is present in the timestamp.
-* Timestamp-Override (string, optional): Allows for manually specifying a timestamp format to use when processing extracted timestamps.
+* `Timestamp-Override` (string, optional): Allows for manually specifying a timestamp format to use when processing extracted timestamps.
 
 ### Common Use Cases
 
