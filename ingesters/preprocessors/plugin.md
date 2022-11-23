@@ -6,13 +6,13 @@
 * `Plugin-Engine` (string, optional): Override the default plugin engine ("scriggo"), currently only `scriggo` is supported.
 * `Debug` (Boolean, optional): Enable debug mode, which allows STDOUT debugging by the plugin.  Defaults to false.
 
-Additional plugin specific options can be specified using a key/value pattern with a single name and a string value.  If the same name is specified twice the plugin will receive the second value.
+Additional plugin specific options can be specified using a key/value pattern with a single name and a string value.  If the same name is specified twice, the plugin will receive the second value.
 
 Plugins are responsible for interpreting additional configuration data.
 
 ### Common Use Cases
 
-The variety of desired preprocessors and data manipulators is nearly infinite, and sometimes it is just required to apply a Turing Complete machine against some data to make it fit a schema or enrich using some external system.  The plugin system is designed to allow complex operations to be performed against data in a reasonably performant manner.  The current plugin is designed to support multiple engines, and each engine may have varying performance, completeness, and/or stability.  The Scriggo engine is the most thoroughly tested, but it does have some known issues.  See the [Scriggo Issue List](https://github.com/open2b/scriggo/issues) for more information.
+The variety of desired preprocessors and data manipulators is nearly infinite. Sometimes applying a Turing Complete machine against the data is all that is necessary to make it fit a schema or enrich using some external system.  The plugin system is designed to allow complex operations to be performed against data in a reasonably performant manner.  The current plugin is designed to support multiple engines and each engine may have varying performance, completeness, and/or stability.  The Scriggo engine is the most thoroughly tested, but it does have some known issues.  See the [Scriggo Issue List](https://github.com/open2b/scriggo/issues) for more information.
 
 
 ### Scriggo Engine Plugins
@@ -21,7 +21,7 @@ The Scriggo engine is currently the only supported plugin engine, but we have hi
 
 #### Structure of a Scriggo Plugin
 
-A Scriggo plugin is a fully valid Go Program that uses an injected "gravwell" package which controls execution and provides some needed types.  A plugin must define and register a few functions then turn over execution control to the `gravwell.Execute` function, essentially making your Go program a callback handler, with the meat of the execution happening in the `gravwell` package.
+A Scriggo plugin is a fully valid Go Program that uses an injected "gravwell" package which controls execution and provides some needed types.  A plugin must define and register a few functions then turn over execution control to the `gravwell.Execute` function, essentially making your Go program a callback handler, with the meat of the execution happening in the `gravwell` package.  Execution begins in the `Main()` function just like a real Go program.
 
 The `gravwell` package is a sort of virtual package, in that it is not a real package you can go lookup on [pkg.go.dev](https://pkg.go.dev) but instead provides some interface definitions and some scaffolding.
 
@@ -58,7 +58,7 @@ The function definition for the `gravwell.Execute` function is:
 func Execute(string, ConfigFunc, StartFunc, CloseFunc, ProcessFunc, FlushFunc) error
 ```
 
-The first parameter to the `Execute` function is the name you wish to provide for your plugin, this name will be reported upstream into the Systems & Health page as well in logs.  All parameters must be valid functions that fit the type definitions described above.
+The first parameter to the `Execute` function is the name you wish to provide for your plugin. This name will be reported upstream into the Systems & Health page and in logs.  All parameters must be valid functions that fit the type definitions described above.
 
 The call order of each function is as follows:
 
@@ -68,11 +68,11 @@ The call order of each function is as follows:
 4. `Flush`
 5. `Close`
 
-The `Config` function is used to provide the plugin the opportunity to parse configuration options and provide feedback to the user when starting a service.  If a configuration is invalid, the plugin should return an error indicating why.  During application startup and configuration validation a plugin will be initialized and the `Config` function will be called so that the plugin can indicate to the user that its configuration is invalid.  A non-nil error returned by the `Config` function is considered fatal and will prevent the ingester from starting up.
+The `Config` function is used to provide the plugin the opportunity to parse configuration options and provide feedback to the user when starting a service.  If a configuration is invalid, the plugin should return an error indicating why.  During application startup and configuration validation, a plugin will be initialized and the `Config` function will be called so that the plugin can indicate to the user that its configuration is invalid.  A non-nil error returned by the `Config` function is considered fatal and will prevent the ingester from starting up.
 
-The `Start` and `Close` functions provide the plugin the opportunity to do any startup and/or shutdown work.  These functions might be used for establish network connections, open files, close network connections, or clean up any temporary resources the plugin may have created.  The `Start` function will be called prior to any calls to `Process` and `Close` indicates that the ingester is shutting down and plugin will not receive any more data.
+The `Start` and `Close` functions provide the plugin the opportunity to do any startup and/or shutdown work.  These functions might be used to establish network connections, open files, close network connections, or clean up any temporary resources the plugin may have created.  The `Start` function will be called prior to any calls to `Process`. `Close` indicates that the ingester is shutting down and the plugin will not receive any more data.
 
-A non-nil error returned by the `Start` function is fatal and will cause the plugin to shutdown and reload.  Plugin writers are encouraged to only return errors on `Start` on truly fatal errors which indicate the plugin could never run, do not return an error on temporary errors like network connectivity problems.
+A non-nil error returned by the `Start` function is fatal and will cause the plugin to shutdown and reload.  Plugin writers are encouraged to only return errors on `Start` for truly fatal errors which indicate the plugin could never run; do not return an error on temporary errors like network connectivity problems.
 
 The `Flush` function may be called periodically when the system is under pressure or when the ingester is shutting down.  `Flush` will always be called immediately prior to the `Close` call.
 
@@ -124,9 +124,11 @@ func main() {
 
 #### Caveats
 
+The Scriggo engine is **NOT** a complete implementation of the Golang spec, there are limititations and missing features.  Some notable missing features is its lack of method declarations.  While you can execute methods on native types you cannot define methods for your own types.  For a complete list of limitations see the [Scriggo limitations page](https://scriggo.com/limitations).
+
 The plugin preprocessor incurs overhead and may not be as performant as a native preprocessor, in most cases the Gravwell ingest system is fast enough that simple plugins will not adversely affect ingest performance.  However, if you are performing complex operations or attempting to operate on a very high speed ingest pipeline we advise that you enable `Cache-Mode=always` on the ingester.
 
-Warning: The Scriggo plugin engine allows for creating goroutines in a plugin, more often than not this will decrease performance due to nature of the Scriggo interpreter.  Concurrency and synchronization primitives may also behave unexpectedly due to the abstracted runtime.  Be forewarned, a Scriggo plugin is not well suited to fan out and crunch heavy data.
+Warning: The Scriggo plugin engine allows for creating goroutines in a plugin. More often than not, this will decrease performance due to nature of the Scriggo interpreter.  Concurrency and synchronization primitives may also behave unexpectedly due to the abstracted runtime.  Be forewarned, a Scriggo plugin is not well suited to fan out and crunch heavy data.
 
 
 ### Examples
@@ -306,7 +308,7 @@ func main() {
 
 ### Available Libraries
 
-Plugins may only make use of code that is available in the parent ingester application or is fully self contained in the plugin.  This due to the way preprocessor plugins are run in an interpreted version of Go, supported by the [Scriggo](https://scriggo.com/) [library](https://github.com/open2b/scriggo/).
+Plugins may only make use of code that is available in the parent ingester application or is fully self contained in the plugin.  This is due to the way preprocessor plugins are run in an interpreted version of Go, supported by the [Scriggo](https://scriggo.com/) [library](https://github.com/open2b/scriggo/).
 
 Therefore the set of libraries available for import are limited to the following standard library packages:
 
@@ -458,4 +460,4 @@ And the following external packages:
 - github.com/miekg/dns
 - github.com/buger/jsonparser
 
-Note: If you want an additional library file a Feature Request issue on our [Github Repo](https://github.com/gravwell/gravwell/issues).
+Note: If you want an additional library, file a Feature Request issue on our [Github Repo](https://github.com/gravwell/gravwell/issues).
