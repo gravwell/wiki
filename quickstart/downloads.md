@@ -40,3 +40,4 @@ Some Gravwell components are distributed as optional additional installers, such
 | [Datastore](https://update.gravwell.io/archive/5.1.2/installers/gravwell_datastore_installer_5.1.2.sh) | ``a3e2678cada7dfd14fd9d20737a5c50c51732b7eea23ac4d91b6695d14c99f83`` | [Documentation](#!distributed/frontend.md) |
 | [Offline Replicator](https://update.gravwell.io/archive/5.1.2/installers/gravwell_offline_replication_installer_5.1.2.sh) | ``1deab6156d79918421d7f39625af7328812386bf6434de062e69718da3966473`` | [Documentation](#!configuration/replication.md) |
 | [Load Balancer](https://update.gravwell.io/archive/5.1.2/installers/gravwell_loadbalancer_installer_5.1.2.sh) | ``0356fb62554b18f1c5a4810ed1c0540242011a91bbb40699ea7bb68d7827ad39`` | |
+| [Gravwell Tools](https://update.gravwell.io/archive/5.1.2/installers/gravwell_tools_5.1.2.sh) | ``98f0127e67845d1f4f07a3d997788ee9b379f56f0ce551b918628f9372c89c11`` | [Documentation](#!/tools/tools.md)|
