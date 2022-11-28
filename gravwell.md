@@ -1,9 +1,9 @@
-# Exploring Gravwell
+# Searching with Gravwell
 
 ```{toctree}
 ---
 maxdepth: 1
-caption: Interacting with the GUI
+caption: The GUI
 ---
 The Gravwell GUI <gui/gui>
 ```
