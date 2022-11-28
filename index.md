@@ -13,7 +13,7 @@ hidden: true
 Quick Start <quickstart/quickstart>
 Configuration <architecture/architecture>
 Ingesters <ingesters/ingesters>
-Search <gravwell>
+Searching with Gravwell <gravwell>
 Automation <automation>
 API <api/api>
 Release Notes <changelog/list>
@@ -56,7 +56,7 @@ Release Notes <changelog/list>
 :link: gravwell
 :link-type: doc
 
-**Search**
+**Searching with Gravwell**
 
 {material-twotone}`search;3em;sd-text-success`
 
