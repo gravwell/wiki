@@ -12,4 +12,4 @@ Insert overview of the tools
 
 ## Splunk Migration
 
-The Splunk migration tool is full [documented here](https://docs.gravwell.io/#!migrate/migrate.md).
+The Splunk migration tool is [fully documented here](https://docs.gravwell.io/#!migrate/migrate.md).
