@@ -10,17 +10,6 @@ The Gravwell GUI has an Ingesters page (under the System menu category) which ca
 ![](remote-ingesters.png)
 
 Attention: The [replication system](/configuration/replication) does not replicate entries larger than 999MB. Larger entries can still be ingested and searched as usual, but they are omitted from replication. This is not a concern for 99.9% of use cases, as all the ingesters detailed in this page tend to create entries no larger than a few kilobytes.
-```{toctree}
----
-maxdepth: 1
-caption: Ingesters
-hidden: true
----
-Ingester Preprocessors <preprocessors/preprocessors>
-Custom Time Formats <customtime/customtime>
-Service Integrations <integrations>
-Federators <federators/federators>
-```
 
 (ingesters_list)=
 ## Ingesters List
@@ -396,6 +385,18 @@ The Gravwell ingest API and core ingesters are fully open source under the BSD 2
 A very basic ingester example (less than 100 lines of code) that watches a file and sends any lines written to it up to a Gravwell cluster [can be seen here](https://www.godoc.org/github.com/gravwell/ingest#example-package)
 
 Keep checking back with the Gravwell GitHub page, as the team is continually improving the ingest API and porting it to additional languages. Community development is fully supported, so if you have a merge request, language port, or a great new ingester that you have open sourced, let Gravwell know!  The Gravwell team would love to feature your hard work in the ingester highlight series.
+
+```{toctree}
+---
+maxdepth: 1
+caption: Additional Ingester Support
+hidden: true
+---
+Ingester Preprocessors <preprocessors/preprocessors>
+Custom Time Formats <customtime/customtime>
+Service Integrations <integrations>
+Federators <federators/federators>
+```
 
 ```{toctree}
 ---
