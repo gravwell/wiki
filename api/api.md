@@ -53,6 +53,16 @@ Search Websocket <websocket-search>
 Reattaching to Searches <websocket-search-attach>
 Interacting with Renderers <websocket-render>
 ```
+
+
+```{toctree}
+---
+maxdepth: 1
+caption: Automation Scripting
+---
+Automation Script APIs & Examples <../scripting/scriptingsearch>
+```
+
 ## System Stats
 
 The system stats also use a websocket for communication. This contains all information necessary for monitoring general cluster health.
