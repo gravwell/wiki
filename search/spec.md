@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is the reference specification the Gravwell query language syntax. A query is made up of indexer and webserver constraints, modules, a pipeline, and a renderer. This document provides documentation for how input text is interpreted and tokenized. Some lexical meaning of input is also defined here. Modules have context-specific semantics that differ between modules (such as numbers being implied to be strings). The user should read the [search module](/search/complete-module-list) documentation for more information on module-specific considerations.
+This is the reference specification the Gravwell query language syntax. A query is made up of indexer and webserver constraints, modules, a pipeline, and a renderer. This document provides documentation for how input text is interpreted and tokenized. Some lexical meaning of input is also defined here. Modules have context-specific semantics that differ between modules (such as numbers being implied to be strings). The user should read the search module documentation for more information on module-specific considerations.
 
 ## Text Encoding 
 
@@ -14,7 +14,7 @@ A "character" is any of the Unicode points in the "General Category" of the Unic
 
 ## Lexical grammar
 
-This section defines the syntax of a Gravwell query. Token semantics are module-specific, so the user should read the [search module](/search/complete-module-list) documentation for more information on module-specific considerations.
+This section defines the syntax of a Gravwell query. Token semantics are module-specific, so the user should read the search module documentation for more information on module-specific considerations.
 
 Note: The grammar is specified using [pbpg](https://github.com/gravwell/pbpg), which is similar to Extended Backus–Naur form. pbpg is itself specified with pbpg and contains the following rules:
 
@@ -222,13 +222,13 @@ All input before the first module in a query represents the query constraints. U
 
 ### Modules
 
-Please see the [list of modules](/search/complete-module-list) for module specific documentation.
+Please see the list of modules in the [Search section](./search) for module specific documentation.
 
 Modules are pipelined functions that extract, transform, and render data. Conceptually, data flows left-to-right in the module pipeline, and modules can drop, pass, modify, or inject data into the pipeline. The last module in the pipeline is the render module (such as `table` or `chart`); note that if no render module is explicitly defined, Gravwell will add one automatically. The module pipeline is split by the `|` character. A module invocation is made up of the module name, optional flags, and optional arguments. 
 
 #### Module name
 
-The first token of a module invocation is the module name. See the [list of modules](/search/complete-module-list) for the list of available modules.
+The first token of a module invocation is the module name. See the list of modules in the [Search section](./search) for the list of available modules.
 
 #### Module flags
 

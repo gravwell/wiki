@@ -23,6 +23,30 @@ If you are interested in a complete training package, please see the [complete t
 
 Note: Community Edition users will need to obtain their own license from [https://www.gravwell.io/download](https://www.gravwell.io/download) before beginning installation. Paid users should already have received a license file via email.
 
+```{toctree}
+---
+maxdepth: 1
+caption: Quick Start
+hidden: true
+---
+Installation Checklists <checklist>
+Docker Deployment <../configuration/docker>
+Custom Docker Deployments <../configuration/custom-docker>
+Gravwell Beta Program <../beta/index>
+Downloads <downloads>
+```
+
+```{toctree}
+---
+maxdepth: 1
+caption: Licensing
+hidden: true
+---
+Gravwell License System <../license/license>
+End User License Agreement <../eula>
+Open-Source Library Licenses <../open_source>
+```
+
 ## System Requirements
 
 ### Hardware
