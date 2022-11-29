@@ -83,3 +83,4 @@ corelight <corelight.md>
 | [drop](drop.md) | Simple dropping preprocessor, it stops all entries from moving through the preprocessor chain |
 | [ciscoise](ciscoise.md) | Cisco ISE multi-message reconstruction preprocessor |
 | [corelight](corelight.md) | Preprocessor to adapt Corelight JSON logs to Zeek TSV data |
+| [plugin](plugin.md) | Preprocessor that loads interpretted code to perform custom preprocessing actions |
