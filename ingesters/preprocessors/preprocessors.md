@@ -55,6 +55,7 @@ gzip <gzip.md>
 jsonextract <jsonextract.md>
 jsonarraysplit <jsonarraysplit.md>
 jsonfilter <jsonfilter.md>
+jsontimeextract <jsontimeextract.md>
 csvrouter <csvrouter.md>
 regexrouter <regexrouter.md>
 srcrouter <srcrouter.md>
@@ -65,6 +66,7 @@ gravwellforwarder <gravwellforwarder.md>
 drop <drop.md>
 ciscoise <ciscoise.md>
 corelight <corelight.md>
+plugin <plugin.md>
 ```
 
 | Preprocessor | Purpose |
@@ -73,6 +75,7 @@ corelight <corelight.md>
 | [jsonextract](jsonextract.md) | Parse and extract elements in JSON data |
 | [jsonarraysplit](jsonarraysplit.md) | Parse JSON array data and split the array into individual entries |
 | [jsonfilter](jsonfilter.md) | Parse JSON data and filter based on field values |
+| [jsontimeextract](jsontimeextract.md) | Parse JSON data and extract timestamps from specific field values |
 | [csvrouter](csvrouter.md) | Parse CSV data and route to specific tags based on column values |
 | [regexrouter](regexrouter.md) | Route entries to specific tags based on regular expression matches |
 | [srcrouter](srcrouter.md) | Route entries to specific tags based on source IP or value |
