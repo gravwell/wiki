@@ -35,6 +35,7 @@ Netflow <netflow>
 Network Capture <pcap>
 Office 365 <o365>
 Packetfleet <packetfleet>
+S3 <s3>
 Session <session>
 Shodan <shodan>
 Simple Relay <simple_relay>
