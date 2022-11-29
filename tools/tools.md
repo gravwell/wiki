@@ -70,7 +70,7 @@ It will show each log line with the timestamp capture location highlighted in re
 
 ### Custom Timestamp Mode
 
-The custom timestamp mode operates the same as the basic mode but also accepts a path to custom timestamp declerations which allows you to test custom timestamps and also see how collisions or misses affect the TimeGrinder.
+The custom timestamp mode operates the same as the basic mode but also accepts a path to custom timestamp declarations which allows you to test custom timestamps and also see how collisions or misses affect the TimeGrinder.
 
 ### Usage
 
