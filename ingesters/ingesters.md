@@ -58,6 +58,7 @@ Windows Events <winevent>
 | [Network Capture](pcap.md) | Ingest PCAP on the wire. |
 | [Office 365](o365.md) | Ingest Microsoft o365 Logs. |
 | [Packetfleet](packetfleet.md) | Issue queries and ingest data from Google Stenographer. |
+| [S3](s3.md) | Ingest data directly from Amazon S3 buckets, including Cloudtrail logs. |
 | [Session](session.md) | Ingest large records into a single entry. |
 | [Shodan](shodan.md) | Ingest Shodan streaming API events. |
 | [Simple Relay](simple_relay.md) | Ingest any text over TCP/UDP, syslog, and more. |
