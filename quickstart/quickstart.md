@@ -33,6 +33,7 @@ Installation Checklists <checklist>
 Docker Deployment <../configuration/docker>
 Custom Docker Deployments <../configuration/custom-docker>
 Gravwell Beta Program <../beta/index>
+Gravwell Tools <../tools/tools>
 Downloads <downloads>
 ```
 
