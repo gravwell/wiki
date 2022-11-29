@@ -49,9 +49,6 @@ maxdepth: 1
 caption: Search and Stats
 ---
 Gravwell Direct Query API <../search/directquery/directquery>
-Search Websocket <websocket-search>
-Reattaching to Searches <websocket-search-attach>
-Interacting with Renderers <websocket-render>
 ```
 
 
@@ -65,17 +62,7 @@ Automation Script APIs & Examples <../scripting/scriptingsearch>
 
 ## System Stats
 
-The system stats also use a websocket for communication. This contains all information necessary for monitoring general cluster health.
-
-```{toctree}
----
-maxdepth: 1
-caption: System Stats (WebSocket)
----
-System Stats Websocket <websocket-stats>
-```
-
-Some other stats may be accessed via REST calls.
+The system stats may be accessed via REST calls.
 
 ```{toctree}
 ---

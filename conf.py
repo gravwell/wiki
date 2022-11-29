@@ -53,7 +53,7 @@ html_theme_options = {
             "href": "favicon.ico",
         },
     ],
-    "header_links_before_dropdown": 6,
+    "header_links_before_dropdown": 7,
     "footer_items": ["copyright", "sphinx-version"],
 }
 
