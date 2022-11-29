@@ -115,7 +115,7 @@ Results:
 
 #### Multiple Log Entry Test
 Here is an example that tests 3 entries in succession showing how different extractors operated.
-First we use a custom time format from a custom application, then a zeek connection log, then back to the custom time format.  This shows that timegrinder will fail on the existing format then find a new format then go back to the old format.
+First we use a custom time format from a custom application, then a Zeek connection log, then back to the custom time format.  This shows that timegrinder will fail on the existing format then find a new format then go back to the old format.
 
 ```
 timetester "2022/05/27 12:43:45 server.go:141: the wombat can't jump" \
