@@ -31,6 +31,7 @@ Attention: The [replication system](#!configuration/replication.md) does not rep
 | [Network Capture](#!ingesters/pcap.md) | Ingest PCAP on the wire. |
 | [Office 365](#!ingesters/o365.md) | Ingest Microsoft o365 Logs. |
 | [Packetfleet](#!ingesters/packetfleet.md) | Issue queries and ingest data from Google Stenographer. |
+| [S3](#!ingesters/s3.md) | Ingest data directly from Amazon S3 buckets, including Cloudtrail logs. |
 | [Session](#!ingesters/session.md) | Ingest large records into a single entry. |
 | [Shodan](#!ingesters/shodan.md) | Ingest Shodan streaming API events. |
 | [Simple Relay](#!ingesters/simple_relay.md) | Ingest any text over TCP/UDP, syslog, and more. |
