@@ -1,6 +1,6 @@
-## Plugin Preprocessor
+# Plugin Preprocessor
 
-### Supported Global Options
+## Supported Global Options
 
 * `Plugin-Path` (string, required, multiple allowed): Specify the path to the plugin application file.  May specify multiple paths for some engine types.
 * `Plugin-Engine` (string, optional): Override the default plugin engine ("scriggo"), currently only `scriggo` is supported.
@@ -10,16 +10,16 @@ Additional plugin specific options can be specified using a key/value pattern wi
 
 Plugins are responsible for interpreting additional configuration data.
 
-### Common Use Cases
+## Common Use Cases
 
 The variety of desired preprocessors and data manipulators is nearly infinite. Sometimes applying a Turing Complete machine against the data is all that is necessary to make it fit a schema or enrich using some external system.  The plugin system is designed to allow complex operations to be performed against data in a reasonably performant manner.  The current plugin is designed to support multiple engines and each engine may have varying performance, completeness, and/or stability.  The Scriggo engine is the most thoroughly tested, but it does have some known issues.  See the [Scriggo Issue List](https://github.com/open2b/scriggo/issues) for more information.
 
 
-### Scriggo Engine Plugins
+## Scriggo Engine Plugins
 
 The Scriggo engine is currently the only supported plugin engine, but we have high hopes for the likes of WebAssembly and a few other interpreters so we made sure to scaffold the system so that we can add additional engines at a later date.
 
-#### Structure of a Scriggo Plugin
+### Structure of a Scriggo Plugin
 
 A Scriggo plugin is a fully valid Go Program that uses an injected "gravwell" package which controls execution and provides some needed types.  A plugin must define and register a few functions then turn over execution control to the `gravwell.Execute` function, essentially making your Go program a callback handler, with the meat of the execution happening in the `gravwell` package.  Execution begins in the `Main()` function just like a real Go program.
 
@@ -77,7 +77,7 @@ A non-nil error returned by the `Start` function is fatal and will cause the plu
 The `Flush` function may be called periodically when the system is under pressure or when the ingester is shutting down.  `Flush` will always be called immediately prior to the `Close` call.
 
 
-#### Skeleton Scriggo Plugin
+### Skeleton Scriggo Plugin
 
 The following Scriggo plugin program is the bare minimum plugin required to implement all required interfaces.  This example skeleton plugin performs no operations and essentially drops all entries:
 
@@ -122,7 +122,7 @@ func main() {
 ```
 
 
-#### Caveats
+### Caveats
 
 The Scriggo engine is **NOT** a complete implementation of the Golang spec, there are limititations and missing features.  Some notable missing features is its lack of method declarations.  While you can execute methods on native types you cannot define methods for your own types.  For a complete list of limitations see the [Scriggo limitations page](https://scriggo.com/limitations).
 
@@ -131,11 +131,11 @@ The plugin preprocessor incurs overhead and may not be as performant as a native
 Warning: The Scriggo plugin engine allows for creating goroutines in a plugin. More often than not, this will decrease performance due to nature of the Scriggo interpreter.  Concurrency and synchronization primitives may also behave unexpectedly due to the abstracted runtime.  Be forewarned, a Scriggo plugin is not well suited to fan out and crunch heavy data.
 
 
-### Examples
+## Examples
 
 We have a set of examples used for testing in our open source [Github](https://github.com/gravwell/gravwell/tree/master/ingest/processors/test_data/plugins) repository.
 
-#### Example: Forcing all data records to lower case
+### Example: Forcing all data records to lower case
 
 The following plugin is an example which takes a single configuration parameter and either forces all data records to upper case or lower case based on the configuration parameter.  This plugin is an example of an atomic operation plugin which does not require extensive startup or shutdown logic and does not buffer data at all.  The example configuration snippet is:
 
@@ -226,7 +226,7 @@ func main() {
 }
 ```
 
-#### Example: Negotiating tags and Routing Data
+### Example: Negotiating tags and Routing Data
 
 This example uses a user provided regex to extract a field from the data and then combine it with the `SRC` value attached to each entry to route the tags.
 
@@ -306,7 +306,7 @@ func main() {
 }
 ```
 
-### Available Libraries
+## Available Libraries
 
 Plugins may only make use of code that is available in the parent ingester application or is fully self contained in the plugin.  This is due to the way preprocessor plugins are run in an interpreted version of Go, supported by the [Scriggo](https://scriggo.com/) [library](https://github.com/open2b/scriggo/).
 
