@@ -15,8 +15,8 @@ The Gravwell core installer contains the indexer and webserver frontend. You'll 
 The core suite of ingesters are available for download as installable packages.  Ingesters designed to operate on Linux machines are typically self contained, statically linked executables that are agnostic to the hosts package management system (with the exception of the NetworkCapture ingester).  Windows based ingesters are distributed as executable MSI packages.  Source code for many ingesters can be found at the [Gravwell Github](https://github.com/gravwell/gravwell/tree/master/ingesters) repository.
 
 ### Current Ingester Releases
-| Ingester Installer |   | More Info |
-|:-------------------|:--|----------:|
+|Ingester Installer |   | More Info |
+|:------------------|:--|----------:|
 | [Simple Relay](https://update.gravwell.io/archive/5.1.2/installers/gravwell_simple_relay_installer_5.1.2.sh) |<button type="button" class="btn" data-toggle="popover" data-placement="bottom" data-content="c5e24190a0333724630360dce287f17b8cdc2dc023eb54b83e5993d5814eadc2">(SHA256)</button> | [Documentation](../ingesters/simple_relay)|
 | [File Follower](https://update.gravwell.io/archive/5.1.2/installers/gravwell_file_follow_installer_5.1.2.sh) |<button type="button" class="btn" data-toggle="popover" data-placement="bottom" data-content="7916d444d883c4fd453771e04599f262c20aff5cc4e935fd0072169454f3f3ba">(SHA256)</button> | [Documentation](../ingesters/file_follow) |
 | [HTTP Ingester](https://update.gravwell.io/archive/5.1.2/installers/gravwell_http_ingester_installer_5.1.2.sh) |<button type="button" class="btn" data-toggle="popover" data-placement="bottom" data-content="37b6756337b510378cb61bfd6fce815da6ab87783b405c5d7793302273731cdb">(SHA256)</button> | [Documentation](../ingesters/http) |
@@ -37,12 +37,12 @@ The core suite of ingesters are available for download as installable packages. 
 
 Some Gravwell components are distributed as optional additional installers, such as the search agent and the datastore.
 
-| Component | SHA256 | More Info |
-|:---------:|:------:|----------:|
-| [Datastore](https://update.gravwell.io/archive/5.1.2/installers/gravwell_datastore_installer_5.1.2.sh) | ``a3e2678cada7dfd14fd9d20737a5c50c51732b7eea23ac4d91b6695d14c99f83`` | [Documentation](../distributed/frontend) |
-| [Offline Replicator](https://update.gravwell.io/archive/5.1.2/installers/gravwell_offline_replication_installer_5.1.2.sh) | ``1deab6156d79918421d7f39625af7328812386bf6434de062e69718da3966473`` | [Documentation](../configuration/replication.md) |
-| [Load Balancer](https://update.gravwell.io/archive/5.1.2/installers/gravwell_loadbalancer_installer_5.1.2.sh) | ``0356fb62554b18f1c5a4810ed1c0540242011a91bbb40699ea7bb68d7827ad39`` | [Documentation](../distributed/loadbalancer.md) |
-| [Gravwell Tools](https://update.gravwell.io/archive/5.1.2/installers/gravwell_tools_5.1.2.sh) | ``98f0127e67845d1f4f07a3d997788ee9b379f56f0ce551b918628f9372c89c11`` | [Documentation](../tools/tools.md)|
+|Component Installer |   | More Info |
+|:-------------------|:--|----------:|
+| [Datastore](https://update.gravwell.io/archive/5.1.2/installers/gravwell_datastore_installer_5.1.2.sh) |<button type="button" class="btn" data-toggle="popover" data-placement="bottom" data-content="a3e2678cada7dfd14fd9d20737a5c50c51732b7eea23ac4d91b6695d14c99f83">(SHA256)</button> | [Documentation](../distributed/frontend) |
+| [Offline Replicator](https://update.gravwell.io/archive/5.1.2/installers/gravwell_offline_replication_installer_5.1.2.sh) |<button type="button" class="btn" data-toggle="popover" data-placement="bottom" data-content="1deab6156d79918421d7f39625af7328812386bf6434de062e69718da3966473">(SHA256)</button> | [Documentation](../configuration/replication.md) |
+| [Load Balancer](https://update.gravwell.io/archive/5.1.2/installers/gravwell_loadbalancer_installer_5.1.2.sh) |<button type="button" class="btn" data-toggle="popover" data-placement="bottom" data-content="0356fb62554b18f1c5a4810ed1c0540242011a91bbb40699ea7bb68d7827ad39">(SHA256)</button> | [Documentation](../distributed/loadbalancer.md) |
+| [Gravwell Tools](https://update.gravwell.io/archive/5.1.2/installers/gravwell_tools_5.1.2.sh) |<button type="button" class="btn" data-toggle="popover" data-placement="bottom" data-content="98f0127e67845d1f4f07a3d997788ee9b379f56f0ce551b918628f9372c89c11">(SHA256)</button> | [Documentation](../tools/tools.md)|
 
 
 <script>
