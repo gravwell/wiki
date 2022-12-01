@@ -13,3 +13,11 @@ html[data-theme="light"] {
 html[data-theme="dark"] {
   --pst-color-primary: #fdbf32;
 }
+
+h3.popover-header {
+  margin-top: 0px;
+}
+
+div.popover.hash-popover {
+  max-width: 100%;
+}
