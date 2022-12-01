@@ -47,6 +47,6 @@ Some Gravwell components are distributed as optional additional installers, such
 
 <script>
 $(document).ready(function(){
-  $('[data-toggle="popover"]').popover({     width: '700px !important' });
+  $('[data-toggle="popover"]').popover();
 });
 </script>
