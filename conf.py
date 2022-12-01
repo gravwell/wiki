@@ -16,7 +16,7 @@ from gravy_lexer import GravwellLexer
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "Gravwell"
-copyright = f'Gravwell, Inc. {date.today().year}'
+copyright = f"Gravwell, Inc. {date.today().year}"
 author = "Gravwell, Inc."
 release = "v5.1.2"
 
@@ -24,7 +24,10 @@ release = "v5.1.2"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = ["myst_parser", "sphinx_design", "sphinxcontrib.spelling"]
-myst_enable_extensions = ["colon_fence"]
+myst_enable_extensions = [
+    "colon_fence",
+    "fieldlist",
+]
 
 
 templates_path = ["_templates"]
@@ -53,7 +56,7 @@ html_theme_options = {
             "href": "favicon.ico",
         },
     ],
-     "icon_links": [
+    "icon_links": [
         {
             # Label for this link
             "name": "GitHub",
@@ -74,7 +77,7 @@ html_theme_options = {
             # The type of image to be used (see below for details)
             "type": "fontawesome",
         },
-   ],
+    ],
     "header_links_before_dropdown": 6,
     "footer_items": ["copyright", "sphinx-version"],
 }
