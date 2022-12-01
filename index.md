@@ -1,3 +1,5 @@
+:html_theme.sidebar_secondary.remove:
+
 # Gravwell Docs
 
 This site contains documentation for Gravwell, plus other resources such as Changelogs.
