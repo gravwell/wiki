@@ -108,6 +108,7 @@ Replication is controlled by the "Replication" configuration group in the gravwe
 | Disable-Server | Disable-Server=true | Disable the indexer replication server, it will only act as a client.  This is important when using offline replication. | 
 | Disable-Compression | Disable-Compression=true | Disable compression on the storage for the replicated data. |
 | Enable-Transparent-Compression | Enable-Transparent-Compression=true | Enable transparent compression on using the host file system for replicated data. |
+| Enable-Transport-Compression | Enable-Transparent-Compression=true | Enable transport compression when transmitting data to replication peer.  Defaults to `true`. |
 
 ## Replication Engine Behavior
 
@@ -126,6 +127,7 @@ Designing and deploying a high availability Gravwell cluster can be simple as lo
 3. If an indexer fails, it is critically important that it be allowed to establish connections with replication peers and perform a first-level tag synchronization prior to ingesting new data.  It can be a good idea to set the `Connect-Wait-Timeout` config parameter to zero, ensuring the failed indexer will not start until it has established replication connections and performed a tag restoration.
 4. Replication storage locations should be reserved exclusively for a single replication system.  For example, using the same network attached storage location for multiple indexers' `Storage-Location` will cause replication failures and data corruption.
 5. Match the compression scheme for replicated and primary data.  If you are using host based transparent compression on the indexers, it is best to mimic that behavior on the replication stores.  If compression schemes match between indexers and replication peers, the restoration process is dramatically faster.
+6. Set `Enable-Transport-Compression=false` when replication peers are on a local collision domain.  The transport compression is enabled by default but only consumes CPU when operating over local connections where bandwidth is not a concern.
 
 ## Troubleshooting
 

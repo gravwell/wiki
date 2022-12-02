@@ -2,7 +2,11 @@
 
 Gravwell provides a robust scripting engine in which you can run searches, update resources, send alerts, or take action.  The engine can run searches and examine data automatically, taking action based on search results without the need to involve a human.  
 
-Automation scripts can be run [on a schedule](scheduledsearch.md) or by hand from the [command line client](#!cli/cli.md). Because the CLI allows the script to be re-executed interactively, we recommend developing and testing scripts in the CLI before creating a scheduled search. See the [Client](#!scripting/scriptingsearch.md#Gravwell_Client_Usage) example script below.
+Automation scripts can be run [on a schedule](scheduledsearch.md) or by hand from the [command line client](#!cli/cli.md). 
+
+## Building Scripts
+
+The Gravwell user interface provides a built-in editor for creating and testing scripts. This interface allows rapid debugging and is the best way to build scripts. It is documented [in the scheduled search/script UI documentation](scheduledsearch.md).
 
 ## Built-in functions
 
