@@ -16,7 +16,9 @@ Gravwell provides an interactive migration tool which can import data from Splun
 
 Gravwell provides an interactive migration tool which can pull data from static files on disk efficiently. See the [migrate tool](/migrate/migrate) documentation.
 
-Note: Only use the migrate tool if the files on disk are not expected to change. To ingest files which are still being added to, use the [File Follow](/ingesters/file_follow) ingester.
+```{note}
+Only use the migrate tool if the files on disk are not expected to change. To ingest files which are still being added to, use the [File Follow](/ingesters/file_follow) ingester.
+```
 
 ## Importing One File
 

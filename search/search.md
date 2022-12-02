@@ -213,7 +213,9 @@ This gives us a table of just connections that didn't have a corresponding DNS q
 
 ![](compound-ex2.png)
 
-Note: Compound queries create ephemeral resources that exist only during the query, however those resources can and do consume disk space and are restricted by the [Resource-Max-Size](config_params_resource-max-size)` global configuration variable which defaults to 512MB.  If the ephemeral resource is larger than the specified size the query will fail.
+```{note}
+Compound queries create ephemeral resources that exist only during the query, however those resources can and do consume disk space and are restricted by the [Resource-Max-Size](config_params_resource-max-size)` global configuration variable which defaults to 512MB.  If the ephemeral resource is larger than the specified size the query will fail.
+```
 
 ## Comments
 

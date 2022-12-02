@@ -40,7 +40,9 @@ By default a backup does not contain any saved searches; to include saved search
 
 The `/api/backup` API may be authenticated using either the JWT authorization token or a cookie.
 
-NOTE: Only a single backup and/or restore may take place at any given time.
+```{note}
+Only a single backup and/or restore may take place at any given time.
+```
 
 ### Restoring from a system backup
 
@@ -50,8 +52,14 @@ The API expects that the backup file be located in the `backup` form field and b
 
 The `/api/backup` API may be authenticated using either the JWT authorization token or a cookie.
 
-NOTE: A restoration is a complete restoration, any changes to users, content, or saved searches will after the restoration point will be lost.
+```{note}
+A restoration is a complete restoration, any changes to users, content, or saved searches will after the restoration point will be lost.
+```
 
-NOTE: Only a single backup and/or restore may take place at any given time.
+```{note}
+Only a single backup and/or restore may take place at any given time.
+```
 
-NOTE: Once the restoration begins, all sessions will be terminated.  Upon successful completion of a restore, all users will need to log back in.
+```{note}
+Once the restoration begins, all sessions will be terminated.  Upon successful completion of a restore, all users will need to log back in.
+```

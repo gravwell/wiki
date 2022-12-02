@@ -32,7 +32,9 @@ Clicking that button brings up a menu with several options for filtering:
 
 ![](filters-options.png)
 
-Note: All the filters described below can be combined with each other. A blue "X" button will appear on the Filters button when a filter is set; click it to clear all filters.
+```{note}
+All the filters described below can be combined with each other. A blue "X" button will appear on the Filters button when a filter is set; click it to clear all filters.
+```
 
 ### Filter by label
 

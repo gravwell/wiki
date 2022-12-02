@@ -36,7 +36,9 @@ The following operation names are supported:
 
 The operation is performed on the source enumerated value. Thus, specifying `stats sum(Bytes)` would tell the stats module to sum up the Bytes enumerated values, outputting a single entry with an enumerated value named `sum` containing the total.
 
-Note: If no source is specified, the operation is instead performed on the body of the entry. Specifying `stats sum` is equivalent to specifying `stats sum(DATA)`
+```{note}
+If no source is specified, the operation is instead performed on the body of the entry. Specifying `stats sum` is equivalent to specifying `stats sum(DATA)`
+```
 
 Multiple operations can be specified:
 
@@ -118,7 +120,9 @@ stats mean(Bytes) stddev(Bytes) by SrcIP over 5m
 
 When sent to the chart module, the results will be calculated over a 5 minute window rather than the standard 1 second.
 
-Note: Only one time window can be specified, and the time window is applied to all operations.  The time window must also be the LAST argument to stats.
+```{note}
+Only one time window can be specified, and the time window is applied to all operations.  The time window must also be the LAST argument to stats.
+```
 
 ## sum() vs total()
 

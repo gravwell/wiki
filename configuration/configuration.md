@@ -64,7 +64,9 @@ Remote-Indexers=net:10.0.1.2:9404
 Remote-Indexers=net:10.0.1.3:9404
 ```
 
-Note: The indexers listed above are listening for control connections on port 9404, the default. This port is set by the `Control-Port` option in the indexer's gravwell.conf file.
+```{note}
+The indexers listed above are listening for control connections on port 9404, the default. This port is set by the `Control-Port` option in the indexer's gravwell.conf file.
+```
 
 ### Webserver TLS
 

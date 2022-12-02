@@ -30,8 +30,9 @@ This port is used when a Gravwell cluster has [multiple webservers](/distributed
 
 RHEL/CentOS uses its own firewall commands. For convenience, we have collected the commands needed to open ports for the webserver and indexer components, plus the Simple Relay ingester. Note that any ingesters which listen on network ports will likely need ports opened in this manner.
 
-Note: The commands shown here will only *temporarily* open ports; rebooting the system will reset the rules. To make the rule changes permanent, run `sudo firewall-cmd --runtime-to-permanent`
-
+```{note}
+The commands shown here will only *temporarily* open ports; rebooting the system will reset the rules. To make the rule changes permanent, run `sudo firewall-cmd --runtime-to-permanent`
+```
 
 ### Indexer ports
 

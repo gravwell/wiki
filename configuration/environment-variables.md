@@ -12,7 +12,9 @@ If "_FILE" is added to the end of the environment variable name, Gravwell assume
 GRAVWELL_INGEST_AUTH_FILE=/run/secrets/ingest_secret /opt/gravwell/bin/gravwell_indexer
 ```
 
-Note: Environment variable values are **only** used when the corresponding field is not explicitly set in the appropriate config file (gravwell.conf or an ingester's config file).
+```{note}
+Environment variable values are **only** used when the corresponding field is not explicitly set in the appropriate config file (gravwell.conf or an ingester's config file).
+```
 
 ## Indexer and Webserver
 

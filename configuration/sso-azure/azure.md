@@ -9,7 +9,9 @@ To set up Azure AD SSO for Gravwell, you'll need the following:
 
 Additional Gravwell SSO configuration information can be found [here](/configuration/sso) if needed.
 
-Note: For the purposes of this document, we'll assume your Gravwell webserver's URL is `https://gravwell.example.com/`.
+```{note}
+For the purposes of this document, we'll assume your Gravwell webserver's URL is `https://gravwell.example.com/`.
+```
 
 ## Create Application in Azure
 

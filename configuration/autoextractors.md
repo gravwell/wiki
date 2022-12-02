@@ -27,9 +27,13 @@ The following fields must be populated:
 
 An extractor may be edited after creation by clicking the pencil (edit) icon on its tile.
 
-Note: Only a single extraction can be defined per tag per user.
+```{note}
+Only a single extraction can be defined per tag per user.
+```
 
-Note: Auto-extractors always operate on the full underlying data of an entry.  They cannot be used to perform extractions on Enumerated Values (the "-e" argument is disallowed)
+```{note}
+Auto-extractors always operate on the full underlying data of an entry.  They cannot be used to perform extractions on Enumerated Values (the "-e" argument is disallowed)
+```
 
 ### Auto-Extractor File Definitions
 
@@ -159,9 +163,13 @@ tag=csvdata ax | table
 
 If you are not interested in extracting a particular field, you can simply leave the name blank. For example, if we have no need to extract the GUID in the example above, we could change the params field to `params="ts, name, id,, src, srcport, dst, dstport, data, country, city, hash"`.
 
-Note: The CSV auto-extraction processor does not support any arguments
+```{note}
+The CSV auto-extraction processor does not support any arguments
+```
 
-Note: The position of the names in the `params` variable indicates the field name. Treat it as a CSV header
+```{note}
+The position of the names in the `params` variable indicates the field name. Treat it as a CSV header
+```
 
 ### Fields
 
@@ -297,7 +305,9 @@ The [Slice](/search/slice/slice.md) module is a powerful binary-slicing system t
 
 Showing binary data in text form is difficult, so in this document we will show the data in hex encoding.  We will be cutting up a binary data stream coming from a small control system that regulates a refrigerant compressor to maintain precise temperature control in a brewing system.  The control system ships strings, integers, and some floating point values, and as is often the case in control systems all the data is in [Big Endian](https://en.wikipedia.org/wiki/Endianness) order.
 
-Note: The slice AX processor does not support any arguments (e.g. no "-e" allowed)
+```{note}
+The slice AX processor does not support any arguments (e.g. no "-e" allowed)
+```
 
 #### Filtering
 

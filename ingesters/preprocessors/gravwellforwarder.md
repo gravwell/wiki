@@ -15,7 +15,9 @@ For this example we are going to specify a complete Federator configuration that
 * The cluster composed of 172.19.0.4 and 172.19.0.5
 * The single-node system 172.19.0.2
 
-NOTE: We are enabling an `always` cache on the forwarding preprocessor so that it won't ever block the normal ingest path.
+```{note}
+We are enabling an `always` cache on the forwarding preprocessor so that it won't ever block the normal ingest path.
+```
 
 ```
 [Global]
@@ -51,7 +53,9 @@ For this example we are going to specify a complete Federator configuration and 
 * 172.19.0.103
 * 172.19.0.2
 
-NOTE: The preprocessor control logic does NOT check whether or not you are not forwarding to the same cluster multiple times. This may actually be desired; by using the forwarder preprocessor in combination with other preprocessors (such as the regex tag routing preprorcessor), the same entry may be ingested into multiple different tags on the same indexer.
+```{note}
+The preprocessor control logic does NOT check whether or not you are not forwarding to the same cluster multiple times. This may actually be desired; by using the forwarder preprocessor in combination with other preprocessors (such as the regex tag routing preprorcessor), the same entry may be ingested into multiple different tags on the same indexer.
+```
 
 ```
 [Global]

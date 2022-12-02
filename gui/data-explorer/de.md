@@ -12,7 +12,9 @@ If we move the mouse cursor over the results, individual words are highlighted. 
 
 ![](words2.png)
 
-Note: In the screenshot above, the string `search.go` is also highlighted by an [actionable](/gui/actionables/actionables); the menu item "search.go" contains a sub-menu with the actionable's actions in it.
+```{note}
+In the screenshot above, the string `search.go` is also highlighted by an [actionable](/gui/actionables/actionables); the menu item "search.go" contains a sub-menu with the actionable's actions in it.
+```
 
 If we click "Include search.go:189", the query will be automatically modified to `tag=gravwell words search.go:189`. We can then re-run the query to see the new results:
 

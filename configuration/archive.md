@@ -56,4 +56,6 @@ The above example has 3 configured wells (default, netflow, and raw).  The defau
 
 The Cloud Archive service is a module service designed to be self-hosted and potentially integrated into other larger infrastructures.  If you are interested in hosting your own Cloud Archive service or would like to remotely archive your data, contact sales@gravwell.io.
 
-Note: Indexers will authenticate to the cloud archive service using the customer license number *on the indexer*. In an [overwatch](/distributed/overwatch) configuration, this number may be different from the license number deployed on the *webservers*.
+```{note}
+Indexers will authenticate to the cloud archive service using the customer license number *on the indexer*. In an [overwatch](/distributed/overwatch) configuration, this number may be different from the license number deployed on the *webservers*.
+```

@@ -4,7 +4,9 @@ Although Gravwell queries are fast, some questions, like "how much data did we i
 
 Our recommended solution? Ingest some more stuff; specifically, ingest periodic *statistics* about your data. We call these "aggregates", or just "aggs". Gravwell includes a pre-built aggregate [flow](/flows/flows) which does basic aggregation with zero configuration required on the user's part, and you can build your own flows to generate custom aggs. This page shows how to deploy the pre-built aggregate flow, how to query aggs, and gives some hints on building your own agg flows.
 
-Note: By convention, aggregates are ingested into tags beginning with `_aggs`, e.g. `_aggs_tags`, `_aggs_userstats`, etc. The default `gravwell.conf` configuration includes a separate well specifically for aggregates for the sake of performance and retention.
+```{note}
+By convention, aggregates are ingested into tags beginning with `_aggs`, e.g. `_aggs_tags`, `_aggs_userstats`, etc. The default `gravwell.conf` configuration includes a separate well specifically for aggregates for the sake of performance and retention.
+```
 
 ## The pre-built agg flow
 
@@ -59,7 +61,9 @@ tag=_aggs_tags csv [0] as tag [1] as count [2] as bytes | stats sum(bytes) by ta
 
 ![](aggs-chart.png)
 
-Note: The aggregated entries *must* pass through the stats module before being charted. Consider the table of `_aggs_tags` results shown earlier; it contains 5-minute counts for each different tag. Each of these counts must be summed (using the stats module) in order to get valid results.
+```{note}
+The aggregated entries *must* pass through the stats module before being charted. Consider the table of `_aggs_tags` results shown earlier; it contains 5-minute counts for each different tag. Each of these counts must be summed (using the stats module) in order to get valid results.
+```
 
 ## Building your own aggs
 

@@ -281,7 +281,9 @@ The clients returned by these functions *must* be closed via their Close() metho
 * `sshConnectPassword(hostname, username, password, hostkey) (*ssh.Client, error)` returns an SSH client for the given hostname, authenticating via password. Note that having established a Client, you will typically want to call client.NewSession() to establish a usable session; see the go documentation or the examples below.
 * `sshConnectKey(hostname, username, privkey, hostkey) (*sftp.Client, error)` connects to the specified SSH server with the given username, using the provided private key (a string or []byte) to authenticate.
 
-Note: The hostkey parameter should be in the known_hosts/authorized_keys format, e.g. "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOcrwoHMonZ/l3OJOGrKYLky2FHKItAmAMPzZUhZEgEb86NNaqfdAj4qmiBDqM04/o7B45mcbjnkTYRuaIUwkno=". To extract the appropriate key from your ~/.ssh/known_hosts, run `ssh-keygen -H -F <hostname>`.
+```{note}
+The hostkey parameter should be in the known_hosts/authorized_keys format, e.g. "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOcrwoHMonZ/l3OJOGrKYLky2FHKItAmAMPzZUhZEgEb86NNaqfdAj4qmiBDqM04/o7B45mcbjnkTYRuaIUwkno=". To extract the appropriate key from your ~/.ssh/known_hosts, run `ssh-keygen -H -F <hostname>`.
+```
 
 A telnet library is also available; no direct wrappers are provided, but it can be used by importing `github.com/ziutek/telnet` in the script and calling telnet.Dial, etc. An example below demonstrates a simple use of the telnet library.
 
@@ -878,4 +880,6 @@ if err != nil {
 return cli.Close()
 ``` 
 
-Note: The Gravwell client has a default request timeout of 5 seconds. For long running requests like system backups you should increase that timeout, but note that it is best practice to restore the original timeout when you've completed the long-running request; we have omitted that above for brevity.
+```{note}
+The Gravwell client has a default request timeout of 5 seconds. For long running requests like system backups you should increase that timeout, but note that it is best practice to restore the original timeout when you've completed the long-running request; we have omitted that above for brevity.
+```

@@ -23,7 +23,9 @@ The most important observation when creating a query is that *all* data emitted 
 tag=* grep bar | alias DATA myData | json -e myData foo==bar baz | stats count(foo) | table count
 ```
 
-NOTE: This is an intentionally bad query meant to force poor performance for illustrative purposes.
+```{note}
+This is an intentionally bad query meant to force poor performance for illustrative purposes.
+```
 
 This query counts the number of entries that are valid JSON with a member "foo" that contains the contents "bar". There are a number of things about this query that decrease performance:
 
@@ -114,7 +116,9 @@ tag=default json UUID=="cd656e75-d54d-4e80-ac13-bc77abdde0ad" foo | lookup -r da
 
 ### Condensing modules
 
-NOTE: This subsection applies only to Gravwell deployments with multiple indexers. 
+```{note}
+This subsection applies only to Gravwell deployments with multiple indexers. 
+```
 
 Some modules require knowledge of all data passing through that portion of a pipeline in order to function. For example:
 
@@ -144,7 +148,9 @@ As the main storage and search component of a Gravwell deployment, indexers can 
 
 ### Gravwell configuration
 
-NOTE: See the [Detailed configuration document](/configuration/parameters) for a list of all Gravwell configuration options.
+```{note}
+See the [Detailed configuration document](/configuration/parameters) for a list of all Gravwell configuration options.
+```
 
 #### Global configuration options
 

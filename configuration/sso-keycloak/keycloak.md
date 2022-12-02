@@ -59,7 +59,9 @@ Finally, scroll back to the top and click the "Advanced" tab, then set the "Asse
 
 ![](client-setup3.png)
 
-Note: If your Gravwell webserver is using a self-signed certificate, click the "Keys" tab and turn off the "Client signature required" toggle.
+```{note}
+If your Gravwell webserver is using a self-signed certificate, click the "Keys" tab and turn off the "Client signature required" toggle.
+```
 
 ## Configure client scope
 

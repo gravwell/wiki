@@ -14,7 +14,9 @@ Because Gravwell is a heavily time-oriented system, it needs to check the curren
 
 To modify the clock source, [follow the directions here](https://aws.amazon.com/premiumsupport/knowledge-center/manage-ec2-linux-clock-source/).
 
-Note: If you are unable to modify the clock source, this notification is only visible to the default 'admin' user, not to any other users, and can be ignored if necessary.
+```{note}
+If you are unable to modify the clock source, this notification is only visible to the default 'admin' user, not to any other users, and can be ignored if necessary.
+```
 
 ## Cannot Reach Gravwell Interface
 
@@ -24,7 +26,9 @@ After installing Gravwell, you may find that your web browser cannot reach the w
 
 By default, Gravwell does not include or generate TLS certificates. If you intend to use Gravwell on the Internet or any other untrusted network, we strongly recommend you install certificates as soon as possible. See [the certificates page](certificates.md) for instructions.
 
-Note: Gravwell requires certificates that are compatible with TLS 1.2 or later.
+```{note}
+Gravwell requires certificates that are compatible with TLS 1.2 or later.
+```
 
 ## Gravwell Processes Won't Start
 
@@ -42,7 +46,9 @@ An invalid configuration file will usually lead to the failure of the associated
 
 The Gravwell components are intended to run as user "gravwell". If the root user runs a Gravwell component manually, it may create or modify essential files and mark them as belonging to root. When run under the "gravwell" account later, the processes will not be able to access the files. You can use `chown` to reassign these files to the gravwell user, but take care *not* to modify anything in `/opt/gravwell/bin` as this can conflict with SELinux flags!
 
-Warning: Do not modify permissions or ownership of files in `/opt/gravwell/bin` unless explicitly instructed by Gravwell support.
+```{warning}
+Do not modify permissions or ownership of files in `/opt/gravwell/bin` unless explicitly instructed by Gravwell support.
+```
 
 ### SELinux Issues
 

@@ -103,4 +103,6 @@ string   | X | X | X | X |   |   |   |
 IPv4     | X | X | X | X |   |   |   |
 IPv6     | X | X | X | X |   |   |   |
 
-Note: The `IPv4` and `IPv6` operators expect 4 and 16 byte network encoded values, text encoding of IP addresses will not extract appropriately.
+```{note}
+The `IPv4` and `IPv6` operators expect 4 and 16 byte network encoded values, text encoding of IP addresses will not extract appropriately.
+```

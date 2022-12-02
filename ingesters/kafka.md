@@ -68,7 +68,9 @@ The Gravwell Kafka ingester can subscribe to multiple topics and even multiple K
 | Username | string | Specify username for SASL authentication |
 | Password | string | Specify password for SASL authentication |
 
-Warning: Setting any consumer as synchronous causes that consumer to continually Sync the ingest pipeline.  It will have significant performance implications for ALL consumers.
+```{warning}
+Setting any consumer as synchronous causes that consumer to continually Sync the ingest pipeline.  It will have significant performance implications for ALL consumers.
+```
 
 Notice: Setting a large `Batch-Size` when using `Synchronous=true` can help with performance under heavy load.
 

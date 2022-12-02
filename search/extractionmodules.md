@@ -60,7 +60,9 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 
 ## Search module documentation
 
-Note: The modules listed here have a primary function of extraction. They may also perform filtering and/or processing.
+```{note}
+The modules listed here have a primary function of extraction. They may also perform filtering and/or processing.
+```
 
 ```{toctree}
 ---

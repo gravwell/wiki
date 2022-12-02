@@ -108,7 +108,9 @@ Note that the `table` and `task` variables are declared outside the function def
 
 Although writing scripts using a `Main` function is more challenging, it is necessary if you need to duplicate entries. The following script reads in an entry containing a Modbus message; if the message is a request of type 0x10 ("Write multiple registers"), the script duplicates the original entry once for each of the registers being written and to each entry attaches "RegAddr" and "RegValue" enumerated values containing a single register address + register value.
 
-Note: This script will not function on its own; as written, it was intended to consume the output of another anko script earlier in the pipeline, which would populate enumerated values such as "Request" and "WriteAddr".
+```{note}
+This script will not function on its own; as written, it was intended to consume the output of another anko script earlier in the pipeline, which would populate enumerated values such as "Request" and "WriteAddr".
+```
 
 ```
 func Main() {
@@ -216,7 +218,9 @@ The following functions are only available in scripts implementing the `Main` fu
 * `setEntrySrc(ent, ip)` sets the source field of an entry.
 * `setEntryTimestamp(ent, time)` sets the timestamp of an entry.
 
-Note: The `setEnum`, `hasEnum`, and `delEnum` functions differ for scripts using `Process` functions vs. `Main` functions, because the `Process` function is implicitly operating on a particular entry.
+```{note}
+The `setEnum`, `hasEnum`, and `delEnum` functions differ for scripts using `Process` functions vs. `Main` functions, because the `Process` function is implicitly operating on a particular entry.
+```
 
 ## Built-in variables
 
@@ -534,5 +538,6 @@ resp, _ = http.DefaultClient.Do(req)
 resp.Body.Close()
 ```
 
-Warning: You *must* close the http.Response's Body field when you are finished, as shown above. Leaving the Body open will leave a network connection open, eventually causing the search agent to run out of sockets. The `httpGet` and `httpPost` functions will close the Body automatically; please consider using those wherever possible.
-
+```{warning}
+You *must* close the http.Response's Body field when you are finished, as shown above. Leaving the Body open will leave a network connection open, eventually causing the search agent to run out of sockets. The `httpGet` and `httpPost` functions will close the Body automatically; please consider using those wherever possible.
+```

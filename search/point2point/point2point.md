@@ -39,7 +39,9 @@ Selecting the 'globe' button switches to a 3d globe display:
 
 ![](globe.png)
 
-Note: Many arcs in the pictures above end off the west coast of Africa. This is because private IP addresses map to the zero-value location, 0° latitude by 0° longitude. There is a button visible in the upper right of the map display showing a map "pin" with a yellow notification badge on it; clicking this will allow you to re-map the zero-value location so that private IP addresses map to your location. You can either manually specify latitude and longitude, or click "Use current location" to request your location from the browser.
+```{note}
+Many arcs in the pictures above end off the west coast of Africa. This is because private IP addresses map to the zero-value location, 0° latitude by 0° longitude. There is a button visible in the upper right of the map display showing a map "pin" with a yellow notification badge on it; clicking this will allow you to re-map the zero-value location so that private IP addresses map to your location. You can either manually specify latitude and longitude, or click "Use current location" to request your location from the browser.
+```
 
 ![](location.png)
 

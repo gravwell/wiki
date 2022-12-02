@@ -6,7 +6,9 @@ By default, grok passes through any entry which matches the pattern and drops an
 
 Grok is a filtering module; after specifying the desired pattern, you may also specify a list of filters to apply to the extracted fields.
 
-Note: Because some filters incorporate extremely strict and complex patterns, they can be relatively slow when processing large numbers of entries. Use modules such as [grep](/search/grep/grep), [regex](/search/regex/regex), and [words](/search/words/words) to pre-filter as much as possible.
+```{note}
+Because some filters incorporate extremely strict and complex patterns, they can be relatively slow when processing large numbers of entries. Use modules such as [grep](/search/grep/grep), [regex](/search/regex/regex), and [words](/search/words/words) to pre-filter as much as possible.
+```
 
 ## Supported Options
 
@@ -27,7 +29,9 @@ tag=apache words GET | grok "%{COMBINEDAPACHELOG}" | table
 
 ![](apache.png)
 
-Note: This query may take some time if you have millions of entries since the COMBINEDAPACHELOG pattern is complex and very strict.
+```{note}
+This query may take some time if you have millions of entries since the COMBINEDAPACHELOG pattern is complex and very strict.
+```
 
 ### Filtering
 
@@ -39,7 +43,9 @@ tag=apache words GET | grok "%{COMBINEDAPACHELOG}" clientip=="10.200.4.40" verb=
 
 ![](apache-filter.png)
 
-Note: We filter for PUT and the IP using the words module to engage indexing and reduce the number of entries that are processed by the expensive `COMBINEDAPACHELOG` grok pattern.
+```{note}
+We filter for PUT and the IP using the words module to engage indexing and reduce the number of entries that are processed by the expensive `COMBINEDAPACHELOG` grok pattern.
+```
 
 ## Performance
 

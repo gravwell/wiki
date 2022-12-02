@@ -2,7 +2,9 @@
 
 The json module is used to extract and filter data from search entries into enumerated values for later use. JSON is an excellent data format for dynamic exploration as the data is self-describing. The JSON module can extract items and rename them, or filter based on the extracted value. Filtering directly within the JSON module provides a very high speed and intuitive way to select data of a specific format.
 
-Note: The `json` module does not unescape extracted fields that may have been escaped in order to adhere to the JSON specification. You can use the [unescape](/search/unescape/unescape) module to unescape extracted fields.
+```{note}
+The `json` module does not unescape extracted fields that may have been escaped in order to adhere to the JSON specification. You can use the [unescape](/search/unescape/unescape) module to unescape extracted fields.
+```
 
 ## Supported Options
 
@@ -21,7 +23,9 @@ The JSON module allows for a filtering based on equality. If a filter is enabled
 | ~        | Subset     | Field contains the value         |
 | !~       | Not Subset | Field does NOT contain the value |
 
-Note: If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped. If you wish to drop the entries which don't contain the field at all, use the `-s` flag.
+```{note}
+If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped. If you wish to drop the entries which don't contain the field at all, use the `-s` flag.
+```
 
 ## Examples
 
@@ -117,7 +121,9 @@ json -x groups groups uid
 
 This will turn the single entry into two entries, one with enumerated values `uid=1` and `groups=17`, one with `uid=1` and `groups=3`.
 
-Note: When expanding an array via the `-x` flag, the underlying Data field and all other enumerated values are duplicated intact; only the contents of the array enumerated value change.
+```{note}
+When expanding an array via the `-x` flag, the underlying Data field and all other enumerated values are duplicated intact; only the contents of the array enumerated value change.
+```
 
 We can also extract components from within array elements:
 

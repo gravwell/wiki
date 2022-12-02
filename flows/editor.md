@@ -2,7 +2,9 @@
 
 Although the Gravwell flow editor can be intimidating at first glance, a few minutes' worth of experimentation and exploration should be enough to get started building flows. This section will go through the various components of the UI, explaining each component.
 
-Note: If you're not yet familiar with the basic components of a flow (nodes, sockets, payloads), refer to the [top-level Flow documentation](flows.md) for an overview.
+```{note}
+If you're not yet familiar with the basic components of a flow (nodes, sockets, payloads), refer to the [top-level Flow documentation](flows.md) for an overview.
+```
 
 You can access the flow editor from the Query & Dev Studio interface, found in the Main Menu. Select "Flows" from the left-hand side, as shown in the screenshot below. From there, you can either start a new blank flow ("Start a New Flow") or instantiate one of the "starter flows" provided by Gravwell.
 
@@ -41,7 +43,9 @@ The HTTP node shown here is a particularly complex node with many config options
 
 If a node is misconfigured, the console will display a list of problems. In the screenshot above, we can see that the Email node has several config options which are not yet set. As those options are populated, the errors will go away.
 
-Note: You can return to the palette view by clicking the palette icon above the configuration pane.
+```{note}
+You can return to the palette view by clicking the palette icon above the configuration pane.
+```
 
 ## Debugging
 

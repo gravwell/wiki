@@ -20,4 +20,6 @@ Some example sort invocations:
 | `sort asc` | Sort by time in ascending order |
 | `sort by src desc` | Sort by entry source in descending order |
 
-Note: The sort module collapses the pipeline  and can restrict second order temporal searching for all renderers.  This means that the overview graph and timeslice selection in the web interface will not affect a search that has been sorted non-temporally. Care must be taken to ensure that any pipeline modules following sort are expecting non-temporally ordered data.
+```{note}
+The sort module collapses the pipeline  and can restrict second order temporal searching for all renderers.  This means that the overview graph and timeslice selection in the web interface will not affect a search that has been sorted non-temporally. Care must be taken to ensure that any pipeline modules following sort are expecting non-temporally ordered data.
+```

@@ -272,7 +272,9 @@ The fulltext accelerator supports a few options which allow for refining the typ
 | -ignoreFloat | Ignore floating point numbers. Logs where floating point numbers are used for filters can make use of `-accptFloat`. | `-acceptFloat` | ENABLED |
 | -maxInt | Enables a filter that will only index integers below a certain size.  This can be valuable when indexing data that such as HTTP access logs.  You want to index the return codes, but not the response times and data sizes. | `-maxInt 1000` | DISABLED |
 
-NOTE: Make sure you understand your data before enabling the `-acceptTS` and `-acceptFloat` flags as these can dramatically bloat the index when using the index engine.  The Bloom engine is less impacted by orthogonal data such as timestamps and floating point numbers.
+```{note}
+Make sure you understand your data before enabling the `-acceptTS` and `-acceptFloat` flags as these can dramatically bloat the index when using the index engine.  The Bloom engine is less impacted by orthogonal data such as timestamps and floating point numbers.
+```
 
 ### Fulltext word extraction
 
@@ -414,9 +416,13 @@ The regex accelerator allows complicated extractions at ingest time in order to 
 	Accelerator-Args="^\\S+\\s\\[(?P<app>\\w+)\\]\\s<(?P<uuid>[\\dabcdef\\-]+)>\\s(?P<src>\\S+)\\s(?P<srcport>\\d+)\\s(?P<dst>\\S+)\\s(?P<dstport>\\d+)\\s(?P<path>\\S+)\\s"
 ```
 
-Note: Remember to escape backslashes '\\' when specifying regular expressions in the gravwell.conf file.  The regex argument '\\w' will become '\\\\w'.
+```{note}
+Remember to escape backslashes '\\' when specifying regular expressions in the gravwell.conf file.  The regex argument '\\w' will become '\\\\w'.
+```
 
-Warning: The regex accelerator requires very precise matches during query, this means that regular expression specified in an accelerator must match the regular expression provided in a query bit-for-bit.  It is not possible to determine if two regular expressions are equivalent, so Gravwell checks that the regular expression strings are exact matches before engaging acceleration.  The regex accelerator is rarely what you want.
+```{warning}
+The regex accelerator requires very precise matches during query, this means that regular expression specified in an accelerator must match the regular expression provided in a query bit-for-bit.  It is not possible to determine if two regular expressions are equivalent, so Gravwell checks that the regular expression strings are exact matches before engaging acceleration.  The regex accelerator is rarely what you want.
+```
 
 ## Winlog
 
@@ -440,7 +446,9 @@ The winlog accelerator is permissive ('-or' flag is implied).  So specify any fi
 
 The [netflow](/search/netflow/netflow) module allows for accelerating on netflow V5 fields and speeding up queries on large amounts of netflow data.  While the netflow module is very fast and the data is extremely compact, it can still be beneficial to engage acceleration if you have very large netflow data volumes.  The netflow module can use any of the direct netflow fields, but cannot use the pivot helper fields.  This means that you must specify `Src` or `Dst` and not `IP`.  The `IP` and `Port` fields cannot be specified in the acceleration arguments.
 
-Note: The helper extractions `Timestamp` and `Duration` cannot be used in accelerators.
+```{note}
+The helper extractions `Timestamp` and `Duration` cannot be used in accelerators.
+```
 
 ### Example Well Configuration
 
@@ -649,7 +657,9 @@ echo 3 > /proc/sys/vm/drop_caches
 
 You can see that the dense query did not benefit from the bloom filter at all due to the high collision rate and regular occurrence of the filtered data where the index system was able to make modest gains by limiting the amount of data that had to be extracted from the disk.
 
-Note: The regex search module/autoextractor is not fully compatible with the fulltext accelerator, so we have to modify the queries slightly to engage the accelerators.  They are ```words "106.218.21.57"``` and ```words list | ax url=="/list" method | count by method | chart count by method```
+```{note}
+The regex search module/autoextractor is not fully compatible with the fulltext accelerator, so we have to modify the queries slightly to engage the accelerators.  They are ```words "106.218.21.57"``` and ```words list | ax url=="/list" method | count by method | chart count by method```
+```
 
 #### Fulltext
 

@@ -35,7 +35,9 @@ Otherwise, download the installer from the [Downloads page](/quickstart/download
 root@gravserver ~ # bash gravwell_network_capture_installer.sh
 ```
 
-Note: You must have libpcap installed for the ingester to work.
+```{note}
+You must have libpcap installed for the ingester to work.
+```
 
 It is highly advised to co-locate the network ingester with an indexer when possible and use a `pipe-conn` link to send data, rather than a `clear-conn` or `tls-conn` link.  If the network ingester is capturing from the same link it is using to push entries, a feedback loop can be created which will rapidly saturate the link (e.g. capturing from eth0 while also sending entries to the ingester via eth0). You can use the `BPF-Filter` option to alleviate this.
 

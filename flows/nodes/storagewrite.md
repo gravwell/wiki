@@ -41,4 +41,6 @@ If there were more results in the current query than in the previous one, the No
 
 ![](storagewrite-example5.png)
 
-Note: The very first run of this flow will fail at the If node, because there was not yet anything in the persistent map. Re-running the flow will succeed.
+```{note}
+The very first run of this flow will fail at the If node, because there was not yet anything in the persistent map. Re-running the flow will succeed.
+```

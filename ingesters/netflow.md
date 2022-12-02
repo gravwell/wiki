@@ -54,5 +54,6 @@ Note that this configuration sends entries to a local indexer via `/opt/gravwell
 
 You can configure any number of `Collector` entries listening on different ports with different tags; this can help organize the data more clearly.
 
-Note: At this time, the ingester only supports Netflow v5; keep this in mind when configuring Netflow exporters.
-
+```{note}
+At this time, the ingester only supports Netflow v5; keep this in mind when configuring Netflow exporters.
+```

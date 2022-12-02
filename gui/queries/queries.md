@@ -54,7 +54,9 @@ Finally, "ISO 8601 duration" allows you to specify a duration in [ISO-8601 forma
 
 ![](iso8601.png)
 
-Note: "Date range" and "Unix timestamp" can be used to search into the future, which is useful if data has been ingested with bad timestamps.
+```{note}
+"Date range" and "Unix timestamp" can be used to search into the future, which is useful if data has been ingested with bad timestamps.
+```
 
 ## Search Results Page
 
@@ -140,7 +142,9 @@ You can zoom in multiple times, down to a minimum zoom level (determined by the 
 
 Note that the timeframe button on the query bar now has a dot on it. This indicates that if you re-run the query at this time, it will run over *the currently selected timeframe*. This is extremely useful when you're starting from a wide set of results and want to drill down into one particular area.
 
-Note: Not all queries will display the timeframe selector. Some modules or module options (like the table renderer's `-nt` flag) force Gravwell into *non-temporal mode*, which disallows zooming.
+```{note}
+Not all queries will display the timeframe selector. Some modules or module options (like the table renderer's `-nt` flag) force Gravwell into *non-temporal mode*, which disallows zooming.
+```
 
 ## Live Update Queries
 

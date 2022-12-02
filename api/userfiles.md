@@ -43,8 +43,9 @@ The "meta" field should be a JSON-encoded string describing sharing and ownershi
 }
 ```
 
-Note: only administrators can set the UID field to another user's UID, or set the Global field to true.
-
+```{note}
+Only administrators can set the UID field to another user's UID, or set the Global field to true.
+```
 
 ## Listing files
 

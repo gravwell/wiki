@@ -120,7 +120,9 @@ The API expects that the file upload be in the form field called `file`.
 
 The import API can be authenticated using either the JWT authorization token or a cookie.
 
-NOTE: An admin can specify groups it is not a member of in the `GID` form field, but non-admin users must be a member of the group specified in `GID`.
+```{note}
+An admin can specify groups it is not a member of in the `GID` form field, but non-admin users must be a member of the group specified in `GID`.
+```
 
 ## Admin APIs
 

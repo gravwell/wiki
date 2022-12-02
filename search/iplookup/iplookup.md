@@ -37,7 +37,9 @@ CIDR,network,owner
 2001:4860:4860:FE08::/48,corporate ipv6,CEO
 ```
 
-Warning: If two CIDRs contain overlapping definitions, the larger definition takes precedence.  That means that if you define `192.168.1.0/24` and `192.168.0.0/16` the definition for `192.168.1.0/24` will be ignored and lookups will match `192.168.0.0/16`.
+```{warning}
+If two CIDRs contain overlapping definitions, the larger definition takes precedence.  That means that if you define `192.168.1.0/24` and `192.168.0.0/16` the definition for `192.168.1.0/24` will be ignored and lookups will match `192.168.0.0/16`.
+```
 
 ### Example Searches
 

@@ -40,7 +40,9 @@ All elements of the IPFIX/NFv9 message *header* can be used for filtering, as ca
 
 The ipfix processor is an expanding module; expanding modules break input entries into multiple output entries. The module takes in individual entries corresponding to whole IPFIX messages. It then processes each data record within the message and emits a new entry *for each record*; thus, a single input entry might turn into 30 output entries.
 
-Note: If you specify *only* header items to extract (e.g. `ipfix Version Sequence`), entries are *not* expanded, because there is only one header per IPFIX message. Each incoming entry will result in no more than one outgoing entry. Specifying a mix of header and data items will trigger expansion.
+```{note}
+If you specify *only* header items to extract (e.g. `ipfix Version Sequence`), entries are *not* expanded, because there is only one header per IPFIX message. Each incoming entry will result in no more than one outgoing entry. Specifying a mix of header and data items will trigger expansion.
+```
 
 ### IPFIX Header Data Items
 
@@ -85,7 +87,9 @@ For convenient, we list some of the most common IPFIX and Netflow v9 fields belo
 | destinationIPv6Address | IPV6_DST_ADDR | IPv6 destination address of the flow. | ~ !~ == != | destinationIPv6Address == ::1
 | destinationIPv6PrefixLength | IPV6_DST_MASK | IPv6 destination address prefix length. | > < <= >= == != | destinationIPv6PrefixLength < 64
 
-Note: In general, you can specify Netflow v9 field names when extracting IPFIX messages and vice versa. However, because data types vary slightly between the two protocols, it is always safest to use IPFIX field names when processing IPFIX and Netflow names when processing Netflow.
+```{note}
+In general, you can specify Netflow v9 field names when extracting IPFIX messages and vice versa. However, because data types vary slightly between the two protocols, it is always safest to use IPFIX field names when processing IPFIX and Netflow names when processing Netflow.
+```
 
 The module also provides a handful of "shortcuts" for convenience:
 

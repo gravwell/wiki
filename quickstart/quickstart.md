@@ -21,7 +21,9 @@ You may find the [installation checklist](checklist.md) a useful companion to th
 
 If you are interested in a complete training package, please see the [complete training PDF](https://github.com/gravwell/training/releases/download/v5.1.2/gravwell_training_5.1.2.pdf).  The Gravwell training PDF is the complete training manual which is paired with labs and exercises. The exercises are built from the open source [Gravwell Training](https://github.com/gravwell/training) repository.
 
-Note: Community Edition users will need to obtain their own license from [https://www.gravwell.io/download](https://www.gravwell.io/download) before beginning installation. Paid users should already have received a license file via email.
+```{note}
+Community Edition users will need to obtain their own license from [https://www.gravwell.io/download](https://www.gravwell.io/download) before beginning installation. Paid users should already have received a license file via email.
+```
 
 ```{toctree}
 ---
@@ -151,7 +153,9 @@ sudo bash gravwell_X.X.X.sh
 
 Follow the prompts and, after completion, you should have a running Gravwell instance.
 
-Note: If your distribution does not use systemd, you will have to start the Gravwell processes manually after installation. Please contact support@gravwell.io if you need help.
+```{note}
+If your distribution does not use systemd, you will have to start the Gravwell processes manually after installation. Please contact support@gravwell.io if you need help.
+```
 
 ## Configuring the License
 
@@ -295,7 +299,9 @@ For example, if you have some old Apache log files you'd like to analyze in Grav
 user@webserver ~# cat /tmp/apache-oct2017.log | nc -q gravwell.server.address 7777
 ```
 
-Note: If you are ingesting a very large set of logs in multiple files, we recommend using the MassFileIngester utility to pre-optimize and ingest en masse, rather than relaying through the Simple Relay ingester.
+```{note}
+If you are ingesting a very large set of logs in multiple files, we recommend using the MassFileIngester utility to pre-optimize and ingest en masse, rather than relaying through the Simple Relay ingester.
+```
 
 ### Network Packet Ingester
 
@@ -317,7 +323,9 @@ The network ingester requires the libpcap shared libraries. If using the standal
 
 If the ingester is on a machine with a Gravwell backend already installed, the installer should automatically pick up the correct `Ingest-Secrets` value and populate the config file with it. In any case, review the configuration file in `/opt/gravwell/etc/network_capture.conf` before running. Make sure at least one "Sniffer" section is uncommented, with the Interface field set to one of your system's network interfaces. For more information, see the [Ingesters documentation](/ingesters/ingesters)
 
-Note: The Debian package and the standalone installer should both prompt for a device from which to capture. If you wish to change your selection, open `/opt/gravwell/etc/network_capture.conf`, set the desired interface, and run `service gravwell_network_capture restart` to restart the ingester.
+```{note}
+The Debian package and the standalone installer should both prompt for a device from which to capture. If you wish to change your selection, open `/opt/gravwell/etc/network_capture.conf`, set the desired interface, and run `service gravwell_network_capture restart` to restart the ingester.
+```
 
 (quickstart_searching)=
 ## Searching
@@ -430,7 +438,9 @@ Gravwell Kits are pre-packaged tool sets for analyzing a particular data source.
 
 Most kits rely on you to set up ingesters (e.g. the Netflow v5 kit expects that you're running the Netflow ingester to gather Netflow records), but the *Weather* kit is actually entirely self-contained. It includes a script which will run every minute and fetch weather data for locations you specify.
 
-Note: To use the Weather kit, you'll need an API key from [openweathermap.org](https://openweathermap.org). The instructions to get an API key [can be found here](https://openweathermap.org/appid).
+```{note}
+To use the Weather kit, you'll need an API key from [openweathermap.org](https://openweathermap.org). The instructions to get an API key [can be found here](https://openweathermap.org/appid).
+```
 
 You can find the kit by clicking the "Kits" item in the main menu. If there are no kits already installed, the GUI will automatically show you a list of *available* kits:
 
@@ -442,7 +452,9 @@ We want to install the Weather kit, so click the deploy icon (an arrow pointing 
 
 The second page contains Configuration Macros. These are used to configure the kit. You'll need to enter your OpenWeatherMap API key in the first macro, then set a list of locations to monitor in the second. The third macro controls the units used and can be left at the default ("imperial") or changed to "metric". When entering values in the configuration macro fields, first click the "Enter custom value" link to turn off certain validation rules.
 
-Note: The list of locations should consist of a colon-separated list of locations as described in [this document](https://openweathermap.org/current#one). Note that multiple countries use the same ZIP code format as the US, so specifying "87110,us" is usually better than just "87110".
+```{note}
+The list of locations should consist of a colon-separated list of locations as described in [this document](https://openweathermap.org/current#one). Note that multiple countries use the same ZIP code format as the US, so specifying "87110,us" is usually better than just "87110".
+```
 
 ![](kit-wizard2.1.png)
 

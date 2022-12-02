@@ -40,7 +40,9 @@ This menu is used to access all the primary functionalities of Gravwell, includi
 
 Items within these sub-menus will typically be used less frequently that the top-level items.
 
-Note: These screenshots include an "Administrator" sub-menu, which contains admin-only management tools and is only visible to users flagged as administrators.
+```{note}
+These screenshots include an "Administrator" sub-menu, which contains admin-only management tools and is only visible to users flagged as administrators.
+```
 
 ## Notifications
 

@@ -44,10 +44,13 @@ Default Value: `false`
 Example: `Enable-Cold-Transparent-Compression=true`
 Gravwell will mark the Cold storage data as compressible and rely on the kernel to perform the compression operations.
 
-Note: If transparent compression is enabled and the underlying filesystem is detected as incompatible with transparent compression, the data will effectively be uncompressed and Gravwell will send a notification to users.
+```{note}
+If transparent compression is enabled and the underlying filesystem is detected as incompatible with transparent compression, the data will effectively be uncompressed and Gravwell will send a notification to users.
+```
 
-Warning: If hot and cold storage locations are not compatible with regards to compression, Gravwell must perform additional work to ageout data from hot to cold.  If acceleration is enabled, Gravwell will re-index the data as it performs the ageout.  Incompatible compression settings can incur significant overhead during ageout.  Uncompressed data is compatible with transparently compressed data, but default compression is not compatible with uncompressed or transparently compressed data.  Gravwell will still function perfectly fine with incompatible compression, the indexer will just work much harder during ageout.
-
+```{warning}
+If hot and cold storage locations are not compatible with regards to compression, Gravwell must perform additional work to ageout data from hot to cold.  If acceleration is enabled, Gravwell will re-index the data as it performs the ageout.  Incompatible compression settings can incur significant overhead during ageout.  Uncompressed data is compatible with transparently compressed data, but default compression is not compatible with uncompressed or transparently compressed data.  Gravwell will still function perfectly fine with incompatible compression, the indexer will just work much harder during ageout.
+```
 
 ## Compression and Replication
 

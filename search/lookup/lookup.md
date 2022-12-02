@@ -6,7 +6,9 @@ The lookup module is used to do data enrichment and translation off of a static 
 lookup -r <resource name> <enumerated value> <column to match> <column to extract> as <valuename>
 ```
 
-Note: If you do NOT provide an ```as <valuename>``` addition to the syntax, lookup will create an enumerated value with the name of the "extracting" column.
+```{note}
+If you do NOT provide an ```as <valuename>``` addition to the syntax, lookup will create an enumerated value with the name of the "extracting" column.
+```
 
 You can also extract multiple columns for each match. The following example matches the contents of enumerated value A against the values in column B; when a match is found, it extracts both columns C and D:
 
@@ -25,7 +27,9 @@ lookup -r mytable [A B] [A B] (C as foo D as bar)
 * `-s`: The "-s" option specifies that the lookup modules should require that all extractions succeed or the entry will be dropped.
 * `-v`: The "-v" flag inverts the flow logic in the lookup module, meaning that successful matches are suppressed and missed matches are passed on.  The "-v" and "-s" flags can be combined to provide basic whitelisting, passing only values which do not exist in the specified lookup table.
 
-Note: When using the `-s` or `-v` flags it is legal to specify that no extractions are to take place.  This operation can be useful when performing whitelisting or blacklisting.
+```{note}
+When using the `-s` or `-v` flags it is legal to specify that no extractions are to take place.  This operation can be useful when performing whitelisting or blacklisting.
+```
 
 Here is an example that ensures that enumerated values `A` and `B` exist in the columns `X` and `Y` but does not enrich data.
 

@@ -135,7 +135,9 @@ To create an actionable, issue a POST to `/api/pivots`. The body should be a JSO
 
 The API will respond with the GUID of the newly-created actionable. If a GUID is specified in the request, that GUID will be used. If no GUID is specified, a random GUID will be generated.
 
-Note: At this time, the `UID`, `GIDs`, and `Global` fields cannot be set during actionable creation. They must instead be set via an update call (see below).
+```{note}
+At this time, the `UID`, `GIDs`, and `Global` fields cannot be set during actionable creation. They must instead be set via an update call (see below).
+```
 
 ## List actionables
 
@@ -335,7 +337,9 @@ To update an actionable, issue a PUT request to `/api/pivots/<guid>`. The reques
 * UID: (Admin only) Set to a 32-bit integer
 * Global: (Admin only) Set to a boolean true or false; Global actionables are visible to all users.
 
-Note: Leaving any of these field blank will result in the actionable being updated with a null value for that field!
+```{note}
+Leaving any of these field blank will result in the actionable being updated with a null value for that field!
+```
 
 ## Delete an actionable
 

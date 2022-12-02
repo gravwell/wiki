@@ -516,7 +516,9 @@ Additional kit installation options may be specified by passing a configuration 
 }
 ```
 
-Note: All of the following are optional. Any or all of them may be omitted; to take the default options, simply omit the body from the request.
+```{note}
+All of the following are optional. Any or all of them may be omitted; to take the default options, simply omit the body from the request.
+```
 
 If set, `OverwriteExisting` tells the installer to simply replace any existing items which have the name unique identifier as the kit's version.
 
@@ -813,6 +815,8 @@ Successful kit build requests are stored by the webserver. You can get a list of
 [{"ID":"io.gravwell.test","Name":"test","Description":"","Version":1,"MinVersion":{"Major":0,"Minor":0,"Point":0},"MaxVersion":{"Major":0,"Minor":0,"Point":0},"Macros":[4,41],"ConfigMacros":null}]
 ```
 
-Note: This store is keyed on UID + kit ID; if I build a kit named "io.gravwell.test" again, it will overwrite the version in the store.
+```{note}
+This store is keyed on UID + kit ID; if I build a kit named "io.gravwell.test" again, it will overwrite the version in the store.
+```
 
 You can delete a particular item by sending a DELETE request to `/api/kits/build/history/<id>`, e.g. `/api/kits/build/history/io.gravwell.test`.

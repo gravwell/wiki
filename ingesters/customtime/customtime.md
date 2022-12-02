@@ -66,7 +66,9 @@ This format would handle the following logs, appropriately applying the current 
 09^00^00 and my id is 6
 ```
 
-Note: The custom timestamp format names can be used in [Timestamp-Format-Override](time_parsing_overrides) values.  For example we can force the timestamp format to our custom format using `Timestamp-Format-Override="foo"`.
+```{note}
+The custom timestamp format names can be used in [Timestamp-Format-Override](time_parsing_overrides) values.  For example we can force the timestamp format to our custom format using `Timestamp-Format-Override="foo"`.
+```
 
 ### Time Formats
 

@@ -6,7 +6,9 @@ If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, conta
 
 Once you have set up Gravwell, check out the [quickstart](/quickstart/quickstart) for some starting points on *using* Gravwell.
 
-Note: Users running Docker on MacOS should be aware that the MacOS host does not have direct IP access to containers, as explained [here](https://docs.docker.com/docker-for-mac/networking/). Be prepared to forward additional ports if you need to access container network services from the host.
+```{note}
+Users running Docker on MacOS should be aware that the MacOS host does not have direct IP access to containers, as explained [here](https://docs.docker.com/docker-for-mac/networking/). Be prepared to forward additional ports if you need to access container network services from the host.
+```
 
 ## Create Docker network
 
@@ -59,7 +61,9 @@ Now that Gravwell is running, point a web browser at port http://localhost:8080 
 
 ![](license-upload-docker.png)
 
-Note: Paid users and existing Community Edition users should have received a license via email. If you haven't signed up for Community Edition yet, head over to [https://www.gravwell.io/download](https://www.gravwell.io/download) and get a license.
+```{note}
+Paid users and existing Community Edition users should have received a license via email. If you haven't signed up for Community Edition yet, head over to [https://www.gravwell.io/download](https://www.gravwell.io/download) and get a license.
+```
 
 Once you upload the license and it is verified, you'll get a login prompt:
 
@@ -105,7 +109,9 @@ Note the use of the `-e` flag to set environment variables. This allows us to dy
 
 The `-p 2055:2055/udp` option forwards UDP port 2055 (Netflow v5 ingest port) from the container to the host. This should make it easier to send Netflow records into the ingest container.
 
-Note: The netflow ingester is also configured by default to accept IPFIX records over UDP on port 6343. If you wish to ingest IPFIX records too, add `-p 6343:6343/udp` to the command line above.
+```{note}
+The netflow ingester is also configured by default to accept IPFIX records over UDP on port 6343. If you wish to ingest IPFIX records too, add `-p 6343:6343/udp` to the command line above.
+```
 
 We can verify that the ingester is active by clicking on the Ingesters item in the menu:
 

@@ -1,6 +1,8 @@
 ## DNS
 
-NOTE: The `dns` module can generate an enormous amount of network traffic to your DNS resolver. DNS resolvers may ban you if you generate too many requests in a short amount of time. 
+```{note}
+The `dns` module can generate an enormous amount of network traffic to your DNS resolver. DNS resolvers may ban you if you generate too many requests in a short amount of time. 
+```
 
 The `dns` module is used to perform DNS lookups on hostnames and store the result in an enumerated value. The `dns` module can also perform reverse lookups on IP addresses. By default the `dns` module will perform no more than 1024 lookups in a given search. This is to prevent DNS query bursts to your resolver. The module keeps a simple least recently used (LRU) cache of results, so searches with many duplicate values may be well under the lookup limit. You can adjust this limit with the `-l` flag.
 

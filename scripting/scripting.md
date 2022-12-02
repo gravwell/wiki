@@ -132,7 +132,9 @@ myArray[1] = 7
 printf("%v\n", myArray)		# prints [0 7 0 0 0]
 ```
 
-Note: generic arrays can also be constructed using the `make` function: `make([]interface, 10)`
+```{note}
+Generic arrays can also be constructed using the `make` function: `make([]interface, 10)`
+```
 
 Multi-dimensional arrays are possible; the following example shows two different ways to achieve the same multi-dimensional array:
 
@@ -190,7 +192,9 @@ b = a[:len(a)-3]			# b == [1 2 3]
 c = a[len(a)-4:len(a)-2]	# c == [3 4]
 ```
 
-Note: It is also possible to slice strings in the same fashion. Thus given `a = "hello"`, `a[1:4]` evaluates to `"ell"`.
+```{note}
+It is also possible to slice strings in the same fashion. Thus given `a = "hello"`, `a[1:4]` evaluates to `"ell"`.
+```
 
 ### Maps
 
@@ -374,7 +378,9 @@ if foo == 3 && !bar {
 }
 ```
 
-Note: While Go allows the form `if result := foo(); result == true { ... }`, it is not acceptable in Anko.
+```{note}
+While Go allows the form `if result := foo(); result == true { ... }`, it is not acceptable in Anko.
+```
 
 #### Ternary operator
 

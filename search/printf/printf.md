@@ -60,4 +60,6 @@ tag=netflow netflow SrcPort DstPort
 
 ![](printf.png)
 
-Note: Language describing the verbs and modifiers Copyright (c) 2009 The Go Authors. Obtained from [Go fmt documentation](https://pkg.go.dev/fmt#hdr-Printing)
+```{note}
+Language describing the verbs and modifiers Copyright (c) 2009 The Go Authors. Obtained from [Go fmt documentation](https://pkg.go.dev/fmt#hdr-Printing)
+```

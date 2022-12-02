@@ -34,7 +34,9 @@ For example the CSV, fields, and regex processors support limited equality filte
 | > | Greater Than | Numeric value of field is greater than
 | >= | Greater Than or Equal to | Numeric value of field is greater than or equal to
 
-Note: Every operator is not supported by every processor.  If multiple tags extract fields with the same name, the filter operator set will be restricted to a common subset.
+```{note}
+Every operator is not supported by every processor.  If multiple tags extract fields with the same name, the filter operator set will be restricted to a common subset.
+```
 
 ### Invoking AX
 

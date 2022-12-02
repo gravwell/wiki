@@ -40,7 +40,9 @@ To create a resource, perform a POST request on `/api/resources`, sending a JSON
 }
 ```
 
-Note: the structure is a subset of the metadata structure, containing fields which can be set by the user.
+```{note}
+The structure is a subset of the metadata structure, containing fields which can be set by the user.
+```
 
 The server will respond with a resource metadata structure for the newly-created resource:
 
@@ -74,7 +76,9 @@ Metadata can be modified by performing a PUT request on `/api/resources/{guid}`.
 {"UID":1,"GUID":"2332866c-9b8d-469f-bf40-de9fad828362","LastModified":"2018-03-07T15:29:10.557490321-07:00","VersionNumber":1,"GroupACL":[3,7],"Global":false,"ResourceName":"newresource","Description":"A new description for the resource!","Size":6,"Hash":"QInZ92Blt3TopFBeBTD0Cw==","Synced":true}
 ```
 
-Note: Only the GroupACL, ResourceName, and Description fields can be modified by regular users. Admin users can also modify the Global field. Any other modified fields will be ignored by the server.
+```{note}
+Only the GroupACL, ResourceName, and Description fields can be modified by regular users. Admin users can also modify the Global field. Any other modified fields will be ignored by the server.
+```
 
 ## Getting resource content-type
 

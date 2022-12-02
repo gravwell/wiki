@@ -6,7 +6,9 @@ Gravwell users care about what's going on in their networks--it's a big reason p
 
 When a Gravwell component crashes, an automated crash report is sent to Gravwell. This consists of the console output from the component in question, which typically includes some brief information about the license (in order to determine whose system just crashed) and a stack trace. **Every** Gravwell component--the webserver, the indexer, the ingesters, the search agent--is set up to send crash reports.
  
-Note: Crash reports are always sent via TLS-verified HTTPS to update.gravwell.io. If we are unable to fully validate the remote certificate, the report does *not* go out.
+ ```{note}
+Crash reports are always sent via TLS-verified HTTPS to update.gravwell.io. If we are unable to fully validate the remote certificate, the report does *not* go out.
+```
 
 Here's an example of a crash report from a Gravwell employee's test system:
 
@@ -86,7 +88,9 @@ The Gravwell webserver component (*only* the webserver) will occasionally send a
 
 Our most important goal in gathering these metrics is to protect the anonymity of your data. These metrics reports will **never** include the actual contents of any data stored in Gravwell, nor will they ever send actual search queries or even a list of tags on the system.
 
-Note: Metrics reports are always sent via TLS-verified HTTPS to update.gravwell.io. If we are unable to fully validate the remote certificate, the report does *not* go out.
+```{note}
+Metrics reports are always sent via TLS-verified HTTPS to update.gravwell.io. If we are unable to fully validate the remote certificate, the report does *not* go out.
+```
 
 We use this same system to notify users of new Gravwell releases: when the metrics report is sent, the server will respond with the latest version of Gravwell. This lets us display a notification in the Gravwell UI when a new version is available (these notifications can be disabled with the `Disable-Update-Notification` parameter in gravwell.conf).
 

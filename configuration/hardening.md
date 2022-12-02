@@ -135,7 +135,9 @@ Disabling the risky APIs can reduce the chances that users export sensitive data
 
 `Disable-Network-Script-Functions=true`
 
-Note: The network scripting functions are extremely useful, so only disable them if you're concerned about users abusing them.
+```{note}
+The network scripting functions are extremely useful, so only disable them if you're concerned about users abusing them.
+```
 
 [//]: # (# Query Controls)
 

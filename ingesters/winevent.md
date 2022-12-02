@@ -53,7 +53,9 @@ Run the .msi installation wizard to install the Gravwell events service.  On fir
 
 ![](winevent_msi_2.png)
 
-Note: The Log Level selection is for internal logging only, it does not affect which Windows events are captured by the ingester.  Setting the level to Information will cause the ingester to emit log events when it starts, stops, and attaches to event Channels.
+```{note}
+The Log Level selection is for internal logging only, it does not affect which Windows events are captured by the ingester.  Setting the level to Information will cause the ingester to emit log events when it starts, stops, and attaches to event Channels.
+```
 
 ![](winevent_msi_3.png)
 
@@ -172,8 +174,9 @@ First you will need to install the winevent ingester on the Windows system that 
 
 ![](winevent_wef_1.png)
 
-Note: Forwarded events will still contain the correct `Channel` in their logs.
-
+```{note}
+Forwarded events will still contain the correct `Channel` in their logs.
+```
 
 To enable the collection of forwarded events first we need to open the winevent configuration file located at `%PROGRAMDATA%\gravwell\eventlog\config.cfg` as an Administrator and insert a new Listener stanza that is pointed at the WEF collection channel:
 
@@ -218,6 +221,7 @@ tag=windows words User32 4624
 | table TargetUserName Computer TargetDomainName LogonType TIMESTAMP
 ```
 
-Note: The above query needs to have the `windows_login_types` resource that is provided by the Windows Resource kit.
-
+```{note}
+The above query needs to have the `windows_login_types` resource that is provided by the Windows Resource kit.
+```
 ![](winevent_example_2.png)

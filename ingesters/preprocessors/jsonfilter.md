@@ -16,7 +16,9 @@ The JSON Field Filtering preprocessor Type is `jsonfilter`.
 
 The `Match-Logic` parameter is only necessary when more than one `Field-Filter` has been specified.
 
-Note: If a field is specified in the configuration but is not present on an entry, the preprocessor will treat the entry *as if the field existed but did not match anything*. Thus, if you have configured the preprocessor to only pass those entries whose fields match your whitelist, an entry which lacks one of the fields will be dropped.
+```{note}
+If a field is specified in the configuration but is not present on an entry, the preprocessor will treat the entry *as if the field existed but did not match anything*. Thus, if you have configured the preprocessor to only pass those entries whose fields match your whitelist, an entry which lacks one of the fields will be dropped.
+```
 
 ### Common Use Cases
 

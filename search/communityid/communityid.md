@@ -18,7 +18,9 @@ Community id parameters are orderd as `<IP A> <IP B> <Port A> <Port B> <Protocol
 
 It is valid to exclude both port numbers: `<IP A> <IP B> <Protocol Number>`. Note that including one port but not the other is invalid.
 
-Note: The `communityid` module requires the protocol *number*, it will not resolve a protocol name.
+```{note}
+The `communityid` module requires the protocol *number*, it will not resolve a protocol name.
+```
 
 ### Examples
 

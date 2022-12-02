@@ -618,7 +618,9 @@ Description: If this parameter is set, the indexer will not send notifications w
 
 The `[Password-Control]` configuration section can be used to enforce password complexity rules when users are created or passwords are changed. Options set in this block apply only to webservers. These complexity configuration rules do not apply when using Single Sign On.
 
-Note: The `Password-Control` section should not be declared more than once.
+```{note}
+The `Password-Control` section should not be declared more than once.
+```
 
 ```
 [Password-Control]
@@ -681,7 +683,9 @@ The configuration file should contain exactly one `Default-Well` section. It may
 
 Refer to the [ageout documentation](ageout.md) for more information on how wells move entries between hot, cold, and archive storage.
 
-Note: `Default-Well` cannot include `Tags=` specifications; instead, the default well contains all tags *not contained in other wells*
+```{note}
+`Default-Well` cannot include `Tags=` specifications; instead, the default well contains all tags *not contained in other wells*
+```
 
 #### **Location**
 Default Value:	`/opt/gravwell/storage/default` for `Default-Well`, none for `Storage-Well`

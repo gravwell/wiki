@@ -30,7 +30,9 @@ Each well will always have a hot storage location defined via the `Location` dir
 Ageout configurations are on a per well basis.  Each well operates independently and asynchronously from all others.  If two wells are sharing the same volume, enabling ageout directives based on storage reserve can cause one well to aggressively migrate and/or delete data due to the incursion by another.
 ```
 
-Note: If data is actively coming into a storage shard that is marked for ageout or is actively being queried, the ageout system will defer aging out the shard to a later time.
+```{note}
+If data is actively coming into a storage shard that is marked for ageout or is actively being queried, the ageout system will defer aging out the shard to a later time.
+```
 
 ## Hot/Cold Deletion Rules
 
@@ -40,7 +42,9 @@ Similarly, when data ages out of the cold well ("frozen") it will not be deleted
 
 Examples of these rules can be seen in the configuration snippets in the following sections.
 
-Warning: You *must* specify either `Delete-Cold-Data` (if using only a hot well) or `Delete-Frozen-Data` (if using both hot & cold wells) if you want data to be actually removed from the disk. These settings require explicit authorization from the user, because our general policy is to never delete anything unless asked. If you do not include the appropriate deletion parameter in your well config, data will never be deleted and your disk will eventually fill up!
+```{warning}
+You *must* specify either `Delete-Cold-Data` (if using only a hot well) or `Delete-Frozen-Data` (if using both hot & cold wells) if you want data to be actually removed from the disk. These settings require explicit authorization from the user, because our general policy is to never delete anything unless asked. If you do not include the appropriate deletion parameter in your well config, data will never be deleted and your disk will eventually fill up!
+```
 
 ## Time-Based Ageout Rules
 
@@ -51,7 +55,9 @@ Time-based ageout manages data based on time retention requirements.  For exampl
 * "w"     - weeks
 * "weeks" - weeks
 
-Note: A shard will only be aged-out when its *most recent* entries exceed the duration.
+```{note}
+A shard will only be aged-out when its *most recent* entries exceed the duration.
+```
 
 An example well configuration using only a hot pool of data and deleting data that is more than 30 days old:
 
@@ -75,8 +81,9 @@ An example configuration in which data is moved from the hot pool to the cold po
 	Delete-Frozen-Data=true
 ```
 
-Note: In the above configuration, data will be deleted permanently when it is 97 days old, having spent 7 days in the hot pool and 90 days in the cold pool.
-
+```{note}
+In the above configuration, data will be deleted permanently when it is 97 days old, having spent 7 days in the hot pool and 90 days in the cold pool.
+```
 The Time based ageout is invoked once per day, sweeping each pool for shards that can be aged out.  By default the sweep happens at midnight UTC, but the execution time can be overridden in the well configuration with the Ageout-Time-Override directive.  The override directive is specified in 24 hour UTC time.
 
 An example configuration that overrides the ageout time checks to occur at 7PM UTC:

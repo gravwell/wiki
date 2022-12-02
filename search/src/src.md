@@ -4,7 +4,9 @@ The source module is used for filtering entries based on source, which is a univ
 
 The source module can translate/handle values specified as IPs, subnets, integers, base 16 integers, and 16 byte hashes.  The entry source field is meant to be extremely flexible.
 
-Note: The source field can be used by the acceleration/indexing system to help speed up queries.  However, only direct equality matches invoke the acceleration system.  Filtering by subnet or using negation does not engage the accelerator.
+```{note}
+The source field can be used by the acceleration/indexing system to help speed up queries.  However, only direct equality matches invoke the acceleration system.  Filtering by subnet or using negation does not engage the accelerator.
+```
 
 ### Example Usage
 

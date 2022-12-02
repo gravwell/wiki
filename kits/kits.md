@@ -58,7 +58,9 @@ The final page of the wizard prompts for additional options. "Override Existing 
 
 When you click the "Deploy" button, the kit and any dependencies will be installed. This may take a minute or so, but eventually the kit will be listed as one of your installed kits.
 
-Note: If you abort the installation wizard, the kit will not be installed, but the downloaded kit will be shown in the "My kits" page under the label "Kits Staged for Deployment", as seen below. You can chose to delete the staged kit or restart the installation wizard.
+```{note}
+If you abort the installation wizard, the kit will not be installed, but the downloaded kit will be shown in the "My kits" page under the label "Kits Staged for Deployment", as seen below. You can chose to delete the staged kit or restart the installation wizard.
+```
 
 ![](staged.png)
 

@@ -16,7 +16,9 @@ A "character" is any of the Unicode points in the "General Category" of the Unic
 
 This section defines the syntax of a Gravwell query. Token semantics are module-specific, so the user should read the search module documentation for more information on module-specific considerations.
 
-Note: The grammar is specified using [pbpg](https://github.com/gravwell/pbpg), which is similar to Extended Backus–Naur form. pbpg is itself specified with pbpg and contains the following rules:
+```{note}
+The grammar is specified using [pbpg](https://github.com/gravwell/pbpg), which is similar to Extended Backus–Naur form. pbpg is itself specified with pbpg and contains the following rules:
+```
 
 ```
 Production  = Name "=" [ Expression ] "." 
@@ -180,7 +182,9 @@ To reconcile this behavior, `eval` and implied code fragments tokenize in a diff
 - Numeric literals are all forms of numbers, floating point numbers, hexadecimal syntax (eg 0xfa), and binary (eg 0b0010).
 - `|` and `||` are treated as bitwise and logical OR operations, respectively.
 
-NOTE: Enumerated values containing reserved characters or whitespace cannot be used in code fragments. These variables must be renamed or aliased.
+```{note}
+Enumerated values containing reserved characters or whitespace cannot be used in code fragments. These variables must be renamed or aliased.
+```
 
 This form of tokenizing occurs until the outermost parenthetical group in the code fragment is closed.
 

@@ -53,7 +53,9 @@ Log-File=/opt/gravwell/log/simple_relay.log
 	Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
 ```
 
-Note: The `Keep-Priority` field is necessary if you plan to analyze syslog entries with the [syslog search module](/search/syslog/syslog).
+```{note}
+The `Keep-Priority` field is necessary if you plan to analyze syslog entries with the [syslog search module](/search/syslog/syslog).
+```
 
 ## Listeners
 
@@ -193,7 +195,9 @@ An example listener specification which removes the priority tag from entries:
 	Drop-Priority=true
 ```
 
-Note: The priority portion of a syslog message is codified in the RFC specification.  Removing the priority means that the Gravwell [syslog](/search/syslog/syslog) search module will be unable to properly parse the values, the syslog search module is dramatically faster than attempting to hand parse syslog messages with regular expressions.  However, some systems use an RFC5424-like header to send non-syslog data (such as the Fortinet products), in which case the data is not syslog at all and dropping the priority is appropriate.
+```{note}
+The priority portion of a syslog message is codified in the RFC specification.  Removing the priority means that the Gravwell [syslog](/search/syslog/syslog) search module will be unable to properly parse the values, the syslog search module is dramatically faster than attempting to hand parse syslog messages with regular expressions.  However, some systems use an RFC5424-like header to send non-syslog data (such as the Fortinet products), in which case the data is not syslog at all and dropping the priority is appropriate.
+```
 
 ## RFC6587 Listener
 
@@ -212,7 +216,9 @@ A common source of RFC6587 data is the Fortinet series of firewalls and switches
 464 <185>date=2022-09-28 time=08:49:59 devname="fortigate" devid="FGT60E4Q16015706" eventtime=1664380199448569680 tz="-0700" logid="0100032002" type="event" subtype="system" level="alert" vd="root" logdesc="Admin login failed" sn="0" user="admin" ui="ssh(192.168.1.100)" method="ssh" srcip=192.168.1.100 dstip=192.168.1.99 action="login" status="failed" reason="ssh_key_invalid" msg="Administrator admin login failed from ssh(192.168.1.100) because of invalid ssh key"
 ```
 
-Note: RFC6587 listeners are not compatible with UDP transports.
+```{note}
+RFC6587 listeners are not compatible with UDP transports.
+```
 
 ### RFC6587 Examples
 

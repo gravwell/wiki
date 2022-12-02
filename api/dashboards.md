@@ -100,7 +100,9 @@ interface RendererOptions {
 }
 ```
 
-Note: Throughout this document, we include valid `Data` structures, but for brevity we will tend to use structures describing an empty dashboard rather than one containing tiles.
+```{note}
+Throughout this document, we include valid `Data` structures, but for brevity we will tend to use structures describing an empty dashboard rather than one containing tiles.
+```
 
 ## Creating a dashboard
 
@@ -452,7 +454,9 @@ The server will respond to update requests with the updated dashboard structure.
 
 To be safe, take care to send back all fields which were present in the original fetch, even if unchanged. For instance, although this update did not modify the `Description` field, we include it in the update request because the webserver cannot distinguish between an *un-set* field and an *empty* field.
 
-Note: The GUID may be used in place of the dashboard ID if desired.
+```{note}
+The GUID may be used in place of the dashboard ID if desired.
+```
 
 ## Deleting a dashboard
 To remove a dashboard issue a request with the DELETE method on the url `/api/dashboards/{id}` where {id} is the numeric ID of the dashboard.

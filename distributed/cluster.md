@@ -130,7 +130,9 @@ Remote-Indexers=net:10.0.1.4:9404
 Remote-Indexers=net:10.0.1.5:9404
 ```
 
-Note: You can use hostnames instead of IP addresses if you wish.
+```{note}
+You can use hostnames instead of IP addresses if you wish.
+```
 
 Once the webserver's gravwell.conf is updated, restart the webserver process:
 

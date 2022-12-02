@@ -37,4 +37,6 @@ Additionally, the name of the enumerated value can be different from the column 
 tag=jsondata val | enrich -r data foo as bar | table val bar
 ```
 
-NOTE: Only the first row of resources are used with the `enrich` module (excluding the column headers for CSV resources).
+```{note}
+Only the first row of resources are used with the `enrich` module (excluding the column headers for CSV resources).
+```

@@ -1,6 +1,8 @@
 ## Transaction
 
-NOTE: The `transaction` module can consume a large amount of memory. Use caution when using this module on memory constrained systems.
+```{note}
+The `transaction` module can consume a large amount of memory. Use caution when using this module on memory constrained systems.
+```
 
 The `transaction` module transforms and groups entries in the pipeline into single-entry "transactions" - groupings of entries - based on any number of keys. It is a powerful tool for capturing the activity of a given user, IP, etc., across multiple entries in a datastream. 
 
