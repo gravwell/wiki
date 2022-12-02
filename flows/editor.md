@@ -4,7 +4,7 @@ Although the Gravwell flow editor can be intimidating at first glance, a few min
 
 Note: If you're not yet familiar with the basic components of a flow (nodes, sockets, payloads), refer to the [top-level Flow documentation](flows.md) for an overview.
 
-You can access the flow editor from the Query & Dev Studio interface, found in the Main Menu. Select "Flows" from the left-hand side, as shown in the screenshot below. From there, you can either start a new blank flow ("Start a New Flow") or instantiate one of the "starter flows" provided by Gravwell.
+You can access the flow editor from the Query Studio interface, found in the Main Menu. Select "Flows" from the left-hand side, as shown in the screenshot below. From there, you can either start a new blank flow ("Start a New Flow") or instantiate one of the "starter flows" provided by Gravwell.
 
 ![dev studio interface](dev-studio.png)
 
@@ -18,7 +18,7 @@ The toolbar contains buttons for quick access to editor functionality. From left
 
 * Flow Designer: shows the flow canvas (default view).
 * Info & Scheduling: shows options to set flow name, description, scheduling, sharing, etc.
-* Disable scheduling: toggle to quickly enable/disable automatic execution of the flow.
+* Enable scheduling: toggle to quickly enable/disable automatic execution of the flow.
 * Save: save the flow.
 * Debug: run the flow
 * Clear selection: deselects any currently-selected node.
@@ -71,7 +71,11 @@ You should specify a name and description for the flow, then define a schedule. 
 
 ![](scheduling.png)
 
-Once the schedule is set, toggle the "Disable scheduling" option to enable scheduled executions of the flow. The search agent will then automatically run it on the given schedule.
+Once the schedule is set, toggle the "Enable scheduling" option to enable scheduled executions of the flow. The search agent will then automatically run it on the given schedule.
+
+The "Enable Backfilled Scheduling" toggle controls whether or not Gravwell will attempt to "backfill" flow executions which *should* have happened but were skipped because e.g. the Gravwell webserver was temporarily offline. If enabled, Gravwell will look at the last execution time of the flow and the schedule string, then figure out every time it should have run between the last execution and now. It will then re-run the flow for each instance, setting the `flow.Scheduled` field appropriately. The `flow.Scheduled` timestamp is used as the endpoint for Run Query nodes in the flow, so backfilled flows which run queries will run the queries over the appropriate time span.
+
+We recommend leaving backfilling on in most cases.
 
 ## In-Flow "Sticky" Notes
 

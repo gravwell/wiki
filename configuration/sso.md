@@ -1,6 +1,6 @@
 # Gravwell Single Sign-On
 
-Gravwell's GUI supports single sign-on using SAML. In theory, any SAML-compliant Identity Provider can be used to log in. This page describes Gravwell's SSO configuration options, then show an example of how Gravwell can be configured to authenticate with a Windows AD FS server.
+Gravwell's GUI supports single sign-on using SAML. In theory, any SAML-compliant Identity Provider can be used to log in. This page describes Gravwell's SSO configuration options, then show an example of how Gravwell can be configured to authenticate with a Windows AD FS server and other SSO providers.
 
 Note: Although regular users log in via SSO, the default 'admin' user does not. Be sure you change the admin user's password when you set up a new system, even if you configure SSO immediately. Be aware also that the Gravwell admin user can still create new non-SSO user accounts from within the GUI if needed.
 
@@ -33,11 +33,15 @@ Gravwell can be configured to receive a list of group memberships with the user'
 * `Groups-Attribute` [default: "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"]: defines the SAML attribute which contains the list of groups to which the user belongs. You will typically have to explicitly configure the SSO provider to send the group list.
 * `Group-Mapping`: Defines one of the groups which may be automatically created if listed in the user's group memberships. This may be specified multiple times to allow multiple groups. The argument should consist of two names separated by a colon; the first is the SSO server-side name for the group (typically a name for AD FS, a UUID for Azure, etc.) and the second is the name Gravwell should use. Thus, if we define `Group-Mapping=Gravwell Users:gravwell-users`, if we receive a login token for a user who is a member of the group "Gravwell Users", we will create a local group named "gravwell-users" and add the user to it.
 
-## Example: Setting up Azure Active Directory
+## Setting up Keycloak
+
+Documentation on setting up SSO with Keycloak is separated into its own page. [Click here](sso-keycloak/keycloak.md) to read it.
+
+## Setting up Azure Active Directory
 
 Documentation on setting up SSO with Azure Active Directory is separated into its own page. [Click here](sso-azure/azure.md) to read it.
 
-## Example: Setting up Windows Server 2016
+## Setting up Windows Server 2016
 
 Gravwell SSO works well with Microsoft's AD FS (Active Directory Federation Services) as provided with Windows Server. We'll describe how to configure AD FS and Gravwell for SSO authentication.
 

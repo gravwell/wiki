@@ -56,6 +56,10 @@ Finally, "ISO 8601 duration" allows you to specify a duration in [ISO-8601 forma
 
 Note: "Date range" and "Unix timestamp" can be used to search into the future, which is useful if data has been ingested with bad timestamps.
 
+![](preview.png)
+
+Note: "Preview" tells Gravwell to just go find "something" without regard to time.  This means that the system will look at the specific tags in use and ask the indexers for time ranges where the data could exist and then begin sampling it.  The data may be in the future or it may be way in the past.  This is a good option for testing queries.
+
 ## Search Results Page
 
 When you run a query, Gravwell displays the *search results page* to show the output. From this page, you can drill down into subsections of the results, modify & re-run the query, change the timeframe, save the results, and more.
@@ -162,4 +166,4 @@ The right button lets you change how often the live update occurs:
 
 ![](live-options.png)
 
-By default, the search updates every minute. You can update as frequently as every 10 seconds, or as infrequently as you wish.
+By default, the search updates every minute. You can update as frequently as every 10 seconds or as infrequently as you wish.
