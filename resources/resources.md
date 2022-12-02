@@ -78,7 +78,9 @@ The name, description, and group sharing can all be managed from this screen. Ad
 
 To change the actual contents of the resource, drag a file into the gray 'File' region or click to select a new file, exactly as when creating a new resource. Note that the Version, Hash, Size, and Last Modified fields change when a different file is uploaded.
 
-Attention: Changes to the resource description will not be saved unless the "Save" button is clicked.
+```{attention}
+Changes to the resource description will not be saved unless the "Save" button is clicked.
+```
 
 ## Using resources
 

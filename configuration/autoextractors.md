@@ -35,7 +35,9 @@ Note: Auto-extractors always operate on the full underlying data of an entry.  T
 
 Auto-extractors can also be defined in text files and uploaded to Gravwell by clicking the "Upload" button in the upper-right corner of the Extractors management page. Because each file can contain multiple extractor definitions, and re-uploading a file will update any existing extractions, this can be a convenient way to share auto-extractor definitions or for mass-updating. Auto-extractor files follow the [TOML V4](https://github.com/toml-lang/toml) format which allows comments using the "#" character. 
 
-Attention: Older versions of Gravwell managed auto-extractors as files in `/opt/gravwell/extractions`. This is no longer supported, but any existing files in that directory will be automatically imported when Gravwell is updated. *All* extractor management should take place through the Gravwell UI.
+```{attention}
+Older versions of Gravwell managed auto-extractors as files in `/opt/gravwell/extractions`. This is no longer supported, but any existing files in that directory will be automatically imported when Gravwell is updated. *All* extractor management should take place through the Gravwell UI.
+```
 
 Each extractor contains a header and the following parameters:
 

@@ -26,7 +26,9 @@ The ageout system can be configured to delete old data, so it is critically impo
 
 Each well will always have a hot storage location defined via the `Location` directive. It may optionally have a cold storage location defined via `Cold-Location`. Ageout is configured by setting constraints and defining any desired rules for moving or deleting data from hot to cold storage, and from cold storage to either archives or deletion. Be aware that unless deletion rules are *explicitly* provided, Gravwell will *never* delete data. The default configuration *does* include ageout rules, so be sure to review the config file (and maybe set up some custom wells) if you've got particular retention requirements.
 
-Attention: Ageout configurations are on a per well basis.  Each well operates independently and asynchronously from all others.  If two wells are sharing the same volume, enabling ageout directives based on storage reserve can cause one well to aggressively migrate and/or delete data due to the incursion by another.
+```{attention}
+Ageout configurations are on a per well basis.  Each well operates independently and asynchronously from all others.  If two wells are sharing the same volume, enabling ageout directives based on storage reserve can cause one well to aggressively migrate and/or delete data due to the incursion by another.
+```
 
 Note: If data is actively coming into a storage shard that is marked for ageout or is actively being queried, the ageout system will defer aging out the shard to a later time.
 
@@ -118,7 +120,9 @@ An example well configuration where the hot pool keeps approximately 50GB and th
 	Delete-Frozen-Data=true
 ```
 
-Attention: Storage-based constraints are not an instant hard limit.  Be sure to leave a little room so that when a storage allotment is exceeded, the indexer can ageout data while still ingesting.  For example, if a hot storage device can hold 512GB and the system typically ingests 100GB per day, setting the storage limit to 490GB should provide enough headroom so that the hot pool won't completely fill up while the indexer is migrating data.
+```{attention}
+Storage-based constraints are not an instant hard limit.  Be sure to leave a little room so that when a storage allotment is exceeded, the indexer can ageout data while still ingesting.  For example, if a hot storage device can hold 512GB and the system typically ingests 100GB per day, setting the storage limit to 490GB should provide enough headroom so that the hot pool won't completely fill up while the indexer is migrating data.
+```
 
 ## Storage Available-Based Ageout Rules
 
@@ -136,7 +140,9 @@ An example well configuration which will use the hot location as long as there i
 	Delete-Frozen-Data=true
 ```
 
-Attention: The Gravwell ageout system which operates on storage reserves is operating entirely orthogonal to outside influences, if a well is configured to respect a 50% storage ceiling and an outside application fills the volume to 60%, Gravwell will delete all entries outside the active shard.  Wells configured with storage reserved should be treated as expendable.
+```{attention}
+The Gravwell ageout system which operates on storage reserves is operating entirely orthogonal to outside influences, if a well is configured to respect a 50% storage ceiling and an outside application fills the volume to 60%, Gravwell will delete all entries outside the active shard.  Wells configured with storage reserved should be treated as expendable.
+```
 
 ## Caveats and Important Notes
 

@@ -45,7 +45,9 @@ Webserver-Address=gravwell1.example.org:443
 Webserver-Address=gravwell2.example.org:443
 ```
 
-Attention: Do not specify multiple webservers unless they are all synchronized using the [datastore](/distributed/frontend)
+```{attention}
+Do not specify multiple webservers unless they are all synchronized using the [datastore](/distributed/frontend)
+```
 
 **Search-Agent-Auth**
 

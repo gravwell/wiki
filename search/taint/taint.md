@@ -13,7 +13,9 @@ The taint module can be used to track network flow propagation, infection propag
 
 Gravwell presented research at the S4x18 conference in Miami which successfully tracked USB based infectors that [hopped air gaps](https://s4x18.com/sessions/using-force-directed-graphs-to-analyze-huge-event-datasets/).
 
-Attention: Because taint can control the direction of the search, it is not advisable to combine it with the sort module.
+```{attention}
+Because taint can control the direction of the search, it is not advisable to combine it with the sort module.
+```
 
 ### Syntax
 

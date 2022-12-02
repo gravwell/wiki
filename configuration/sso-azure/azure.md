@@ -57,7 +57,9 @@ Open `gravwell.conf` on your webserver and create an SSO section:
 
 Change `Gravwell-Server-URL` to point to your Gravwell webserver (this can be an IP address if necessary), then set `Provider-Metadata-URL` to the "App Federation Metadata URL" you copied in the previous section. The other two parameters can be left alone.
 
-Attention: You MUST set the `Provider-Metadata-URL` option; the one given is invalid and serves only as an example.
+```{attention}
+You MUST set the `Provider-Metadata-URL` option; the one given is invalid and serves only as an example.
+```
 
 Now restart the Gravwell webserver (`systemctl restart gravwell_webserver.service`). It should come back up; if not, check for typos in your configuration and look in `/dev/shm/gravwell_webserver.service` and `/opt/gravwell/log/web/` for errors.
 

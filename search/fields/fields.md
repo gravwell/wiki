@@ -8,9 +8,13 @@ Fields are extracted by specifying an index into data from a base of zero.  An i
 
 Extracted index fields can be renamed by appending the directive `as <name>` immediately after a field index value.  For example, to extract the 6th field from a piece of data into an enumerated value with the name "uri" the extraction directive would be `[5] as uri`.  If no rename directive is provided the extracted values are given the name that matches the index.  Extracted fields also support filters which allows for quickly filtering entries based on equality or contained values.  Filters must be specified before the renaming statement.  An example fields directive which only allows entries to pass by where the 1st field is the value "stuff" would be `[0]=="stuff"`.  To only allow entries where the 1st field does not equal the value "stuff" and rename the 1st field to "things" the directive would be `[0] != "stuff" as things`.
 
-Attention: Field extraction indexes can be specified as base 10, base 8, or base 16.  The default name applied is the original text value of the index.  An extraction directive of [0xA] will extract the 11th field with the name "0xA", while [010] will extract the 9th field and apply the name "010".
+```{attention}
+Field extraction indexes can be specified as base 10, base 8, or base 16.  The default name applied is the original text value of the index.  An extraction directive of [0xA] will extract the 11th field with the name "0xA", while [010] will extract the 9th field and apply the name "010".
+```
 
-Attention: To specify filter values and or extraction names which contain special characters like "-", ".", or spaces surround the value in double quotes.
+```{attention}
+To specify filter values and or extraction names which contain special characters like "-", ".", or spaces surround the value in double quotes.
+```
 
 ### Supported Options
 

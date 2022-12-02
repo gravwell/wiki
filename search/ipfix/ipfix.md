@@ -59,7 +59,9 @@ IPFIX and Netflow v9 define fields which may make up a data record. Netflow defi
 
 IANA has defined a similar set of fields for IPFIX, which [can be found here](https://www.iana.org/assignments/ipfix/ipfix.xhtml#ipfix-information-elements). An IPFIX fields are similar to Netflow v9 fields (they have a field ID, a type, and a name), but IPFIX introduces the concept of the _enterprise ID_ in addition to the field IDs used by Netflow v9. The enterprise ID allows users to define their own set of fields in addition to the predefined ones, which all have an enterprise ID of 0.
 
-Attention: Because IPFIX and Netflow v9 are template-based, any given data record may or may not contain the fields described below. If you attempt to extract e.g. "sourceIPv4PrefixLength" but get empty results, it is possible that your IPFIX records do not contain that field.
+```{attention}
+Because IPFIX and Netflow v9 are template-based, any given data record may or may not contain the fields described below. If you attempt to extract e.g. "sourceIPv4PrefixLength" but get empty results, it is possible that your IPFIX records do not contain that field.
+```
 
 For convenient, we list some of the most common IPFIX and Netflow v9 fields below; refer to the documents linked above for a complete list of supported names.
 

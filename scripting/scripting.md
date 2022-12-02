@@ -109,7 +109,9 @@ y = b - c	# boolean true converts to 1, so y == 2.5 - true == 2.5 - 1.0 == 1.5
 
 The exact semantics of various operations on the different types are explained in later sections.
 
-Attention: If you use hex constants in Anko, be sure to capitalize A-F. `0x1E` is a valid representation of the number 14, but `0x1e` is not.
+```{attention}
+If you use hex constants in Anko, be sure to capitalize A-F. `0x1E` is a valid representation of the number 14, but `0x1e` is not.
+```
 
 ### Arrays
 

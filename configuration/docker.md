@@ -29,9 +29,13 @@ We have set several environment variables which bear examination. They set share
 * `GRAVWELL_CONTROL_AUTH=MyControlSecret` tells the *frontend* and *indexer* that they should authenticate with each other using MyControlSecret
 * `GRAVWELL_SEARCHAGENT_AUTH=MySearchAgentAuth` tells the *frontend* to use MySearchAgentAuth when authenticating the search agent
 
-Attention: We **highly** recommend setting these values to secrets of your own choosing if you intend to run this long-term, ESPECIALLY if you expose it to the Internet in any way.
+```{attention}
+We **highly** recommend setting these values to secrets of your own choosing if you intend to run this long-term, ESPECIALLY if you expose it to the Internet in any way.
+```
 
-Attention: The secret value for GRAVWELL_INGEST_AUTH must match GRAVWELL_INGEST_SECRET
+```{attention}
+The secret value for GRAVWELL_INGEST_AUTH must match GRAVWELL_INGEST_SECRET
+```
 
 ### Configuring Persistent Storage
 
@@ -81,7 +85,9 @@ In our case, it was **172.19.0.2**. We can then use netcat to send in some lines
 	this is a test
 	this is another test
 
-Attention: MacOS users cannot access containers directly by IP, because the containers are actually run within a Linux VM. You can either use netcat from within a Docker container (either the same container or a new one), or forward port 7777 to the host when launching the Gravwell container.
+```{attention}
+MacOS users cannot access containers directly by IP, because the containers are actually run within a Linux VM. You can either use netcat from within a Docker container (either the same container or a new one), or forward port 7777 to the host when launching the Gravwell container.
+```
 
 We can then run a quick search over the last hour to verify that the data made it in and Gravwell is working properly:
 

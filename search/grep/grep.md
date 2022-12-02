@@ -15,9 +15,13 @@ Grep allows multiple patterns to be specified. If any pattern is matched, the en
 * `-simple`: Simple match. With this flag, `grep` will match exactly the characters you specify, with no wildcard matching. This allows you to find asterisks and other normally-reserved characters: `grep -s * `
 * `-w`: A word match.  The entire match pattern must a word as would be matched by the fulltext extractors.
 
-Attention: Case-insensitive search is significantly slower. If you must do case-insensitive grep, try to put it later in your search pipeline to improve speed.
+```{attention}
+Case-insensitive search is significantly slower. If you must do case-insensitive grep, try to put it later in your search pipeline to improve speed.
+```
 
-Attention: The `-w` word match implies a simple match as the wildcards allow for crossing word boundaries.
+```{attention}
+The `-w` word match implies a simple match as the wildcards allow for crossing word boundaries.
+```
 
 ### Parameter Structure
 ```

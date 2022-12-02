@@ -161,7 +161,9 @@ Once Gravwell is installed, open a web browser and navigate to the server (e.g. 
 
 Once the license is uploaded and verified, Gravwell should present a login screen. Log in as "admin" with the password "changeme".
 
-Attention: The default username/password combination for Gravwell is admin/changeme. We highly recommend changing the admin password as soon as possible! This can be done by choosing “Account Settings” from the navigation sidebar or clicking the “user” icon in the upper right.
+```{attention}
+The default username/password combination for Gravwell is admin/changeme. We highly recommend changing the admin password as soon as possible! This can be done by choosing “Account Settings” from the navigation sidebar or clicking the “user” icon in the upper right.
+```
 
 ![](login.png)
 

@@ -70,7 +70,9 @@ Gravwell will periodically push updates to the official kit server. When one of 
 
 If there are no items which have been modified, the Backup step will not be shown. The rest of the wizard is identical to the installation wizard, although defaults such as group access should be already set for you.
 
-Attention: The upgrading a kit to a new version involves the *complete deletion* of the previous version's contents. Do not click the "Deploy" button at the end of the wizard until you are prepared for this to happen!
+```{attention}
+Upgrading a kit to a new version involves the *complete deletion* of the previous version's contents. Do not click the "Deploy" button at the end of the wizard until you are prepared for this to happen!
+```
 
 ## Uninstalling Kits
 

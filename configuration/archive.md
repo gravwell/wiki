@@ -4,9 +4,13 @@ Gravwell supports an ageout mechanism called Cloud Archive.  Cloud archive is a 
 
 The archive system ensures that data is successfully uploaded to the archive server before it is deleted during normal ageout.
 
-Attention: Indexers will not delete data until they have successfully uploaded it to the archive server.  If the indexer cannot upload due to connectivity issues, misconfigurations, or poor network throughput they will not delete data.  The inability to delete data may cause indexers to run out of storage and cease ingesting new data.  If a Cloud Archive upload fails to complete the user interface will display a notification with the failure.
+```{attention}
+Indexers will not delete data until they have successfully uploaded it to the archive server.  If the indexer cannot upload due to connectivity issues, misconfigurations, or poor network throughput they will not delete data.  The inability to delete data may cause indexers to run out of storage and cease ingesting new data.  If a Cloud Archive upload fails to complete the user interface will display a notification with the failure.
+```
 
-Attention: The Cloud Archive system compresses data while in transit which requires some CPU resources when uploading.  Pushing data to a remote system also requires time, depending on available bandwidth and CPU.  Be sure to leave yourself a little headroom when defining ageout parameters to account for additional time consumed by Cloud Archive.
+```{attention}
+The Cloud Archive system compresses data while in transit which requires some CPU resources when uploading.  Pushing data to a remote system also requires time, depending on available bandwidth and CPU.  Be sure to leave yourself a little headroom when defining ageout parameters to account for additional time consumed by Cloud Archive.
+```
 
 ## Configuring Indexers
 

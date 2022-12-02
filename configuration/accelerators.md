@@ -432,7 +432,9 @@ The winlog module is perhaps *the* slowest search module.  The complexity of XML
 	Accelerator-Args="EventID Provider Computer TargetUserName SubjectUserName"
 ```
 
-Attention: The winlog accelerator is permissive ('-or' flag is implied).  So specify any field you plan on using to filter searches on, even if two of the fields would not be present in the same entry.
+```
+The winlog accelerator is permissive ('-or' flag is implied).  So specify any field you plan on using to filter searches on, even if two of the fields would not be present in the same entry.
+```
 
 ## Netflow
 

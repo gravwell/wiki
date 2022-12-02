@@ -78,7 +78,9 @@ stats mean(Bytes) stddev(Bytes) by SrcIP DstIP DstPort
 
 The module will calculate a separate mean and standard deviation for *every combination of SrcIP, DstIP, and DstPort*.
 
-Attention: When working with very large datasets on systems with limited memory, specifying too many by arguments can lead to memory exhaustion as the stats module attempts to keep millions of combinations in memory.
+```{attention}
+When working with very large datasets on systems with limited memory, specifying too many by arguments can lead to memory exhaustion as the stats module attempts to keep millions of combinations in memory.
+```
 
 ### Using complex "By" arguments
 

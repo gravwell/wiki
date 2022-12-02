@@ -110,7 +110,9 @@ Tiles can be reshaped by clicking and dragging their corners, as you would with 
 
 ![](arrange-dashboard.png)
 
-Attention: Modifications to the dashboard layout are not permanent until you click the "Save Changes" button which appears in the lower right. Until that button is clicked, you can revert to the old layout by refreshing the page.
+```{attention}
+Modifications to the dashboard layout are not permanent until you click the "Save Changes" button which appears in the lower right. Until that button is clicked, you can revert to the old layout by refreshing the page.
+```
 
 ## Live Updating
 

@@ -108,9 +108,13 @@ Note that while the ID, Name, Description, and Version fields are required, the 
 }
 ```
 
-Attention: The UUIDs specified for templates, actionables, and userfiles should be the *GUIDs* associated with those structures, not the *ThingUUID* field which is also reported in a listing of items.
+```{attention}
+The UUIDs specified for templates, actionables, and userfiles should be the *GUIDs* associated with those structures, not the *ThingUUID* field which is also reported in a listing of items.
+```
 
-Attention: The UUIDs specified for Banner, Cover, and Icon must be included in the list of Files for the build request.  If the build request contains references to file UUIDs that are NOT included in the main file request the API server will reject the request.
+```{attention}
+The UUIDs specified for Banner, Cover, and Icon must be included in the list of Files for the build request.  If the build request contains references to file UUIDs that are NOT included in the main file request the API server will reject the request.
+```
 
 The system will respond with a structure describing the newly-built kit:
 

@@ -47,7 +47,9 @@ Gravwell SSO works well with Microsoft's AD FS (Active Directory Federation Serv
 
 You must have Active Directory and AD FS installed on your server before you begin. Basic installation and setup of these services is outside the scope of this document--we assume that if you're setting up SSO, you probably already have Active Directory configured!
 
-Attention: It is *essential* that any user accounts you intend to use with Gravwell must have an email address set in Active Directory! This is used as the username internally to Gravwell. If you get errors in the event log with EventID 364, this is why!
+```{attention}
+It is *essential* that any user accounts you intend to use with Gravwell must have an email address set in Active Directory! This is used as the username internally to Gravwell. If you get errors in the event log with EventID 364, this is why!
+```
 
 ### Set up Gravwell
 

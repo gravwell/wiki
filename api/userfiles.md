@@ -93,7 +93,9 @@ The various fields of a file (Name, Desc, Global, GIDs, Labels) can be updated w
 
 Note that any fields beyond those show above may be present but will be ignored.
 
-Attention: The UID of a file may be changed, but only by an administrator and only when the `?admin=true` parameter has been set.
+```{attention}
+The UID of a file may be changed, but only by an administrator and only when the `?admin=true` parameter has been set.
+```
 
 ## Deleting a file
 

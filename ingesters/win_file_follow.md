@@ -4,7 +4,9 @@ The Windows File Follower ingester is the best way to ingest files on a local wi
 
 The most common use case for File Follower is monitoring a directory containing log files which are actively being updated, such as from a custom Windows application that writes log files to a location on disk.  The file follower is also a good option when performing forensic investigations because you can gather up large quantities of EVTX files and drag them into a folder to be ingested.
 
-Attention: Do not use the file follower to follow actively written EVTX files on a Windows system; the kernel does not produce inotify events on these EVTX files.  The [Windows event ingester](/ingesters/winevent) is a better option for pulling in live event logs.
+```{attention}
+Do not use the file follower to follow actively written EVTX files on a Windows system; the kernel does not produce inotify events on these EVTX files.  The [Windows event ingester](/ingesters/winevent) is a better option for pulling in live event logs.
+```
 
 ## Installation
 
