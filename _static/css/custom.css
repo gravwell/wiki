@@ -1,7 +1,7 @@
 html[data-theme="light"],
 html[data-theme="dark"] {
   --pst-font-family-base: Lato, var(--pst-font-family-base-system);
-  --pst-font-family-heading: Lato, var(--pst-font-family-base-system);
+  --pst-font-family-heading: Erbaum, var(--pst-font-family-base-system);
   --pst-font-family-monospace: Courier, var(--pst-font-family-monospace-system);
 }
 
@@ -20,4 +20,30 @@ h3.popover-header {
 
 div.popover.hash-popover {
   max-width: 100%;
+}
+
+li.nav-item > a.nav-link,
+.nav-item.dropdown > .btn.nav-item {
+  font-family: Erbaum, var(--pst-font-family-base-system);
+  font-size: 0.9rem;
+}
+
+nav.bd-links p.caption {
+  color: var(--pst-color-primary);
+}
+
+nav.bd-links p.bd-links__title {
+  color: var(--pst-color-primary);
+}
+
+.bd-sidebar {
+  font-family: Erbaum, var(--pst-font-family-base-system);
+}
+
+.bd-sidebar-secondary {
+  font-family: Erbaum, var(--pst-font-family-base-system);
+}
+
+.bd-sidebar-secondary .onthispage {
+  color: var(--pst-color-primary);
 }
