@@ -110,7 +110,7 @@ class GravwellLexer(RegexLexer):
             #
             # Identifier
             #
-            (r"[\w,]+", identifierToken, "#pop"),
+            (r"[\w,*]+", identifierToken, "#pop"),
         ],
         "pipeModuleInvocation": [
             #
