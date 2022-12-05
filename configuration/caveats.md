@@ -20,11 +20,11 @@ If you are unable to modify the clock source, this notification is only visible 
 
 ## Cannot Reach Gravwell Interface
 
-After installing Gravwell, you may find that your web browser cannot reach the webserver, or that the webserver is not connecting to any indexers. This is frequently a result of closed firewall ports. Gravwell uses a number of TCP ports which must be opened for proper operation. Please refer to [the networking considerations page](networking.md) for more information on which ports must be opened.
+After installing Gravwell, you may find that your web browser cannot reach the webserver, or that the webserver is not connecting to any indexers. This is frequently a result of closed firewall ports. Gravwell uses a number of TCP ports which must be opened for proper operation. Please refer to [the networking considerations page](networking) for more information on which ports must be opened.
 
 ## Configuring HTTPS and Secure Listeners
 
-By default, Gravwell does not include or generate TLS certificates. If you intend to use Gravwell on the Internet or any other untrusted network, we strongly recommend you install certificates as soon as possible. See [the certificates page](certificates.md) for instructions.
+By default, Gravwell does not include or generate TLS certificates. If you intend to use Gravwell on the Internet or any other untrusted network, we strongly recommend you install certificates as soon as possible. See [the certificates page](certificates) for instructions.
 
 ```{note}
 Gravwell requires certificates that are compatible with TLS 1.2 or later.
@@ -52,11 +52,11 @@ Do not modify permissions or ownership of files in `/opt/gravwell/bin` unless ex
 
 ### SELinux Issues
 
-Gravwell makes an attempt to properly flag files in `/opt/gravwell` for SELinux compatibility, but careless use of the `chown` and `chmod` commands in `/opt/gravwell/bin` can clear these flags. See [the SELinux section of the hardening document](hardening.md) for more information.
+Gravwell makes an attempt to properly flag files in `/opt/gravwell` for SELinux compatibility, but careless use of the `chown` and `chmod` commands in `/opt/gravwell/bin` can clear these flags. See [the SELinux section of the hardening document](hardening) for more information.
 
 ## Gravwell Consumes Too Much Memory/CPU
 
-Because Gravwell often has to deal with huge quantities of data, we do not restrict how much memory or CPU time it can consume. If, however, you must run Gravwell on the same system as some other important software, you may wish to restrict its access to resources. In that case, see the "systemd Unit Files" section of the [system hardening document](hardening.md).
+Because Gravwell often has to deal with huge quantities of data, we do not restrict how much memory or CPU time it can consume. If, however, you must run Gravwell on the same system as some other important software, you may wish to restrict its access to resources. In that case, see the "systemd Unit Files" section of the [system hardening document](hardening).
 
 ## Gravwell and Virtual Memory Areas
 

@@ -85,7 +85,7 @@ Actionables have two different IDs attached to them: a GUID, and a ThingUUID. Th
 
 Consider an example: I create the actionable from scratch, so it gets assigned a random GUID, `e80293f0-5732-4c7e-a3d1-2fb779b91bf7`, and a random ThingUUID, `c3b24e1e-5186-4828-82ee-82724a1d4c45`. I then bundle the actionable into a kit. Another user on the same system then installs this kit for themselves, which instantiates an actionable with the **same** GUID (`e80293f0-5732-4c7e-a3d1-2fb779b91bf7`) but a **random** ThingUUID (`f07373a8-ea85-415f-8dfd-61f7b9204ae0`).
 
-This system is identical to the one used in [templates](templates.md). Templates use GUIDs and ThingUUIDs so that dashboards can refer to templates by GUID, but multiple users can still install the same kit (with the sample template) at the same time without conflict. Although no Gravwell components reference actionables in the same way dashboards reference templates, we have included the behavior as future-proofing.
+This system is identical to the one used in [templates](templates). Templates use GUIDs and ThingUUIDs so that dashboards can refer to templates by GUID, but multiple users can still install the same kit (with the sample template) at the same time without conflict. Although no Gravwell components reference actionables in the same way dashboards reference templates, we have included the behavior as future-proofing.
 
 ### Accessing Actionables via GUID vs ThingUUID
 

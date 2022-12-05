@@ -54,7 +54,7 @@ curl --header "Gravwell-Token: rQ_e-7I8xRgeFYJpWzqMdEu391HCTC0QYvvJl_fp9YNXNquAc
 
 ### Examples
 
-This section is by no means exhaustive in the set of Gravwell APIs that can be accessed by tokens.  Executing queries requires a slightly more elaborate API interaction, for more information checkout the [Direct Query API](/search/directquery/directquery.md) section.
+This section is by no means exhaustive in the set of Gravwell APIs that can be accessed by tokens.  Executing queries requires a slightly more elaborate API interaction, for more information checkout the [Direct Query API](/search/directquery/directquery) section.
 
 #### Get Tags
 

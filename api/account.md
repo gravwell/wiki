@@ -38,7 +38,7 @@ The group details structure is as follows:
 
 ## Log in and log out
 
-The API to authenticate with the webserver is [documented here](login.md).
+The API to authenticate with the webserver is [documented here](login).
 
 ## Fetch current user's info
 GET on /api/info/whoami returns current account info

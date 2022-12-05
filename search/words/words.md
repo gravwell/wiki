@@ -2,7 +2,7 @@
 
 Words is a simple text matching engine that searches for a text word that is delimited by split characters.  The words module is functionally equivalent to `grep -s -w` and is designed to interact with the fulltext accelerator.  Words supports UTF8 character encoding and will normally behave well with binary data, this means it is possible to look for the word "foo" in a pcap stream.  However, it is important to understand how the words module breaks on word boundaries.  If the word `foo` is adjacent to the byte 0x44 in a binary data stream the words module will identify the word as `Dfoo` and will not match the query term `foo`.  Words is a great first level filter when operating on unknown data.
 
-The words module does not support wildcards, if you need word matching with wildcard support check out the [grep](../grep/grep.md) module using the `-w` flag.
+The words module does not support wildcards, if you need word matching with wildcard support check out the [grep](/search/grep/grep) module using the `-w` flag.
 
 The `words` module allows multiple patterns to be specified and defaults to as strict mode, this means that every pattern must match for the entry to be passed down the pipeline.  If you need an `any` matching behavior the `-or` flag specifies that if any word matches the entry will be passed down the pipeline.  The `words` module also supports an inverted logic so that you can search for entries that do not contain words.
 

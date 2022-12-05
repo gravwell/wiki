@@ -4,7 +4,7 @@ Gravwell enables per-tag extraction definitions that can ease the complexity of 
 
 Auto-extractors are simply definitions that can be applied to tags and describe how to correctly extract fields from the data in a given tag. The "ax" module then automatically invokes the appropriate functionality of other modules. 
 
-Auto-extractor definitions are used by the [AX](../search/ax/ax.md) module which transparently references the correct extraction based on tags.
+Auto-extractor definitions are used by the [AX](/search/ax/ax) module which transparently references the correct extraction based on tags.
 
 ## Auto-Extractor Configuration
 
@@ -301,7 +301,7 @@ tag=test ax email~"test.org" app path | table
 
 ### Slice
 
-The [Slice](/search/slice/slice.md) module is a powerful binary-slicing system that can extract data directly from binary data streams.  Gravwell engineers have developed entire protocol dissectors using nothing but the slice module.  However, cutting up binary streams of data and interpreting the data is not for the faint of heart, and once you have built up a beautiful query that slices and dices a proprietary data stream no one wants to remember it or even copy & paste it.
+The [Slice](/search/slice/slice) module is a powerful binary-slicing system that can extract data directly from binary data streams.  Gravwell engineers have developed entire protocol dissectors using nothing but the slice module.  However, cutting up binary streams of data and interpreting the data is not for the faint of heart, and once you have built up a beautiful query that slices and dices a proprietary data stream no one wants to remember it or even copy & paste it.
 
 Showing binary data in text form is difficult, so in this document we will show the data in hex encoding.  We will be cutting up a binary data stream coming from a small control system that regulates a refrigerant compressor to maintain precise temperature control in a brewing system.  The control system ships strings, integers, and some floating point values, and as is often the case in control systems all the data is in [Big Endian](https://en.wikipedia.org/wiki/Endianness) order.
 
@@ -311,7 +311,7 @@ The slice AX processor does not support any arguments (e.g. no "-e" allowed)
 
 #### Filtering
 
-The slice AX processor is designed to cast data to specific types.  As such its filtering options are a little more nuanced than other modules.  Each extracted value has a specific set of filter operators based on its type.  For a full description of filtering operators and types, see the [slice module documentation](../search/slice/slice.md).
+The slice AX processor is designed to cast data to specific types.  As such its filtering options are a little more nuanced than other modules.  Each extracted value has a specific set of filter operators based on its type.  For a full description of filtering operators and types, see the [slice module documentation](/search/slice/slice).
 
 #### Examples
 

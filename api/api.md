@@ -48,7 +48,7 @@ User Files <userfiles>
 maxdepth: 1
 caption: Search and Stats
 ---
-Gravwell Direct Query API <../search/directquery/directquery>
+Gravwell Direct Query API </search/directquery/directquery>
 ```
 
 
@@ -57,7 +57,7 @@ Gravwell Direct Query API <../search/directquery/directquery>
 maxdepth: 1
 caption: Automation Scripting
 ---
-Automation Script APIs & Examples <../scripting/scriptingsearch>
+Automation Script APIs & Examples </scripting/scriptingsearch>
 ```
 
 ## System Stats
@@ -82,5 +82,5 @@ The System contains a test API located at _/api/test_ which can be used to test 
 maxdepth: 1
 caption: API Tokens System
 ---
-API Tokens System <../tokens/tokens>
+API Tokens System </tokens/tokens>
 ```

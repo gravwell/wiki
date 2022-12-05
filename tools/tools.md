@@ -1,6 +1,6 @@
 # Gravwell Tools
 
-The Gravwell tools package (available in the Redhat and Debian repositories and [the downloads page](../quickstart/downloads)) contains small utilities which may come in handy when using Gravwell. The programs will be installed in `/usr/local/sbin` when the tools package is installed.
+The Gravwell tools package (available in the Redhat and Debian repositories and [the downloads page](/quickstart/downloads)) contains small utilities which may come in handy when using Gravwell. The programs will be installed in `/usr/local/sbin` when the tools package is installed.
 
 ## Common Arguments for Ingester Tools
 
@@ -111,7 +111,9 @@ Results:
 	2022-05-27 12:43:46 +0000 UTC	NGINX
 ```
 
-**NOTE:** Terminals capable of handling ANSI color codes will highlight the timestamp location in the log in green.
+```{note}
+Terminals capable of handling ANSI color codes will highlight the timestamp location in the log in green.
+```
 
 #### Multiple Log Entry Test
 Here is an example that tests 3 entries in succession showing how different extractors operated.
@@ -151,4 +153,4 @@ The system will correctly interpret the first timestamp and lock onto the `Unpad
 
 ## Splunk Migration
 
-The Splunk migration tool is [fully documented here](../migrate/migrate).
+The Splunk migration tool is [fully documented here](/migrate/migrate).

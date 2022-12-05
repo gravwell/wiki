@@ -32,7 +32,7 @@ To view the results of a search, click the 'View Results' icon on the right edge
 
 ![](view-results.png)
 
-Note that this does not *re-run* the search; instead, it loads the results from the previous search which are stored on the webserver's disk. This means that even very old searches whose original data has been [aged out](/configuration/ageout.md) can be viewed.
+Note that this does not *re-run* the search; instead, it loads the results from the previous search which are stored on the webserver's disk. This means that even very old searches whose original data has been [aged out](/configuration/ageout) can be viewed.
 
 ## Adding Notes
 

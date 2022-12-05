@@ -26,7 +26,7 @@ The following example formats the ingester info, packs it into a PDF, and sends 
 
 ![](ingesterinfo-example.png)
 
-The [Text Template](template.md) node is configured with the following template:
+The [Text Template](template) node is configured with the following template:
 
 ```
 Connected Ingesters:

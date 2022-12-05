@@ -1,14 +1,14 @@
 # Scheduling Searches and Scripts with the Search Agent
 
-It is often advantageous to perform searches or run scripts automatically, for instance running a search every morning to detect malicious behavior from the previous night. Using Gravwell's search agent, searches and [search scripts](scriptingsearch.md) can be run on customized scheduled.
+It is often advantageous to perform searches or run scripts automatically, for instance running a search every morning to detect malicious behavior from the previous night. Using Gravwell's search agent, searches and [search scripts](scriptingsearch) can be run on customized scheduled.
 
-The scheduling feature allows the user to schedule both regular searches and [search scripts](scriptingsearch.md).
+The scheduling feature allows the user to schedule both regular searches and [search scripts](scriptingsearch).
 
 ## Setting up the Search Agent
 
 The Gravwell Search Agent is now included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the Search Agent. The Search Agent is installed automatically by the Gravwell Debian package.
 
-For more information about configuring (or disabling) the search agent, see [the search agent documentation](searchagent.md).
+For more information about configuring (or disabling) the search agent, see [the search agent documentation](searchagent).
 
 ## Managing Scheduled Searches
 

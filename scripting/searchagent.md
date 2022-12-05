@@ -1,6 +1,6 @@
 # Gravwell Searchagent
 
-The search agent is the component which runs [automations](scheduledsearch.md). The search agent is included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the search agent. The search agent is installed automatically by the Gravwell Debian package.
+The search agent is the component which runs [automations](scheduledsearch). The search agent is included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the search agent. The search agent is installed automatically by the Gravwell Debian package.
 
 You can verify the search agent is running with the following command:
 

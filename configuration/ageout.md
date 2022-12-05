@@ -38,7 +38,7 @@ If data is actively coming into a storage shard that is marked for ageout or is 
 
 When data ages out from the hot well, it is moved to the cold well if a cold well is defined. If no cold well is defined, data will be left in the hot well unless deletion is explicitly authorized via the `Delete-Cold-Data` option.
 
-Similarly, when data ages out of the cold well ("frozen") it will not be deleted unless the `Delete-Frozen-Data` parameter is specified. If you need long-term archives, frozen data can be sent to the [Gravwell archiving service](archive.md) before deletion.
+Similarly, when data ages out of the cold well ("frozen") it will not be deleted unless the `Delete-Frozen-Data` parameter is specified. If you need long-term archives, frozen data can be sent to the [Gravwell archiving service](archive) before deletion.
 
 Examples of these rules can be seen in the configuration snippets in the following sections.
 
@@ -161,7 +161,7 @@ Take care when combining time-based constraints with total storage constraints. 
 
 ### Transparent Compression + Docker Caveats
 
-[Transparent compression](compression.md) has important implications for ageout rules involving total storage. A file with transparent compression enabled takes up less space on disk than the uncompressed version, but it is difficult to find out precisely *how much* disk space it is actually using. Consider a well configured with `Max-Hot-Storage-GB=5`; if transparent compression is enabled, we would prefer to ageout data only when 5GB of *actual disk space* are used, rather than when the size of the uncompressed data reaches 5GB.
+[Transparent compression](compression) has important implications for ageout rules involving total storage. A file with transparent compression enabled takes up less space on disk than the uncompressed version, but it is difficult to find out precisely *how much* disk space it is actually using. Consider a well configured with `Max-Hot-Storage-GB=5`; if transparent compression is enabled, we would prefer to ageout data only when 5GB of *actual disk space* are used, rather than when the size of the uncompressed data reaches 5GB.
 
 Gravwell attempts to query the actual on-disk size of shards on BTRFS systems with compression enabled. On a typical Linux system, this will work fine. However, **when using Docker containers**, extra care must be taken. If Docker's runtime directory (default `/var/lib/docker`) is on a BTRFS filesystem, wells can use transparent compression, *but* the on-disk size query will fail because certain IOCTL calls are disabled by default. You can enable the appropriate IOCTL calls for your Docker container by passing the `--cap-add=SYS_ADMIN` flag to the command you use to instantiate the indexer container.
 

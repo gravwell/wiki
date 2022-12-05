@@ -19,7 +19,7 @@ This example gathers information about currently-connected ingesters and formats
 
 ![](slackfile-example.png)
 
-The [Text Template](template.md) node is configured with the following template:
+The [Text Template](template) node is configured with the following template:
 
 ```
 Connected Ingesters:

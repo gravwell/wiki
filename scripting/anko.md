@@ -2,7 +2,7 @@
 
 As introduced in [the search modules documentation](searchmodule_list), Gravwell's anko module is a general-purpose scripting tool within the search pipeline. It allows extremely flexible manipulations of search entries, at the cost of complexity for the script creator. Once a script is created, though, it can be easily shared with other users.
 
-See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting.md) for more details about the language itself.
+See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting) for more details about the language itself.
 
 ### Disabling network functions in anko scripts
 

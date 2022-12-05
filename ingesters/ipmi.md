@@ -63,4 +63,4 @@ IPMI uses the default set of Global configuration options. IPMI devices are conf
 
 The IPMI stanza is simple, only taking one or more Targets (the IP:PORT of the IPMI device), username, password, tag, and a poll rate, in seconds. The default poll rate is 60 seconds. Optionally, you can set a source override to force the SRC field on all ingested entries to another IP. By default, the SRC field is set to the IP of the IPMI device. 
 
-Additionally, all IPMI stanzas can use the "Preprocessor" options, as described [here](/ingesters/preprocessors/preprocessors.md).
+Additionally, all IPMI stanzas can use the "Preprocessor" options, as described [here](/ingesters/preprocessors/preprocessors).

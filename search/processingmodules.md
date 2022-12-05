@@ -115,7 +115,7 @@ words <words/words>
 * [lookup](lookup/lookup) - enrich entries by looking up keys in a table.
 * [lower](upperlower/upperlower) - convert text to lower-case.
 * [maclookup](maclookup/maclookup) - look up manufacturer, address, and country information based on a MAC address.
-* [Math Modules (list)](math/math.md) - perform math operations.
+* [Math Modules (list)](math/math) - perform math operations.
   * count - count entries.
   * max - find a maximum value.
   * mean - find a mean value.

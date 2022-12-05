@@ -8,9 +8,9 @@ Search extraction modules extract fields from data which "ride along" with the r
 
 ## Query Accelerators
 
-Extraction modules can make use of [query accelerators](/configuration/accelerators) (like full text indexing, JSON indexing, etc) when filtering is used with a given module. For example, using the module `netflow Src Dst Port==22` can use a properly configured accelerator to dramatically reduce search time because not all records need to be evaluated.  Some filtering modules (such as [words](words/words.md)) can also invoke query acceleration by passing hints to the underlying accelerator.
+Extraction modules can make use of [query accelerators](/configuration/accelerators) (like full text indexing, JSON indexing, etc) when filtering is used with a given module. For example, using the module `netflow Src Dst Port==22` can use a properly configured accelerator to dramatically reduce search time because not all records need to be evaluated.  Some filtering modules (such as [words](words/words)) can also invoke query acceleration by passing hints to the underlying accelerator.
 
-Not all query modules are compatible with all query accelerators.  For example, the `netflow` tag is configured to be accelerated using the netflow accelerator, but the [words](words/words.md) module will not be able to invoke netflow query acceleration. This is because the netflow accelerator is expecting to operate on binary data and apply a specific structure to data during indexing where the words module is designed to operate on a fulltext acceleration.
+Not all query modules are compatible with all query accelerators.  For example, the `netflow` tag is configured to be accelerated using the netflow accelerator, but the [words](words/words) module will not be able to invoke netflow query acceleration. This is because the netflow accelerator is expecting to operate on binary data and apply a specific structure to data during indexing where the words module is designed to operate on a fulltext acceleration.
 
 Gravwell will intelligently examine query parameters and invoke the acceleration system whenever possible, but there are some caveats to be aware of:
 
@@ -40,11 +40,11 @@ Gravwell is not a bit field index which means that it will only accelerate on di
 
 Some flags appear in several different search modules and have the same meaning throughout:
 
-* `-e <source name>` specifies that the module should attempt to read its input data from the given enumerated value rather than from the entry's data field. This is useful in for modules like [json](json/json.md), where the JSON-encoded data may have been extracted from a larger data record, for example the following search will attempt to read JSON fields from the payloads of HTTP packets: `tag=pcap packet tcp.Payload | json -e Payload user.email`
-* `-r <resource name>` specifies a resource in the [resources](/resources/resources) system. This is generally used to store additional data used by the module, such as a GeoIP mapping table used by the [geoip](geoip/geoip.md) module.
-* `-v` indicates that the normal pass/drop logic should be inverted. For example the [grep](grep/grep.md) module normally passes entries which match a given pattern and drop those which do not match; specifying the `-v` flag will cause it to drop entries which match and pass those which do not.
-* `-s` indicates a "strict" mode. If a module normally allows an entry to proceed down the pipeline if any one of several conditions are met, setting the strict flag means an entry will proceed only if *all* conditions are met. For example, the [require](require/require.md) module will normally pass an entry if it contains any one of the required enumerated values, but when the `-s` flag is used, it will only pass entries which contain *all* specified enumerated values.
-* `-p` indicates "permissive" mode.  If a module normally drops entries when patterns and filters do not match, the permissive flag tells the module to let the module go through.  The [regex](regex/regex.md) and [grok](grok/grok.md) modules are good examples where the permissive flag can be valuable.
+* `-e <source name>` specifies that the module should attempt to read its input data from the given enumerated value rather than from the entry's data field. This is useful in for modules like [json](json/json), where the JSON-encoded data may have been extracted from a larger data record, for example the following search will attempt to read JSON fields from the payloads of HTTP packets: `tag=pcap packet tcp.Payload | json -e Payload user.email`
+* `-r <resource name>` specifies a resource in the [resources](/resources/resources) system. This is generally used to store additional data used by the module, such as a GeoIP mapping table used by the [geoip](geoip/geoip) module.
+* `-v` indicates that the normal pass/drop logic should be inverted. For example the [grep](grep/grep) module normally passes entries which match a given pattern and drop those which do not match; specifying the `-v` flag will cause it to drop entries which match and pass those which do not.
+* `-s` indicates a "strict" mode. If a module normally allows an entry to proceed down the pipeline if any one of several conditions are met, setting the strict flag means an entry will proceed only if *all* conditions are met. For example, the [require](require/require) module will normally pass an entry if it contains any one of the required enumerated values, but when the `-s` flag is used, it will only pass entries which contain *all* specified enumerated values.
+* `-p` indicates "permissive" mode.  If a module normally drops entries when patterns and filters do not match, the permissive flag tells the module to let the module go through.  The [regex](regex/regex) and [grok](grok/grok) modules are good examples where the permissive flag can be valuable.
 
 ## Universal Enumerated Values
 
@@ -94,26 +94,26 @@ winlog <winlog/winlog>
 xml <xml/xml>
 ```
 
-* [ax](ax/ax.md) - automatically extract fields from entries.
-* [canbus](canbus/canbus.md) - decode CANBUS data.
-* [cef](cef/cef.md) - decode CEF data.
-* [csv](csv/csv.md) - extract fields from CSV data.
-* [dump](dump/dump.md) - dump entries from a resource into the pipeline.
-* [fields](fields/fields.md) - extract data from entries using arbitrary field separators.
-* [grok](grok/grok.md) - extract data from complicated text structures using pre-defined regular expressions.
-* [ip](ip/ip.md) - convert & filter IP addresses.
-* [ipfix](ipfix/ipfix.md) - extract data from IPFIX records.
-* [j1939](j1939/j1939.md) - parse J1939 data.
-* [json](json/json.md) - extract elements from JSON data.
-* [kv](kv/kv.md) - parse key-value data.
-* [netflow](netflow/netflow.md) - parse Netflow records.
-* [packet](packet/packet.md) - parse raw packets.
-* [packetlayer](packetlayer/packetlayer.md) - parse portions of a packet.
-* [path](path/path.md) - extract portions of pathnames.
-* [regex](regex/regex.md) - match and extract data using regular expressions.
-* [slice](slice/slice.md) - low-level binary parsing & extraction.
-* [strings](strings/strings.md) - find strings from binary data.
-* [subnet](subnet/subnet.md) - extract & filter based on IP subnets.
-* [syslog](syslog/syslog.md) - parse and extract syslog entries.
-* [winlog](winlog/winlog.md) - parse Windows logs.
-* [xml](xml/xml.md) - parse XML data.
+* [ax](ax/ax) - automatically extract fields from entries.
+* [canbus](canbus/canbus) - decode CANBUS data.
+* [cef](cef/cef) - decode CEF data.
+* [csv](csv/csv) - extract fields from CSV data.
+* [dump](dump/dump) - dump entries from a resource into the pipeline.
+* [fields](fields/fields) - extract data from entries using arbitrary field separators.
+* [grok](grok/grok) - extract data from complicated text structures using pre-defined regular expressions.
+* [ip](ip/ip) - convert & filter IP addresses.
+* [ipfix](ipfix/ipfix) - extract data from IPFIX records.
+* [j1939](j1939/j1939) - parse J1939 data.
+* [json](json/json) - extract elements from JSON data.
+* [kv](kv/kv) - parse key-value data.
+* [netflow](netflow/netflow) - parse Netflow records.
+* [packet](packet/packet) - parse raw packets.
+* [packetlayer](packetlayer/packetlayer) - parse portions of a packet.
+* [path](path/path) - extract portions of pathnames.
+* [regex](regex/regex) - match and extract data using regular expressions.
+* [slice](slice/slice) - low-level binary parsing & extraction.
+* [strings](strings/strings) - find strings from binary data.
+* [subnet](subnet/subnet) - extract & filter based on IP subnets.
+* [syslog](syslog/syslog) - parse and extract syslog entries.
+* [winlog](winlog/winlog) - parse Windows logs.
+* [xml](xml/xml) - parse XML data.

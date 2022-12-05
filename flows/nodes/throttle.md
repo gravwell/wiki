@@ -18,7 +18,7 @@ This example runs a query which checks for ingesters disconnecting; if any are f
 
 Note that in the screenshot above, the Throttle node has blocked further execution of the Text Template and Mattermost Message nodes, because it has only been 34 seconds since the last successful execution.
 
-The [Run Query](runquery.md) node is configured to run the following query over the last hour:
+The [Run Query](runquery) node is configured to run the following query over the last hour:
 
 ```gravwell
 tag=gravwell syslog Hostname Message~"Ingest routine exiting" Structured.ingester Structured.ingesterversion Structured.ingesteruuid Structured.client 
@@ -28,11 +28,11 @@ tag=gravwell syslog Hostname Message~"Ingest routine exiting" Structured.ingeste
 | table indexer ingester client ingesterversion ingesteruuid count
 ```
 
-The [If](if.md) node checks if `search.Count` is greater than 0. If so, the [Get Table Results](gettableresults.md) node fetches those results as a table.
+The [If](if) node checks if `search.Count` is greater than 0. If so, the [Get Table Results](gettableresults) node fetches those results as a table.
 
 The Throttle node is configured with a Duration of 1 hour. When the flow is run for the first time, it will allow downstream execution to continue and note the current time. The next time the flow is run, the Throttle node will check if it has been more than an hour since the last time it allowed execution. If so, it allows execution again and updates the stored timestamp; otherwise, it blocks further execution.
 
-The [Text Template](template.md) node generates a simple message from the table results:
+The [Text Template](template) node generates a simple message from the table results:
 
 ```
 Bounced ingesters:
@@ -41,6 +41,6 @@ Bounced ingesters:
 {{ end }}
 ```
 
-And the [Mattermost Message](mattermost.md) node sends the results to a Mattermost channel:
+And the [Mattermost Message](mattermost) node sends the results to a Mattermost channel:
 
 ![](throttle-output.png)

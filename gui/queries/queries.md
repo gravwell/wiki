@@ -60,7 +60,9 @@ Finally, "ISO 8601 duration" allows you to specify a duration in [ISO-8601 forma
 
 ![](preview.png)
 
-Note: "Preview" tells Gravwell to just go find "something" without regard to time.  This means that the system will look at the specific tags in use and ask the indexers for time ranges where the data could exist and then begin sampling it.  The data may be in the future or it may be way in the past.  This is a good option for testing queries.
+```{note}
+"Preview" tells Gravwell to just go find "something" without regard to time.  This means that the system will look at the specific tags in use and ask the indexers for time ranges where the data could exist and then begin sampling it.  The data may be in the future or it may be way in the past.  This is a good option for testing queries.
+```
 
 ## Search Results Page
 

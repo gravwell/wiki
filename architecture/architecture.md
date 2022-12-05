@@ -8,11 +8,11 @@ maxdepth: 1
 caption: Architecture
 hidden: true
 ---
-Networking Considerations for Gravwell <../configuration/networking>
-Gravwell Clusters <../distributed/cluster>
-Distributed Gravwell Webserver <../distributed/frontend>
-Gravwell Load Balancer <../distributed/loadbalancer>
-Gravwell Overwatch <../distributed/overwatch>
+Networking Considerations for Gravwell </configuration/networking>
+Gravwell Clusters </distributed/cluster>
+Distributed Gravwell Webserver </distributed/frontend>
+Gravwell Load Balancer </distributed/loadbalancer>
+Gravwell Overwatch </distributed/overwatch>
 ```
 
 ```{toctree}
@@ -21,19 +21,19 @@ maxdepth: 1
 caption: Configuration
 hidden: true
 ---
-Advanced Gravwell Configuration <../configuration/configuration>
-Environment Variables <../configuration/environment-variables>
-Configuration Parameters <../configuration/parameters>
-Indexer Configuration <../configuration/indexer-default-config>
-Compression <../configuration/compression>
-Data Ageout <../configuration/ageout>
-Cloud Archive <../configuration/archive>
-Data Replication <../configuration/replication>
-Gravwell Searchagent <../scripting/searchagent>
-Gravwell Accelerators <../configuration/accelerators>
-Performance Tuning <../tuning/tuning>
-Gravwell Metrics and Crash Reporting <../metrics>
-Common Problems & Caveats <../configuration/caveats>
+Advanced Gravwell Configuration </configuration/configuration>
+Environment Variables </configuration/environment-variables>
+Configuration Parameters </configuration/parameters>
+Indexer Configuration </configuration/indexer-default-config>
+Compression </configuration/compression>
+Data Ageout </configuration/ageout>
+Cloud Archive </configuration/archive>
+Data Replication </configuration/replication>
+Gravwell Searchagent </scripting/searchagent>
+Gravwell Accelerators </configuration/accelerators>
+Performance Tuning </tuning/tuning>
+Gravwell Metrics and Crash Reporting </metrics>
+Common Problems & Caveats </configuration/caveats>
 ```
 
 ```{toctree}
@@ -42,8 +42,8 @@ maxdepth: 1
 caption: Securing Gravwell
 hidden: true
 ---
-Hardening a Gravwell Installation <../configuration/hardening>
-Configuring TLS Certificates <../configuration/certificates>
+Hardening a Gravwell Installation </configuration/hardening>
+Configuring TLS Certificates </configuration/certificates>
 ```
 
 ```{toctree}
@@ -52,10 +52,10 @@ maxdepth: 1
 caption: Administration
 hidden: true
 ---
-Gravwell Administration <../admin/admin>
-Gravwell Single Sign-On <../configuration/sso>
-Configuring SSO for Azure Active Directory <../configuration/sso-azure/azure>
-Configuring Keycloak SSO with Gravwell <../configuration/sso-keycloak/keycloak>
+Gravwell Administration </admin/admin>
+Gravwell Single Sign-On </configuration/sso>
+Configuring SSO for Azure Active Directory </configuration/sso-azure/azure>
+Configuring Keycloak SSO with Gravwell </configuration/sso-keycloak/keycloak>
 ```
 
 ## Cluster Topology

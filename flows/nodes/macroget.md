@@ -1,6 +1,6 @@
 # Read Macros Node
 
-This node reads the values of named [Gravwell macros](/search/macros.md). For each specified macro, it outputs a new value into the payload with a name matching the macro name.
+This node reads the values of named [Gravwell macros](/search/macros). For each specified macro, it outputs a new value into the payload with a name matching the macro name.
 
 ## Configuration
 

@@ -13,7 +13,7 @@ The eval module has several important restrictions:
 To make the structure of your eval expression more clear, hit Ctrl-Enter while typing the query to insert newlines if needed.
 ```
 
-See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting.md) for more details about the language itself.
+See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting) for more details about the language itself.
 
 ## Filtering: Expressions vs. Statements
 

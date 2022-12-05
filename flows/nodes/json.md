@@ -20,9 +20,9 @@ This example uses both the JSON Encode and JSON Decode nodes. It hits a Gravwell
 
 ![](json-example.png)
 
-First, the [HTTP](http.md) node does a GET request on `http://localhost/api/stats/sysDesc`, querying the local Gravwell system for information about the system. The response comes back as a JSON-encoded string, so we feed that into the JSON Decode node, which is configured to decode the variable `response` and put the result into the payload under the name `decoded`.
+First, the [HTTP](http) node does a GET request on `http://localhost/api/stats/sysDesc`, querying the local Gravwell system for information about the system. The response comes back as a JSON-encoded string, so we feed that into the JSON Decode node, which is configured to decode the variable `response` and put the result into the payload under the name `decoded`.
 
-Next, we use the [JavaScript](javascript.md) node to pick out the CPU model and CPU MHz fields from the decoded structure and put them into a different object within the payload. Refer back to the screenshot above; note how the payload coming out of the JavaScript node has a `decoded` field, with lots of information about the webserver, and a `webserverInfo` field, containing only the two items we picked out in the JS code. The JavaScript code used was:
+Next, we use the [JavaScript](javascript) node to pick out the CPU model and CPU MHz fields from the decoded structure and put them into a different object within the payload. Refer back to the screenshot above; note how the payload coming out of the JavaScript node has a `decoded` field, with lots of information about the webserver, and a `webserverInfo` field, containing only the two items we picked out in the JS code. The JavaScript code used was:
 
 ```
 payload.webserverInfo = {};

@@ -1,6 +1,6 @@
 # Update Resources Node
 
-This node creates or updates the contents of a [Gravwell Resource](/resources/resources.md). 
+This node creates or updates the contents of a [Gravwell Resource](/resources/resources). 
 
 ## Configuration
 

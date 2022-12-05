@@ -75,12 +75,16 @@ primitives:
     before 45m ago        # Packets before a relative time
     before 3h ago         # Packets after a relative time
 
-**NOTE**: Relative times must be measured in integer values of hours or minutes
+```{note}
+Relative times must be measured in integer values of hours or minutes
 as demonstrated above.
+```
 
 Primitives can be combined with and/&& and with or/||, which have equal
 precedence and evaluate left-to-right.  Parens can also be used to group.
 
     (udp and port 514) or (tcp and port 8080)
 
-**Note**: This section sourced from [Google Stenographer](https://github.com/google/stenographer/blob/master/README.md)
+```{note}
+This section sourced from [Google Stenographer](https://github.com/google/stenographer/blob/master/README.md)
+```

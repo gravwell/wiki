@@ -1,6 +1,6 @@
 # Read Resources Node
 
-This node reads the contents of a [Gravwell Resource](/resources/resources.md). The resource contents are put into a new payload value matching the resource name.
+This node reads the contents of a [Gravwell Resource](/resources/resources). The resource contents are put into a new payload value matching the resource name.
 
 ## Configuration
 

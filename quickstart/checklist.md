@@ -2,9 +2,9 @@
 
 ## Single-Node Checklist
 
-This checklist gives a general order of operation for configuring a single-node, standalone Gravwell instance. Refer to the [Quickstart](quickstart.md) for additional step-by-step instructions.
+This checklist gives a general order of operation for configuring a single-node, standalone Gravwell instance. Refer to the [Quickstart](quickstart) for additional step-by-step instructions.
 
-□ Install Gravwell via self-extracting installer, Debian/Redhat package, or Docker container (see [Quickstart](quickstart.md)).
+□ Install Gravwell via self-extracting installer, Debian/Redhat package, or Docker container (see [Quickstart](quickstart)).
 
 □ Verify firewall rules allow incoming traffic on [ports used by Gravwell](/configuration/networking).
 
@@ -30,7 +30,7 @@ This checklist gives a general order of operation for configuring a single-node,
 
 □ If you intend to use [distributed frontends](/distributed/frontend), provision an additional system for the *datastore*. Note that the datastore cannot be co-resident with an indexer or webserver process.
 
-□ Install Gravwell on each of the webserver and indexer nodes (see [Quickstart](quickstart.md)).
+□ Install Gravwell on each of the webserver and indexer nodes (see [Quickstart](quickstart)).
 
 □ Install the datastore if desired. This is included in the core shell installer, but is in a separate package for Debian and Redhat.
 

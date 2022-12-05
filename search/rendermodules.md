@@ -24,11 +24,11 @@ gauge/numbercard <gauge/gauge>
 wordcloud <wordcloud/wordcloud>
 ```
 
-* [chart](chart/chart.md) - Render data as line graphs, bar graphs, etc.
-* [fdg](fdg/fdg.md) - Force-directed graphs.
-* [stackgraph](stackgraph/stackgraph.md) - Stack graphs.
-* [gauge/numbercard](gauge/gauge.md) - Gauges and numeric cards.
-* [wordcloud](wordcloud/wordcloud.md) - Word clouds.
+* [chart](chart/chart) - Render data as line graphs, bar graphs, etc.
+* [fdg](fdg/fdg) - Force-directed graphs.
+* [stackgraph](stackgraph/stackgraph) - Stack graphs.
+* [gauge/numbercard](gauge/gauge) - Gauges and numeric cards.
+* [wordcloud](wordcloud/wordcloud) - Word clouds.
 
 ### Tables and Text
 
@@ -43,10 +43,10 @@ raw <raw/raw>
 pcap <pcap/pcap>
 ```
 
-* [table](table/table.md) - Display tables of enumerated values.
-* [text](text/text.md) - Output the body of entries with minimal formatting.
-* [raw](raw/raw.md) - Output data completely unformatted.
-* [pcap](pcap/pcap.md) - Show an overview of the contents of network packets.
+* [table](table/table) - Display tables of enumerated values.
+* [text](text/text) - Output the body of entries with minimal formatting.
+* [raw](raw/raw) - Output data completely unformatted.
+* [pcap](pcap/pcap) - Show an overview of the contents of network packets.
 
 ### Maps
 
@@ -59,5 +59,5 @@ pointmap/heatmap <map/map>
 point2point <point2point/point2point>
 ```
 
-* [pointmap/heatmap](map/map.md) - Display heatmaps or individual points on a map.
-* [point2point](point2point/point2point.md) - Display data entries which have both a source and a destination.
+* [pointmap/heatmap](map/map) - Display heatmaps or individual points on a map.
+* [point2point](point2point/point2point) - Display data entries which have both a source and a destination.

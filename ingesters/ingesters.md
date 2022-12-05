@@ -1,5 +1,5 @@
 # Ingesters
-This section contains more detailed instruction for configuring and running Gravwell ingesters, which gather incoming data, package it into Gravwell entries, and ship it to Gravwell indexers for storage. The ingesters described in these pages are primarily designed to capture *live* data as it is generated; if you have existing data you want to import, check out the [migration documents](migrate/migrate.md).
+This section contains more detailed instruction for configuring and running Gravwell ingesters, which gather incoming data, package it into Gravwell entries, and ship it to Gravwell indexers for storage. The ingesters described in these pages are primarily designed to capture *live* data as it is generated; if you have existing data you want to import, check out the [migration documents](migrate/migrate).
 
 The Gravwell-created ingesters are released under the BSD open source license and can be found on [Github](https://github.com/gravwell/gravwell/tree/master/ingesters). The ingest API is also open source, so you can create your own ingesters for unique data sources, performing additional normalization or pre-processing, or any other manner of things. The ingest API code [is located here](https://github.com/gravwell/gravwell/tree/master/ingest).
 
@@ -46,26 +46,26 @@ Windows Events <winevent>
 
 | Ingester | Description |
 |----------|-------------|
-| [Amazon SQS](sqs.md) | Subscribe and ingest from Amazon SQS queues. |
-| [Azure Event Hubs](eventhubs.md) | Consume from Azure Event Hubs. |
-| [collectd](collectd.md) | Ingest collectd samples. |
-| [File Follower](file_follow.md) | Watch and ingest files on disk, such as logs. |
-| [Windows File Follower](win_file_follow.md) | Watch and ingest files on Windows, such as logs and EVTX files. |
-| [GCP PubSub](pubsub.md) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
-| [HTTP](http.md) | Create HTTP listeners on multiple URL paths. |
-| [IPMI](ipmi.md) | Periodically collect SDR and SEL records from IPMI devices. |
-| [Kafka](kafka.md) | Create a Kafka Consumer that ingests into Gravwell. Can be paired with the Gravwell Kafka Federator. |
-| [Kinesis](kinesis.md) | Ingest from Amazon's [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) service. |
-| [Microsoft Graph API](msg.md) | Ingest from Microsoft's Graph API. |
-| [Netflow](netflow.md) | Collect Netflow and IPFIX records. |
-| [Network Capture](pcap.md) | Ingest PCAP on the wire. |
-| [Office 365](o365.md) | Ingest Microsoft o365 Logs. |
-| [Packetfleet](packetfleet.md) | Issue queries and ingest data from Google Stenographer. |
-| [S3](s3.md) | Ingest data directly from Amazon S3 buckets, including Cloudtrail logs. |
-| [Session](session.md) | Ingest large records into a single entry. |
-| [Shodan](shodan.md) | Ingest Shodan streaming API events. |
-| [Simple Relay](simple_relay.md) | Ingest any text over TCP/UDP, syslog, and more. |
-| [Windows Events](winevent.md) | Collect Windows events. |
+| [Amazon SQS](sqs) | Subscribe and ingest from Amazon SQS queues. |
+| [Azure Event Hubs](eventhubs) | Consume from Azure Event Hubs. |
+| [collectd](collectd) | Ingest collectd samples. |
+| [File Follower](file_follow) | Watch and ingest files on disk, such as logs. |
+| [Windows File Follower](win_file_follow) | Watch and ingest files on Windows, such as logs and EVTX files. |
+| [GCP PubSub](pubsub) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
+| [HTTP](http) | Create HTTP listeners on multiple URL paths. |
+| [IPMI](ipmi) | Periodically collect SDR and SEL records from IPMI devices. |
+| [Kafka](kafka) | Create a Kafka Consumer that ingests into Gravwell. Can be paired with the Gravwell Kafka Federator. |
+| [Kinesis](kinesis) | Ingest from Amazon's [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) service. |
+| [Microsoft Graph API](msg) | Ingest from Microsoft's Graph API. |
+| [Netflow](netflow) | Collect Netflow and IPFIX records. |
+| [Network Capture](pcap) | Ingest PCAP on the wire. |
+| [Office 365](o365) | Ingest Microsoft o365 Logs. |
+| [Packetfleet](packetfleet) | Issue queries and ingest data from Google Stenographer. |
+| [S3](s3) | Ingest data directly from Amazon S3 buckets, including Cloudtrail logs. |
+| [Session](session) | Ingest large records into a single entry. |
+| [Shodan](shodan) | Ingest Shodan streaming API events. |
+| [Simple Relay](simple_relay) | Ingest any text over TCP/UDP, syslog, and more. |
+| [Windows Events](winevent) | Collect Windows events. |
 
 
 ## Tags
@@ -411,5 +411,5 @@ caption: Data Migration
 hidden: true
 ---
 Migrating Data <migrate/migrate>
-The Migration Tool <../migrate/migrate>
+The Migration Tool </migrate/migrate>
 ```

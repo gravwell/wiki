@@ -681,7 +681,7 @@ The parameters in this section apply to well specifications, including the `Defa
 
 The configuration file should contain exactly one `Default-Well` section. It may also include one or more `Storage-Well` sections.
 
-Refer to the [ageout documentation](ageout.md) for more information on how wells move entries between hot, cold, and archive storage.
+Refer to the [ageout documentation](ageout) for more information on how wells move entries between hot, cold, and archive storage.
 
 ```{note}
 `Default-Well` cannot include `Tags=` specifications; instead, the default well contains all tags *not contained in other wells*
@@ -902,7 +902,7 @@ But it will more frequently require additional configuration:
 	Email-Attribute = "mail"
 ```
 
-Refer to the [SSO configuration documentation](sso.md) for more information.
+Refer to the [SSO configuration documentation](sso) for more information.
 
 #### **Gravwell-Server-URL**
 Default Value:

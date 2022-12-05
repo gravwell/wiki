@@ -4,7 +4,7 @@
 
 This site contains documentation for Gravwell, plus other resources such as Changelogs.
 
-If you're just starting out with Gravwell, we recommend reading the [Quickstart](quickstart/quickstart.md) first, then moving on to the [Search pipeline](search/search.md) documentation to learn more.
+If you're just starting out with Gravwell, we recommend reading the [Quickstart](quickstart/quickstart) first, then moving on to the [Search pipeline](search/search) documentation to learn more.
 
 Gravwell is pleased to announce our free [Community Edition](https://www.gravwell.io/download)!
 

@@ -17,7 +17,7 @@ This section contains basic “quick start” instructions for getting Gravwell 
 
 This guide is suitable for Community Edition users as well as users with a paid single-node Gravwell subscription.
 
-You may find the [installation checklist](checklist.md) a useful companion to this document.
+You may find the [installation checklist](checklist) a useful companion to this document.
 
 If you are interested in a complete training package, please see the [complete training PDF](https://github.com/gravwell/training/releases/download/v5.1.3/gravwell_training_5.1.3.pdf).  The Gravwell training PDF is the complete training manual which is paired with labs and exercises. The exercises are built from the open source [Gravwell Training](https://github.com/gravwell/training) repository.
 
@@ -32,10 +32,10 @@ caption: Quick Start
 hidden: true
 ---
 Installation Checklists <checklist>
-Docker Deployment <../configuration/docker>
-Custom Docker Deployments <../configuration/custom-docker>
-Gravwell Beta Program <../beta/index>
-Gravwell Tools <../tools/tools>
+Docker Deployment </configuration/docker>
+Custom Docker Deployments </configuration/custom-docker>
+Gravwell Beta Program </beta/index>
+Gravwell Tools </tools/tools>
 Downloads <downloads>
 ```
 
@@ -45,9 +45,9 @@ maxdepth: 1
 caption: Licensing
 hidden: true
 ---
-Gravwell License System <../license/license>
-End User License Agreement <../eula>
-Open-Source Library Licenses <../open_source>
+Gravwell License System </license/license>
+End User License Agreement </eula>
+Open-Source Library Licenses </open_source>
 ```
 
 ## System Requirements
@@ -173,7 +173,7 @@ The default username/password combination for Gravwell is admin/changeme. We hig
 
 ## Configuring Ingesters
 
-A freshly installed Gravwell instance, by itself, is boring. You'll want some ingesters to provide data. You can either install packages from the repositories or head over to [the Downloads page](downloads.md) to fetch self-extracting installers for each ingester.
+A freshly installed Gravwell instance, by itself, is boring. You'll want some ingesters to provide data. You can either install packages from the repositories or head over to [the Downloads page](downloads) to fetch self-extracting installers for each ingester.
 
 The ingesters available in the Debian repository can be viewed by running `apt-cache search gravwell`:
 

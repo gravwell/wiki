@@ -37,11 +37,11 @@ Gravwell can be configured to receive a list of group memberships with the user'
 
 ## Setting up Keycloak
 
-Documentation on setting up SSO with Keycloak is separated into its own page. [Click here](sso-keycloak/keycloak.md) to read it.
+Documentation on setting up SSO with Keycloak is separated into its own page. [Click here](sso-keycloak/keycloak) to read it.
 
 ## Setting up Azure Active Directory
 
-Documentation on setting up SSO with Azure Active Directory is separated into its own page. [Click here](sso-azure/azure.md) to read it.
+Documentation on setting up SSO with Azure Active Directory is separated into its own page. [Click here](sso-azure/azure) to read it.
 
 ## Setting up Windows Server 2016
 
@@ -55,7 +55,7 @@ It is *essential* that any user accounts you intend to use with Gravwell must ha
 
 ### Set up Gravwell
 
-In order to configure AD FS, you'll need an SSO metadata file from your Gravwell instance. We'll therefore set up Gravwell first; you'll see an SSO button on the Gravwell GUI, but it will be disabled until we configure AD FS. To enable SSO, you *must* have TLS certificates (self-signed or otherwise) configured on the Gravwell webserver; see [this documentation section](certificates.md) for instructions on setting up TLS.
+In order to configure AD FS, you'll need an SSO metadata file from your Gravwell instance. We'll therefore set up Gravwell first; you'll see an SSO button on the Gravwell GUI, but it will be disabled until we configure AD FS. To enable SSO, you *must* have TLS certificates (self-signed or otherwise) configured on the Gravwell webserver; see [this documentation section](certificates) for instructions on setting up TLS.
 
 Open your `gravwell.conf` and add an `[SSO]` section below the `[Global]` section. If your AD FS server is at "sso.example.org" and your Gravwell webserver is at "gravwell.example.org", your config might look like this:
 

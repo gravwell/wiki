@@ -85,11 +85,11 @@ This action simply runs a new query, with the contents of the matched text as `_
 
 #### Execute a Template
 
-Runs a pre-made [template](/gui/templates/templates.md), using the matched text as the input variable to the template. 
+Runs a pre-made [template](/gui/templates/templates), using the matched text as the input variable to the template. 
 
 #### Launch a Dashboard
 
-This action opens a dashboard. If the dashboard has [template](/gui/templates/templates.md) variables (an [investigative dashboard](/gui/dashboards/dashboards.md), the user is prompted to select which variable to populate with the matched text.
+This action opens a dashboard. If the dashboard has [template](/gui/templates/templates) variables (an [investigative dashboard](/gui/dashboards/dashboards), the user is prompted to select which variable to populate with the matched text.
 
 ![](actionables-dashboard.png)
 
