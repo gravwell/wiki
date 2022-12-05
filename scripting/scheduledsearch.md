@@ -80,6 +80,20 @@ You can force a scheduled search or script to run immediately at any time. Open 
 
 ![](immediate.png)
 
+## Clearing Errors
+
+When a script encounters an error during execution, an icon will be displayed on the scripts page to indicate that an error has occurred. 
+
+![](scripterror.png)
+
+Clicking the icon will display the error message:
+
+![](scripterror2.png)
+
+Note that the most recent error will be preserved even if the script successfully runs later--this is to make sure you are aware of any *periodic* failures which may be occurring. The error message may be cleared by either clicking the "Clear error" option below the error message or selecting "Clear error" from the script's 3-dot menu. There is also a button at the top right of the page which will clear *all* errors.
+
+![](clear-errors.png)
+
 ## Deleting a Scheduled Search/Script
 
 To delete a scheduled search, select the "Delete" option:

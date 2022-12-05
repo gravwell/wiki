@@ -72,7 +72,9 @@ The Gravwell Kafka ingester can subscribe to multiple topics and even multiple K
 Setting any consumer as synchronous causes that consumer to continually Sync the ingest pipeline.  It will have significant performance implications for ALL consumers.
 ```
 
-Notice: Setting a large `Batch-Size` when using `Synchronous=true` can help with performance under heavy load.
+```{note}
+Setting a large `Batch-Size` when using `Synchronous=true` can help with performance under heavy load.
+```
 
 ### Authentication
 
