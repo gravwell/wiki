@@ -27,18 +27,14 @@ Release Notes <changelog/list>
 :link: quickstart/quickstart
 :link-type: doc
 
-**Quick Start**
-
-{material-twotone}`rocket;3em;sd-text-success`
+**Quick Start**  {material-twotone}`rocket;3em;sd-text-primary;`
 
 :::
 :::{grid-item-card}
 :link: architecture/architecture
 :link-type: doc
 
-**Configuration**
-
-{material-twotone}`settings;3em;sd-text-success`
+**Configuration**  {material-twotone}`settings;3em;sd-text-primary`
 
 :::
 ::::
@@ -49,18 +45,14 @@ Release Notes <changelog/list>
 :link: ingesters/ingesters
 :link-type: doc
 
-**Ingesters**
-
-{material-twotone}`upload;3em;sd-text-success`
+**Ingesters**  {material-twotone}`upload;3em;sd-text-primary`
 
 :::
 :::{grid-item-card}
 :link: gravwell
 :link-type: doc
 
-**Searching with Gravwell**
-
-{material-twotone}`search;3em;sd-text-success`
+**Searching with Gravwell**  {material-twotone}`search;3em;sd-text-primary`
 
 :::
 ::::
@@ -71,18 +63,14 @@ Release Notes <changelog/list>
 :link: automation
 :link-type: doc
 
-**Automation**
-
-{material-twotone}`power;3em;sd-text-success`
+**Automation**  {material-twotone}`power;3em;sd-text-primary`
 
 :::
 :::{grid-item-card}
 :link: /api/api
 :link-type: doc
 
-**API**
-
-{material-twotone}`api;3em;sd-text-success`
+**API**  {material-twotone}`api;3em;sd-text-primary`
 
 :::
 ::::

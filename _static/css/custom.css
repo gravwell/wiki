@@ -51,3 +51,11 @@ nav.bd-links p.bd-links__title {
 .admonition-title {
   font-family: var(--pst-font-family-heading);
 }
+
+.sd-card-text {
+  font-family: var(--pst-font-family-heading);
+}
+
+.sd-material-icon {
+  float: right; 
+}
