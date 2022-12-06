@@ -1,5 +1,8 @@
 # Searching with Gravwell
 
+This section provides an overview of the Gravwell GUI and a comprehensive description of the search pipeline and its modules. This is where you can learn more about interacting with Gravwell and building queries to effectively explore and understand your data.
+
+## Gravwell
 ```{toctree}
 ---
 maxdepth: 1
