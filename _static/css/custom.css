@@ -57,5 +57,13 @@ nav.bd-links p.bd-links__title {
 }
 
 .sd-material-icon {
-  float: right; 
+  float: right;
+}
+
+.docs-version {
+  float: right;
+}
+
+.git-commit-id {
+  color: var(--pst-color-primary);
 }

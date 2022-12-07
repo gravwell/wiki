@@ -1,5 +1,7 @@
 import os
+import subprocess
 import sys
+import pathlib
 
 sys.path.insert(0, os.path.abspath("."))
 
@@ -27,6 +29,7 @@ extensions = ["myst_parser", "sphinx_design", "sphinxcontrib.spelling"]
 myst_enable_extensions = [
     "colon_fence",
     "fieldlist",
+    "substitution",
 ]
 
 
@@ -79,8 +82,39 @@ html_theme_options = {
         },
     ],
     "header_links_before_dropdown": 6,
-    "footer_items": ["copyright", "sphinx-version"],
+    "footer_items": [
+        "git-commit-footer",
+        "copyright",
+        "sphinx-version",
+    ],
 }
 
 
 lexers["gw"] = lexers["gravwell"] = GravwellLexer(startinline=True)
+
+
+# -- Substitutions -------------------------------------------------
+
+# Determine git commit ID
+#
+# Make sure we're checking the commit id for the wiki project, by passing the directory
+# to the git subprocess call
+git_dir = pathlib.Path(__file__).parent.resolve()
+commit_id = (
+    subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], cwd=git_dir)
+    .strip()
+    .decode("ascii")
+)
+try:
+    subprocess.check_call(["git", "diff", "--quiet"], cwd=git_dir)
+    is_dirty_tree = False
+except subprocess.CalledProcessError:
+    is_dirty_tree = True
+
+# Variables to substitute in HTML template files
+html_context = {
+    "git_commit": f"{commit_id}{'*' if is_dirty_tree else ''}",
+}
+
+# Variables to substitute in Markdown files
+myst_substitutions = {}
