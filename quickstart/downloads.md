@@ -8,11 +8,7 @@ The Debian and RHEL repositories are more easily maintained than these standalon
 
 The Gravwell core installer contains the indexer and webserver frontend. You'll need a license; either get a Community Edition free license, or contact info@gravwell.io for commercial options.
 
-<<<<<<< HEAD
-Download Gravwell Core Installer <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.1.3/installers/gravwell_5.1.3.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">e08647c0d1bda9a7e71907eb5cfe839170f99c82fa97bda02e4eca9f7e054af7</span></code>'>(SHA256)</a>
-=======
-[Download Gravwell Core Installer](https://update.gravwell.io/archive/5.1.3/installers/gravwell_5.1.3.sh) (SHA256: a15be7fe76bb784a1868f73b8dd5299fde2a3429dcd3f56d5d799bf3ab704c1e)
->>>>>>> upstream/master
+Download Gravwell Core Installer <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.1.3/installers/gravwell_5.1.3.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">a15be7fe76bb784a1868f73b8dd5299fde2a3429dcd3f56d5d799bf3ab704c1e</span></code>'>(SHA256)</a>
 
 ## Ingesters
 
