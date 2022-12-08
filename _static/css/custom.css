@@ -71,3 +71,7 @@ nav.bd-links p.bd-links__title {
 .git-commit-id {
   color: var(--pst-color-primary);
 }
+
+#logbot-container img {
+  background: unset;
+}
