@@ -1,8 +1,5 @@
-let
-  packages = (import ./packages.nix);
-  pkgs = packages.nixpkgs;
-  chosenPackages = packages.chosenPackages;
-in pkgs.dockerTools.buildLayeredImage {
+with import ./packages.nix;
+pkgs.dockerTools.buildLayeredImage {
   # docker image name
   name = "gw-sphinx-docs";
 

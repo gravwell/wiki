@@ -1,5 +1,2 @@
-let
-  packages = (import ./packages.nix);
-  pkgs = packages.nixpkgs;
-  chosenPackages = packages.chosenPackages;
-in pkgs.mkShell { buildInputs = chosenPackages ++ [ pkgs.coreutils ]; }
+with (import ./packages.nix);
+pkgs.mkShell { buildInputs = chosenPackages ++ [ pkgs.coreutils ]; }

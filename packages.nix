@@ -36,6 +36,6 @@ let
     ]);
 
 in {
-  nixpkgs = pkgs;
+  inherit pkgs;
   chosenPackages = [ pythonBundle pkgs.gnumake pkgs.git custom-aspell ];
 }

@@ -3,3 +3,6 @@ wiki
 *.bak
 _build/
 __pycache__/
+
+# Any nix-build results
+result
