@@ -18,6 +18,10 @@ h3.popover-header {
   margin-top: 0px;
 }
 
+div.popover {
+  background-color: var(--pst-color-surface);
+}
+
 div.popover.hash-popover {
   max-width: 100%;
 }
