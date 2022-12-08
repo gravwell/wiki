@@ -1,12 +1,13 @@
 import os
+import pathlib
 import subprocess
 import sys
-import pathlib
+from datetime import date
+
+from sphinx.highlighting import lexers
 
 sys.path.insert(0, os.path.abspath("."))
 
-from datetime import date
-from sphinx.highlighting import lexers
 from gravy_lexer import GravwellLexer
 
 # Configuration file for the Sphinx documentation builder.
@@ -25,7 +26,7 @@ release = "v5.1.2"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["myst_parser", "sphinx_design", "sphinxcontrib.spelling"]
+extensions = ["myst_parser", "sphinx_design"]
 myst_enable_extensions = [
     "colon_fence",
     "fieldlist",
