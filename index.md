@@ -74,3 +74,8 @@ Release Notes <changelog/list>
 
 :::
 ::::
+
+<script>
+var url = window.location.href;
+window.location.href=url.replace(/#!(.*).md$/g, '$1.html');
+</script>
