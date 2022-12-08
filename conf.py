@@ -26,7 +26,12 @@ release = "v5.1.2"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["myst_parser", "sphinx_design"]
+extensions = [
+    "myst_parser",
+    "sphinx_design",
+    "notfound.extension",
+]
+
 myst_enable_extensions = [
     "colon_fence",
     "fieldlist",
@@ -91,7 +96,14 @@ html_theme_options = {
 }
 
 
+# -- Gravwell Query Language Config ----------------------------
+
 lexers["gw"] = lexers["gravwell"] = GravwellLexer(startinline=True)
+
+
+# -- "Not Found" Extension Config ----------------------------
+
+notfound_urls_prefix = ""
 
 
 # -- Substitutions -------------------------------------------------
