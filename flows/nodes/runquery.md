@@ -21,7 +21,7 @@ The node inserts an object (named `search` by default) into the payload containi
 * `Count`: the number of entries returned by the query.
 * `Results`: the results of the query (see below).
 
-Typically, downstream nodes will take either the `search` object itself or `search.Results` as their input; the two are interchangeable. Some nodes, such as the [PDF](pdf.md) node, can take the search object and perform custom formatting on the results. Others, such as the [Notification](notification.md) node, simply get a basic stringified version of the search results.
+Typically, downstream nodes will take either the `search` object itself or `search.Results` as their input; the two are interchangeable. Some nodes, such as the [PDF](pdf) node, can take the search object and perform custom formatting on the results. Others, such as the [Notification](notification) node, simply get a basic stringified version of the search results.
 
 ## Example
 

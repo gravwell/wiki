@@ -4,7 +4,9 @@ The Windows File Follower ingester is the best way to ingest files on a local wi
 
 The most common use case for File Follower is monitoring a directory containing log files which are actively being updated, such as from a custom Windows application that writes log files to a location on disk.  The file follower is also a good option when performing forensic investigations because you can gather up large quantities of EVTX files and drag them into a folder to be ingested.
 
-Attention: Do not use the file follower to follow actively written EVTX files on a Windows system; the kernel does not produce inotify events on these EVTX files.  The [Windows event ingester](/#!ingesters/winevent.md) is a better option for pulling in live event logs.
+```{attention}
+Do not use the file follower to follow actively written EVTX files on a Windows system; the kernel does not produce inotify events on these EVTX files.  The [Windows event ingester](/ingesters/winevent) is a better option for pulling in live event logs.
+```
 
 ## Installation
 
@@ -22,9 +24,11 @@ At startup, file follower will ingest any existing data in the tracked paths bef
 
 The File Follower configuration file is by default located in `C:\Program Files\gravwell\filefollow\file_follow.cfg`.
 
-The File Follower ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, File Follower supports multiple upstream indexers, TLS, cleartext, and named pipe connections, and local logging.
+The File Follower ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, File Follower supports multiple upstream indexers, TLS, cleartext, and named pipe connections, and local logging.
 
-Note: We recommend strongly against using a file cache with the File Follower ingester, since it is already tracking its position within the source files.
+```{note}
+We recommend strongly against using a file cache with the File Follower ingester, since it is already tracking its position within the source files.
+```
 
 An example configuration for the File Follower ingester, configured to watch several different types of log files in `c:\logs\customapp\` and recursively follow files under `c:\logs\evtxfiles`:
 
@@ -182,7 +186,9 @@ and
 ####This is the second entry
 ```
 
-Note: `Timestamp-Delimited` overrides `Regex-Delimiter`; set one or the other.
+```{note}
+`Timestamp-Delimited` overrides `Regex-Delimiter`; set one or the other.
+```
 
 ### Timestamp-Delimited
 
@@ -210,7 +216,9 @@ Line 2 of the second entry
 Line 3 of the second entry
 ```
 
-Note: `Timestamp-Delimited` overrides `Regex-Delimiter`; set one or the other.
+```{note}
+`Timestamp-Delimited` overrides `Regex-Delimiter`; set one or the other.
+```
 
 ### Ignore-Timestamps
 

@@ -29,13 +29,15 @@ To install an Overwatch server, use the Gravwell installer to install only the w
 
 Next, the webserver should be configured in an **Overwatch Domain**. The domain is set with the `Webserver-Domain` parameter in gravwell.conf. Client webservers can safely be left in domain 0, but the Overwatch webserver should be set to a different number; this can be any integer between 0 and 32767.
 
-Those are the only essential configurations for the Overwatch webserver. You may wish to [configure TLS](#!configuration/certificates.md) or set other options, but at this point it should be safe to restart the webserver (`systemctl restart gravwell_webserver.service`) and begin use.
+Those are the only essential configurations for the Overwatch webserver. You may wish to [configure TLS](/configuration/certificates) or set other options, but at this point it should be safe to restart the webserver (`systemctl restart gravwell_webserver.service`) and begin use.
 
 ### Configuring Multiple Overwatch Servers
 
 It may be advantageous to configure multiple overwatch systems that are tied to either all or some subset of client indexers.  MSSPs may want the ability to segment their customer base such that specific analysts operate on some subset of clients.  Enterprises may wish to provide fully independent overwatch webservers to multiple organizations.  Because overwatch systems operate on the domain configuration parameter, multiple overwatch webservers can be configured on multiple domains.
 
-Warning: Multiple Overwatch webservers *MUST* be on separate domains unless they are configured to operate in distributed mode. If multiple Overwatch webservers are configured on the same domain, resources will be improperly managed on the indexers, leading to query errors.
+```{warning}
+Multiple Overwatch webservers *MUST* be on separate domains unless they are configured to operate in distributed mode. If multiple Overwatch webservers are configured on the same domain, resources will be improperly managed on the indexers, leading to query errors.
+```
 
 ![](OverwatchMutiple.png)
 

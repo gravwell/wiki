@@ -10,7 +10,7 @@ Once the stream is configured, each record in the PubSub stream topic will be st
 
 ## Basic Configuration
 
-The PubSub ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, PubSub supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+The PubSub ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, PubSub supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 ## PubSub Examples
 
@@ -29,9 +29,9 @@ The PubSub ingester uses the unified global configuration block described in the
 
 ## Installation and configuration
 
-First, download the installer from the [Downloads page](#!quickstart/downloads.md), then install the ingester:
+First, download the installer from the [Downloads page](/quickstart/downloads), then install the ingester:
 
-```
+```console
 root@gravserver ~# bash gravwell_pubsub_ingest_installer.sh
 ```
 

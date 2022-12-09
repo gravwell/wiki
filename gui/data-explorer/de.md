@@ -12,7 +12,9 @@ If we move the mouse cursor over the results, individual words are highlighted. 
 
 ![](words2.png)
 
-Note: In the screenshot above, the string `search.go` is also highlighted by an [actionable](#!gui/actionables/actionables.md); the menu item "search.go" contains a sub-menu with the actionable's actions in it.
+```{note}
+In the screenshot above, the string `search.go` is also highlighted by an [actionable](/gui/actionables/actionables); the menu item "search.go" contains a sub-menu with the actionable's actions in it.
+```
 
 If we click "Include search.go:189", the query will be automatically modified to `tag=gravwell words search.go:189`. We can then re-run the query to see the new results:
 
@@ -26,7 +28,7 @@ Note that if we have written a query already, we can still click on words and ha
 
 ### Word Filtering Caveats
 
-At this time, word filtering only works on queries which use the [text renderer](#!search/text/text.md). We hope to introduce clickable options for the table renderer in the future.
+At this time, word filtering only works on queries which use the [text renderer](/search/text/text). We hope to introduce clickable options for the table renderer in the future.
 
 ## Field Extraction
 

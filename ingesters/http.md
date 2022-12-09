@@ -6,7 +6,7 @@ This is an extremely convenient method for scriptable data ingest, since the `cu
 
 ## Basic Configuration
 
-The HTTP ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the HTTP ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+The HTTP ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the HTTP ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 ## Listener Examples
 
@@ -99,9 +99,9 @@ If you're using the Gravwell Debian repository, installation is just a single ap
 apt-get install gravwell-http-ingester
 ```
 
-Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
+Otherwise, download the installer from the [Downloads page](/quickstart/downloads). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
 
-```
+```console
 root@gravserver ~ # bash gravwell_http_ingester_installer_3.0.0.sh
 ```
 
@@ -132,7 +132,9 @@ Each HTTP Ingester listener can be configured to enforce authentication.  The su
 
 When specifying an authentication system other than none credentials must be provided.  The `jwt` and `cookie` and cookie authentication systems require a username and password while the `preshared-token` and `preshared-parameter` must provide a token value and optional token name.
 
-Warning: Like any other webpage, authentication is NOT SECURE over cleartext connections and attackers that can sniff traffic can capture tokens and cookies.
+```{warning}
+Like any other webpage, authentication is NOT SECURE over cleartext connections and attackers that can sniff traffic can capture tokens and cookies.
+```
 
 ### No Authentication
 
@@ -205,7 +207,9 @@ curl -X POST -c /tmp/cookie.txt -b /tmp/cookie.txt -d "this is a cookie data" lo
 
 The Preshared token authentication mechanism uses a preshared secret rather than a login mechanism.  The preshared secret is expected to be sent with each request in an Authorization header.  Many HTTP frameworks expect this type of ingest, such as the Splunk HEC and supporting AWS Kinesis and Lambda infrastructure.  Using a preshared token listener we can define a capture system that is a plugin replacement for Splunk HEC.
 
-Note: If you do not define a `TokenName` value, the default value of `Bearer` will be used.
+```{note}
+If you do not define a `TokenName` value, the default value of `Bearer` will be used.
+```
 
 An example configuration which defines a preshared token:
 
@@ -228,7 +232,9 @@ curl -X POST -H "Authorization: foo barbaz" -d "this is a preshared token" local
 
 The Preshared Parameter authentication mechanism uses a preshared secret that is provided as a query parameter.  The `preshared-parameter` system can be useful when scripting or using data producers that typically do not support authentication by embedding the authentication token into the URL.
 
-Note: Embedding the authentication token into the URL means the proxies and HTTP logging infrastructure may capture and log authentication tokens.
+```{note}
+Embedding the authentication token into the URL means the proxies and HTTP logging infrastructure may capture and log authentication tokens.
+```
 
 An example configuration which defines a preshared parameter:
 

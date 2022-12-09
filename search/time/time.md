@@ -21,7 +21,7 @@ time tsString extractedTS
 
 To print entry timestamps in a specific format and time zone:
 
-```
+```gravwell
 tag=json time -f "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIMESTAMP foo | table TIMESTAMP foo
 ```
 
@@ -29,7 +29,7 @@ tag=json time -f "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIMESTAMP 
 
 The output of the previous module invocation can be fed back in to the time module to convert back into timestamps:
 
-```
+```gravwell
 tag=json time -f "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIMESTAMP foo | time -f "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" foo bar | table TIMESTAMP foo bar
 ```
 

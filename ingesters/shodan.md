@@ -60,7 +60,7 @@ More information about the Shodan Record format is available at the [Shodan data
 
 ## Basic Configuration
 
-The Shodan ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the Shodan ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+The Shodan ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the Shodan ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 The Shodan Ingester requires a [Shodan API key](https://developer.shodan.io/api/requirements). Using the API key, you can configure one or more Shodan readers. For example:
 

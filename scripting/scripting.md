@@ -2,10 +2,10 @@
 
 Scripting is used in two ways within Gravwell: as part of a search pipeline, and as a method to automate search launching. The scripting language ([Anko](https://github.com/mattn/anko)) is the same in both cases, with some slight differences to account for the differing use cases. This article introduces both use cases and provides a high-level overview of the Anko language.
 
-* [`anko` module documentation](anko.md)
-* [`eval` module documentation](eval.md)
-* [Automation scripting documentation](scriptingsearch.md) (contains detailed descriptions of functions available for automation scripts)
-* [Scheduling scripts & queries](scheduledsearch.md)
+* [`anko` module documentation](anko)
+* [`eval` module documentation](eval)
+* [Automation scripting documentation](scriptingsearch) (contains detailed descriptions of functions available for automation scripts)
+* [Scheduling scripts & queries](scheduledsearch)
 
 ## Scripting modules
 
@@ -20,16 +20,16 @@ While anko can do anything, eval has several important restrictions:
 
 This document describes the Anko programming language itself. Documentation for the two search modules is maintained on separate pages:
 
-* [`anko` documentation](anko.md) (anko is also briefly described in [the search modules documentation](#!search/searchmodules.md#Anko))
-* [`eval` documentation](eval.md) (eval is also briefly described in [the search modules documentation](#!search/searchmodules.md#Eval))
+* [`anko` documentation](anko) (anko is also briefly described in [the search modules documentation](searchmodule_list))
+* [`eval` documentation](eval) (eval is also briefly described in [the search modules documentation](searchmodule_list))
 
 ## Search Scripts
 
 Where the `anko` and `eval` modules run scripts *inside* search pipelines, Gravwell also supports scripts which *launch* searches of their own and operate on the results. This is useful for automated queries, e.g. a script which runs every morning at 6 a.m. to look for particular suspicious network behavior.
 
-These scripts can be either run on a schedule (see [automation scripts](#!scripting/scheduledsearch.md)) or run by hand using the [command line client](#!cli/cli.md). The scripting language is the same in both cases, although scripts run on a schedule cannot use `print` functions to display output.
+These scripts can be either run on a schedule (see [automation scripts](/scripting/scheduledsearch)) or run by hand using the [command line client](/cli/cli). The scripting language is the same in both cases, although scripts run on a schedule cannot use `print` functions to display output.
 
-The [automation script](scriptingsearch.md) documentation provides more information on how to write this type of script, including examples.
+The [automation script](scriptingsearch) documentation provides more information on how to write this type of script, including examples.
 
 ## Anko overview
 
@@ -109,7 +109,9 @@ y = b - c	# boolean true converts to 1, so y == 2.5 - true == 2.5 - 1.0 == 1.5
 
 The exact semantics of various operations on the different types are explained in later sections.
 
-Attention: If you use hex constants in Anko, be sure to capitalize A-F. `0x1E` is a valid representation of the number 14, but `0x1e` is not.
+```{attention}
+If you use hex constants in Anko, be sure to capitalize A-F. `0x1E` is a valid representation of the number 14, but `0x1e` is not.
+```
 
 ### Arrays
 
@@ -130,7 +132,9 @@ myArray[1] = 7
 printf("%v\n", myArray)		# prints [0 7 0 0 0]
 ```
 
-Note: generic arrays can also be constructed using the `make` function: `make([]interface, 10)`
+```{note}
+Generic arrays can also be constructed using the `make` function: `make([]interface, 10)`
+```
 
 Multi-dimensional arrays are possible; the following example shows two different ways to achieve the same multi-dimensional array:
 
@@ -188,7 +192,9 @@ b = a[:len(a)-3]			# b == [1 2 3]
 c = a[len(a)-4:len(a)-2]	# c == [3 4]
 ```
 
-Note: It is also possible to slice strings in the same fashion. Thus given `a = "hello"`, `a[1:4]` evaluates to `"ell"`.
+```{note}
+It is also possible to slice strings in the same fashion. Thus given `a = "hello"`, `a[1:4]` evaluates to `"ell"`.
+```
 
 ### Maps
 
@@ -372,7 +378,9 @@ if foo == 3 && !bar {
 }
 ```
 
-Note: While Go allows the form `if result := foo(); result == true { ... }`, it is not acceptable in Anko.
+```{note}
+While Go allows the form `if result := foo(); result == true { ... }`, it is not acceptable in Anko.
+```
 
 #### Ternary operator
 

@@ -1,6 +1,6 @@
 # Ingest Node
 
-This node ingests data into Gravwell under a specified tag. Note that the user must be a member of a group specified in the [`Webserver-Ingest-Groups` configuration parameter](#!configuration/parameters.md) to ingest entries.
+This node ingests data into Gravwell under a specified tag. Note that the user must be a member of a group specified in the [`Webserver-Ingest-Groups` configuration parameter](/configuration/parameters) to ingest entries.
 
 ## Configuration
 

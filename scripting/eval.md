@@ -1,6 +1,6 @@
 # The eval module
 
-As introduced in [the search modules documentation](#!search/searchmodules.md#Eval), Gravwell's eval module is a general tool for manipulating search entries when other modules may fall short. It uses the [Anko scripting language](scripting.md) to provide generic scriptability within the pipeline.
+As introduced in [the search modules documentation](searchmodule_list), Gravwell's eval module is a general tool for manipulating search entries when other modules may fall short. It uses the [Anko scripting language](scripting) to provide generic scriptability within the pipeline.
 
 The eval module has several important restrictions:
 
@@ -9,21 +9,23 @@ The eval module has several important restrictions:
 * Loops are not allowed
 * No access to the resource system
 
-Note: To make the structure of your eval expression more clear, hit Ctrl-Enter while typing the query to insert newlines if needed.
+```{note}
+To make the structure of your eval expression more clear, hit Ctrl-Enter while typing the query to insert newlines if needed.
+```
 
-See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting.md) for more details about the language itself.
+See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting) for more details about the language itself.
 
 ## Filtering: Expressions vs. Statements
 
 The eval module will filter entries when the argument is an expression; it will not filter when the argument is a statement. Consider the following example:
 
-```
+```gravwell
 tag=reddit json Body | eval len(Body) < 20 | table Body
 ```
 
 `len(Body) < 20` is an expression, so only entries which match the expression are allowed to continue down the pipeline. In contrast, consider the following:
 
-```
+```gravwell
 tag=reddit json Body | eval if len(Body) <= 10 { setEnum("postlen", "short"); setEnum(“anotherEnum”, “foo”) } | table Body
 ```
 
@@ -37,13 +39,13 @@ A statement controls the flow and structure of the script, like `if` and `switch
 
 Within an eval statement, existing enumerated values may be referred to as if they were regular variables:
 
-```
+```gravwell
 tag=reddit json Body | eval len(Body) < 20 | table Body
 ```
 
 However, to set an enumerated value, a more explicit statement is required. The `setEnum` function takes a name and a value as arguments. It creates or updates an enumerated value with the given name, inferring the correct enumerated value type for the given value:
 
-```
+```gravwell
 tag=reddit json Body | eval if len(Body) <= 10 { setEnum("postlen", "short") } else if len(Body) > 10 && len(Body) < 300 { setEnum("postlen", "medium") } else { setEnum("postlen", "long") } | count by postlen | table postlen count
 ```
 
@@ -82,13 +84,13 @@ Eval provides built-in utility functions, listed below in the format `functionNa
 
 The conversion functions are particularly important because eval can't always do implicit conversion the way you want. For example, the packet module extracts IPs in a special type, not just a string. In order to properly compare against an enumerated value containing an IP, you must use the `IP` function:
 
-```
+```gravwell
 tag=pcap packet ipv4.SrcIP | eval SrcIP != toIP("192.168.0.1") | count by SrcIP | table SrcIP count
 ```
 
 You can check the type of an enumerated value by using the `typeOf` function, in case you're getting unexpected results:
 
-```
+```gravwell
 tag=pcap packet ipv4.SrcIP | eval setEnum("type", typeOf(SrcIP)) | table type
 ```
 
@@ -108,7 +110,7 @@ Note that the comment contains an ID for the current comment (1234222), the auth
 
 The following command attempts to match parent IDs to author names. For every comment it sees, it stores a mapping of the comment ID to the author name in a map named "id_to_name". Then, it checks if the parent ID has an entry in that map; if so, it sets the `parentauthor` enumerated value to that name, otherwise it sets the enumerated value to "unknown".
 
-```
+```gravwell
 tag=hackernews json author id "parent-id" as parentid | sort asc | eval if true { setPersistentMap("id_to_name", id, author);  name = getPersistentMap("id_to_name", parentid); if name != nil { setEnum("parentauthor", name) } else { setEnum("parentauthor", "unknown") } } | table author id parentid parentauthor
 ```
 

@@ -6,7 +6,7 @@ For Gravwell, "at-least-once" delivery is an important caveat - The SQS ingester
 
 ## Basic Configuration
 
-The SQS ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, SQS supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+The SQS ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, SQS supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 ## Queue Examples
 
@@ -35,9 +35,9 @@ If you're using the Gravwell Debian repository, installation is just a single ap
 apt-get install gravwell-sqs
 ```
 
-Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). To install the Netflow ingester, simply run the installer as root (the actual file name will typically include a version number):
+Otherwise, download the installer from the [Downloads page](/quickstart/downloads). To install the Netflow ingester, simply run the installer as root (the actual file name will typically include a version number):
 
-```
+```console
 root@gravserver ~ # bash gravwell_sqs.sh
 ```
 

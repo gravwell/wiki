@@ -43,23 +43,47 @@ Log-Level=INFO
 
 This configuration defines two data consumers (Simple Relay calls them "Listeners") named "default" and "syslog". It also defines a preprocessor named "timestamp". Note how the "default" listener includes the option `Preprocessor=timestamp`. This specifies that entries coming from that listener on port 7777 should be sent to the "timestamp" preprocessor. Because the "syslog" listener does not set any `Preprocessor` option, entries coming in on port 601 will not go through any preprocessors.
 
+(ingest_preprocessors_list)=
 ## Available Preprocessors
+
+```{toctree}
+---
+maxdepth: 1
+hidden: true
+---
+gzip <gzip>
+jsonextract <jsonextract>
+jsonarraysplit <jsonarraysplit>
+jsonfilter <jsonfilter>
+jsontimeextract <jsontimeextract>
+csvrouter <csvrouter>
+regexrouter <regexrouter>
+srcrouter <srcrouter>
+regextimestamp <regextimestamp>
+regexextract <regexextract>
+forwarder <forwarder>
+gravwellforwarder <gravwellforwarder>
+drop <drop>
+ciscoise <ciscoise>
+corelight <corelight>
+plugin <plugin>
+```
 
 | Preprocessor | Purpose |
 | -------------| -------- |
-| [gzip](/ingesters/preprocessors/gzip.md) | Decompress gzipped data in entries |
-| [jsonextract](/ingesters/preprocessors/jsonextract.md) | Parse and extract elements in JSON data |
-| [jsonarraysplit](/ingesters/preprocessors/jsonarraysplit.md) | Parse JSON array data and split the array into individual entries |
-| [jsonfilter](/ingesters/preprocessors/jsonfilter.md) | Parse JSON data and filter based on field values |
-| [jsontimeextract](/ingesters/preprocessors/jsontimeextract.md) | Parse JSON data and extract timestamps from specific field values |
-| [csvrouter](/ingesters/preprocessors/csvrouter.md) | Parse CSV data and route to specific tags based on column values |
-| [regexrouter](/ingesters/preprocessors/regexrouter.md) | Route entries to specific tags based on regular expression matches |
-| [srcrouter](/ingesters/preprocessors/srcrouter.md) | Route entries to specific tags based on source IP or value |
-| [regextimestamp](/ingesters/preprocessors/regextimestamp.md) | Perform complex timestamp processing using regular expressions |
-| [regexextract](/ingesters/preprocessors/regexextract.md) | Perform data extractions and repacking using regular expressions |
-| [forwarder](/ingesters/preprocessors/forwarder.md) | Forward entries using TCP or UDP connections |
-| [gravwellforwarder](/ingesters/preprocessors/gravwellforwarder.md) | Forward entries using a Gravwell ingest connection |
-| [drop](/ingesters/preprocessors/drop.md) | Simple dropping preprocessor, it stops all entries from moving through the preprocessor chain |
-| [ciscoise](/ingesters/preprocessors/ciscoise.md) | Cisco ISE multi-message reconstruction preprocessor |
-| [corelight](/ingesters/preprocessors/corelight.md) | Preprocessor to adapt Corelight JSON logs to Zeek TSV data |
-| [plugin](/ingesters/preprocessors/plugin.md) | Preprocessor that loads interpretted code to perform custom preprocessing actions |
+| [gzip](gzip) | Decompress gzipped data in entries |
+| [jsonextract](jsonextract) | Parse and extract elements in JSON data |
+| [jsonarraysplit](jsonarraysplit) | Parse JSON array data and split the array into individual entries |
+| [jsonfilter](jsonfilter) | Parse JSON data and filter based on field values |
+| [jsontimeextract](jsontimeextract) | Parse JSON data and extract timestamps from specific field values |
+| [csvrouter](csvrouter) | Parse CSV data and route to specific tags based on column values |
+| [regexrouter](regexrouter) | Route entries to specific tags based on regular expression matches |
+| [srcrouter](srcrouter) | Route entries to specific tags based on source IP or value |
+| [regextimestamp](regextimestamp) | Perform complex timestamp processing using regular expressions |
+| [regexextract](regexextract) | Perform data extractions and repacking using regular expressions |
+| [forwarder](forwarder) | Forward entries using TCP or UDP connections |
+| [gravwellforwarder](gravwellforwarder) | Forward entries using a Gravwell ingest connection |
+| [drop](drop) | Simple dropping preprocessor, it stops all entries from moving through the preprocessor chain |
+| [ciscoise](ciscoise) | Cisco ISE multi-message reconstruction preprocessor |
+| [corelight](corelight) | Preprocessor to adapt Corelight JSON logs to Zeek TSV data |
+| [plugin](plugin) | Preprocessor that loads interpretted code to perform custom preprocessing actions |

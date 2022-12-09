@@ -4,7 +4,7 @@ The Azure Event Hubs Ingester pulls events from Microsoft Azure's [Event Hubs](h
 
 ## Basic Configuration
 
-The Event Hubs ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, SQS supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+The Event Hubs ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, SQS supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 The configuration file is located in `/opt/gravwell/etc/azure_event_hubs.conf`. There is also a directory, `/opt/gravwell/etc/azure_event_hubs.conf.d`, into which additional configuration files may be dropped; this is a convenient way to manage individual Event Hub configurations, rather than maintaining one large config file.
 
@@ -71,4 +71,4 @@ The following optional parameters modify how the Timestamp field is set for entr
 * `Timezone-Override`, string: if set to a string such as "America/Chicago", the ingester will use the specified timezone when attempting to extract timestamps from event bodies, rather than assuming UTC. This is useful when parsing timestamps which do not specify a UTC offset explicitly. Note that this parameter has no effect if `Parse-Time` is false!
 * `Assume-Local-Timezone`, boolean: if set to true, the ingester will use the system timezone when extracting timestamps from event bodies, rather than assuming UTC. Note that this parameter has no effect if `Parse-Time` is false!
 
-Each EventHub configuration block may also specify one or more `Preprocessor` parameters to invoke [Gravwell ingest proprocessors](#!ingesters/preprocessors/preprocessors.md) as needed.
+Each EventHub configuration block may also specify one or more `Preprocessor` parameters to invoke [Gravwell ingest proprocessors](/ingesters/preprocessors/preprocessors) as needed.

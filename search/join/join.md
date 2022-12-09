@@ -4,7 +4,7 @@ The join module makes it easier to join two or more enumerated values into a sin
 
 The following search will extract the destination IP and port from netflow records and join them with a semicolon as a separator, placing the result in an enumerated value named `dialstring`:
 
-```
+```gravwell
 tag=netflow netflow Dst DstPort | join -s : Dst DstPort as dialstring | table Dst DstPort dialstring
 ```
 
@@ -16,7 +16,7 @@ Any number of enumerated values can be specified. An output enumerated value is 
 
 ## Example
 
-```
+```gravwell
 tag=pcap packet ipv4.SrcIP ~ 192.168.0.0/16 tcp.SrcPort | join -s : SrcIP SrcPort as dialstring | unique SrcIP SrcPort | table SrcIP SrcPort dialstring
 ```
 ![](join.png)

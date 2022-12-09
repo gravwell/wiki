@@ -109,7 +109,9 @@ POST /api/library
 }
 ```
 
-Note: Because the "GUID" field is not set here, the system will assign one. You may also include the GUID in the request.
+```{note}
+Because the "GUID" field is not set here, the system will assign one. You may also include the GUID in the request.
+```
 
 Response:
 ```

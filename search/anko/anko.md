@@ -1,12 +1,12 @@
 ## Anko
 
-The anko module provides a more complete scripting environment as a supplement to eval. It allows more complex operations on search entries, but it also requires more work to develop, test, and deploy an anko script than a simple eval expression. Scripts are stored as resources in the [resource system](#!resources/resources.md).
+The anko module provides a more complete scripting environment as a supplement to eval. It allows more complex operations on search entries, but it also requires more work to develop, test, and deploy an anko script than a simple eval expression. Scripts are stored as resources in the [resource system](/resources/resources).
 
 The syntax of anko is identical to that of eval; both derive from [github.com/mattn/anko](https://github.com/mattn/anko), with some additional functions added for Gravwell-specific tasks.
 
 We recommend using anko in situations where no other modules are capable enough. Typically this means situations where entries need to be compared against previous entries, entries need to be duplicated, complex operations are required to extract data from entries, or a combination of these.
 
-This portion of the documentation only briefly describes the usage of the anko module; for a more detailed description, see the [full anko module documentation](#!scripting/anko.md) and the [Anko scripting language documentation](#!scripting/scripting.md).
+This portion of the documentation only briefly describes the usage of the anko module; for a more detailed description, see the [full anko module documentation](/scripting/anko) and the [Anko scripting language documentation](/scripting/scripting).
 
 ### Syntax
 
@@ -33,12 +33,14 @@ func Process() {
 
 Assuming the script is uploaded to a resource named `CheckPostLen`, the script can be executed like this:
 
-```
+```gravwell
 tag=reddit json Body | anko CheckPostLen | count by postlen | table postlen count
 ```
 
 The `Process` function will be executed once for every search entry which reaches the anko module, checking the length of the enumerated value `Body` and setting a new enumerated value `postlen` based on the length of the body.
 
-Note: The `return true` at the end of the process function is critical.  The Process function returns a boolean indicating whether the entry should be passed through or filtered out.  Returning false means drop the entry.  Returning true means allow the entry to continue down the pipeline.
+```{note}
+The `return true` at the end of the process function is critical.  The Process function returns a boolean indicating whether the entry should be passed through or filtered out.  Returning false means drop the entry.  Returning true means allow the entry to continue down the pipeline.
+```
 
-This example is quite simple; it implements only a `Process` function (not the optional `Parse` or `Finalize` functions). For more complex examples, refer to the [full anko module documentation](#!scripting/anko.md)
+This example is quite simple; it implements only a `Process` function (not the optional `Parse` or `Finalize` functions). For more complex examples, refer to the [full anko module documentation](/scripting/anko)

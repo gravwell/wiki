@@ -1,6 +1,6 @@
 # The Query Library
 
-The query library lets you store commonly-used search queries for quick recall. You can pull up queries from the library at the [Gravwell search prompt](#!gui/queries/queries.md) and embed them in [dashboards](#!gui/dashboards/dashboards.md).
+The query library lets you store commonly-used search queries for quick recall. You can pull up queries from the library at the [Gravwell search prompt](/gui/queries/queries) and embed them in [dashboards](/gui/dashboards/dashboards).
 
 ## The Query Library Page
 
@@ -60,7 +60,7 @@ You may also change the timeframe used in the query by clicking "Change timefram
 
 ## Scheduling a Query
 
-You can easily create a [scheduled search](#!scripting/scheduledsearch.md) from a query library item by selecting the "Schedule" option in the extended menu. This will take you to a scheduled search creation page with the selected query pre-populated; fill in the the name, description, schedule, etc. and click 'Save' to create a scheduled search.
+You can easily create a [scheduled search](/scripting/scheduledsearch) from a query library item by selecting the "Schedule" option in the extended menu. This will take you to a scheduled search creation page with the selected query pre-populated; fill in the the name, description, schedule, etc. and click 'Save' to create a scheduled search.
 
 ![](schedule-query.png)
 

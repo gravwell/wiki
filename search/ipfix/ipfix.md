@@ -1,6 +1,6 @@
 # IPFIX and Netflow V9
 
-The ipfix processor is designed to extract and filter raw IPFIX and Netflow V9 data frames, allowing you to quickly identify network flows, filter on ports, or generally monitor the behavior of aggregate flows.  Gravwell has a native IPFIX + Netflow ingester which is open source and available at https://github.com/gravwell/ingesters or as an installer in the [quickstart section](/#!quickstart/downloads.md).
+The ipfix processor is designed to extract and filter raw IPFIX and Netflow V9 data frames, allowing you to quickly identify network flows, filter on ports, or generally monitor the behavior of aggregate flows.  Gravwell has a native IPFIX + Netflow ingester which is open source and available at https://github.com/gravwell/ingesters or as an installer in the [quickstart section](/quickstart/downloads).
 
 ## A Note About Templates
 
@@ -40,7 +40,9 @@ All elements of the IPFIX/NFv9 message *header* can be used for filtering, as ca
 
 The ipfix processor is an expanding module; expanding modules break input entries into multiple output entries. The module takes in individual entries corresponding to whole IPFIX messages. It then processes each data record within the message and emits a new entry *for each record*; thus, a single input entry might turn into 30 output entries.
 
-Note: If you specify *only* header items to extract (e.g. `ipfix Version Sequence`), entries are *not* expanded, because there is only one header per IPFIX message. Each incoming entry will result in no more than one outgoing entry. Specifying a mix of header and data items will trigger expansion.
+```{note}
+If you specify *only* header items to extract (e.g. `ipfix Version Sequence`), entries are *not* expanded, because there is only one header per IPFIX message. Each incoming entry will result in no more than one outgoing entry. Specifying a mix of header and data items will trigger expansion.
+```
 
 ### IPFIX Header Data Items
 
@@ -59,7 +61,9 @@ IPFIX and Netflow v9 define fields which may make up a data record. Netflow defi
 
 IANA has defined a similar set of fields for IPFIX, which [can be found here](https://www.iana.org/assignments/ipfix/ipfix.xhtml#ipfix-information-elements). An IPFIX fields are similar to Netflow v9 fields (they have a field ID, a type, and a name), but IPFIX introduces the concept of the _enterprise ID_ in addition to the field IDs used by Netflow v9. The enterprise ID allows users to define their own set of fields in addition to the predefined ones, which all have an enterprise ID of 0.
 
-Attention: Because IPFIX and Netflow v9 are template-based, any given data record may or may not contain the fields described below. If you attempt to extract e.g. "sourceIPv4PrefixLength" but get empty results, it is possible that your IPFIX records do not contain that field.
+```{attention}
+Because IPFIX and Netflow v9 are template-based, any given data record may or may not contain the fields described below. If you attempt to extract e.g. "sourceIPv4PrefixLength" but get empty results, it is possible that your IPFIX records do not contain that field.
+```
 
 For convenient, we list some of the most common IPFIX and Netflow v9 fields below; refer to the documents linked above for a complete list of supported names.
 
@@ -83,7 +87,9 @@ For convenient, we list some of the most common IPFIX and Netflow v9 fields belo
 | destinationIPv6Address | IPV6_DST_ADDR | IPv6 destination address of the flow. | ~ !~ == != | destinationIPv6Address == ::1
 | destinationIPv6PrefixLength | IPV6_DST_MASK | IPv6 destination address prefix length. | > < <= >= == != | destinationIPv6PrefixLength < 64
 
-Note: In general, you can specify Netflow v9 field names when extracting IPFIX messages and vice versa. However, because data types vary slightly between the two protocols, it is always safest to use IPFIX field names when processing IPFIX and Netflow names when processing Netflow.
+```{note}
+In general, you can specify Netflow v9 field names when extracting IPFIX messages and vice versa. However, because data types vary slightly between the two protocols, it is always safest to use IPFIX field names when processing IPFIX and Netflow names when processing Netflow.
+```
 
 The module also provides a handful of "shortcuts" for convenience:
 
@@ -112,7 +118,7 @@ You can also specify fields by giving an enterprise ID and field ID separated by
 
 ### Number of HTTPS flows by Source IP over time
 
-```
+```gravwell
 tag=ipfix ipfix destinationIPv4Address as Dst destinationTransportPort==443 | count by Dst | chart count by Dst
 ```
 
@@ -120,7 +126,7 @@ tag=ipfix ipfix destinationIPv4Address as Dst destinationTransportPort==443 | co
 
 ### Find out which IPs are using port 80
 
-```
+```gravwell
 tag=ipfix ipfix port==80 ip ~ PRIVATE | unique ip | table ip
 ```
 
@@ -128,13 +134,13 @@ tag=ipfix ipfix port==80 ip ~ PRIVATE | unique ip | table ip
 
 This example filters down to only Netflow v9 records, then extracts the protocol and counts how many flows appeared for each.
 
-```
+```gravwell
 tag=v9 ipfix Version==9 PROTOCOL | count by PROTOCOL | table PROTOCOL count
 ```
 
 ### Extract a list of fields in each data record
 
-```
+```gravwell
 tag=ipfix ipfix -f | table FIELDS
 ```
 

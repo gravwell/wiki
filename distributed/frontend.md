@@ -1,4 +1,4 @@
-# The distributed Gravwell webserver
+# Distributed Gravwell Webserver
 
 Just as Gravwell is designed to have multiple indexers operating at once, it can also have multiple webservers operating at once, pointing to the same set of indexers. Having multiple webservers allows for load balancing and high availability. Even if you only have a single webserver, deploying a datastore can provide useful resiliency, since the datastore can be used to restore a failed webserver or vice versa.
 
@@ -6,7 +6,7 @@ Once configured, distributed webservers will synchronize resources, users, dashb
 
 ## The datastore server
 
-Gravwell uses a separate server process called the datastore to keep webservers in sync. It can run on its own machine or it can share a server with a webserver. Fetch the datastore installer from [the downloads page](#!quickstart/downloads.md), then run it on the machine which will contain the datastore.
+Gravwell uses a separate server process called the datastore to keep webservers in sync. It can run on its own machine or it can share a server with a webserver. Fetch the datastore installer from [the downloads page](/quickstart/downloads), then run it on the machine which will contain the datastore.
 
 ### Configuring the datastore server
 
@@ -37,7 +37,9 @@ External-Addr=10.0.0.1:443
 
 The `External-Addr` field is the IP address and port that *other webservers* should use to contact this webserver. This allows a user on one webserver to view the results of a search executed on another webserver.
 
-Note: By default, the webserver will check in with the datastore every 10 seconds. This can be modified by setting the `Datastore-Update-Interval` field to the desired number of seconds. Be warned that waiting too long between updates will make changes propagate very slowly between webservers, while overly-frequent updates may cause undue system load. 5 to 10 seconds is a good choice.
+```{note}
+By default, the webserver will check in with the datastore every 10 seconds. This can be modified by setting the `Datastore-Update-Interval` field to the desired number of seconds. Be warned that waiting too long between updates will make changes propagate very slowly between webservers, while overly-frequent updates may cause undue system load. 5 to 10 seconds is a good choice.
+```
 
 ## Disaster recovery
 
@@ -61,4 +63,4 @@ If the datastore is on a separate machine, use `scp` or another file transfer me
 
 ## Load balancing
 
-Gravwell now offers a custom load balancing component specifically designed to distribute users across multiple webservers with minimal configuration. See [the load balancing configuration page](loadbalancer.md) for information on setting it up.
+Gravwell now offers a custom load balancing component specifically designed to distribute users across multiple webservers with minimal configuration. See [the load balancing configuration page](loadbalancer) for information on setting it up.

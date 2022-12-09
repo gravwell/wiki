@@ -26,19 +26,25 @@ The ageout system can be configured to delete old data, so it is critically impo
 
 Each well will always have a hot storage location defined via the `Location` directive. It may optionally have a cold storage location defined via `Cold-Location`. Ageout is configured by setting constraints and defining any desired rules for moving or deleting data from hot to cold storage, and from cold storage to either archives or deletion. Be aware that unless deletion rules are *explicitly* provided, Gravwell will *never* delete data. The default configuration *does* include ageout rules, so be sure to review the config file (and maybe set up some custom wells) if you've got particular retention requirements.
 
-Attention: Ageout configurations are on a per well basis.  Each well operates independently and asynchronously from all others.  If two wells are sharing the same volume, enabling ageout directives based on storage reserve can cause one well to aggressively migrate and/or delete data due to the incursion by another.
+```{attention}
+Ageout configurations are on a per well basis.  Each well operates independently and asynchronously from all others.  If two wells are sharing the same volume, enabling ageout directives based on storage reserve can cause one well to aggressively migrate and/or delete data due to the incursion by another.
+```
 
-Note: If data is actively coming into a storage shard that is marked for ageout or is actively being queried, the ageout system will defer aging out the shard to a later time.
+```{note}
+If data is actively coming into a storage shard that is marked for ageout or is actively being queried, the ageout system will defer aging out the shard to a later time.
+```
 
 ## Hot/Cold Deletion Rules
 
 When data ages out from the hot well, it is moved to the cold well if a cold well is defined. If no cold well is defined, data will be left in the hot well unless deletion is explicitly authorized via the `Delete-Cold-Data` option.
 
-Similarly, when data ages out of the cold well ("frozen") it will not be deleted unless the `Delete-Frozen-Data` parameter is specified. If you need long-term archives, frozen data can be sent to the [Gravwell archiving service](archive.md) before deletion.
+Similarly, when data ages out of the cold well ("frozen") it will not be deleted unless the `Delete-Frozen-Data` parameter is specified. If you need long-term archives, frozen data can be sent to the [Gravwell archiving service](archive) before deletion.
 
 Examples of these rules can be seen in the configuration snippets in the following sections.
 
-Warning: You *must* specify either `Delete-Cold-Data` (if using only a hot well) or `Delete-Frozen-Data` (if using both hot & cold wells) if you want data to be actually removed from the disk. These settings require explicit authorization from the user, because our general policy is to never delete anything unless asked. If you do not include the appropriate deletion parameter in your well config, data will never be deleted and your disk will eventually fill up!
+```{warning}
+You *must* specify either `Delete-Cold-Data` (if using only a hot well) or `Delete-Frozen-Data` (if using both hot & cold wells) if you want data to be actually removed from the disk. These settings require explicit authorization from the user, because our general policy is to never delete anything unless asked. If you do not include the appropriate deletion parameter in your well config, data will never be deleted and your disk will eventually fill up!
+```
 
 ## Time-Based Ageout Rules
 
@@ -49,7 +55,9 @@ Time-based ageout manages data based on time retention requirements.  For exampl
 * "w"     - weeks
 * "weeks" - weeks
 
-Note: A shard will only be aged-out when its *most recent* entries exceed the duration.
+```{note}
+A shard will only be aged-out when its *most recent* entries exceed the duration.
+```
 
 An example well configuration using only a hot pool of data and deleting data that is more than 30 days old:
 
@@ -73,8 +81,9 @@ An example configuration in which data is moved from the hot pool to the cold po
 	Delete-Frozen-Data=true
 ```
 
-Note: In the above configuration, data will be deleted permanently when it is 97 days old, having spent 7 days in the hot pool and 90 days in the cold pool.
-
+```{note}
+In the above configuration, data will be deleted permanently when it is 97 days old, having spent 7 days in the hot pool and 90 days in the cold pool.
+```
 The Time based ageout is invoked once per day, sweeping each pool for shards that can be aged out.  By default the sweep happens at midnight UTC, but the execution time can be overridden in the well configuration with the Ageout-Time-Override directive.  The override directive is specified in 24 hour UTC time.
 
 An example configuration that overrides the ageout time checks to occur at 7PM UTC:
@@ -118,7 +127,9 @@ An example well configuration where the hot pool keeps approximately 50GB and th
 	Delete-Frozen-Data=true
 ```
 
-Attention: Storage-based constraints are not an instant hard limit.  Be sure to leave a little room so that when a storage allotment is exceeded, the indexer can ageout data while still ingesting.  For example, if a hot storage device can hold 512GB and the system typically ingests 100GB per day, setting the storage limit to 490GB should provide enough headroom so that the hot pool won't completely fill up while the indexer is migrating data.
+```{attention}
+Storage-based constraints are not an instant hard limit.  Be sure to leave a little room so that when a storage allotment is exceeded, the indexer can ageout data while still ingesting.  For example, if a hot storage device can hold 512GB and the system typically ingests 100GB per day, setting the storage limit to 490GB should provide enough headroom so that the hot pool won't completely fill up while the indexer is migrating data.
+```
 
 ## Storage Available-Based Ageout Rules
 
@@ -136,7 +147,9 @@ An example well configuration which will use the hot location as long as there i
 	Delete-Frozen-Data=true
 ```
 
-Attention: The Gravwell ageout system which operates on storage reserves is operating entirely orthogonal to outside influences, if a well is configured to respect a 50% storage ceiling and an outside application fills the volume to 60%, Gravwell will delete all entries outside the active shard.  Wells configured with storage reserved should be treated as expendable.
+```{attention}
+The Gravwell ageout system which operates on storage reserves is operating entirely orthogonal to outside influences, if a well is configured to respect a 50% storage ceiling and an outside application fills the volume to 60%, Gravwell will delete all entries outside the active shard.  Wells configured with storage reserved should be treated as expendable.
+```
 
 ## Caveats and Important Notes
 
@@ -148,7 +161,7 @@ Take care when combining time-based constraints with total storage constraints. 
 
 ### Transparent Compression + Docker Caveats
 
-[Transparent compression](compression.md) has important implications for ageout rules involving total storage. A file with transparent compression enabled takes up less space on disk than the uncompressed version, but it is difficult to find out precisely *how much* disk space it is actually using. Consider a well configured with `Max-Hot-Storage-GB=5`; if transparent compression is enabled, we would prefer to ageout data only when 5GB of *actual disk space* are used, rather than when the size of the uncompressed data reaches 5GB.
+[Transparent compression](compression) has important implications for ageout rules involving total storage. A file with transparent compression enabled takes up less space on disk than the uncompressed version, but it is difficult to find out precisely *how much* disk space it is actually using. Consider a well configured with `Max-Hot-Storage-GB=5`; if transparent compression is enabled, we would prefer to ageout data only when 5GB of *actual disk space* are used, rather than when the size of the uncompressed data reaches 5GB.
 
 Gravwell attempts to query the actual on-disk size of shards on BTRFS systems with compression enabled. On a typical Linux system, this will work fine. However, **when using Docker containers**, extra care must be taken. If Docker's runtime directory (default `/var/lib/docker`) is on a BTRFS filesystem, wells can use transparent compression, *but* the on-disk size query will fail because certain IOCTL calls are disabled by default. You can enable the appropriate IOCTL calls for your Docker container by passing the `--cap-add=SYS_ADMIN` flag to the command you use to instantiate the indexer container.
 

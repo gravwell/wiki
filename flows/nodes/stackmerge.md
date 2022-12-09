@@ -2,7 +2,7 @@
 
 This node combines multiple input payloads into a single output payload. Beginning with the first payload (the "base" payload), it progressively overlays the contents of the additional payloads on top of it. If there are items with the same name in multiple payloads, the earlier values will be overwritten as later payloads are merged in--for instance, if two Run Query nodes are fed into the same Stack Merge node without renaming their output values, the output payload of the Stack Merge node will have only one `search` value (whichever node was connected to the "last" input socket).
 
-Contrast this node to the [Nest Merge](nestmerge.md) node.
+Contrast this node to the [Nest Merge](nestmerge) node.
 
 ## Configuration
 

@@ -7,7 +7,7 @@ The `chart` render module is a condensing module that collapses and recalculates
 
 The following query generates a chart showing which usernames most commonly fail ssh authentication; due to online brute-forcing attacks, we can expect "root" to be the most common.
 
-```
+```gravwell
 tag=syslog grep sshd | grep "Failed password for" | regex "Failed\spassword\sfor\s(?P<user>\S+)" | count by user | chart count by user limit 10
 ```
 
@@ -21,7 +21,7 @@ tag=syslog grep sshd | grep "Failed password for" | regex "Failed\spassword\sfor
 
 The `chart` renderer can produce data sets based on keys.  In the above examples we are plotting the `count` of entries using the key `user` which produces a count for each user user.  Chart supports multiple keys, which would allow us to chart data using the intersection of multiple key values.  For example we can run a query that calculates the size of data for each IP and Port using PCAP.  The query and results would be:
 
-```
+```gravwell
 tag=pcap packet ipv4.IP ~ 192.168.0.0/16 tcp.Port | length | stats sum(length) by IP Port | chart sum by IP Port
 ```
 
@@ -36,18 +36,19 @@ The `chart` renderer can also plot multiple independent data sources.  We might 
 
 The following query generates the `min`, `max`, and `mean` of packet lengths over time and displays the results on a single chart:
 
-```
+```gravwell
 tag=pcap packet ipv4.IP ~ 192.168.0.0/16 tcp.Port | length | stats min(length) max(length) mean(length)| chart min max mean
 ```
 
 ![Chart with multiple datasets](multidata.png)
 
-Note: Multiple value types on a single chart are called categories.
-
+```{note}
+Multiple value types on a single chart are called categories.
+```
 
 Charts can use multiple keys and categories, it is perfectly acceptable to plot the `min`, `max`, and `mean` using a set of keys.  This query plots the `min`, `max`, and `mean` of packet sizes using the `IP` and `Port` keys.  The chart can get a little busy, but the output can still be useful.
 
-```
+```gravwell
 tag=pcap packet ipv4.IP ~ 192.168.0.0/16 tcp.Port | length | stats min(length) max(length) mean(length) by IP Port | chart min max mean by IP Port
 ```
 
@@ -57,7 +58,7 @@ tag=pcap packet ipv4.IP ~ 192.168.0.0/16 tcp.Port | length | stats min(length) m
 
 The `chart` renderer utilizes the Gravwell pipeline to decide how to key and condense multiple categories.  It is intelligent enough to identify the correct keys that generated a data category and condense using those keys.  This allows us to generate very complex charts with multiple categories that do not have uniform key sets.  For example, maybe we want mean packet sizes for each IP, but we want the standard deviation of packet sizes for everything.  This can be accomplished using the following query:
 
-```
+```gravwell
 tag=pcap packet ipv4.IP ~ 192.168.0.0/16 tcp.Port | length | stats mean(length) by IP stddev(length) over 1m | chart stddev mean by IP limit 3
 ```
 
@@ -65,9 +66,11 @@ tag=pcap packet ipv4.IP ~ 192.168.0.0/16 tcp.Port | length | stats mean(length) 
 
 Chart can handle even more complex category and key interactions, here is a query that plots the mean of packet lengths by IP, and the max packet for each IP Port, and the standard deviation of all packet lengths.
 
-Note: Notice that we provide all the categories and a single set of keys that covers all keys used for the categories.  Chart will figure out which keys go to which category and *do the right thing*.
-
+```{note}
+Notice that we provide all the categories and a single set of keys that covers all keys used for the categories.  Chart will figure out which keys go to which category and *do the right thing*.
 ```
+
+```gravwell
 tag=pcap packet ipv4.IP ~ 192.168.0.0/16 tcp.Port | length | stats mean(length) by IP stddev(length) max(length) by IP Port over 1m | chart stddev max mean by IP Port limit 3
 ```
 

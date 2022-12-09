@@ -28,7 +28,7 @@ The following example formats the indexer info, packs it into a PDF, and sends t
 
 ![](indexerinfo-example.png)
 
-The [Text Template](template.md) node is configured with the following template:
+The [Text Template](template) node is configured with the following template:
 
 ```
 Connected Indexers:

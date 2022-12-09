@@ -1,10 +1,10 @@
 # Get Text Results Node
 
-This node fetches a user-specified number of results from a search which was previously executed using the [Run a Query](runquery.md) node. Many nodes, such as the [PDF](pdf.md) node, can operate directly on the search object output by the Query node, but in some specific situations (formatting results in a specific way using the [Text Template](template.md) node, for instance) this node can provide the raw output required.
+This node fetches a user-specified number of results from a search which was previously executed using the [Run a Query](runquery) node. Many nodes, such as the [PDF](pdf) node, can operate directly on the search object output by the Query node, but in some specific situations (formatting results in a specific way using the [Text Template](template) node, for instance) this node can provide the raw output required.
 
 ## Configuration
 
-* `Search`, required: The search from which results should be fetched. This should be the output of a [Run a Query](runquery.md) node.
+* `Search`, required: The search from which results should be fetched. This should be the output of a [Run a Query](runquery) node.
 * `Count`, required: The number of rows to fetch from the results. This can be a static integer, or it can be set to `search.Count` to fetch all results from the query.
 * `Output Variable Name`: Results will be stored in the payload under this name. Defaults to `textResults`.
 
@@ -49,7 +49,7 @@ This node inserts an object into the payload, using the key set in the `Output V
 
 ## Example
 
-This example runs a query, fetches the text results, and uses the [Text Template](template.md) node to print the TS and SRC fields of each entry.
+This example runs a query, fetches the text results, and uses the [Text Template](template) node to print the TS and SRC fields of each entry.
 
 ![](gettextresults-example.png)
 

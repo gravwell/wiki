@@ -14,7 +14,7 @@ The node injects an entry into the payload for each config item specified.
 
 ## Example
 
-This example uses the Set Variables node to define a query string and a count, which are used in multiple Run Query and Get Table Results nodes to make modifications easier. The results of those nodes are then fed into the [PDF](pdf.md) node to generate a nice report, which is then sent out via email.
+This example uses the Set Variables node to define a query string and a count, which are used in multiple Run Query and Get Table Results nodes to make modifications easier. The results of those nodes are then fed into the [PDF](pdf) node to generate a nice report, which is then sent out via email.
 
 ![](inject-flow.png)
 

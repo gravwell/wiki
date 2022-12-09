@@ -12,7 +12,7 @@ The numbercard renderer is an "alias" of gauge: it has the exact same syntax as 
 
 The simplest way to use the gauge renderer is by passing it a single enumerated value argument:
 
-```
+```gravwell
 tag=json json class | stats mean(class) | gauge mean
 ```
 
@@ -28,8 +28,7 @@ Selecting 'Number card' in the chart type dropdown will change the display to th
 
 If we specify `numbercard` instead of `gauge`, we will default to the 'Number card' view:
 
-
-```
+```gravwell
 tag=json json class | stats mean(class) | numbercard mean
 ```
 
@@ -39,7 +38,7 @@ tag=json json class | stats mean(class) | numbercard mean
 
 The default label is not always ideal, especially when creating a gauge for use in a dashboard. If you would like a more informative label, wrap the magnitude enumerated value and the desired label in parentheses as below:
 
-```
+```gravwell
 tag=json json class | mean class | gauge (mean "Avg Class")
 ```
 
@@ -49,7 +48,7 @@ tag=json json class | mean class | gauge (mean "Avg Class")
 
 You can specify minimum and maximum values for the gauge by wrapping the magnitude enumerated value and the desired min/max values in parentheses:
 
-```
+```gravwell
 tag=json json class | stats mean(class) | gauge (mean 1 100000)
 ```
 
@@ -57,7 +56,7 @@ tag=json json class | stats mean(class) | gauge (mean 1 100000)
 
 You can also specify the minimum and maximum by enumerated values:
 
-```
+```gravwell
 tag=json json class | stats mean(class) min(class) max(class) | gauge (mean min max)
 ```
 
@@ -65,15 +64,15 @@ tag=json json class | stats mean(class) min(class) max(class) | gauge (mean min 
 
 Or use a mix of constants and enumerated values:
 
-```
+```gravwell
 tag=json json class | stats mean(class) max(class) | gauge (mean 1 max)
 ```
 
 ## Combining Min/Max with Labels
 
-You can, of course, specify a gauge with both min/max values *and* a label:
+You can, of course, specify a gauge with both min/max values _and_ a label:
 
-```
+```gravwell
 tag=json json class | mean class | gauge (mean 0 100000 "Avg Class")
 ```
 
@@ -83,7 +82,7 @@ tag=json json class | mean class | gauge (mean 0 100000 "Avg Class")
 
 You can list multiple enumerated values to place multiple needles on the gauge:
 
-```
+```gravwell
 tag=json json class | stats mean(class) stddev(class) | gauge mean stddev
 ```
 
@@ -91,7 +90,7 @@ tag=json json class | stats mean(class) stddev(class) | gauge mean stddev
 
 You can specify min/max values for each needle separately if desired, but note that default single-gauge renderer will select the lowest min and highest max for display, ignoring the others. For that reason, you may wish to select the "multiple gauges" option in the configuration menu:
 
-```
+```gravwell
 tag=json json class | stats mean(class) stddev(class) min(class) max(class) | gauge (mean min max) (stddev 1 35000)
 ```
 
@@ -101,11 +100,13 @@ The renderer also behaves appropriately in "number card" mode with multiple item
 
 ![](gauge-multi3.png)
 
+(keyed_multi-gauge_renderer)=
+
 ## Keyed Multi-Gauge
 
-If you specify a magnitude which is *keyed*, gauge will output values for each combination of keys. So for instance, one might take weather data from multiple cities and find the average *per city*, then pass the resulting average to `gauge` or `numbercard`:
+If you specify a magnitude which is _keyed_, gauge will output values for each combination of keys. So for instance, one might take weather data from multiple cities and find the average _per city_, then pass the resulting average to `gauge` or `numbercard`:
 
-```
+```gravwell
 tag=weather json main.temp name | stats mean(temp) by name | numbercard mean
 ```
 
@@ -113,7 +114,7 @@ tag=weather json main.temp name | stats mean(temp) by name | numbercard mean
 
 If you specify a label, it will be used appropriately:
 
-```
+```gravwell
 tag=weather json main.temp name | stats mean(temp) by name | gauge (mean "Fahrenheit temp")
 ```
 

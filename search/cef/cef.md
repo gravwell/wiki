@@ -46,7 +46,7 @@ CEF:0|Citrix|NetScaler|NS11.0|APPFW|APPFW_STARTURL|6|src=192.168.1.1 method=GET 
 
 The Query:
 
-```
+```gravwell
 tag=firewall cef DeviceVendor DeviceProduct Severity==7 msg | table DeviceVendor DeviceProduct msg
 ```
 
@@ -60,12 +60,12 @@ CEF:0|Citrix|NetScaler|NS11.0|APPFW|APPFW_STARTURL|6|src=192.168.1.1 Version=11.
 
 The Query:
 
-```
+```gravwell
 tag=firewall cef DeviceVendor==Citrix DeviceProduct==NetScaler Severity Ext.Version msg ~ Banned | table DeviceVendor DeviceProduct msg Version
 ```
 
 The query would extract the value "11.0" for version rather than "0" but if you ALSO wanted the header value we can make use of the "as" syntax to pull both the header Version and the key Version.  The "~" inline filter states that we only want records containing the word "Banned" in the message field.
 
-```
+```gravwell
 tag=firewall cef DeviceVendor DeviceProduct Severity Version as hdrversion Ext.Version msg | eval Severity > 7 | table DeviceVendor DeviceProduct msg Version hdrversion
 ```

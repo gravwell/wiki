@@ -9,7 +9,7 @@ This node combines multiple input payloads into a single output payload. Each in
 }
 ```
 
-Contrast this node to the [Stack Merge](stackmerge.md) node.
+Contrast this node to the [Stack Merge](stackmerge) node.
 
 ## Configuration
 

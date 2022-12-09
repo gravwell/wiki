@@ -9,7 +9,7 @@ Users can create a variety of objects within the Gravwell system:
 * Templates
 * Userfiles
 
-At this time, there are no GUI utilities for managing these objects as the administrator. However, the [Gravwell command-line client](#!cli/cli.md) can list, delete, and modify all of these object types using options in the **admin** sub-menu.
+At this time, there are no GUI utilities for managing these objects as the administrator. However, the [Gravwell command-line client](/cli/cli) can list, delete, and modify all of these object types using options in the **admin** sub-menu.
 
 To access these management options, run the client, log in as an administrator user, and enter the admin menu:
 

@@ -1,4 +1,4 @@
-#Gravwell Accelerators
+# Gravwell Accelerators
 
 Gravwell can process entries as they are *ingested* in order to perform field extraction.  The extracted fields are then recorded in acceleration blocks which accompany each shard.  Using the accelerators can enable dramatic speedups in throughput with minimal storage overhead.  Accelerators are specified on a per-well basis and are designed to be as unobtrusive and flexible as possible.  If data enters a well that does not match the acceleration directive, or is missing the specified fields, Gravwell processes it just like any other entry.  Acceleration will engage when it can.
 
@@ -61,17 +61,17 @@ Accelerators are configured on a per-well basis.  Each well can specify an accel
 
 ### Supported Extraction Modules
 
-* [CSV](#!search/csv/csv.md)
-* [Fields](#!search/fields/fields.md)
-* [Syslog](#!search/syslog/syslog.md)
-* [JSON](#!search/json/json.md)
-* [CEF](#!search/cef/cef.md)
-* [Regex](#!search/regex/regex.md)
-* [Winlog](#!search/winlog/winlog.md)
-* [Slice](#!search/slice/slice.md)
-* [Netflow](#!search/netflow/netflow.md)
-* [IPFIX](#!search/ipfix/ipfix.md)
-* [Packet](#!search/packet/packet.md)
+* [CSV](/search/csv/csv)
+* [Fields](/search/fields/fields)
+* [Syslog](/search/syslog/syslog)
+* [JSON](/search/json/json)
+* [CEF](/search/cef/cef)
+* [Regex](/search/regex/regex)
+* [Winlog](/search/winlog/winlog)
+* [Slice](/search/slice/slice)
+* [Netflow](/search/netflow/netflow)
+* [IPFIX](/search/ipfix/ipfix)
+* [Packet](/search/packet/packet)
 * Fulltext
 
 ### Example Configuration
@@ -104,12 +104,13 @@ For example, consider the following well configuration which uses the JSON accel
 
 If we were to issue the following query:
 
-```
+```gravwell
 tag=app json username==admin app.field1=="login event" app.field2 != "failure" | count by hostname | table hostname count
 ```
 
 The json search module will transparently invoke the acceleration framework and provide a first-level filter on the "username" and "app.field1" extracted values.  The "app.field2" field is NOT accelerated in this query because it does not use a direct equality filter.  Filters that exclude, compare, or check for subsets are not eligible for acceleration.
 
+(accelerating_specific_tags)=
 ### Accelerating Specific Tags
 
 The acceleration system allows for acceleration at the well or tag levels, this allows you to specify a basic acceleration scheme on a well then specify specific accelerator configurations for specific tags or groups of tags.
@@ -252,7 +253,7 @@ Note that the tag `zeekconn` can be matched against both accelerators, however t
 
 ## Fulltext
 
-The fulltext accelerator is designed to index words within text logs and is considered the most flexible acceleration option.  Many of the other search modules support invoking the fulltext accelerator when executing queries.  However, the primary search module for engaging with the fulltext accelerator is the [grep](/search/grep/grep.md) module with the `-w` flag.  Much like the Unix grep utility, `grep -w` specifies that the provided filter is expected to a word, rather than a subset of bytes.  Running a search with `words foo bar baz` will look for the words foo, bar, and baz and engage the fulltext accelerator.
+The fulltext accelerator is designed to index words within text logs and is considered the most flexible acceleration option.  Many of the other search modules support invoking the fulltext accelerator when executing queries.  However, the primary search module for engaging with the fulltext accelerator is the [grep](/search/grep/grep) module with the `-w` flag.  Much like the Unix grep utility, `grep -w` specifies that the provided filter is expected to a word, rather than a subset of bytes.  Running a search with `words foo bar baz` will look for the words foo, bar, and baz and engage the fulltext accelerator.
 
 While the fulltext accelerator may be the most flexible, it is also the most costly.  Using the fulltext accelerator can significantly reduce the ingest performance of Gravwell and can consume significant storage space, this is due to the fact that the fulltext accelerator is indexing on virtually every component of every entry.
 
@@ -271,7 +272,9 @@ The fulltext accelerator supports a few options which allow for refining the typ
 | -ignoreFloat | Ignore floating point numbers. Logs where floating point numbers are used for filters can make use of `-accptFloat`. | `-acceptFloat` | ENABLED |
 | -maxInt | Enables a filter that will only index integers below a certain size.  This can be valuable when indexing data that such as HTTP access logs.  You want to index the return codes, but not the response times and data sizes. | `-maxInt 1000` | DISABLED |
 
-NOTE: Make sure you understand your data before enabling the `-acceptTS` and `-acceptFloat` flags as these can dramatically bloat the index when using the index engine.  The Bloom engine is less impacted by orthogonal data such as timestamps and floating point numbers.
+```{note}
+Make sure you understand your data before enabling the `-acceptTS` and `-acceptFloat` flags as these can dramatically bloat the index when using the index engine.  The Bloom engine is less impacted by orthogonal data such as timestamps and floating point numbers.
+```
 
 ### Fulltext word extraction
 
@@ -329,7 +332,7 @@ The following well configuration performs fulltext acceleration using the `index
 
 ## JSON
 
-The JSON accelerator module is specified using the accelerator name "json" and uses the exact same syntax for picking fields as the JSON modules.  See the [JSON search module](#!search/json/json.md) section for more information on field extraction.
+The JSON accelerator module is specified using the accelerator name "json" and uses the exact same syntax for picking fields as the JSON modules.  See the [JSON search module](/search/json/json) section for more information on field extraction.
 
 ### Example Well Configuration
 
@@ -343,7 +346,7 @@ The JSON accelerator module is specified using the accelerator name "json" and u
 
 ## Syslog
 
-The syslog accelerator is designed to operate on conforming RFC5424 syslog messages.  See the [syslog search module](#!search/syslog/syslog.md) section for more information on field extraction.
+The syslog accelerator is designed to operate on conforming RFC5424 syslog messages.  See the [syslog search module](/search/syslog/syslog) section for more information on field extraction.
 
 ### Example Well Configuration
 
@@ -357,7 +360,7 @@ The syslog accelerator is designed to operate on conforming RFC5424 syslog messa
 
 ## CEF
 
-The CEF accelerator is designed to operate on CEF log messages and is just as flexible as the search module.  See the [CEF search module](#!search/cef/cef.md) section for more information on field extraction.
+The CEF accelerator is designed to operate on CEF log messages and is just as flexible as the search module.  See the [CEF search module](/search/cef/cef) section for more information on field extraction.
 
 ### Example Well Configuration
 
@@ -371,7 +374,7 @@ The CEF accelerator is designed to operate on CEF log messages and is just as fl
 
 ## Fields
 
-The fields accelerator can operate on any delimited data format, whether it be CSV, TSV, or some other delimiter.  The fields accelerator allows you to specify the delimiter the same way as the search module.  See the [fields search module](#!search/fields/fields.md) section for more information on field extraction.
+The fields accelerator can operate on any delimited data format, whether it be CSV, TSV, or some other delimiter.  The fields accelerator allows you to specify the delimiter the same way as the search module.  See the [fields search module](/search/fields/fields) section for more information on field extraction.
 
 ### Example Well Configuration
 
@@ -387,7 +390,7 @@ This configuration extracts four fields from a comma-separated entry. Note the u
 
 ## CSV
 
-The CSV accelerator is designed to operate on comma-separated value data, automatically removing surrounding white space and double quotes from data.  See the [CSV search module](#!search/csv/csv.md) section for more information on column extraction.
+The CSV accelerator is designed to operate on comma-separated value data, automatically removing surrounding white space and double quotes from data.  See the [CSV search module](/search/csv/csv) section for more information on column extraction.
 
 ### Example Well Configuration
 
@@ -413,9 +416,13 @@ The regex accelerator allows complicated extractions at ingest time in order to 
 	Accelerator-Args="^\\S+\\s\\[(?P<app>\\w+)\\]\\s<(?P<uuid>[\\dabcdef\\-]+)>\\s(?P<src>\\S+)\\s(?P<srcport>\\d+)\\s(?P<dst>\\S+)\\s(?P<dstport>\\d+)\\s(?P<path>\\S+)\\s"
 ```
 
-Note: Remember to escape backslashes '\\' when specifying regular expressions in the gravwell.conf file.  The regex argument '\\w' will become '\\\\w'.
+```{note}
+Remember to escape backslashes '\\' when specifying regular expressions in the gravwell.conf file.  The regex argument '\\w' will become '\\\\w'.
+```
 
-Warning: The regex accelerator requires very precise matches during query, this means that regular expression specified in an accelerator must match the regular expression provided in a query bit-for-bit.  It is not possible to determine if two regular expressions are equivalent, so Gravwell checks that the regular expression strings are exact matches before engaging acceleration.  The regex accelerator is rarely what you want.
+```{warning}
+The regex accelerator requires very precise matches during query, this means that regular expression specified in an accelerator must match the regular expression provided in a query bit-for-bit.  It is not possible to determine if two regular expressions are equivalent, so Gravwell checks that the regular expression strings are exact matches before engaging acceleration.  The regex accelerator is rarely what you want.
+```
 
 ## Winlog
 
@@ -431,13 +438,17 @@ The winlog module is perhaps *the* slowest search module.  The complexity of XML
 	Accelerator-Args="EventID Provider Computer TargetUserName SubjectUserName"
 ```
 
-Attention: The winlog accelerator is permissive ('-or' flag is implied).  So specify any field you plan on using to filter searches on, even if two of the fields would not be present in the same entry.
+```
+The winlog accelerator is permissive ('-or' flag is implied).  So specify any field you plan on using to filter searches on, even if two of the fields would not be present in the same entry.
+```
 
 ## Netflow
 
-The [netflow](#!search/netflow/netflow.md) module allows for accelerating on netflow V5 fields and speeding up queries on large amounts of netflow data.  While the netflow module is very fast and the data is extremely compact, it can still be beneficial to engage acceleration if you have very large netflow data volumes.  The netflow module can use any of the direct netflow fields, but cannot use the pivot helper fields.  This means that you must specify `Src` or `Dst` and not `IP`.  The `IP` and `Port` fields cannot be specified in the acceleration arguments.
+The [netflow](/search/netflow/netflow) module allows for accelerating on netflow V5 fields and speeding up queries on large amounts of netflow data.  While the netflow module is very fast and the data is extremely compact, it can still be beneficial to engage acceleration if you have very large netflow data volumes.  The netflow module can use any of the direct netflow fields, but cannot use the pivot helper fields.  This means that you must specify `Src` or `Dst` and not `IP`.  The `IP` and `Port` fields cannot be specified in the acceleration arguments.
 
-Note: The helper extractions `Timestamp` and `Duration` cannot be used in accelerators.
+```{note}
+The helper extractions `Timestamp` and `Duration` cannot be used in accelerators.
+```
 
 ### Example Well Configuration
 
@@ -454,7 +465,7 @@ This example configuration uses the `bloom` engine and is accelerating on the so
 
 ## IPFIX
 
-The [ipfix](#!search/ipfix/ipfix.md) module can accelerate queries on IPFIX-formatted records. This module can accelerate on any of the 'normal' IPFIX fields, but not pivot helper fields. This means you must specify `sourceTransportPort` or `destinationTransportPort` rather than `port`, or `src`/`dst` rather than `ip`.
+The [ipfix](/search/ipfix/ipfix) module can accelerate queries on IPFIX-formatted records. This module can accelerate on any of the 'normal' IPFIX fields, but not pivot helper fields. This means you must specify `sourceTransportPort` or `destinationTransportPort` rather than `port`, or `src`/`dst` rather than `ip`.
 
 ### Example Well Configuration
 
@@ -471,7 +482,7 @@ This example configuration uses the `index` engine to accelerate on source/desti
 
 ## Packet
 
-The [packet](#!search/packet/packet.md) module can accelerate raw packet captures using the same syntax as the search module of the same name.  There is a subtle but important difference in how the packet accelerator is applied as compared to the search modules; the accelerator can use overlapping layers.  This means that you can specify both UDP and TCP items and extract the right field depending on the packet being processed.
+The [packet](/search/packet/packet) module can accelerate raw packet captures using the same syntax as the search module of the same name.  There is a subtle but important difference in how the packet accelerator is applied as compared to the search modules; the accelerator can use overlapping layers.  This means that you can specify both UDP and TCP items and extract the right field depending on the packet being processed.
 
 A well configuration can be configured to accelerate IPv4, IPv6, TCP, UDP, ICMP, etc... all at the same time.  The packet accelerator does not treat specified fields as implied filters.
 
@@ -489,7 +500,7 @@ The packet accelerator also requires direct fields, this means you cannot use th
 
 ## SRC
 
-The src accelerator can be used when only the entry's source field should be accelerated.  However, it is essentially possible to combine the src accelerator with other accelerators by enabling the "Accelerate-On-Source" flag and using src search module in your queries.  See the [src search module](#!search/src/src.md) for more information on filtering.
+The src accelerator can be used when only the entry's source field should be accelerated.  However, it is essentially possible to combine the src accelerator with other accelerators by enabling the "Accelerate-On-Source" flag and using src search module in your queries.  See the [src search module](/search/src/src) for more information on filtering.
 
 ### Example Well Configuration
 
@@ -513,7 +524,7 @@ The src accelerator can be used when only the entry's source field should be acc
 
 The following query invokes both the fields accelerator and the src accelerator to specify specific log types coming from specific sources.
 
-```
+```gravwell
 tag=app src dead::beef | fields -d "," [1]=="security" [2]="process" [5]="domain" [3] as processname | count by processname | table processname count
 ```
 
@@ -646,7 +657,9 @@ echo 3 > /proc/sys/vm/drop_caches
 
 You can see that the dense query did not benefit from the bloom filter at all due to the high collision rate and regular occurrence of the filtered data where the index system was able to make modest gains by limiting the amount of data that had to be extracted from the disk.
 
-Note: The regex search module/autoextractor is not fully compatible with the fulltext accelerator, so we have to modify the queries slightly to engage the accelerators.  They are ```words "106.218.21.57"``` and ```words list | ax url=="/list" method | count by method | chart count by method```
+```{note}
+The regex search module/autoextractor is not fully compatible with the fulltext accelerator, so we have to modify the queries slightly to engage the accelerators.  They are ```words "106.218.21.57"``` and ```words list | ax url=="/list" method | count by method | chart count by method```
+```
 
 #### Fulltext
 
@@ -679,7 +692,7 @@ The results show why fulltext may often be worth the storage and ingest penalty:
 
 #### Query AX modules
 
-The AX definition file for all four tags is below, see the [AX]() documentation for more information:
+The AX definition file for all four tags is below, see the [AX](/configuration/autoextractors) documentation for more information:
 
 ```
 [[extraction]]

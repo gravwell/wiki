@@ -4,7 +4,9 @@ This page describes the APIs for interacting with user groups.
 
 Requests sent to `/api/groups` and other URLs under the `/api/groups/` path operate on user accounts. The webserver will send StatusOK (200) on a good request, while a 400-500 status will be sent on error (depending on the error).
 
-Note: Adding and removing users from groups is done through the [user account APIs](account.md), not the group APIs. These APIs are purely for creating, deleting, and describing groups.
+```{note}
+Adding and removing users from groups is done through the [user account APIs](account), not the group APIs. These APIs are purely for creating, deleting, and describing groups.
+```
 
 ## Data types
 

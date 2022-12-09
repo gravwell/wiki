@@ -8,24 +8,24 @@ Specifically, `limit X Y` will pass entries `[X,Y)`. That is limit is inclusive 
 
 For example, to look at the payload of 10 packets:
 
-```
+```gravwell
 tag=pcap packet tcp.Payload | limit 10 | table Payload
 ```
 
 To look at packets 5 to 10:
 
-```
+```gravwell
 tag=pcap packet tcp.Payload | limit 5 10 | table Payload
 ```
 
 Limit can also key on enumerated values. If you want to allow 5 entries for each value of the enumerated value "foo", for example:
 
-```
+```gravwell
 tag=default ax | limit 5 by foo
 ```
 
 You can specify any number of keyed fields. To allow 5 entries for each combination of enumerated values "foo", "bar", and "baz", for example:
 
-```
+```gravwell
 tag=default ax | limit 5 by foo bar baz
 ```

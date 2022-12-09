@@ -34,7 +34,7 @@ The node inserts an object (named `splunkResults` by default) into the payload c
 
 The `Results` field is an array of objects, each representing one line of results from the Splunk query.
 
-Note that the top-level `splunkResults` object can be passed directly to the [Ingest](ingest.md) node; the results will be JSON-encoded and ingested.
+Note that the top-level `splunkResults` object can be passed directly to the [Ingest](ingest) node; the results will be JSON-encoded and ingested.
 
 ## Example
 

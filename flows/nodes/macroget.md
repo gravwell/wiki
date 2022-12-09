@@ -1,6 +1,6 @@
 # Read Macros Node
 
-This node reads the values of named [Gravwell macros](/search/macros.md). For each specified macro, it outputs a new value into the payload with a name matching the macro name.
+This node reads the values of named [Gravwell macros](/search/macros). For each specified macro, it outputs a new value into the payload with a name matching the macro name.
 
 ## Configuration
 
@@ -18,7 +18,7 @@ This example runs a query, then re-ingests the results into a tag whose name is 
 
 The Run Query node is configured to run the following query over the last 24 hours to find failed logins:
 
-```
+```gravwell
 tag=gravwell syslog Message=="Authentication failure" user | stats count by user | table user count
 ```
 

@@ -4,7 +4,7 @@ Gravwell provides an interactive tool for migrating text files and Splunk data i
 
 ## Installation
 
-The `migrate` tool is included in the `gravwell-tools` package for Debian and Redhat, and is also available as a standalone shell installer on [our downloads page](#!/quickstart/downloads.md). Once installed, the program is located at `/usr/local/sbin/gravwell_migrate`.
+The `migrate` tool is included in the `gravwell-tools` package for Debian and Redhat, and is also available as a standalone shell installer on [our downloads page](/quickstart/downloads). Once installed, the program is located at `/usr/local/sbin/gravwell_migrate`.
 
 ## Basic Configuration
 
@@ -170,7 +170,9 @@ Multiple `Splunk` blocks may be defined, although each must have a unique name. 
 | Index-Sourcetype-To-Tag | | A mapping of a Splunk index and sourcetype pair to a Gravwell tag. Can be set interactively from within the migrate tool. | `main,json:importedjson` (maps the index "main" and sourcetype "json" to the Gravwell tag "importedjson") |
 | Preprocessor |              | Specify preprocessors to be applied to entries as they are consumed from Splunk.  More than one preprocessor can be specified and they are executed in order. | `Preprocessor="logins"` |
 
-Note: The migrate tool will automatically create a file named `splunk1.conf` in `/opt/gravwell/etc/migrate.conf.d` to store your index+sourcetype→tag mappings (see below). Settings in this file will be merged with the settings in the main configuration file automatically.
+```{note}
+The migrate tool will automatically create a file named `splunk1.conf` in `/opt/gravwell/etc/migrate.conf.d` to store your index+sourcetype→tag mappings (see below). Settings in this file will be merged with the settings in the main configuration file automatically.
+```
 
 ### Importing Data
 
@@ -196,7 +198,9 @@ Select a pair which you wish to import and press enter. A form (below) will be d
 
 ![Tag form](tagform.png)
 
-Note: If the Unix timestamp is set to 0, migration will begin from 1970, which can take a long time to complete even when no data is present. To speed things up, we strongly recommend either setting a timestamp in this form, or setting the `Ingest-From-Unix-Time` parameter in the config file (see above).
+```{note}
+If the Unix timestamp is set to 0, migration will begin from 1970, which can take a long time to complete even when no data is present. To speed things up, we strongly recommend either setting a timestamp in this form, or setting the `Ingest-From-Unix-Time` parameter in the config file (see above).
+```
 
 After you have set the tag for the desired index + sourcetype pairs, you can select "Write Config" to write out a file in the `migrate.conf.d` directory which will store the mappings permanently.
 

@@ -14,4 +14,4 @@ The node does not modify the payload.
 
 ## Example
 
-Refer to the [Run Query](runquery.md) node documentation for a basic example of using the Notification node.
+Refer to the [Run Query](runquery) node documentation for a basic example of using the Notification node.

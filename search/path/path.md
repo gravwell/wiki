@@ -19,7 +19,7 @@ The path module supports the following four extractions:
 
 Each extraction can be filtered and renamed using the `as` keyword. For example:
 
-```
+```gravwell
 tag=filenames path base == "foo.txt" as foofiles
 ```
 
@@ -27,13 +27,13 @@ tag=filenames path base == "foo.txt" as foofiles
 
 Extract the filename of all ".txt" files:
 
-```
+```gravwell
 tag=default path base ext == ".txt" | table
 ```
 
 Extract any Windows directories that are not on the "C:" volume:
 
-```
+```gravwell
 tag=default path dir volume != "C:" | table
 ```
 

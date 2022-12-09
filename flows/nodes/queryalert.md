@@ -26,15 +26,15 @@ This example runs a query counting failed login attempts by user. If there were 
 
 ![](alert-example.png)
 
-The [Run Query](runquery.md) node is configured to run the following query:
+The [Run Query](runquery) node is configured to run the following query:
 
-```
+```gravwell
 tag=gravwell syslog Message=="Authentication failure" user as User
 | stats count as FailedLogins by User 
 | table User FailedLogins
 ```
 
-The [If](if.md) node checks `search.Count` against 0; if there are any results, execution continues.
+The [If](if) node checks `search.Count` against 0; if there are any results, execution continues.
 
 The Text Template node generates a simple description of the results and sends it on to the email node.
 

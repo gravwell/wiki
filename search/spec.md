@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is the reference specification the Gravwell query language syntax. A query is made up of indexer and webserver constraints, modules, a pipeline, and a renderer. This document provides documentation for how input text is interpreted and tokenized. Some lexical meaning of input is also defined here. Modules have context-specific semantics that differ between modules (such as numbers being implied to be strings). The user should read the [search module](#!search/complete-module-list.md) documentation for more information on module-specific considerations.
+This is the reference specification the Gravwell query language syntax. A query is made up of indexer and webserver constraints, modules, a pipeline, and a renderer. This document provides documentation for how input text is interpreted and tokenized. Some lexical meaning of input is also defined here. Modules have context-specific semantics that differ between modules (such as numbers being implied to be strings). The user should read the search module documentation for more information on module-specific considerations.
 
 ## Text Encoding 
 
@@ -14,9 +14,11 @@ A "character" is any of the Unicode points in the "General Category" of the Unic
 
 ## Lexical grammar
 
-This section defines the syntax of a Gravwell query. Token semantics are module-specific, so the user should read the [search module](#!search/complete-module-list.md) documentation for more information on module-specific considerations.
+This section defines the syntax of a Gravwell query. Token semantics are module-specific, so the user should read the search module documentation for more information on module-specific considerations.
 
-Note: The grammar is specified using [pbpg](https://github.com/gravwell/pbpg), which is similar to Extended Backus–Naur form. pbpg is itself specified with pbpg and contains the following rules:
+```{note}
+The grammar is specified using [pbpg](https://github.com/gravwell/pbpg), which is similar to Extended Backus–Naur form. pbpg is itself specified with pbpg and contains the following rules:
+```
 
 ```
 Production  = Name "=" [ Expression ] "." 
@@ -121,7 +123,7 @@ unicode_print = Characters from Unicode categories L, M, N, P, and S
 
 Tokens are groups of characters separated by whitespace (as defined above) and reserved characters (such as `|`), unless grouped in a quoted string. The semantic meaning of a token depends on the position the token occurs in the input. For example,
 
-```
+```gravwell
 tag=default json tag
 ```
 
@@ -147,19 +149,19 @@ When filtering, tokenizing in the R-value (the value of the filter) of the filte
 
 Gravwell syntax supports inline code fragments for filtering and other operations. This is accomplished with either the `eval` module, followed by the code fragment, or a module stage wrapped in parentheses. For example,
 
-```
+```gravwell
 tag=default json foo-bar baz | eval baz > 10 | table
 ```
 
 has the code fragment `baz > 10`. This is easily parsed using the tokenizing rules described above. This same query can be written as
 
-```
+```gravwell
 tag=default json foo-bar baz | (baz>10) | table
 ```
 
 However, the code fragment syntax supports C-style notation for bitwise and logic operations, so Gravwell parses these fragments differently than the regular token stream. For example,
 
-```
+```gravwell
 tag=default json foo-bar foo bar | ( foo-bar > 10 ) | table
 ```
 
@@ -167,7 +169,7 @@ has a code fragment `foo-bar > 10`, but it is unclear if the user meant "foo min
 
 Another example,
 
-```
+```gravwell
 tag=default json foo bar | ( baz = foo | bar ) | table
 ```
 
@@ -180,7 +182,9 @@ To reconcile this behavior, `eval` and implied code fragments tokenize in a diff
 - Numeric literals are all forms of numbers, floating point numbers, hexadecimal syntax (eg 0xfa), and binary (eg 0b0010).
 - `|` and `||` are treated as bitwise and logical OR operations, respectively.
 
-NOTE: Enumerated values containing reserved characters or whitespace cannot be used in code fragments. These variables must be renamed or aliased.
+```{note}
+Enumerated values containing reserved characters or whitespace cannot be used in code fragments. These variables must be renamed or aliased.
+```
 
 This form of tokenizing occurs until the outermost parenthetical group in the code fragment is closed.
 
@@ -222,13 +226,13 @@ All input before the first module in a query represents the query constraints. U
 
 ### Modules
 
-Please see the [list of modules](#!search/complete-module-list.md) for module specific documentation.
+Please see the list of modules in the [Search section](./search) for module specific documentation.
 
 Modules are pipelined functions that extract, transform, and render data. Conceptually, data flows left-to-right in the module pipeline, and modules can drop, pass, modify, or inject data into the pipeline. The last module in the pipeline is the render module (such as `table` or `chart`); note that if no render module is explicitly defined, Gravwell will add one automatically. The module pipeline is split by the `|` character. A module invocation is made up of the module name, optional flags, and optional arguments. 
 
 #### Module name
 
-The first token of a module invocation is the module name. See the [list of modules](#!search/complete-module-list.md) for the list of available modules.
+The first token of a module invocation is the module name. See the list of modules in the [Search section](./search) for the list of available modules.
 
 #### Module flags
 
@@ -260,9 +264,9 @@ If no renderer is specified, the text renderer is implied.
 
 ### Compound queries
 
-Multiple modules can be grouped into a single _compound query_ using the [compound query notation](#!search/search.md#Compound_Queries). A compound query takes the form of
+Multiple modules can be grouped into a single _compound query_ using the [compound query notation](compound_queries). A compound query takes the form of
 
-```
+```gravwell
 @foo{tag=default ...}; @bar{tag=default ...}; tag=default lookup -r @foo | ...
 ```
 

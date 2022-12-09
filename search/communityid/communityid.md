@@ -6,7 +6,7 @@ The `communityid` module is designed to implement the Zeek Community ID spec, a 
 The module takes two IP:port pairs plus a protocol identifier and computes a hash that represents the network flow.  The ports are optional and ignored for non-TCP and non-UDP protocols.  If ports are not provided and the community ID algorithm expects them for the calculation, zero values are inserted.
 
 
-```
+```gravwell
 tag=netflow netflow Src SrcPort Dst DstPort Protocol
 | communityid Src Dst SrcPort DstPort Protocol
 | table
@@ -18,7 +18,9 @@ Community id parameters are orderd as `<IP A> <IP B> <Port A> <Port B> <Protocol
 
 It is valid to exclude both port numbers: `<IP A> <IP B> <Protocol Number>`. Note that including one port but not the other is invalid.
 
-Note: The `communityid` module requires the protocol *number*, it will not resolve a protocol name.
+```{note}
+The `communityid` module requires the protocol *number*, it will not resolve a protocol name.
+```
 
 ### Examples
 
@@ -26,7 +28,7 @@ Note: The `communityid` module requires the protocol *number*, it will not resol
 
 In this example we show how to get a community ID value from traditional Zeek conn logs.  These logs include the protocol by name rather than number, which means we need to use the `network_services` resource from the Gravwell Network Enrichment kit to resolve the name back to a number.  In this example we are also using the autoextractors provided in the Gravwell Zeek Kit to process the TSV Zeek logs.
 
-```
+```gravwell
 tag=zeekconn ax
 | lookup -r network_services proto proto_name proto_number
 | communityid orig resp orig_port resp_port proto_number
@@ -39,7 +41,7 @@ tag=zeekconn ax
 
 In this example we generate a community ID value from IPFIX data. This example uses the native IP, port, and protocol values from within the IPFIX datatypes.  No lookups are needed.
 
-```
+```gravwell
 tag=ipfix ipfix src dst srcPort dstPort protocolIdentifier
 | communityid  src dst srcPort dstPort protocolIdentifier
 | table
@@ -52,7 +54,7 @@ tag=ipfix ipfix src dst srcPort dstPort protocolIdentifier
 In this example we generate a community ID value from a data source that may not have ports. We are using Zeek Conn logs and ICMP traffic for this example, but if you had text records of ICMP traffic they would work too. Note that rather than using a lookup, we simply set `proto_number` manually
 
 
-```
+```gravwell
 tag=zeekconn ax proto==icmp
 | enrich proto_number 1
 | communityid orig resp proto_number

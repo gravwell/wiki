@@ -14,7 +14,7 @@ The template structure contains the following fields:
 * Name: The template's name.
 * Description: A more detailed description of the template.
 * Updated: A timestamp representing the last update time for the template.
-* Labels: An array of strings containing [labels](#!gui/labels/labels.md).
+* Labels: An array of strings containing [labels](/gui/labels/labels).
 * Contents: The actual definition of the template itself (see below).
   * Contents.query: The template query.
   * Contents.variable: Variable name in query.
@@ -160,7 +160,9 @@ To create a template, issue a POST to `/api/templates`. The body should be a JSO
 
 The API will respond with the GUID of the newly-created template. If a GUID is specified in the request, that GUID will be used. If no GUID is specified, a random GUID will be generated.
 
-Note: At this time, the `UID`, `GIDs`, and `Global` fields cannot be set during template creation. They must instead be set via an update call (see below).
+```{note}
+At this time, the `UID`, `GIDs`, and `Global` fields cannot be set during template creation. They must instead be set via an update call (see below).
+```
 
 ## List templates
 
@@ -240,7 +242,9 @@ To update a template, issue a PUT request to `/api/templates/<guid>`. The reques
 * UID: (Admin only) Set to a 32-bit integer
 * Global: (Admin only) Set to a boolean true or false; Global templates are visible to all users.
 
-Note: Leaving any of these field blank will result in the template being updated with a null value for that field!
+```{note}
+Leaving any of these field blank will result in the template being updated with a null value for that field!
+```
 
 ## Delete a template
 

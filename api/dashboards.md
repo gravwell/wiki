@@ -13,7 +13,7 @@ The dashboard api is essentially a generic CRUD api for managing json blobs used
 * Global: A boolean, set to true if dashboard should be visible to all users (admin only).
 * Created: The timestamp at which the dashboard was created.
 * Updated: The timestamp at which the dashboard was last updated.
-* Labels: An array of strings containing [labels](#!gui/labels/labels.md).
+* Labels: An array of strings containing [labels](/gui/labels/labels).
 * Data: The actual definition of the dashboard contents (see below).
 
 Note that every dashboard has both an `ID` field and a `GUID` field. This is because dashboards may be packed in kits along with actionables which *refer* to those dashboards. A dashboard packed into a kit includes its existing GUID, and that GUID is preserved when the kit is installed, so it is safe for actionables to refer to the dashboard by its GUID. The ID field, on the other hand, is randomly generated whenever a dashboard is created or installed. A given system may actually have several dashboards with the same GUID (installed by different users, typically) but each dashboard will have its own unique ID.
@@ -100,7 +100,9 @@ interface RendererOptions {
 }
 ```
 
-Note: Throughout this document, we include valid `Data` structures, but for brevity we will tend to use structures describing an empty dashboard rather than one containing tiles.
+```{note}
+Throughout this document, we include valid `Data` structures, but for brevity we will tend to use structures describing an empty dashboard rather than one containing tiles.
+```
 
 ## Creating a dashboard
 
@@ -452,7 +454,9 @@ The server will respond to update requests with the updated dashboard structure.
 
 To be safe, take care to send back all fields which were present in the original fetch, even if unchanged. For instance, although this update did not modify the `Description` field, we include it in the update request because the webserver cannot distinguish between an *un-set* field and an *empty* field.
 
-Note: The GUID may be used in place of the dashboard ID if desired.
+```{note}
+The GUID may be used in place of the dashboard ID if desired.
+```
 
 ## Deleting a dashboard
 To remove a dashboard issue a request with the DELETE method on the url `/api/dashboards/{id}` where {id} is the numeric ID of the dashboard.

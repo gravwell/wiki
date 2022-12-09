@@ -11,7 +11,7 @@ The module can find the difference between integers, floating point numbers, tim
 
 You can find the difference between two values by specifying the two enumerated value names as arguments; the second will be subtracted from the first. The following will generate enumerated values named "diff" containing DstPort - SrcPort:
 
-```
+```gravwell
 tag=netflow netflow SrcPort DstPort | diff DstPort SrcPort | table
 ```
 
@@ -21,7 +21,7 @@ tag=netflow netflow SrcPort DstPort | diff DstPort SrcPort | table
 
 The following query uses the other mode; it compares the TIMESTAMP field of the current entry against that of the previous entry to see how frequently netflow packets are arriving:
 
-```
+```gravwell
 tag=netflow sort by time asc | diff TIMESTAMP | table
 ```
 
@@ -39,7 +39,7 @@ diff foo bar as foobarDiff
 
 When in temporal mode (comparing an enumerated value against its value in the previous entry), diff can store multiple "previous entries" based on a specified key set. The following query extracts the source IP address from network packets and checks how long it's been since that IP has been seen:
 
-```
+```gravwell
 tag=pcap sort by time asc | packet ipv4.SrcIP | diff TIMESTAMP by SrcIP | table
 ```
 

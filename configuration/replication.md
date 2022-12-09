@@ -2,7 +2,9 @@
 
 Replication is included with all Gravwell Cluster Edition licenses, allowing for fault-tolerant high availability deployments.  The Gravwell replication engine transparently manages data replication across distributed indexers with automatic failover, load balanced data distribution, and compression.  Gravwell also provides fine tuned control over exactly which wells are included in replication and how the data is distributed across peers.  Customers can rapidly deploy a Gravwell cluster with uniform data distribution, or design a replication scheme that can tolerate entire data center failures using region-aware peer selection.  The online failover system also allows continued access to data even when some indexers are offline.
 
-Attention: Gravwell's replication system is designed purely to replicate ingested data. It does not back up user accounts, dashboards, search history, resources, etc., which are stored on the webserver rather than the indexers. To add resiliency to a webserver, consider deploying [a datastore](#!distributed/frontend.md) for your webserver; the datastore will store a redundant live copy of your webserver's data.
+```{attention}
+Gravwell's replication system is designed purely to replicate ingested data. It does not back up user accounts, dashboards, search history, resources, etc., which are stored on the webserver rather than the indexers. To add resiliency to a webserver, consider deploying [a datastore](/distributed/frontend) for your webserver; the datastore will store a redundant live copy of your webserver's data.
+```
 
 The replication system is logically separated into "Clients" and "Peers", with each indexer potentially acting as both a peer and a client.  A client is responsible for reaching out to known replication peers and driving the replication transactions.  When deploying a Gravwell cluster in a replicating mode, it is important that indexers be able to initiate a TCP connection to any peers acting as replication storage nodes.
 
@@ -10,9 +12,13 @@ Replication connections are encrypted by default and require that indexers have 
 
 Replication storage nodes (nodes which receive replicated data) are allotted a specific amount of storage and will not delete data until that storage is exhausted.  If a remote client node deletes data as part of normal ageout, the data shard is marked as deleted and prioritized for deletion when the replication node hits its storage limit.  The replication system prioritizes deleted shards first, cold shards second, and oldest shards last.  All replicated data is compressed; if a cold storage location is provided it is usually recommended that the replication storage location have the same storage capacity as the cold and hot storage combined.
 
-Note: By default, the replication engine uses port 9406.
+```{note}
+By default, the replication engine uses port 9406.
+```
 
-Attention: Entries larger than 999MB will **not** be replicated. They can be ingested and searched as normal, but are omitted from replication.
+```{attention}
+Entries larger than 999MB will **not** be replicated. They can be ingested and searched as normal, but are omitted from replication.
+```
 
 ## Basic Online Deployment
 
@@ -78,7 +84,7 @@ You can also use IPv6 addresses for replication peers. For example:
 	Connect-Wait-Timeout=60
 ```
 
-
+(replication_offline_deployment)=
 ## Offline Deployment
 
 Replication is not included with the standard Single Edition Gravwell license.  If your organization does not need a multi-node deployment of Gravwell but would like access to the replication engine for managed backups, contact <sales@gravwell.io> to upgrade a Single Edition license to a replicating Single Edition license.  Single edition replication is entirely offline, meaning that if the indexing goes offline the data cannot be searched until the indexer comes back online and completes recovery.
@@ -141,7 +147,9 @@ Ensure that all replication peers have a common `Control-Auth` (or `Replication-
 
 Ensure that X509 certificates are signed by a valid Certificate Authority (CA) that is respected by the keystore on the host systems.  If the certificate stores are not valid, either install the public keys into the host machines certificate store, or disable TLS validation via the `Insecure-Skip-TLS-Verify` option.
 
-Attention: Disabling TLS verification via `Insecure-Skip-TLS-Verify` opens up replication to man-in-the-middle attacks.  An attacker could modify data in flight, potentially corrupting logs or hiding activity in replicated data.
+```{attention}
+Disabling TLS verification via `Insecure-Skip-TLS-Verify` opens up replication to man-in-the-middle attacks.  An attacker could modify data in flight, potentially corrupting logs or hiding activity in replicated data.
+```
 
 Check firewall rules and/or routing ACLs to ensure that indexers are allowed to communicate with one another on the specified port.
 

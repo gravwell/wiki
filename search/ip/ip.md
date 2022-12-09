@@ -2,6 +2,7 @@
 
 The ip module can convert enumerated values to the IP type and optionally perform filtering. This allows the user to, for instance, extract a string containing an IP address from a JSON structure, then use the ip module to convert that string to an IP address and check if it is in a certain subnet.
 
+(search_ip_supported_options)=
 ## Supported Options
 
 * `-or`: The "-or" flag specifies that the ip module should allow an entry to continue down the pipeline if ANY of the filters are successful.
@@ -35,13 +36,13 @@ The ip module defines the keyword PRIVATE to match any of the standard private n
 
 Assuming JSON-formatted entries containing an 'ipaddr' field, extract that field and convert it to an IP address for later use:
 
-```
+```gravwell
 tag=json json ipaddr | ip ipaddr
 ```
 
 The resulting IP enumerated value can also be assigned to a different enumerated value name rather than overwriting the original:
 
-```
+```gravwell
 tag=json json ipaddr | ip ipaddr as IP
 ```
 
@@ -49,13 +50,13 @@ tag=json json ipaddr | ip ipaddr as IP
 
 Assuming CSV-formatted data in which the 3rd field describes the source IP address of a connection, we can drop all connections not originating from 192.168.1.5:
 
-```
+```gravwell
 tag=csv csv [2] as srcip | ip srcip==192.168.1.5
 ```
 
 We can also eliminate any connections which originated in the local subnet:
 
-```
+```gravwell
 tag=csv csv [2] as srcip | ip srcip !~ 192.168.0.0/16
 ```
 
@@ -63,7 +64,7 @@ tag=csv csv [2] as srcip | ip srcip !~ 192.168.0.0/16
 
 Assuming CSV-formatted data in which the 3rd field describes the source IP address of a connection, we can use the ip module to keep only those entries originating from private networks:
 
-```
+```gravwell
 tag=csv csv [2] as srcip | ip srcip ~ PRIVATE
 ```
 
@@ -71,7 +72,7 @@ tag=csv csv [2] as srcip | ip srcip ~ PRIVATE
 
 Assuming CSV-formatted data in which the 3rd field describes the source IP address of a connection, we can use the ip module to assign a network category for each IP address:
 
-```
+```gravwell
 tag=csv csv [2] as srcip | ip -categorize srcip | table srcip srcip_category
 ```
 

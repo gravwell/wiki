@@ -10,7 +10,7 @@ The pcap renderer has no option flags and takes no arguments.
 
 The following query assumes the "packet" tag contains packets captured with the Network Capture ingester. It simply displays the packets as text. This is a way to get a general look at what kind of traffic might exist on your network:
 
-```
+```gravwell
 tag=packet pcap
 ```
 
@@ -18,7 +18,7 @@ tag=packet pcap
 
 You can also restrict the entries by using search modules as usual:
 
-```
+```gravwell
 tag=packet packet tcp.Port==80 | pcap
 ```
 
