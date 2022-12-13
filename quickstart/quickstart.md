@@ -159,7 +159,19 @@ If your distribution does not use systemd, you will have to start the Gravwell p
 
 ## Configuring the License
 
-Once Gravwell is installed, open a web browser and navigate to the server (e.g. [http://localhost/](http://localhost/)). It should prompt you to upload a license file:
+Once Gravwell is installed, open a web browser and navigate to the server (e.g. [http://localhost/](http://localhost/)). It should ask if you have a license file already (if you've already signed up for CE) or if you need to get one:
+
+![Upload or Get license](license1.png)
+
+Clicking "Get a license" will take you to a form where you can sign up for community edition and get a license emailed to you:
+
+![Get license](getlicense.png)
+
+Once you submit that form, or if you click "I have a license", you will be taken to the EULA page:
+
+![EULA](eula-gui.png)
+
+After agreeing to the EULA, you may upload your license:
 
 ![Upload license](upload-license.png)
 
@@ -180,26 +192,30 @@ The ingesters available in the Debian repository can be viewed by running `apt-c
 ```console
 root@debian:~# apt-cache search gravwell
 gravwell - Gravwell data analytics platform (gravwell.io)
+gravwell-azure-event-hubs - Gravwell ingester for Azure Event Hubs
 gravwell-collectd - Gravwell collectd ingester
 gravwell-crash-reporter - Gravwell crash reporter service
 gravwell-datastore - Gravwell datastore service
-gravwell-federator - Gravwell ingest Federator
+gravwell-federator - Gravwell ingest federator
 gravwell-file-follow - Gravwell file follow ingester
 gravwell-http-ingester - Gravwell HTTP ingester
-gravwell-ipmi - Gravwell IPMI ingester
+gravwell-ipmi - Gravwell IPMI Ingester
 gravwell-kafka - Gravwell Kafka ingester
 gravwell-kafka-federator - Gravwell Kafka federator
 gravwell-kinesis - Gravwell Kinesis ingester
 gravwell-loadbalancer - Gravwell load balancing service
+gravwell-msgraph - Gravwell ingester for Microsoft Graph API
 gravwell-netflow-capture - Gravwell netflow ingester
 gravwell-network-capture - Gravwell packet ingester
 gravwell-o365 - Gravwell Office 365 log ingester
 gravwell-offline-replication - Gravwell offline replication service
 gravwell-packet-fleet - Gravwell Packet Fleet ingester
 gravwell-pubsub - Gravwell ingester for Google Pub/Sub streams
+gravwell-s3 - Gravwell S3 ingester
 gravwell-shodan - Gravwell Shodan ingester
 gravwell-simple-relay - Gravwell simple relay ingester
 gravwell-sqs - Gravwell SQS ingester
+gravwell-tools - Miscellaneous Gravwell tools
 ```
 
 If you install them on the same node as the main Gravwell instance, they should be automatically configured to connect to the indexer, but you'll need to set up data sources for most. See the [ingester configuration documents](/ingesters/ingesters) for instructions on that.
@@ -255,7 +271,7 @@ Simple Relay will ingest syslog entries sent to it on TCP port 601 or UDP port 5
 ## Feeding Data into Gravwell
 This section provides basic instructions for sending data into Gravwell. Review the [ingesters](/ingesters/ingesters) section for instructions for setting up other data ingesters.
 
-The “System Stats” page in Gravwell can help you see if the Gravwell server is receiving any data. If no data is reported and you think that is an error, double-check that the ingesters are running (`ps aux | grep gravwell` should show `gravwell_webserver`, `gravwell_indexer`, `gravwell_simple_relay`, and `gravwell_file_follow`) and that their configuration files are correct.
+The "Ingesters & Federators" page (in the "Systems & Health" section of the main menu) can help you see if the ingesters are connected and the Gravwell server is receiving any data. If no data is reported and you think that is an error, double-check that the ingesters are running (`ps aux | grep gravwell` should show `gravwell_webserver`, `gravwell_indexer`, `gravwell_simple_relay`, and `gravwell_file_follow`) and that their configuration files are correct.
 
 ![](stats.png)
 
@@ -357,7 +373,8 @@ Here are see the results of all entries containing “ssh”:
 These results might give a very broad insight, but to truly extract useful information we need to refine our search. For this example, we will extract successful SSH logins. We'll also extract some particular fields from the log records to make displaying the results easier:
 
 ```gravwell
-tag=syslog syslog Appname==sshd Message~Accepted | regex -e Message "Accepted\s(?P<method>\S+)\sfor\s(?P<user>\S+)\sfrom\s(?P<ip>\S+)"
+tag=syslog syslog Appname==sshd Message~Accepted 
+| regex -e Message "Accepted\s(?P<method>\S+)\sfor\s(?P<user>\S+)\sfrom\s(?P<ip>\S+)"
 ```
 
 Breaking down the search:
@@ -370,14 +387,16 @@ The results are filtered down to only logins:
 
 ![Search filtered to logins](logins-only.png)
 
-If you click the "Enumerated Values" button at the bottom of the results, we can see all the available enumerated values which have been extracted by this search.
+We can specify a *render module* at the end of the query to change how results are displayed. If we add `| table` at the end, the table renderer will automatically display all extracted enumerated values:
 
-![Search filtered to logins](logins-only-enums.png)
+![Table renderer](logins-table.png)
 
-We can specify a *render module* at the end of the query to change how results are displayed. If you want a chart of all the usernames that have logged in, you could issue the following search:
+If you want a chart of all the usernames that have logged in, you could issue the following search:
 
 ```gravwell
-tag=syslog syslog Appname==sshd Message~Accepted | regex -e Message "Accepted\s(?P<method>\S+)\sfor\s(?P<user>\S+)\sfrom\s(?P<ip>\S+)" | count by user | chart count by user
+tag=syslog syslog Appname==sshd Message~Accepted 
+| regex -e Message "Accepted\s(?P<method>\S+)\sfor\s(?P<user>\S+)\sfrom\s(?P<ip>\S+)" 
+| count by user | chart count by user
 ```
 
 The breakdown of  the new search query items is as follows:
@@ -385,34 +404,35 @@ The breakdown of  the new search query items is as follows:
 * ```count by user```: The `count` module will count how many times each `user` value (as extracted by regex) appears.
 * ```chart count by user```: Pipe the output of the count module into a charting renderer, drawing a separate line per user with magnitude determined by the count module's results.
 
-The results show a nice graph of all users that have logged into the system during the search timeframe. You can change the graph type to get different views into the data as well as use the overview chart to select smaller timeframes of the results. Looks like the IT admin 'kris' is the only user to log into these systems lately, as expected.
+The results show a time plot of user logins during the search timeframe. You can change the graph type to get different views into the data as well as use the overview chart to select smaller timeframes of the results. Looks like "john" is the only user to log in lately!
 
 ![Search counting by users](users-chart.png)
 
-You can also click on the charting icon (the zig zag line) and change the type of chart.  Here is the exact same data displayed in a bar chart.
+You can also click on the chart type menu (the zig zag line labeled "Line chart" near the upper right) and change the type of chart.  Here is the exact same data displayed in a time-series bar chart:
 
 ![Search counting by users](users-chart-bar.png)
 
 ### Network Examples
-Consider an example home network in which the user has set up the packet capture ingester on their Linux router, thus capturing all packets to and from the Internet. We can use this data to analyze use patterns, such as when particular games are played. The example house uses a 10.0.0.0/24 network subnet and Blizzard Entertainment games use port 1119 for game traffic. The following search will show which PCs are playing Blizzard games and when:
+Consider an example home network in which the user has set up the packet capture ingester on their Linux router, thus capturing all packets to and from the Internet. We can use this data to analyze use patterns, such as web traffic. The example house uses a 192.168.0.0/16 network subnet. The following search will show which PCs are generating the most HTTPS traffic and when:
 
 ```gravwell
-tag=pcap packet ipv4.DstIP !~ 10.0.0.0/24 tcp.DstPort==1119 ipv4.SrcIP | count by SrcIP | chart count by SrcIP
+tag=pcap packet ipv4.DstIP !~ 192.168.0.0/16 tcp.DstPort==443 ipv4.SrcIP 
+| count by SrcIP | chart count by SrcIP
 ```
 
 A review of the search command is as follows:
 
 * ```tag=pcap```: Tells Gravwell to only search through items tagged 'pcap'.
 * ```packet```: Invokes the packet parsing search pipeline module and enables the rest of the options in this command.
-  * ```ipv4.DstIP !~ 10.0.0.0/24```: The Gravwell packet parser splits out a packet into its various fields. In this case, the search is comparing Destination IPs and looking for those not in the 10.0.0.x class C subnet.
-  * ```tcp.DstPort == 1119```: Specifies a destination port. This will filter only packets destined for port 1119, used by most Blizzard Entertainment games.
+  * ```ipv4.DstIP !~ 192.168.0.0/16```: The Gravwell packet parser splits out a packet into its various fields. In this case, the search is comparing Destination IPs and looking for those not in the 192.168.x.x class B subnet.
+  * ```tcp.DstPort == 443```: Specifies a destination port. This will filter only packets destined for port 443, used by most modern web traffic.
   * ```ipv4.SrcIP```: Specifying this field without a comparison operator tells the packet parser to extract and place the source IP into the pipeline.
 * ```count by SrcIP```: Pipe the filtered results from the packet parser into the math count module and tell it to count how many times each source IP appears.
-* ```chart count by SrcIP```: Pipe the count results into the charting renderer for display, drawing a separate line for each source IP value.
+* ```chart count by SrcIP```: Pipe the count results into the charting renderer for display, drawing a separate line for each source IP value. By default it will draw separate lines for the top 7 SrcIPs and group the rest into "other".
 
-Results: We see two systems sending traffic to port 1119. The IP represented in yellow (10.0.0.6) appears to be passive traffic, while 10.0.0.183 in blue is actively communicating with the Blizzard games services.
+Results: We see several systems sending traffic to port 443. The IP represented in light blue (192.168.0.92) has been active since about 8 in the morning, and was active the previous afternoon... which makes sense, because it's a work computer!
 
-![Game traffic](games.png)
+![web traffic](web.png)
 
 For more details on using the packet parsing search module, see the [packet search module documentation](/search/packet/packet).
 
@@ -424,13 +444,11 @@ Navigate to the “Dashboards" page (use the menu at top-left) and click the "+A
 The dashboard should have automatically created a tile for the search, but you may wish to resize it. You can change how the tile is displayed by selecting "Edit tile" from the tile's menu.
 
 ### Dashboards in Action
-One common use case for Gravwell is keeping track of network activity. Here we see a dashboard that reports on outbound and inbound bandwidth rates, active MACs on WiFi, Windows networking events, and general packet frequency. All of this data is extracted from pcap, netflow, and Windows events.
+One common use case for Gravwell is keeping track of network activity. Here we see a dashboard that reports on network traffic based on Zeek connection logs
 
 ![network dashboard](network-dashboard.png)
 
-The outbound traffic chart shows a pretty big spike for an otherwise quiet system around 10:34 AM, so we zoom in by "brushing" out a smaller timeframe on the Overview chart. By default, zooming in on one overview will zoom in on any other searches that are attached to this dashboard. So, when we zoom in on the successful logins, the rest of the charts will update to reflect this smaller time range. Zooming in we can see the spike for the address 10.0.0.57. To further investigate we could use a pre-built network investigation dashboard, but that's outside the scope of this quickstart.
-
-![network dashboard, zoomed in](network-dashboard-zoomed.png)
+We can use the Overview tile to investigate particular spans of time by clicking and dragging the mouse to "sweep" a portion of time. By default, zooming in on one overview will zoom in on any other searches that are attached to this dashboard. 
 
 ## Installing Kits
 
