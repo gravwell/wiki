@@ -26,7 +26,7 @@ A custom format requires three items to function:
 * Regular Expression
 * Format
 
-The given name for a custom time format must be unique across other custom time formats and the included timegrinder formats.  For a complete up-to-date listing of included time formats and their names, check out our [timegrinder documentation)[https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#pkg-constants].
+The given name for a custom time format must be unique across other custom time formats and the included timegrinder formats.  For a complete up-to-date listing of included time formats and their names, check out our [timegrinder documentation](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#pkg-constants).
 
 Custom time formats are declared in the configuration files for supported ingesters by specifying a named `TimeFormat` INI block.  Here is an example format named "foo" which handles timestamps that are delimited using underscores:
 
