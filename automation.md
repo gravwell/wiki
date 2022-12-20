@@ -11,6 +11,7 @@ caption: Flows
 ---
 Flows <flows/flows>
 The Flow Editor <flows/editor>
+Common Flow Patterns <flows/patterns/patterns>
 ```
 
 ```{toctree}
