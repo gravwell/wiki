@@ -51,6 +51,10 @@ Note that some nodes may block execution of downstream nodes. The **If** node is
 
 Flows are created using the flow editor. Please refer to the [flow editor documentation](editor) for a detailed description of the editor, instructions on how to use it, and information about debugging & scheduling flows.
 
+## Common Flow Patterns
+
+Because flows are quite flexible, it can be a bit daunting trying to figure out how to tackle a given task. We have collected some [common flow patterns](patterns/patterns) to help with this.
+
 ## Node list
 
 ```{toctree}
