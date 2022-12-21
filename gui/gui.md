@@ -17,6 +17,7 @@ Kits </kits/kits>
 Templates <templates/templates>
 Macros </search/macros>
 Actionables <actionables/actionables>
+Email Configuration</configuration/email>
 Advanced GUI User Preferences </configuration/gui>
 ```
 
@@ -92,10 +93,4 @@ The "Advanced Preferences" section can be ignored by most users. Selecting "Deve
 
 ### Email Server
 
-The final tab, "Email Server", is extremely important for users who intend to do automated email alerting via scheduled scripts. It must be set up with a valid SMTP configuration before emails can be sent.
-
-![](email-prefs.png)
-
-The fields are mostly self-explanatory; "Server" is an SMTP server, "Port" is the port to use for SMTP, "Username" and "Password" authenticate to that server. "Use TLS" should be enabled if the server expects TLS connections. The "Disable TLS certification validation" option is provided in case the server is using self-signed certificates; be cautious enabling this!
-
-Once the fields have been populated, click "Update Settings" to save them, then click "Test Configuration" to send a test email.
+The final tab, "Email Server", is extremely important for users who intend to use Gravwell to send automated email alerts.  Complete documentation is available on the [Email Configuration](/configuration/email) page.
