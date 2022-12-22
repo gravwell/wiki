@@ -4,7 +4,7 @@ Gravwell can be configured to send Emails via automated scripts and flows, but t
 
 ## User Defined Email Configuration
 
-Users can configure their own SMTP server by first visiting their [User Preferences](https://docs.gravwell.io/configuration/gui.html#user-preferences) page and then clicking the "Email Server" tab.
+Users can configure their own SMTP server by first visiting their [User Preferences](/configuration/gui.html#user-preferences) page and then clicking the "Email Server" tab.
 
 ![](email-prefs.png)
 
