@@ -1,6 +1,6 @@
 # Fuse
 
-The fuse module can do basic data fusion in the pipeline, without requiring [compound queries](#!search/search.md), multiple queries, or [`eval`](#!search/eval/eval.md) code. It takes one or more "key" enumerated values, plus one or more "data" enumerated values. For each entry that comes into the module, it does one of the following:
+The fuse module can do basic data fusion in the pipeline, without requiring [compound queries](/search/search), multiple queries, or [`eval`](/search/eval/eval) code. It takes one or more "key" enumerated values, plus one or more "data" enumerated values. For each entry that comes into the module, it does one of the following:
 
 * *Store*: If all of the data enumerated values exist on the entry, it places the contents of those enumerated values into an in-memory lookup table, keyed off the contents of the key enumerated values.
 * *Load*: If the data enumerated values are not set, it checks the lookup table, keying off the contents of the key enumerated values. If there are values stored in the lookup table, it copies them into the current entry.
@@ -9,7 +9,7 @@ Fuse tracks only the most-recently-seen set of data enumerated values for any gi
 
 For instance, you might combine DHCP logs with Netflow records in order to attach MAC addresses to the Netflow. As soon as the fuse module sees a DHCP log associating the MAC address "00:11:22:33:44:55" with the IP address 10.0.0.1, it can start attaching an enumerated value containing 00:11:22:33:44:55 to each Netflow record with IP address 10.0.0.1. However, because the fuse module is highly temporal, this means that any Netflow records which show up *before* the DHCP log arrives will *not* get the MAC address attached.
 
-You can think of fuse like a simpler version of [lookup](#!search/lookup/lookup.md), where the lookup table is built on the fly in the pipeline rather than ahead of time.
+You can think of fuse like a simpler version of [lookup](/search/lookup/lookup), where the lookup table is built on the fly in the pipeline rather than ahead of time.
 
 ## Syntax
 
@@ -29,7 +29,7 @@ These options can be combined:
 
 	fuse [key1 key2] (data1 data2)
 
-Fuse uses square brackets and parentheses this way in order to draw a similarity with the syntax of [the lookup module](#!search/lookup/lookup.md).
+Fuse uses square brackets and parentheses this way in order to draw a similarity with the syntax of [the lookup module](/search/lookup/lookup).
 
 ## Example: Zeek connection & DHCP fusion
 
@@ -49,7 +49,7 @@ From `zeekconn` we'll just extract the orig & resp IP addresses, plus port numbe
 
 Now we use the fuse module to enrich:
 
-```
+```gravwell
 tag=zeekconn,zeekdhcp ax orig resp orig_port resp_port mac assigned_addr 
 | tag=zeekconn alias orig ip 
 | tag=zeekdhcp alias assigned_addr ip 
@@ -74,7 +74,7 @@ The results are shown below. Note the connection log outlined in red; it does no
 
 If we want to include hostnames too, we can tweak the query very slightly to add them to the fuse invocation:
 
-```
+```gravwell
 tag=zeekconn,zeekdhcp ax orig resp orig_port resp_port mac assigned_addr host_name
 | tag=zeekconn alias orig ip 
 | tag=zeekdhcp alias assigned_addr ip 

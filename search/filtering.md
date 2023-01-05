@@ -4,13 +4,13 @@ Very frequently you will want to filter entries in a query based on some criteri
 
 Gravwell extraction modules will typically allow *extracted* items to be *filtered* at extraction time. Consider the query below, which extracts the IPv4 destination IP and the TCP destination port from packets:
 
-```
+```gravwell
 tag=pcap packet ipv4.DstIP tcp.DstPort
 ```
 
 We can add filters to, for example, only show packets destined for port 22 on IPs in the 10.0.0.0/8 subnet:
 
-```
+```gravwell
 tag=pcap packet ipv4.DstIP ~ 10.0.0.0/8 tcp.DstPort == 22
 ```
 
@@ -48,7 +48,7 @@ Each enumerated value type is compatible with some filters but not others:
 
 ## Filtering & Acceleration
 
-If your data is in an [accelerated well](#!configuration/accelerators.md), inline filters can be used to speed up your queries. Only the equal operator (==) will engage acceleration; filtering for equality allows the acceleration engine to look up entries which match the desired field.
+If your data is in an [accelerated well](/configuration/accelerators), inline filters can be used to speed up your queries. Only the equal operator (==) will engage acceleration; filtering for equality allows the acceleration engine to look up entries which match the desired field.
 
 For acceleration to be engaged, your data needs to be configured to accelerate on the specified field. For instance, if you are indexing pcap data on the tcp.DstPort and tcp.SrcPort fields, the query `tag=pcap packet tcp.DstPort==22` will use the index, but `tag=pcap packet ipv4.SrcIP==10.0.0.1` will not.
 
@@ -63,30 +63,30 @@ Gravwell implements some special shortcuts for filtering. When filtering IP addr
 
 Regex:
 
-```
+```gravwell
 tag=syslog regex *shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" user==root ip ~ "192.168"
 ```
 
 AX:
 
-```
+```gravwell
 tag=testregex,testcsv ax dstport==80 | table app src dst
 ```
 
 CSV:
 
-```
+```gravwell
 tag=default csv [5]!=stuff [4] [3]~"things" | table 3 4 5
 ```
 
 IPFIX:
 
-```
+```gravwell
 tag=ipfix ipfix destinationIPv4Address as Dst destinationTransportPort==443 | count by Dst | chart count by Dst
 ```
 
 IP module:
 
-```
+```gravwell
 tag=csv csv [2] as srcip | ip srcip ~ PRIVATE
 ```

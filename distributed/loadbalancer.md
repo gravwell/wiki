@@ -1,4 +1,4 @@
-# The Gravwell Load Balancer
+# Gravwell Load Balancer
 
 To make setting up your environment as easy as possible, Gravwell provides a custom load balancer specifically designed for use with Gravwell webservers. It can automatically discover Gravwell webservers, meaning you don't need to reconfigure the loadbalancer every time you add or remove a webserver--and if a webserver goes down, it will automatically direct users to another server.
 
@@ -6,7 +6,7 @@ To make setting up your environment as easy as possible, Gravwell provides a cus
 
 The load balancer is an HTTP(S) proxy which automatically directs clients to one of the Gravwell webservers. It sets a cookie on the user's browser to maintain a level of "stickiness", so one session's requests all go to the same webserver.
 
-The load balancer discovers Gravwell webservers by communicating with the Gravwell datastore, which provides a list of active webservers. See [the distributed webserver documentation](frontend.md) for more info about the datastore.
+The load balancer discovers Gravwell webservers by communicating with the Gravwell datastore, which provides a list of active webservers. See [the distributed webserver documentation](frontend) for more info about the datastore.
 
 Once installed and configured, users should access Gravwell through the load balancer. We recommend setting a hostname such as `gravwell.example.org` to point at the load balancer while naming webservers something like `web1.example.org`; encourage users to visit `gravwell.example.org` instead of accessing the webservers directly.  Users do not need direct access to Gravwell webservers when using the load balancer--the webservers may be privately addressed or otherwise inaccessible to the wider world.
 
@@ -14,7 +14,7 @@ Once installed and configured, users should access Gravwell through the load bal
 
 The load balancer component is distributed through all the same channels as the main Gravwell installer:
 
-* Self-extracting shell installer is available [on the downloads page](https://docs.gravwell.io/#!quickstart/downloads.md)
+* Self-extracting shell installer is available [on the downloads page](/quickstart/downloads)
 * In the Debian and RedHat repositories as a package named `gravwell-loadbalancer`.
 * On DockerHub as [gravwell/loadbalancer](https://hub.docker.com/r/gravwell/loadbalancer)
 
@@ -41,7 +41,7 @@ Datastore-Insecure-Disable-TLS=true
 
 The Disable-HTTP-Redirector and Insecure-Disable-HTTPS settings make the load balancer listen for incoming connections on HTTP only. At the bottom of the file, the Datastore parameter tells the load balancer where the Gravwell datastore may be found; the Control-Secret parameter gives the authentication token for communicating with the datastore, while Datastore-Insecure-Disable-TLS sets us to talk to the datastore over an unencrypted connection.
 
-If we want to use HTTPS instead, we need to provide the load balancer with a valid TLS certificate & key pair (see [the TLS documentation](#!configuration/certificates.md) for more information on setting up TLS in Gravwell). Here's an example configuration that listens on HTTPS and communicates with the datastore over an encrypted channel:
+If we want to use HTTPS instead, we need to provide the load balancer with a valid TLS certificate & key pair (see [the TLS documentation](/configuration/certificates) for more information on setting up TLS in Gravwell). Here's an example configuration that listens on HTTPS and communicates with the datastore over an encrypted channel:
 
 ```
 [Global]

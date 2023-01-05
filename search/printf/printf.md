@@ -52,7 +52,7 @@ In addition, the following modifiers are available to many verbs:
 
 This example formats a simple string containing floating point numbers.
 
-```
+```gravwell
 tag=netflow netflow SrcPort DstPort 
 | printf "The source port is %v and the destination port is %v!" SrcPort DstPort 
 | table
@@ -60,4 +60,6 @@ tag=netflow netflow SrcPort DstPort
 
 ![](printf.png)
 
-Note: Language describing the verbs and modifiers Copyright (c) 2009 The Go Authors. Obtained from [Go fmt documentation](https://pkg.go.dev/fmt#hdr-Printing)
+```{note}
+Language describing the verbs and modifiers Copyright (c) 2009 The Go Authors. Obtained from [Go fmt documentation](https://pkg.go.dev/fmt#hdr-Printing)
+```

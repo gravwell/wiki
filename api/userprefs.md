@@ -1,4 +1,4 @@
-## User Preferences
+# User Preferences
 The user preferences API is used to store GUI preferences to persist across logins and between devices.
 
 GET the /api/users/{id}/preferences and it will return a chunk of JSON.  Admins can request any users preferences, users can ONLY request their own sessions. If no preferences exist, return null.

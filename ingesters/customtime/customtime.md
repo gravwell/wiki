@@ -2,21 +2,21 @@
 
 Many ingesters can support the inclusion of custom time formats that can extend the capability of the Gravwell timegrinder time resolution system.  The [timegrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder) has a wide array of timestamp formats that it can automatically identify and resolve.  However, in the real world with real developers there is no telling what time format a system may decide to use.  That is why we enable users to specify custom time formats for inclusion in the timegrinder system.
 
-Custom time formats are a fallback when the usual timestamp extraction fails; refer to the [main ingesters page](#!ingesters/ingesters.md#Time) for more general information on timestamp extraction.
+Custom time formats are a fallback when the usual timestamp extraction fails; refer to the [main ingesters page](ingesters_time) for more general information on timestamp extraction.
 
 ## Supported Ingesters
 
-Not all ingesters support custom time formats.  One-off or standalone ingesters such as [singlefile](https://github.com/gravwell/gravwell/blob/v3.7.0/ingesters/singleFile/main.go) are applications meant to be invoked by hand and do not have a configuration file.  Dedicated ingesters like [netflow](#!ingesters/ingesters.md#Netflow_Ingester) don't need to resolve timestamps, so there is no need for custom formats.
+Not all ingesters support custom time formats.  One-off or standalone ingesters such as [singlefile](https://github.com/gravwell/gravwell/blob/v3.7.0/ingesters/singleFile/main.go) are applications meant to be invoked by hand and do not have a configuration file.  Dedicated ingesters like [netflow](ingesters_list) don't need to resolve timestamps, so there is no need for custom formats.
 
 The following ingesters support the inclusion of custom time formats:
 
-* [Simple Relay](#!ingesters/simple_relay.md)
-* [File Follower](#!ingesters/file_follow.md)
-* [HTTP Ingester](#!ingesters/http.md)
-* [Amazon Kinesis](#!ingesters/kinesis.md)
-* [Microsoft Graph API](#!ingesters/msg.md)
-* [Office 365](#!ingesters/o365.md)
-* [Kafka](#!ingesters/kafka.md)
+* [Simple Relay](/ingesters/simple_relay)
+* [File Follower](/ingesters/file_follow)
+* [HTTP Ingester](/ingesters/http)
+* [Amazon Kinesis](/ingesters/kinesis)
+* [Microsoft Graph API](/ingesters/msg)
+* [Office 365](/ingesters/o365)
+* [Kafka](/ingesters/kafka)
 
 ## Defining a Custom Format
 
@@ -26,7 +26,7 @@ A custom format requires three items to function:
 * Regular Expression
 * Format
 
-The given name for a custom time format must be unique across other custom time formats and the included timegrinder formats.  For a complete up-to-date listing of included time formats and their names, check out our [timegrinder documentation)[https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#pkg-constants].
+The given name for a custom time format must be unique across other custom time formats and the included timegrinder formats.  For a complete up-to-date listing of included time formats and their names, check out our [timegrinder documentation](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#pkg-constants).
 
 Custom time formats are declared in the configuration files for supported ingesters by specifying a named `TimeFormat` INI block.  Here is an example format named "foo" which handles timestamps that are delimited using underscores:
 
@@ -66,7 +66,9 @@ This format would handle the following logs, appropriately applying the current 
 09^00^00 and my id is 6
 ```
 
-Note: The custom timestamp format names can be used in [Timestamp-Format-Override](#!ingesters/ingesters.md#Time_Parsing_Overrides) values.  For example we can force the timestamp format to our custom format using `Timestamp-Format-Override="foo"`.
+```{note}
+The custom timestamp format names can be used in [Timestamp-Format-Override](time_parsing_overrides) values.  For example we can force the timestamp format to our custom format using `Timestamp-Format-Override="foo"`.
+```
 
 ### Time Formats
 
@@ -90,7 +92,7 @@ This example will properly handle timestamps in their respective time zones and 
 
 ## Examples
 
-Here is an example [File Follower](#!ingesters/file_follow.md) configuration which adds two custom time formats:
+Here is an example [File Follower](/ingesters/file_follow) configuration which adds two custom time formats:
 
 ```
 [Global]

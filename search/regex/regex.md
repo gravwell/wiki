@@ -19,7 +19,9 @@ Because regular expressions can get very long, the regex module takes the `-r` f
 * `-v`: The "-v" option tells regex to operate in inverse mode, dropping any entries which match the regex and passing entries which do not match.
 * `-p`: The "-p" option tells regex to allow entries through if the regular expression does not match at all.  The permissive flag does not change the operation of filters.
 
-Note: Storing especially large regular expressions in resource files can clean up queries, and allows for easy reuse.  If `-r` is specified, do not specify a regular expression in the query -- instead the contents of the resource will be used. Handy!
+```{note}
+Storing especially large regular expressions in resource files can clean up queries, and allows for easy reuse.  If `-r` is specified, do not specify a regular expression in the query -- instead the contents of the resource will be used. Handy!
+```
 
 ### Inline Filtering
 
@@ -35,7 +37,7 @@ The regex module supports inline filtering to allow for down-selecting data dire
 
 #### Filtering Examples
 
-```
+```gravwell
 tag=syslog regex "shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" user==root ip ~ "192.168"
 ```
 
@@ -44,6 +46,6 @@ tag=syslog regex "shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0
 regex <argument list> <regular expression> <filter arguments>
 ```
 ### Example Search
-```
+```gravwell
 tag=syslog grep sshd | regex *shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)"
 ```

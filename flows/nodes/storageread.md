@@ -1,6 +1,6 @@
 # Flow Storage Read
 
-This node, in conjunction with the [Flow Storage Write node](storagewrite.md) enables users to persist data across different *runs* of a flow. Every flow can have multiple key-value maps, which persist from execution to execution. This can be used to record the last time an event occurred, or track how many times a particular hostname has been seen, etc.
+This node, in conjunction with the [Flow Storage Write node](storagewrite) enables users to persist data across different *runs* of a flow. Every flow can have multiple key-value maps, which persist from execution to execution. This can be used to record the last time an event occurred, or track how many times a particular hostname has been seen, etc.
 
 The Flow Storage Read node pulls elements back out of a key-value map. The Flow Storage Write node stores items into a key-value map. 
 
@@ -15,4 +15,4 @@ The node will insert an item into the output payload for each key extracted from
 
 ## Example
 
-Refer to the [Flow Storage Write](storagewrite.md) node documentation for an example showing the use of both nodes.
+Refer to the [Flow Storage Write](storagewrite) node documentation for an example showing the use of both nodes.

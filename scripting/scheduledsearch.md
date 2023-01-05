@@ -1,14 +1,14 @@
 # Scheduling Searches and Scripts with the Search Agent
 
-It is often advantageous to perform searches or run scripts automatically, for instance running a search every morning to detect malicious behavior from the previous night. Using Gravwell's search agent, searches and [search scripts](scriptingsearch.md) can be run on customized scheduled.
+It is often advantageous to perform searches or run scripts automatically, for instance running a search every morning to detect malicious behavior from the previous night. Using Gravwell's search agent, searches and [search scripts](scriptingsearch) can be run on customized scheduled.
 
-The scheduling feature allows the user to schedule both regular searches and [search scripts](scriptingsearch.md).
+The scheduling feature allows the user to schedule both regular searches and [search scripts](scriptingsearch).
 
 ## Setting up the Search Agent
 
 The Gravwell Search Agent is now included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the Search Agent. The Search Agent is installed automatically by the Gravwell Debian package.
 
-For more information about configuring (or disabling) the search agent, see [the search agent documentation](searchagent.md).
+For more information about configuring (or disabling) the search agent, see [the search agent documentation](searchagent).
 
 ## Managing Scheduled Searches
 
@@ -22,9 +22,11 @@ To create a new scheduled search, click the 'Add' button in the upper-right corn
 
 ![](newsched.png)
 
-You must provide a search query, specify a timeframe over which it should run, give it a name and description, and define the schedule. You may also optionally chose one or more groups whose members may see the results of this scheduled search, define [labels](#!gui/labels/labels.md), or assign the scheduled search to an installed kit.
+You must provide a search query, specify a timeframe over which it should run, give it a name and description, and define the schedule. You may also optionally chose one or more groups whose members may see the results of this scheduled search, define [labels](/gui/labels/labels), or assign the scheduled search to an installed kit.
 
-Note: Gravwell uses the cron schedule format to specify when a search should run. If you're not familiar with cron, check out [the Wikipedia article](https://en.wikipedia.org/wiki/Cron) and try [this site to experiment with scheduling](https://cron.help/)
+```{note}
+Gravwell uses the cron schedule format to specify when a search should run. If you're not familiar with cron, check out [the Wikipedia article](https://en.wikipedia.org/wiki/Cron) and try [this site to experiment with scheduling](https://cron.help/)
+```
 
 Below, we have defined a simple scheduled search which runs every minute and counts how many entries came in over the last minute:
 

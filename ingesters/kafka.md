@@ -8,7 +8,7 @@ Most Kafka configurations enforce a data durability guarantee, which means data 
 
 ## Basic Configuration
 
-The Kafka ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the Kafka Ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+The Kafka ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the Kafka Ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 ## Consumer Examples
 
@@ -36,7 +36,7 @@ The Kafka ingester uses the unified global configuration block described in the 
 
 ## Installation
 
-The Kafka ingester is available in the Gravwell Debian repository as a Debian package as well as a shell installer on our [Downloads page](#!quickstart/downloads.md).  Installation via the repository is performed using `apt`:
+The Kafka ingester is available in the Gravwell Debian repository as a Debian package as well as a shell installer on our [Downloads page](/quickstart/downloads).  Installation via the repository is performed using `apt`:
 
 ```
 apt-get install gravwell-kafka
@@ -44,7 +44,7 @@ apt-get install gravwell-kafka
 
 The shell installer provides support for any non-Debian system that uses systemd, including Arch, Redhat, Gentoo, and Fedora.
 
-```
+```console
 root@gravserver ~ # bash gravwell_kafka_installer.sh
 ```
 
@@ -68,9 +68,13 @@ The Gravwell Kafka ingester can subscribe to multiple topics and even multiple K
 | Username | string | Specify username for SASL authentication |
 | Password | string | Specify password for SASL authentication |
 
-Warning: Setting any consumer as synchronous causes that consumer to continually Sync the ingest pipeline.  It will have significant performance implications for ALL consumers.
+```{warning}
+Setting any consumer as synchronous causes that consumer to continually Sync the ingest pipeline.  It will have significant performance implications for ALL consumers.
+```
 
-Notice: Setting a large `Batch-Size` when using `Synchronous=true` can help with performance under heavy load.
+```{note}
+Setting a large `Batch-Size` when using `Synchronous=true` can help with performance under heavy load.
+```
 
 ### Authentication
 

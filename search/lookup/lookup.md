@@ -6,7 +6,9 @@ The lookup module is used to do data enrichment and translation off of a static 
 lookup -r <resource name> <enumerated value> <column to match> <column to extract> as <valuename>
 ```
 
-Note: If you do NOT provide an ```as <valuename>``` addition to the syntax, lookup will create an enumerated value with the name of the "extracting" column.
+```{note}
+If you do NOT provide an ```as <valuename>``` addition to the syntax, lookup will create an enumerated value with the name of the "extracting" column.
+```
 
 You can also extract multiple columns for each match. The following example matches the contents of enumerated value A against the values in column B; when a match is found, it extracts both columns C and D:
 
@@ -25,7 +27,9 @@ lookup -r mytable [A B] [A B] (C as foo D as bar)
 * `-s`: The "-s" option specifies that the lookup modules should require that all extractions succeed or the entry will be dropped.
 * `-v`: The "-v" flag inverts the flow logic in the lookup module, meaning that successful matches are suppressed and missed matches are passed on.  The "-v" and "-s" flags can be combined to provide basic whitelisting, passing only values which do not exist in the specified lookup table.
 
-Note: When using the `-s` or `-v` flags it is legal to specify that no extractions are to take place.  This operation can be useful when performing whitelisting or blacklisting.
+```{note}
+When using the `-s` or `-v` flags it is legal to specify that no extractions are to take place.  This operation can be useful when performing whitelisting or blacklisting.
+```
 
 Here is an example that ensures that enumerated values `A` and `B` exist in the columns `X` and `Y` but does not enrich data.
 
@@ -39,9 +43,9 @@ Lookup data can be downloaded from compatible render modules (e.g. the table mod
 
 ![Lookup Download](lookup-download.png)
 
-The [table renderer](#!search/table/table.md) also provides a `-save` option, which will automatically save the search result table as a resource for later use by lookup:
+The [table renderer](/search/table/table) also provides a `-save` option, which will automatically save the search result table as a resource for later use by lookup:
 
-```
+```gravwell
 tag=syslog regex "DHCPACK on (?P<ip>\S+) to (?P<mac>\S+)" | unique ip mac | table -save ip2mac ip mac
 ```
 
@@ -66,7 +70,7 @@ desktop-2,64:bc:0c:87:9a:11
 
 Then we issue a search off of packet data and use the lookup module to enrich our data stream to include hostnames, which in this case we are assigning to the "devicename" enumerated value.
 
-```
+```gravwell
 tag=pcap packet eth.SrcMAC | count by SrcMAC | lookup -r macresolution SrcMAC mac hostname as devicename |  table SrcMAC devicename count
 ```
 
@@ -83,7 +87,7 @@ This results in a table containing the following:
 
 Using the same "macresolution" table shown above:
 
-```
+```gravwell
 tag=pcap packet eth.SrcMAC | count by SrcMAC | lookup -v -s -r macresolution SrcMAC mac hostname |  table SrcMAC count
 ```
 
@@ -109,7 +113,7 @@ Sacramento,38.527,-121.347
 
 Given the name of a city, we'd like to be able to extract both latitude and longitude values. Assuming we're working with JSON entries with contain a "City" field, the following query will do exactly that:
 
-```
+```gravwell
 tag=default json City | lookup -r places City name (lat long) | table
 ```
 

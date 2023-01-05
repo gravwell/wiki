@@ -1,4 +1,4 @@
-# Performance tuning
+# Performance Tuning
 
 Gravwell is capable of taxing the disk, network, and CPU resources of even the most performant systems. Gravwell is optimized to work well on a variety of hardware and software configurations. That said, there are a number of query optimizations, configuration options, and Linux system parameters that can dramatically improve ingest and search performance. 
 
@@ -6,7 +6,7 @@ Gravwell is capable of taxing the disk, network, and CPU resources of even the m
 
 A Gravwell query, when read left to right, represents the flow of data from one module to the next. For example:
 
-```
+```gravwell
 tag=gravwell syslog Severity Message | count Message by Severity | chart count by Severity
 ```
 
@@ -19,11 +19,13 @@ This query has four components:
 
 The most important observation when creating a query is that *all* data emitted by a module is seen by the next module in the pipeline. If we can limit or filter data early in a pipeline, we can dramatically improve the performance of the overall pipeline simply by removing the amount of data processing required. For example:
 
-```
+```gravwell
 tag=* grep bar | alias DATA myData | json -e myData foo==bar baz | stats count(foo) | table count
 ```
 
-NOTE: This is an intentionally bad query meant to force poor performance for illustrative purposes.
+```{note}
+This is an intentionally bad query meant to force poor performance for illustrative purposes.
+```
 
 This query counts the number of entries that are valid JSON with a member "foo" that contains the contents "bar". There are a number of things about this query that decrease performance:
 
@@ -33,7 +35,7 @@ This query counts the number of entries that are valid JSON with a member "foo" 
 
 A much faster and equivalent query could be:
 
-```
+```gravwell
 tag=jsonData json foo==bar | stats count(foo) | table count
 ```
 
@@ -54,11 +56,11 @@ Gravwell stores data in "wells", logical groupings of data, on disk according to
 
 This declaration creates a well named "syslog" that in turn stores data belonging to both the "syslog" and "gravwell" tags. When issuing a search on a tag, Gravwell will read from the well containing the given tag(s) and read from it. If you were using the declaration above and issued the following query:
 
-```
+```gravwell
 tag=gravwell syslog Appname==indexer
 ```
 
-Gravwell would have to read all entries in the given timeframe and send them to the syslog module to be filtered. Gravwell can accelerate data by _indexing_ entries in wells. Acceleration is a complex topic, and a detailed description of how to configure acceleration can be found in the [Acceleration documentation](#!configuration/accelerators.md).
+Gravwell would have to read all entries in the given timeframe and send them to the syslog module to be filtered. Gravwell can accelerate data by _indexing_ entries in wells. Acceleration is a complex topic, and a detailed description of how to configure acceleration can be found in the [Acceleration documentation](/configuration/accelerators).
 
 For now though, let's rewrite the configuration to simply perform "fulltext" acceleration on this data:
 
@@ -72,7 +74,7 @@ For now though, let's rewrite the configuration to simply perform "fulltext" acc
 
 By enabling acceleration, Gravwell creates an index of all text fragments in the ingested data, with references to where in the well that fragment can be found. Let's look at the query again:
 
-```
+```gravwell
 tag=gravwell syslog Appname==indexer
 ```
 
@@ -88,13 +90,13 @@ Using acceleration can improve query performance by several orders of magnitude 
 
 Consider the query:
 
-```
+```gravwell
 tag=pcap packet eth.SrcMAC eth.DstMAC eth.Type ipv4.IP ipv4.Payload tcp.Port | max Port | table max
 ```
 
 The above query uses the packet module to extract 6 fields and only uses one (Port). Gravwell performs a best effort optimization at parse time to eliminate unused extractions in modules, but there are several scenarios where the extractions may still take place. In order to reduce burden on the packet module, which in this example not only has to extract the packet data, but also perform type assertions on MAC addresses, IP addresses, and integers, you can rewrite the query with *just* the necessary extractions for the end result:
 
-```
+```gravwell
 tag=pcap packet tcp.Port | max Port | table max
 ```
 
@@ -102,23 +104,25 @@ tag=pcap packet tcp.Port | max Port | table max
 
 Consider the query:
 
-```
+```gravwell
 tag=default json UUID foo | lookup -r data foo bar baz | eval UUID=="cd656e75-d54d-4e80-ac13-bc77abdde0ad" | table
 ```
 
 The above query extracts json data, performs some processing on every instace of "foo", and then filters the data down to just those entries with a specific UUID that was extracted in the first module. This query is potentially very costly, as the indexer must retrieve every record in the "default" tag for the given timeframe, and the lookup module must perform additional data lookups. If we moved the filter to the json module instead, we could reduce the overhead considerably, especially if acceleration is enabled on the default tag. By moving the filter to the beginning of the query, we allow the indexer to perform retrieval optimizations on disk, and we minimize the number of entries sent down the pipeline.
 
-```
+```gravwell
 tag=default json UUID=="cd656e75-d54d-4e80-ac13-bc77abdde0ad" foo | lookup -r data foo bar baz | table`
 ```
 
 ### Condensing modules
 
-NOTE: This subsection applies only to Gravwell deployments with multiple indexers. 
+```{note}
+This subsection applies only to Gravwell deployments with multiple indexers. 
+```
 
 Some modules require knowledge of all data passing through that portion of a pipeline in order to function. For example:
 
-```
+```gravwell
 tag=default json value | table value
 ```
 
@@ -126,13 +130,13 @@ This query simply asks all indexers to extract "value" from JSON data and show i
 
 Now consider:
 
-```
+```gravwell
 tag=default json value subxml | stats mean(value) | xml -e subxml Name | stats unique_count(Name) | table mean unique_count
 ```
 
 This query performs a mean operation on "value" early in the pipeline. In order to calculate the mean, the stats module must have all instances of "value". This causes the query to "condense" at the stats module, meaning that the indexers no longer run in parallel, but instead send their data to the webserver after extraction, and the remaining query is performed on the webserver. It is best to put condensing modules as late in a query as possible so that indexers can continue to run in parallel. Since no other modules except for table depend on the mean, we can simply rearrange this query. Additionally, the stats module can perform multiple operation in a single invocation:
 
-```
+```gravwell
 tag=default json value subxml | xml -e subxml Name | stats mean(value) unique_count(Name) | table mean unique_count
 ```
 
@@ -144,7 +148,9 @@ As the main storage and search component of a Gravwell deployment, indexers can 
 
 ### Gravwell configuration
 
-NOTE: See the [Detailed configuration document](#!configuration/parameters.md) for a list of all Gravwell configuration options.
+```{note}
+See the [Detailed configuration document](/configuration/parameters) for a list of all Gravwell configuration options.
+```
 
 #### Global configuration options
 
@@ -230,7 +236,7 @@ Additionally, transparent compression also has performance benefits by taking ad
 
 ##### Acceleration
 
-As mentioned above, utilizing well acceleration can dramatically improve performance. See the [Acceleration documentation](#!configuration/accelerators.md) for more information.
+As mentioned above, utilizing well acceleration can dramatically improve performance. See the [Acceleration documentation](/configuration/accelerators) for more information.
 
 ### Linux kernel and system tuning
 

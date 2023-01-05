@@ -56,7 +56,7 @@ The following require the separate ASN database (specified with the -r flag):
 
 #### Filtering on country and requiring that city is resolved
 
-```
+```gravwell
 tag=pcap packet IPv4.SrcIP IPv4.DstIP | geoip -s DstIP.Country == US DstIP.City | count by City | chart count by City
 ```
 
@@ -64,7 +64,7 @@ tag=pcap packet IPv4.SrcIP IPv4.DstIP | geoip -s DstIP.Country == US DstIP.City 
 
 #### Showing Per IP Country Traffic
 
-```
+```gravwell
 tag=pcap packet ipv4.SrcIP ipv4.DstIP ipv4.Length  | geoip DstIP.Country as DestCountry | sum Length by SrcIP,DestCountry | stackgraph DestCountry SrcIP sum
 ```
 
@@ -72,13 +72,13 @@ tag=pcap packet ipv4.SrcIP ipv4.DstIP ipv4.Length  | geoip DstIP.Country as Dest
 
 #### Extracting City for Two IPs
 
-```
+```gravwell
 tag=pcap packet ipv4.SrcIP ipv4.DstIP | geoip DstIP.City as dest SrcIP.City as src | fdg -b src dst
 ```
 
 #### Extracting ASN Org
 
-```
+```gravwell
 tag=pcap packet ipv4.SrcIP !~ PRIVATE | geoip -r asn SrcIP.ASNOrg | table
 ```
 

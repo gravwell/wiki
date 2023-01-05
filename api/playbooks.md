@@ -125,7 +125,9 @@ The server will respond with the UUID of the newly-created playbook. If the `GUI
 
 To update the contents of a playbook, send a PUT request to `/api/playbooks/<uuid>`, where the UUID matches the desired playbook. The body of the request should contain the playbook structure to be updated. Note that changes to the UUID, GUID, LastUpdated, and Synced fields will be ignored. Administrators are allowed to modify the UID field, but regular users cannot.
 
-Note: If you do not intend to update the contents of a field, you should send the original value in the request. The server has no way to know if e.g. an un-set "Desc" field means you wish to preserve the original value, or you wish to clear the field.
+```{note}
+If you do not intend to update the contents of a field, you should send the original value in the request. The server has no way to know if e.g. an un-set "Desc" field means you wish to preserve the original value, or you wish to clear the field.
+```
 
 ## Deleting a Playbook
 

@@ -15,9 +15,13 @@ Grep allows multiple patterns to be specified. If any pattern is matched, the en
 * `-simple`: Simple match. With this flag, `grep` will match exactly the characters you specify, with no wildcard matching. This allows you to find asterisks and other normally-reserved characters: `grep -s * `
 * `-w`: A word match.  The entire match pattern must a word as would be matched by the fulltext extractors.
 
-Attention: Case-insensitive search is significantly slower. If you must do case-insensitive grep, try to put it later in your search pipeline to improve speed.
+```{attention}
+Case-insensitive search is significantly slower. If you must do case-insensitive grep, try to put it later in your search pipeline to improve speed.
+```
 
-Attention: The `-w` word match implies a simple match as the wildcards allow for crossing word boundaries.
+```{attention}
+The `-w` word match implies a simple match as the wildcards allow for crossing word boundaries.
+```
 
 ### Parameter Structure
 ```
@@ -28,31 +32,31 @@ grep <argument list> <search parameter>
 
 To find any Apache logs containing the exact string "Mozilla\*Firefox" (no wildcards):
 
-```
+```gravwell
 tag=apache grep "Mozilla\*Firefox"
 ```
 
 To find packets over port 80 whose payloads begin with the bytes 0, 1, 2, 3:
 
-```
+```gravwell
 tag=pcap packet tcp.Port==80 tcp.Payload | grep -e Payload "\x01\x02\x03\x04"
 ```
 
 Match any Reddit post which contains words ending in "ing" or "ed":
 
-```
+```gravwell
 tag=reddit json Body | grep -e Body "*ing" "*ed"
 ```
 
 Drop any Reddit posts on subreddits beginning with "Ask" or containing "foo":
 
-```
+```gravwell
 tag=reddit json Subreddit | grep -v -e Subreddit "Ask*" "foo"
 ```
 
 Grab only user agents that contain Mozilla and Windows
 
-```
+```gravwell
 tag=apache grep -s Mozilla Windows
 ```
 

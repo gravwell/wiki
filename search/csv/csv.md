@@ -8,9 +8,13 @@ Fields are extracted by specifying an index into data from a base of zero.  An i
 
 Extracted columns can be renamed by appending the directive `as <name>` immediately after a field index value.  For example, to extract the 6th column from a piece of data into an enumerated value with the name "uri" the extraction directive would be `[5] as uri`.  If no rename directive is provided the extracted values are given the name that matches the index.  Extracted columns also support filters which allows for quickly filtering entries based on equality or contained values.  Filters must be specified before the renaming statement.  An example column directive which only allows entries to pass by where the 1st column is the value "stuff" would be `[0]=="stuff"`.  To only allow entries where the 1st column does not equal the value "stuff" and rename the 1st field to "things" the directive would be `[0] != "stuff" as things`.
 
-Attention: Column extraction indexes can be specified as base 10, base 8, or base 16.  The default name applied is the original text value of the index.  An extraction directive of [0xA] will extract the 11th column with the name "0xA", while [010] will extract the 9th column and apply the name "010".
+```{attention}
+Column extraction indexes can be specified as base 10, base 8, or base 16.  The default name applied is the original text value of the index.  An extraction directive of [0xA] will extract the 11th column with the name "0xA", while [010] will extract the 9th column and apply the name "010".
+```
 
-Attention: To specify filter values and or extraction names which contain special characters like "-", ".", or spaces, surround the value in double quotes.
+```{attention}
+To specify filter values and or extraction names which contain special characters like "-", ".", or spaces, surround the value in double quotes.
+```
 
 ### Supported Options
 
@@ -60,27 +64,27 @@ The output would look as follows (notice the lack of quotes or surrounding white
 
 Extract a URL column from a CSV http.log feed and name it "url".
 
-```
+```gravwell
 tag=brohttp csv [9] as url
 ```
 
 
 Extract the URL and requester field from a CSV bro http.log feed and filter for only entries where the URL contains a space and outputting the results in a table.
 
-```
+```gravwell
 tag=brohttp csv [9] ~ " " as url [2] as requester | table url requester
 ```
 
 
 Extract the 4th, 5th, and 6th columns where the 6th column must not be "stuff" and the 4th column must contain "things.
 
-```
+```gravwell
 tag=default csv [5]!=stuff [4] [3]~"things" | table 3 4 5
 ```
 
 
 Extract a URI from an apache access log and then parse the "DATA" parameter as a CSV.
 
-```
+```gravwell
 tag=apache tag=apache regex "GET\s(?P<base>[^\s\?]+)\?(?P<params>\S+)\s" | regex -e params "DATA\=(?P<dataparam>[^\s&]+)" | csv -e dataparam [0] [1] [2] | table 0 1 2
 ```

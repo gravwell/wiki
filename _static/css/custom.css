@@ -1,0 +1,77 @@
+html[data-theme="light"],
+html[data-theme="dark"] {
+  --pst-font-family-base: Lato, var(--pst-font-family-base-system);
+  --pst-font-family-heading: Erbaum, var(--pst-font-family-base-system);
+  --pst-font-family-monospace: Courier, var(--pst-font-family-monospace-system);
+}
+
+html[data-theme="light"] {
+  --pst-color-primary: #533485;
+  --pst-color-warning: #fdbf32;
+}
+
+html[data-theme="dark"] {
+  --pst-color-primary: #fdbf32;
+}
+
+h3.popover-header {
+  margin-top: 0px;
+}
+
+div.popover {
+  background-color: var(--pst-color-surface);
+}
+
+div.popover.hash-popover {
+  max-width: 100%;
+}
+
+li.nav-item > a.nav-link,
+.nav-item.dropdown > .btn.nav-item {
+  font-family: var(--pst-font-family-heading);
+  font-size: 0.9rem;
+}
+
+nav.bd-links p.caption {
+  color: var(--pst-color-primary);
+}
+
+nav.bd-links p.bd-links__title {
+  color: var(--pst-color-primary);
+}
+
+.bd-sidebar {
+  font-family: var(--pst-font-family-heading);
+}
+
+.bd-sidebar-secondary {
+  font-family: var(--pst-font-family-heading);
+}
+
+.bd-sidebar-secondary .onthispage {
+  color: var(--pst-color-primary);
+}
+
+.admonition-title {
+  font-family: var(--pst-font-family-heading);
+}
+
+.sd-card-text {
+  font-family: var(--pst-font-family-heading);
+}
+
+.sd-material-icon {
+  float: right;
+}
+
+.docs-version {
+  float: right;
+}
+
+.git-commit-id {
+  color: var(--pst-color-primary);
+}
+
+#logbot-container img {
+  background: unset;
+}

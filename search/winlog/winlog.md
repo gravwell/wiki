@@ -1,6 +1,6 @@
 # Winlog
 
-The winlog processor is a special-purpose extractor for XML-formatted Windows log data. It provides "shortcuts" for extracting many common fields from Windows log entries rather than requiring the more general [xml module](/#!search/xml/xml.md).
+The winlog processor is a special-purpose extractor for XML-formatted Windows log data. It provides "shortcuts" for extracting many common fields from Windows log entries rather than requiring the more general [xml module](/search/xml/xml).
 
 ## Supported Options
 

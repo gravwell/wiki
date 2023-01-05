@@ -38,7 +38,7 @@ The group details structure is as follows:
 
 ## Log in and log out
 
-The API to authenticate with the webserver is [documented here](login.md).
+The API to authenticate with the webserver is [documented here](login).
 
 ## Fetch current user's info
 GET on /api/info/whoami returns current account info
@@ -197,7 +197,9 @@ To change a password, issue a PUT to the url `/api/users/{id}/pwd`.
 }
 ```
 
-Note: If the current user is an admin and changing the password for an account they DO NOT OWN, the OrigPass field is NOT required.
+```{note}
+If the current user is an admin and changing the password for an account they DO NOT OWN, the OrigPass field is NOT required.
+```
 
 ## Delete a user
 To delete a user the client should send a DELETE to `/api/users/{id}/` with `{id}` set to the UID to delete.  Only admins can use this facility, and a user cannot delete their own account.  The primary admin (UID 1) cannot be deleted.

@@ -46,7 +46,9 @@ We will use the regex extractor to pull out the data fields and the hostname, th
 	Template=`{"host": "${host}", "data": ${data}}`
 ```
 
-NOTE: Observe the use of backticks in the Regex and Template fields. This eliminates the need to escape each backslash within the value.
+```{note}
+Observe the use of backticks in the Regex and Template fields. This eliminates the need to escape each backslash within the value.
+```
 
 The result is:
 
@@ -54,6 +56,6 @@ The result is:
 {"host": "loginapp", "data": {"user": "bob", "action": "login", "result": "success", "UID": 123, "ts": "2020-03-20T15:35:20Z"}}
 ```
 
-NOTE: Templates can specify multiple fields constant values.  Extracted fields can be inserted multiple times.
-
-
+```{note}
+Templates can specify multiple fields constant values.  Extracted fields can be inserted multiple times.
+```

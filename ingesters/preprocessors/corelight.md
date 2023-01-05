@@ -55,7 +55,7 @@ Resulting TSV output:
 
 #### Example: Default Handlers
 
-Here is a basic [Simple Relay](/#!ingesters/simple_relay.md) example which listens for JSON over TCP on port 7890 and translates the JSON payloads to TSV data with no custom handlers:
+Here is a basic [Simple Relay](/ingesters/simple_relay) example which listens for JSON over TCP on port 7890 and translates the JSON payloads to TSV data with no custom handlers:
 
 ```
 [Listener "corelight"]

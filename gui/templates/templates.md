@@ -57,6 +57,6 @@ As with most objects in Gravwell, templates may be set visible to the owner only
 
 ## Using Templates in Dashboards
 
-Templates may be embedded in dashboard tiles, creating what we call an *investigative dashboard*. When the dashboard is loaded, the user will be prompted for variable values. See the [dashboard documentation page](#!gui/dashboards/dashboards.md) for instructions on adding templates to dashboards.
+Templates may be embedded in dashboard tiles, creating what we call an *investigative dashboard*. When the dashboard is loaded, the user will be prompted for variable values. See the [dashboard documentation page](/gui/dashboards/dashboards) for instructions on adding templates to dashboards.
 
-These investigative dashboards can be accessed directly from query results using [actionables](/gui/actionables/actionables.md), which look for particular patterns of text and provide pop-up menus which can, among other things, launch an investigative dashboard. The selected text will be automatically used to replace the template variable.
+These investigative dashboards can be accessed directly from query results using [actionables](/gui/actionables/actionables), which look for particular patterns of text and provide pop-up menus which can, among other things, launch an investigative dashboard. The selected text will be automatically used to replace the template variable.

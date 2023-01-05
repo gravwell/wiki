@@ -8,7 +8,7 @@ A simple web interface to submit and view job status is also available by browsi
 
 ## Basic Configuration
 
-Packet Fleet uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, Packet Fleet supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+Packet Fleet uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, Packet Fleet supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 ## Stenographer Examples
 
@@ -75,12 +75,16 @@ primitives:
     before 45m ago        # Packets before a relative time
     before 3h ago         # Packets after a relative time
 
-**NOTE**: Relative times must be measured in integer values of hours or minutes
+```{note}
+Relative times must be measured in integer values of hours or minutes
 as demonstrated above.
+```
 
 Primitives can be combined with and/&& and with or/||, which have equal
 precedence and evaluate left-to-right.  Parens can also be used to group.
 
     (udp and port 514) or (tcp and port 8080)
 
-**Note**: This section sourced from [Google Stenographer](https://github.com/google/stenographer/blob/master/README.md)
+```{note}
+This section sourced from [Google Stenographer](https://github.com/google/stenographer/blob/master/README.md)
+```

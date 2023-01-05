@@ -110,7 +110,9 @@ Tiles can be reshaped by clicking and dragging their corners, as you would with 
 
 ![](arrange-dashboard.png)
 
-Attention: Modifications to the dashboard layout are not permanent until you click the "Save Changes" button which appears in the lower right. Until that button is clicked, you can revert to the old layout by refreshing the page.
+```{attention}
+Modifications to the dashboard layout are not permanent until you click the "Save Changes" button which appears in the lower right. Until that button is clicked, you can revert to the old layout by refreshing the page.
+```
 
 ## Live Updating
 
@@ -124,7 +126,7 @@ After clicking "Save" and "Back to tiles", the dashboard should now begin automa
 
 ## Investigative Dashboards
 
-Gravwell supports a particular kind of saved query called a [*template*](/gui/templates/templates.md), which defines variables in the query string itself. If you use a template query in a dashboard tile, the dashboard will prompt you for values for each variable when you load it. A dashboard containing templates is called an *investigative dashboard*, because it can investigate a particular IP address, hostname, UUID, etc.
+Gravwell supports a particular kind of saved query called a [*template*](/gui/templates/templates), which defines variables in the query string itself. If you use a template query in a dashboard tile, the dashboard will prompt you for values for each variable when you load it. A dashboard containing templates is called an *investigative dashboard*, because it can investigate a particular IP address, hostname, UUID, etc.
 
 Below, observe the highlighted variables in the queries when viewing a list of templates:
 
@@ -138,5 +140,5 @@ Dashboards with template queries can also be used in conjunction with *actionabl
 
 ![](actionable-dashboard.png)
 
-See the [documentation on actionables](#!gui/actionables/actionables.md) for more information.
+See the [documentation on actionables](/gui/actionables/actionables) for more information.
 

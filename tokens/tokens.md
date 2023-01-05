@@ -24,7 +24,9 @@ After populating your new token with a name, description, permissions, and an op
 
 ![Generated Token](popup.png)
 
-NOTE: Make sure to record the token, Gravwell will never again provide that token to you, this is your one and only chance to record it.
+```{note}
+Make sure to record the token, Gravwell will never again provide that token to you, this is your one and only chance to record it.
+```
 
 ## Token Permissions
 
@@ -32,7 +34,9 @@ Token permissions are defined using specific allowances, you select exactly whic
 
 Permissions on tokens are an overlay on the users existing permissions.  This means that if the current user cannot access an API or feature, then the token cannot either.  Tokens can only restrict access, they cannot grant access that a user does not currently have.
 
-NOTE: The `Token write` permission can be particularly dangerous. If you grant a token the ability to write to the token API it can create new tokens with any permission it wants.  Token permissions are not transitive, tokens that create other tokens do not inherit their parent's permission set.
+```{note}
+The `Token write` permission can be particularly dangerous. If you grant a token the ability to write to the token API it can create new tokens with any permission it wants.  Token permissions are not transitive, tokens that create other tokens do not inherit their parent's permission set.
+```
 
 ## Restrictions
 
@@ -50,7 +54,7 @@ curl --header "Gravwell-Token: rQ_e-7I8xRgeFYJpWzqMdEu391HCTC0QYvvJl_fp9YNXNquAc
 
 ### Examples
 
-This section is by no means exhaustive in the set of Gravwell APIs that can be accessed by tokens.  Executing queries requires a slightly more elaborate API interaction, for more information checkout the [Direct Query API](/search/directquery/directquery.md) section.
+This section is by no means exhaustive in the set of Gravwell APIs that can be accessed by tokens.  Executing queries requires a slightly more elaborate API interaction, for more information checkout the [Direct Query API](/search/directquery/directquery) section.
 
 #### Get Tags
 

@@ -1,6 +1,6 @@
 # Gravwell Searchagent
 
-The search agent is the component which runs [automations](scheduledsearch.md). The search agent is included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the search agent. The search agent is installed automatically by the Gravwell Debian package.
+The search agent is the component which runs [automations](scheduledsearch). The search agent is included in the main Gravwell install packages and will be installed by default. Disabling the webserver component with the `--no-webserver` flag or setting the `--no-searchagent` flag will disable installation of the search agent. The search agent is installed automatically by the Gravwell Debian package.
 
 You can verify the search agent is running with the following command:
 
@@ -45,7 +45,9 @@ Webserver-Address=gravwell1.example.org:443
 Webserver-Address=gravwell2.example.org:443
 ```
 
-Attention: Do not specify multiple webservers unless they are all synchronized using the [datastore](#!distributed/frontend.md)
+```{attention}
+Do not specify multiple webservers unless they are all synchronized using the [datastore](/distributed/frontend)
+```
 
 **Search-Agent-Auth**
 
@@ -53,11 +55,11 @@ The `Search-Agent-Auth` parameter sets the authentication token used to authenti
 
 **Insecure-Skip-TLS-Verify**
 
-If `Insecure-Skip-TLS-Verify` is set to true, the search agent will *not* verify the validity of TLS certificates when connecting to an HTTPS-enabled Gravwell webserver. Use this option with care and see [the certificates documentation](#!configuration/certificates.md) for more information.
+If `Insecure-Skip-TLS-Verify` is set to true, the search agent will *not* verify the validity of TLS certificates when connecting to an HTTPS-enabled Gravwell webserver. Use this option with care and see [the certificates documentation](/configuration/certificates) for more information.
 
 **Insecure-Use-HTTP**
 
-If `Insecure-Use-HTTP` is set to true, the search agent will attempt to communicate with the Gravwell webserver using plaintext HTTP rather than the default HTTPS. This option is set to true in the default configuration file because [Gravwell requires manual configuration to enable HTTPS](#!configuration/certificates.md)
+If `Insecure-Use-HTTP` is set to true, the search agent will attempt to communicate with the Gravwell webserver using plaintext HTTP rather than the default HTTPS. This option is set to true in the default configuration file because [Gravwell requires manual configuration to enable HTTPS](/configuration/certificates)
 
 **Disable-Network-Script-Functions**
 

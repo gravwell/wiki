@@ -16,7 +16,7 @@ geodist [-u <unit>] (loc1 loc2 [as output])...
 
 This query charts the average distance, in miles, between source and destination in Zeek connection logs:
 
-```
+```gravwell
 tag=zeekconn ax orig resp | ip orig!~PRIVATE resp!~PRIVATE | geoip orig.Location as sloc resp.Location as dloc | geodist -u mi sloc dloc as distance | stats mean(distance) as miles | chart miles
 ```
 

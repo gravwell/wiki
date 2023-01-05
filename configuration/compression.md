@@ -10,7 +10,9 @@ Gravwell supports two types of compression: default and transparent compression.
 
 Transparent compression allows for offloading compression/decompression work to the host kernel while maintaining an uncompressed page cache.  Transparent compression can allow for very fast and efficient compression/decompression but requires that the underlying filesystem support transparent compression.  Currently the [BTRFS](https://btrfs.wiki.kernel.org/index.php/Main_Page) and [ZFS](https://wiki.archlinux.org/index.php/ZFS) filesystem are supported.
 
-Attention: Transparent compression has important implications for ageout rules involving total storage. Please refer to the [ageout documentation](ageout.md) for more information.
+```{attention}
+Transparent compression has important implications for ageout rules involving total storage. Please refer to the [ageout documentation](ageout) for more information.
+```
 
 **Disable-Compression**
 Default Value: `false`
@@ -42,14 +44,17 @@ Default Value: `false`
 Example: `Enable-Cold-Transparent-Compression=true`
 Gravwell will mark the Cold storage data as compressible and rely on the kernel to perform the compression operations.
 
-Note: If transparent compression is enabled and the underlying filesystem is detected as incompatible with transparent compression, the data will effectively be uncompressed and Gravwell will send a notification to users.
+```{note}
+If transparent compression is enabled and the underlying filesystem is detected as incompatible with transparent compression, the data will effectively be uncompressed and Gravwell will send a notification to users.
+```
 
-Warning: If hot and cold storage locations are not compatible with regards to compression, Gravwell must perform additional work to ageout data from hot to cold.  If acceleration is enabled, Gravwell will re-index the data as it performs the ageout.  Incompatible compression settings can incur significant overhead during ageout.  Uncompressed data is compatible with transparently compressed data, but default compression is not compatible with uncompressed or transparently compressed data.  Gravwell will still function perfectly fine with incompatible compression, the indexer will just work much harder during ageout.
-
+```{warning}
+If hot and cold storage locations are not compatible with regards to compression, Gravwell must perform additional work to ageout data from hot to cold.  If acceleration is enabled, Gravwell will re-index the data as it performs the ageout.  Incompatible compression settings can incur significant overhead during ageout.  Uncompressed data is compatible with transparently compressed data, but default compression is not compatible with uncompressed or transparently compressed data.  Gravwell will still function perfectly fine with incompatible compression, the indexer will just work much harder during ageout.
+```
 
 ## Compression and Replication
 
-The [replication system][replication.md] adheres to the same rules as normal well storage.  Replicated data can be configured to use transparent compression, default compression, or no compression at all.  The same rules for compatibility between hot and cold storage locations in a well and compression also apply to replicated data and replication peers.  If a replication peer has configured an incompatible form of compression indexers will perform significantly more work when restoring after a failure.  For best performance, Gravwell recommends that hot, cold, and replication stores use the same compression schemes.
+The [replication system][replication] adheres to the same rules as normal well storage.  Replicated data can be configured to use transparent compression, default compression, or no compression at all.  The same rules for compatibility between hot and cold storage locations in a well and compression also apply to replicated data and replication peers.  If a replication peer has configured an incompatible form of compression indexers will perform significantly more work when restoring after a failure.  For best performance, Gravwell recommends that hot, cold, and replication stores use the same compression schemes.
 
 Compression for replication storage locations is controlled by the `Disable-Compression` and `Enable-Transparent-Compression` directives.  The snappy compression system is the default compression scheme.
 

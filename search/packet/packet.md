@@ -45,13 +45,13 @@ The packet processor supports submodules which allow for breaking out specific f
 
 Enumerated value names are derived by the last name in a submodule specification. For example, the specification "ipv4.SrcIP" will generate the enumerated value "SrcIP". Enumerated value names can be overridden with an "as" argument. For example, to extract "ipv4.SrcIP" as "foo":
 
-```
+```gravwell
 tag=pcap packet ipv4.SrcIP as foo | table foo
 ```
 
 Renamed enumerated values can also be used with filters:
 
-```
+```gravwell
 tag=pcap packet ipv4.SrcIP="8.8.8.8" as foo | table foo
 ```
 
@@ -83,7 +83,7 @@ The dot1q packet submodule is designed to enable parsing of VLAN tagged packets.
 
 An example search that shows all mac addresses routing multiple IPv4 addresses with VLAN tagged packets:
 
-```
+```gravwell
 tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | count by SrcMAC | eval count > 1 | table SrcMAC count
 ```
 
@@ -203,7 +203,7 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 
 For example, the following command will find all DNS queries for Tumblr:
 
-```
+```gravwell
 tag=pcap packet udp.DstPort==53 udp.Payload | grep -e Payload "tumblr" | text
 ```
 
@@ -223,11 +223,13 @@ The packet search module can decode MPLS headers and allows for selective filter
 
 For example, the following command will filter all traffic which contains MPLS headers and a traffic Label of 5
 
-```
+```gravwell
 tag=pcap packet mpls.Label==5 mpls.TrafficClass mpls.Payload | grep -e Payload "HTTP" | count by TrafficClass | table TrafficClass count
 ```
 
-Note: The MPLS package module will only look at the first MPLS layer, if there are multiple layers you will need to use the [packetlayer](#!search/packetlayer/packetlayer.md) module to decode the additional layers by referencing the Payload enumerated value.
+```{note}
+The MPLS package module will only look at the first MPLS layer, if there are multiple layers you will need to use the [packetlayer](/search/packetlayer/packetlayer) module to decode the additional layers by referencing the Payload enumerated value.
+```
 
 <!---
 ### ICS-specific protocols

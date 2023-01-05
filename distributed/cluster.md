@@ -2,16 +2,16 @@
 
 While Gravwell will happily run entirely contained on a single node, environments with large quantities of data may be best served with a cluster. In a Gravwell cluster, one or more webservers control one or more indexers, all on separate servers.
 
-The Gravwell architecture is described in detail in [this document](#!architecture/architecture.md); this article deals more concretely with details of configuration for clustering.
+The Gravwell architecture is described in detail in [this document](/architecture/architecture); this article deals more concretely with details of configuration for clustering.
 
 The following are all valid Gravwell configurations:
 
 * One webserver and one indexer, both running on the same system. This is the default installation; we do not consider it a cluster because the webserver and indexer are on the same machine.
 * One webserver and one indexer, each on its own server. This is the simplest possible cluster.
 * One webserver and multiple indexers, each on their own servers.
-* [Multiple webservers](#!distributed/frontend.md) and multiple indexers.
+* [Multiple webservers](/distributed/frontend) and multiple indexers.
 
-We will discuss configuring a cluster with a single webserver and one or more indexers. If you want multiple webservers, we recommend following the steps outlined here to first configure a single-webserver cluster, then using the information in [this document](#!distributed/frontend.md) to add additional webservers later. You will likely also want to set up [load balancing](loadbalancer.md) to most effectively utilize all webservers.
+We will discuss configuring a cluster with a single webserver and one or more indexers. If you want multiple webservers, we recommend following the steps outlined here to first configure a single-webserver cluster, then using the information in [this document](/distributed/frontend) to add additional webservers later. You will likely also want to set up [load balancing](loadbalancer) to most effectively utilize all webservers.
 
 ## Planning Your Cluster
 
@@ -24,17 +24,17 @@ There are several things to keep in mind while planning your cluster:
 
 The last point is tricky, because the number of indexers required to store a given amount of data depends heavily on the hardware available (how much RAM per node, NVME vs SSD vs spinning disk, etc.) and how much querying you intend to do. We recommend contacting [Gravwell support](mailto:support@gravwell.io) for help in planning your cluster.
 
-Before beginning, it is useful to know the specific IP addresses or hostnames which will be used for the webserver and the indexers. Also, review the ports in [this document](#!configuration/networking.md) to ensure that your network is configured to allow necessary connections between Gravwell components; in brief, you'll want to make sure the webserver can reach port 9404 on the indexers, that users can reach port 80 and 443 on the webserver, and that your ingesters will be able to reach ports 4023 and 4024 on the indexers.
+Before beginning, it is useful to know the specific IP addresses or hostnames which will be used for the webserver and the indexers. Also, review the ports in [this document](/configuration/networking) to ensure that your network is configured to allow necessary connections between Gravwell components; in brief, you'll want to make sure the webserver can reach port 9404 on the indexers, that users can reach port 80 and 443 on the webserver, and that your ingesters will be able to reach ports 4023 and 4024 on the indexers.
 
 **Do I need multiple webservers?** Most likely, no. Multiple webservers make your cluster more complex. In general, we recommend setting up a single webserver, then adding more if the load is too high in use. 
 
 ### Planning Tags and Wells
 
-If you know you will be ingesting netflow, packet capture, syslogs, Apache logs, and Windows logs, you should consider putting each data class into its own storage well. By putting syslog into a separate well from high-volume sources such as raw packets, you'll improve the speed of your syslog queries. See [the advanced configuration article](#!configuration/configuration.md#Tags_and_Wells) for a more detailed discussion of tags and wells.
+If you know you will be ingesting netflow, packet capture, syslogs, Apache logs, and Windows logs, you should consider putting each data class into its own storage well. By putting syslog into a separate well from high-volume sources such as raw packets, you'll improve the speed of your syslog queries. See [the advanced configuration article](configuration_tags_and_wells) for a more detailed discussion of tags and wells.
 
 In the planning stage, it is useful to make a list of each data source, which tag you'll apply to it, and which well you intend to use for storing it. If you're not yet sure what data you'll be ingesting, you can use the default well configuration and make adjustments once real data begins flowing in.
 
-Also consider [ageout](#!configuration/ageout.md) needs at this time. How long do you want to retain system logs? Packet captures? Netflow records? For example, if you're ingesting 100 gigabytes of packets per day and your cluster has 10 TB of storage in total, you could store about 100 days of uncompressed packet data, but any data older than that will need to be aged out.
+Also consider [ageout](/configuration/ageout) needs at this time. How long do you want to retain system logs? Packet captures? Netflow records? For example, if you're ingesting 100 gigabytes of packets per day and your cluster has 10 TB of storage in total, you could store about 100 days of uncompressed packet data, but any data older than that will need to be aged out.
 
 ## Installing the Webserver
 
@@ -42,19 +42,19 @@ We recommend starting your installation with the webserver. This will generate a
 
 ### Installing webserver via shell installer
 
-To install only the webserver and search agent using the [standalone shell installer](#!quickstart/downloads.md), run the following command (the version will likely differ for you):
+To install only the webserver and search agent using the [standalone shell installer](/quickstart/downloads), run the following command (the version will likely differ for you):
 
-```
+```console
 root@headnode# bash gravwell_3.2.0.sh --no-indexer
 ```
 
 ### Installing webserver via Debian package
 
-Setting up a webserver-only node from the Debian package requires a few additional steps. Set up the repository and install the Gravwell package as described in [the quickstart document](#!quickstart/quickstart.md#Debian_repository). You can allow the installer to auto-generate secret tokens for you when prompted.
+Setting up a webserver-only node from the Debian package requires a few additional steps. Set up the repository and install the Gravwell package as described in [the quickstart document](debian_repo). You can allow the installer to auto-generate secret tokens for you when prompted.
 
 After installing the `gravwell` package, you'll need to disable the indexer:
 
-```
+```console
 root@headnode# systemctl stop gravwell_indexer.service
 root@headnode# systemctl disable gravwell_indexer.service
 ```
@@ -65,9 +65,9 @@ Now that the webserver is installed, we will build the configuration file to be 
 
 Delete any lines which begin with `Indexer-UUID`. If you installed the webserver using the shell installer, there may not be any Indexer-UUID line; this is fine.
 
-Next, define your storage wells. At the time of writing, the default configuration creates separate wells for Linux syslogs, Windows event logs, web server logs (Apache, nginx, etc.), netflow/ipfix records, and "raw" data such as packet capture. You should feel free to delete or modify any of the `Storage-Well` definitions to match your planned tag/well configuration, but please note that the configuration **must** contain a `Default-Well` definition, so don't delete it! Now is a good time to define [data retention and ageout policies](#!configuration/ageout.md) for each well, per the guidelines you chose during the planning stage.
+Next, define your storage wells. At the time of writing, the default configuration creates separate wells for Linux syslogs, Windows event logs, web server logs (Apache, nginx, etc.), netflow/ipfix records, and "raw" data such as packet capture. You should feel free to delete or modify any of the `Storage-Well` definitions to match your planned tag/well configuration, but please note that the configuration **must** contain a `Default-Well` definition, so don't delete it! Now is a good time to define [data retention and ageout policies](/configuration/ageout) for each well, per the guidelines you chose during the planning stage.
 
-If you intend to use [data replication](#!configuration/replication.md), in which indexers replicate each other's stored entries to prevent data loss in case of hardware failure, this is also the time to add it to the configuration. See the [replication article](#!configuration/replication.md) for instructions on how to configure replication.
+If you intend to use [data replication](/configuration/replication), in which indexers replicate each other's stored entries to prevent data loss in case of hardware failure, this is also the time to add it to the configuration. See the [replication article](/configuration/replication) for instructions on how to configure replication.
 
 ## Installing the Indexers
 
@@ -75,9 +75,9 @@ Having written the indexer config file, you should now copy it to the servers yo
 
 ### Installing indexer via shell installer
 
-To install only the indexer using the [standalone shell installer](#!quickstart/downloads.md), run the following command on every indexer server:
+To install only the indexer using the [standalone shell installer](/quickstart/downloads), run the following command on every indexer server:
 
-```
+```console
 root@indexer0# bash gravwell_3.2.0.sh  --no-webserver --no-searchagent --use-config /tmp/indexer.conf
 ```
 
@@ -87,11 +87,11 @@ This will copy your config file to its proper location in /opt/gravwell/etc/grav
 
 Setting up an indexer-only node from the Debian package requires a few additional steps. Follow these steps on every indexer server.
 
-Set up the repository and install the Gravwell package as described in [the quickstart document](#!quickstart/quickstart.md#Debian_repository). You can allow the installer to auto-generate secret tokens for you when prompted, because we will be replacing the config file with our own.
+Set up the repository and install the Gravwell package as described in [the quickstart document](debian_repo). You can allow the installer to auto-generate secret tokens for you when prompted, because we will be replacing the config file with our own.
 
 After installing the `gravwell` package, we want to stop all Gravwell services:
 
-```
+```console
 root@indexer0# systemctl stop gravwell_indexer.service
 root@indexer0# systemctl stop gravwell_webserver.service
 root@indexer0# systemctl stop gravwell_searchagent.service
@@ -99,20 +99,20 @@ root@indexer0# systemctl stop gravwell_searchagent.service
 
 Then install the customized config file:
 
-```
+```console
 root@indexer0# cp /tmp/indexer.conf /opt/gravwell/etc/gravwell.conf
 ```
 
 Disable the webserver and search agent components:
 
-```
+```console
 root@indexer0# systemctl disable gravwell_webserver.service
 root@indexer0# systemctl disable gravwell_searchagent.service
 ```
 
 And finally restart the indexer service:
 
-```
+```console
 root@indexer0# systemctl start gravwell_indexer.service
 ```
 
@@ -130,11 +130,13 @@ Remote-Indexers=net:10.0.1.4:9404
 Remote-Indexers=net:10.0.1.5:9404
 ```
 
-Note: You can use hostnames instead of IP addresses if you wish.
+```{note}
+You can use hostnames instead of IP addresses if you wish.
+```
 
 Once the webserver's gravwell.conf is updated, restart the webserver process:
 
-```
+```console
 root@headnode# systemctl restart gravwell_webserver.service
 ```
 

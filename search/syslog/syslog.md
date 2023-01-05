@@ -1,6 +1,6 @@
 # Syslog
 
-The syslog processor extracts fields from [RFC 5424-formatted](https://tools.ietf.org/html/rfc5424) syslog messages as ingested with the [Simple Relay ingester](#!ingesters/ingesters.md) (be sure to set the Keep-Priority flag on your listener, or it won't work).
+The syslog processor extracts fields from [RFC 5424-formatted](https://tools.ietf.org/html/rfc5424) syslog messages as ingested with the [Simple Relay ingester](/ingesters/ingesters) (be sure to set the Keep-Priority flag on your listener, or it won't work).
 
 ## Supported Options
 
@@ -56,19 +56,22 @@ The syslog module would extract the following fields:
 * MsgID: "1"
 * Message: "An application event log entry..."
 
+(syslog_structured_data)=
 ### Structured Data
 
 In the example record above, the portion `[ex@32473 iut="3" foo="bar"]` is the *Structured Data* section. Structured Data sections contain the structured value ID ("ex@32473", extracted with the `StructuredID` keyword) and any number of key-value pairs. To access a value using the syslog module, specify `Structured.key`: specifying `syslog Structured.iut` will extract an enumerated value named `iut` containing the value "3". Similarly, `syslog StructuredID Structured.foo` would extract `StructuredID` containing "ex@32473" and `foo` containing "bar".
 
 Note that a single syslog message may contain multiple structured data sections, each with its own ID. If both sections define the same key, you may wish to explicitly specify which section to extract from. This can be done by inserting the Structured ID into the extraction: `syslog Structured[ex@32473].foo`. If you do not specify the ID, the module will extract a result from one of the sections with no guarantees as to which one.
 
-Note: If multiple structured data sections exist, extracting the StructuredID field will return the ID of the first section. Filters will be checked against the IDs of all sections. For example, given an entry containing `[foo@bar a=b][baz@quux x=y]`, the entry will be dropped if you specify `StructuredID!="baz@quux"` *or* `StructuredID!="foo@bar"`. Specifying `StructuredID=="baz@quux"` will pass the example entry because *one* of the sections matches; it will only drop entries that don't have "baz@quux" as the ID of *any* section.
+```{note}
+If multiple structured data sections exist, extracting the StructuredID field will return the ID of the first section. Filters will be checked against the IDs of all sections. For example, given an entry containing `[foo@bar a=b][baz@quux x=y]`, the entry will be dropped if you specify `StructuredID!="baz@quux"` *or* `StructuredID!="foo@bar"`. Specifying `StructuredID=="baz@quux"` will pass the example entry because *one* of the sections matches; it will only drop entries that don't have "baz@quux" as the ID of *any* section.
+```
 
 ## Examples
 
 ### Number of events by severity
 
-```
+```gravwell
 tag=syslog syslog Severity | count by Severity | chart count by Severity
 ```
 
@@ -76,7 +79,7 @@ tag=syslog syslog Severity | count by Severity | chart count by Severity
 
 ### Number of events at each severity level by application
 
-```
+```gravwell
 tag=syslog syslog Appname Severity | count by Appname,Severity | table Appname Severity count
 ```
 

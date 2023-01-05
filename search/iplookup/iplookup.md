@@ -2,7 +2,7 @@
 
 The `iplookup` module is used to perform data enrichment of IP addresses using a subnet as a key, this allows for generating simpler lookup tables that do not need to contain an exact match, potentially simplifying the management of some resources.  The `iplookup` module uses a resource that specifies a column containing a CIDR.  Each row in the CSV must contain a valid IPv4 or IPv6 CIDR definition.  Additional columns in the CSV can be used to provide additional values that can be attached to entries during query.  This may be network segment names, organizations, security tier, or even a latitude/longitude.
 
-The `iplookup` module uses a [radix tree](https://en.wikipedia.org/wiki/Radix_tree) to match a specific IP or CIDR against the provided data list.  While radix trees are fast, it is NOT an `O(1)` lookup.  There are some cases where the iplookup module may not be the best choice.  For example, if your resource contains mostly `/32` CIDRs, a plain old [lookup](../lookup/lookup.md) list might be a better option.  Extremely large sets of lookups may also incur significant memory and CPU overhead.  The `iplookup` system fully supports IPv6 and it is entirely possible to specify trillions of CIDRs in the resource which will consume TBs of RAM and create an extremely large tree.  Most reasonable uses of the iplookup module will be very fast, even faster than the [geoip](../geoip/geoip.md) module using the maxmind database.
+The `iplookup` module uses a [radix tree](https://en.wikipedia.org/wiki/Radix_tree) to match a specific IP or CIDR against the provided data list.  While radix trees are fast, it is NOT an `O(1)` lookup.  There are some cases where the iplookup module may not be the best choice.  For example, if your resource contains mostly `/32` CIDRs, a plain old [lookup](/search/lookup/lookup) list might be a better option.  Extremely large sets of lookups may also incur significant memory and CPU overhead.  The `iplookup` system fully supports IPv6 and it is entirely possible to specify trillions of CIDRs in the resource which will consume TBs of RAM and create an extremely large tree.  Most reasonable uses of the iplookup module will be very fast, even faster than the [geoip](/search/geoip/geoip) module using the maxmind database.
 
 The `iplookup` module can perform any number of enrichments in a single execution.  For example, if your CSV contained the columns `CIDR`, `network`, `building`, `lat`, `long`, `division` we could attach all of the additional data at once using a single invocation.  An example would look like:
 
@@ -37,7 +37,9 @@ CIDR,network,owner
 2001:4860:4860:FE08::/48,corporate ipv6,CEO
 ```
 
-Warning: If two CIDRs contain overlapping definitions, the larger definition takes precedence.  That means that if you define `192.168.1.0/24` and `192.168.0.0/16` the definition for `192.168.1.0/24` will be ignored and lookups will match `192.168.0.0/16`.
+```{warning}
+If two CIDRs contain overlapping definitions, the larger definition takes precedence.  That means that if you define `192.168.1.0/24` and `192.168.0.0/16` the definition for `192.168.1.0/24` will be ignored and lookups will match `192.168.0.0/16`.
+```
 
 ### Example Searches
 
@@ -47,7 +49,7 @@ The iplookup module can be used for creating whitelists (`-s` flag), blacklists 
 
 The `iplookup` module is often used for categorizing IPs and enriching IPs.  Some useful queries might group traffic by business unit, or system tier.  It can also provide a simple means to apply geolocation to private subnets where you know the exact coordinates of a machine based on its subnet.  Here we show using the iplookup module to enrich netflow to perform traffic accounting using a business unit.  In this case we have a segmented network and can see the traffic volumes by each segment.
 
-```
+```gravwell
 tag=netflow netflow IP~PRIVATE Bytes |
 iplookup -r subnets -e IP network |
 stats sum(Bytes) by network |
@@ -62,7 +64,7 @@ The iplookup module can be used to perform blacklist checks, where we can ensure
 
 Here is an example query that uses the iplookup system to ensure that there are no flows between our 172.17.0.0/16 subnet and a set of defined subnets specified in the `controlsubnets` resource.  Here we use the `-s` flag to ONLY look at flows with a Dst address in the specified resource.
 
-```
+```gravwell
 tag=netflow
 netflow Src~172.17.0.0/16 Dst DstPort |
 iplookup -s -r controlsubnets -e Dst |

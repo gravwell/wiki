@@ -31,7 +31,7 @@ If you already have your list of indexers with ingest and control shared secrets
 
 For example, to install the indexer component without installing the webserver or randomizing passwords, run:
 
-```
+```console
 root@gravserver# bash gravwell_installer.sh --no-questions --no-random-passwords --no-webserver
 ```
 
@@ -41,13 +41,15 @@ If you choose to randomize passwords, you will need to go back through your inde
 
 Configuration of a Gravwell cluster is designed to be simple and efficient right from the start.  However, there are knobs to twist that can allow the system to better take advantage of extremely large systems or smaller embedded and industrial devices with memory constraints.  The core configuration file is designed to be shared by both the webserver and indexer, and is located by default at `/opt/gravwell/etc/gravwell.conf`
 
-For a detailed listing of configuration options see [this page](parameters.md).
+For a detailed listing of configuration options see [this page](parameters).
 
-For a complete example indexer configuration see our [example default config](indexer-default-config.md).
+For a complete example indexer configuration see our [example default config](indexer-default-config).
 
 The most important items in the configuration file are the `Ingest-Auth`, `Control-Auth`, and `Search-Agent-Auth` configuration parameters.  The `Control-Auth` parameter is the shared secret that the webserver and indexers use to authenticate each other. If an attacker can communicate with your indexers and has the `Control-Auth` token, he has total access to the data they store.  The `Ingest-Auth` token is used to validate ingesters, and restricts the ability to create tags and push data into Gravwell.  Gravwell prides itself on speed, which means an attacker with access to your `Ingest-Auth` token can push a tremendous amount of data into Gravwell in a very short amount of time.  The `Search-Agent-Auth` token allows Gravwell's Search Agent utility to automatically connect to the webserver and issue searches on the behalf of users. These tokens are important and you should protect them carefully.
 
-Attention: In clustered Gravwell installations, it is essential that all nodes are configured with the same `Ingest-Auth` and `Control-Auth` values to enable proper intercommunication.
+```{attention}
+In clustered Gravwell installations, it is essential that all nodes are configured with the same `Ingest-Auth` and `Control-Auth` values to enable proper intercommunication.
+```
 
 ## Webserver Configuration
 
@@ -62,11 +64,13 @@ Remote-Indexers=net:10.0.1.2:9404
 Remote-Indexers=net:10.0.1.3:9404
 ```
 
-Note: The indexers listed above are listening for control connections on port 9404, the default. This port is set by the `Control-Port` option in the indexer's gravwell.conf file.
+```{note}
+The indexers listed above are listening for control connections on port 9404, the default. This port is set by the `Control-Port` option in the indexer's gravwell.conf file.
+```
 
 ### Webserver TLS
 
-By default, Gravwell does not generate TLS certificates. For instructions on setting up properly-signed TLS certificates or self-signed certificates on the webserver, refer to the [TLS/HTTP instructions](certificates.md). 
+By default, Gravwell does not generate TLS certificates. For instructions on setting up properly-signed TLS certificates or self-signed certificates on the webserver, refer to the [TLS/HTTP instructions](certificates). 
 
 ### Webserver Configuration Pitfalls
 
@@ -94,6 +98,7 @@ There are a few key configuration options in an indexer's gravwell.conf which af
 
 Indexers store their data in _wells_. Each well stores some number of tags. If a well contains 100GB of data tagged "pcap" and 10MB of data tagged "syslog", searching for syslog data means the indexer also has to read the pcap data from the disk, slowing down the search. For this reason we strongly suggest creating separate wells for tags you anticipate will contain a lot of data. See the 'Tags and Wells' section for more information.
 
+(configuration_tags_and_wells)=
 ## Tags and Wells
 
 **Tags** are used as a method to logically separate data of different types.  Tags are applied at ingest time by the ingesters (SimpleRelay, NetworkCapture, etc).  For example, it is useful to apply unique tags to syslog logs, Apache logs, network packets, video streams, audio streams, etc.  **Wells** are the storage groupings which actually organize and store the ingested data. Although users typically do not interact with them, the wells store data on-disk in **shards**, with each shard containing approximately 1.5 days of data.
@@ -124,16 +129,17 @@ When reassigning tags between wells, the system will NOT move the data.  If you 
 
 ## Data Ageout
 
-Gravwell supports an ageout system whereby data management policies can be applied to individual wells.  The ageout policies control data retention, storage well utilization, and compression.  For more information about configuration data ageout see the [Data Ageout](ageout.md). section
+Gravwell supports an ageout system whereby data management policies can be applied to individual wells.  The ageout policies control data retention, storage well utilization, and compression.  For more information about configuration data ageout see the [Data Ageout](ageout). section
 
 ## Well Replication
 
-A Gravwell cluster with multiple indexer nodes can be configured so that nodes replicate their data to one another in case of disk failure or accidental deletion. See the [replication documentation](replication.md) for information on configuring replication.
+A Gravwell cluster with multiple indexer nodes can be configured so that nodes replicate their data to one another in case of disk failure or accidental deletion. See the [replication documentation](replication) for information on configuring replication.
 
 ## Query Acceleration
 
-Gravwell supports the notion of "accelerators" for individual wells, which allow you apply parsers to data at ingest to generate optimization blocks.  Accelerators are just as flexible as query modules and are transparently engaged when performing queries.  Accelerators are extremely useful for needle-in-haystack style queries, where you need to zero in on data that has specific field values very quickly.  See the [Accelerators](accelerators.md) section for more information and configuration techniques.
+Gravwell supports the notion of "accelerators" for individual wells, which allow you apply parsers to data at ingest to generate optimization blocks.  Accelerators are just as flexible as query modules and are transparently engaged when performing queries.  Accelerators are extremely useful for needle-in-haystack style queries, where you need to zero in on data that has specific field values very quickly.  See the [Accelerators](accelerators) section for more information and configuration techniques.
 
+(password_complexity)=
 ## Password Complexity
 
 Gravwell supports the option to enforce password complexity on users when not in single sign on mode.  Enabling password complexity requirements is performed by adding the following structure to the `gravwell.conf` file:

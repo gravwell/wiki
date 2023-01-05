@@ -11,19 +11,19 @@ Subnet is designed to extract a subnet from an IP address.  This is useful for l
 
 Charting failed SSH login attempts by origin subnet
 
-```
+```gravwell
 tag=syslog grep sshd | grep "Failed password for" | regex "\sfrom\s(?P<ip>\S+)\s" | subnet ip /16 | count by subnet | chart count by subnet limit 64
 ```
 
 Filtering failed SSH login attempts to only those from a specific subnet
 
-```
+```gravwell
 tag=syslog grep sshd | grep "Failed password for" | regex "\sfrom\s(?P<ip>\S+)\s" | subnet ip /16 as attackersub | grep -e attackersub “34.22.1.0” | count by ip | sort by count desc | table ip count
 ```
 
 Get the source and destination subnets from packets:
 
-```
+```gravwell
 tag=pcap packet ipv4.SrcIP ipv4.DstIP | subnet SrcIP /16 as srcsub DstIP /16 as dstsub | table
 ```
 

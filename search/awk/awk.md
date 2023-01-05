@@ -15,7 +15,7 @@ The AWK programming language is beyond the scope of this documentation. You can 
 
 In this example, we simply print the third token in a whitespace delimited input stream. 
 
-```
+```gravwell
 tag=input awk -o output "{ print $3 }" | table DATA output
 ```
 
@@ -25,7 +25,7 @@ tag=input awk -o output "{ print $3 }" | table DATA output
 
 This example replaces all instances of the characters "foo" with "bar". 
 
-```
+```gravwell
 tag=input awk -o output "{ gsub(/foo/,'bar'); print }" | table DATA output
 ```
 
@@ -35,7 +35,7 @@ tag=input awk -o output "{ gsub(/foo/,'bar'); print }" | table DATA output
 
 This example takes a per row average of comma delimited numbers.
 
-```
+```gravwell
 tag=input awk -o output "
 BEGIN {FS=','}
 {

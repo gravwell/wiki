@@ -2,18 +2,24 @@
 
 Most users will interact with Gravwell through the web GUI. This page describes a few high-level menus and interface concepts; the pages linked below go into detail on other topics.
 
-* [The Search Interface](queries/queries.md)
-* [Dashboards](dashboards/dashboards.md)
-* [Persistent Searches](persistent/persistent.md)
-* [Labels and Filtering](labels/labels.md)
-* [The Query Library](querylibrary/querylibrary.md)
-* [Resources](#!resources/resources.md)
-* [Auto-Extractors](#!configuration/autoextractors.md)
-* [Kits](#!kits/kits.md)
-* [Templates](templates/templates.md)
-* [Macros](#!search/macros.md)
-* [Actionables](actionables/actionables.md)
-* [Advanced GUI User Preferences](#!configuration/gui.md)
+```{toctree}
+---
+maxdepth: 1
+---
+The Search Interface <queries/queries>
+Dashboards <dashboards/dashboards>
+Persistent Searches <persistent/persistent>
+Labels and Filtering <labels/labels>
+The Query Library <querylibrary/querylibrary>
+Resources </resources/resources>
+Auto-Extractors </configuration/autoextractors>
+Kits </kits/kits>
+Templates <templates/templates>
+Macros </search/macros>
+Actionables <actionables/actionables>
+Email Configuration</configuration/email>
+Advanced GUI User Preferences </configuration/gui>
+```
 
 ## GUI Introduction
 
@@ -35,7 +41,9 @@ This menu is used to access all the primary functionalities of Gravwell, includi
 
 Items within these sub-menus will typically be used less frequently that the top-level items.
 
-Note: These screenshots include an "Administrator" sub-menu, which contains admin-only management tools and is only visible to users flagged as administrators.
+```{note}
+These screenshots include an "Administrator" sub-menu, which contains admin-only management tools and is only visible to users flagged as administrators.
+```
 
 ## Notifications
 
@@ -81,14 +89,8 @@ The "Home Page" dropdown menu selects which page will be displayed after logging
 
 The "Search Group Visibility" option allows you to share the results of all searches with a given group; this can be a convenient way to collaborate. In the screenshot, the user has selected the group named "foo"; all members of that group will have access to the searches this user runs in the future.
 
-The "Advanced Preferences" section can be ignored by most users. Selecting "Developer mode" enables manual editing of JSON preferences (see [this page](!#configuration/gui.md) for more information), while toggling "Experimental Features" will enable the Experimental Features section in the main menu.
+The "Advanced Preferences" section can be ignored by most users. Selecting "Developer mode" enables manual editing of JSON preferences (see [this page](/configuration/gui) for more information), while toggling "Experimental Features" will enable the Experimental Features section in the main menu.
 
 ### Email Server
 
-The final tab, "Email Server", is extremely important for users who intend to do automated email alerting via scheduled scripts. It must be set up with a valid SMTP configuration before emails can be sent.
-
-![](email-prefs.png)
-
-The fields are mostly self-explanatory; "Server" is an SMTP server, "Port" is the port to use for SMTP, "Username" and "Password" authenticate to that server. "Use TLS" should be enabled if the server expects TLS connections. The "Disable TLS certification validation" option is provided in case the server is using self-signed certificates; be cautious enabling this!
-
-Once the fields have been populated, click "Update Settings" to save them, then click "Test Configuration" to send a test email.
+The final tab, "Email Server", is extremely important for users who intend to use Gravwell to send automated email alerts.  Complete documentation is available on the [Email Configuration](/configuration/email) page.

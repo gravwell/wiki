@@ -16,4 +16,6 @@ Show syslog entries in a rough ordering, do not strictly sort them by time.
 
 Show syslog entries in a rough ordering from oldest to newest, do not strictly sort them by time.
 
-Note: The `nosort` module collapses the pipeline, this means that if you are running on a cluster environment it may actually reduce the query performance if you place it in the wrong location.
+```{note}
+The `nosort` module collapses the pipeline, this means that if you are running on a cluster environment it may actually reduce the query performance if you place it in the wrong location.
+```

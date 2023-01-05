@@ -50,7 +50,7 @@ wait
 
 The standard docker startup script looks for the environment variable `NO_SSL_GEN` and will skip X509 certificate generation if set to "true".  If your deployment is injecting valid certificates be sure to include the argument `-e NO_SSL_GEN=true` when starting the container.
 
-The indexer, webserver, and ingesters can also have some configuration parameters set via environment variables rather than config file if desired. See the [Environment Variables](environment-variables.md) documentation for more details.
+The indexer, webserver, and ingesters can also have some configuration parameters set via environment variables rather than config file if desired. See the [Environment Variables](environment-variables) documentation for more details.
 
 ## Sample Dockerfile For Ingesters
 

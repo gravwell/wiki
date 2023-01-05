@@ -2,7 +2,9 @@
 
 Gravwell's GUI supports single sign-on using SAML. In theory, any SAML-compliant Identity Provider can be used to log in. This page describes Gravwell's SSO configuration options, then show an example of how Gravwell can be configured to authenticate with a Windows AD FS server and other SSO providers.
 
-Note: Although regular users log in via SSO, the default 'admin' user does not. Be sure you change the admin user's password when you set up a new system, even if you configure SSO immediately. Be aware also that the Gravwell admin user can still create new non-SSO user accounts from within the GUI if needed.
+```{note}
+Although regular users log in via SSO, the default 'admin' user does not. Be sure you change the admin user's password when you set up a new system, even if you configure SSO immediately. Be aware also that the Gravwell admin user can still create new non-SSO user accounts from within the GUI if needed.
+```
 
 ## Gravwell SSO Configuration Parameters
 
@@ -35,11 +37,11 @@ Gravwell can be configured to receive a list of group memberships with the user'
 
 ## Setting up Keycloak
 
-Documentation on setting up SSO with Keycloak is separated into its own page. [Click here](sso-keycloak/keycloak.md) to read it.
+Documentation on setting up SSO with Keycloak is separated into its own page. [Click here](sso-keycloak/keycloak) to read it.
 
 ## Setting up Azure Active Directory
 
-Documentation on setting up SSO with Azure Active Directory is separated into its own page. [Click here](sso-azure/azure.md) to read it.
+Documentation on setting up SSO with Azure Active Directory is separated into its own page. [Click here](sso-azure/azure) to read it.
 
 ## Setting up Windows Server 2016
 
@@ -47,11 +49,13 @@ Gravwell SSO works well with Microsoft's AD FS (Active Directory Federation Serv
 
 You must have Active Directory and AD FS installed on your server before you begin. Basic installation and setup of these services is outside the scope of this document--we assume that if you're setting up SSO, you probably already have Active Directory configured!
 
-Attention: It is *essential* that any user accounts you intend to use with Gravwell must have an email address set in Active Directory! This is used as the username internally to Gravwell. If you get errors in the event log with EventID 364, this is why!
+```{attention}
+It is *essential* that any user accounts you intend to use with Gravwell must have an email address set in Active Directory! This is used as the username internally to Gravwell. If you get errors in the event log with EventID 364, this is why!
+```
 
 ### Set up Gravwell
 
-In order to configure AD FS, you'll need an SSO metadata file from your Gravwell instance. We'll therefore set up Gravwell first; you'll see an SSO button on the Gravwell GUI, but it will be disabled until we configure AD FS. To enable SSO, you *must* have TLS certificates (self-signed or otherwise) configured on the Gravwell webserver; see [this documentation section](certificates.md) for instructions on setting up TLS.
+In order to configure AD FS, you'll need an SSO metadata file from your Gravwell instance. We'll therefore set up Gravwell first; you'll see an SSO button on the Gravwell GUI, but it will be disabled until we configure AD FS. To enable SSO, you *must* have TLS certificates (self-signed or otherwise) configured on the Gravwell webserver; see [this documentation section](certificates) for instructions on setting up TLS.
 
 Open your `gravwell.conf` and add an `[SSO]` section below the `[Global]` section. If your AD FS server is at "sso.example.org" and your Gravwell webserver is at "gravwell.example.org", your config might look like this:
 

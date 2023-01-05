@@ -2,6 +2,62 @@
 
 The Gravwell system architecture section is designed to provide information about how Gravwell is deployed and operated from an architecture perspective.  Anyone wishing to run a simple single node instance of Gravwell with all ingesters pointed directly at the single indexer can safely ignore this section.  The system architecture section is for system administrators, DevOps engineers, and cloud architects that need to understand more about the underlying topology and architecture of Gravwell in order to deploy larger more complicated instances.
 
+```{toctree}
+---
+maxdepth: 1
+caption: Architecture
+hidden: true
+---
+Networking Considerations for Gravwell </configuration/networking>
+Gravwell Clusters </distributed/cluster>
+Distributed Gravwell Webserver </distributed/frontend>
+Gravwell Load Balancer </distributed/loadbalancer>
+Gravwell Overwatch </distributed/overwatch>
+```
+
+```{toctree}
+---
+maxdepth: 1
+caption: Configuration
+hidden: true
+---
+Advanced Gravwell Configuration </configuration/configuration>
+Environment Variables </configuration/environment-variables>
+Configuration Parameters </configuration/parameters>
+Indexer Configuration </configuration/indexer-default-config>
+Compression </configuration/compression>
+Data Ageout </configuration/ageout>
+Cloud Archive </configuration/archive>
+Data Replication </configuration/replication>
+Gravwell Searchagent </scripting/searchagent>
+Gravwell Accelerators </configuration/accelerators>
+Performance Tuning </tuning/tuning>
+Gravwell Metrics and Crash Reporting </metrics>
+Common Problems & Caveats </configuration/caveats>
+```
+
+```{toctree}
+---
+maxdepth: 1
+caption: Securing Gravwell
+hidden: true
+---
+Hardening a Gravwell Installation </configuration/hardening>
+Configuring TLS Certificates </configuration/certificates>
+```
+
+```{toctree}
+---
+maxdepth: 1
+caption: Administration
+hidden: true
+---
+Gravwell Administration </admin/admin>
+Gravwell Single Sign-On </configuration/sso>
+Configuring SSO for Azure Active Directory </configuration/sso-azure/azure>
+Configuring Keycloak SSO with Gravwell </configuration/sso-keycloak/keycloak>
+```
+
 ## Cluster Topology
 
 Gravwell is a highly concurrent distributed storage and search system designed to move fast and reduce the cognitive overhead required to effectively extract information from data streams.  Effectively storing, searching, and managing volumes of data that may approach hundreds of terabytes per day requires multiple machines utilizing a large array of storage devices.  It simply isn’t possible to stand up one machine with one disk and deal with enterprise throughput requirements.

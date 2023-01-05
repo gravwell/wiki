@@ -1,12 +1,14 @@
 # Grok
 
-The grok module allows you to extract data from complicated text structures without specifying the whole regular expression every time. Instead, grok assigns names to regular expressions, allowing the user to specify the name instead. Grok patterns may contain additional patterns nested within them, making it easy to build up new definitions. It pre-defines a selection of useful patterns, but can also read your own customized set of patterns from a [resource](#!resources/resources.md).
+The grok module allows you to extract data from complicated text structures without specifying the whole regular expression every time. Instead, grok assigns names to regular expressions, allowing the user to specify the name instead. Grok patterns may contain additional patterns nested within them, making it easy to build up new definitions. It pre-defines a selection of useful patterns, but can also read your own customized set of patterns from a [resource](/resources/resources).
 
 By default, grok passes through any entry which matches the pattern and drops any which does not. This behavior can be inverted with the `-v` flag.
 
 Grok is a filtering module; after specifying the desired pattern, you may also specify a list of filters to apply to the extracted fields.
 
-Note: Because some filters incorporate extremely strict and complex patterns, they can be relatively slow when processing large numbers of entries. Use modules such as [grep](#!search/grep/grep.md), [regex](#!search/regex/regex.md), and [words](#!search/words/words.md) to pre-filter as much as possible.
+```{note}
+Because some filters incorporate extremely strict and complex patterns, they can be relatively slow when processing large numbers of entries. Use modules such as [grep](/search/grep/grep), [regex](/search/regex/regex), and [words](/search/words/words) to pre-filter as much as possible.
+```
 
 ## Supported Options
 
@@ -21,25 +23,29 @@ The following query takes advantage of a resource to implement a complex pattern
 
 The following query finds all Apache logs for "GET" requests and parses them out into their components:
 
-```
+```gravwell
 tag=apache words GET | grok "%{COMBINEDAPACHELOG}" | table
 ```
 
 ![](apache.png)
 
-Note: This query may take some time if you have millions of entries since the COMBINEDAPACHELOG pattern is complex and very strict.
+```{note}
+This query may take some time if you have millions of entries since the COMBINEDAPACHELOG pattern is complex and very strict.
+```
 
 ### Filtering
 
 We can build on the previous query to return only those entries whose "clientip" field matches a particular IP and uses the GET method:
 
-```
+```gravwell
 tag=apache words GET | grok "%{COMBINEDAPACHELOG}" clientip=="10.200.4.40" verb==GET | table clientip
 ```
 
 ![](apache-filter.png)
 
-Note: We filter for PUT and the IP using the words module to engage indexing and reduce the number of entries that are processed by the expensive `COMBINEDAPACHELOG` grok pattern.
+```{note}
+We filter for PUT and the IP using the words module to engage indexing and reduce the number of entries that are processed by the expensive `COMBINEDAPACHELOG` grok pattern.
+```
 
 ## Performance
 
@@ -47,13 +53,13 @@ Grok can dramatically simplify complicated regular expressions and allow mere mo
 
 For example, let's look at two queries that compile response code counts for each HTTP method and display them in a stackgraph, the first query uses grok with the `COMBINEDAPACHELOG` pattern allows for a very simple query:
 
-```
+```gravwell
 tag=apache grok "%{COMBINEDAPACHELOG}" | stats count by verb response | stackgraph verb response count
 ```
 
 The second query uses grok primitives to extract only the fields that are explicitly needed:
 
-```
+```gravwell
 tag=apache grok "] \"%{WORD:verb}\s\S+\s\S+\s%{POSINT:response}" | stats count by verb response | stackgraph verb response count
 ```
 

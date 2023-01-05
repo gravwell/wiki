@@ -2,15 +2,16 @@
 
 Gravwell provides a robust scripting engine in which you can run searches, update resources, send alerts, or take action.  The engine can run searches and examine data automatically, taking action based on search results without the need to involve a human.  
 
-Automation scripts can be run [on a schedule](scheduledsearch.md) or by hand from the [command line client](#!cli/cli.md). 
+Automation scripts can be run [on a schedule](scheduledsearch) or by hand from the [command line client](/cli/cli). 
 
 ## Building Scripts
 
-The Gravwell user interface provides a built-in editor for creating and testing scripts. This interface allows rapid debugging and is the best way to build scripts. It is documented [in the scheduled search/script UI documentation](scheduledsearch.md).
+The Gravwell user interface provides a built-in editor for creating and testing scripts. This interface allows rapid debugging and is the best way to build scripts. It is documented [in the scheduled search/script UI documentation](scheduledsearch).
 
+(scripting_built-in_functions)=
 ## Built-in functions
 
-Scripts can use built-in functions that mostly match those available for the [anko](#!scripting/anko.md) module, with some additions for launching and managing searches. The functions are listed below in the format `functionName(<functionArgs>) <returnValues>`.  These functions are provided as convenience wrappers for specific functionality, however the complete [Gravwell client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) is available using the `getClient` wrapper.  The `getClient` wrapper will return a client object that is signed in as the user executing the script. 
+Scripts can use built-in functions that mostly match those available for the [anko](/scripting/anko) module, with some additions for launching and managing searches. The functions are listed below in the format `functionName(<functionArgs>) <returnValues>`.  These functions are provided as convenience wrappers for specific functionality, however the complete [Gravwell client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) is available using the `getClient` wrapper.  The `getClient` wrapper will return a client object that is signed in as the user executing the script. 
 
 ## Controlling Versions
 
@@ -115,6 +116,7 @@ require(`alerts/email.ank`, cfg.email_lib_revision)
 * `typeOf(val) type` returns the type of val as a string, e.g. “string”, “bool”.
 * `hashItems(val...) (uint64, ok)` hashes one or more items into a uint64 using the siphash algorithm. 'ok' is true if at least one of the items could be hashed. Note that the hash function can really only hash scalars; passing slices or maps will typically not work.
 
+(scripting_search_management)=
 ## Search management
 
 Due to the way Gravwell's search system works, some of the functions in this section return Search structs (written as `search` in the parameters) while others return search IDs (written as `searchID` in the parameters). Each Search struct contains a search ID which can be accessed as `search.ID`.
@@ -195,7 +197,7 @@ The following functions provide basic HTTP functionality:
 * `httpGet(url) (string, error)` performs an HTTP GET request on the given URL, returning the response body as a string.
 * `httpPost(url, contentType, data) (response, error)` performs an HTTP POST request to the given URL with the specified content type (e.g. "application/json") and the given data as the POST body.
 
-More elaborate HTTP operations are possible with the "net/http" library. See the package documentation in the [anko document](anko.md) for a description of what is available, or see below for an example.
+More elaborate HTTP operations are possible with the "net/http" library. See the package documentation in the [anko document](anko) for a description of what is available, or see below for an example.
 
 If the user has configured their personal email settings within Gravwell, the `email` function is a very simple way to send an email:
 
@@ -274,14 +276,18 @@ if condition == true {
 
 A set of wrapper functions provide access to SSH and SFTP clients. See [the ssh library documentation](https://godoc.org/golang.org/x/crypto/ssh) and [the sftp library documentation](https://godoc.org/github.com/pkg/sftp) for information about the method which can be called on the structures these return.
 
-Attention: The clients returned by these functions *must* be closed via their Close() method when you're done using them. See examples below.
+```{attention}
+The clients returned by these functions *must* be closed via their Close() method when you're done using them. See examples below.
+```
 
 * `sftpConnectPassword(hostname, username, password, hostkey) (*sftp.Client, error)`establishes an SFTP session on the given ssh server with the specified username and password. If the hostkey parameter is non-nil, it will be used as the expected public key from the host to perform host-key verification. If the hostkey parameter is nil, host key verification will be skipped.
 * `sftpConnectKey(hostname, username, privkey, hostkey) (*sftp.Client, error)` establishes an SFTP session on the specified ssh server with the given username, using the provided private key (a string or []byte) to authenticate.
 * `sshConnectPassword(hostname, username, password, hostkey) (*ssh.Client, error)` returns an SSH client for the given hostname, authenticating via password. Note that having established a Client, you will typically want to call client.NewSession() to establish a usable session; see the go documentation or the examples below.
 * `sshConnectKey(hostname, username, privkey, hostkey) (*sftp.Client, error)` connects to the specified SSH server with the given username, using the provided private key (a string or []byte) to authenticate.
 
-Note: The hostkey parameter should be in the known_hosts/authorized_keys format, e.g. "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOcrwoHMonZ/l3OJOGrKYLky2FHKItAmAMPzZUhZEgEb86NNaqfdAj4qmiBDqM04/o7B45mcbjnkTYRuaIUwkno=". To extract the appropriate key from your ~/.ssh/known_hosts, run `ssh-keygen -H -F <hostname>`.
+```{note}
+The hostkey parameter should be in the known_hosts/authorized_keys format, e.g. "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOcrwoHMonZ/l3OJOGrKYLky2FHKItAmAMPzZUhZEgEb86NNaqfdAj4qmiBDqM04/o7B45mcbjnkTYRuaIUwkno=". To extract the appropriate key from your ~/.ssh/known_hosts, run `ssh-keygen -H -F <hostname>`.
+```
 
 A telnet library is also available; no direct wrappers are provided, but it can be used by importing `github.com/ziutek/telnet` in the script and calling telnet.Dial, etc. An example below demonstrates a simple use of the telnet library.
 
@@ -433,6 +439,7 @@ c.Write("foo")
 c.Close()
 ```
 
+(scripting_system_management_functions)=
 ## Management Functions
 
 The scripting system also has access to management functions that can be used to automatically interact with various Gravwell APIs.
@@ -693,7 +700,7 @@ if err != nil {
 }
 return setResource("csv", buff)
 ```
-
+(scripting_sql_usage)=
 ## SQL Usage
 
 The Gravwell scripting system exposes SQL database packages so that automation scripts can interact with external SQL databases.  The SQL library requires Gravwell version 4.1.6 or newer.
@@ -782,7 +789,7 @@ return setResource("foobar", data)
 
 ## IPExist Datasets
 
-The [ipexist](#!search/ipexist/ipexist.md) search module is designed to test whether an IPv4 address exists in a set, this module is a simple filtering module that is designed for one thing and one thing only: speed.  Under the hood, `ipexist` uses a highly optimized bitmap system so that its possible for a modest machine to represent the entirety of the IPv4 address space in it's filter system.  IPExist is a great tool for holding threat lists and performing initial filtering operations on very large sets of data before performing more expensive lookups using the [iplookup](#!search/iplookup/iplookup.md) module.
+The [ipexist](/search/ipexist/ipexist) search module is designed to test whether an IPv4 address exists in a set, this module is a simple filtering module that is designed for one thing and one thing only: speed.  Under the hood, `ipexist` uses a highly optimized bitmap system so that its possible for a modest machine to represent the entirety of the IPv4 address space in it's filter system.  IPExist is a great tool for holding threat lists and performing initial filtering operations on very large sets of data before performing more expensive lookups using the [iplookup](/search/iplookup/iplookup) module.
 
 The Gravwell scripting system has access to the ipexist builder functions, enabling you to generate high speed ip membership tables from existing data.  The ipexist builder functions are open source and available on [github](https://github.com/gravwell/ipexist).  Below is a basic script which generates an ip membership resource using a query:
 
@@ -833,6 +840,7 @@ println("buffer", len(buff))
 return setResource("sshusers", buff)
 ```
 
+(scripting_gravwell_client_usage)=
 ## Gravwell Client Usage
 
 The `getClient` function will hand back a pointer to a new [Client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) object that is logged in and synchronized as the current user. Under normal operating conditions, the new client should be ready for immediate use.  However, it is possible for Gravwell webservers to become unavailable during script operations due to network failures or system upgrades.  We therefore recommend that scripts test the status of the client connection using the [TestLogin()](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client.TestLogin) method.
@@ -876,4 +884,6 @@ if err != nil {
 return cli.Close()
 ``` 
 
-Note: The Gravwell client has a default request timeout of 5 seconds. For long running requests like system backups you should increase that timeout, but note that it is best practice to restore the original timeout when you've completed the long-running request; we have omitted that above for brevity.
+```{note}
+The Gravwell client has a default request timeout of 5 seconds. For long running requests like system backups you should increase that timeout, but note that it is best practice to restore the original timeout when you've completed the long-running request; we have omitted that above for brevity.
+```

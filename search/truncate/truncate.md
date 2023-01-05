@@ -2,7 +2,7 @@
 
 The `truncate` module preserves only the first N characters (or bytes when using binary mode) of enumerated values. For example, to truncate all but the first 20 characters of the EV "Message":
 
-```
+```gravwell
 tag=data json IP Message | truncate -e Message 20 | table
 ```
 
@@ -17,7 +17,7 @@ tag=data json IP Message | truncate -e Message 20 | table
 
 In this example, we extract requests from DNS:
 
-```
+```gravwell
 tag=dns json Question.Hdr.Name | table
 ```
 
@@ -25,7 +25,7 @@ tag=dns json Question.Hdr.Name | table
 
 We can truncate, and add back an ellipsis, using the `truncate` module: 
 
-```
+```gravwell
 tag=dns json Question.Hdr.Name 
 | truncate -ellipsis Name 10 
 | table

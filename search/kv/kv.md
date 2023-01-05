@@ -61,7 +61,7 @@ date=2022-09-26 time=10:57:08 devname="fortigate" devid="FGT60E4Q16015706" event
 
 It's nicely formatted, using the equals sign as the separator and spaces as delimiters, which are the defaults for the kv module. The following query will extract the devname, level, logdesc, and msg fields and show them in a table:
 
-```
+```gravwell
 tag=syslog kv -q devname level logdesc msg | table
 ```
 
@@ -69,7 +69,7 @@ tag=syslog kv -q devname level logdesc msg | table
 
 This query will show only "critical" entries:
 
-```
+```gravwell
 tag=syslog kv -q devname level=="critical" logdesc msg | table
 ```
 

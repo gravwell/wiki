@@ -14,7 +14,7 @@ The actionable structure contains the following fields:
 * Name: The actionable's name.
 * Description: A more detailed description of the actionable.
 * Updated: A timestamp representing the last update time for the actionable.
-* Labels: An array of strings containing [labels](#!gui/labels/labels.md).
+* Labels: An array of strings containing [labels](/gui/labels/labels).
 * Disabled: A boolean value indicating if the actionable has been disabled.
 * Contents: The actual definition of the actionable itself (see below).
   * Contents.menuLabel: Optional. If not present, the first 20 characters of the name will be used in the dropdown menu.
@@ -85,7 +85,7 @@ Actionables have two different IDs attached to them: a GUID, and a ThingUUID. Th
 
 Consider an example: I create the actionable from scratch, so it gets assigned a random GUID, `e80293f0-5732-4c7e-a3d1-2fb779b91bf7`, and a random ThingUUID, `c3b24e1e-5186-4828-82ee-82724a1d4c45`. I then bundle the actionable into a kit. Another user on the same system then installs this kit for themselves, which instantiates an actionable with the **same** GUID (`e80293f0-5732-4c7e-a3d1-2fb779b91bf7`) but a **random** ThingUUID (`f07373a8-ea85-415f-8dfd-61f7b9204ae0`).
 
-This system is identical to the one used in [templates](templates.md). Templates use GUIDs and ThingUUIDs so that dashboards can refer to templates by GUID, but multiple users can still install the same kit (with the sample template) at the same time without conflict. Although no Gravwell components reference actionables in the same way dashboards reference templates, we have included the behavior as future-proofing.
+This system is identical to the one used in [templates](templates). Templates use GUIDs and ThingUUIDs so that dashboards can refer to templates by GUID, but multiple users can still install the same kit (with the sample template) at the same time without conflict. Although no Gravwell components reference actionables in the same way dashboards reference templates, we have included the behavior as future-proofing.
 
 ### Accessing Actionables via GUID vs ThingUUID
 
@@ -135,7 +135,9 @@ To create an actionable, issue a POST to `/api/pivots`. The body should be a JSO
 
 The API will respond with the GUID of the newly-created actionable. If a GUID is specified in the request, that GUID will be used. If no GUID is specified, a random GUID will be generated.
 
-Note: At this time, the `UID`, `GIDs`, and `Global` fields cannot be set during actionable creation. They must instead be set via an update call (see below).
+```{note}
+At this time, the `UID`, `GIDs`, and `Global` fields cannot be set during actionable creation. They must instead be set via an update call (see below).
+```
 
 ## List actionables
 
@@ -335,7 +337,9 @@ To update an actionable, issue a PUT request to `/api/pivots/<guid>`. The reques
 * UID: (Admin only) Set to a 32-bit integer
 * Global: (Admin only) Set to a boolean true or false; Global actionables are visible to all users.
 
-Note: Leaving any of these field blank will result in the actionable being updated with a null value for that field!
+```{note}
+Leaving any of these field blank will result in the actionable being updated with a null value for that field!
+```
 
 ## Delete an actionable
 

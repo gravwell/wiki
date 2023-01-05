@@ -5,7 +5,9 @@ A notification can also include a Type. The type is used so that something can c
 
 Notifications can come in two forms, targeted and broadcast.  Broadcast notifications go to everyone, targeted notifications only go to users with the appropriate UID or GID.  Broadcast notifications inherently have no UID/GID (they will always be zero).
 
-Note: Only admin users can create notifications visible to other users. Regular users can only create notifications visible to themselves.
+```{note}
+Only admin users can create notifications visible to other users. Regular users can only create notifications visible to themselves.
+```
 
 Notifications have an Expires field, which specifies a date at which the notification will be automatically deleted. They also have a Sent field, which is typically left blank and auto-populated by the server. There is also an optional IgnoreUntil field; Notifications with a IgnoreUntil date in the future won't come back on requests until that time. If a notification is added with blank dates (Sent, Expires, IgnoreUntil) they are populated with default values.
 

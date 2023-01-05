@@ -1,10 +1,10 @@
 # Netflow Ingester
 
-The Netflow ingester acts as a Netflow collector (see [the Wikipedia article](https://en.wikipedia.org/wiki/NetFlow) for a full description of Netflow roles), gathering records created by Netflow exporters and capturing them as Gravwell entries for later analysis. These entries can then be analyzed using the [netflow](#!search/netflow/netflow.md) search module.
+The Netflow ingester acts as a Netflow collector (see [the Wikipedia article](https://en.wikipedia.org/wiki/NetFlow) for a full description of Netflow roles), gathering records created by Netflow exporters and capturing them as Gravwell entries for later analysis. These entries can then be analyzed using the [netflow](/search/netflow/netflow) search module.
 
 ## Basic Configuration
 
-The Netflow ingester uses the unified global configuration block described in the [ingester section](#!ingesters/ingesters.md#Global_Configuration_Parameters).  Like most other Gravwell ingesters, the Netflow ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
+The Netflow ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the Netflow ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
 ## Collector Examples
 
@@ -29,9 +29,9 @@ If you're using the Gravwell Debian repository, installation is just a single ap
 apt-get install gravwell-netflow-capture
 ```
 
-Otherwise, download the installer from the [Downloads page](#!quickstart/downloads.md). To install the Netflow ingester, simply run the installer as root (the actual file name will typically include a version number):
+Otherwise, download the installer from the [Downloads page](/quickstart/downloads). To install the Netflow ingester, simply run the installer as root (the actual file name will typically include a version number):
 
-```
+```console
 root@gravserver ~ # bash gravwell_netflow_capture_installer.sh
 ```
 
@@ -54,5 +54,6 @@ Note that this configuration sends entries to a local indexer via `/opt/gravwell
 
 You can configure any number of `Collector` entries listening on different ports with different tags; this can help organize the data more clearly.
 
-Note: At this time, the ingester only supports Netflow v5; keep this in mind when configuring Netflow exporters.
-
+```{note}
+At this time, the ingester only supports Netflow v5; keep this in mind when configuring Netflow exporters.
+```

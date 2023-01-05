@@ -1,8 +1,8 @@
 # The anko module
 
-As introduced in [the search modules documentation](#!search/searchmodules.md#Anko), Gravwell's anko module is a general-purpose scripting tool within the search pipeline. It allows extremely flexible manipulations of search entries, at the cost of complexity for the script creator. Once a script is created, though, it can be easily shared with other users.
+As introduced in [the search modules documentation](searchmodule_list), Gravwell's anko module is a general-purpose scripting tool within the search pipeline. It allows extremely flexible manipulations of search entries, at the cost of complexity for the script creator. Once a script is created, though, it can be easily shared with other users.
 
-See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting.md) for more details about the language itself.
+See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting) for more details about the language itself.
 
 ### Disabling network functions in anko scripts
 
@@ -10,7 +10,7 @@ By default, anko scripts are allowed to use network utilities such as the http a
 
 ## Managing anko scripts
 
-In order to run an anko script in a search, the text file containing the script must be uploaded as a resource. See the [resources section](#!resources/resources.md) for information on how to create and upload a resource.
+In order to run an anko script in a search, the text file containing the script must be uploaded as a resource. See the [resources section](/resources/resources) for information on how to create and upload a resource.
 
 At this time, to make a change to a script you must edit the script in the original text file, then re-upload the file to the resource. Future versions of Gravwell will include an integrated text editor to make scripting simpler.
 
@@ -38,7 +38,9 @@ The script may also contain functions named `Parse` and `Finalize`.
 
 The `Parse` function is called before `Process` or `Main` and is given the command line arguments as an array of arguments. The `Parse` function indicates that the arguments have been successfully processed by returning nil; any non-nil return is treated as an error and presented to the user. See the sample script below for a sample of how to parse script arguments.
 
-Attention: The Parse function MUST explicitly return a value. Returning nil signals a successful parse; returning anything else indicates an error. In case of an error, we recommend returning a string describing the problem.
+```{attention}
+The Parse function MUST explicitly return a value. Returning nil signals a successful parse; returning anything else indicates an error. In case of an error, we recommend returning a string describing the problem.
+```
 
 The `Finalize` function is called after `Process` or `Main` have completed. It is the last code executed in the script; this is a good place to create resources if desired.
 
@@ -106,7 +108,9 @@ Note that the `table` and `task` variables are declared outside the function def
 
 Although writing scripts using a `Main` function is more challenging, it is necessary if you need to duplicate entries. The following script reads in an entry containing a Modbus message; if the message is a request of type 0x10 ("Write multiple registers"), the script duplicates the original entry once for each of the registers being written and to each entry attaches "RegAddr" and "RegValue" enumerated values containing a single register address + register value.
 
-Note: This script will not function on its own; as written, it was intended to consume the output of another anko script earlier in the pipeline, which would populate enumerated values such as "Request" and "WriteAddr".
+```{note}
+This script will not function on its own; as written, it was intended to consume the output of another anko script earlier in the pipeline, which would populate enumerated values such as "Request" and "WriteAddr".
+```
 
 ```
 func Main() {
@@ -214,7 +218,9 @@ The following functions are only available in scripts implementing the `Main` fu
 * `setEntrySrc(ent, ip)` sets the source field of an entry.
 * `setEntryTimestamp(ent, time)` sets the timestamp of an entry.
 
-Note: The `setEnum`, `hasEnum`, and `delEnum` functions differ for scripts using `Process` functions vs. `Main` functions, because the `Process` function is implicitly operating on a particular entry.
+```{note}
+The `setEnum`, `hasEnum`, and `delEnum` functions differ for scripts using `Process` functions vs. `Main` functions, because the `Process` function is implicitly operating on a particular entry.
+```
 
 ## Built-in variables
 
@@ -532,5 +538,6 @@ resp, _ = http.DefaultClient.Do(req)
 resp.Body.Close()
 ```
 
-Warning: You *must* close the http.Response's Body field when you are finished, as shown above. Leaving the Body open will leave a network connection open, eventually causing the search agent to run out of sockets. The `httpGet` and `httpPost` functions will close the Body automatically; please consider using those wherever possible.
-
+```{warning}
+You *must* close the http.Response's Body field when you are finished, as shown above. Leaving the Body open will leave a network connection open, eventually causing the search agent to run out of sockets. The `httpGet` and `httpPost` functions will close the Body automatically; please consider using those wherever possible.
+```

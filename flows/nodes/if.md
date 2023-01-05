@@ -16,4 +16,4 @@ The node does not modify the payload. However, if the expression evaluates to "f
 
 ## Example
 
-Refer to the [Run Query](runquery.md) node's documentation for an example demonstrating the use of the If node.
+Refer to the [Run Query](runquery) node's documentation for an example demonstrating the use of the If node.

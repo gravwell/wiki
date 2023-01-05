@@ -2,11 +2,13 @@
 
 The Gravwell Direct Query API is designed to provide atomic, REST-powered access to the Gravwell query system.  This API allows for simple integration with external tools and systems that do not normally know how to interact with Gravwell.  The API is designed to be as flexible as possible and support tools that know how to interact with an HTTP API.
 
-The Direct Query API is authenticated and requires a valid Gravwell account with access to the Gravwell query system.  Most users will want to generate a [Gravwell Token](/tokens/tokens.md) and use that to access the query API.
+The Direct Query API is authenticated and requires a valid Gravwell account with access to the Gravwell query system.  Most users will want to generate a [Gravwell Token](/tokens/tokens) and use that to access the query API.
 
-Issuing a query via the Direct Query API requires the same set of parameters as issuing a query via the Gravwell web GUI.  You will need a query string, a time range, and an optional output format.  The Direct Query API has some limitations on which output formats can be provided.  For example, the [pointmap](/search/map/map.md) and [heatmap](/search/map/map.md) renderers cannot output rendered maps via this API, nor can this API draw a chart and deliver it as an image.  This API is primarily used for retrieving raw results and delivering them to other systems for direct integration.
+Issuing a query via the Direct Query API requires the same set of parameters as issuing a query via the Gravwell web GUI.  You will need a query string, a time range, and an optional output format.  The Direct Query API has some limitations on which output formats can be provided.  For example, the [pointmap](/search/map/map) and [heatmap](/search/map/map) renderers cannot output rendered maps via this API, nor can this API draw a chart and deliver it as an image.  This API is primarily used for retrieving raw results and delivering them to other systems for direct integration.
 
-NOTE: The Direct Query API is atomic, one request will execute and entire search and deliver the completed results.  Queries that cover large time durations or require significant time to execute may require that HTTP clients adjust their respective client timeouts.
+```{note}
+The Direct Query API is atomic, one request will execute and entire search and deliver the completed results.  Queries that cover large time durations or require significant time to execute may require that HTTP clients adjust their respective client timeouts.
+```
 
 ## Query Endpoints
 
@@ -103,9 +105,13 @@ The query API is accessed via the POST HTTP method and is located at `/api/searc
 | end       | RFC3339 end timestamp for the query | X |
 | duration  | Golang encoded duration | X |
 
-Note: While the `start`, `end`, and `duration` parameters are optional at last one complete set must be provided, either `start` and `end` or `duration`.
+```{note}
+While the `start`, `end`, and `duration` parameters are optional at last one complete set must be provided, either `start` and `end` or `duration`.
+```
 
-Note: Each query renderer will support a different set of output formats, if the specified output format is not supported a 400 BadRequest response will be returned.
+```{note}
+Each query renderer will support a different set of output formats, if the specified output format is not supported a 400 BadRequest response will be returned.
+```
 
 ### Examples
 

@@ -13,7 +13,9 @@ The taint module can be used to track network flow propagation, infection propag
 
 Gravwell presented research at the S4x18 conference in Miami which successfully tracked USB based infectors that [hopped air gaps](https://s4x18.com/sessions/using-force-directed-graphs-to-analyze-huge-event-datasets/).
 
-Attention: Because taint can control the direction of the search, it is not advisable to combine it with the sort module.
+```{attention}
+Because taint can control the direction of the search, it is not advisable to combine it with the sort module.
+```
 
 ### Syntax
 
@@ -39,7 +41,7 @@ taint -f <known value> <src> <dest>
 
 If we were to assume that a vicious new infection vector was found which could arbitrarily infect DNS servers by embedding a payload in their lookup cache, we could use the taint module to identify which top level domain names may have been attacked.  The following search starts with a known patient zero, and generates a force directed graph showing all future propagation of tainted domains in a small network.
 
-```
+```gravwell
 tag=dns json Remote Answer.Hdr.Name |  regex -e Name "(?P<tld>[^\.]+\.[^\.]+)\.$" | regex -e Remote "(?P<ip>[\d\.]+):\d+" | taint -b -pz 192.168.1.122 ip tld | fdg -b ip tld
 ```
 
@@ -47,7 +49,7 @@ tag=dns json Remote Answer.Hdr.Name |  regex -e Name "(?P<tld>[^\.]+\.[^\.]+)\.$
 
 Reversing the work flow, the following search shows how a hunter might start with a known infection and work backwards to a potential patient zero.
 
-```
+```gravwell
 tag=dns json Remote Answer.Hdr.Name |  regex -e Name "(?P<tld>[^\.]+\.[^\.]+)\.$" | regex -e Remote "(?P<ip>[\d\.]+):\d+" | taint -b -f apple.com tld ip | fdg -b ip tld
 ```
 

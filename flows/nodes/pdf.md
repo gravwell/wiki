@@ -22,15 +22,15 @@ This flow runs two Gravwell queries, formats the results in a PDF, and emails th
 
 ![](pdf-example1.png)
 
-The [Run Query](runquery.md) nodes are configured to output their results into human-friendly names:
+The [Run Query](runquery) nodes are configured to output their results into human-friendly names:
 
 ![](pdf-example2.png)
 
-Results from the two query nodes are joined using the [Stack Merge](stackmerge.md) node, then the PDF node packages the two query results into the document:
+Results from the two query nodes are joined using the [Stack Merge](stackmerge) node, then the PDF node packages the two query results into the document:
 
 ![](pdf-example3.png)
 
-Finally, the [Email](email.md) node sends the resulting PDF to the recipient:
+Finally, the [Email](email) node sends the resulting PDF to the recipient:
 
 ![](pdf-example4.png)
 

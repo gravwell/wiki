@@ -10,17 +10,19 @@ Most Gravwell licenses are unlimited, meaning that when it is time to migrate ma
 
 ## Splunk Migration
 
-Gravwell provides an interactive migration tool which can import data from Splunk. See the [migrate tool](#!/migrate/migrate.md) documentation.
+Gravwell provides an interactive migration tool which can import data from Splunk. See the [migrate tool](/migrate/migrate) documentation.
 
 ## Importing Many Files
 
-Gravwell provides an interactive migration tool which can pull data from static files on disk efficiently. See the [migrate tool](#!/migrate/migrate.md) documentation.
+Gravwell provides an interactive migration tool which can pull data from static files on disk efficiently. See the [migrate tool](/migrate/migrate) documentation.
 
-Note: Only use the migrate tool if the files on disk are not expected to change. To ingest files which are still being added to, use the [File Follow](#!/ingesters/file_follow.md) ingester.
+```{note}
+Only use the migrate tool if the files on disk are not expected to change. To ingest files which are still being added to, use the [File Follow](/ingesters/file_follow) ingester.
+```
 
 ## Importing One File
 
-The single file ingester is one of the most simplistic ingesters in the Gravwell arsenal.  It is designed to ingest a single line-delimited file to a specific tag.  It can transparently decompress files and has some limited parsing ability.  If you have a single large Apache access log or just need to script up some one off file ingestion, it can be the simplest option. The ingester is included in the `gravwell-tools` package for Debian and Redhat, and is also available as a standalone shell installer on [our downloads page](#!/quickstart/downloads.md). Once installed, the program is located at `/usr/local/sbin/gravwell_single_file_ingester`.
+The single file ingester is one of the most simplistic ingesters in the Gravwell arsenal.  It is designed to ingest a single line-delimited file to a specific tag.  It can transparently decompress files and has some limited parsing ability.  If you have a single large Apache access log or just need to script up some one off file ingestion, it can be the simplest option. The ingester is included in the `gravwell-tools` package for Debian and Redhat, and is also available as a standalone shell installer on [our downloads page](/quickstart/downloads). Once installed, the program is located at `/usr/local/sbin/gravwell_single_file_ingester`.
 
 The ingester is a standalone ingester that is designed to operate using flags rather than a config file.  This means that it lacks some of the additional functionality of other ingesters such as custom timestamp definitions and preprocessor support.  The following flags are supported:
 
@@ -59,7 +61,7 @@ The following command ingests the contents of `/tmp/my-logs.txt`, one entry per 
 
 ## Importing PCAP Files
 
-If you have existing PCAP files (from Wireshark or tcpdump or some other packet capture tool), you can ingest them using the PCAP file ingester.  The ingester is included in the `gravwell-tools` package for Debian and Redhat, and is also available as a standalone shell installer on [our downloads page](#!/quickstart/downloads.md). Once installed, the program is located at `/usr/local/sbin/gravwell_pcap_file_ingester`.
+If you have existing PCAP files (from Wireshark or tcpdump or some other packet capture tool), you can ingest them using the PCAP file ingester.  The ingester is included in the `gravwell-tools` package for Debian and Redhat, and is also available as a standalone shell installer on [our downloads page](/quickstart/downloads). Once installed, the program is located at `/usr/local/sbin/gravwell_pcap_file_ingester`.
 
 The ingester is a standalone ingester that is designed to operate using flags rather than a config file.  This means that it lacks some of the additional functionality of other ingesters such as custom timestamp definitions and preprocessor support.  The following flags are supported:
 

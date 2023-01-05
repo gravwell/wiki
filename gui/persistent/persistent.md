@@ -1,6 +1,6 @@
 # Persistent Searches
 
-Gravwell users may wish to [send long-running searches to the background or save search results](#!gui/queries/queries.md), or [schedule searches](#!scripting/scheduledsearch.md) to run periodically. To review the search results at a later time, use the *Persistent Searches* page, found in the Searches section of the main menu:
+Gravwell users may wish to [send long-running searches to the background or save search results](/gui/queries/queries), or [schedule searches](/scripting/scheduledsearch) to run periodically. To review the search results at a later time, use the *Persistent Searches* page, found in the Searches section of the main menu:
 
 ![](persistent-menu.png)
 
@@ -24,7 +24,7 @@ The flag SAVED is appended to searches which the user has explicitly marked to s
 
 There is another flag, BACKGROUNDED, which may be attached to an ACTIVE search, e.g. "ACTIVE/BACKGROUNDED"or even "ACTIVE/SAVING/BACKGROUNDED". This means the user has sent the search to the background and will review it later. If a search is not backgrounded, the search will be canceled and deleted if the user navigates away from the active search results page.
 
-See the [search interface documentation](#!gui/queries/queries.md) for more information on saving and backgrounding searches.
+See the [search interface documentation](/gui/queries/queries) for more information on saving and backgrounding searches.
 
 ## Viewing Results
 
@@ -32,7 +32,7 @@ To view the results of a search, click the 'View Results' icon on the right edge
 
 ![](view-results.png)
 
-Note that this does not *re-run* the search; instead, it loads the results from the previous search which are stored on the webserver's disk. This means that even very old searches whose original data has been [aged out](!#configuration/ageout.md) can be viewed.
+Note that this does not *re-run* the search; instead, it loads the results from the previous search which are stored on the webserver's disk. This means that even very old searches whose original data has been [aged out](/configuration/ageout) can be viewed.
 
 ## Adding Notes
 
@@ -52,9 +52,9 @@ Searches in the persistent searches page have a menu of additional actions which
 
 ![](additional.png)
 
-* Save query: Stores the query string in a [query library](#!gui/querylibrary/querylibrary.md) entry.
+* Save query: Stores the query string in a [query library](/gui/querylibrary/querylibrary) entry.
 * Copy query: Copies the query string into the clipboard.
 * Save: Marks the search as saved.
-* Schedule: Brings up a page to create a new [scheduled search](#!scripting/scheduledsearch.md) using that query.
+* Schedule: Brings up a page to create a new [scheduled search](/scripting/scheduledsearch) using that query.
 * Background: For an active search, marks it as backgrounded.
 * Delete: Removes the search from the system.
