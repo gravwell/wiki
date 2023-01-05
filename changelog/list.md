@@ -8,7 +8,7 @@ maxdepth: 1
 caption: Current Release
 ---
 
-5.1.3 <5.1.3>
+5.1.4 <5.1.4>
 ```
 
 ## Previous Versions
@@ -19,6 +19,7 @@ maxdepth: 1
 caption: Previous Releases
 ---
 
+5.1.3 <5.1.3>
 5.1.2 <5.1.2>
 5.1.1 <5.1.1>
 5.1.0 <5.1.0>
