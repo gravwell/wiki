@@ -53,7 +53,3 @@ Log-Level=INFO
 Note that this configuration sends entries to a local indexer via `/opt/gravwell/comms/pipe`. Entries are tagged 'netflow'.
 
 You can configure any number of `Collector` entries listening on different ports with different tags; this can help organize the data more clearly.
-
-```{note}
-At this time, the ingester only supports Netflow v5; keep this in mind when configuring Netflow exporters.
-```
