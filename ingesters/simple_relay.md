@@ -213,7 +213,7 @@ Additional RFC6587 listener configuration parameters:
 A common source of RFC6587 data is the Fortinet series of firewalls and switches when transmitting logs using the "reliable" mode, an example RFC6587 message is shown below:
 
 ```
-464 <185>date=2022-09-28 time=08:49:59 devname="fortigate" devid="FGT60E4Q16015706" eventtime=1664380199448569680 tz="-0700" logid="0100032002" type="event" subtype="system" level="alert" vd="root" logdesc="Admin login failed" sn="0" user="admin" ui="ssh(192.168.1.100)" method="ssh" srcip=192.168.1.100 dstip=192.168.1.99 action="login" status="failed" reason="ssh_key_invalid" msg="Administrator admin login failed from ssh(192.168.1.100) because of invalid ssh key"
+464 <185>date=2022-09-28 time=08:49:59 devname="fortigate" devid="FGT60EABCDEF012" eventtime=1664380199448569680 tz="-0700" logid="0100032002" type="event" subtype="system" level="alert" vd="root" logdesc="Admin login failed" sn="0" user="admin" ui="ssh(192.168.1.100)" method="ssh" srcip=192.168.1.100 dstip=192.168.1.99 action="login" status="failed" reason="ssh_key_invalid" msg="Administrator admin login failed from ssh(192.168.1.100) because of invalid ssh key"
 ```
 
 ```{note}
@@ -242,7 +242,7 @@ An example listener designed to accept "reliable" mode data from a Fortinet devi
 The previously shown example would be ingested as:
 
 ```
-date=2022-09-28 time=08:49:59 devname="fortigate" devid="FGT60E4Q16015706" eventtime=1664380199448569680 tz="-0700" logid="0100032002" type="event" subtype="system" level="alert" vd="root" logdesc="Admin login failed" sn="0" user="admin" ui="ssh(192.168.1.100)" method="ssh" srcip=192.168.1.100 dstip=192.168.1.99 action="login" status="failed" reason="ssh_key_invalid" msg="Administrator admin login failed from ssh(192.168.1.100) because of invalid ssh key"
+date=2022-09-28 time=08:49:59 devname="fortigate" devid="FGT60EABCDEF012" eventtime=1664380199448569680 tz="-0700" logid="0100032002" type="event" subtype="system" level="alert" vd="root" logdesc="Admin login failed" sn="0" user="admin" ui="ssh(192.168.1.100)" method="ssh" srcip=192.168.1.100 dstip=192.168.1.99 action="login" status="failed" reason="ssh_key_invalid" msg="Administrator admin login failed from ssh(192.168.1.100) because of invalid ssh key"
 ```
 
 ## Regex Listeners
