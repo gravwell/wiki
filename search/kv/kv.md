@@ -56,7 +56,7 @@ The kv module can filter based on string equality. If a filter is enabled that s
 Here's a sample of a log entry from a Fortigate firewall:
 
 ```
-date=2022-09-26 time=10:57:08 devname="fortigate" devid="FGT60E4Q16015706" eventtime=1664215028981468505 tz="-0700" logid="0100041001" type="event" subtype="system" level="critical" vd="root" logdesc="FortiGate update failed" status="update" msg="Fortigate scheduled update failed"
+date=2022-09-26 time=10:57:08 devname="fortigate" devid="FGT60EABCDEF012" eventtime=1664215028981468505 tz="-0700" logid="0100041001" type="event" subtype="system" level="critical" vd="root" logdesc="FortiGate update failed" status="update" msg="Fortigate scheduled update failed"
 ```
 
 It's nicely formatted, using the equals sign as the separator and spaces as delimiters, which are the defaults for the kv module. The following query will extract the devname, level, logdesc, and msg fields and show them in a table:
