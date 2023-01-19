@@ -82,10 +82,10 @@ Note that you may need to create the `%PROGRAMDATA%\gravwell\eventlog` path.
 A complete execution sequence for a Group Policy push might look like:
 
 ```
-msiexec.exe /i gravwell_win_events_3.3.12.msi /quiet
+msiexec.exe /i gravwell_win_events_5.1.4.msi /quiet
 xcopy \\share\gravwell_config.cfg %PROGRAMDATA%\gravwell\eventlog\config.cfg
-sc stop "GravwellEvent Service"
-sc start "GravwellEvent Service"
+sc stop "GravwellEvents Service"
+sc start "GravwellEvents Service"
 ```
 
 Or
