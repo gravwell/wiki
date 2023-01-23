@@ -322,4 +322,4 @@ The format defined using these options will be inserted at the top of the list o
 
 ### Attach-Filename
 
-Each follower has the option to attach the complete file path of the source file to each entry at the time of ingest using the `Attach-Filename=true` parameter to the Follower configuration block.  Setting `Attach-Filename=true` to the follower will attach a value named `file` to each entry which is available at query time in Gravwell.  While most compression will certainly reduce the impact, be aware that attaching long file paths to entries will have an impact on storage; compression will reduce that impact but it will not eliminate it.
+Each follower has the option to attach the complete file path of the source file to each entry at the time of ingest using the `Attach-Filename=true` parameter to the Follower configuration block.  Setting `Attach-Filename=true` to the follower will attach a value named `file` to each entry which is available at query time in Gravwell.  Be aware that attaching long file paths to entries will have an impact on storage; compression will reduce that impact but it will not eliminate it.
