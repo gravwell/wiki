@@ -3,7 +3,12 @@
 The alias module can "clone" existing enumerated values. Modifying the new enumerated value does not change the original. This can be particularly useful when you wish to pre-populate the extracted enumerated value for the `lookup` module:
 
 ```gravwell
-tag=pcap packet ipv4.SrcIP | ip SrcIP ~ PRIVATE | alias SrcIP src_host | lookup -r hosts SrcIP ip hostname as src_host | count by src_host | table src_host SrcIP count
+tag=pcap packet ipv4.SrcIP
+| ip SrcIP ~ PRIVATE
+| alias SrcIP src_host
+| lookup -r hosts SrcIP ip hostname as src_host
+| count by src_host
+| table src_host SrcIP count
 ```
 
 ![](alias.png)
