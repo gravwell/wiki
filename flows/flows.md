@@ -67,6 +67,7 @@ Email <nodes/email>
 Flow Storage Read <nodes/storageread>
 Flow Storage Write <nodes/storagewrite>
 Gravwell Notification <nodes/notification>
+HTML Format <nodes/htmlformat>
 HTTP <nodes/http>
 If <nodes/if>
 Indexer Info <nodes/indexerinfo>
@@ -82,6 +83,7 @@ Read Macros <nodes/macroget>
 Read Resources <nodes/resourceget>
 Rename <nodes/rename>
 Run a Query <nodes/runquery>
+Run Query - Advanced <nodes/runqueryadvanced>
 Set Variables <nodes/inject>
 Slack File <nodes/slackfile>
 Slack Message <nodes/slackmessage>
@@ -98,6 +100,7 @@ Update Resources <nodes/resourceupdate>
 * [Flow Storage Read](nodes/storageread): read items from a persistent storage.
 * [Flow Storage Write](nodes/storagewrite): write items into a persistent storage.
 * [Gravwell Notification](nodes/notification): set Gravwell notifications.
+* [HTML Format](nodes/htmlformat): format variables as HTML.
 * [HTTP](nodes/http): do HTTP requests.
 * [If](nodes/if): perform logical operations.
 * [Indexer Info](nodes/indexerinfo): get information about Gravwell indexers.
@@ -113,6 +116,7 @@ Update Resources <nodes/resourceupdate>
 * [Read Resources](nodes/resourceget): read Gravwell resources.
 * [Rename](nodes/rename): rename variables in the payload.
 * [Run a Query](nodes/runquery): run a Gravwell query.
+* [Run Query - Advanced](nodes/runqueryadvanced): run a Gravwell query with more flexible options.
 * [Set Variables](nodes/inject): inject variables into the payload.
 * [Slack File](nodes/slackfile): upload a file to a Slack channel.
 * [Slack Message](nodes/slackmessage): send a message to a Slack channel.
