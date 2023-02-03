@@ -6,7 +6,7 @@ This node executes a Gravwell query, much like the [Run a Query](runquery) node,
 
 * `Query String`, required: the Gravwell query to run.
 * `Start Time`, required: the starting point for the query timeframe. This can be either a literal timestamp ("2023-01-01T00:00:00Z07:00") or a [Go-style duration string](https://pkg.go.dev/time#ParseDuration) such as "-10h" or "-20m".
-* `End Time`, required: the end point for the query timeframe. This can be either a literal timestamp ("2023-01-31T11:59:59Z07:00") or a [Go-style duration string](https://pkg.go.dev/time#ParseDuration) such as "0h" or "-5h".
+* `End Time`, required: the end point for the query timeframe. This can be either a literal timestamp ("2023-01-31T11:59:59Z07:00") or a [Go-style duration string](https://pkg.go.dev/time#ParseDuration) such as "0h" or "-5m".
 * `Output Variable Name`: the name to use for results in the payload, default "search".
 
 ```{note}
@@ -23,11 +23,11 @@ The node inserts an object (named `search` by default) into the payload containi
 
 ## Example
 
-This node behaves exactly like the [Run a Query](runquery) node, except for the difference in timeframe specification. This section will therefore show a few examples of the timeframe could be configured:
+This node behaves exactly like the [Run a Query](runquery) node, except for the difference in timeframe specification. This section will therefore show a few examples of how the timeframe could be configured:
 
 | Start | End | Explanation |
 |-------|-----|-------------|
 | 2023-01-01T00:00:00Z07:00 | 2023-01-31T11:59:59Z07:00 | Search over the entire month of January 2023 |
-| -24h | 0h | Search over the last day (equivalent to using the normal Run Query node with a duration of 24 hours) |
+| -24h | 0h | Search over the last day (equivalent to using the normal Run a Query node with a duration of 24 hours) |
 | -36h | -12h | If scheduled at noon, searches over the *previous day's* data. This can help if, for whatever reason, it takes time for the entirety of a day's logs to be collected |
 | -24h | 24h | Searches data over a 2-day span centered on the scheduled time, extending 24h into the *future*. This is not usually a good idea, but sometimes data may come in with timestamps in the future |
