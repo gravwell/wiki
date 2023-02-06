@@ -403,7 +403,6 @@ hidden: true
 Ingester Preprocessors <preprocessors/preprocessors>
 Custom Time Formats <customtime/customtime>
 Service Integrations <integrations>
-Federators <federators/federators>
 ```
 
 ```{toctree}
