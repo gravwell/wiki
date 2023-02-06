@@ -78,6 +78,6 @@ Release Notes <changelog/list>
 <script>
 var url=window.location.href;
 if(url.includes(".md")) {
-  window.location.href=url.replace(/#!(.*).md$/g, '$1.html');
+  window.location.href=url.replace(/#!(.*).md*/g, '$1.html');
 }
 </script>
