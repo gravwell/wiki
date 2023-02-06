@@ -25,12 +25,14 @@ hidden: true
 Amazon SQS <sqs>
 Azure Event Hubs <eventhubs>
 collectd <collectd>
+Federator <federators/federator>
 File Follower <file_follow>
 Windows File Follower <win_file_follow>
 GCP PubSub <pubsub>
 HTTP <http>
 IPMI <ipmi>
 Kafka <kafka>
+Kafka Federator <federators/kafkafederator>
 Kinesis <kinesis>
 Microsoft Graph API <msg>
 Netflow <netflow>
@@ -401,7 +403,6 @@ hidden: true
 Ingester Preprocessors <preprocessors/preprocessors>
 Custom Time Formats <customtime/customtime>
 Service Integrations <integrations>
-Federators <federators/federators>
 ```
 
 ```{toctree}
