@@ -1,8 +1,8 @@
 ## Regex Extraction Preprocessor
 
-It is common for transport buses to wrap data streams with additional metadata that may not be pertinent to the actual event.  Syslog is an excellent example, where the syslog header may not provide value to the underlying data, duplicates fields in the underlying data, or simply complicates the analysis of the data.  The regexextractor preprocessor uses a regular expression to extract multiple fields and reform them into a new structure for ingestion.
+It is common for transport buses to wrap data streams with additional metadata that may not be pertinent to the actual event.  Syslog is an excellent example, where the syslog header may not provide value to the underlying data, duplicates fields in the underlying data, or simply complicates the analysis of the data.  The regexextract preprocessor uses a regular expression to extract multiple fields and reform them into a new structure for ingestion.
 
-The regexextraction preprocessor uses named regular expression extraction fields and a template to extract data and then reform it into an output record.  Output templates can contain static values and completely reform the output data if needed.
+The regexextract preprocessor uses named regular expression extraction fields and a template to extract data and then reform it into an output record.  Output templates can contain static values and completely reform the output data if needed.
 
 Templates reference extracted values by name using field definitions similar to bash.  For example, if your regex extracted a field named `foo` you could insert that extraction in the template with `${foo}`. The templates also support the following special keys:
 
@@ -17,10 +17,11 @@ The Regex Extraction preprocessor Type is `regexextract`.
 * Drop-Misses (boolean, optional): This parameter specifies whether the preprocessor should drop the entry if the regular expression does not match. By default the entry is passed through.
 * Regex (string, required): This parameter defines the regular expression for extraction
 * Template (string, required): This parameter defines the output form of the record.
+* Attach (string, optional): Name extracted value that will be attached as an intrinsic value.
 
 ### Common Use Cases
 
-The regexpreprocessor is most commonly used for stripping un-needed headers from data streams, however it can also be used to reform data into easier to process formats.
+The regexextract preprocessor is most commonly used for stripping un-needed headers from data streams, however it can also be used to reform data into easier to process formats.
 
 #### Example: Stripping Syslog Headers
 
@@ -58,4 +59,38 @@ The result is:
 
 ```{note}
 Templates can specify multiple fields constant values.  Extracted fields can be inserted multiple times.
+```
+#### Example: Removing and Attaching Headers
+
+Given the following record, we want to remove the host and category headers and leave only the data field; the host and category will be attached as values to the entry:
+
+```
+hostname => [testing.gravwell.io] category => [test values] data => [A very important data item]
+```
+
+This log message contains several items and significant formatting, we can use the `regexextract` preprocessor to extract the data field and put it into the body of an entry while extracting the hostname and category and placing them into attached values.
+
+```
+[Listener "magic app"]
+	Bind-String="0.0.0.0:7777"
+	Preprocessor=customapp
+
+[Preprocessor "customapp"]
+	Type=regexextract
+	Regex=`hostname\s=>\s\[(?P<host>[^\]]+)\]\scategory\s=>\s\[(?P<cat>[^\]]+)\]\sdata\s=>\s\[(?P<data>[^\]]+)\]`
+	Template=`$(data)`
+	Attach=host
+	Attach=cat
+```
+
+The result is:
+
+```
+A very important data item
+```
+
+Two attached values named `host` and `cat` will also be attached to the entry with the values `testing.gravwell.io` and `test values` respectively.
+
+```{note}
+Multiple attach directives can be specified, but the specified attach names must be named extractions in the regular expression.
 ```
