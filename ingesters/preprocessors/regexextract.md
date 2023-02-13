@@ -68,7 +68,7 @@ Given the following record, we want to remove the host and category headers and 
 hostname => [testing.gravwell.io] category => [test values] data => [A very important data item]
 ```
 
-This log message contains several items and significant formatting, we can use the `regexextract` preprocessor to extract the data field and put it into the body of an entry while extracting the hostname and category and placing them into attached values.
+This log message contains several items and significant formatting. We can use the `regexextract` preprocessor to extract the data field and put it into the body of an entry while extracting the hostname and category and placing them into attached values.
 
 ```
 [Listener "magic app"]
