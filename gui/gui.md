@@ -17,6 +17,7 @@ Kits </kits/kits>
 Templates <templates/templates>
 Macros </search/macros>
 Actionables <actionables/actionables>
+Secrets <secrets/secrets>
 Email Configuration</configuration/email>
 Advanced GUI User Preferences </configuration/gui>
 ```
