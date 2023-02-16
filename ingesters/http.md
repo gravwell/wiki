@@ -285,7 +285,7 @@ The HTTP ingester supports a listener block that is API compatible with the Splu
 
 ```
 
-The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items. If the `URL` configuration item is omitted it will default to `/services/collector/event`.
+The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items. If the `URL` configuration item is omitted, it will default to `/services/collector/event`.
 
 Both `Listener` and `HEC-Compatible-Listener` configuration blocks can be specified on the same HTTP ingester.
 
