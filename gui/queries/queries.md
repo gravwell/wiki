@@ -16,7 +16,7 @@ To run a search entirely from scratch, simply begin typing. Once a valid query, 
 
 ![](autocomplete.gif)
 
-As you type, the autocomplete menu will automatically open with suggestions to help to write your query. You can also manually invoke the autocomplete menu with <kbd>Ctrl</kbd> + <kbd>Space</kbd>. If the query editor detects a problem with your query, it will underline relevant parts of the query with a red line. Hovering over those underlined parts will display a hint explaining the problem. Hovering over any other part of the query will display a hint with information about the thing being hovered.
+As you type, the autocomplete menu will automatically open with suggestions to help write your query. You can also manually invoke the autocomplete menu with <kbd>Ctrl</kbd> + <kbd>Space</kbd>. If the query editor detects a problem with your query, it will underline relevant parts of the query with a red line. Hovering over those underlined parts will display a hint explaining the problem. Hovering over any other part of the query will display a hint with information about the thing being hovered.
 
 |                       Feature | Action                              |
 | ----------------------------: | :---------------------------------- |
