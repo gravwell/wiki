@@ -12,7 +12,19 @@ From this page, you can enter a new search entirely from scratch, re-run previou
 
 ### Entering a search manually
 
-To run a search entirely from scratch, simply begin typing. Once a valid query, such as `tag=* stats count by TAG | chart count by TAG`, has been entered, the "Search" button will be enabled. At this point you can launch the query by either clicking on the button or by hitting "Shift"+"Enter".
+To run a search entirely from scratch, simply begin typing. Once a valid query, such as `tag=* stats count by TAG | chart count by TAG`, has been entered, the "Search" button will be enabled. At this point you can launch the query by either clicking on the button or by hitting <kbd>Shift</kbd> + <kbd>Enter</kbd>.
+
+![](autocomplete.gif)
+
+As you type, the autocomplete menu will automatically open with suggestions to help to write your query. You can also manually invoke the autocomplete menu with <kbd>Ctrl</kbd> + <kbd>Space</kbd>. If the query editor detects a problem with your query, it will underline relevant parts of the query with a red line. Hovering over those underlined parts will display a hint explaining the problem. Hovering over any other part of the query will display a hint with information about the thing being hovered.
+
+|                       Feature | Action                              |
+| ----------------------------: | :---------------------------------- |
+|              View Completions | <kbd>Ctrl</kbd> + <kbd>Space</kbd>  |
+|                  Launch Query | <kbd>Shift</kbd> + <kbd>Enter</kbd> |
+|                   Error Hints | Hover underlined text               | 
+| Other Hints and Documentation | Hover                               |
+
 
 ### Accessing search history
 
