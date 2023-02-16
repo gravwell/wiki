@@ -5,7 +5,7 @@ The Text Template node can format text using the [Go text/template library](http
 Text Templates implement a version of the [Mustache Template System](https://en.wikipedia.org/wiki/Mustache_(template_system)), which is essentially formatting language which is designed to allow for embedded logic, control flow, and data access directly into a schema.  The Gravwell Text Template flow node uses the Go *text/template* package and more or less implements a standard *Mustache* system.
 
 ```{note}
-A word of caution, the Text Template node is the as much a sledgehammer as the `regex` search module; it can do almost anything with enough brute force.
+A word of caution, the Text Template node is as much a sledgehammer as the `regex` search module; it can do almost anything with enough brute force.
 ```
 
 ## Configuration
