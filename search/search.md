@@ -83,7 +83,7 @@ Gravwell extraction modules will typically allow *extracted* items to be *filter
 
 ### Processing Modules
 
-Processing modules are used to analyze data entries, filtering out undesired data, performing statistical analyses,. A search pipeline may include many processing modules, one after another, each operating on the results of the previous module.
+Processing modules are used to analyze data entries, filter out undesired data, and perform statistical analyses. A search pipeline may include many processing modules, one after another, each operating on the results of the previous module.
 
 In the example shown in the previous section, `eval` is a processing module performing some filtering. Note that many processing modules can be made to operate on a subset of the overall query tags by putting an *additional* tag specification before the module invocation -- something we call Data Fusion. This can be very useful if you need to perform some initial extractions differently:
 

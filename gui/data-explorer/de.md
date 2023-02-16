@@ -57,21 +57,3 @@ Selecting the menu option will automatically update the query with a filter on t
 ![](filtered-query.png)
 
 You can then continue in this way, selecting fields from the Details Pane (or clicking on words in the raw entries, see the "Word Filtering" section!) to drill down into precisely the data you care about.
-
-## The Data Explorer UI
-
-The two previous sections describe how to do data exploration within the Query Studio, in which the user types some portions of the query by hand and has other portions automatically inserted based on clicking in the UI. Another option is the Data Explorer UI, a dedicated interface for mouse-driven data exploration.
-
-Selecting the "Data Explorer" item in the main menu brings up a list of tags currently on the system:
-
-![](de1.png)
-
-Clicking on any tag will start exploration on that tag. The Data Explorer attempts to do field extraction, as described in the section above, which means it must determine an appropriate data format for the tag on the first use. In the screenshot below, we see that it has proposed the "syslog" extractor and the user has selected it:
-
-![](de2.png)
-
-Unlike the Query Studio, when working with the Data Explorer it *only* shows the extracted elements, never the raw entry itself. In the screenshot below, we see that the user has added filters on the Message and Appname fields. Note how both filters are shown in the "Filters" pane, and how the operation and value can be changed on the fly.
-
-![](de3.png)
-
-As filters are added, a query string is generated in the "Query" pane. Clicking "Start a Search" will launch that query in the regular search interface; in this way, you can use the Data Explorer to do initial filtering, poking around the data to find the set you're interested in, before pivoting over to the search interface for more detailed interactions.
