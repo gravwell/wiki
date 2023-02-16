@@ -16,6 +16,8 @@ Auto-Extractors </configuration/autoextractors>
 Kits </kits/kits>
 Templates <templates/templates>
 Macros </search/macros>
+User Files <files/files>
+Playbooks <playbooks/playbooks>
 Actionables <actionables/actionables>
 Secrets <secrets/secrets>
 Email Configuration</configuration/email>

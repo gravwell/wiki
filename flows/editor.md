@@ -6,9 +6,9 @@ Although the Gravwell flow editor can be intimidating at first glance, a few min
 If you're not yet familiar with the basic components of a flow (nodes, sockets, payloads), refer to the [top-level Flow documentation](flows) for an overview.
 ```
 
-You can access the flow editor from the Query Studio interface, found in the Main Menu. Select "Flows" from the left-hand side, as shown in the screenshot below. From there, you can either start a new blank flow ("Start a New Flow") or instantiate one of the "starter flows" provided by Gravwell.
+Flows are managed through the Flows page, in the Automation section of the Main Menu. From there, you can start a new blank flow or instantiate one of the "starter flows" provided by Gravwell by clicking the "+" icon in the upper right.
 
-![dev studio interface](dev-studio.png)
+![](create-flow.png)
 
 Selecting either option will take you into the flow editor, the parts of which are marked in the screenshot below. The **palette** provides a list of available nodes, which can be dragged out into the **canvas**. The **console** provides information about problems with the flow and output from any test runs.
 
@@ -80,6 +80,8 @@ Once the schedule is set, toggle the "Enable scheduling" option to enable schedu
 The "Enable Backfilled Scheduling" toggle controls whether or not Gravwell will attempt to "backfill" flow executions which *should* have happened but were skipped because e.g. the Gravwell webserver was temporarily offline. If enabled, Gravwell will look at the last execution time of the flow and the schedule string, then figure out every time it should have run between the last execution and now. It will then re-run the flow for each instance, setting the `flow.Scheduled` field appropriately. The `flow.Scheduled` timestamp is used as the endpoint for Run Query nodes in the flow, so backfilled flows which run queries will run the queries over the appropriate time span.
 
 We recommend leaving backfilling on in most cases.
+
+Flows may be made visible to other users via the Access setting at the bottom of the page. Sharing your flows with other users allows them to make duplicate flows for themselves. Only administrators can modify another user's flow.
 
 ## In-Flow "Sticky" Notes
 
