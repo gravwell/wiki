@@ -96,7 +96,7 @@ Listener configuration blocks support the following configuration parameters:
 | Tag-Name                  | string       | YES      |                              | Tag assigned to entries received by the endpoint. |
 | Multiline                 | boolean      | NO       | false                        | Treat request body as a multiline file and process each line as an individual entry. |
 | Ignore-Timestamps         | boolean      | NO       | false                        | Do not extract or process timestamps, use current time. |
-| Assume-Local-Timzeone     | boolean      | NO       | false                        | Assume localtimezone on timestamps without a specified timezone. |
+| Assume-Local-Timzeone     | boolean      | NO       | false                        | Assume local timezone on timestamps without a specified timezone. |
 | Timzeone-Override         | string       | NO       |  | Specify a specific timezone to attach to entries if the derived timestamp does not contain a timezone. |
 | Timestamp-Format-Override | string       | NO       |    | Force timestamp processing to look for a specific timestamp format. |
 | AuthType                  | string       | NO       | none | Specify authentication type (basic, jwt, cookie, etc...). |
@@ -285,7 +285,7 @@ The HTTP ingester supports a listener block that is API compatible with the Splu
 
 ```
 
-The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items, if the `URL` configuration item is omitted it will default to `/services/collector/event`.
+The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items. If the `URL` configuration item is omitted it will default to `/services/collector/event`.
 
 Both `Listener` and `HEC-Compatible-Listener` configuration blocks can be specified on the same HTTP ingester.
 
@@ -305,7 +305,7 @@ The `HEC-Compatible-Listener` supports the following configuration parameters:
 
 ## Health Checks
 
-Some systems (such as AWS load-balancers) require an unauthenticated URL that can be probed and interpreted as "proof of life".  The HTTP ingester can be configured to provide an a URL which when accessed with any method, body, and/or query parameters will always return a 200 OK.  To enable this health check endpoint add the `Health-Check-URL` stanza to the Global configuration block.
+Some systems (such as AWS load-balancers) require an unauthenticated URL that can be probed and interpreted as "proof of life".  The HTTP ingester can be configured to provide a URL which will always return a 200 OK when accessed with any method, body, and/or query parameters.  To enable this health check endpoint, add the `Health-Check-URL` stanza to the Global configuration block.
 
 Here is a minimal example configuration snippet with the health check URL `/logbot/are/you/alive`:
 
