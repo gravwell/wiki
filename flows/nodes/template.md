@@ -39,7 +39,7 @@ The resulting notification:
 
 ## Example - Iterating Over Slice
 
-Text templates allow for iterating over slices of values; in this example we use the [Get Table Results](/flows/nodes/gettableresults) node to pull back a set of entries from a query using the [table renderer](/search/table/table) and then iterate over them to output a set of headers with TSV rows:
+Text templates can iterate over slices of values; in this example we use the [Get Table Results](/flows/nodes/gettableresults) node to pull back a set of entries from a query using the [table renderer](/search/table/table) and then iterate over them to output a set of headers and TSV rows:
 
 ![](template_flow_1.png)
 
