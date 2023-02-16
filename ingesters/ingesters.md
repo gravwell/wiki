@@ -43,6 +43,7 @@ S3 <s3>
 Session <session>
 Shodan <shodan>
 Simple Relay <simple_relay>
+SNMP Trap <snmp>
 Windows Events <winevent>
 ```
 
@@ -67,6 +68,7 @@ Windows Events <winevent>
 | [Session](session) | Ingest large records into a single entry. |
 | [Shodan](shodan) | Ingest Shodan streaming API events. |
 | [Simple Relay](simple_relay) | Ingest any text over TCP/UDP, syslog, and more. |
+| [SNMP Trap](snmp) | Receive and ingest SNMP trap messages. |
 | [Windows Events](winevent) | Collect Windows events. |
 
 
