@@ -56,41 +56,6 @@ Multiple "Listener" definitions can be defined allowing specific URLs to send en
 	TokenValue=Secret
 ```
 
-## Splunk HEC Compatibility
-
-The HTTP ingester supports a listener block that is API compatible with the Splunk HTTP Event Collector.  This special listener block enables a simplified configuration so that any endpoint that can send data to the Splunk HEC can also send to the Gravwell HTTP Ingester.  The HEC compatible configuration block looks like so:
-
-```
-[HEC-Compatible-Listener "testing"]
-	URL="/services/collector/event"
-	TokenValue="thisisyourtoken"
-	Tag-Name=HECStuff
-
-```
-
-The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items, if the `URL` configuration item is omitted it will default to `/services/collector/event`.
-
-Both `Listener` and `HEC-Compatible-Listener` configuration blocks can be specified on the same HTTP ingester.
-
-## Health Checks
-
-Some systems (such as AWS load balancers) require an unauthenticated URL that can be probed and interpreted as "proof of life".  The HTTP ingester can be configured to provide an a URL which when accessed with any method, body, and/or query parameters will always return a 200 OK.  To enable this health check endpoint add the `Health-Check-URL` stanza to the Global configuration block.
-
-Here is a minimal example configuration snippet with the health check URL `/logbot/are/you/alive`:
-
-```
-[Global]
-Ingest-Secret = IngestSecrets
-Connection-Timeout = 0
-Pipe-Backend-Target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
-Log-Level=INFO #options are OFF INFO WARN ERROR
-Bind=":8080"
-Max-Body=4096000 #about 4MB
-Log-File="/opt/gravwell/log/http_ingester.log"
-Health-Check-URL="/logbot/are/you/alive"
-
-```
-
 ## Installation
 
 If you're using the Gravwell Debian repository, installation is just a single apt command:
@@ -118,6 +83,29 @@ An example global configuration with HTTPS enabled might look like the following
 	TLS-Certificate-File=/opt/gravwell/etc/cert.pem
 	TLS-Key-File=/opt/gravwell/etc/key.pem
 ```
+
+### Listener Configuration Options
+
+Listener configuration blocks support the following configuration parameters:
+
+
+| Parameter                 | Type         | Required | Default Value                | Description                         |
+|---------------------------|--------------|----------|------------------------------|-------------------------------------|
+| URL                       | string       | YES      |            | Endpoint URL to handle requests. |
+| Method                    | string       | NO       | `POST``  | HTTP method for requests. |
+| Tag-Name                  | string       | YES      |                              | Tag assigned to entries received by the endpoint. |
+| Multiline                 | boolean      | NO       | false                        | Treat request body as a multiline file and process each line as an individual entry. |
+| Ignore-Timestamps         | boolean      | NO       | false                        | Do not extract or process timestamps, use current time. |
+| Assume-Local-Timzeone     | boolean      | NO       | false                        | Assume local timezone on timestamps without a specified timezone. |
+| Timzeone-Override         | string       | NO       |  | Specify a specific timezone to attach to entries if the derived timestamp does not contain a timezone. |
+| Timestamp-Format-Override | string       | NO       |    | Force timestamp processing to look for a specific timestamp format. |
+| AuthType                  | string       | NO       | none | Specify authentication type (basic, jwt, cookie, etc...). |
+| Username                  | string       | NO       |      | Username credential, required when using cookie, basic, or JWT based authentication methods. |
+| Password                  | string       | NO       |      | Password credential, required when using cookie, basic, or JWT based authentication methods. |
+| LoginURL                  | string       | NO       |      | Specify login URL when performing cookie or JWT based authentication.  Required when using login based authentication methods. |
+| TokenName                 | string       | NO       |      | Authorization token name, required when using preshared-token or preshared-parameter authentication method.|
+| TokenValue                | string       | NO       |      | Authorization token value, required when using preshared-token or preshared-parameter authentication method.|
+| Preprocessor              | string array | NO       |      | Set of preprocessors to apply to entries. |
 
 ### Listener Authentication
 
@@ -284,3 +272,54 @@ The HTTP Ingester can go out of spec on methods, accepting almost any ASCII stri
 ```
 curl -X SUPER_SECRET_METHOD -d "this is a test 2 using basic auth" http://127.0.0.1:8080/data
 ```
+
+## Splunk HEC Compatibility
+
+The HTTP ingester supports a listener block that is API compatible with the Splunk HTTP Event Collector.  This special listener block enables a simplified configuration so that any endpoint that can send data to the Splunk HEC can also send to the Gravwell HTTP Ingester.  The HEC compatible configuration block looks like so:
+
+```
+[HEC-Compatible-Listener "testing"]
+	URL="/services/collector/event"
+	TokenValue="thisisyourtoken"
+	Tag-Name=HECStuff
+
+```
+
+The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items. If the `URL` configuration item is omitted, it will default to `/services/collector/event`.
+
+Both `Listener` and `HEC-Compatible-Listener` configuration blocks can be specified on the same HTTP ingester.
+
+The `HEC-Compatible-Listener` supports the following configuration parameters:
+
+| Parameter                 | Type         | Required | Default Value                | Description                         |
+|---------------------------|--------------|----------|------------------------------|-------------------------------------|
+| URL                       | string       | NO       | `/services/collector/event`  | Endpoint URL for Splunk events. |
+| TokenValue                | string       | YES      |                              | Authentication Token. |
+| Tag-Name                  | string       | YES      |                              | Tag assigned to entries received by the endpoint. |
+| Ignore-Timestamps         | boolean      | NO       | false                        | Do not extract or process timestamps, use current time. |
+| Ack                       | boolean      | NO       | false                        | Acknowledge receipt and respond with entry IDs. |
+| Max-Size                  | unsigned int | NO       | 524288 (512k)                | Maximum size for each decoded entry. |
+| Tag-Match                 | string array | NO       |                              | Sourcetype value to tag mapping, multiple can be specified. |
+| Preprocessor              | string array | NO       |                              | Set of preprocessors to apply to entries. |
+
+
+## Health Checks
+
+Some systems (such as AWS load-balancers) require an unauthenticated URL that can be probed and interpreted as "proof of life".  The HTTP ingester can be configured to provide a URL which will always return a 200 OK when accessed with any method, body, and/or query parameters.  To enable this health check endpoint, add the `Health-Check-URL` stanza to the Global configuration block.
+
+Here is a minimal example configuration snippet with the health check URL `/logbot/are/you/alive`:
+
+```
+[Global]
+Ingest-Secret = IngestSecrets
+Connection-Timeout = 0
+Pipe-Backend-Target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
+Log-Level=INFO #options are OFF INFO WARN ERROR
+Bind=":8080"
+Max-Body=4096000 #about 4MB
+Log-File="/opt/gravwell/log/http_ingester.log"
+Health-Check-URL="/logbot/are/you/alive"
+
+```
+
+

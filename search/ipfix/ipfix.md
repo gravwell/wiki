@@ -69,7 +69,7 @@ For convenient, we list some of the most common IPFIX and Netflow v9 fields belo
 
 
 | IPFIX Name | Netflow v9 Name |      Description        | Supported Operators | Example |
-|-------|--------------------------|---------------------|---------|
+|------------|-----------------|-------------------------|---------------------|---------|
 | octetDeltaCount | IN_BYTES | The number of octets since the previous report (if any) in incoming packets for this Flow at the Observation Point. The number of octets includes IP header(s) and IP payload | > < <= >= == != | octetDeltaCount == 80
 | packetDeltaCount | IN_PKTS | The number of incoming packets since the previous report (if any) for this Flow at the Observation Point. | > < <= >= == != | packetDeltaCount == 80
 | deltaFlowCount | FLOWS | The conservative count of Original Flows contributing to this Aggregated Flow; may be distributed via any of the methods expressed by the valueDistributionMethod Information Element. | > < <= >= == != | packetDeltaCount == 80

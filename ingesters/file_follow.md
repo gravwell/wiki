@@ -46,22 +46,25 @@ Max-Files-Watched=64
         File-Filter="syslog,syslog.[0-9]" #we are looking for all authorization log files
         Tag-Name=syslog
         Assume-Local-Timezone=true
+
 [Follower "auth"]
         Base-Directory="/var/log/"
         File-Filter="auth.log,auth.log.[0-9]" #we are looking for all authorization log files
         Tag-Name=syslog
         Assume-Local-Timezone=true #Default for assume localtime is false
+
 [Follower "packages"]
         Base-Directory="/var/log"
         File-Filter="dpkg.log,dpkg.log.[0-9]" #we are looking for all dpkg files
         Tag-Name=dpkg
         Ignore-Timestamps=true
+
 [Follower "external"]
         Base-Directory="/tmp/incoming"
-		Recursive=true
+        Recursive=true
         File-Filter="*.log"
         Tag-Name=external
-		Timezone-Override="America/Los_Angeles"
+        Timezone-Override="America/Los_Angeles"
 ```
 
 In this example, the "syslog" follower reads `/var/log/syslog` and its rotations, ingesting lines to the syslog tag and assuming dates to be in the local timezone. Similarly, the "auth" follower also uses the syslog tag to ingest `/var/log/auth.log`. The "packages" follower ingests Debian's package management logs to the dpkg tag; for the purposes of illustration, it ignores the timestamps and marks each entry with the time it was read.
@@ -80,7 +83,9 @@ We recommend leaving this setting at 64 in most cases; configuring the limit too
 
 ## Follower Configuration
 
-The File Follower configuration file contains one or more "Follower" directives:
+The File Follower configuration file contains one or more "Follower" directives which specify which directory to watch and some optional parameters.
+
+A basic example configuration is:
 
 ```
 [Follower "syslog"]
@@ -89,9 +94,28 @@ The File Follower configuration file contains one or more "Follower" directives:
         Tag-Name=syslog
 ```
 
-Each follower specifies at minimum a base directory and a filename filtering pattern. This section describes possible configuration parameters which can be set per follower.
+Each follower specifies at minimum a base directory and a filename filtering pattern. This section describes possible configuration parameters which can be set per follower.  The following table specifies the available configuration parameters with additional details below:
 
-###	Base-Directory
+| Parameter                 | Type   | Required | Default Value | Description                         |
+|---------------------------|--------|----------|---------------|-------------------------------------|
+| Base-Directory            | string | YES      |               | Directory to watch for files in.    |
+| File-Filter               | string |          |               | List of globs to filter which files to follow.  Missing filter means all files are followed. |
+| Tag-Name                  | strung | YES      |               | Tag to assign entries to. |
+| Ignore-Timestamps         | bool   |          | false         | Ignore timestamps in data, assign entries to now. |
+| Assume-Local-Timezone     | bool   |          | false         | Assume timestamps missing a timezone refer to local timezone. |
+| Recursive                 | bool   |          | false         | Descend into all sub directories and watch nested files. |
+| Ignore-Line-Prefix        | string(s) |       |               | Line prefixes that can be used to ignore lines, multiple can be specified. |
+| Ignore-Glob               | string(s) |       |               | Set of glob patterns that specify entries to ignore, multiple can be specified. |
+| Timestamp-Format-Override | string |          |               | Optional timestamp format override for parsing timestamps. |
+| Timestamp-Delimited       | bool   |          | false         | Indicate that entries should be delimited by timestamps.  Requires Timestamp-Format-Override. |
+| Regex-Delimiter           | string |          |               | Delimit entries using a timestamp rather than lines. |
+| Timestamp-Regex           | string |          |               | Regular expression used for identifying a timestamp within data. |
+| Timestamp-Format-String   | string |          |               | Format string used for parsing timestamps. |
+| Preprocessor              | string(s) |       |               | List of preprocessors to use when processing entries after extraction. |
+| Attach-Filename           | bool  |           | false         | Attach complete filepath to each entry. |
+
+
+### Base-Directory
 
 The Base-Directory parameter specifies the directory which will contain the files to be ingested. It should be an absolute path and contain no wildcards.
 
@@ -158,7 +182,7 @@ The following indicates that lines beginning with `#` or `//` should not be inge
 Ignore-Line-Prefix="#"
 Ignore-Line-Prefix="//"
 ```
-(file_follow_ignore-glob)=
+
 ### Ignore-Glob
 
 The ingester will drop (not ingest) any lines that match the given glob pattern. Globs are text patterns containing wildcards (such as `*`). For example, to drop any line that contains the word "foo" anywhere in the line:
@@ -295,3 +319,7 @@ The `Timestamp-Regex` and `Timestamp-Format-String` options may be used in tande
 The `Timestamp-Format-String` parameter should be a Go-style timestamp format as defined [in this document](https://golang.org/pkg/time/). The `Timestamp-Regex` parameter should be a regular expression which can match the timestamps you wish to extract; note that it must also be able to match the `Timestamp-Format-String` and will return an error if it does not match.
 
 The format defined using these options will be inserted at the top of the list of formats used by timegrinder, meaning it will be checked first, but if a valid timestamp is not found with the user-defined format, the rest of the timegrinder formats will also be tried.
+
+### Attach-Filename
+
+Each follower has the option to attach the complete file path of the source file to each entry at the time of ingest using the `Attach-Filename=true` parameter to the Follower configuration block.  Setting `Attach-Filename=true` to the follower will attach a value named `file` to each entry which is available at query time in Gravwell.  Be aware that attaching long file paths to entries will have an impact on storage; compression will reduce that impact but it will not eliminate it.

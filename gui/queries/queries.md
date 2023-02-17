@@ -2,9 +2,9 @@
 
 Although investigations may begin with an email alert from an automated script, or when the user notices something strange on a dashboard, actual *data exploration* typically involves running queries manually, iterating over different timeframes and queries to drill down to the information of interest. This document describes the **user interfaces** Gravwell provides for building and running queries; for discussion of how to actually build the queries, see [the search documentation](/search/search).
 
-## New Search Page
+## Query Studio Page
 
-The New Search page is the default homepage for Gravwell users. It can also be reached by clicking the Gravwell logo in the upper left of the UI, or by opening the main menu and selecting "New Search".
+The Query Studio page can be set as the default page in your preferences or it can be reached by  opening the main menu and selecting "Query Studio".
 
 ![](searchbar.png)
 
@@ -12,27 +12,40 @@ From this page, you can enter a new search entirely from scratch, re-run previou
 
 ### Entering a search manually
 
-To run a search entirely from scratch, simply begin typing. Once a valid query, such as `tag=* stats count by TAG | chart count by TAG`, has been entered, the "Search Now" and "Background Search" buttons will be enabled. At this point you can launch the query by either clicking one of those buttons or by hitting "Enter".
+To run a search entirely from scratch, simply begin typing. Once a valid query, such as `tag=* stats count by TAG | chart count by TAG`, has been entered, the "Search" button will be enabled. At this point you can launch the query by either clicking on the button or by hitting <kbd>Shift</kbd> + <kbd>Enter</kbd>.
+
+![](autocomplete.gif)
+
+As you type, the autocomplete menu will automatically open with suggestions to help write your query. You can also manually invoke the autocomplete menu with <kbd>Ctrl</kbd> + <kbd>Space</kbd>. If the query editor detects a problem with your query, it will underline relevant parts of the query with a red line. Hovering over those underlined parts will display a hint explaining the problem. Hovering over any other part of the query will display a hint with information about the thing being hovered.
+
+|                       Feature | Action                              |
+| ----------------------------: | :---------------------------------- |
+|              View Completions | <kbd>Ctrl</kbd> + <kbd>Space</kbd>  |
+|                  Launch Query | <kbd>Shift</kbd> + <kbd>Enter</kbd> |
+|                   Error Hints | Hover underlined text               | 
+| Other Hints and Documentation | Hover                               |
+
 
 ### Accessing search history
 
-To re-run a previous search, either hit the down-arrow or click the list icon on the far-right side of the search bar:
+To re-run a previous search, use the arrow to open the right-hand pane and choose History in the dropdown:
 
 ![](search-hist.png)
 
-Click the desired search from the history list. This will collapse the history dropdown; click "Search Now" to run the search.
+Click the desired search from the history list and click "Search" to run the search.
 
 ### Accessing the query library
 
-The queries stored in the query library are also available through the search bar. Click the list icon on the far-right side of the search bar as when accessing search history, *then* click "Query library" at the bottom of the dropdown to switch views:
+The queries stored in the query library are also available through the right-hand pane. Select "Library" the dropdown to switch views:
 
 ![](search-library.png)
 
 ## Selecting a Timeframe
 
-By default, queries run over the last hour of data. This is easily changed through the Timeframe dropdown below the query bar:
+By default, queries run over the last hour of data. This is easily changed by clicking on the calendar icon or timeframe above the query and selecting a timeframe from the dropdown:
 
-![](timeframe.png)
+![](timeframe-icon.png)
+![](timeframe-select.png)
 
 Selecting "Last hour" will run the query over the span of time from the current second back through exactly one hour previous. If the search is launched at 9:22, the query will run over the data from 8:22 through 9:22. "Last 24 hours", "Last 7 days", and so on operate similarly.
 
@@ -70,11 +83,11 @@ When you run a query, Gravwell displays the *search results page* to show the ou
 
 ![](results.png)
 
-As seen in the screenshot above, the search results page shows the current query at the top of the page. You can edit the query in this box, then click the magnifying glass icon to re-run the query. If you want to use a different timeframe, use the calendar icon to select a different timeframe before re-running.
+As seen in the screenshot above, the search results page shows the current query at the top of the page. You can edit the query in this box, then click the "Search" button to re-run the query. If you want to use a different timeframe, use the calendar icon to select a different timeframe before re-running.
 
-You can also use the history/library dropdown icon to completely change the query to one from either the search history or the query library; this can be useful after you have selected a sub-region of the timeframe (see the Timeframe sub-selection section).
+You can also use the history/library in the right-hand pane to completely change the query to one from either the search history or the query library; this can be useful after you have selected a sub-region of the timeframe (see the Timeframe sub-selection section).
 
-The results page also has a menu of additional actions for the search results, accessible by clicking the three vertical dots on the right side of the page as shown below. The individual options in this menu are covered in the following subsections.
+The results page also has a menu of additional actions for the search results, accessible by clicking the three dots on the right side of the page as shown below. The individual options in this menu are covered in the following subsections.
 
 ![](menu.png)
 
@@ -94,10 +107,6 @@ This option lets you add the search to an existing dashboard, or create a new da
 
 ![](add-to-dash.png)
 
-### Send to background
-
-This option is useful when a search is taking longer than expected to complete. Clicking "send to background" will make the search continue running in the background even after you navigate away from the results page; this allows you to do other things while the search completes. You can monitor the search's status and view the completed results from the [Persistent Searches](/gui/persistent/persistent) page. Note that backgrounded searches do *not* persist across webserver restarts; to keep results around permanently, use the "Save results" option.
-
 ### Schedule
 
 Clicking "Schedule" takes you to the New Scheduled Search page, with the current query pre-populated in the query field. The timeframe selector will also be set to match your most recently-run timeframe, if possible. Simply give the scheduled search a name, description, and schedule, then click save.
@@ -116,7 +125,7 @@ One particularly useful combination is downloading JSON results from the [raw re
 
 ### Share Query URL
 
-The "Share Query URL" option brings up a dialog showing a URL which you can copy and paste to another user. Opening the URL will re-run the same query you just ran. This is a convenient way to show some data to another person when they can't come look at your screen.
+The "Share query URL" option brings up a dialog showing a URL which you can copy and paste to another user. Opening the URL will re-run the same query you just ran. This is a convenient way to show some data to another person when they can't come look at your screen.
 
 ![](share.png)
 
@@ -152,11 +161,15 @@ Note that the timeframe button on the query bar now has a dot on it. This indica
 Not all queries will display the timeframe selector. Some modules or module options (like the table renderer's `-nt` flag) force Gravwell into *non-temporal mode*, which disallows zooming.
 ```
 
+## Run search in background
+
+This option is useful when a search is taking longer than expected to complete. Clicking "Run search in background" will make the search continue running in the background even after you navigate away from the results page; this allows you to do other things while the search completes. You can monitor the search's status and view the completed results from the [Persistent Searches](/gui/persistent/persistent) page. Note that backgrounded searches do *not* persist across webserver restarts; to keep results around permanently, use the "Save results" option.
+
+![](send-background.png)
+
 ## Live Update Queries
 
-If you want to track a particular query, updating the results as new entries come into Gravwell, you can use the Live Update function. Either click the "Live update" toggle button on the new search page, or use the timeframe dropdown menu in the search results page to turn it on and re-run the search.
-
-![](live-new.png)
+If you want to track a particular query, updating the results as new entries come into Gravwell, you can use the Live Update function. Click the "Begin live update" button in the toolbar to turn it on and re-run the search.
 
 ![](live-results.png)
 

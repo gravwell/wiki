@@ -20,7 +20,7 @@ There are a few other things which help *identify* a kit that are useful to keep
 
 ## Browsing Installed Kits
 
-Kits are managed through the Kits page, located in the main menu. When you load the kits page, you will first see a list of installed kits. In the image below, we see two installed kits:
+Kits are managed through the Kits page, located in the main menu. When you load the kits page, you will first see a list of installed kits if there are any. If there are no kits staged or deployed, the available kits will be displayed instead. In the image below, we see two installed kits:
 
 ![](listkits.png)
 
@@ -28,19 +28,19 @@ Clicking one of the kits will put you into the *context* of the selected kit and
 
 ![](showkit.png)
 
-The UI is now in the kit's *context*, meaning it will only show that kit's contents until you leave the context. For example, browsing to the Dashboards page from the main menu will show only two two dashboards included with that particular kit:
+The UI is now in the kit's *context*, meaning it will only show that kit's contents until you leave the context. For example, browsing to the Resources page from the main menu will show only the resources included with that particular kit:
 
 ![](kitcontext.png)
 
-Note the text "Kits / Netflow v5 / Dashboards" at the top of the page. This indicates that we are *inside* that particular kit. To leave the kit context, click the Gravwell logo next to the main menu button.
+Note the text "Kits / Network enrichment / Resources" at the top of the page. This indicates that we are *inside* that particular kit. To leave the kit context, open the main menu and navigate back to "All Gravwell" or click the Gravwell logo next to the main menu.
 
 ## Installing Kits
 
-To install a kit, you must enter kit management mode by clicking the "Manage Kits" button in the upper-right corner of the main kits page. If you have no kits installed, the UI will automatically take you to the 'Available Kits' tab, otherwise the default view will show your currently-installed kits. To find and install kits, click the 'Available Kits' label at the top of the screen.
+To find and install kits, click the "Available Kits" tab in the upper-right corner of the main kits page. 
 
 ![](availablekits.png)
 
-You can click the kit details button to learn more about a given kit. Once you've decided on a kit to install, click the install kit button. The system will download the kit, then pop up a wizard for installation. In the screenshot below, we have selected the IPFIX kit for installation. The first page shows a list of items contained in the kit:
+You can click on the kit to view details and learn more about a given kit. Once you've decided on a kit to install, click the "Deploy" button. The system will pull the kit, then pop up a wizard for installation. In the screenshot below, we have selected the IPFIX kit for installation. The first page shows a list of items contained in the kit:
 
 ![](wizard1.png)
 

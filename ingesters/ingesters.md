@@ -25,12 +25,14 @@ hidden: true
 Amazon SQS <sqs>
 Azure Event Hubs <eventhubs>
 collectd <collectd>
+Federator <federators/federator>
 File Follower <file_follow>
 Windows File Follower <win_file_follow>
 GCP PubSub <pubsub>
 HTTP <http>
 IPMI <ipmi>
 Kafka <kafka>
+Kafka Federator <federators/kafkafederator>
 Kinesis <kinesis>
 Microsoft Graph API <msg>
 Netflow <netflow>
@@ -41,6 +43,7 @@ S3 <s3>
 Session <session>
 Shodan <shodan>
 Simple Relay <simple_relay>
+SNMP Trap <snmp>
 Windows Events <winevent>
 ```
 
@@ -65,6 +68,7 @@ Windows Events <winevent>
 | [Session](session) | Ingest large records into a single entry. |
 | [Shodan](shodan) | Ingest Shodan streaming API events. |
 | [Simple Relay](simple_relay) | Ingest any text over TCP/UDP, syslog, and more. |
+| [SNMP Trap](snmp) | Receive and ingest SNMP trap messages. |
 | [Windows Events](winevent) | Collect Windows events. |
 
 
@@ -401,7 +405,6 @@ hidden: true
 Ingester Preprocessors <preprocessors/preprocessors>
 Custom Time Formats <customtime/customtime>
 Service Integrations <integrations>
-Federators <federators/federators>
 ```
 
 ```{toctree}
