@@ -24,6 +24,12 @@ The rest of this document describes the syntax and semantics of the eval languag
 
 Identifiers name variables and types. For example, in `foo = "bar";`, "foo" is an identifier. Identifiers can contain any number of letters, digits, and the underscore "_" character, and must begin with either a letter or an underscore. No other characters are allowed.
 
+It is possible to create an enumeratd value that doesn't follow the identifier syntax rules in eval. When using enumerated values like this, you can wrap the name of the enumerated value in `$( )`. For example: 
+
+```
+tag=gravwell json "55 crazy enumerated value!" | eval $(55 crazy enumerated value!) == "value"
+```
+
 For example, the following are all valid identifiers.
 
 ```
@@ -127,7 +133,7 @@ time
 type
 ```
 
-Additionally, eval will attempt to "promote" types that can be automatically cast. For example, if "foo" contains the string "3.14", the expression `foo < 3.14` will cause eval to attempt to promote foo to a floating-point number before the expression is evaluated.
+Additionally, eval will attempt to "promote" types that can be automatically cast. For example, if "foo" contains the string "56", the expression `foo < 3.14` will cause eval to attempt to promote foo to a floating-point number before the expression is evaluated.
 
 ### Scope
 
@@ -143,7 +149,9 @@ The right-hand-side of an assignment is also an expression. For example, `foo = 
 
 Expressions can be complex, and contain other expressions, just like in C-style programs. For example, `( a == b || b < 3.14 || ( type(b) == "string" && error == "none" ))` is an expression made up of several, smaller expressions.
 
-*When a program consists of only an expression, the program as a whole is treated as a filter. If the expression returns false (or returns the "zero" value of the type returned), the entry will be dropped.*
+```{note}
+When a program consists of only an expression, the program as a whole is treated as a filter. If the expression returns false (or returns the "zero" value of the type returned), the entry will be dropped.
+```
 
 ### Statements
 
