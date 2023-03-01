@@ -19,7 +19,7 @@ The node inserts a value into the payload using the name specified in the `Name`
 
 ## Usage
 
-When a text template executes it has access to all [flow payload variables](/flows/flows.html#payloads) under the base dot (*.*) accessor; this means you can directly embed the name of your flow via *.flow.Name*.  Paths in the payload system are case sensitive, so *.name* is a different variable than *.Name*.  Templates can access any variable in the payload that has been produced "upstream" of the Text Template node.
+When a text template executes it has access to all <a href="/flows/flows.html#payloads">flow payload variables</a> under the base dot (*.*) accessor; this means you can directly embed the name of your flow via *.flow.Name*.  Paths in the payload system are case sensitive, so *.name* is a different variable than *.Name*.  Templates can access any variable in the payload that has been produced "upstream" of the Text Template node.
 
 The Go implementation of Mustache Templates includes a variety of control systems for iterating over arrays, performing conditional output, and even setting local variables.  For a deep dive on examples see the [package documentation on Actions](https://pkg.go.dev/text/template#hdr-Actions).
 
