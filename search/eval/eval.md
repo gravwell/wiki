@@ -24,7 +24,7 @@ The rest of this document describes the syntax and semantics of the eval languag
 
 Identifiers name variables and types. For example, in `foo = "bar";`, "foo" is an identifier. Identifiers can contain any number of letters, digits, and the underscore "_" character, and must begin with either a letter or an underscore. No other characters are allowed.
 
-It is possible to create an enumeratd value that doesn't follow the identifier syntax rules in eval. When using enumerated values like this, you can wrap the name of the enumerated value in `$( )`. For example: 
+It is possible to create an enumerated value that doesn't follow the identifier syntax rules in eval. When using enumerated values like this, you can wrap the name of the enumerated value in `$( )`. For example: 
 
 ```
 tag=gravwell json "55 crazy enumerated value!" | eval $(55 crazy enumerated value!) == "value"
