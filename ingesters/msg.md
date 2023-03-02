@@ -1,3 +1,10 @@
+---
+myst:
+  substitutions:
+    package: "gravwell-msgraph"
+    standalone: "gravwell_msgraph"
+    dockername: ""
+---
 # Microsoft Graph API Ingester
 
 Gravwell provides an ingester which can pull security information from Microsoft's Graph API. In order to configure the ingester, you will need to register a new *application* within the Azure Active Directory management portal; this will generate a set of keys which can be used to access the logs. You will need the following information:
@@ -5,6 +12,11 @@ Gravwell provides an ingester which can pull security information from Microsoft
 * Client ID: A UUID generated for your application via the Azure management console
 * Client secret: A secret token generated for your application via the Azure console
 * Tenant Domain: The domain of your Azure domain, e.g. "mycorp.onmicrosoft.com"
+
+## Installation
+
+```{include} installation_instructions_template.md 
+```
 
 ## Basic Configuration
 
