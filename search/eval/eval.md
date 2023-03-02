@@ -108,9 +108,9 @@ The following examples are valid numbers.
 
 Strings are any sequence of characters enclosed in double quotes `"`. 
 
-### Constants
+### Numeric literals
 
-Constants consist of any numbers or string literals, as well as a special case of an identifier that otherwise is not a declared variable or enumerated value from earlier in the query.
+Numeric literals consist of any decimal values, hex values (for example, 0xffff), and floating point values.
 
 ### Variables and types
 
