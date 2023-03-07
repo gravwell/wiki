@@ -54,7 +54,7 @@ By default, most interfaces will show all objects the user has access to, regard
 
 ### Show hidden
 
-Objects with the special label "hidden" are not displayed by default. This is a convenience function which can keep displays clear of rarely-accessed objects. Click the "Show hidden record" toggle to show hidden objects. In the screenshot below, toggling "Show hidden record" reveals an additional hidden macro:
+Objects with the special label "hidden" are not displayed by default. This is a convenience function which can keep displays clear of rarely-accessed objects. Click the "Show hidden records" toggle to show hidden objects. In the screenshot below, toggling "Show hidden records" reveals an additional hidden macro:
 
 ![](filter-hidden.png)
 
@@ -66,7 +66,7 @@ Gravwell defines a handful of special labels and label prefixes for particular o
 
 ### Hidden
 
-The string "hidden" is a special label; applying it to an object will prevent the object from being displayed by default. To see the object, toggle the "Show hidden record" option in the filter menu, as detailed above.
+The string "hidden" is a special label; applying it to an object will prevent the object from being displayed by default. To see the object, toggle the "Show hidden records" option in the filter menu, as detailed above.
 
 ### Kit Label Prefixes
 

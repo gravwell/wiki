@@ -78,6 +78,7 @@ Release Notes <changelog/list>
 <script>
 var url=window.location.href;
 if(url.includes(".md")) {
-  window.location.href=url.replace(/#!(.*).md*/g, '$1.html');
+  var split = url.split(".md");
+  window.location.href= split[0].replace(/#!(.*)/g, '$1.html') + split[1].replace(/_/g, '-').toLowerCase();
 }
 </script>
