@@ -1,3 +1,10 @@
+---
+myst:
+  substitutions:
+    package: "gravwell-pubsub"
+    standalone: "gravwell_pubsub_ingest"
+    dockername: ""
+---
 # GCP PubSub Ingester
 
 Gravwell provides an ingester capable of fetching entries from Google Compute Platform's [PubSub stream](https://cloud.google.com/pubsub/) service. The ingester can process multiple PubSub streams within a single GCP project. The process of setting up a PubSub stream is outside the scope of this document, but in order to configure the PubSub ingester for an existing stream you will need:
@@ -7,6 +14,11 @@ Gravwell provides an ingester capable of fetching entries from Google Compute Pl
 * The name of a PubSub topic
 
 Once the stream is configured, each record in the PubSub stream topic will be stored as a single entry in Gravwell.
+
+## Installation
+
+```{include} installation_instructions_template.md 
+```
 
 ## Basic Configuration
 

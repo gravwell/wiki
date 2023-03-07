@@ -8,18 +8,6 @@ Please submit any bugs or feedback to [beta@gravwell.io](mailto:beta@gravwell.io
 
 Thank you!
 
-## Current "State of the Beta"
-
-We're preparing for the release of Gravwell 4.2.0. The primary new feature of this release is the Data Explorer, which makes it easier to play with your data in a point-and-click manner.
-
-### Desired Testing
-
-Testing desires for this sprint (in order of priority)
-
-* Data Explorer - Try it with as many different data sources as you can. Add filters, remove filters, pivot into other query modes.
-* Query Studio - Make sure the query editing box is usable and robust, move between many queries and tags, check the new formatting with other renderers.
-* Per Tag Accelerators - Add some [tag specific accelerator definitions](accelerating_specific_tags).
-
 ## Installation and Upgrade
 
 We're very excited to say this build is now available for your use and testing. We have created a new Ubuntu repository and Docker images. Switching from Stable to Beta is done by modifying your apt source repository (or our quick start instructions if installing from scratch).

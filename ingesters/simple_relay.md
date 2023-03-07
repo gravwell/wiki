@@ -1,3 +1,10 @@
+---
+myst:
+  substitutions:
+    package: "gravwell-simple-relay"
+    standalone: "gravwell_simple_relay"
+    dockername: "simple_relay"
+---
 # Simple Relay
 
 Simple Relay is the go-to ingester for text based data sources that can be delivered over plaintext TCP, encrypted TCP, or plaintext UDP network connections via either IPv4 or IPv6.
@@ -8,6 +15,11 @@ Some common use cases for Simple Relay are:
 * Devops log collection over a network
 * Bro sensor log collection
 * Simple integration with any text source capable of delivering over a network
+
+## Installation
+
+```{include} installation_instructions_template.md 
+```
 
 ## Basic Configuration
 

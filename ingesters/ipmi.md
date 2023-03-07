@@ -1,3 +1,10 @@
+---
+myst:
+  substitutions:
+    package: "gravwell-ipmi"
+    standalone: "gravwell_ipmi"
+    dockername: "ipmi"
+---
 # IPMI Ingester
 
 The IPMI Ingester collects Sensor Data Record (SDR) and System Event Log (SEL) records from any number of IPMI devices. 
@@ -40,6 +47,11 @@ The configuration file provides a simple host/port, username, and password field
         "EventData3": 255
     }
 }
+```
+
+## Installation
+
+```{include} installation_instructions_template.md 
 ```
 
 ## Basic Configuration
