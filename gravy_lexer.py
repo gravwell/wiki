@@ -48,7 +48,7 @@ class GravwellLexer(RegexLexer):
             # strings
             #
             (r'"([^"])*$', Error),  # non-teminated string
-            (r'"', String.Delimiter, "string"),
+            (r'["`]', String.Delimiter, "string"),
             #
             # open comment
             #
