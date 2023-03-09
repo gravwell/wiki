@@ -18,6 +18,20 @@ tag=gravwell json foo | eval if (foo == "bar") { other_variable = "hey! foo is b
 
 The rest of this document describes the syntax and semantics of the eval language. 
 
+## Use cases
+
+Eval is used primarily for advanced filtering, especially multifiltering. For example, in order to filter a field extracted from the `json` module, you would normally use filtering in the `json` module directly:
+
+```
+tag=gravwell json foo=="my value"
+```
+
+However, if you want to filter "foo" in the example above to "my value" or "my other value", you must use the `eval` module:
+
+```
+tag=gravwell json foo | eval ( foo == "my value" || foo == "my other value" )
+```
+
 ## Lexical elements
 
 ### Identifiers
@@ -108,9 +122,9 @@ The following examples are valid numbers.
 
 Strings are any sequence of characters enclosed in double quotes `"`. 
 
-## Constants
+### Numeric literals
 
-Constants consist of any numbers or string literals, as well as a special case of an identifier that otherwise is not a declared variable or enumerated value from earlier in the query.
+Numeric literals consist of any decimal values, hex values (for example, 0xffff), and floating point values.
 
 ## Variables and types
 
