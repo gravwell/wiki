@@ -24,6 +24,22 @@ This page shows information about ingesters. The ingester list is searchable and
 
 ![](ingesters-page.png)
 
+If an ingester gets disconnected, it will be displayed at the top of the page in the "Missing Ingesters" section:
+
+![](missing-ingesters.png)
+
+Each indexer keeps track of the ingesters it has seen. It stores the most-recently-seen ingester state in `/opt/gravwell/etc/ingester_states.json`. If you decide to "retire" some ingesters and no longer want to see them in the Missing Ingesters section, you can stop the indexer, remove that file, and restart:
+
+```
+systemctl stop gravwell_indexer.service
+rm /opt/gravwell/etc/ingester_states.json 
+systemctl start gravwell_indexer.service
+```
+
+```{note}
+Removing the ingester_states.json file means that *all* currently-missing ingesters will be forgotten.
+```
+
 ## Hardware
 
 The Hardware page shows information about the individual computers which make up the Gravwell cluster. At the top of the page is information about cluster-wide CPU and memory usage, ingest rates, etc.; below are individual "cards" for each indexer (be1, be2, be3):
