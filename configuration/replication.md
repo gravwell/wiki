@@ -124,6 +124,12 @@ The replication engine ensures backup of two core pieces of data: tags and the a
 
 Replication is designed to coordinate with data ageout, migration, and well isolation.  When an indexer ages out data to a cold storage pool or deletes it entirely, the data regions are marked as either cold or deleted on remote storage peers.  The remote storage peers use deletion, cold storage, and shard age when determining which data to keep and/or restore on a node failure.  If data has been marked as deleted by an indexer, the data will not be restored should the indexer fail and recover via replication.  Data that has previously been marked as cold will be put directly back into the cold storage pool during restoration.  Indexers should restore themselves to the exact same state they were in pre-failure when recovering using replication.
 
+The replication engine takes great care to try and distribute storage load evenly across all available peers; this means that as an indexer is distributing data to replication peers it will often pause for a few seconds to query remote systems about storage usage and shard distribution.  These pauses allow all the replication peers to accept shard assignments from other peers as-well-as generate an accurate picture of replication behavior across a cluster.  From a practical standpoint, if replication is engaged for the first time after ingesting significant historical data the replication system may appear to burst data to peers with high traffic volumes followed by relative calm.  The bursty behavior is due to the periods where the system is sampling multiple remote peers.  However, if an indexer has a single replication peer it does not need to perform sampling of remote loads or worry about distributing shards across multiple peers; this simplified replication topology means that the engine can attempt to bring replicated data up to speed as fast as it can which may mean the indexers will fully saturate network links transferring very large volumes of data.
+
+```{attention}
+The replication engines first priority is getting data to as safe a state as possible.  If an indexer has access to a 40GbE connection and the disks to back it up, it will use that 40GbE of bandwidth.
+```
+
 ### Best Practices
 
 Designing and deploying a high availability Gravwell cluster can be simple as long as a few basic best practices are followed.  The following list calls out some guidelines you should follow when deploying and recovering a Gravwell cluster instance.
