@@ -1,4 +1,4 @@
-## Slice
+# Slice
 
 The slice module is a powerful but very low-level tool for extracting bytes from entries or enumerated values by simply specifying offsets within the entry/enumerated value and optionally casting those bytes to specific type.  Slice can reference bytes via relative indexing, including negative numbers.
 
@@ -18,7 +18,7 @@ Slice can extract from raw entry contents, or it can operate on an enumerated va
 | `slice uint16be(Payload[-2:]) as value` | Pull the last two bytes from "Payload", parse them as an unsigned 16-bit big-endian integer, and store it as "value" |
 | `slice uint16be(Payload[-4:-2]) as value2` | Pull the two bytes preceding the last two bytes of "Payload", parse them as an unsigned 16-bit big-endian integer, and store as "value2"
 
-### Supported Types
+## Supported Types
 
 An integral function of the slice module is casting the data to the appropriate type.  By default, data is extracted as a byte slice, but the option cast allows us to transform it into a type.  Types that have a suffix of "be" indicate a [Big Endian](https://en.wikipedia.org/wiki/Endianness) bit order, those without a "be" suffix use a Little Endian bit order.
 
@@ -52,11 +52,11 @@ An integral function of the slice module is casting the data to the appropriate 
 * IPv4
 * IPv6
 
-### Inline filtering
+## Inline filtering
 
 The slice module supports inline filtering which allows for very fast processing of binary data.  Every type does not support every filter operation.  For example attempting to find a subset in a floating point number does not make any sense, nor does applying "less than" to a byte slice.  Below is the complete list of filter operators and a table showing which operators can be applied to which types:
 
-#### Filter Operators
+### Filter Operators
 
 | Operator | Name | Description |
 |----------|------|-------------|
@@ -69,7 +69,7 @@ The slice module supports inline filtering which allows for very fast processing
 | > | Greater Than | Numeric value of field is greater than
 | >= | Greater Than or Equal to | Numeric value of field is greater than or equal to
 
-#### Supported Operators by Type
+### Supported Operators by Type
 
 Type     | == | != | ~ | !~ | < | <= | > | >=
 ----------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:

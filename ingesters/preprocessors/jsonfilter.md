@@ -1,4 +1,4 @@
-## JSON Field Filtering Preprocessor
+# JSON Field Filtering Preprocessor
 
 This preprocessor will parse entry data as a JSON object, then extract specified fields and compare them against lists of acceptable values. The lists of acceptable values are specified in files on the disk, one value per line.
 
@@ -8,7 +8,7 @@ This preprocessor is particularly useful to narrow down a firehose of general da
 
 The JSON Field Filtering preprocessor Type is `jsonfilter`.
 
-### Supported Options
+## Supported Options
 
 * `Field-Filter` (string, required): This specifies two things: the name of the JSON field of interest, and the path to a file which contains values to match against. For example, one might specify `Field-Filter=ComputerName,/opt/gravwell/etc/computernames.txt` in order to extract a field named "ComputerName" and compare it against values in `/opt/gravwell/etc/computernames.txt`. The `Field-Filter` option may be specified multiple times in order to filter against multiple fields.
 * `Match-Logic` (string, optional): This parameter specifies the logic operation to use when filtering against multiple fields. If set to "and", an entry is only considered a match when *all* specified fields match against the given lists. If set to "or", an entry is considered a match when *any* field matches.
@@ -20,11 +20,11 @@ The `Match-Logic` parameter is only necessary when more than one `Field-Filter` 
 If a field is specified in the configuration but is not present on an entry, the preprocessor will treat the entry *as if the field existed but did not match anything*. Thus, if you have configured the preprocessor to only pass those entries whose fields match your whitelist, an entry which lacks one of the fields will be dropped.
 ```
 
-### Common Use Cases
+## Common Use Cases
 
 The json field filtering preprocessor can down select entries based on fields within the entries.  This allows for building blacklists and whitelists on data flows to ensure that data either does or does not make it to storage.
 
-### Example: Simple Whitelisting
+## Example: Simple Whitelisting
 
 Suppose we have an endpoint monitoring solution which is sending thousands of events per second detailing things which are occurring across the enterprise. Due to the high event volume, we may decide we only want to index events with a certain severity. Luckily, the events include a Severity field:
 
@@ -61,7 +61,7 @@ Finally, we create `/opt/gravwell/etc/severity-list.txt` and populate it with a 
 
 After restarting the ingester, it will extract the `Severity` field from each entry and compare the resulting value against those listed in the file. If the value matches a line in the file, the entry will be sent to the indexer. Otherwise, it will be dropped.
 
-### Example: Blacklisting
+## Example: Blacklisting
 
 Building on the previous example, we may find that that our endpoint monitoring system is generating a *lot* of high-severity false positives from certain systems. We may determine that events with the `EventID` field set to 219, 220, or 1338 and the `System` field set to "webserver-prod.example.org" and "webserver-dev.example.org" are always false positives. We can define another preprocessor to get rid of these entries before they are sent to the indexer:
 

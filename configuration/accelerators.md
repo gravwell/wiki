@@ -121,7 +121,7 @@ For example, lets look at a definition where a well has a default Acceleration s
 
 Note - Multiple `Tag-Accelerator-Definitions` may be specified to include multiple files.
 
-##### gravwell.conf
+#### gravwell.conf
 
 ```
 [global]
@@ -148,7 +148,7 @@ Note - Multiple `Tag-Accelerator-Definitions` may be specified to include multip
 	tags=pcap*
 ```
 
-##### accel.defs
+#### accel.defs
 
 ```
 [Tag-Accelerator "csv things"]
@@ -177,7 +177,7 @@ Lets build out a table to see how specific tags would be mapped to specific well
 | pcap     | `raw`           | `packet`                      |
 
 
-#### Accelerator Tag Match Rules
+### Accelerator Tag Match Rules
 
 Accelerator tag definitions CAN overlap with some specific rules.  This is in contrast to the well assignment rules where a single tag may not match two different specifications.  Tags are matched against an accelerator definition using either a `hard` match or a `soft` match.  A `hard` match occurs when the tag is directly specified without any wildcards, a `soft` match occurs when a tag is matched using a wildcard globbing pattern.  For example the tag `foobar` would match the tag specification `foo*` via a soft match, if we directly specified the tag `foobar` then it would be a hard match.
 

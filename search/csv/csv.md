@@ -1,8 +1,8 @@
-## CSV
+# CSV
 
 The csv module is designed to extract and filter data from comma separated values.  The csv module can be thought of as an enhanced fields module that is designed to accommodate some additional rules related to csv values such as the ability to quote columns that may contain commas, or escape commas, or surround columns with white space.
 
-### Specifying Extraction Fields
+## Specifying Extraction Fields
 
 Fields are extracted by specifying an index into data from a base of zero.  An index is specified using a positive integer surrounded by square brackets.  Multiple columns can be extracted by providing multiple directives.  Column extraction indexes do not need be be specified in order.
 
@@ -16,12 +16,12 @@ Column extraction indexes can be specified as base 10, base 8, or base 16.  The 
 To specify filter values and or extraction names which contain special characters like "-", ".", or spaces, surround the value in double quotes.
 ```
 
-### Supported Options
+## Supported Options
 
 * `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
 * `-s` : The “-s” option specifies that the csv module operate in a strict mode.  If any column specification cannot be met, the entry is dropped.  For example if you want the 0th, 1st, and 2nd field but an entry only has 2 columns the strict flag will cause the entry to be dropped.
 
-### Filtering Operators
+## Filtering Operators
 
 The csv module allows for a filtering based on equality.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
 
@@ -32,13 +32,13 @@ The csv module allows for a filtering based on equality.  If a filter is enabled
 | ~ | Subset | Field contains the value
 | !~ | Not Subset | Field does NOT contain the value
 
-#### Filtering Examples
+### Filtering Examples
 
 ```
 csv [0] == "foo" [2] != "bar" [3] ~ baz as ID
 ```
 
-### Data Extraction
+## Data Extraction
 
 The CSV module will always clean out surrounding whitespace and double quotes from extracted column data.  For example, consider the following entry:
 
@@ -60,7 +60,7 @@ The output would look as follows (notice the lack of quotes or surrounding white
 | 15554 | 9870f7cd-b7d3-4bb6-8160-f5f146ebc764 | OK, what sort of language would we have the world speak?<br>Isabella |
 
 
-### Example queries
+## Example queries
 
 Extract a URL column from a CSV http.log feed and name it "url".
 

@@ -1,4 +1,4 @@
-## Limit
+# Limit
 
 The limit module allows a specified number of entries through and no more. This may be especially useful during the process of building a query, for example while testing regular expressions; by inserting a `limit 50` into the pipeline, the results displayed will be less overwhelming.
 

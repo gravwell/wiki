@@ -139,10 +139,10 @@ Designing and deploying a high availability Gravwell cluster can be simple as lo
 
 Below are potential problems and solutions when debugging a replication problem.
 
-#### After a failure, an indexer did not restore its data
+### After a failure, an indexer did not restore its data
 Ensure that the indexer maintained its original `Indexer-UUID` value when coming back online.  If the UUID changed, put it back to the original value and ensure the indexer has adequate time to restore all data.  Restoration after changing the `Indexer-UUID` may require significantly more time as the replication system merges the two disparate data stores.
 
-#### Data is not showing up in the replication Storage-Location
+### Data is not showing up in the replication Storage-Location
 Ensure that all replication peers have a common `Control-Auth` (or `Replication-Secret-Override`) value.  If peers cannot authenticate with each other they will not exchange data.
 
 Ensure that X509 certificates are signed by a valid Certificate Authority (CA) that is respected by the keystore on the host systems.  If the certificate stores are not valid, either install the public keys into the host machines certificate store, or disable TLS validation via the `Insecure-Skip-TLS-Verify` option.
@@ -153,10 +153,10 @@ Disabling TLS verification via `Insecure-Skip-TLS-Verify` opens up replication t
 
 Check firewall rules and/or routing ACLs to ensure that indexers are allowed to communicate with one another on the specified port.
 
-#### After a failure an indexer is refusing to start due to a failed tag merge
+### After a failure an indexer is refusing to start due to a failed tag merge
 If an indexer starts ingesting after a failure prior to restoring its tag mapping, it is possible to enter a state where the tag maps on replication nodes cannot be merged.  If you encounter an unmergeable tag error, contact <support@gravwell.io> for assistance in manually restoring the failed node.
  
-#### After a failure an indexer did not restore all its data
+### After a failure an indexer did not restore all its data
 Replication peers may not have been able to keep up with an indexer due to poor storage performance, poor network performance, or storage failures on the replication node.  Ensure that replication peers have adequate bandwidth and storage capacity to keep up with ingestion.  If a storage node is ingesting at hundreds of megabytes per second, the replication peers must be able to compute, transfer, and store the data at the same rate.
 
 Also ensure that there was adequate storage on replication peers.  If a storage node is configured to keep 10TB of cold data and 1TB of hot data, replication peers should be capable of storing at least 11TB of data.  If a replication node was overloaded or misconfigured it may have been removing old data.

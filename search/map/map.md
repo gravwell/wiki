@@ -7,7 +7,7 @@ The `pointmap` and `heatmap` renderer modules translate search results onto a ma
 
 The map will display a maximum of 1000 points. It is geofenced, meaning that zooming in on one portion of the map will display up to 1000 points within that area.
 
-# Pointmap
+## Pointmap
 
 Pointmap translates entries into distinct markers on the map. If additional enumerated value names are specified, their contents will be displayed when a point is clicked.
 
@@ -27,7 +27,7 @@ tag=netflow netflow IP Bytes | sum Bytes by IP | geoip IP.Location | geoip -r ma
 
 ![](map2.png)
 
-# Heatmap
+## Heatmap
 
 Heatmap operates similarly to pointmap, but it takes 0 or 1 additional enumerated values as arguments. If no enumerated value argument is given, it generates a heat map using the number of entries for each location as the 'heat'. In this example using netflow records, the 'heat' represents the number of connections from a location:
 
