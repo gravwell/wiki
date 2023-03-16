@@ -116,6 +116,38 @@ Replication is controlled by the "Replication" configuration group in the gravwe
 | Enable-Transparent-Compression | Enable-Transparent-Compression=true | Enable transparent compression on using the host file system for replicated data. |
 | Enable-Transport-Compression | Enable-Transparent-Compression=true | Enable transport compression when transmitting data to replication peer.  Defaults to `true`. |
 
+## Disabling Replication Per Well
+
+The replication engine will replicate all data across all wells by default, however it may be desired to control which datasets are replicated due to costs, priorities, or just when testing Gravwell.  Some users find it useful to have a "test" well where data can be ingested and aged out quickly and replicating that test data may not make much sense.  Gravwell allows for disabling replication on a per well basis by adding the configuration stanza `Disable-Replication=true` inside the well configuration block.  When replication is disabled the engine will not communicate the wells existence or push any data to replication peers; tags however are always replicated, even if they are assigned to a well with replication disabled.
+
+An example configuration snippet where replication is enabled on an indexer but a specific well is excluded is as follows:
+
+```
+[Replication]
+	Peer=172.16.2.101
+	Storage-Location=/opt/gravwell/replication_storage
+	Connect-Wait-Timeout=60
+
+
+[Default-Well]
+	Location=/opt/gravwell/storage/default/
+	Hot-Duration=365d
+	Delete-Cold-Data=true
+
+[Storage-Well "testing"]
+	Location=/opt/gravwell/storage/default/
+	Tags="testing-*"
+	Hot-Duration=2d
+	Delete-Cold-Data=true
+	Disable-Replication=true
+```
+
+
+```{attention}
+The default well is not subject to the `Disable-Replication` configuration parameter and is always replicated.  Do not attempt to disable replication on the default well.
+```
+
+
 ## Replication Engine Behavior
 
 The replication engine is a best effort asynchronous replication and restoration system designed to minimize impact on ingest and search.  The replication system attempts a best-effort data distribution but focuses on timely assignment and distribution.  This means that shards are assigned in a distributed first-come, first-serve order with some guidance based on previous distribution.  The system does not attempt a perfectly uniform data distribution and replication peers with higher throughput (either bandwidth, storage, or CPU) may take on a greater replication load than peers with less.  When designing a Gravwell cluster topology intended to support data replication, we recommend over-provisioning the replication storage by 10-15% to allow for unexpected bursts or data distribution that is not perfectly uniform.
