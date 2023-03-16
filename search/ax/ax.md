@@ -1,4 +1,4 @@
-## AX
+# AX
 
 The ax module is a wrapper module which uses pre-extraction rules to extract fields from data by invoking the functionality of other modules.  It can significantly simplify queries which use data that is not self-describing, standard, or structured.
 
@@ -17,7 +17,7 @@ As of release 4.2.0 the following AX processors are available:
 
 For full documentation on the configuration of AX extractors, see the [autoextractor section](/configuration/autoextractors).
 
-### Filtering
+## Filtering
 
 The ax module supports inline filtering on extracted values using the same filtering semantics as the underlying processor.  Each processor may support a specific subset of filter operators.
 
@@ -38,7 +38,7 @@ For example the CSV, fields, and regex processors support limited equality filte
 Every operator is not supported by every processor.  If multiple tags extract fields with the same name, the filter operator set will be restricted to a common subset.
 ```
 
-### Invoking AX
+## Invoking AX
 
 The AX module can process multiple tags with multiple custom processors at the same time.  This means that if you have a tag named "foo" which contains CSV data and a tag named "bar" that contains unstructured data you can use ax to seamlessly process both streams with a single invocation.  Here is an example of two different data formats (CSV and unstructured):
 

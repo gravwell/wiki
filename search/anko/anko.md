@@ -1,4 +1,4 @@
-## Anko
+# Anko
 
 The anko module provides a more complete scripting environment as a supplement to eval. It allows more complex operations on search entries, but it also requires more work to develop, test, and deploy an anko script than a simple eval expression. Scripts are stored as resources in the [resource system](/resources/resources).
 
@@ -8,13 +8,13 @@ We recommend using anko in situations where no other modules are capable enough.
 
 This portion of the documentation only briefly describes the usage of the anko module; for a more detailed description, see the [full anko module documentation](/scripting/anko) and the [Anko scripting language documentation](/scripting/scripting).
 
-### Syntax
+## Syntax
 
 `anko <script name> [script arguments]`
 
 Anko scripts are stored as resources. The name of the resource must be specified as the first argument to the `anko` module. After the script name, any additional arguments are passed on to the script itself.
 
-### Example script
+## Example script
 
 The following script is a re-formatted version of an example from the eval module documentation. Note that it is far easier to read than the one-line eval example:
 

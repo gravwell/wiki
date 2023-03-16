@@ -1,4 +1,4 @@
-## XML
+# XML
 
 The xml module can extract components from XML data into enumerated values for later use. Since XML is untyped, all results are returned as strings.
 
@@ -44,7 +44,7 @@ Similarly, if an element or attribute contains a ".", "[", or "]" character, you
 xml A."My.Element" as MyElement
 ```
 
-### Filtering
+## Filtering
 
 The xml module allows for simple pre-filtering of data, to avoid invoking addition modules (like eval) when possible. Because of the way XML works, there are a few peculiarities in how the xml module handles filtering, so it is important to read this section carefully.
 
@@ -84,6 +84,6 @@ xml System.Data[Name]=="Username"
 This query results in a new enumerated value named `Data` containing the string "gravwell".
 
 
-### Supported Options
+## Supported Options
 
 * `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
