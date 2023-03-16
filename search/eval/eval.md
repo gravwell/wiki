@@ -1,6 +1,6 @@
-## Eval
+# Eval
 
-### Introduction
+## Introduction
 
 The `eval` module is a general purpose filtering and programming environment that runs a "program" against each entry in the query pipeline. It uses a C-style syntax and supports creating simple filters, as well as arbitrary operations on each entry. 
 
@@ -18,9 +18,23 @@ tag=gravwell json foo | eval if (foo == "bar") { other_variable = "hey! foo is b
 
 The rest of this document describes the syntax and semantics of the eval language. 
 
-### Lexical elements
+## Use cases
 
-#### Identifiers
+Eval is used primarily for advanced filtering, especially multifiltering. For example, in order to filter a field extracted from the `json` module, you would normally use filtering in the `json` module directly:
+
+```
+tag=gravwell json foo=="my value"
+```
+
+However, if you want to filter "foo" in the example above to "my value" or "my other value", you must use the `eval` module:
+
+```
+tag=gravwell json foo | eval ( foo == "my value" || foo == "my other value" )
+```
+
+## Lexical elements
+
+### Identifiers
 
 Identifiers name variables and types. For example, in `foo = "bar";`, "foo" is an identifier. Identifiers can contain any number of letters, digits, and the underscore "_" character, and must begin with either a letter or an underscore. No other characters are allowed.
 
@@ -39,7 +53,7 @@ foo314
 foo_bar
 ```
 
-#### Keywords
+### Keywords
 
 The following keywords are reserved and may not be used as identifiers.
 
@@ -58,7 +72,7 @@ return
 switch
 ```
 
-#### Operators
+### Operators
 
 Operators are used for filtering and boolean/arithmetic logic. Operators behave similarly to all C-style programming languages (C, C++, Go, ...) with one caveat -- the bitwise OR operator `|` can only appear inside parenthetical expressions in order to avoid a syntax conflict with the Gravwell query language.
 
@@ -75,7 +89,7 @@ The following operators are supported.
 ~ !~		String "contains" operators
 ```
 
-#### Punctuation
+### Punctuation
 
 Eval uses punctuation similar to the C programming language. For example, `( )` are used to enclose expressions in statements as in `if (foo == "bar")...`.
 
@@ -91,7 +105,7 @@ $		Alternative enumerated value accessor
 . :		Scope and range (not currently supported)
 ```
 
-#### Numbers
+### Numbers
 
 Numbers can be expressed as decimal and hexadecimal integers, as well as decimal floating-point. Hexadecimal values always begin with "0x". 
 
@@ -104,15 +118,15 @@ The following examples are valid numbers.
 5.00
 ```
 
-#### String literals
+### String literals
 
 Strings are any sequence of characters enclosed in double quotes `"`. 
 
-### Constants
+### Numeric literals
 
-Constants consist of any numbers or string literals, as well as a special case of an identifier that otherwise is not a declared variable or enumerated value from earlier in the query.
+Numeric literals consist of any decimal values, hex values (for example, 0xffff), and floating point values.
 
-### Variables and types
+## Variables and types
 
 All enumerated values created in the query pipeline are available in eval as variables. Additionally, all variables created in eval are available as enumerated values to any modules after eval in the query pipeline. 
 
@@ -135,11 +149,11 @@ type
 
 Additionally, eval will attempt to "promote" types that can be automatically cast. For example, if "foo" contains the string "56", the expression `foo < 3.14` will cause eval to attempt to promote foo to a floating-point number before the expression is evaluated.
 
-### Scope
+## Scope
 
 Eval has no variable scoping. All variables are "global", regardless of if they are declared in a statement block or not.
 
-### Expressions
+## Expressions
 
 Expressions are simply computations of values. The behavior of an expression depends on where in a program it is used. 
 
@@ -153,13 +167,13 @@ Expressions can be complex, and contain other expressions, just like in C-style 
 When a program consists of only an expression, the program as a whole is treated as a filter. If the expression returns false (or returns the "zero" value of the type returned), the entry will be dropped.
 ```
 
-### Statements
+## Statements
 
 Statements control program execution. For example, `if (foo == "bar") { ... }` contains an "if" statement, which will determine how the program is to proceed.
 
 Statements are separated by the `{ }` punctuation in the case of "if" and "for", and semicolons ";" for assignments. Currently, only "if", "for", and assignment statements are supported in eval.
 
-### Built-in functions
+## Built-in functions
 
 `eval` has several built-in functions:
 
@@ -173,7 +187,7 @@ rand      Returns a random 64-bit integer
 log	  Logs a message according to the logging configuration in the deployment's gravwell.conf
 ```
 
-### Syntax
+## Syntax
 
 The eval syntax is expressed using a [variant](https://github.com/gravwell/pbpg) of Extended Backus-Naur Form (EBNF):
 
