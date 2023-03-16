@@ -278,42 +278,64 @@ Queries are executed in order, and any later query (including other inner querie
 
 Below is the pbpg representation of the query grammar. 
 
-
 ```
-Query 			= [ QueryStructure | CompoundQuery ] .
-QueryStructure 		= { Constraint } [ Module { "|" Module } ] .
-CompoundQuery 		= InnerQuery { InnerQuery } QueryStructure .			
-InnerQuery 		= "@" String "{" QueryStructure "}" ";" .			
+# Query and module grammar
 
-Constraint 		= ConstraintString "=" ConstraintString.					
-Module 			= { Constraint } (Hoc | RegularModule) .					
-RegularModule 		= String { Token } .						
-Token 			= QuotedString | String | (Op (RString | QuotedString)) | Special .			
+Query             = CompoundQuery | QueryStructure
+QueryStructure    = { Constraint } [ [ "|" ] Module { "|" Module } ]
+CompoundQuery     = InnerQuery { InnerQuery } QueryStructure
+InnerQuery        = Whitespace AT QueryName "{" QueryStructure "}" SEMICOLON
+Constraint        = Whitespace CLvalue "=" CRvalue { "," CRvalue }
+ModuleConstraint  = Whitespace MCLvalue "=" CRvalue { "," CRvalue }
+Module            = { ModuleConstraint } Whitespace ( SpecialModule | JSONModule | Hoc | RegularModule ) Whitespace
+JSONModule        = JSONModuleName { JSONToken }
+SpecialModule     = SpecialModuleName { SpecialToken }
+RegularModule     = ModuleName { Token }
+JSONToken         = RawString | QuotedString | JSONString | ( Op ( QuotedString | RString ) ) | Special
+SpecialToken      = RawString | QuotedString | RString | ( Op ( QuotedString | RString ) ) | Special
+Token             = RawString | QuotedString | String | ( Op ( QuotedString | RString ) ) | Special
 
-Hoc 			= ( [ "eval" ] "(" HocFragment ")") | ( "eval" EvalFragment ) .					
-HocFragment 		= { HocToken } .					
-HocToken 		= Identifier | Operator | QuotedString | Number |
+# Eval grammar
 
-Identifier 		= Letter { Letter | Digit } .					
-Letter			= # Unicode letter category
-Digit			= # Unicode digit category
+Hoc               = ( HocName HocFragment ) | ( HocName EvalFragment )
+HocFragment       = { HocToken }
+HocToken          = Whitespace EVLiteral | Identifier | Operator | QuotedString | Number | LPAREN | RPAREN | LCURLY | RCURLY | PIPE
+EVLiteral         = "$(" EV ")"
+EV                = ev
+Identifier        = Letter { LetterDigit }
+LetterDigit       = Letter | Digit
+Letter            = letter
+Digit             = digit
+Operator          = "<<" | ">>" | "<=" | ">=" | "+=" | "-=" | "&&" | "||" | "++" | "--" | "==" | "!=" | "!~" | "~" | "+" | "-" | "*" | "/" | "%" | "&" | "^" | "<" | ">" | "=" | "!" | "[" | "]" | "," | ";" | "." | ":" | "?"
+LPAREN            = lparen
+RPAREN            = rparen
+LCURLY            = lcurly
+RCURLY            = rcurly
+PIPE              = pipe
+Number            = Hex | Decimal
+Decimal           = Digit { Digit } [ Dot { Digit } ]
+Hex               = hex
+Dot               = dot
+EvalFragment      = evalfragment
 
-Operator		= "<<" | ">>" | "+=" | "-=" | "&&" | "||" |
-			  "++" | "--" | "==" | "!=" | "+"  | "-"  |
-			  "*"  | "/"  | "%"  | "&"  | "^"  | "<"  |
-			  ">"  | "="  | "!"  | "["  | "]"  | "{"  |
-			  "}"  | ","  | ";"  | "."  | ":" .				
+# Lexer invocations 
 
-Number			= Digit { Digit } [ "." { Digit } ] .				
-
-Special 		= "{" | "}" | "(" | ")" | ";" | "=" | "<" | "!" |
-			  ">" | "~" | "%" | "^" | "&" | "*" | "," | "+" |
-			  "." | ":" | "[" | "]" .						
-
-Op 			= "<=" | ">=" | "==" | "!=" | "~" | "!~" | "<" | ">" .			
-
-String 			= # All printable Unicode codepoints except for whitespace, the Specials rule, and "|".
-QuotedString 		= # All printable Unicode codepoints, including whitespace, surrounded by double quotes '"'.
-ConstraintString	= # Same as String, but "[", "]", "*", and "," are allowed.
-RString 		= # Same as String, but "." and ":" are allowed.
+Special           = Whitespace "(" | ")" | ";" | "=" | "<" | "!" | ">" | "~" | "%" | "^" | "&" | "*" | "," | "+" | "." | ":" | "[" | "]" | "/"
+Op                = Whitespace "<=" | ">=" | "==" | "!=" | "~" | "!~" | "<" | ">"
+RString           = rstring
+QuotedString      = quotestring
+String            = string
+JSONModuleName    = JSONModuleString
+SpecialModuleName = specialModuleString
+ModuleName        = string
+QueryName         = string
+CLvalue           = clval
+MCLvalue          = mclval
+CRvalue           = crstring
+Whitespace        = whitespace
+RawString         = rawstring
+JSONString        = jsonString
+AT                = compoundAt
+SEMICOLON         = compoundSemicolon
+HocName           = "hoc" | "eval"
 ```

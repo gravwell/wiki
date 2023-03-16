@@ -21,6 +21,7 @@ Playbooks <playbooks/playbooks>
 Actionables <actionables/actionables>
 Secrets <secrets/secrets>
 Email Configuration</configuration/email>
+Systems & Health<systems-health>
 Advanced GUI User Preferences </configuration/gui>
 ```
 
@@ -97,3 +98,4 @@ The "Advanced Preferences" section can be ignored by most users. Selecting "Deve
 ### Email Server
 
 The final tab, "Email Server", is extremely important for users who intend to use Gravwell to send automated email alerts.  Complete documentation is available on the [Email Configuration](/configuration/email) page.
+

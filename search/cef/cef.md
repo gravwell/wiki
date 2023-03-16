@@ -1,8 +1,8 @@
-## CEF
+# CEF
 
 The CEF or Common Event Format is used by several data providers and many data enrichment systems.  The Gravwell CEF parser is designed to allow for very fast extraction of the common CEF header variables, as well as an arbitrary set of key value pairs.  The loose specification that is CEF technically defines a set of known key names, but we have yet to see a data generating product that produces CEF and strictly holds to those set of keys, which is why the Gravwell module can handle any key name.
 
-### Standard CEF Header Key Names
+## Standard CEF Header Key Names
 
 CEF contains a set of standardized header values that should be present in every CEF record.  The header record names are:
 
@@ -34,7 +34,7 @@ Each CEF field supports a set of operators that can act as fast filters.  The fi
 
 When possible, use the CEF inline filters so that the CEF module can zero into the types of records you want immediately, rather than relying on downstream modules.  Using inline filters is not only faster during worst case operation, it also enables you to take advantage of field accelerators when they are enabled.
 
-### Examples
+## Examples
 
 If we wanted to extract the device vendor, product, severity, and msg from the following CEF record and draw a table with only records where the severity was > 7.
 

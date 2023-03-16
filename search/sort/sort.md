@@ -1,4 +1,4 @@
-## Sort
+# Sort
 
 By default, everything in the Gravwell search pipeline is temporally sorted. The web interface provides some additional sorting capabilities while maintaining the raw power of temporal sorting on the search backend.
 

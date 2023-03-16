@@ -1,12 +1,12 @@
-## Netflow
+# Netflow
 
 The netflow processor is designed to extract and filter raw netflow data frames, allowing for quickly identifying network flows, filtering on ports, or generally monitoring the behavior of aggregate flows.  Gravwell has a native netflow ingester which is open source and available at https://github.com/gravwell/ingesters or as an installer in the [quickstart section](/quickstart/downloads).
 
-### Supported Options
+## Supported Options
 
 * `-e`: The “-e” option specifies that the netflow module should operate on an enumerated value.  Operating on enumerated values can be useful when you have extracted a netflow frame using upstream modules.  You could extract netflow frames from raw PCAP and pass the frames into the netflow module.
 
-### Processing Operators
+## Processing Operators
 
 Each netflow field supports a set of operators that can act as fast filters.  The filters supported by each operator are determined by the data type of the field. Numeric values support everything but the subset operators and IP addresses support just the subset operators.
 
@@ -22,11 +22,11 @@ Each netflow field supports a set of operators that can act as fast filters.  Th
 | !~ | Not subset | Field must not be a member of
 
 
-### Data Items
+## Data Items
 
 The netflow search module is designed to process raw netflow frames.  A single netflow frame consists of a header and N records; for Netflow V5 N must be > 0 and < 31.  Each data item in a netflow record can be extracted and used as a filter.  When filtering on Header data items, the filter applies to all records in the frame.  Header data items are processed first, and only if the header filters do not drop the frame are the records processed.  The netflow processor is an expanding module; expanding modules break input entries into multiple output entries.  This means that when using the netflow module more entries can come out of the pipeline than were fed in.
 
-#### Netflow v5 Header Data Items
+### Netflow v5 Header Data Items
 
 | Field |       Description        | Supported Operators | Example |
 |-------|--------------------------|---------------------|---------|
@@ -42,7 +42,7 @@ The netflow search module is designed to process raw netflow frames.  A single n
 | SampleInterval | 14 bit value representing the sampling interval of the sensing engine | > < <= >= == != | SampleInterval > 0x100
 | Timestamp | Helper extractor that converts Sec and NSec to a friendly timestamp value. Filtering is NOT supported. | |
 
-#### Netflow v5 Record Data Items
+### Netflow v5 Record Data Items
 
 | Field |       Description        | Supported Operators | Example |
 |-------|--------------------------|---------------------|---------|
@@ -68,9 +68,9 @@ The netflow search module is designed to process raw netflow frames.  A single n
 | DstMask | Destination IPv4 address mask bits | > < <= >= == != | DstMask <= 16
 | Duration | Helper value that converts UptimeFirst and UptimeLast into a duration | > < <= >= == != | Duration > 100ms
 
-### Examples
+## Examples
 
-#### Number of HTTP flows by Destination IP over time
+### Number of HTTP flows by Destination IP over time
 
 ```gravwell
 tag=netflow netflow Src Dst Port==80 | count by Dst | chart count by Dst
@@ -78,7 +78,7 @@ tag=netflow netflow Src Dst Port==80 | count by Dst | chart count by Dst
 
 ![Number of flows by ip](flowcounts.png)
 
-#### Total traffic by IP and Protocol
+### Total traffic by IP and Protocol
 
 ```gravwell
 tag=netflow netflow IP~192.168.0.0/16 Protocol Bytes as traffic | sum traffic by IP Protocol | stackgraph IP Protocol sum

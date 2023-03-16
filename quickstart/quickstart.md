@@ -78,29 +78,21 @@ Gravwell is distributed in four ways: via a Docker container, via a distribution
 
 Installing from the Debian repository is quite simple. We need to take a few steps first to add Gravwell's PGP signing key and Debian package repository, but then it's just a matter of installing the `gravwell` package.
 
-Run the following commands as the `root` user:
+#### Set up Gravwell's Debian Repository
 
-#### Install Prerequisite Packages
+First, we'll set up the Gravwell Debian repository by installing some prerequisite packages, fetching our signing key, and installing a file describing the repository into the APT configuration directory. Run the following commands as the `root` user:
 
 ```
 apt install apt-transport-https gnupg wget
-```
-
-#### Get the Gravwell Repository Signing Key
-```
 wget -O /usr/share/keyrings/gravwell.asc https://update.gravwell.io/debian/update.gravwell.io.gpg.key
-```
-
-#### Install the Gravwell Repository
-```
 echo 'deb [ arch=amd64 signed-by=/usr/share/keyrings/gravwell.asc ] https://update.gravwell.io/debian community main' > /etc/apt/sources.list.d/gravwell.list
 ```
 
 #### Update Apt and Install Gravwell
+
 ```
 apt update && apt install gravwell
 ```
-
 
 The installation process will prompt to set some shared secret values used by components of Gravwell. We strongly recommend allowing the installer to generate random values (the default) for security.
 
@@ -110,6 +102,7 @@ The installation process will prompt to set some shared secret values used by co
 
 ![Generate secrets](secret-prompt.png)
 
+(redhat_repo)=
 ### Redhat/CentOS Repositories
 
 Gravwell is available as a `yum` repository for both Redhat and CentOS Linux distributions. To use the Gravwell yum repository, add the following stanza to your `yum.conf` (located in `/etc/yum.conf`)
