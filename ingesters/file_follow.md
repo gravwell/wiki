@@ -19,7 +19,7 @@ On RHEL/CentOS, `/var/log` belongs to the "root" group, not "adm" as we assume. 
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Kernel parameter tuning

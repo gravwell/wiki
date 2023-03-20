@@ -15,7 +15,7 @@ A simple web interface to submit and view job status is also available by browsi
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration

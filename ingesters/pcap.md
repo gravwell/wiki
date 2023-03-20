@@ -11,7 +11,7 @@ A primary strength of Gravwell is the ability to ingest binary data. The network
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration
