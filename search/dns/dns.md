@@ -1,4 +1,4 @@
-# DNS
+## DNS
 
 ```{note}
 The `dns` module can generate an enormous amount of network traffic to your DNS resolver. DNS resolvers may ban you if you generate too many requests in a short amount of time. 
@@ -14,12 +14,12 @@ tag=windows winlog Computer | dns Computer ip | table
 
 Both forward and reverse lookups can generate multiple results. If a lookup generates more than one result, the output will be a comma separated value (CSV) list of strings. If the result is a single value, it will be generated in the type requested (hostnames will be strings, IP addresses will be typed IPs). 
 
-## Supported Options
+### Supported Options
 
 * `-reverse`: Treat the enumerated value as an IP and perform reverse lookups.
 * `-l`: Set the maximum number of lookups to perform. This prevents accidental DNS query bursts to your resolver. The default value is 1024.
 
-## Examples
+### Examples
 
 In this example, we extract hostnames from a dataset, and simply do DNS lookups on each hostname:
 

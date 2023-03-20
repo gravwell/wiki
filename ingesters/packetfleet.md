@@ -1,10 +1,3 @@
----
-myst:
-  substitutions:
-    package: "gravwell-packet-fleet"
-    standalone: "gravwell_packet_fleet"
-    dockername: ""
----
 # Packet Fleet Ingester
 
 The Packet Fleet Ingester provides a mechanism to query Google Stenographer instances and have results ingested per-packet into Gravwell. 
@@ -12,11 +5,6 @@ The Packet Fleet Ingester provides a mechanism to query Google Stenographer inst
 Each Stenographer ingester listens on a given port (```Listen-Address```) and accepts Stenographer queries (see query syntax below) as an HTTP POST. On receiving a query, the ingester returns an integer job ID, and asynchronously queries the Stenographer instance and begins to ingest the returned PCAP. Multiple in-flight queries can be ran concurrently. Job status can be viewed by issuing an HTTP GET on "/status", which returns a JSON-encoded array of in-flight job IDs. 
 
 A simple web interface to submit and view job status is also available by browsing to the specified ingester port.
-
-## Installation
-
-```{include} installation_instructions_template.md 
-```
 
 ## Basic Configuration
 

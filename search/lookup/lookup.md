@@ -1,4 +1,4 @@
-# Lookup
+## Lookup
 
 The lookup module is used to do data enrichment and translation off of a static lookup table stored in a resource. The contents of one or more *enumerated values* are compared against values in the *match columns* until a match is found, then the value in that row's *extract column* is extracted into another enumerated value:
 
@@ -22,7 +22,7 @@ Lookup also supports vectored matches, this means you can match a set of enumera
 lookup -r mytable [A B] [A B] (C as foo D as bar)
 ```
 
-## Supported Options
+### Supported Options
 * `-r <arg>`: The "-r" option informs the lookup module which lookup resource should be used to enrich data.
 * `-s`: The "-s" option specifies that the lookup modules should require that all extractions succeed or the entry will be dropped.
 * `-v`: The "-v" flag inverts the flow logic in the lookup module, meaning that successful matches are suppressed and missed matches are passed on.  The "-v" and "-s" flags can be combined to provide basic whitelisting, passing only values which do not exist in the specified lookup table.
@@ -37,7 +37,7 @@ Here is an example that ensures that enumerated values `A` and `B` exist in the 
 lookup -v -r mytable [A B] [X Y] ()
 ```
 
-## Setting up a lookupdata resource
+### Setting up a lookupdata resource
 
 Lookup data can be downloaded from compatible render modules (e.g. the table module) and stored in a resource for sharing and utilization. Using the menu on the search results page, we can opt to download a table of search results in this format by selecting "LOOKUPDATA".
 
@@ -51,13 +51,13 @@ tag=syslog regex "DHCPACK on (?P<ip>\S+) to (?P<mac>\S+)" | unique ip mac | tabl
 
 In the above example, the table renderer automatically creates a resource named 'ip2mac' which contains a mapping of IP addresses to MAC addresses as derived from DHCP logs.
 
-### CSV tables
+#### CSV tables
 
 CSV data can also be used for the lookup module. In order to use a csv file as a resource in the Gravwell lookup search module the CSV must contain unique headers for the columns.
 
-## Examples
+### Examples
 
-### Basic Extraction
+#### Basic Extraction
 
 In this example, we have a resource called "macresolution" which was created from the following csv:
 ```
@@ -83,7 +83,7 @@ This results in a table containing the following:
 40:b0:fa:d7:af:01	|	mobile-device-1 	|	  927
 ```
 
-### Whitelisting
+#### Whitelisting
 
 Using the same "macresolution" table shown above:
 
@@ -100,7 +100,7 @@ This results in a table containing any mac addresses which were **not** in the l
 40:b0:fa:d7:af:fe	|	   21
 ```
 
-### Multiple Extraction
+#### Multiple Extraction
 
 Consider the following lookup table named "places":
 

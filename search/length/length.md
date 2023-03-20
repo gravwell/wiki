@@ -1,4 +1,4 @@
-# Length
+## Length
 
 The `length` module calculates the length (in bytes) of either the entry data or an enumerated value. The syntax is:
 
@@ -8,11 +8,11 @@ length [-t target] [source]
 
 The `source` parameter is an optional enumerated value name on which to operate; if no source is specified, length will use the raw entry data. By default, the length of the data or enumerated value is written to an enumerated value named "length". Specifying a `target` will instead write the length out to an enumerated value of that name.
 
-## Supported Options
+### Supported Options
 
 * `-t <target>`: Write the computed length to a specified enumerated value instead of the default named "length".
 
-## Example Usage
+### Example Usage
 
 | Command | Description |
 |---------|-------------|

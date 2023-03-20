@@ -1,20 +1,8 @@
----
-myst:
-  substitutions:
-    package: "gravwell-http-ingester"
-    standalone: "gravwell_http_ingester"
-    dockername: "http_ingester"
----
 # HTTP
 
 The HTTP ingester sets up HTTP listeners on one or more paths. If an HTTP request is sent to one of those paths, the request's Body will be ingested as a single entry.
 
 This is an extremely convenient method for scriptable data ingest, since the `curl` command makes it easy to do a POST request using standard input as the body.
-
-## Installation
-
-```{include} installation_instructions_template.md 
-```
 
 ## Basic Configuration
 

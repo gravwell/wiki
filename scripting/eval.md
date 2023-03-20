@@ -96,7 +96,7 @@ tag=pcap packet ipv4.SrcIP | eval setEnum("type", typeOf(SrcIP)) | table type
 
 In this case, the results show that `SrcIP` is a net.IP.
 
-## Persistent Maps
+#### Persistent Maps
 
 Eval provides a method to store data in a map, meaning data from one entry can be stored for later comparison against another entry. The `SetPersistentMap(mapname, key, value)` function creates or updates an entry in a map (specified by `mapname` parameter) mapping the given string `key` to the `value`, which can be anything. The `GetPersistentMap(mapname, key)` function can then be used to retrieve that information.
 

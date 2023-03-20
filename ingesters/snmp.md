@@ -1,18 +1,6 @@
----
-myst:
-  substitutions:
-    package: "gravwell-snmp"
-    standalone: "gravwell_snmp_ingest"
-    dockername: ""
----
 # SNMP Trap Ingester
 
 The SNMP ingester can receive SNMP traps for SNMP versions 2c and 3. The trap messages are ingested in a JSON structure for ease of use.
-
-## Installation
-
-```{include} installation_instructions_template.md 
-```
 
 ## Basic Configuration
 

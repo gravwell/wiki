@@ -1,18 +1,6 @@
----
-myst:
-  substitutions:
-    package: "gravwell-network-capture"
-    standalone: "gravwell_network_capture"
-    dockername: "network_capture"
----
 # Network Capture Ingester
 
 A primary strength of Gravwell is the ability to ingest binary data. The network ingester allows you to capture full packets from the network for later analysis; this provides much better flexibility than simply storing netflow or other condensed traffic information.
-
-## Installation
-
-```{include} installation_instructions_template.md 
-```
 
 ## Basic Configuration
 

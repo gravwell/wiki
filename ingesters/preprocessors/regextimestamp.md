@@ -1,10 +1,10 @@
-# Regex Timestamp Extraction Preprocessor
+## Regex Timestamp Extraction Preprocessor
 
 Ingesters will typically attempt to extract a timestamp from an entry by looking for the first thing which appears to be a valid timestamp and parsing it. In combination with additional ingester configuration rules for parsing timestamps (specifying a specific timestamp format to look for, etc.) this is usually sufficient to properly extract the appropriate timestamp, but some data sources may defy these straightforward methods. Consider a situation where a network device may send CSV-formatted event logs wrapped in syslog--a situation we have seen at Gravwell! The regex timestamp extractor can be used to skip the timestamp in the syslog header and instead extract the timestamp contained in the CSV logs.
 
 The Regex Timestamp Extraction preprocessor Type is `regextimestamp`.
 
-## Supported Options
+### Supported Options
 
 * `Regex` (string, required): This parameter specifies the regular expression to be applied to the incoming entries. It must contain at least one [named capturing group](https://www.regular-expressions.info/named.html), e.g. `(?P<timestamp>.+)` which will be used with the `TS-Match-Name` parameter.
 * `TS-Match-Name` (string, required): This parameter gives the name of the named capturing group from the `Regex` parameter which will contain the extracted timestamp.
@@ -44,11 +44,11 @@ The Regex Timestamp Extraction preprocessor Type is `regextimestamp`.
 * `Assume-Local-Timezone` (boolean, optional): This option tells the preprocessor to assume the timestamp is in the local timezone if no timezone is included. This is mutually exclusive with the `Timezone-Override` parameter.
 
 
-## Common Use Cases
+### Common Use Cases
 
 Many data streams may have multiple timestamps or values that can easily be interpreted as timestamps.  The regextimestamp preprocessor allows you to force timegrinder to examine a specific timestamp within a log stream.  A good example is a log stream that is transported via syslog using an application that includes its own timestamp but does not relay that timestamp to the syslog API.  The syslog wrapper will have a well-formed timestamp of its own, but it will necessarily be after the correct timestamp in the actual log entry.
 
-## Example: Wrapped Syslog Data
+### Example: Wrapped Syslog Data
 
 ```
 Nov 25 15:09:17 webserver alerts[1923]: Nov 25 14:55:34,GET,10.1.3.4,/info.php

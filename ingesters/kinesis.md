@@ -1,10 +1,3 @@
----
-myst:
-  substitutions:
-    package: "gravwell-kinesis"
-    standalone: "gravwell_kinesis_ingest"
-    dockername: ""
----
 # Kinesis Ingester
 
 Gravwell provides an ingester capable of fetching entries from Amazon's [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) service. The ingester can process multiple Kinesis streams at a time, with each stream composed of many individual shards. The process of setting up a Kinesis stream is outside the scope of this document, but in order to configure the Kinesis ingester for an existing stream you will need:
@@ -14,11 +7,6 @@ Gravwell provides an ingester capable of fetching entries from Amazon's [Kinesis
 * The name of the stream itself
 
 Once the stream is configured, each record in the Kinesis stream will be stored as a single entry in Gravwell.
-
-## Installation
-
-```{include} installation_instructions_template.md 
-```
 
 ## Basic Configuration
 

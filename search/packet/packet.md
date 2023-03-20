@@ -1,4 +1,4 @@
-# Packet
+## Packet
 
 The Packet pipeline module extracts fields from Ethernet, IPv4, IPv6, TCP, and UDP packets.  Each field supports an operator which can selectively filter the packet, if no operator is provided the field is extracted if available.
 
@@ -6,11 +6,11 @@ The packet module is useful both for filtering traffic down to specific protocol
 
 Some field modules allow for flexible section where it is desirable to filter on a field that may have a source and destination.  To accommodate selection on IPs, Ports, MACs where there are both a source and destination, the special fields Port, IP, MAC are available.  If either source or destination matches an enumerated value with the field will be populated with the component that matched.  For example, tcp.Port==80 will match whenever either tcp.SrcPort or tcp.DstPort are equal to 80; tcp.Port != 80 will ensure that if either the source or destination ports are 80 the packet is filtered.
 
-## Supported Options
+### Supported Options
 
 * `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record. For example, the packet processing engine can operate on extracted values such as analyzing layer 2 tunnels.`
 
-## Packet Processing Operators
+### Packet Processing Operators
 
 | Operator | Name | Description
 |----------|------|-------------
@@ -23,7 +23,7 @@ Some field modules allow for flexible section where it is desirable to filter on
 | ~ | Subset | Field must be a member of
 | !~ | Not subset | Field must not be a member of
 
-## Packet Processing Submodules
+### Packet Processing Submodules
 
 The packet processor supports submodules which allow for breaking out specific fields in a packet. Each submodule and field supports a set of operators that allow the packet processor to also filter events based on the subfields.  The following sub modules are available:
 
@@ -41,7 +41,7 @@ The packet processor supports submodules which allow for breaking out specific f
 | modbus | modbus/TCP packets |
 | MPLS | Multi-protocol Label Switching |
 
-## Renaming Extractions
+### Renaming Extractions
 
 Enumerated value names are derived by the last name in a submodule specification. For example, the specification "ipv4.SrcIP" will generate the enumerated value "SrcIP". Enumerated value names can be overridden with an "as" argument. For example, to extract "ipv4.SrcIP" as "foo":
 
@@ -55,9 +55,9 @@ Renamed enumerated values can also be used with filters:
 tag=pcap packet ipv4.SrcIP="8.8.8.8" as foo | table foo
 ```
 
-## List of Packet Processing Submodules
+### List of Packet Processing Submodules
 
-### Ethernet
+#### Ethernet
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
@@ -68,7 +68,7 @@ tag=pcap packet ipv4.SrcIP="8.8.8.8" as foo | table foo
 | eth | Type | < > <= >= == != | eth.Type < 5 
 | eth | Payload | | eth.Payload
 
-### VLAN dot1q
+#### VLAN dot1q
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
@@ -79,7 +79,7 @@ tag=pcap packet ipv4.SrcIP="8.8.8.8" as foo | table foo
 
 The dot1q packet submodule is designed to enable parsing of VLAN tagged packets.
 
-#### Example Search
+##### Example Search
 
 An example search that shows all mac addresses routing multiple IPv4 addresses with VLAN tagged packets:
 
@@ -87,7 +87,7 @@ An example search that shows all mac addresses routing multiple IPv4 addresses w
 tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | count by SrcMAC | eval count > 1 | table SrcMAC count
 ```
 
-### 802.11 Wireless
+#### 802.11 Wireless
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
@@ -100,13 +100,13 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | dot11 | FromDS | == ! | dot11.FromDS != false
 | dot11 | Payload | | dot11.Payload
 
-### 802.11 Information Elements
+#### 802.11 Information Elements
 
 | Packet Type | Field | Operators | Example
 |-----|-------|-----------|---------
 | dot11info | SSID | == != | dot11.SSID != xfinitywifi
 
-### IPv4
+#### IPv4
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
@@ -125,7 +125,7 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | ipv4 | IP | == != ~ !~ | ipv4.IP ~ 192.168.1.0/14
 | ipv4 | Payload | | ipv4.Payload
 
-### IPv6
+#### IPv6
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
@@ -140,7 +140,7 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | ipv6 | IP | == != ~ !~ | ipv6.IP == FE80::1/64 
 | ipv6 | Payload | | ipv6.Payload
 
-### TCP
+#### TCP
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
@@ -156,7 +156,7 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | tcp | DataOffset | == != < > <= >= | tcp.DataOffset > 96 
 | tcp | Payload | ~ !~ | tcp.Payload ~ "HTTP"
 
-### UDP
+#### UDP
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
@@ -168,7 +168,7 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | udp | Payload | ~ !~ | udp.Payload
 
 
-### ICMP V4
+#### ICMP V4
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
@@ -179,7 +179,7 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | icmpv4 | Seq | == != < > <= >= | icmpv4.Seq > 100
 | icmpv4 | Payload | == != ~ !~ | icmpv4.Payload
 
-### ICMP V6
+#### ICMP V6
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
@@ -188,7 +188,7 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | icmpv6 | Checksum | == != < > <= >= | icmpv6.Checksum == 1024 
 | icmpv6 | Payload | == != ~ !~ | icmpv6.Payload
 
-### Modbus
+#### Modbus
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
@@ -209,7 +209,7 @@ tag=pcap packet udp.DstPort==53 udp.Payload | grep -e Payload "tumblr" | text
 
 The `udp.DstPort==53` component specifies that we should only match on packets destined for UDP port 53, while the `udp.Payload` component specifies that the payload portion of each packet should be extracted into an enumerated value. We then use the `grep` module to search the payload for the word “tumblr” and send the results to the `text` renderer for display.
 
-### MPLS
+#### MPLS
 
 The packet search module can decode MPLS headers and allows for selective filtering.  The following MPLS fields are available.
 

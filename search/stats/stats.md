@@ -1,4 +1,4 @@
-# Stats 
+# Stats Module
 
 The stats module allows the user to perform multiple stats operations simultaneously, where the individual math modules only perform one operation. The canonical example for the stats module is computing the mean and standard deviation of values in order to display error bars on a graph.
 

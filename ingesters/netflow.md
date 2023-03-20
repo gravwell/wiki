@@ -1,18 +1,6 @@
----
-myst:
-  substitutions:
-    package: "gravwell-netflow-capture"
-    standalone: "gravwell_netflow_capture"
-    dockername: "netflow_capture"
----
 # Netflow Ingester
 
 The Netflow ingester acts as a Netflow collector (see [the Wikipedia article](https://en.wikipedia.org/wiki/NetFlow) for a full description of Netflow roles), gathering records created by Netflow exporters and capturing them as Gravwell entries for later analysis. These entries can then be analyzed using the [netflow](/search/netflow/netflow) search module.
-
-## Installation
-
-```{include} installation_instructions_template.md 
-```
 
 ## Basic Configuration
 

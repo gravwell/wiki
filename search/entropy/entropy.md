@@ -1,4 +1,4 @@
-# Entropy
+## Entropy
 
 The `entropy` module calculates the entropy of field values over time. Specifying `entropy` without any arguments will generate the entropy of all entries DATA fields across the search range. The `entropy` module supports temporal search mode allowing for charting of entropy over time. `entropy` can also operate on enumerated values and group by enumerated values. Output values are between 0 and 1.
 
@@ -22,11 +22,11 @@ tag=gravwell entropy over 10m
 
 All arguments are optional.
 
-## Supported Options
+### Supported Options
 
 `entropy` has no flags.
 
-## Examples
+### Examples
 
 This query calculates and charts the entropy of TCP packet payloads based on port:
 

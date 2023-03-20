@@ -1,10 +1,3 @@
----
-myst:
-  substitutions:
-    package: "gravwell-file-follow"
-    standalone: "gravwell_file_follow"
-    dockername: "file_follow"
----
 # File Follower
 
 The File Follower ingester is the best way to ingest files on the local filesystem in situations where those files may be updated on the fly. It ingests each line of the files as a single entry.
@@ -15,11 +8,6 @@ Note that if you instead wish to ingest existing/archive files (which will not b
 
 ```{attention}
 On RHEL/CentOS, `/var/log` belongs to the "root" group, not "adm" as we assume. File Follower runs in the adm group by default, so if you want it to read `/var/log` you need to `chgrp -R adm /var/log` OR change the group in the systemd unit file.
-```
-
-## Installation
-
-```{include} installation_instructions_template.md 
 ```
 
 ## Kernel parameter tuning

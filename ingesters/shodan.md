@@ -58,19 +58,6 @@ A Shodan entry is a JSON-formatted record containing the elements for a single S
 
 More information about the Shodan Record format is available at the [Shodan datapedia site](https://datapedia.shodan.io).
 
-## Installation
-To install the Debian package, make sure the Gravwell Debian repository is configured [as described in the quickstart](debian_repo). Then run the following command as root:
-
-::: {parsed-literal}
-apt update && apt install gravwell-shodan
-:::
-
-To install via the standalone shell installer, download the installer from the [downloads page](/quickstart/downloads), then run the following command as root, replacing X.X.X with the appropriate version:
-
-::: {parsed-literal}
-bash gravwell_shodan_installer_X.X.X.sh
-:::
-
 ## Basic Configuration
 
 The Shodan ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the Shodan ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.

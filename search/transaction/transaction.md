@@ -1,4 +1,4 @@
-# Transaction
+## Transaction
 
 ```{note}
 The `transaction` module can consume a large amount of memory. Use caution when using this module on memory constrained systems.
@@ -6,7 +6,7 @@ The `transaction` module can consume a large amount of memory. Use caution when 
 
 The `transaction` module transforms and groups entries in the pipeline into single-entry "transactions" - groupings of entries - based on any number of keys. It is a powerful tool for capturing the activity of a given user, IP, etc., across multiple entries in a datastream. 
 
-## Supported Options
+### Supported Options
 
 * `-e`: The `-e` option operates on an enumerated value instead of on the entire record. Multiple EVs are supported by providing additional `-e` flags.
 * `-rsep`: The `-rsep` option sets the string to insert between transaction records. The default is "\n".
@@ -18,7 +18,7 @@ The `transaction` module transforms and groups entries in the pipeline into sing
 
 All flags are optional.
 
-## Overview
+### Overview
 
 The `transaction` module groups entries into single entries based on a provided set of keys. For example, given a dataset with enumerated values "host", "message", and "action", the query:
 
@@ -60,7 +60,7 @@ tag=data kv host action message user group | transaction host action user | tabl
 
 Will group records with the same host, action, and user. 
 
-## Memory considerations
+### Memory considerations
 
 The `transaction` module must buffer all entries in the datastream in order to create transactions. For queries that produce large amounts of data, this can quickly exhaust the available memory on a system. In order to prevent this, the `transaction` module provides two flags, `-maxsize`, and `-maxstate`, to control how much and how long to retain data before passing it downstream in the pipeline. 
 

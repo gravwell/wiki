@@ -1,10 +1,10 @@
-# Dump
+## Dump
 
 The `dump` module is designed to treat resources as queryable data, meaning that you can inject a CSV or lookup table into the query pipeline and perform operations on the rows as if they are full fledged search entries.  Dump can be particularly useful when building dashboards and views that need to operate on data that has already been imported from some other static source or aggregated used scheduled queries.
 
 The Gravwell search system will infer from the query whether or not it needs to engage the indexers and/or stored data.  If the `dump` module can satisfy all the enumerated value requirements and no other extraction modules are present the query will not execute on the indexers at all.  However, the dump module does support injecting values along side other data through the `-p` execution flag which is documented below.
 
-## Supported Options
+### Supported Options
 
 * `-r`: The `-r` option requires an argument and specifies the name or UUID of a resource to extract data from.  A resource must be specified and the current user must have read access to that resource.
 * `-p`: The `-p` indicates that the dump module is injecting values along side other data and the pipeline should query the indexers. This flag cannot be used with the `-t` flag.
@@ -12,11 +12,11 @@ The Gravwell search system will infer from the query whether or not it needs to 
 * `-tz`: Set the timezone for timestamps processed using `-t`, in tz [tz database format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), e.g. "America/Denver", "UTC", or "Atlantic/Reykjavik". 
 * `-f`: Specifies the format to be used when parsing timestamps when using `-t`. The format consists of a string representation of a specific time, "Mon Jan 2 15:04:05 MST 2006", as used by the [Go time library](https://golang.org/pkg/time/#pkg-constants). Refer to the linked documentation for more examples.
 
-## Filtering and Column Inclusion
+### Filtering and Column Inclusion
 
 The `dump` module will extract all columns from a CSV or lookup table resource if no columns are specified or if all specified columns have filters operations.  For example, `dump -r hosts hostname` means only extract the hostname column, where `dump -r hosts hostname == "ad.example.com"` means extract all columns because every column specified has a filter operation attached.  The query `dump -r hosts hostname == "ad.example.com" IP` will only extract the `hostname` and `IP` columns.
 
-### Supported Filter Operators
+#### Supported Filter Operators
 
 The `dump` module allows for a filtering based on equality.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any column in a row that fails the filter specification will be not be injected into the pipeline.
 
@@ -28,7 +28,7 @@ The `dump` module allows for a filtering based on equality.  If a filter is enab
 | !~ | Not Subset | Field does NOT contain the value
 
 
-### Filtering Examples
+#### Filtering Examples
 
 Retrieve all columns from the `hosts` resource where the `hostname` column does not equal "ad.example.com":
 ```
@@ -45,7 +45,7 @@ Retrieve all columns from the `hosts` resource where the hostname is not empty a
 dump -r hosts hostname != "" org=="finance"
 ```
 
-## Example Queries
+### Example Queries
 
 Dump an entire resource into the pipeline and populates the table module:
 

@@ -1,4 +1,4 @@
-# Printf
+## Printf
 
 The printf module implements a Go-style printf function, and supports a number of operator verbs. The module requires an formatting string, followed by the exact number of enumerated value arguments as required by the formatting string. 
 
@@ -44,11 +44,11 @@ In addition, the following modifiers are available to many verbs:
 	for numbers, this moves the padding after the sign
 ```
 
-## Supported Options
+### Supported Options
 
 * `-e`: By default, printf creates an enumerated value "printf" to store the result in. Use `-e` to change the destination enumerated value.
 
-## Example Usage
+### Example Usage
 
 This example formats a simple string containing floating point numbers.
 

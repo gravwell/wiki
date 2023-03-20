@@ -1,4 +1,4 @@
-# Grep
+## Grep
 
 Grep is a very basic pipeline module that searches for a text string (not Unicode). Any record containing such text will match and be passed through the pipeline. Any record not containing the text is dropped from the pipeline. For example, `grep foo` will pass on any records containing the text “foo” and drop any records that do not have “foo” anywhere within. Grep is case sensitive so `grep foo` would match “foo” but drop “Foo”.  Grep also supports a standard set of escape codes similar to printf, allowing for binary filters as well.
 
@@ -6,7 +6,7 @@ Grep supports the standard GNU wildcards as well as fast string and binary match
 
 Grep allows multiple patterns to be specified. If any pattern is matched, the entry is passed down the pipeline. If the `-v` flag is used to invert the search, the entry will be dropped if *any* pattern matches.
 
-## Supported options
+### Supported options
 
 * `-v`: “Inverse” grep. For instance, `grep -v bar` would drop any records containing the text “bar” and pass on any records that do not contain “bar”.
 * `-i`: Match case insensitive values. Thus, `grep -i foo` would match “Foo” and “foo”. Case insensitive search tends to be one of the slowest operations; put it later in your pipeline if possible to keep things fast.
@@ -23,12 +23,12 @@ Case-insensitive search is significantly slower. If you must do case-insensitive
 The `-w` word match implies a simple match as the wildcards allow for crossing word boundaries.
 ```
 
-## Parameter Structure
+### Parameter Structure
 ```
 grep <argument list> <search parameter>
 ```
 
-## Example Search
+### Example Search
 
 To find any Apache logs containing the exact string "Mozilla\*Firefox" (no wildcards):
 
@@ -60,7 +60,7 @@ Grab only user agents that contain Mozilla and Windows
 tag=apache grep -s Mozilla Windows
 ```
 
-## Working With Word Matches
+### Working With Word Matches
 
 The word match system is designed to match complete words.  Grep with the -w flag is one of the primary methods to interacting with the fulltext indexing system.
 

@@ -1,18 +1,18 @@
-# gzip Preprocessor
+## gzip Preprocessor
 
 The gzip preprocessor can uncompress entries which have been compressed with the GNU 'gzip' algorithm.
 
 The GZIP preprocessor Type is `gzip`.
 
-## Supported Options
+### Supported Options
 
 * `Passthrough-Non-Gzip` (boolean, optional): if set to true, the preprocessor will pass through any entries whose contents cannot be uncompressed with gzip. By default, the preprocessor will drop any entries which are not gzip-compressed.
 
-## Common Use Cases
+### Common Use Cases
 
 Many cloud data bus providers will package data in a compressed form.  This preprocessor can decompress the data stream in the ingester rather than routing through a cloud lambda function (which can incur additional costs).
 
-## Example: Decompressing compressed entries
+### Example: Decompressing compressed entries
 
 Example config:
 

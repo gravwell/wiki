@@ -1,12 +1,12 @@
-# Filetype
+## filetype
 
 The `filetype` module is used to fingerprint a number of filetypes, and put that filetype into a named enumerated value. The underlying filetypes must be in their native format (such as an entry that is a raw JPEG). 
 
-## Supported Options
+### Supported Options
 
 * `-e`: Use an enumerated value instead of the DATA field.
 
-## Usage
+### Usage
 
 The `filetype` module requires that a single argument be provided which specifies the output enumerated value name to be populated with the MIME type value.  If the `filetype` module cannot identify a suitable MIME type for the given value the enumerated value will not be produced.
 
@@ -22,9 +22,9 @@ The supported filter operators are:
 | !~ | Not subset |
 
 
-## Supported Types
+### Supported Types
 
-### Images 
+#### Images 
 
 * jpg - image/jpeg
 * png - image/png
@@ -39,7 +39,7 @@ The supported filter operators are:
 * ico - image/vnd.microsoft.icon
 * dwg - image/vnd.dwg
 
-### Video
+#### Video
 
 * mp4 - video/mp4
 * m4v - video/x-m4v
@@ -52,7 +52,7 @@ The supported filter operators are:
 * flv - video/x-flv
 * 3gp - video/3gpp
 
-### Audio
+#### Audio
 
 * mid - audio/midi
 * mp3 - audio/mpeg
@@ -64,7 +64,7 @@ The supported filter operators are:
 * aac - audio/aac
 * aiff - audio/x-aiff
 
-### Archive
+#### Archive
 
 * epub - application/epub+zip
 * zip - application/zip
@@ -94,7 +94,7 @@ The supported filter operators are:
 * elf - application/x-executable
 * dcm - application/dicom
 
-### Documents
+#### Documents
 
 * doc - application/msword
 * docx - application/vnd.openxmlformats-officedocument.wordprocessingml.document
@@ -103,20 +103,20 @@ The supported filter operators are:
 * ppt - application/vnd.ms-powerpoint
 * pptx - application/vnd.openxmlformats-officedocument.presentationml.presentation
 
-### Font
+#### Font
 
 * woff - application/font-woff
 * woff2 - application/font-woff
 * ttf - application/font-sfnt
 * otf - application/font-sfnt
 
-### Application
+#### Application
 
 * wasm - application/wasm
 * dex - application/vnd.android.dex
 * dey - application/vnd.android.dey
 
-## Example
+### Example
 
 This example uses the `filetype` module to list the image types in the "images" tag. It additionally filters to display just images.
 

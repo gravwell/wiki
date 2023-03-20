@@ -1,4 +1,4 @@
-# Canbus
+## Canbus
 
 The canbus module extracts fields from CAN messages (i.e. vehicle data). These fields are automatically extracted with the invocation of the canbus module.
 
@@ -9,7 +9,7 @@ The canbus module extracts fields from CAN messages (i.e. vehicle data). These f
 | canbus | RTR | == != | canbus RTR==true
 | canbus | Data | ~ !~ | canbus Data
 
-## Example Search
+### Example Search
 
 The following search will count by canbus packet IDs and display a table with the most frequent IDs.
 

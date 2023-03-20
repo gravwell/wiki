@@ -106,7 +106,7 @@ The second extraction for the "locs" tag demonstrates the omission of non-essent
 
 The AX module supports integrated filtering at time of *search*.  Filtering cannot, however, be applied to any auto-extraction *definition*.
 
-### Filtering Operators
+#### Filtering Operators
 
 | Operator | Name | Description |
 |----------|------|-------------|
@@ -115,7 +115,7 @@ The AX module supports integrated filtering at time of *search*.  Filtering cann
 | ~  | Subset | Field contains the value
 | !~ | Not Subset | Field does NOT contain the value
 
-### Filtering Examples
+#### Filtering Examples
 
 ```
 ax foo=="bar" baz~"stuff"

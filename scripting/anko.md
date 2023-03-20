@@ -4,7 +4,7 @@ As introduced in [the search modules documentation](searchmodule_list), Gravwell
 
 See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting) for more details about the language itself.
 
-## Disabling network functions in anko scripts
+### Disabling network functions in anko scripts
 
 By default, anko scripts are allowed to use network utilities such as the http and net libraries, sftp, and ssh. You may not want to give Gravwell users network access; setting the option `Disable-Network-Script-Functions=true` in `/opt/gravwell/etc/gravwell.conf` will disable this.
 

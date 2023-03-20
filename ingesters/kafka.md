@@ -1,10 +1,3 @@
----
-myst:
-  substitutions:
-    package: "gravwell-kafka"
-    standalone: "gravwell_kafka"
-    dockername: "kafka_consumer"
----
 # Kafka
 
 The Kafka ingester designed to act as a consumer for [Apache Kafka](https://kafka.apache.org/) so that data Gravwell can attach to a Kafka cluster and consume data.  Kafka can act as a high availability [data broker](https://kafka.apache.org/uses#uses_logs) to Gravwell.  Kafka can take on some of the roles provided by the Gravwell Federator, or ease the burden of integrating Gravwell into an existing data flow.  If your data is already flowing to Kafka, integrating Gravwell is just an `apt-get` away.
@@ -12,11 +5,6 @@ The Kafka ingester designed to act as a consumer for [Apache Kafka](https://kafk
 The Gravwell Kafka ingester is best suited as a co-located ingest point for a single indexer.  If you are operating a Kafka cluster and a Gravwell cluster, it is best not to duplicate the load balancing characteristics of Kafka at the Gravwell ingest layer.  Install the Kafka ingester on the same machine as the Gravwell indexer and use the Unix named pipe connection.  Each indexer should be configured with its own Kafka ingester, this way the Kafka cluster can manage load balancing.
 
 Most Kafka configurations enforce a data durability guarantee, which means data is stored in non-volatile storage when consumers are not available to consume it.  As a result we do not recommend that the Gravwell ingest cache be enabled on Kafka ingester, instead let Kafka provide the data durability.
-
-## Installation
-
-```{include} installation_instructions_template.md 
-```
 
 ## Basic Configuration
 

@@ -1,10 +1,3 @@
----
-myst:
-  substitutions:
-    package: "gravwell-kafka-federator"
-    standalone: "gravwell_kafka_federator"
-    dockername: "kafka_federator"
----
 # Kafka Federator
 
 Gravwell also provides a Kafka Federator, that behaves exactly like the Federator, except that it uses Kafka as an upstream transport. Ingesters can connect to it just as with Federator, and ingested entries will be put into Kafka Topics as messages. 
@@ -12,11 +5,6 @@ Gravwell also provides a Kafka Federator, that behaves exactly like the Federato
 ![](kafkaFederatorDiagram.png)
 
 The Kafka Federator can be paired with the [Kafka Consumer](/ingesters/kafka) to read messages from a topic and ingest them into a Gravwell indexer.
-
-## Installation
-
-```{include} ../installation_instructions_template.md 
-```
 
 ## Configuration
 
