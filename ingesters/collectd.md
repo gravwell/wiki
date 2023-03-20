@@ -1,6 +1,18 @@
+---
+myst:
+  substitutions:
+    package: "gravwell-collectd"
+    standalone: "gravwell_collectd"
+    dockername: "collectd"
+---
 # collectd Ingester
 
 The collectd ingester is a fully standalone [collectd](https://collectd.org/) collection agent which can directly ship collectd samples to Gravwell.  The ingester supports multiple collectors which can be configured with different tags, security controls, and plugin-to-tag overrides.
+
+## Installation
+
+```{include} installation_instructions_template.md 
+```
 
 ## Basic Configuration
 

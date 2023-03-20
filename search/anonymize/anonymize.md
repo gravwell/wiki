@@ -1,4 +1,4 @@
-## anonymize
+# Anonymize
 
 The `anonymize` module is used replace the contents of specified enumerated values with anonymized values. For example, to replace the IP address in a dataset with anonymized addresses:
 
@@ -10,11 +10,11 @@ This query will map each entry's IP enumerated value with a random IP address. T
 
 The `anonymize` module supports strings, byte arrays, IP addresses, MAC addresses, integers, floating point numbers, and locations. 
 
-### Supported Options
+## Supported Options
 
 * `-prefix <prefix>`: anonymized text will be prefixed with this string. Defaults to `anonymized_`.
 
-### Example
+## Example
 
 In this example, we extract request/response pairs from DNS:
 

@@ -1,12 +1,12 @@
-## Path
+# Path
 
 The path module extracts and filters path names.  It can process individual portions of a path, including the directory, filename, extension, and volume. It works with both Windows (including UNC paths) and Linux/Unix style paths. 
 
-### Supported Options
+## Supported Options
 
 * `-e`: Extract from an enumerated value instead of the DATA portion of the entry.
 
-### Arguments and syntax
+## Arguments and syntax
 
 The path module supports the following four extractions:
 
@@ -23,7 +23,7 @@ Each extraction can be filtered and renamed using the `as` keyword. For example:
 tag=filenames path base == "foo.txt" as foofiles
 ```
 
-### Examples
+## Examples
 
 Extract the filename of all ".txt" files:
 

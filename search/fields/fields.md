@@ -1,8 +1,8 @@
-## Fields
+# Fields
 
 The fields module is used to extract and filter data from search entries into enumerated values for later use.  The fields module is designed to be extremely flexible in capturing and filtering data where data items are delimited by a constant set of bytes.  Formats that are comma delimited (CSV), tab delimited, or space delimited are easily processed using the fields module.  More complicated structures which multi-byte delimiters and/or binary formats with known fields separators can use the fields system to extract on arbitrary field boundaries.  Example data producers that can benefit from the fields module are [bro](https://www.bro.org/) with its tab delimited format or the CSV output format from snort.
 
-### Specifying Extraction Fields
+## Specifying Extraction Fields
 
 Fields are extracted by specifying an index into data from a base of zero.  An index is specified using a positive integer surrounded by square brackets.  Multiple fields can be extracted by providing multiple directives.  Field extraction indexes do not need be be specified in order.
 
@@ -16,7 +16,7 @@ Field extraction indexes can be specified as base 10, base 8, or base 16.  The d
 To specify filter values and or extraction names which contain special characters like "-", ".", or spaces surround the value in double quotes.
 ```
 
-### Supported Options
+## Supported Options
 
 * `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
 * `-d <arg>` : The “-d” option specifies the delimiter used to extract fields.  A delimiter can be any string of bytes.  The default is a comma: ",".
@@ -24,7 +24,7 @@ To specify filter values and or extraction names which contain special character
 * `-q` : The “-q” option specifies that the fields can be quoted.  This is useful when dealing with delimiters which might show up in fields.  For example, if the field delimiter is a space, columns may need to contain a space and will be quoted.  If the "-q" argument is specified, any delimiter that is surrounded boy double quotes will be ignored and included in the field.  Delimiters cannot contain double quotes when using the "-q" flag.
 * `-clean` : The “-clean” flag specifies that the fields module should remove all surrounding whitespace from extracted fields.  Data formats like CSV which may have trailing whitespace can use the "-clean" flag to remove the unwanted whitespace.  If the "-q" flag is specified with "-clean" double quotes will be removed from quoted fields.
 
-### Filtering Operators
+## Filtering Operators
 
 The fields module allows for a filtering based on equality.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
 
@@ -35,7 +35,7 @@ The fields module allows for a filtering based on equality.  If a filter is enab
 | ~ | Subset | Field contains the value
 | !~ | Not Subset | Field does NOT contain the value
 
-### Examples
+## Examples
 
 Extract the URL field from a tab delimited bro http.log feed and name it "url".
 
