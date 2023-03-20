@@ -15,7 +15,7 @@ Most Kafka configurations enforce a data durability guarantee, which means data 
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration

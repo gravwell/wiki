@@ -11,7 +11,7 @@ The collectd ingester is a fully standalone [collectd](https://collectd.org/) co
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration

@@ -13,7 +13,7 @@ This is an extremely convenient method for scriptable data ingest, since the `cu
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration

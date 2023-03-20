@@ -51,7 +51,7 @@ The configuration file provides a simple host/port, username, and password field
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration
