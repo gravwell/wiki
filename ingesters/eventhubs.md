@@ -1,6 +1,18 @@
+---
+myst:
+  substitutions:
+    package: "gravwell-azure-event-hubs"
+    standalone: "gravwell_azure_event_hubs_ingest"
+    dockername: ""
+---
 # Azure Event Hubs Ingester
 
 The Azure Event Hubs Ingester pulls events from Microsoft Azure's [Event Hubs](https://docs.microsoft.com/en-us/azure/event-hubs/event-hubs-about), a "big data streaming platform". We take care to track which events have been ingested from each hub, to avoid double-ingest. When configuring a hub for the first time, you may chose to have the ingester consume all events currently in the hub first, or to have it only consume newly-created events.
+
+## Installation
+
+```{include} installation_instructions_template.md 
+```
 
 ## Basic Configuration
 

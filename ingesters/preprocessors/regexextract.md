@@ -1,4 +1,4 @@
-## Regex Extraction Preprocessor
+# Regex Extraction Preprocessor
 
 It is common for transport buses to wrap data streams with additional metadata that may not be pertinent to the actual event.  Syslog is an excellent example, where the syslog header may not provide value to the underlying data, duplicates fields in the underlying data, or simply complicates the analysis of the data.  The regexextract preprocessor uses a regular expression to extract multiple fields and reform them into a new structure for ingestion.
 
@@ -12,18 +12,18 @@ Templates reference extracted values by name using field definitions similar to 
 
 The Regex Extraction preprocessor Type is `regexextract`.
 
-### Supported Options
+## Supported Options
 
 * Drop-Misses (boolean, optional): This parameter specifies whether the preprocessor should drop the entry if the regular expression does not match. By default the entry is passed through.
 * Regex (string, required): This parameter defines the regular expression for extraction
 * Template (string, required): This parameter defines the output form of the record.
 * Attach (string, optional): Name extracted value that will be attached as an intrinsic value.
 
-### Common Use Cases
+## Common Use Cases
 
 The regexextract preprocessor is most commonly used for stripping un-needed headers from data streams, however it can also be used to reform data into easier to process formats.
 
-#### Example: Stripping Syslog Headers
+### Example: Stripping Syslog Headers
 
 Given the following record, we want to remove the syslog header and ship just the JSON blob. We will slightly restructure the JSON, though, to include the application name from the syslog header.
 
@@ -60,7 +60,7 @@ The result is:
 ```{note}
 Templates can specify multiple fields constant values.  Extracted fields can be inserted multiple times.
 ```
-#### Example: Removing and Attaching Headers
+### Example: Removing and Attaching Headers
 
 Given the following record, we want to remove the host and category headers and leave only the data field; the host and category will be attached as values to the entry:
 

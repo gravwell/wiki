@@ -1,16 +1,16 @@
-## CSV Router Preprocessor
+# CSV Router Preprocessor
 
 The CSV router preprocessor can route entries to different tags based on the contents of a specified CSV column in the entry. The configuration specifies a column index (zero indexed), the contents of which are then tested against user-defined routing rules.
 
 The CSV Router preprocessor Type is `csvrouter`.
 
-### Supported Options
+## Supported Options
 
 * `Route-Extraction` (int, required): This parameter specifies the column index (beginning with 0) of the CSV which will contain the string used to compare against routes.
 * `Route` (string, required): At least one `Route` definition is required. This consists of two strings separated by a colon, e.g. `Route=sshd:sshlogtag`. The first string ('sshd') is matched against the value extracted via `Route-Extraction`, and the second string defines the name of the tag to which matching entries should be routed. If the second string is left blank, entries matching the first string *will be dropped*.
 * `Drop-Misses` (boolean, optional): By default, entries which are not valid CSV or do not contain enough columns to extract the `Route-Extraction` column will be passed through unmodified. Setting `Drop-Misses` to true will make the ingester drop any entries which 1) are not valid CSV, or 2) do not contain enough columns to extract the `Route-Extraction` column.
 
-### Example: Routing based on the Third Column
+## Example: Routing based on the Third Column
 
 Given the input:
 

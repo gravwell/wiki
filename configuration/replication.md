@@ -116,6 +116,38 @@ Replication is controlled by the "Replication" configuration group in the gravwe
 | Enable-Transparent-Compression | Enable-Transparent-Compression=true | Enable transparent compression on using the host file system for replicated data. |
 | Enable-Transport-Compression | Enable-Transparent-Compression=true | Enable transport compression when transmitting data to replication peer.  Defaults to `true`. |
 
+## Disabling Replication Per Well
+
+The replication engine will replicate all data across all wells by default, however it may be desired to control which datasets are replicated due to costs, priorities, or just when testing Gravwell.  Some users find it useful to have a "test" well where data can be ingested and aged out quickly and replicating that test data may not make much sense.  Gravwell allows for disabling replication on a per well basis by adding the configuration stanza `Disable-Replication=true` inside the well configuration block.  When replication is disabled, the engine will not communicate the wells existence or push any data to replication peers; tags however are always replicated, even if they are assigned to a well with replication disabled.
+
+An example configuration snippet where replication is enabled on an indexer but a specific well is excluded is as follows:
+
+```
+[Replication]
+	Peer=172.16.2.101
+	Storage-Location=/opt/gravwell/replication_storage
+	Connect-Wait-Timeout=60
+
+
+[Default-Well]
+	Location=/opt/gravwell/storage/default/
+	Hot-Duration=365d
+	Delete-Cold-Data=true
+
+[Storage-Well "testing"]
+	Location=/opt/gravwell/storage/default/
+	Tags="testing-*"
+	Hot-Duration=2d
+	Delete-Cold-Data=true
+	Disable-Replication=true
+```
+
+
+```{attention}
+The default well is not subject to the `Disable-Replication` configuration parameter and is always replicated.  Do not attempt to disable replication on the default well.
+```
+
+
 ## Replication Engine Behavior
 
 The replication engine is a best effort asynchronous replication and restoration system designed to minimize impact on ingest and search.  The replication system attempts a best-effort data distribution but focuses on timely assignment and distribution.  This means that shards are assigned in a distributed first-come, first-serve order with some guidance based on previous distribution.  The system does not attempt a perfectly uniform data distribution and replication peers with higher throughput (either bandwidth, storage, or CPU) may take on a greater replication load than peers with less.  When designing a Gravwell cluster topology intended to support data replication, we recommend over-provisioning the replication storage by 10-15% to allow for unexpected bursts or data distribution that is not perfectly uniform.
@@ -123,6 +155,12 @@ The replication engine is a best effort asynchronous replication and restoration
 The replication engine ensures backup of two core pieces of data: tags and the actual entries.  The mapping of printable tag names to storage IDs is maintained independently by each indexer and are critical for effective searching.  Because the tag to name maps are relatively small, every indexer replicates its entire map to every other replication peer.  Data on the other hand is only ever replicated once.
 
 Replication is designed to coordinate with data ageout, migration, and well isolation.  When an indexer ages out data to a cold storage pool or deletes it entirely, the data regions are marked as either cold or deleted on remote storage peers.  The remote storage peers use deletion, cold storage, and shard age when determining which data to keep and/or restore on a node failure.  If data has been marked as deleted by an indexer, the data will not be restored should the indexer fail and recover via replication.  Data that has previously been marked as cold will be put directly back into the cold storage pool during restoration.  Indexers should restore themselves to the exact same state they were in pre-failure when recovering using replication.
+
+The replication engine takes great care to try and distribute storage load evenly across all available peers; this means that as an indexer is distributing data to replication peers it will often pause for a few seconds to query remote systems about storage usage and shard distribution.  These pauses allow all the replication peers to accept shard assignments from other peers as well as generate an accurate picture of replication behavior across a cluster.  From a practical standpoint, if replication is engaged for the first time after ingesting significant historical data, the replication system may appear to burst data to peers with high traffic volumes followed by relative calm.  This bursty behavior is due to the periods where the system is sampling multiple remote peers.  However, if an indexer has a single replication peer, it does not need to perform sampling of remote loads or worry about distributing shards across multiple peers; this simplified replication topology means that the engine can attempt to bring replicated data up to speed as fast as it can, which means the indexers may fully saturate network links transferring very large volumes of data.
+
+```{attention}
+The replication engines first priority is getting data to as safe a state as possible.  If an indexer has access to a 40GbE connection and the disks to back it up, it will use that 40GbE of bandwidth.
+```
 
 ### Best Practices
 
@@ -139,10 +177,10 @@ Designing and deploying a high availability Gravwell cluster can be simple as lo
 
 Below are potential problems and solutions when debugging a replication problem.
 
-#### After a failure, an indexer did not restore its data
+### After a failure, an indexer did not restore its data
 Ensure that the indexer maintained its original `Indexer-UUID` value when coming back online.  If the UUID changed, put it back to the original value and ensure the indexer has adequate time to restore all data.  Restoration after changing the `Indexer-UUID` may require significantly more time as the replication system merges the two disparate data stores.
 
-#### Data is not showing up in the replication Storage-Location
+### Data is not showing up in the replication Storage-Location
 Ensure that all replication peers have a common `Control-Auth` (or `Replication-Secret-Override`) value.  If peers cannot authenticate with each other they will not exchange data.
 
 Ensure that X509 certificates are signed by a valid Certificate Authority (CA) that is respected by the keystore on the host systems.  If the certificate stores are not valid, either install the public keys into the host machines certificate store, or disable TLS validation via the `Insecure-Skip-TLS-Verify` option.
@@ -153,10 +191,10 @@ Disabling TLS verification via `Insecure-Skip-TLS-Verify` opens up replication t
 
 Check firewall rules and/or routing ACLs to ensure that indexers are allowed to communicate with one another on the specified port.
 
-#### After a failure an indexer is refusing to start due to a failed tag merge
+### After a failure an indexer is refusing to start due to a failed tag merge
 If an indexer starts ingesting after a failure prior to restoring its tag mapping, it is possible to enter a state where the tag maps on replication nodes cannot be merged.  If you encounter an unmergeable tag error, contact <support@gravwell.io> for assistance in manually restoring the failed node.
  
-#### After a failure an indexer did not restore all its data
+### After a failure an indexer did not restore all its data
 Replication peers may not have been able to keep up with an indexer due to poor storage performance, poor network performance, or storage failures on the replication node.  Ensure that replication peers have adequate bandwidth and storage capacity to keep up with ingestion.  If a storage node is ingesting at hundreds of megabytes per second, the replication peers must be able to compute, transfer, and store the data at the same rate.
 
 Also ensure that there was adequate storage on replication peers.  If a storage node is configured to keep 10TB of cold data and 1TB of hot data, replication peers should be capable of storing at least 11TB of data.  If a replication node was overloaded or misconfigured it may have been removing old data.

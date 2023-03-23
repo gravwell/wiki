@@ -1,3 +1,10 @@
+---
+myst:
+  substitutions:
+    package: "gravwell-simple-relay"
+    standalone: "gravwell_simple_relay"
+    dockername: "simple_relay"
+---
 # Simple Relay
 
 Simple Relay is the go-to ingester for text based data sources that can be delivered over plaintext TCP, encrypted TCP, or plaintext UDP network connections via either IPv4 or IPv6.
@@ -8,6 +15,11 @@ Some common use cases for Simple Relay are:
 * Devops log collection over a network
 * Bro sensor log collection
 * Simple integration with any text source capable of delivering over a network
+
+## Installation
+
+```{include} installation_instructions_template.md 
+```
 
 ## Basic Configuration
 
@@ -302,7 +314,7 @@ Because the event logs can span multiple lines, it is not safe to use the basic 
 
 The behavior of the Regex parameter is discussed below.
 
-#### Regex Parameter Details
+### Regex Parameter Details
 
 The `Regex` parameter specifies a regular expression to be used as the delimiter. The ingester will read incoming data and buffer it until it finds a match for the regular expression. It then takes all the buffered data *up to but not including* the delimiter and ingests it as an entry. The delimiter itself is *discarded*. Thus, if we define `Regex="X"` and send the following:
 
@@ -318,11 +330,11 @@ Note that sometimes, you'll wish to keep portions of the delimiter. In the Windo
 Regex=`(?P<prefix><\d+>1 \d{4}-\d{1,2}-\d{1,2}T)`
 ```
 
-#### Trim-Whitespace Parameter
+### Trim-Whitespace Parameter
 
 If `Trim-Whitespace` is set to true, any preceding or trailing whitespace on the outgoing entry data will be removed.
 
-#### Max-Buffer Parameter
+### Max-Buffer Parameter
 
 The Max-Buffer parameter specifies, in bytes, how much data the regex listener should buffer as it looks for a matching regular expression. The default is 8 MB. If the listener reads more data than that without finding a match for the regex delimiter, it will ingest an entry containing the first `Max-Buffer` stored bytes; although the entries may end up malformed, we consider it more appropriate to ingest questionable data than to throw it away.
 

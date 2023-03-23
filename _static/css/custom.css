@@ -75,3 +75,17 @@ nav.bd-links p.bd-links__title {
 #logbot-container img {
   background: unset;
 }
+
+@media (min-width: 960px) {
+  .bd-page-width {
+    max-width: 1800px;
+  }
+}
+
+.bd-main .bd-content .bd-article-container {
+  max-width: 100%;
+}
+
+.bd-sidebar-primary {
+  max-width: 380px;
+}

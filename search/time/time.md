@@ -17,6 +17,10 @@ time tsString extractedTS
 * `-f <format>`: Specifies the format to be used when printing timestamps or optionally when parsing strings. The format consists of a string representation of a specific time, "Mon Jan 2 15:04:05 MST 2006", as used by the [Go time library](https://golang.org/pkg/time/#pkg-constants). For instance, one may say `-f "Mon 3:04PM"` to get a very brief timestamp format. Refer to the linked documentation for more examples.
 * `-tz <timezone>`: Specifies a time zone, in [tz database format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), e.g. "America/Denver", "UTC", or "Atlantic/Reykjavik". This time zone will be used when *printing* timestamps (which do not have a time zone associated with them) and when *parsing* strings which do not contain a time zone specification.
 
+## Note on the use of the `-f` flag
+
+The `-f` (format) flag has a different behavior depending on the underlying type of the enumerated value being used as input. If the enumerated value is a timestamp, such as the built-in TIMESTAMP EV, `-f` sets the output format for the output enumerated value. Conversely, if the input enumerated value is a string, the `-f` flag is used to tell the time module what format the timestamp is in (not using the flag will invoke the lower performance "timegrinder" approach). 
+
 ## Examples
 
 To print entry timestamps in a specific format and time zone:

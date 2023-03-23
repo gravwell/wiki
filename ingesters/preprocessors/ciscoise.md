@@ -1,14 +1,14 @@
-## Cisco ISE Preprocessor
+# Cisco ISE Preprocessor
 
 The Cisco ISE preprocessor is designed to parse and accommodate the format and transport of Cisco ISE logs.  See the [Cisco Introduction to ISE Syslogs](https://www.cisco.com/c/en/us/td/docs/security/ise/syslog/Cisco_ISE_Syslogs/m_IntrotoSyslogs.pdf) for more information.
 
 The Cisco ISE preprocessor is named `cisco_ise` and supports the ability to reassemble multipart messages, reformat the messages into a format more appropriate for Gravwell and modern syslog systems, filter unwanted message pairs, and remove redundant message headers.
 
-### Attribute Filtering and Formatting
+## Attribute Filtering and Formatting
 
 The Cisco ISE logging system is designed to split a single message across multiple syslog messages.  Gravwell will accept messages that far exceed the maximum message size of syslog, however if you are supporting multiple targets for Cisco ISE messages it may be necessary to enable multipart messages.  Disabling multipart messages in your Cisco device and letting Gravwell handle large payloads will be far more efficient.
 
-### Supported Options
+## Supported Options
 
 * `Drop-Misses` (boolean, optional): If set to true, the preprocessor will drop entries for which it was unable to extract a valid ISE message. By default, these entries are passed along.
 * `Enable-Multipart-Reassembly` (boolean, optional): If set to true the preprocessor will attempt to reassemble messages that contain a Cisco remote message header.
@@ -19,7 +19,7 @@ The Cisco ISE logging system is designed to split a single message across multip
 * `Attribute-Strip-Header` (boolean, optional): Specifies that attributes with nested names and/or type information should have the header values stripped.  This is extremely useful for cleaning up poorly-formed attribute values.
 
 
-### Example Configuration
+## Example Configuration
 
 The following `cisco_ise` preprocessor configuration is designed to re-assemble multipart messages, remove unwanted `Step` attributes, and reform the output messages in the CEF format.  It also strips the cisco attribute headers.
 

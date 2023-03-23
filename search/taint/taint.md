@@ -1,5 +1,4 @@
- 
-## Taint
+# Taint
 
 The taint module is used for taint analysis and flow tracking.  The module can be used to specify known start points and then propagate "infections" forward.  Taint can also be used to specify infection endpoints and work backwards in time to identify origination points.  The taint module has the ability to reverse the direction of the search system.  For example, if taint is attempting to start with a known patient zero, it will force the search to start at the beginning of the time window and move forward in time.  However, if taint is starting with a known infection and working backwards to find patient zero, it will force the search to start at the end of the time window and move backwards.
 
@@ -17,27 +16,27 @@ Gravwell presented research at the S4x18 conference in Miami which successfully 
 Because taint can control the direction of the search, it is not advisable to combine it with the sort module.
 ```
 
-### Syntax
+## Syntax
 
 The command syntax for the taint module is similar to a force directed graph.  We must specify a source and destination with flags designating whether flow is bidirectional.  A starting point is required, whether it be a patient zero (-pz) or a known infection (-f).
 
-#### Starting with patient zero
+### Starting with patient zero
 ```
 taint -pz <known value> <src> <dest>
 ```
 
-#### Starting with known endpoint
+### Starting with known endpoint
 ```
 taint -f <known value> <src> <dest>
 ```
 
-### Supported Options
+## Supported Options
 * `-pz <arg>`: The -pz flag specifies the value for a patient zero (starting point).  Taint will look in the <src> enumerated values for the patient zero value to start tainting.
 * `-f <arg>`: The -f flag specifies the value for a known infection.  Taint will look in enumerated values specified by <src> for the known-infected value and begin tracking taints.
 * `-b`: The -b flag specifies that infections are bidirectional, and if either side has been tainted in the past, the taint is transferred to the other.
 * `-a`: The -a flag specifies that all entries should pass through the taint module, meaning that the taint module will NOT drop entries that do not contain tainted values.
 
-### Examples
+## Examples
 
 If we were to assume that a vicious new infection vector was found which could arbitrarily infect DNS servers by embedding a payload in their lookup cache, we could use the taint module to identify which top level domain names may have been attacked.  The following search starts with a known patient zero, and generates a force directed graph showing all future propagation of tainted domains in a small network.
 
