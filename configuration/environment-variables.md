@@ -21,7 +21,7 @@ Environment variable values are **only** used when the corresponding field is no
 The table below shows which `gravwell.conf` parameters can be set via environment variables for the indexer and the webserver. Note that these variables are only used if the parameter is **not** configured in `gravwell.conf`.
 
 | gravwell.conf variable | Environment Variable | Example |
-|:------|:----|:---|----:|
+|:------|:----|:---|
 | Ingest-Auth | GRAVWELL_INGEST_AUTH | GRAVWELL_INGEST_AUTH=CE58DD3F22422C2E348FCE56FABA131A |
 | Control-Auth | GRAVWELL_CONTROL_AUTH | GRAVWELL_CONTROL_AUTH=C2018569D613932A6BBD62A03A101E84 |
 | Indexer-UUID | GRAVWELL_INDEXER_UUID | GRAVWELL_INDEXER_UUID=a6bb4386-3433-11e8-bc0b-b7a5a01a3120 |
