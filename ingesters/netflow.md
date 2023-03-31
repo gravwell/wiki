@@ -38,7 +38,7 @@ By default the Netflow ingester will listen for both Netflowv5 on UDP port 2055 
 ```
 
 ```{note}
-The default NetflowV9 and/or IPFix port of 4739 is somewhat disagreed upon by major networking manufacturers, some equipment expect to send NetflowV9 traffic to UDP port 6343.  Adjust the configuration file accordingly.
+The default NetflowV9 and/or IPFix port of 4739 is somewhat disagreed upon by major networking manufacturers; some equipment expects to send NetflowV9 traffic to UDP port 6343.  Adjust the configuration file accordingly.
 ```
 
 ## Installation
