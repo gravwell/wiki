@@ -13,7 +13,6 @@ Slice can extract from raw entry contents, or it can operate on an enumerated va
 | Command | Description |
 |---------|-------------|
 | `slice [0:4] as foo` | Extract the first 5 bytes directly from the entry's data and place them into an enumerated value "foo" |
-| `slice Payload[9] as tenth` | Extract the tenth byte from the enumerated value "Payload" |
 | `slice uint16le(Payload[9:10]) as value` | Pull two bytes from the enumerated value "Payload", parse them as an unsigned 16-bit little-endian integer, and store it as "value" |
 | `slice uint16be(Payload[-2:]) as value` | Pull the last two bytes from "Payload", parse them as an unsigned 16-bit big-endian integer, and store it as "value" |
 | `slice uint16be(Payload[-4:-2]) as value2` | Pull the two bytes preceding the last two bytes of "Payload", parse them as an unsigned 16-bit big-endian integer, and store as "value2"
