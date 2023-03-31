@@ -29,8 +29,16 @@ The Netflow ingester uses the unified global configuration block described in th
 
 [Collector "ipfix"]
 	Tag-Name=ipfix
-	Bind-String="0.0.0.0:6343"
+	Bind-String="0.0.0.0:4739"
 	Flow-Type=ipfix
+```
+
+```note
+By default the Netflow ingester will listen for both Netflowv5 on UDP port 2055 and NetflowV9/IPFix on UDP port 4379.  It is highly reccomended that one of the listeners is disabled.
+```
+
+```note
+The default NetflowV9 and/or IPFix port of 4739 is somewhat disagreed upon by major networking manufacturers, some equipment expect to send NetflowV9 traffic to UDP port 6343.  Adjust the configuration file accordingly.
 ```
 
 ## Installation

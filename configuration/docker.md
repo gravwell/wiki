@@ -110,7 +110,7 @@ Note the use of the `-e` flag to set environment variables. This allows us to dy
 The `-p 2055:2055/udp` option forwards UDP port 2055 (Netflow v5 ingest port) from the container to the host. This should make it easier to send Netflow records into the ingest container.
 
 ```{note}
-The netflow ingester is also configured by default to accept IPFIX records over UDP on port 6343. If you wish to ingest IPFIX records too, add `-p 6343:6343/udp` to the command line above.
+The netflow ingester is also configured by default to accept IPFIX records over UDP on port 4739. If you wish to ingest IPFIX records too, add `-p 4739:4739/udp` to the command line above.
 ```
 
 We can verify that the ingester is active by clicking on the Ingesters item in the menu:
