@@ -11,7 +11,7 @@ The Azure Event Hubs Ingester pulls events from Microsoft Azure's [Event Hubs](h
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration
