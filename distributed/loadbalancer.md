@@ -87,9 +87,13 @@ Description:	Sets the location of a TLS secret key. The key must correspond to a
 Default Value:	(empty)
 Description:	Sets the location of a TLS certificate file. The certificate must be valid for the load balancer's hostname.
 
+**Insecure-Disable-Client-HTTPS**
+Default Value:	`false`
+Description:	When this parameter is set to `true`, the load balancer will connect to Grawvell webservers using cleartext HTTP connections.
+
 **Insecure-Skip-TLS-Verify**
 Default Value:	`false`
-Description:	If this parameter is set to `true`, the load balancer will not verify TLS certificates on Gravwell webservers when proxying connections. This setting is ignored if `Insecure-Disable-HTTPS=true` is set.
+Description:	If this parameter is set to `true`, the load balancer will not verify TLS certificates on Gravwell webservers when proxying connections. This setting is ignored if `Insecure-Disable-Client-HTTPS=true` is set.
 
 **Update-Interval**
 Default Value:	30
@@ -171,6 +175,7 @@ Description:	If set to true, the load balancer will not validate the webserver's
 When deploying in Docker, it is frequently easier to configure components via Docker environment variables instead of modifying a config file. All basic parameters of the load balancer can be configured through environment variables:
 
 * `GRAVWELL_INSECURE_DISABLE_HTTPS` - Equivalent to the `Insecure-Disable-HTTPS` config parameter
+* `GRAVWELL_INSECURE_DISABLE_CLIENT_HTTPS` - Equivalent to the `Insecure-Disable-Client-HTTPS` config parameter
 * `GRAVWELL_INSECURE_SKIP_TLS_VERIFY` - Equivalent to the `Insecure-Skip-TLS-Verify` config parameter
 * `GRAVWELL_DISABLE_HTTP_REDIRECTOR` - Equivalent to the `Disable-HTTP-Redirector` config parameter
 * `GRAVWELL_WEB_PORT` - Equivalent to the `Web-Port` config parameter
@@ -190,6 +195,7 @@ docker create --name loadbalancer \
 	-e GRAVWELL_CONTROL_SECRET=ControlSecrets \
 	-e GRAVWELL_DATASTORE=datastore.example.org \
 	-e GRAVWELL_INSECURE_DISABLE_HTTPS=TRUE \
+	-e GRAVWELL_INSECURE_DISABLE_CLIENT_HTTPS=TRUE \
 	-e GRAVWELL_LOG_DIR=/tmp -e GRAVWELL_LOG_LEVEL=INFO \
 	-e GRAVWELL_LOG_ENABLE_ACCESS_LOG=TRUE \
 	-e GRAVWELL_DATASTORE_INSECURE_DISABLE_TLS=TRUE \
