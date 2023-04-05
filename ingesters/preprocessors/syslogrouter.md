@@ -21,7 +21,7 @@ The syslog router preprocessor dynamically creates tags based on the content of 
 ## Supported Options
 
 * `Template` (string, required): The `Template` directive is a simplified text template specification that allows for creating a tag structure based on constant values and syslog data.
-* `Drop-Misses` (Boolean, optional): By default, if an entry is not a valid RFC5424 or RFC3164 syslog entry, the Syslog Router preprocessor will not modify the tag and will pass the entry through on the default tag.  The `Drop-Misses` configuration directive causes the preprocessor to entirely drop the entry if it cannot accurately route to an appropriate tag.
+* `Drop-Misses` (Boolean, optional): By default, if an entry is not a valid RFC5424 or RFC3164 syslog entry, the syslog router preprocessor will not modify the tag and will pass the entry through on the default tag.  The `Drop-Misses` configuration directive causes the preprocessor to entirely drop the entry if it cannot accurately route to an appropriate tag.
 
 ### Supported Fields and Routing Rules
 
