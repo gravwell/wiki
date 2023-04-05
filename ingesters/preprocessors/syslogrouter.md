@@ -1,20 +1,21 @@
 # Syslog Router Preprocessor
 
-The `syslogrouter` is designed to dynamically route a single Syslog data stream to multiple Gravwell tags by extracting fields and forming a tag name using those fields.  Common use cases for the `syslogrouter` preprocessor is consuming a unified data stream from a 3rd party syslog aggregator; the 3rd party aggregator may not support internal routing to specific IP:Port destinations, so the `syslogrouter` preprocessor can extract fields and route based on those fields.
+The syslog router is designed to dynamically route a single Syslog data stream to multiple Gravwell tags by extracting fields and forming a tag name using those fields.  Common use cases for the syslog router preprocessor is consuming a unified data stream from a 3rd party syslog aggregator; the 3rd party aggregator may not support internal routing to specific IP:Port destinations, so the syslog router preprocessor can extract fields and route based on those fields.
 
-The `syslogrouter` preprocessor uses named syslog fields and a template to create a Gravwell tag name.  Tag name templates can contain static values and components of the underlying data.
+The syslog router preprocessor uses named syslog fields and a template to create a Gravwell tag name.  Tag name templates can contain static values and components of the underlying data.
 
 Templates reference extracted values by name using field definitions similar to bash.  For example, you can reference the syslog `Appname` in the template with `${Appname}`. The templates also support the following special keys:
 
 * `${_SRC_}`, which will be replaced by the SRC field of the current entry.
 
+The syslog router preprocessor Type is `syslogrouter`.
 
 ```{note}
-The `syslogrouter` preprocessor requires properly formed RFC5424 or RFC3164 messages, it will not handle the wildly out of spec "syslog" that many vendors like to claim is compliant.
+The syslog router preprocessor requires properly formed RFC5424 or RFC3164 messages, it will not handle the wildly out of spec "syslog" that many vendors like to claim is compliant.
 ```
 
 ```{warning}
-The `syslogrouter` preprocessor dynamically creates tags based on the content of data, this means that a data stream could easily exhaust all available tags if you choose a poorly formed template.  Make sure you know what you are doing when using the `syslogrouter` preprocessor.
+The syslog router preprocessor dynamically creates tags based on the content of data, this means that a data stream could easily exhaust all available tags if you choose a poorly formed template.  Make sure you know what you are doing when using the syslog router preprocessor.
 ```
 
 ## Supported Options
@@ -24,7 +25,7 @@ The `syslogrouter` preprocessor dynamically creates tags based on the content of
 
 ### Supported Fields and Routing Rules
 
-The `syslogrouter` supports the following Syslog field names for tag routing:
+The syslog router supports the following Syslog field names for tag routing:
 
 * `Priority`
 * `Facility`
@@ -36,12 +37,12 @@ The `syslogrouter` supports the following Syslog field names for tag routing:
 * `MsgId`
 
 ```{note}
-Gravwell tag names may not contain control characters, non-printable characters, or any of the following special characters: `!@#$%^&*()=+<>,.:;\``"'{[}]|`.  If `syslogrouter` detects invalid characters in a formulated tag name, they will be replaced with the `_` (underscore) character.
+Gravwell tag names may not contain control characters, non-printable characters, or any of the following special characters: `!@#$%^&*()=+<>,.:;\``"'{[}]|`.  If syslog router detects invalid characters in a formulated tag name, they will be replaced with the `_` (underscore) character.
 ```
 
 
 ```{note}
-If a field does not exist (`-` in RFC5424) in a syslog message, the `syslogrouter` preprocessor will omit it entirely.
+If a field does not exist (`-` in RFC5424) in a syslog message, the syslog router preprocessor will omit it entirely.
 ```
 
 ## Example: Routing based on Appname
