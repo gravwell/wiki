@@ -56,6 +56,7 @@ jsonextract <jsonextract>
 jsonarraysplit <jsonarraysplit>
 jsonfilter <jsonfilter>
 jsontimeextract <jsontimeextract>
+syslogrouter <syslogrouter>
 csvrouter <csvrouter>
 regexrouter <regexrouter>
 srcrouter <srcrouter>
@@ -76,6 +77,7 @@ plugin <plugin>
 | [jsonarraysplit](jsonarraysplit) | Parse JSON array data and split the array into individual entries |
 | [jsonfilter](jsonfilter) | Parse JSON data and filter based on field values |
 | [jsontimeextract](jsontimeextract) | Parse JSON data and extract timestamps from specific field values |
+| [syslogrouter](syslogrouter) | Parse Syslog (RFC5424/RFC3164) data and route to specific tags based on field values |
 | [csvrouter](csvrouter) | Parse CSV data and route to specific tags based on column values |
 | [regexrouter](regexrouter) | Route entries to specific tags based on regular expression matches |
 | [srcrouter](srcrouter) | Route entries to specific tags based on source IP or value |
