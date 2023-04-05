@@ -15,7 +15,7 @@ Gravwell provides an ingester which can pull security information from Microsoft
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration

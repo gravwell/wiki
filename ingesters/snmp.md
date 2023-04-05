@@ -11,7 +11,7 @@ The SNMP ingester can receive SNMP traps for SNMP versions 2c and 3. The trap me
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration

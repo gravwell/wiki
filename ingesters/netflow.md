@@ -11,7 +11,7 @@ The Netflow ingester acts as a Netflow collector (see [the Wikipedia article](ht
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration

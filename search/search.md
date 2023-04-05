@@ -12,7 +12,7 @@ tag=weather json main.temp name | eval temp > 20 | table name temp
 
 The user interface used to run queries [is documented here](/gui/queries/queries).
 
-<video controls>
+<video controls width="100%" height="auto">
 	<source src="https://www.gravwell.io/hubfs/videos/Query%20Basics.mp4" type="video/mp4">
 	Your browser does not support the video tag
 </video>

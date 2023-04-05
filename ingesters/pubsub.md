@@ -17,7 +17,7 @@ Once the stream is configured, each record in the PubSub stream topic will be st
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration

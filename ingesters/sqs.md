@@ -13,7 +13,7 @@ For Gravwell, "at-least-once" delivery is an important caveat - The SQS ingester
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration

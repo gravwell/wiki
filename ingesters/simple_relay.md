@@ -18,7 +18,7 @@ Some common use cases for Simple Relay are:
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration
