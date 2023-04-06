@@ -28,6 +28,7 @@ let
     with ps; [
       sphinx
       sphinx-autobuild
+      sphinx-copybutton
       myst-parser
       pydata-sphinx-theme
       sphinx-design
