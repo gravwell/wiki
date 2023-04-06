@@ -30,6 +30,7 @@ extensions = [
     "myst_parser",
     "sphinx_design",
     "notfound.extension",
+    "sphinx_copybutton",
 ]
 
 myst_enable_extensions = [
@@ -131,3 +132,6 @@ html_context = {
 
 # Variables to substitute in Markdown files
 myst_substitutions = {}
+
+# Copy button
+copybutton_selector = "div.highlight pre,div.docutils pre.literal-block"
