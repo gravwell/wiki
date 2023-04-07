@@ -82,7 +82,7 @@ An example configuration in which data is moved from the hot pool to the cold po
 ```
 
 ```{note}
-In the above configuration, data will be deleted permanently when it is 97 days old, having spent 7 days in the hot pool and 90 days in the cold pool.
+In the above configuration, data will be deleted permanently when it is 90 days old, having spent 7 days in the hot pool and 83 days in the cold pool.
 ```
 The Time based ageout is invoked once per day, sweeping each pool for shards that can be aged out.  By default the sweep happens at midnight UTC, but the execution time can be overridden in the well configuration with the Ageout-Time-Override directive.  The override directive is specified in 24 hour UTC time.
 
@@ -157,7 +157,7 @@ Ageout constraints are applied to entire shards, so if a single shard grows beyo
 
 Time-based constraints require that the entire shard fall outside the specified time window.  As such, time constraints that are less than 1 day have no meaning, and hot pools must be able to hold at least 2 days worth of data.
 
-Take care when combining time-based constraints with total storage constraints. If `Hot-Duration=7D` and `Cold-Duration=90D` are specified, data will be deleted after 97 days. However, if `Max-Hot-Storage-GB=2` and `Cold-Duration=90D` are specified, data will move from the hot well to the cold well when the hot well exceeds 2GB, and **data will be deleted from the cold well when it is 90 days old**.
+Take care when combining time-based constraints with total storage constraints. If `Hot-Duration=7D` and `Cold-Duration=90D` are specified, data will be deleted after 90 days. However, if `Max-Hot-Storage-GB=2` and `Cold-Duration=90D` are specified, data will move from the hot well to the cold well when the hot well exceeds 2GB, and **data will be deleted from the cold well when it is 90 days old**.
 
 ### Transparent Compression + Docker Caveats
 
