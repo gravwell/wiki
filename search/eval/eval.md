@@ -167,6 +167,16 @@ Expressions can be complex, and contain other expressions, just like in C-style 
 When a program consists of only an expression, the program as a whole is treated as a filter. If the expression returns false (or returns the "zero" value of the type returned), the entry will be dropped.
 ```
 
+```{note}
+Expressions that operate on enumerated values that don't exist have undefined behavior. If you aren't sure that an EV will exist in each entry being processed, be sure to use the has() built-in to ensure the behavior you intend. For example:
+
+	if has(myEV) {
+		if (myEV == "foo") {
+			...
+		}
+	}
+```
+
 ## Statements
 
 Statements control program execution. For example, `if (foo == "bar") { ... }` contains an "if" statement, which will determine how the program is to proceed.
@@ -185,6 +195,7 @@ ceil 	  Returns the integer part of a floating-point number after rounding to ne
 delete    Deletes the enumerated value in the entry
 rand      Returns a random 64-bit integer
 log	  Logs a message according to the logging configuration in the deployment's gravwell.conf
+has       Returns true if the specified EV exists
 ```
 
 ## Syntax
