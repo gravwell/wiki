@@ -151,6 +151,29 @@ An example well configuration which will use the hot location as long as there i
 The Gravwell ageout system which operates on storage reserves is operating entirely orthogonal to outside influences, if a well is configured to respect a 50% storage ceiling and an outside application fills the volume to 60%, Gravwell will delete all entries outside the active shard.  Wells configured with storage reserved should be treated as expendable.
 ```
 
+## Forcing a Required Retention Period
+
+Controlling ageout using storage constraints allows Gravwell to manage storage by moving and/or deleting data only when needed.  However, it may be desirable to enforce a line in the sand in addition to standard storage-based controls.  The `Required-Retention` stanza can specify a period that directs the configured well to refuse to delete data, across hot or cold storage, if the specific retention period is not maintained.
+
+For example, the following configuration defines that the well should keep up to 100G in hot storage and maintain at least 10% of spare storage in cold.  The `Required-Retention=30d` also informs the well that it is not allowed to delete shards within the 30 days, regardless of storage availability.
+
+```
+[Storage-Well "doorlogs"]
+	Location=/mnt/xpoint/gravwell/doorlogs
+	Cold-Location=/mnt/storage/gravwell_cold/doorlogs
+	Tags=badgeaccess
+	Max-Hot-Storage-GB=100
+	Cold-Storage-Reserve=10
+	Required-Retention=30d
+	Delete-Frozen-Data=true
+```
+
+**Be aware** that ingest may stop if you do not have enough storage to cover the specified retention period.  If there is no room for data and Gravwell is not allowed to delete, the only option is to stop taking on more data.  Required-Retention is designed to provide a safety mechanism for compliance or regulatory requirements while also letting Gravwell keep as much data as it can.
+
+```{attention}
+The Required-Retention flag will check specified retention periods against time based ageout.  Setting `Required-Retention=90d` and `Cold-Duration=80d` will result in an error as the required retention directly conflicts with the maximum duration value specified in the Cold storage well.
+```
+
 ## Caveats and Important Notes
 
 Ageout constraints are applied to entire shards, so if a single shard grows beyond the size of a data constraint the shard will age out in its entirety once the shard is idle.
