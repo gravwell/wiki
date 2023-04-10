@@ -79,7 +79,7 @@ subnet <subnet/subnet>
 taint <taint/taint>
 time <time/time>
 transaction <transaction/transaction>
-trim <trim/trim>
+Trim Modules (list) <trim/trim>
 truncate <truncate/truncate>
 unescape <unescape/unescape>
 upper/lower <upperlower/upperlower>
