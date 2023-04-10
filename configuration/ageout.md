@@ -153,9 +153,9 @@ The Gravwell ageout system which operates on storage reserves is operating entir
 
 ## Forcing a Required Retention Period
 
-Controlling ageout using storage constraints allows Gravwell to manage storage and move and/or delete data only when needed.  However, it may be desirable to enforce a line in the sand in addition to standard storage based controls.  The `Required-Retention` stanza can specify a period that directs a given well to refuse to delete data across hot or cold if the specific retention period is not maintained.
+Controlling ageout using storage constraints allows Gravwell to manage storage by moving and/or deleting data only when needed.  However, it may be desirable to enforce a line in the sand in addition to standard storage-based controls.  The `Required-Retention` stanza can specify a period that directs the configured well to refuse to delete data, across hot or cold storage, if the specific retention period is not maintained.
 
-For example, the following well defines that the well should keep up to 100G in hot storage and maintain at least 10% of spare storage in cold.  The `Required-Retention=30d` also informs the well that it is not allowed to delete shards within the 30 days, regardless of storage availability.
+For example, the following configuration defines that the well should keep up to 100G in hot storage and maintain at least 10% of spare storage in cold.  The `Required-Retention=30d` also informs the well that it is not allowed to delete shards within the 30 days, regardless of storage availability.
 
 ```
 [Storage-Well "doorlogs"]
@@ -164,14 +164,14 @@ For example, the following well defines that the well should keep up to 100G in 
 	Tags=badgeaccess
 	Max-Hot-Storage-GB=100
 	Cold-Storage-Reserve=10
-	Required-Retention=90d
+	Required-Retention=30d
 	Delete-Frozen-Data=true
 ```
 
-**Be aware** that if you do not have enough storage to cover the specified retention period ingest may stop, if there is no room for data and Gravwell is not allowed to delete the only option is to stop taking on more data.  Required-Retention is designed to provide a safety mechanism for compliance or regulatory requirements while also letting Gravwell keep as much data as it can.
+**Be aware** that ingest may stop if you do not have enough storage to cover the specified retention period.  If there is no room for data and Gravwell is not allowed to delete, the only option is to stop taking on more data.  Required-Retention is designed to provide a safety mechanism for compliance or regulatory requirements while also letting Gravwell keep as much data as it can.
 
 ```{attention}
-The Required-Retention flag will check specified retention periods against time based ageout.  Setting Required-Retention=90d and Cold-Duration=80d will result in an error as the required retention directly conflicts with the maximum duration value specified in the Cold storage well.
+The Required-Retention flag will check specified retention periods against time based ageout.  Setting `Required-Retention=90d` and `Cold-Duration=80d` will result in an error as the required retention directly conflicts with the maximum duration value specified in the Cold storage well.
 ```
 
 ## Caveats and Important Notes
