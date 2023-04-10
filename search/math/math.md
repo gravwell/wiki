@@ -116,3 +116,5 @@ tag=pcap packet tcp.DstPort tcp.DstIP | eval DstPort < 1024 | unique DstPort Dst
 ```
 
 The search above will output every unique combination of IP + port, provided the port is less than 1024. This is a useful way to find servers on a network, for instance.
+
+The optional `-maxtracked` flag sets the maximum number of unique keys to track per operation, e.g. `unique -maxtracked 5000 DstIP`. This is used to help avoid memory exhaustion if you run `stats count by DstIP` and there are millions of IPv6 addresses in the data. Defaults to 100000000.

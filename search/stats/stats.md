@@ -16,6 +16,7 @@ These components are discussed below.
 ### Supported Flags
 
 * `-b`: This flag tells the stats module to always preserve the original body of the entry. For example, saying `tag=* length | stats max(length) | text` would normally cause the output entry's body to be overwritten with the maximum length seen, for convenient display with the text renderer. Adding the `-b` flag (`tag=* length | stats -b max(length) | text`) would preserve the original body, meaning the renderer will instead display the *contents* of the longest entry seen.
+* `-maxtracked <n>`: Sets the maximum number of unique keys to track per operation. This is used to help avoid memory exhaustion if you run `stats count by ipv6addr` and there are millions of IPv6 addresses in the data. Defaults to 100000000.
 
 (math_operations_specification)=
 ## Math Operations Specification
