@@ -747,7 +747,7 @@ Description:	If this option is set, the well will attempt to upload shards to an
 #### **Required-Retention**
 Default Value: disabled
 Example:	`Required-Retention=90d`
-Description:   This parameter specifies a hard requirement on data retention in a well regardless of other age out parameters.  Required-Retention can be viewed as a safety mechanism which prevents data deletion if a specific retention period is not maintained.  If the system runs out of storage due to the hard retention requirement Gravwell will stop ingesting data.
+Description:   This parameter specifies a hard requirement on data retention in a well regardless of other ageout parameters.  Required-Retention can be viewed as a safety mechanism which prevents data deletion if a specific retention period is not maintained.  If the system runs out of storage due to the hard retention requirement, Gravwell will stop ingesting data.
 
 #### **Disable-Compression, Disable-Hot-Compression, Disable-Cold-Compression**
 Default Value:	false
