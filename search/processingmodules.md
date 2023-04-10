@@ -79,6 +79,7 @@ subnet <subnet/subnet>
 taint <taint/taint>
 time <time/time>
 transaction <transaction/transaction>
+trim <trim/trim>
 truncate <truncate/truncate>
 unescape <unescape/unescape>
 upper/lower <upperlower/upperlower>
@@ -139,6 +140,13 @@ words <words/words>
 * [taint](taint/taint) - taint tracking.
 * [time](time/time) - convert strings to time enumerated values, and vice versa.
 * [transaction](transaction/transaction) - group multiple entries into single-entry "transactions" based on keys.
+* [trim](trim/trim) - various string trim functions.
+  * trim - remove leading and trailing Unicode code points.
+  * trimleft - remove leading Unicode code points.
+  * trimprefix - remove the provided prefix.
+  * trimright - remove trailing Unicode code points.
+  * trimspace - remove all leading and trailing whitespace.
+  * trimsuffix - remove the provided suffix.
 * [truncate](truncate/truncate) - truncate entries or enumerated values to a specified number of characters.
 * [unescape](unescape/unescape) - convert escaped text into an unescaped representation.
 * [upper](upperlower/upperlower) - convert text to upper-case.
