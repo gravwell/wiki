@@ -15,19 +15,17 @@ The trim modules consist of:
 
 None of the trim modules have any flags.
 
-## Overview
+## trim
 
-### trim
-
-#### Syntax
+### Syntax
 
 	trim <enumerated value> <code points>
 
-#### Example
+### Example
 
 	trim foo "abcd"
 
-#### Example output
+### Example output
 
 	"amy has queried" -> "my has querie"
 	"cab fare"        -> " fare"
@@ -35,17 +33,17 @@ None of the trim modules have any flags.
 
 This example will remove any of the leading or trailing characters "abcd" from the EV. 
 
-### trimleft
+## trimleft
 
-#### Syntax
+### Syntax
 
 	trimleft <enumerated value> <code points>
 
-#### Example
+### Example
 
 	trimleft foo "abcd"
 
-#### Example output
+### Example output
 
 	"amy has queried" -> "my has queried"
 	"cab fare"        -> " fare"
@@ -53,34 +51,34 @@ This example will remove any of the leading or trailing characters "abcd" from t
 
 This example will remove any of the leading characters "abcd" from the EV. 
 
-### trimprefix
+## trimprefix
 
-#### Syntax
+### Syntax
 
 	trimprefix <enumerated value> <prefix>
 
-#### Example
+### Example
 
 	trimprefix foo "Watch out!"
 
-#### Example output
+### Example output
 
 	"Watch out! A rabid logbot!" -> " A rabid logbot!"
 	"Watch logbot dance!"        -> "Watch logbot dance!"
 
 This example will remove the prefix "Watch out!" from the EV. 
 
-### trimright
+## trimright
 
-#### Syntax
+### Syntax
 
 	trimright <enumerated value> <code points>
 
-#### Example
+### Example
 
 	trimright foo "abcd"
 
-#### Example output
+### Example output
 
 	"amy has queried" -> "amy has querie"
 	"cab fare"        -> "cab fare"
@@ -88,17 +86,17 @@ This example will remove the prefix "Watch out!" from the EV.
 
 This example will remove any of the trailing characters "abcd" from the EV. 
 
-### trimspace
+## trimspace
 
-#### Syntax
+### Syntax
 
 	trimspace <enumerated value>
 
-#### Example
+### Example
 
 	trimspace foo
 
-#### Example output
+### Example output
 
 	"
          
@@ -106,17 +104,17 @@ This example will remove any of the trailing characters "abcd" from the EV.
 
 This example will remove all leading and trailing whitespace from the EV.
 
-### trimsuffix
+## trimsuffix
 
-#### Syntax
+### Syntax
 
 	trimsuffix <enumerated value> <suffix>
 
-#### Example
+### Example
 
 	trimpsuffix foo "logbot!"
 
-#### Example output
+### Example output
 
 	"Watch out! A rabid logbot!" -> "Watch out! A rabid"
 	"Watch logbot dance!"        -> "Watch logbot dance!"

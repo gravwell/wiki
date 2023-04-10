@@ -140,7 +140,7 @@ words <words/words>
 * [taint](taint/taint) - taint tracking.
 * [time](time/time) - convert strings to time enumerated values, and vice versa.
 * [transaction](transaction/transaction) - group multiple entries into single-entry "transactions" based on keys.
-* [trim](trim/trim) - various string trim functions.
+* [Trim Modules (list)](trim/trim) - various string trim functions.
   * trim - remove leading and trailing Unicode code points.
   * trimleft - remove leading Unicode code points.
   * trimprefix - remove the provided prefix.
