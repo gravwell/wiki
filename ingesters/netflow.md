@@ -34,7 +34,7 @@ The Netflow ingester uses the unified global configuration block described in th
 ```
 
 ```{note}
-By default the Netflow ingester will listen for both Netflowv5 on UDP port 2055 and NetflowV9/IPFix on UDP port 4379.  It is highly reccomended that one of the listeners is disabled.
+By default the Netflow ingester will listen for both Netflowv5 on UDP port 2055 and NetflowV9/IPFix on UDP port 4739.  It is highly reccomended that one of the listeners is disabled.
 ```
 
 ```{note}
