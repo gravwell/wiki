@@ -30,30 +30,41 @@ This port is used when a Gravwell cluster has [multiple webservers](/distributed
 
 RHEL/CentOS uses its own firewall commands. For convenience, we have collected the commands needed to open ports for the webserver and indexer components, plus the Simple Relay ingester. Note that any ingesters which listen on network ports will likely need ports opened in this manner.
 
-```{note}
-The commands shown here will only *temporarily* open ports; rebooting the system will reset the rules. To make the rule changes permanent, run `sudo firewall-cmd --runtime-to-permanent`
+```{warning}
+The commands shown here will only *temporarily* open ports if you do not use the `--permanent` flag; rebooting the system will reset the rules. To make the rule changes permanent, run `sudo firewall-cmd --runtime-to-permanent` or keep the `--permanent` flags.
 ```
 
 ### Indexer ports
 
 ```
-sudo firewall-cmd --zone=public --add-port=9404/tcp 
-sudo firewall-cmd --zone=public --add-port=9405/tcp
-sudo firewall-cmd --zone=public --add-port=4023/tcp
-sudo firewall-cmd --zone=public --add-port=4024/tcp
+sudo firewall-cmd --zone=public --add-port=9404/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=9405/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=4023/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=4024/tcp --permanent
+sudo firewall-cmd --reload
 ```
 
 ### Webserver ports
 
 ```
-sudo firewall-cmd --zone=public --add-service=http
-sudo firewall-cmd --zone=public --add-service=https
+sudo firewall-cmd --zone=public --add-service=http --permanent
+sudo firewall-cmd --zone=public --add-service=https --permanent
+sudo firewall-cmd --reload
 ```
 
 ### Simple Relay ports
 
 ```
-sudo firewall-cmd --zone=public --add-port=7777/tcp
-sudo firewall-cmd --zone=public --add-port=601/tcp
-sudo firewall-cmd --zone=public --add-port=514/udp
+sudo firewall-cmd --zone=public --add-port=7777/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=601/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=514/udp --permanent
+sudo firewall-cmd --reload
+```
+
+
+### Check Firewall Status
+
+```
+sudo firewall-cmd --state
+sudo firewall-cmd --list-all
 ```
