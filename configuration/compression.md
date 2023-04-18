@@ -14,34 +14,34 @@ Transparent compression allows for offloading compression/decompression work to 
 Transparent compression has important implications for ageout rules involving total storage. Please refer to the [ageout documentation](ageout) for more information.
 ```
 
-**Disable-Compression**
-Default Value: `false`
-Example: `Disable-Compression=true`
+**Disable-Compression**  
+Default Value: `false`  
+Example: `Disable-Compression=true`  
 Compression for the entire well is disabled, both hot and cold storage locations will not use compression
 
-**Disable-Hot-Compression**
-Default Value: `false`
-Example: `Disable-Hot-Compression=true`
+**Disable-Hot-Compression**  
+Default Value: `false`  
+Example: `Disable-Hot-Compression=true`  
 Compression for the hot storage location is disabled.
 
-**Disable-Cold-Compression**
-Default Value: `false`
-Example: `Disable-Cold-Compression=true`
+**Disable-Cold-Compression**  
+Default Value: `false`  
+Example: `Disable-Cold-Compression=true`  
 Compression for the cold storage location is disabled, if no cold storage location is specified the setting has no effect.
 
-**Enable-Transparent-Compression**
-Default Value: `false`
-Example: `Enable-Transparent-Compression=true`
+**Enable-Transparent-Compression**  
+Default Value: `false`  
+Example: `Enable-Transparent-Compression=true`  
 Gravwell will mark the storage data as compressible and rely on the kernel to perform the compression operations.
 
-**Enable-Hot-Transparent-Compression**
-Default Value: `false`
-Example: `Enable-Hot-Transparent-Compression=true`
+**Enable-Hot-Transparent-Compression**  
+Default Value: `false`  
+Example: `Enable-Hot-Transparent-Compression=true`  
 Gravwell will mark the hot storage data as compressible and rely on the kernel to perform the compression operations.
 
-**Enable-Cold-Transparent-Compression**
-Default Value: `false`
-Example: `Enable-Cold-Transparent-Compression=true`
+**Enable-Cold-Transparent-Compression**  
+Default Value: `false`  
+Example: `Enable-Cold-Transparent-Compression=true`  
 Gravwell will mark the Cold storage data as compressible and rely on the kernel to perform the compression operations.
 
 ```{note}
