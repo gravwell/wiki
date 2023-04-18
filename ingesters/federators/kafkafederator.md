@@ -15,7 +15,7 @@ The Kafka Federator can be paired with the [Kafka Consumer](/ingesters/kafka) to
 
 ## Installation
 
-```{include} ../installation_instructions_template.md 
+```{include} ../installation_instructions_template
 ```
 
 ## Configuration

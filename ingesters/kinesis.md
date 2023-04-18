@@ -17,7 +17,7 @@ Once the stream is configured, each record in the Kinesis stream will be stored 
 
 ## Installation
 
-```{include} installation_instructions_template.md 
+```{include} installation_instructions_template 
 ```
 
 ## Basic Configuration

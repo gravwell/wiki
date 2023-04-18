@@ -16,6 +16,7 @@ These components are discussed below.
 ### Supported Flags
 
 * `-b`: This flag tells the stats module to always preserve the original body of the entry. For example, saying `tag=* length | stats max(length) | text` would normally cause the output entry's body to be overwritten with the maximum length seen, for convenient display with the text renderer. Adding the `-b` flag (`tag=* length | stats -b max(length) | text`) would preserve the original body, meaning the renderer will instead display the *contents* of the longest entry seen.
+* `-maxtracked <n>`: Sets the maximum number of unique keys to track per operation. This is used to help avoid memory exhaustion if you run `stats count by ipv6addr` and there are millions of IPv6 addresses in the data. If the maxtracked value is exceeded, the search will terminate with an error suggesting you should increase the max value. Defaults to 100000000.
 
 (math_operations_specification)=
 ## Math Operations Specification
@@ -139,3 +140,9 @@ tag=zeekconn fields -d "\t" [8] as dur
 ![Sum vs. Total](SumVsTotal.png)
 
 This query generates two lines based on the sum and total sum of the duration values.  The chart generates a line for the `sum` values by bucketing the data where the line for `total` represents buckets that compound over time.  The underlying operations are the same, but total does not "reset" the bucket each time it transitions to a new time span, where "sum" does.
+
+## The `-maxtracked` flag
+
+The `-maxtracked` flag is intended as "safety rails" against bad queries. For instance, each Zeek entry includes a unique ID, and a query like `tag=zeekconn ax uid | stats count by uid` could lead to memory exhaustion; this is why we set a default maxtracked value. In most cases, you'll never need to change the default. If a query exceeds the max, the search will shut down with an error message, prompting you to either reformulate your query or increase the maxtracked option:
+
+![](maxtracked.png)

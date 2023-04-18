@@ -89,3 +89,20 @@ nav.bd-links p.bd-links__title {
 .bd-sidebar-primary {
   max-width: 380px;
 }
+
+div.docutils  {
+    position: relative;
+}
+
+/* Show the copybutton */
+div.docutils:hover button.copybtn, button.copybtn.success {
+	opacity: 1;
+}
+
+div.docutils button.copybtn:hover {
+    background-color: rgb(235, 235, 235);
+}
+
+div.docutils button.copybtn:active {
+    background-color: rgb(187, 187, 187);
+}

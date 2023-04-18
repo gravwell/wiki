@@ -82,7 +82,7 @@ An example configuration in which data is moved from the hot pool to the cold po
 ```
 
 ```{note}
-In the above configuration, data will be deleted permanently when it is 97 days old, having spent 7 days in the hot pool and 90 days in the cold pool.
+In the above configuration, data will be deleted permanently when it is 90 days old, having spent 7 days in the hot pool and 83 days in the cold pool.
 ```
 The Time based ageout is invoked once per day, sweeping each pool for shards that can be aged out.  By default the sweep happens at midnight UTC, but the execution time can be overridden in the well configuration with the Ageout-Time-Override directive.  The override directive is specified in 24 hour UTC time.
 
@@ -151,13 +151,36 @@ An example well configuration which will use the hot location as long as there i
 The Gravwell ageout system which operates on storage reserves is operating entirely orthogonal to outside influences, if a well is configured to respect a 50% storage ceiling and an outside application fills the volume to 60%, Gravwell will delete all entries outside the active shard.  Wells configured with storage reserved should be treated as expendable.
 ```
 
+## Forcing a Required Retention Period
+
+Controlling ageout using storage constraints allows Gravwell to manage storage by moving and/or deleting data only when needed.  However, it may be desirable to enforce a line in the sand in addition to standard storage-based controls.  The `Required-Retention` stanza can specify a period that directs the configured well to refuse to delete data, across hot or cold storage, if the specific retention period is not maintained.
+
+For example, the following configuration defines that the well should keep up to 100G in hot storage and maintain at least 10% of spare storage in cold.  The `Required-Retention=30d` also informs the well that it is not allowed to delete shards within the 30 days, regardless of storage availability.
+
+```
+[Storage-Well "doorlogs"]
+	Location=/mnt/xpoint/gravwell/doorlogs
+	Cold-Location=/mnt/storage/gravwell_cold/doorlogs
+	Tags=badgeaccess
+	Max-Hot-Storage-GB=100
+	Cold-Storage-Reserve=10
+	Required-Retention=30d
+	Delete-Frozen-Data=true
+```
+
+**Be aware** that ingest may stop if you do not have enough storage to cover the specified retention period.  If there is no room for data and Gravwell is not allowed to delete, the only option is to stop taking on more data.  Required-Retention is designed to provide a safety mechanism for compliance or regulatory requirements while also letting Gravwell keep as much data as it can.
+
+```{attention}
+The Required-Retention flag will check specified retention periods against time based ageout.  Setting `Required-Retention=90d` and `Cold-Duration=80d` will result in an error as the required retention directly conflicts with the maximum duration value specified in the Cold storage well.
+```
+
 ## Caveats and Important Notes
 
 Ageout constraints are applied to entire shards, so if a single shard grows beyond the size of a data constraint the shard will age out in its entirety once the shard is idle.
 
 Time-based constraints require that the entire shard fall outside the specified time window.  As such, time constraints that are less than 1 day have no meaning, and hot pools must be able to hold at least 2 days worth of data.
 
-Take care when combining time-based constraints with total storage constraints. If `Hot-Duration=7D` and `Cold-Duration=90D` are specified, data will be deleted after 97 days. However, if `Max-Hot-Storage-GB=2` and `Cold-Duration=90D` are specified, data will move from the hot well to the cold well when the hot well exceeds 2GB, and **data will be deleted from the cold well when it is 90 days old**.
+Take care when combining time-based constraints with total storage constraints. If `Hot-Duration=7D` and `Cold-Duration=90D` are specified, data will be deleted after 90 days. However, if `Max-Hot-Storage-GB=2` and `Cold-Duration=90D` are specified, data will move from the hot well to the cold well when the hot well exceeds 2GB, and **data will be deleted from the cold well when it is 90 days old**.
 
 ### Transparent Compression + Docker Caveats
 

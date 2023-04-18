@@ -124,8 +124,9 @@ yum install -y gravwell
 Once installed you will have to bump the CentOS firewall for web ports, executing the following:
 
 ```
-sudo firewall-cmd --zone=public --add-service=http
-sudo firewall-cmd --zone=public --add-service=https
+sudo firewall-cmd --zone=public --add-service=http --permanent
+sudo firewall-cmd --zone=public --add-service=https --permanent
+sudo firewall-cmd --reload
 ```
 
 You should now be able to access the Gravwell web interface on the IP assigned to the CentOS/RHEL system.

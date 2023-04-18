@@ -21,7 +21,7 @@ from gravy_lexer import GravwellLexer
 project = "Gravwell"
 copyright = f"Gravwell, Inc. {date.today().year}"
 author = "Gravwell, Inc."
-release = "v5.2.1"
+release = "v5.2.2"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -30,6 +30,7 @@ extensions = [
     "myst_parser",
     "sphinx_design",
     "notfound.extension",
+    "sphinx_copybutton",
 ]
 
 myst_enable_extensions = [
@@ -131,3 +132,6 @@ html_context = {
 
 # Variables to substitute in Markdown files
 myst_substitutions = {}
+
+# Copy button
+copybutton_selector = "div.highlight pre,div.docutils pre.literal-block"
