@@ -1,6 +1,6 @@
 # API Tokens System
 
-The Gravwell API Token system is designed to allow users to create restricted tokens that can be used to access specific APIs in Gravwell without requiring a full login cycle.  This means that a user can generate a token and use it to access a restricted set of APIs in scripts, command line applications, and 3rd party programs that may not have direct Gravwell integration.  API tokens consist of a randomly generated authentication token, a set of access allowances, and an optional expiration.  All users have access to the tokens API; admins can disable access to tokens API for non-admin users using the Gravwell ABAC system.
+The Gravwell API Token system is designed to allow users to create restricted tokens that can be used to access specific APIs in Gravwell without requiring a full login cycle.  This means that a user can generate a token and use it to access a restricted set of APIs in scripts, command line applications, and 3rd party programs that may not have direct Gravwell integration.  API tokens consist of a randomly generated authentication token, a set of access allowances, and an optional expiration.  All users have access to the tokens API; admins can disable access to tokens API for non-admin users using the Gravwell CBAC system.
 
 The Tokens API interface is located in the "Tools & Resources" navigation section.
 
