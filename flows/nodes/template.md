@@ -87,7 +87,7 @@ Last Run: 2023-02-16 20:01:45.606580068 +0000 UTC
 
 ## Example - Extracting Query Values
 
-The Text template can index into result data and extract specific values, this can be useful when using query result values for high level fields.  This example shows running a query that looks for users with excessive login failures and sends an email with the user and failure rates in the subject line.
+The Text template can index into result data and extract specific values. This can be useful when using query result values for high level fields. This example shows running a query that looks for users with excessive login failures and sends an email with the user and failure rates in the subject line.
 
 Notice that we have two distinct text templates that are producing two different outputs for our email.  It is entirely valid to string together multiple text templates for different fields.
 
