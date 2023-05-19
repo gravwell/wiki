@@ -25,7 +25,7 @@ The Go implementation of Mustache Templates includes a variety of control system
 
 
 ```{note}
-The text template requires a concrete type to interact with, so it is often nessasary to pull data out of asearch using GetTableResults or GetTextResults before working with a search.
+The text template requires a concrete type to interact with, so it is often necessary to pull data out of a search using GetTableResults or GetTextResults before working the data.
 ```
 
 ## Example - Simple Notification
