@@ -24,17 +24,17 @@ When creating or editing a user or group, select the "Capabilities" tab and sele
 
 Tag access is configured by selecting the Tags tab, and selecting the tags the user or group has access to.
 
-Users that don't have access to a particilar feature will see a menu system with those features disabled. For example, a user that does not have access to dashboard or data ingest will see a menu system like this:
+Users that don't have access to a particular feature will see a menu system with those features disabled. For example, a user that does not have access to dashboard or data ingest will see a menu system like this:
 
 ![CBAC Menu](cbac_menu.png)
 
 ## Granting Capabilities in Practice
 
-A typical use of user and group CBAC grants is to not provide any grants to individual users, and instead create groups with specific roles. For example, creating a group named "IT Users" that has access to IT related data (syslog, router logs, firewall logs, etc.), and a group named "Incident Response Users" that has access to IDS and other security realted data, allows the admin to grant access to users based on their role. Users that need access to both IT and Incident response data in this example can simply be added to both groups.
+A typical use of user and group CBAC grants is to not provide any grants to individual users, and instead create groups with specific roles. For example, creating a group named "IT Users" that has access to IT related data (syslog, router logs, firewall logs, etc.), and a group named "Incident Response Users" that has access to IDS and other security related data, allows the admin to grant access to users based on their role. Users that need access to both IT and Incident response data in this example can simply be added to both groups.
 
 ## List of CBAC Capabilities
 
-| Capability Name | Desecription |
+| Capability Name | Description |
 |--------|-------|
 | Search | Search data and execute queries. |
 | Download | Download search results. |
