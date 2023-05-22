@@ -30,7 +30,7 @@ Users that don't have access to a particular feature will see a menu system with
 
 ## Granting Capabilities in Practice
 
-A typical use of user and group CBAC grants is to not provide any grants to individual users, and instead create groups with specific roles. For example, creating a group named "IT Users" that has access to IT related data (syslog, router logs, firewall logs, etc.), and a group named "Incident Response Users" that has access to IDS and other security related data, allows the admin to grant access to users based on their role. Users that need access to both IT and Incident response data in this example can simply be added to both groups.
+In practice, it is less common to grant capabilities to individual users; instead, administrators create groups with specific roles and assign users to those groups. For example, creating a group named "IT Users" that has access to IT-related tags (syslog, router logs, firewall logs, etc.), and a group named "Incident Response Users" that has access to IDS and other security related data, allows the admin to grant access to users based on their role. Users that need access to both IT and Incident response data in this example can simply be added to both groups.
 
 ## List of CBAC Capabilities
 
