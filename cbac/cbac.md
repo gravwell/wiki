@@ -1,6 +1,6 @@
 # Capability Based Access Control
 
-Capability Based Access Control (CBAC) is a feature permissions system that enables users and groups to be configured with fine-grained access to various Gravwell features. For example, using CBAC, a user can be configured to have access to search, but not resources or kits. Additionally, CBAC can be used to define which tags are available to users and groups.
+Capability Based Access Control (CBAC) is a feature access system that enables users and groups to be configured with fine-grained access to various Gravwell features. For example, using CBAC, a user can be configured to have access to search, but not resources or kits. Additionally, CBAC can be used to define which tags are available to users and groups.
 
 CBAC is based around a deny-all default policy. Capabilities and tag access must be granted to each user (or group a user belongs to) in order to access those features. Admin users are not restricted by CBAC and always have full system access.
 
@@ -41,7 +41,6 @@ In practice, it is less common to grant capabilities to individual users; instea
 | SaveSearch | Save a search and add notes. |
 | AttachSearch | Load a search by search ID. |
 | BackgroundSearch | Execute a search in the background. |
-| GetTags | View tags in the system. |
 | SetSearchGroup | Assign a default group to searches. |
 | SearchHistory | View search history of authenticated user |
 | SearchAllHistory | View search history of items user has access to. |
@@ -99,9 +98,9 @@ In practice, it is less common to grant capabilities to individual users; instea
 
 ## Determining a CBAC Grant
 
-A user is given a capability or tag grant from both the grants given to the user directly, and from any groups the user is a part of. 
+A user is granted access based on the combination of capabilities and tags that are granted directly to the user and also those granted to any groups the user belongs to.
 
-For example, if user "Bob" has access to Search and Resources (but nothing else), and the "gravwell" tag, and is part of a group that grants access to "Dashboards" and the "default" tag, "Bob" has access to Search, Resources, and Dashboards, and both the "gravwell" and "default" tags.
+For example, user "Bob" has access to Search and Resources (but nothing else), and the "gravwell" tag. Bob is also a member of a group that grants access to "Dashboards" and the "default" tag. As a result, "Bob" has access to Search, Resources, and Dashboards, and both the "gravwell" and "default" tags.
 
 ## CBAC Restrictions in Search
 
