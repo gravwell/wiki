@@ -33,6 +33,7 @@ Gravwell Searchagent </scripting/searchagent>
 Gravwell Accelerators </configuration/accelerators>
 Performance Tuning </tuning/tuning>
 Gravwell Metrics and Crash Reporting </metrics>
+Capability Based Access Control (CBAC) </cbac/cbac>
 Common Problems & Caveats </configuration/caveats>
 ```
 
