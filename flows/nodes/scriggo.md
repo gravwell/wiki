@@ -14,6 +14,7 @@ The Go flow node has some notable restrictions on what it can and can't do.  The
 * No reflection on custom types, the `reflect` package cannot handle types defined in your programs.
 * Limited libraries, you can only import libraries that are included in the searchagent, full list at the end of this page.
 * No `unsafe` package and limited pointer operations, unsafe package cannot be imported and pointer arithmetic will likely result in unexpected results.
+* No `defer` operation.  Sorry, not implemented, do it like it's C99!
 
 ## Configuration
 
