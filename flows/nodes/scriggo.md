@@ -1,19 +1,19 @@
 # Go Node
 
-This node can execute a limited subset of Go code in a flow.  The node uses the open source [Scriggo](https://github.com/open2b/scriggo) project to execute Go code using a custom interpretter.
+This node can execute a limited subset of Go code in a flow.  The node uses the open source [Scriggo](https://github.com/open2b/scriggo) project to execute Go code using a custom interpreter.
 
 ```{note}
-The Scriggo Go interpretter does not implement all of the Go specification and may behave unexpectedly when relying on reflection or complex pointer pointer operations.  The Go node is useful for performing simple type-aware operations in a flow, not writing complex automation programs.
+The Scriggo Go interpretter does not implement *all* of the Go specification and may behave unexpectedly when doing reflection or complex pointer operations.  The Go node is useful for performing simple type-aware operations in a flow, not writing complex programs.
 ```
 
 ## Restrictions
 
-The Go flow node has some notable restrictions on what it can and can't do.  The following are some of the restrictions to be aware of.
+The Go flow node has some notable restrictions on what it can and can't do:
 
-* No go routines, the `go` keyword is disabled and the node cannot launch go routines.
-* No reflection on custom types, the `reflect` package cannot handle types defined in your programs.
-* Limited libraries, you can only import libraries that are included in the searchagent, full list at the end of this page.
-* No `unsafe` package and limited pointer operations, unsafe package cannot be imported and pointer arithmetic will likely result in unexpected results.
+* No goroutines. The `go` keyword is disabled and the node cannot launch goroutines.
+* No reflection on custom types. The `reflect` package cannot handle types defined in your programs.
+* Limited libraries. You can only import libraries that are included in the searchagent. Full list at the end of this page.
+* No `unsafe` package and limited pointer operations. The `unsafe` package cannot be imported and pointer arithmetic will likely result in unexpected results.
 * No `defer` operation.  Sorry, not implemented, do it like it's C99!
 
 ## Configuration
@@ -27,19 +27,20 @@ The Go node can modify any value in the incoming payload. It can also create new
 
 Variables in the payload are accessed in Go code by using the Gettter/Setter interface on the `Payload` variable exported in the `gravwell` package, e.g. `gravwell.Payload.Set("foobar", 3.14159)`.
 
-### Output Debugging
+### Debug Output
 
-All `stdout` or `stderr` output will be written to the Flow console log; this means including a `println("hello mom!")` will include `hello mom!` in the flow debug output.
+All `stdout` or `stderr` output will be written to the Flow console log. This means including a `println("hello mom!")` will include `hello mom!` in the flow debug output.
 
 ## Native Gravwell Package
 
-The Go flow node can import a package called `gravwell` that will allow access to flow specific functions and values.  The `gravwell` package can almost be thought of as a virtual package because it simply maps global variables and some internal flow functionality to a package so that Go node programs can interact with flow variables.
+The Go flow node can import a package called `gravwell` that will allow access to flow specific functions and values.  The `gravwell` package can almost be thought of as a "virtual" package because it simply maps global variables and some internal flow functionality to a package so that Go node programs can interact with flow variables.
 
 The `gravwell` package exposes the following variables and functions:
 
 ### Payload Getter and Setter
 
-One of the most useful variables in the `gravwell` package is the `Payload` variable which enables getting and setting natively typed values into the Flow payload.  The `Payload` varialbe implements the following interface:
+One of the most useful variables in the `gravwell` package is the `Payload` variable which enables getting and setting natively typed values in the Flow payload.  The `Payload` variable implements the following interface:
+
 ```
 type Payload interface {
 	Get(string) (interface{}, error)
@@ -47,45 +48,45 @@ type Payload interface {
 }
 ```
 
-The `Payload` interface allows for getting and setting native types into the flow payload similar to the [Javascript](/flows/nodes/javascript) node or other logic nodes.
+The `Payload` interface can get and set native types into the flow payload similar to the [Javascript](/flows/nodes/javascript) node or other logic nodes.
 
 ```{note}
-If you define a new struct type in your Go program and set it into the flow Payload may result in undefined behavior because that type information won't make it outside the Go flow node.
+Defining a new struct type in your Go program and setting it into the flow Payload may result in undefined behavior, because that type information won't make it outside the Go flow node.
 ```
 
 ### Other Package Types
 
 | Name     | Type/Prototype      | Description                                                    |
 |----------|---------------------|----------------------------------------------------------------|
-| `START`    | [time.Time](https://pkg.go.dev/time#Time) | The scheduled start time for the flow, this time may be in the past if the flow is backfilling missed runs. |
+| `START`    | [time.Time](https://pkg.go.dev/time#Time) | The scheduled start time for the flow. This time may be far in the past if the flow is backfilling missed runs. |
 | `LAST_RUN` | [time.Time](https://pkg.go.dev/time#Time) | The timestamp of the last run of this flow. |
-| `DURATION` | [time.Duration](https://pkg.go.dev/time#Duration) | The the scheduled time duration of a flow run, this repesents the time window the flow should cover for any queries. |
+| `DURATION` | [time.Duration](https://pkg.go.dev/time#Duration) | The scheduled time duration of a flow run. This repesents the time window the flow should cover for any queries. |
 | `ThisScriptID` | `string` | The current flow ID |
 | `GetClient` | `func() *client.Client` | Returns an active logged in client for use, [client.Client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) docs available. |
-| `SetPersistentMap` | `SetPersistentMap(mapName string, key string, value interface{})` | Set a natively typed value into the persistent map that can be retrieved accross runs. |
+| `SetPersistentMap` | `SetPersistentMap(mapName string, key string, value interface{})` | Set a natively typed value into a persistent map that can be retrieved across runs. |
 | `GetPersistentMap` | `GetPersistentMap(mapName string, key string) (value interface{})` | Get a persistent map value from previous runs. |
 | `DeletePersistentMap` | `DeletePersistentMap(mapName, value string)` | Delete a value from the persistent map. |
 | `PersistentMap` | `PersistentMap(mapName string) map[string]interface{}` | Get a complete persistent map. |
 | `Backup` | `Backup(wtr io.Writer, includeSS bool) (err error)` | Create a new backup with a provided `io.Writer`. |
-| `BackupWithConfig` | `BackupWithConfig(wtr io.Writer, cfg types.BackupConfig) (err error)` | Create a new backup with the provided `io.Writer` and [BackupConfig](). |
+| `BackupWithConfig` | `BackupWithConfig(wtr io.Writer, cfg types.BackupConfig) (err error)` | Create a new backup with the provided `io.Writer` and [BackupConfig](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client/types#BackupConfig). |
 | `GetMacro` | ` GetMacro(key string) (string, error)` | Retrieve a system macro. |
 | `Systems` | `Systems() (map[string]types.SysInfo` | Get a map of [SysInfo](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client/types#SysInfo) structures using the system name as the map key. |
 | `Ingesters` | `Ingesters() (map[string]types.IngestStats, error)` | Get a map of [IngesterStats](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client/types#IngesterStats) keyed by terminating indexer UUID. |
-| `Indexers` | `Indexers() (map[string]types.IdxStats, error)` | Get a map of [IdxStats](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client/types#IdxStats) keyed by indexer UUID.   This API call is expensive and returns the complete shard state system wide.  |
+| `Indexers` | `Indexers() (map[string]types.IdxStats, error)` | Get a map of [IdxStats](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client/types#IdxStats) keyed by indexer UUID.   This API call is expensive and returns the complete shard state systemwide.  |
 | `IndexerStates` | `IndexerStates() (map[string]string, error)` | Get a map of indexer health states keyed by indexer UUID.|
 | `AddSelfTargetedNotification` | `AddSelfTargetedNotification(id uint32, msg, link string, expires time.Time) error` | Create a Gravwell notification. |
-| `GetResource` | `GetResource(key string) ([]byte, error)` | Get a gravwell reasource. |
-| `SetResource` | `GetResource(key string, value []byte) (error)` | |
+| `GetResource` | `GetResource(key string) ([]byte, error)` | Get a gravwell resource. |
+| `SetResource` | `SetResource(key string, value []byte) (error)` | Set a Gravwell resource. |
 | `ScheduledSearchInfo` | `ScheduledSearchInfo() ([]types.ScheduledSearch, error)` | Get the list of [ScheduledSearch](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client/types#ScheduledSearch) structures for the current user. |
-| `GetSecret` | `GetSecret(name string) (string, error)` | Retrieve a secret value, this is the complete secret value, be careful with this call. |
+| `GetSecret` | `GetSecret(name string) (string, error)` | Retrieve a secret value. This is the complete secret value, so be careful with this call! |
 
 ## Examples
 
 Below are a few basic examples of using the Go node to perform some specific operations that may be useful in a Flow.
 
-### Basic Program
+### Payload Modification
 
-This basic program shows how we grab a value from the flow payload, modify it, and put it back.  The basic flow might look like the following:
+This program shows how we grab a value from the flow payload, modify it, and put it back.  The basic flow might look like the following:
 
 ![](basic_go_node_flow.png)
 
@@ -95,13 +96,6 @@ package main
 import (
 	"gravwell"
 )
-
-/* payload implements a Get and Set, like this interface: 
-type payload interface {
-	Get(string) (interface{}, error)
-	Set(string, interface{}) error
-}
-*/
 
 var payload = gravwell.Payload
 
@@ -119,7 +113,7 @@ func main() {
 
 ### Getting a Client
 
-This basic program shows how to get a handle on a client and then use it to perform some more complicated using the client.
+This program shows how to get a handle on a client and then use it to perform some more complicated operations.
 
 ![](get_client_go_node_flow.png)
 
@@ -149,7 +143,7 @@ func main() {
 
 ### Getting Search Results
 
-In this flow we grab a search ID and then use a client to download the results and relay them out to a TCP socket.  This example demonstrates using the Go node to attach to a native search type as well as export the data through an imported library funcition.
+In this flow we grab a search ID and then use a client to download the results and relay them out to a TCP socket.  This example demonstrates using the Go node to attach to a native search type as well as export the data through an imported library function.
 
 ![](search_output_go_node_flow.png)
 
