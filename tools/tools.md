@@ -157,7 +157,7 @@ The Splunk migration tool is [fully documented here](/migrate/migrate).
 
 ##  Account Unlock
 
-The Account Unlock tool can be used to unlock and reset the password for any account.  While an Admin user can perform this same functionality via the User Administration screens in the GUI,  or via the Gravwell CLI,  There may be times when you do not have a secondary Admin user who can make the changes for you.  This tool provides a Break Glass ability for you to reset the password on an account or system when you do not have another way to do so.
+The Account Unlock tool can be used to unlock and reset the password for any account.  While an Admin user can perform this same functionality via the User Administration screens in the GUI,  or via the Gravwell CLI,  there may be times when you do not have a secondary Admin user who can make the changes for you.  This tool provides a Break Glass ability for you to reset the password on an account or system when you do not have another way to do so.
 
 You can find the tool at [https://update.gravwell.io/files/tools/accountUnlock.](https://update.gravwell.io/files/tools/accountUnlock)  
 
