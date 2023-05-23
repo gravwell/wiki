@@ -66,6 +66,7 @@ hidden: true
 Email <nodes/email>
 Flow Storage Read <nodes/storageread>
 Flow Storage Write <nodes/storagewrite>
+Go Scripting <nodes/scriggo>
 Gravwell Notification <nodes/notification>
 HTML Format <nodes/htmlformat>
 HTTP <nodes/http>
