@@ -25,7 +25,7 @@ The Go flow node has some notable restrictions on what it can and can't do:
 
 The Go node can modify any value in the incoming payload. It can also create new items in the outgoing payload, but those new items *must* be listed in the Outputs config field.
 
-Variables in the payload are accessed in Go code by using the Gettter/Setter interface on the `Payload` variable exported in the `gravwell` package, e.g. `gravwell.Payload.Set("foobar", 3.14159)`.
+Variables in the payload are accessed in Go code by using the Getter/Setter interface on the `Payload` variable exported in the `gravwell` package, e.g. `gravwell.Payload.Set("foobar", 3.14159)`.
 
 ### Debug Output
 
@@ -73,12 +73,12 @@ Defining a new struct type in your Go program and setting it into the flow Paylo
 | `Systems` | `Systems() (map[string]types.SysInfo` | Get a map of [SysInfo](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client/types#SysInfo) structures using the system name as the map key. |
 | `Ingesters` | `Ingesters() (map[string]types.IngestStats, error)` | Get a map of [IngesterStats](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client/types#IngesterStats) keyed by terminating indexer UUID. |
 | `Indexers` | `Indexers() (map[string]types.IdxStats, error)` | Get a map of [IdxStats](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client/types#IdxStats) keyed by indexer UUID.   This API call is expensive and returns the complete shard state systemwide.  |
-| `IndexerStates` | `IndexerStates() (map[string]string, error)` | Get a map of indexer health states keyed by indexer UUID.|
+| `IndexerStates` | `IndexerStates() (map[string]string, error)` | Get a map of indexer health states keyed by indexer UUID.  |
 | `AddSelfTargetedNotification` | `AddSelfTargetedNotification(id uint32, msg, link string, expires time.Time) error` | Create a Gravwell notification. |
-| `GetResource` | `GetResource(key string) ([]byte, error)` | Get a gravwell resource. |
+| `GetResource` | `GetResource(key string) ([]byte, error)` | Get a Gravwell resource. |
 | `SetResource` | `SetResource(key string, value []byte) (error)` | Set a Gravwell resource. |
 | `ScheduledSearchInfo` | `ScheduledSearchInfo() ([]types.ScheduledSearch, error)` | Get the list of [ScheduledSearch](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client/types#ScheduledSearch) structures for the current user. |
-| `GetSecret` | `GetSecret(name string) (string, error)` | Retrieve a secret value. This is the complete secret value, so be careful with this call! |
+| `GetSecret` | `GetSecret(name string) (string, error)` | Retrieve a secret value. This is the complete secret value, so be careful with this call. |
 
 ## Examples
 
