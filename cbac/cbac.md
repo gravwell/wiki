@@ -110,4 +110,4 @@ CBAC capabilities also apply to search. A user that does not have access to reso
 
 - Some capabilities require both read and write grants in order to function correctly, such as Resources and Playbooks.
 - The GUI automatically selects read access for a given feature if any of the write capabilities for that feature are selected. If write-only access is needed, you must use the Gravwell command line tool to configure the capability.
-
+- When CBAC is enabled, the `Webserver-Ingest-Groups` configuration parameter is ignored.

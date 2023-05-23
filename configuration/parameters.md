@@ -444,7 +444,7 @@ Description:	The HTTP-Proxy parameter configures a proxy to be used for HTTP and
 Applies to:		Webserver  
 Default Value:
 Example:		`Webserver-Ingest-Groups=ingestUsers`  
-Description:	The Webserver-Ingest-Groups parameter is a list parameter which specifies groups whose users are allowed to ingest entries directly via the Gravwell web API. As a list parameter, it can be specified multiple times to enable multiple groups to ingest via web API.
+Description:	The Webserver-Ingest-Groups parameter is a list parameter which specifies groups whose users are allowed to ingest entries directly via the Gravwell web API. As a list parameter, it can be specified multiple times to enable multiple groups to ingest via web API. When [CBAC](/cbac/cbac) is enabled, this configuration parameter is ignored.
 
 ### **Disable-Update-Notification**
 Applies to:		Webserver  
