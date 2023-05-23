@@ -3,7 +3,7 @@
 This node can execute a limited subset of Go code in a flow.  The node uses the open source [Scriggo](https://github.com/open2b/scriggo) project to execute Go code using a custom interpreter.
 
 ```{note}
-The Scriggo Go interpretter does not implement *all* of the Go specification and may behave unexpectedly when doing reflection or complex pointer operations.  The Go node is useful for performing simple type-aware operations in a flow, not writing complex programs.
+The Scriggo Go interpreter does not implement *all* of the Go specification and may behave unexpectedly when doing reflection or complex pointer operations.  The Go node is useful for performing simple type-aware operations in a flow, not writing complex programs.
 ```
 
 ## Restrictions
@@ -61,7 +61,7 @@ Defining a new struct type in your Go program and setting it into the flow Paylo
 | `START`    | [time.Time](https://pkg.go.dev/time#Time) | The scheduled start time for the flow. This time may be far in the past if the flow is backfilling missed runs. |
 | `LAST_RUN` | [time.Time](https://pkg.go.dev/time#Time) | The timestamp of the last run of this flow. |
 | `DURATION` | [time.Duration](https://pkg.go.dev/time#Duration) | The scheduled time duration of a flow run. This repesents the time window the flow should cover for any queries. |
-| `ThisScriptID` | `string` | The current flow ID |
+| `ThisScriptID` | `string` | The current flow ID. |
 | `GetClient` | `func() *client.Client` | Returns an active logged in client for use, [client.Client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) docs available. |
 | `SetPersistentMap` | `SetPersistentMap(mapName string, key string, value interface{})` | Set a natively typed value into a persistent map that can be retrieved across runs. |
 | `GetPersistentMap` | `GetPersistentMap(mapName string, key string) (value interface{})` | Get a persistent map value from previous runs. |
