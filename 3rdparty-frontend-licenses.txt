@@ -29,9 +29,6 @@ THE SOFTWARE.
 @angular/common
 MIT
 
-@angular/compiler
-MIT
-
 @angular/core
 MIT
 
@@ -141,6 +138,9 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+@ngrx/component
+MIT
+
 @ngrx/component-store
 MIT
 
@@ -188,7 +188,7 @@ angular-gridster2
 MIT
 MIT License
 
-Copyright (c) 2022 Tiberiu Zuld
+Copyright (c) 2023 Tiberiu Zuld
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4155,27 +4155,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 timezones.json
 MIT
-The MIT License (MIT)
-
-Copyright (c) 2014 Dmitriy Filipenko
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 topojson-client
 ISC
@@ -4248,7 +4227,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 vega
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4279,7 +4258,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-canvas
 BSD-3-Clause
-Copyright (c) 2015-2018, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4310,7 +4289,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-crossfilter
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4341,7 +4320,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-dataflow
 BSD-3-Clause
-Copyright (c) 2015-2018, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4372,7 +4351,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-encode
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4403,7 +4382,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-event-selector
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4434,7 +4413,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-expression
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4465,7 +4444,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-force
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4496,7 +4475,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-format
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4527,7 +4506,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-functions
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4558,7 +4537,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-geo
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4589,7 +4568,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-hierarchy
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4620,7 +4599,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-label
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4651,7 +4630,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-loader
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4682,7 +4661,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-parser
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4713,7 +4692,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-projection
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4744,7 +4723,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-regression
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4775,7 +4754,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-runtime
 BSD-3-Clause
-Copyright (c) 2015-2018, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4806,7 +4785,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-scale
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4837,7 +4816,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-scenegraph
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4868,7 +4847,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-selections
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4899,7 +4878,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-statistics
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4930,7 +4909,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-time
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4961,7 +4940,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-transforms
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -4992,7 +4971,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-util
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -5023,7 +5002,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-view
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -5054,7 +5033,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-view-transforms
 BSD-3-Clause
-Copyright (c) 2015-2018, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -5085,7 +5064,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-voronoi
 BSD-3-Clause
-Copyright (c) 2015-2021, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -5116,7 +5095,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 vega-wordcloud
 BSD-3-Clause
-Copyright (c) 2015-2018, University of Washington Interactive Data Lab
+Copyright (c) 2015-2023, University of Washington Interactive Data Lab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
