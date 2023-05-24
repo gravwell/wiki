@@ -154,3 +154,28 @@ The system will correctly interpret the first timestamp and lock onto the `Unpad
 ## Splunk Migration
 
 The Splunk migration tool is [fully documented here](/migrate/migrate).
+
+##  Account Unlock
+
+The Account Unlock tool can be used to unlock and reset the password for any account.  While an Admin user can perform this same functionality via the User Administration screens in the GUI,  or via the Gravwell CLI,  there may be times when you do not have a secondary Admin user who can make the changes for you.  This tool provides a Break Glass ability for you to reset the password on an account or system when you do not have another way to do so.
+
+You can find the tool at [https://update.gravwell.io/files/tools/accountUnlock.](https://update.gravwell.io/files/tools/accountUnlock)  
+
+MD5: f299262fddf05d067a8b60e975bfb72a
+
+SHA256: 0583805315f5420ce14aada8d3a63fa6638aad8fcf251989a5f819ad8709d0a9
+
+To use the tool:
+1. Download the tool on your system and make it executable
+2. Stop the gravwell webserver (it has a lock on the user database)
+3. As the root user (or user gravwell) run the accountUnlock tool with the account you want to reset as the argument
+4. Restart the gravwell webserver
+
+```
+sudo systemctl stop gravwell_webserver
+sudo /tmp/accountUnlock admin
+sudo systemctl restart gravwell_webserver
+sudo systemctl status gravwell_webserver
+```
+
+The tool will return with confirmation that the user account has been unlocked and the default password to which it has been reset.
