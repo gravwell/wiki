@@ -23,6 +23,11 @@ When a text template executes it has access to all <a href="/flows/flows.html#pa
 
 The Go implementation of Mustache Templates includes a variety of control systems for iterating over arrays, performing conditional output, and even setting local variables.  For a deep dive on examples see the [package documentation on Actions](https://pkg.go.dev/text/template#hdr-Actions).
 
+
+```{note}
+The text template requires a concrete type to interact with, so it is often necessary to pull data out of a search using GetTableResults or GetTextResults before working the data.
+```
+
 ## Example - Simple Notification
 
 This example generates a message containing the flow's name & execution time, then sets a notification with that message:
@@ -78,4 +83,23 @@ The output is well formatted, taking native types into account:
 Running: foobar ("foo to the bar")
 Scheduled every 1h0m0s
 Last Run: 2023-02-16 20:01:45.606580068 +0000 UTC
+```
+
+## Example - Extracting Query Values
+
+The Text template can index into result data and extract specific values. This can be useful when using query result values for high level fields. This example shows running a query that looks for users with excessive login failures and sends an email with the user and failure rates in the subject line.
+
+Notice that we have two distinct text templates that are producing two different outputs for our email.  It is entirely valid to string together multiple text templates for different fields.
+
+![](template_flow_2.png)
+
+```text
+Excessive Login Failures {{index .tableResults.Data 0 0}}  {{index .tableResults.Data 0 1}} 
+```
+
+By providing two index values to the `index` operator we can extract a specific cell from a two dimensional table, in this case the username and failure counts for a query that generates a table.
+
+The output is a well formatted subject line:
+```text
+Excessive Login Failures Bob 13
 ```

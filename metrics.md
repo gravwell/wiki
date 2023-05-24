@@ -98,7 +98,7 @@ Here's an example that was sent by a Gravwell employee's home system:
 
 ```
 {
-    "ABACActive": false,
+    "CBACActive": false,
     "ApiVer": {
         "Major": 0,
         "Minor": 1
@@ -380,7 +380,7 @@ Here's an example that was sent by a Gravwell employee's home system:
 
 The structure is large, in part because this webserver is connected to 4 indexers which each get their own set of information. Here's a breakdown of the fields in detail:
 
-* `ABACActive`: Set to true if any ABAC or tag access rules are in place on the system.
+* `CBACActive`: Set to true if any CBAC or tag access rules are in place on the system.
 * `ApiVer`: An internal Gravwell API versioning number.
 * `AutomatedSearchCount`: The number of searches which have been executed "automatically" (by the search agent, or by loading a dashboard).
 * `BuildVer`: A structure describing the particular build of Gravwell on this system.
