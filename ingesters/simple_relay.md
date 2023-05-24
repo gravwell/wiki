@@ -351,6 +351,8 @@ Additional JSON listener configuration parameters:
 | Extractor     | string  |  | A JSON path which specifies the object to extract from the JSON object for use in tag assignment |
 | Tag-Match     | string list | | A set of key/value specifications used to match against the Extractor parameter and lookup a tag for assignment, many Tag-Match parameters can be defined |
 | Default-Tag   | string  |  | The tag to assign to the entry if no match can be made using the set of Tag-Match parameters |
+| Max-Object-Size | unsigned int | 1048576 | Default maximum object size for a JSON object.  Defaults to 1MB and will drop values that are over this size.  This is a safety valve for unauthenticated listeners. |
+| Disable-Compact | bool | false | By default the JSON listener will attempt to clean and compact JSON objects.  Set to true to keep JSON objects in their original form. |
 
 ### JSON Parameter Details
 
