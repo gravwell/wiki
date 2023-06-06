@@ -2,9 +2,25 @@
 
 This page demonstrates how to accomplish some common tasks in the flows system.
 
-## Build an HTML email body with query results
+## Send Query Results via Email
 
-A very common use-case for flows is to run one or more queries, check if there were results, and send an alert email if so. The following flow implements the basics:
+One of the simplest but most useful things you can do in a flow is to periodically send the results of a query via email. It only takes two nodes to do this:
+
+![](simple-email1.png)
+
+The [Run Query](/flows/nodes/runquery) node is configured to execute a search, in this case `tag=gravwell syslog Appname | stats count by Appname | table`.
+
+The [Email](/flows/nodes/email) node is then configured to use `search.Results` as the *Body* of the email. Gravwell will automatically format the search results as HTML when sending.
+
+![](simple-email2.png)
+
+The resulting email is shown below:
+
+![](simple-email3.png)
+
+## Build an arbitrary HTML email body
+
+Although you can send the results of a single query via email using just two nodes (Email and Run Query), sometimes you want to include more explanation or have multiple search results. The following flow shows an example of a more complex email:
 
 ![](email1.png)
 
@@ -65,6 +81,26 @@ The resulting email looks like this:
 ![](email5.png)
 
 Note that the text template is reasonably generic: it will work properly regardless of what query you use, because it generates the email on the fly based on the contents of the payload.
+
+## Generate & Share a PDF
+
+The example in the [PDF node documentation](/flows/nodes/pdf) shows how to build a PDF from multiple Gravwell query results and send it via email. You can of course send that PDF out via multiple different methods, too:
+
+![](pdf.png)
+
+## Ingest Data from HTTP Services
+
+The following flow hits 4 different HTTP APIs and ingests the results into different tags:
+
+![](http-ingest1.png)
+
+The [HTTP nodes](/flows/nodes/http) are configured with the desired URLs and HTTP methods:
+
+![](http-ingest2.png)
+
+The [Ingest nodes](/flows/nodes/ingest) are configured to ingest the HTTP node's `response` output into specific tags:
+
+![](http-ingest3.png)
 
 ## Build an arbitrary JSON object
 
