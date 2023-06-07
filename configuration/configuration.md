@@ -2,44 +2,28 @@
 
 This document describes some more advanced configuration options for Gravwell installations, including information on configuring storage wells, data ageout, and multi-node clusters.
 
-Gravwell is optionally a distributed system, allowing for multiple indexers which comprise a Gravwell cluster.  The default installation will install both the webserver and indexer on the same machine, but with an appropriate license configuration, running a cluster is just as simple as running a single instance.
+Gravwell is optionally a distributed system, with multiple indexers comprising a Gravwell cluster.  The default installation will install both the webserver and indexer on the same machine, but with an appropriate license configuration, running a cluster is just as simple as running a single instance.
 
-## Installer Options
+(configuration_overlays)=
+## Configuration Files & Overlay Directories
 
-The Gravwell installer supports several flags to make automated installation or deployment easier.  The following flags are supported:
+Almost all Gravwell components provide both a monolithic config *file* (e.g. `/opt/gravwell/etc/gravwell.conf`, `/opt/gravwell/etc/simple_relay.conf`) and a config overlay *directory* (e.g. `/opt/gravwell/etc/gravwell.conf.d/`) into which you can drop snippets of additional configuration. 
 
-| Flag | Description |
-|------|-------------|
-| `--help` | Display installer help menu |
-| `--no-certs` | Installer will not generate self-signed certificates
-| `--no-questions` | Assume all defaults and automatically accept EULA
-| `--no-random-passwords` | Do not generate random ingest and control secrets
-| `--no-indexer` | Do not install Gravwell indexer component
-| `--no-webserver` | Do not install the Gravwell webserver component
-| `--no-searchagent` | Do not install the Gravwell search agent (typically used with `--no-webserver`)
-| `--no-start` | Do not start the components after installation
-| `--no-crash-report` | Do not install the automated debug report component
-| `--use-config` | Use a specific config file
+Any file in the config overlay directory ending in `.conf` will be merged into the base config loaded from the config file, with files processed in alphabetical order. This follows the standard convention used in Linux systems, as in `/etc/sudoers` and `/etc/sudoers.d`.
 
-### Common use-cases for advanced installation requirements
+For instance, rather than adding a new well by editing `/opt/gravwell/etc/gravwell.conf` directly, you could create a file named `/opt/gravwell/etc/gravwell.conf.d/syslog-well.conf` and include *only* the well configuration in it:
 
-If you are deploying Gravwell to a cluster with multiple indexers, you would not want to install the webserver component on your indexer nodes.
-
-If you are using an automated deployment tool you don’t want the installer stopping and asking a questions.
-
-If you already have your list of indexers with ingest and control shared secrets, specifying a configuration file at install time can greatly speed up the process.
-
-For example, to install the indexer component without installing the webserver or randomizing passwords, run:
-
-```console
-root@gravserver# bash gravwell_installer.sh --no-questions --no-random-passwords --no-webserver
+```
+[Storage-Well "syslog"]
+	Location=/opt/gravwell/storage/syslog/
+	Tags=syslog
 ```
 
-If you choose to randomize passwords, you will need to go back through your indexers and webserver and ensure the `Control-Auth` parameter in the `gravwell.conf` file matches for the webserver and each indexer. You'll also want to set the same `Ingest-Auth` value on all the indexers.
+Similarly, one can drop [Simple Relay](/ingesters/simple_relay) Listener definitions into files in `/opt/gravwell/etc/simple_relay.conf.d/` and so on.
 
 ## General Configuration
 
-Configuration of a Gravwell cluster is designed to be simple and efficient right from the start.  However, there are knobs to twist that can allow the system to better take advantage of extremely large systems or smaller embedded and industrial devices with memory constraints.  The core configuration file is designed to be shared by both the webserver and indexer, and is located by default at `/opt/gravwell/etc/gravwell.conf`
+The core configuration file is designed to be shared by both the webserver and indexer, and is located by default at `/opt/gravwell/etc/gravwell.conf`
 
 For a detailed listing of configuration options see [this page](parameters).
 
@@ -99,7 +83,7 @@ There are a few key configuration options in an indexer's gravwell.conf which af
 Indexers store their data in _wells_. Each well stores some number of tags. If a well contains 100GB of data tagged "pcap" and 10MB of data tagged "syslog", searching for syslog data means the indexer also has to read the pcap data from the disk, slowing down the search. For this reason we strongly suggest creating separate wells for tags you anticipate will contain a lot of data. See the 'Tags and Wells' section for more information.
 
 (configuration_tags_and_wells)=
-## Tags and Wells
+### Tags and Wells
 
 **Tags** are used as a method to logically separate data of different types.  Tags are applied at ingest time by the ingesters (SimpleRelay, NetworkCapture, etc).  For example, it is useful to apply unique tags to syslog logs, Apache logs, network packets, video streams, audio streams, etc.  **Wells** are the storage groupings which actually organize and store the ingested data. Although users typically do not interact with them, the wells store data on-disk in **shards**, with each shard containing approximately 1.5 days of data.
 
@@ -119,7 +103,7 @@ Tag-to-well mappings are defined in the `/opt/gravwell/etc/gravwell.conf` config
 
 The well named "raw" is thus used to store data tagged "pcap" and "video", which we could reasonably assume will consume a significant amount of storage.
 
-### Tag Restrictions and Gotchas
+#### Tag Restrictions and Gotchas
 
 Tag names can only contain alpha numeric values; dashes, underscores, special characters, etc are not allowed in tag names.  Tags should be simple names like "syslog" or "apache" that are easy to type and reflect the type of data in use.
 
@@ -127,15 +111,15 @@ The Default well receives all entries with tags that have not been explicitly as
 
 When reassigning tags between wells, the system will NOT move the data.  If you ingest data under the tag "syslog" without pinning the tag to a non-default well, then change the config file to define a new well or assign the syslog tag to an existing well, all data that exists in the default well under the syslog tag is no longer searchable.  Contact support@gravwell.io for access to a standalone tool for well and tag migration that can recover the entries, or for help re-ingesting old wells into an optimized/alternate configuration.
 
-## Data Ageout
+### Data Ageout
 
 Gravwell supports an ageout system whereby data management policies can be applied to individual wells.  The ageout policies control data retention, storage well utilization, and compression.  For more information about configuration data ageout see the [Data Ageout](ageout). section
 
-## Well Replication
+### Well Replication
 
 A Gravwell cluster with multiple indexer nodes can be configured so that nodes replicate their data to one another in case of disk failure or accidental deletion. See the [replication documentation](replication) for information on configuring replication.
 
-## Query Acceleration
+### Query Acceleration
 
 Gravwell supports the notion of "accelerators" for individual wells, which allow you apply parsers to data at ingest to generate optimization blocks.  Accelerators are just as flexible as query modules and are transparently engaged when performing queries.  Accelerators are extremely useful for needle-in-haystack style queries, where you need to zero in on data that has specific field values very quickly.  See the [Accelerators](accelerators) section for more information and configuration techniques.
 
@@ -181,3 +165,36 @@ Certain versions of the indexer and webserver are only compatible with specific 
 | 3 | 4.2 |
 
 Ingesters are always backwards compatible with older versions of indexers as they negotiate the ingest protocol version when they connect. However, some new features may be disabled if there is a significant version mismatch. We recommend using the ingester version that matches your indexer version.
+
+## Shell Installer Options
+
+The Gravwell shell installer supports several flags to make automated installation or deployment easier.  The following flags are supported:
+
+| Flag | Description |
+|------|-------------|
+| `--help` | Display installer help menu |
+| `--no-certs` | Installer will not generate self-signed certificates
+| `--no-questions` | Assume all defaults and automatically accept EULA
+| `--no-random-passwords` | Do not generate random ingest and control secrets
+| `--no-indexer` | Do not install Gravwell indexer component
+| `--no-webserver` | Do not install the Gravwell webserver component
+| `--no-searchagent` | Do not install the Gravwell search agent (typically used with `--no-webserver`)
+| `--no-start` | Do not start the components after installation
+| `--no-crash-report` | Do not install the automated debug report component
+| `--use-config` | Use a specific config file
+
+### Common use-cases for advanced installation requirements
+
+If you are deploying Gravwell to a cluster with multiple indexers, you would not want to install the webserver component on your indexer nodes.
+
+If you are using an automated deployment tool you don’t want the installer stopping and asking a questions.
+
+If you already have your list of indexers with ingest and control shared secrets, specifying a configuration file at install time can greatly speed up the process.
+
+For example, to install the indexer component without installing the webserver or randomizing passwords, run:
+
+```console
+root@gravserver# bash gravwell_installer.sh --no-questions --no-random-passwords --no-webserver
+```
+
+If you choose to randomize passwords, you will need to go back through your indexers and webserver and ensure the `Control-Auth` parameter in the `gravwell.conf` file matches for the webserver and each indexer. You'll also want to set the same `Ingest-Auth` value on all the indexers.

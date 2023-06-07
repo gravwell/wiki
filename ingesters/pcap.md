@@ -18,6 +18,8 @@ A primary strength of Gravwell is the ability to ingest binary data. The network
 
 The Network Capture ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the Network Capture ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
+The configuration file is at `/opt/gravwell/etc/network_capture.conf`. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/network_capture.conf.d`).
+
 ## Sniffer Examples
 
 ```

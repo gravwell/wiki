@@ -22,6 +22,8 @@ Gravwell provides an ingester which can pull security information from Microsoft
 
 The MS Graph ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the MS Graph ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
+The configuration file is at `/opt/gravwell/etc/msgraph_ingest.conf`. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/msgraph_ingest.conf.d`).
+
 ## ContentType Examples
 
 ```

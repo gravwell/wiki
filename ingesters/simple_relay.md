@@ -25,6 +25,8 @@ Some common use cases for Simple Relay are:
 
 The Simple Relay ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters Simple Relay supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
+The configuration file is at `/opt/gravwell/etc/simple_relay.conf`. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/simple_relay.conf.d`).
+
 An example configuration for the Simple Relay ingester, configured to listen on several ports and apply a unique tag to each is as follows:
 
 ```
