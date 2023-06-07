@@ -16,7 +16,7 @@ Be careful about unconditionally Saving searches on flows which run frequently! 
 
 ## Example
 
-This flow runs a query, then if there was at least one result it saves the search and sends an email which links directly to the results.
+This flow runs a query, then if there was at least one result, it saves the search and sends an email which links directly to the results.
 
 ![](bgsave1.png)
 
