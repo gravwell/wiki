@@ -190,7 +190,7 @@ Then we can use vi to edit `/opt/gravwell/etc/netflow_capture.conf` as described
 
 ## Using Docker Compose
 
-If you prefer to deploy complicated docker setups automatically as a complete system, the Docker compose tool can provide an easy way to deploy and configure many services en masse.  Docker compose also provides a convenient way to create volumes that are automatically initialized and persistent across multiple runs and upgrades.  Below is a simple Docker Compose file (`docker-compose.yml`) which starts a Gravwell system and two ingesters, the ingesters are automatically configured with appropriate secrets and connection targets.  Two volumes are created so that data and settings are persisted across restarts, upgrades, and tear downs.
+If you prefer to deploy complicated docker setups automatically as a complete system, the Docker compose tool can provide an easy way to deploy and configure many services en masse.  Docker compose also provides a convenient way to create volumes that are automatically initialized and persistent across multiple runs and upgrades.  Below is a simple Docker Compose file (`docker-compose.yml`) which starts a Gravwell system and two ingesters. The ingesters are automatically configured with appropriate secrets and connection targets.  Two volumes are created so that data and settings are persisted across restarts, upgrades, and tear downs.
 
 ```
 version: "3.5"
@@ -244,9 +244,9 @@ volumes:
   gravwell-storage:
 ```
 
-To start the Gravwell system issue the command `docker compose up -d`, to stop it issue `docker compose down`, to remove the containers issue `docker compose rm`.
+To start the Gravwell system, issue the command `docker compose up -d`; to stop it issue `docker compose down`; to remove the containers issue `docker compose rm`.
 
-An upgrade cycle using Docker compose might look like so:
+An upgrade cycle using Docker compose might look like this:
 
 ```
 docker compose down
