@@ -124,7 +124,7 @@ Gravwell can automatically create groups and add SSO users to these groups as me
 
 ![](sso-groups.png)
 
-In gravwell.conf, you'll need to add a `Groups-Attribute` field (`http://schemas.microsoft.com/ws/2008/06/identity/claims/groups` if you set the outgoing claim type to "Group" as shown above) to indicate which attribute contains the list of groups. You'll also need at least one `Group-Mapping` field to map Active Directory group names to desired group names within Gravwell. The example below maps an AD group named "Gravwell Users" to a Gravwell group named "gravwell-users":
+In gravwell.conf, you'll need to add a `Groups-Attribute` field (`http://schemas.xmlsoap.org/claims/Group` if you set the outgoing claim type to "Group" as shown above) to indicate which attribute contains the list of groups. You'll also need at least one `Group-Mapping` field to map Active Directory group names to desired group names within Gravwell. The example below maps an AD group named "Gravwell Users" to a Gravwell group named "gravwell-users":
 
 ```
 	Groups-Attribute=http://schemas.xmlsoap.org/claims/Group
