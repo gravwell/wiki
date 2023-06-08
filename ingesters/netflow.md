@@ -18,6 +18,8 @@ The Netflow ingester acts as a Netflow collector (see [the Wikipedia article](ht
 
 The Netflow ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the Netflow ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
+The configuration file is at `/opt/gravwell/etc/netflow_capture.conf`. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/netflow_capture.conf.d`).
+
 ## Collector Examples
 
 ```

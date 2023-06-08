@@ -36,7 +36,7 @@ At startup, file follower will ingest any existing data in the tracked paths bef
 
 ## Basic Configuration
 
-The File Follower configuration file is by default located in `/opt/gravwell/etc/file_follow.conf` on Linux and `C:\Program Files\gravwell\file_follow.cfg` on Windows.
+The File Follower configuration file is by default located in `/opt/gravwell/etc/file_follow.conf` on Linux and `C:\Program Files\gravwell\file_follow.cfg` on Windows. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/file_follow.conf.d`).
 
 The File Follower ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, File Follower supports multiple upstream indexers, TLS, cleartext, and named pipe connections, and local logging.
 

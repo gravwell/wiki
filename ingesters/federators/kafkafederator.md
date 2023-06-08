@@ -20,6 +20,8 @@ The Kafka Federator can be paired with the [Kafka Consumer](/ingesters/kafka) to
 
 ## Configuration
 
+The configuration file is at `/opt/gravwell/etc/kafka_federator.conf`. The Federator will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/kafka_federator.conf.d`).
+
 Kafka Federator defines listeners and Kafka headers. A listener is similar to a Federator listener, in which ingesters may connect and send entries. Listeners also define what topic to publish messages on. A header sets arbitrary key value pairs in the generated Kafka header. 
 
 Additionally, the global section defines a group leader to connect to and a partition.  Because the Kafka Federator is designed to send data to a Kafka broker rather than a Gravwell indexer, the `[Global]` section of the configuration file is different than typical Gravwell ingesters.  The following configuration parameters are available in the `[Global]` section:

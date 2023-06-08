@@ -22,6 +22,8 @@ Most Kafka configurations enforce a data durability guarantee, which means data 
 
 The Kafka ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the Kafka Ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
+The configuration file is at `/opt/gravwell/etc/kafka.conf`. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/kafka.conf.d`).
+
 ## Consumer Examples
 
 ```

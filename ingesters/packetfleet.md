@@ -22,6 +22,8 @@ A simple web interface to submit and view job status is also available by browsi
 
 Packet Fleet uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, Packet Fleet supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
+The configuration file is at `/opt/gravwell/etc/packet_fleet.conf`. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/packet_fleet.conf.d`).
+
 ## Stenographer Examples
 
 ```
