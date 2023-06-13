@@ -14,19 +14,16 @@ time tsString extractedTS
 
 ## Supported Options
 
-* `-f <format>`: Specifies the format to be used when printing timestamps or optionally when parsing strings. The format consists of a string representation of a specific time, "Mon Jan 2 15:04:05 MST 2006", as used by the [Go time library](https://golang.org/pkg/time/#pkg-constants). For instance, one may say `-f "Mon 3:04PM"` to get a very brief timestamp format. Refer to the linked documentation for more examples.
+* `-iformat <format>`: Specifies the format to be used parsing strings. The format consists of a string representation of a specific time, "Mon Jan 2 15:04:05 MST 2006", as used by the [Go time library](https://golang.org/pkg/time/#pkg-constants). Refer to the linked documentation for more examples. Note: This flag is ignored if the EV type is a timestamp.
+* `-oformat <format>`: Specifies the format to be used when printing timestamps. The format consists of a string representation of a specific time, "Mon Jan 2 15:04:05 MST 2006", as used by the [Go time library](https://golang.org/pkg/time/#pkg-constants). For instance, one may say `-f "Mon 3:04PM"` to get a very brief timestamp format. Refer to the linked documentation for more examples. Note: When using this flag, the output EV will be a string. When omitted, the output EV will be a timestamp type.
 * `-tz <timezone>`: Specifies a time zone, in [tz database format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), e.g. "America/Denver", "UTC", or "Atlantic/Reykjavik". This time zone will be used when *printing* timestamps (which do not have a time zone associated with them) and when *parsing* strings which do not contain a time zone specification.
-
-## Note on the use of the `-f` flag
-
-The `-f` (format) flag has a different behavior depending on the underlying type of the enumerated value being used as input. If the enumerated value is a timestamp, such as the built-in TIMESTAMP EV, `-f` sets the output format for the output enumerated value. Conversely, if the input enumerated value is a string, the `-f` flag is used to tell the time module what format the timestamp is in (not using the flag will invoke the lower performance "timegrinder" approach). 
 
 ## Examples
 
 To print entry timestamps in a specific format and time zone:
 
 ```gravwell
-tag=json time -f "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIMESTAMP foo | table TIMESTAMP foo
+tag=json time -oformat "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIMESTAMP foo | table TIMESTAMP foo
 ```
 
 ![](time1.png)
@@ -34,7 +31,7 @@ tag=json time -f "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIMESTAMP 
 The output of the previous module invocation can be fed back in to the time module to convert back into timestamps:
 
 ```gravwell
-tag=json time -f "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIMESTAMP foo | time -f "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" foo bar | table TIMESTAMP foo bar
+tag=json time -oformat "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIMESTAMP foo | time -iformat "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" foo bar | table TIMESTAMP foo bar
 ```
 
 ![](time2.png)
