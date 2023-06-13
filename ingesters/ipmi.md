@@ -58,6 +58,8 @@ The configuration file provides a simple host/port, username, and password field
 
 The IPMI ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the IPMI ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
+The configuration file is at `/opt/gravwell/etc/ipmi.conf`. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/impi.conf.d`).
+
 ## Configuration Options
 
 IPMI uses the default set of Global configuration options. IPMI devices are configured with an "IPMI" stanza and each stanza can support multiple IPMI devices that share the same credentials. For example:

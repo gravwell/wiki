@@ -63,6 +63,7 @@ maxdepth: 1
 hidden: true
 ---
 
+Background/Save query <nodes/bgsave>
 Email <nodes/email>
 Flow Storage Read <nodes/storageread>
 Flow Storage Write <nodes/storagewrite>
@@ -97,10 +98,12 @@ Throttle <nodes/throttle>
 Update Resources <nodes/resourceupdate>
 ```
 
+* [Background/Save Search](nodes/bgsave): Save or background a Gravwell query.
 * [Email](nodes/email): send email.
 * [Flow Storage Read](nodes/storageread): read items from a persistent storage.
 * [Flow Storage Write](nodes/storagewrite): write items into a persistent storage.
 * [Gravwell Notification](nodes/notification): set Gravwell notifications.
+* [Go Scripting](nodes/scriggo): execute Go code in the flow.
 * [HTML Format](nodes/htmlformat): format variables as HTML.
 * [HTTP](nodes/http): do HTTP requests.
 * [If](nodes/if): perform logical operations.

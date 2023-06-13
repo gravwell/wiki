@@ -188,6 +188,77 @@ Then we can use vi to edit `/opt/gravwell/etc/netflow_capture.conf` as described
 
 	docker restart netflow
 
+## Using Docker Compose
+
+If you prefer to deploy complicated docker setups automatically as a complete system, the Docker compose tool can provide an easy way to deploy and configure many services en masse.  Docker compose also provides a convenient way to create volumes that are automatically initialized and persistent across multiple runs and upgrades.  Below is a simple Docker Compose file (`docker-compose.yml`) which starts a Gravwell system and two ingesters. The ingesters are automatically configured with appropriate secrets and connection targets.  Two volumes are created so that data and settings are persisted across restarts, upgrades, and tear downs.
+
+```
+version: "3.5"
+
+networks:
+  gravwell:
+
+services:
+  gravwell:
+    image: "gravwell/gravwell:latest"
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - gravwell-etc:/opt/gravwell/etc
+      - gravwell-storage:/opt/gravwell/storage
+    # Don't forget to configure your volumes, so that your data persists!
+    # See https://docs.gravwell.io/configuration/docker.html#configuring-persistent-storage
+    # volumes:
+    networks:
+      - gravwell
+    environment:
+      - GRAVWELL_INGEST_SECRET=MyIngestSecret
+      - GRAVWELL_INGEST_AUTH=MyIngestSecret
+      - GRAVWELL_CONTROL_AUTH=MyControlSecret
+      - GRAVWELL_SEARCHAGENT_AUTH=MySearchAgentAuth
+
+  simple-relay:
+    image: "gravwell/simple_relay:latest"
+    restart: always
+    depends_on:
+      - gravwell
+    networks:
+      - gravwell
+    environment:
+      - GRAVWELL_CLEARTEXT_TARGETS=gravwell
+      - GRAVWELL_INGEST_SECRET=MyIngestSecret
+
+  netflow-capture:
+    image: "gravwell/netflow_capture:latest"
+    restart: always
+    depends_on:
+      - gravwell
+    networks:
+      - gravwell
+    environment:
+      - GRAVWELL_CLEARTEXT_TARGETS=gravwell
+      - GRAVWELL_INGEST_SECRET=MyIngestSecret
+volumes:
+  gravwell-etc:
+  gravwell-storage:
+```
+
+To start the Gravwell system, issue the command `docker compose up -d`; to stop it issue `docker compose down`; to remove the containers issue `docker compose rm`.
+
+An upgrade cycle using Docker compose might look like this:
+
+```
+docker compose down
+docker dompose rm
+docker pull gravwell/gravwell:latest
+docker pull gravwell/simple_relay:latest
+docker pull gravwell/netflow_capture:latest
+docker compose up -d
+```
+
+![](docker-compose.png)
+
 ## Configuring external (non-Docker) ingesters
 
 If you refer back to the original command we used to launch the `gravwell/gravwell` image, you'll note that we forwarded ports 4023 and 4024 to the host. These are respectively the cleartext and TLS-encrypted ingest ports for the indexer. If you have an ingester running on another system (perhaps gathering log files on a Linux server somewhere), you can set the `Cleartext-Backend-target` or `Encrypted-Backend-target` fields in the ingester config file to point at your Docker host and ingest data into the Gravwell instance there.

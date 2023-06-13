@@ -75,6 +75,8 @@ bash gravwell_shodan_installer_X.X.X.sh
 
 The Shodan ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the Shodan ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
+The configuration file is at `/opt/gravwell/etc/shodan_ingest.conf`. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/shodan_ingest.conf.d`).
+
 The Shodan Ingester requires a [Shodan API key](https://developer.shodan.io/api/requirements). Using the API key, you can configure one or more Shodan readers. For example:
 
 ```

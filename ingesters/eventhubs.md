@@ -20,6 +20,7 @@ The Event Hubs ingester uses the unified global configuration block described in
 
 The configuration file is located in `/opt/gravwell/etc/azure_event_hubs.conf`. There is also a directory, `/opt/gravwell/etc/azure_event_hubs.conf.d`, into which additional configuration files may be dropped; this is a convenient way to manage individual Event Hub configurations, rather than maintaining one large config file.
 
+
 ## Event Hub Configuration
 
 In order to consume events from an Event Hub, you will need the following pieces of information:

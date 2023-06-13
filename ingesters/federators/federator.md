@@ -44,7 +44,7 @@ Otherwise, download the installer from the [Downloads page](/quickstart/download
 root@gravserver ~ # bash gravwell_federator_installer.sh
 ```
 
-The Federator will almost certainly require configuration for your specific setup; please refer to the following section for more information. The configuration file can be found at `/opt/gravwell/etc/federator.conf`.
+The Federator will almost certainly require configuration for your specific setup; please refer to the following section for more information. The configuration file can be found at `/opt/gravwell/etc/federator.conf`. The Federator will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/federator.conf.d`).
 
 ## Example Configuration
 
