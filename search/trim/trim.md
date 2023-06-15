@@ -2,6 +2,8 @@
 
 The trim modules are six modules that modify given string-based enumerated values in various ways. For example, you can use `trimleft` to remove a given list of characters from the beginning of a given enumerated value.
 
+The trim module can use either a string literal as the cutset/prefix/suffix, or an EV can be specified using the `-e` flag.
+
 The trim modules consist of:
 
 - `trim`: Remove leading and trailing Unicode code points from an enumerated value.
@@ -13,7 +15,7 @@ The trim modules consist of:
 
 ## Supported Options
 
-None of the trim modules have any flags.
+* `-e`: Optional. Use the contents of an EV, specified with `-e`, as the cutset, prefix, or suffix. `trimspace` does not support this flag.
 
 ## trim
 
@@ -32,6 +34,18 @@ None of the trim modules have any flags.
 	"bad dad"	  -> " "
 
 This example will remove any of the leading or trailing characters "abcd" from the EV. 
+
+### Example using an EV instead of a string literal
+
+	trim -e bar foo 
+
+### Example output
+
+This assumes the EV "bar", has the contents "abcd"
+
+	"amy has queried" -> "my has querie"
+	"cab fare"        -> " fare"
+	"bad dad"	  -> " "
 
 ## trimleft
 
