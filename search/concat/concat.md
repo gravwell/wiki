@@ -18,7 +18,7 @@ Any number of enumerated values can be specified. An output enumerated value is 
 
 ```gravwell
 tag=conns csv [0] as ip [1] as port
-| join -s ":" ip port as dialstring
+| concat -s ":" ip port as dialstring
 | table
 ```
 ![](concat.png)
