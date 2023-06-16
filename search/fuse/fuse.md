@@ -11,6 +11,10 @@ For instance, you might combine DHCP logs with Netflow records in order to attac
 
 You can think of fuse like a simpler version of [lookup](/search/lookup/lookup), where the lookup table is built on the fly in the pipeline rather than ahead of time.
 
+## Supported Options
+
+* `-pushpop`: This flag enables "push-pop" mode. In this mode, fuse *always* stores the current value of the data enumerated values and *always* loads the previous values. See below for a detailed example.
+
 ## Syntax
 
 Fuse can take its arguments in a few different forms. If you're specifying only one key E.V. and one data E.V., the syntax is particularly simple:
@@ -85,3 +89,45 @@ tag=zeekconn,zeekdhcp ax orig resp orig_port resp_port mac assigned_addr host_na
 ```
 
 ![](fused-hostnames.png)
+
+## Example: Push-Pop
+
+Push-pop mode is most useful when you want to compare a particular EV on the current entry to the same EV on the *previous* entry. The following pattern is usually used:
+
+```
+alias myEV myPreviousEV | fuse -pushpop keyEV myPreviousEV
+```
+
+This makes a copy of the current enumerated value usng alias, then tells `fuse` to save that value & overwrite the EV with the previously-saved value.
+
+We can make use of this pattern to ask: how "fast" are our users traveling? Did a user log in from California at 9 a.m., then from Germany at 9:30? The query below answers that question for SSH logs.
+
+```
+tag=syslog syslog Hostname==update Appname==sshd
+| regex "Accepted .* for (?P<user>\S+) from (?P<ip>\S+) port" 
+| sort by time asc
+| geoip ip.Location
+| require Location
+| alias Location previousLocation TIMESTAMP prevTS
+| fuse -pushpop user (prevTS previousLocation)
+| geodist -u mi Location previousLocation
+| diff TIMESTAMP prevTS as deltaT
+| eval miles_per_second=(distance/(int(deltaT)/1000000000))
+| table user ip Location previousLocation distance deltaT miles_per_second
+```
+
+The first parts of the query are straightforward: extract username and IP address from SSH logs, then use the `geoip` module to find locations for those IPs.
+
+Next, we make copies of the `Location` and `TIMESTAMP` enumerated values, then use `fuse -pushpop` to get the previous values of those EVs for each username.
+
+Then, we find the geographic distance between the current `Location` and the `previousLocation`, giving us a new EV named `distance`.
+
+Next, we use the `diff` module to find the difference between the current timestamp and the previous one, calling that `deltaT`.
+
+Finally, we use the `eval` module to calculate velocity based on change in location (distance) divided by change in time (deltaT, a duration expressed in nanoseconds) to get a speed in miles per second.
+
+Viewing the results in a table shows that user `jfloren` logged on from two different hosts 678 miles apart within a minute. To do this in person, he'd have to travel at 17 miles per second (which is unlikely), so our next step is to figure out if he's actually logging in from remote systems or if somebody got his credentials!
+
+![](fuse-velocity.png)
+
+Note how on the second entry, the `previousLocation` value matches the `Location` of the *first* entry; likewise previousLocation on the third entry matches that of the second entry. This is the basic function of the push-pop mode.
