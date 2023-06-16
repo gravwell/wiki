@@ -4,9 +4,13 @@ Just as Gravwell is designed to have multiple indexers operating at once, it can
 
 Once configured, distributed webservers will synchronize resources, users, dashboards, user preferences, and user search histories.
 
+```{note}
+The datastore is a single point of failure for your distributed webserver system. If the datastore goes down, your webservers will continue to function in a degraded state, but it is *critical* that you restore it as soon as possible. Refer to the Disaster Recovery section below for more information, and be sure to take [frequent backups](/admin/backuprestore) for safety.
+```
+
 ## The datastore server
 
-Gravwell uses a separate server process called the datastore to keep webservers in sync. It can run on its own machine or it can share a server with a webserver. Fetch the datastore installer from [the downloads page](/quickstart/downloads), then run it on the machine which will contain the datastore.
+Gravwell uses a separate server process called the datastore to keep webservers in sync. It must run on its own machine; it cannot share a server with a Gravwell webserver or indexer. Fetch the datastore installer from [the downloads page](/quickstart/downloads), then run it on the machine which will contain the datastore.
 
 ### Configuring the datastore server
 
@@ -49,7 +53,7 @@ The datastore stores data in the following locations:
 
 * `/opt/gravwell/etc/datastore-users.db` (user database)
 * `/opt/gravwell/etc/datastore-webstore.db` (dashboards, user preferences, search history)
-* `/opt/gravwell/etc/resources/datastore/` (resources)
+* `/opt/gravwell/resources/datastore/` (resources)
 
 If any of these locations are accidentally lost or deleted, they should be restored from one of the webserver systems before restarting the datastore. Assuming the datastore is on the same machine as one of the webservers, use the following commands:
 
@@ -60,6 +64,18 @@ cp -r /opt/gravwell/resources/webserver/* /opt/gravwell/resources/datastore/
 ```
 
 If the datastore is on a separate machine, use `scp` or another file transfer method to copy those files from a webserver server.
+
+### Worst Case Scenario
+
+If you "lose" your datastore (disk failure, for instance) and stand it back up without restoring the essential data files listed above, webservers which connect to it can become confused. They will see that the datastore has *nothing* on it, and that their local copies of things have been marked as "Synced", so they'll assume that some *other* webserver must have deleted everything when they weren't looking. They will then delete all their local copies.
+
+Luckily, if you've been [taking regular backups](/admin/backuprestore), you can still restore your data pretty easily from a backup file using the following steps:
+
+1. Restart the webservers
+2. Log in as admin; the account should have been restored to the default admin/changeme credentials.
+3. Upload your backup file (Main Menu -> Administrator -> Backup/Restore)
+
+This will restore your data on the webserver, which will then push it all to the datastore and thence out to the other webservers.
 
 ## Load balancing
 
