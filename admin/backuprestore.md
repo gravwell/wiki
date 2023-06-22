@@ -33,3 +33,48 @@ You will be prompted for confirmation before the restoration process begins. Not
 ![](restore-prompt.png)
 
 Once you click the checkbox and select "Restore", your user and all other users on the system will be *logged out*. When you log in again, the system should now be in the same state as it was when the backup was made.
+
+## Automated Backups
+
+The Gravwell scripting engine can be used to create automated offsite backups; a simple script can create a backup and stream it offsite using a TCP connection, HTTP request, or any other network method.  Below is an example backup script which sends a system backup to a listening TCP server:
+
+```
+net = import("net")
+time = import("time")
+
+BACKUP_SERVER=`192.168.1.1:1234`
+
+cli = getClient()
+if cli == nil {
+    return "Failed to get client"
+}
+err = cli.TestLogin()
+if err != nil {
+       return err
+}
+// Backup may be large, increase our request timeout
+err = cli.SetRequestTimeout(10*time.Minute)
+if err != nil {
+    return err
+}
+
+conn, err = net.Dial("tcp", BACKUP_SERVER)
+if err != nil {
+    return err
+}
+
+err = cli.Backup(conn, false)
+if err != nil {
+    return err
+}
+
+conn.Close()
+
+return cli.Close()
+```
+
+```{note}
+Backups can contain sensitive data like hashed passwords and user configuration.  The above example demonstrates using the scripting system to perform scheduled backups, but a more secure system would use a TLS transport and/or a transport that requires authentication like sftp or ssh.
+```
+
+Backups require administrator privileges so make sure to schedule your script using an administrator account.
