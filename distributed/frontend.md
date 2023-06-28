@@ -79,7 +79,7 @@ This will restore your data on the webserver, which will then push it all to the
 
 ## Datastore-Dependent Operations
 
-Most operations, like running a search or creating a new dashboard, can happen even if the webserver has temporarily lost its connection to the datastore; newly-created objects will be pushed when the connection is reestablished. However, there are some operations which, due to the design of the webserver & datastore, must be executed while connected to the datastore. In general, these are operations which delete objects and operations which have to do with users & groups. A full list is below:
+Most operations, like running a search or creating a new dashboard, can happen even if the webserver has temporarily lost its connection to the datastore; newly-created objects will be pushed when the connection is reestablished. However, there are some operations which, due to the design of the webserver & datastore, must be executed while connected to the datastore. In general, these are operations which delete objects, operations which have to do with users & groups, and any security sensitive operation. A full list is below:
 
 * Adding a user/group
 * Deleting a user/group
