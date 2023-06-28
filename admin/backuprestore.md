@@ -77,4 +77,4 @@ return cli.Close()
 Backups can contain sensitive data like hashed passwords and user configuration.  The above example demonstrates using the scripting system to perform scheduled backups, but a more secure system would use a TLS transport and/or a transport that requires authentication like sftp or ssh.
 ```
 
-Backups require administrator privileges so make sure to schedule your script using an administrator account.
+Backups require administrator privileges, so make sure to schedule your script using an administrator account.
