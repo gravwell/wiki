@@ -77,6 +77,36 @@ Luckily, if you've been [taking regular backups](/admin/backuprestore), you can 
 
 This will restore your data on the webserver, which will then push it all to the datastore and thence out to the other webservers.
 
+## Datastore-Dependent Operations
+
+Most operations, like running a search or creating a new dashboard, can happen even if the webserver has temporarily lost its connection to the datastore; newly-created objects will be pushed when the connection is reestablished. However, there are some operations which, due to the design of the webserver & datastore, must be executed while connected to the datastore. In general, these are operations which delete objects and operations which have to do with users & groups. A full list is below:
+
+* Adding a user/group
+* Deleting a user/group
+* Locking/unlocking users
+* Setting the admin flag on a user
+* Modifying user/group information
+* Modifying user password
+* Changing user/group capabilities
+* Changing user/group tag access
+* Setting a user's default search group
+* Adding a user to a group
+* Removing a user from a group
+* Clearing a user's search history
+* Deleting a kit
+* Deleting a template
+* Deleting an actionable
+* Deleting a token
+* Deleting a secret
+* Deleting a user file
+* Deleting a search library item
+* Deleting a user preference
+* Deleting an automation
+* Deleting a macro
+* Deleting an auto-extractor
+* Deleting a playbook
+* Deleting a dashboard
+
 ## Load balancing
 
 Gravwell now offers a custom load balancing component specifically designed to distribute users across multiple webservers with minimal configuration. See [the load balancing configuration page](loadbalancer) for information on setting it up.
