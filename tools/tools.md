@@ -182,14 +182,14 @@ The tool will return with confirmation that the user account has been unlocked a
 
 ## Export
 
-The export tool outputs the entries in a given indexer or well within an indexer to one or more compressed JSON archives of entries. The output files can natively be reingested to Gravwell. The DATA portion of an entry is base64 encoded, while the TAG, SRC, and Timestamp are strings. 
+The export tool (`/usr/local/sbin/gravwell_export`) outputs the entries in a given indexer or well within an indexer to one or more compressed JSON archives of entries. The output files can natively be reingested to Gravwell. The DATA portion of an entry is base64 encoded, while the TAG, SRC, and Timestamp are strings. 
 
 ### Usage
 
 To export data, run the export tool with the server address and other necessary configuration options, as shown below. The tool will prompt for login credentials, and begin to export data. 
 
 ```
-Usage of ./export:
+Usage of gravwell_export:
   -insecure
     	Do NOT enforce webserver certificates, TLS operates in insecure mode
   -insecure-no-https
@@ -207,7 +207,7 @@ Usage of ./export:
 For example:
 
 ```
-./export -output tmp/ -s 10.0.0.1
+/usr/local/sbin/gravwell_export -output tmp/ -s 10.0.0.1
 Username:  admin
 Password:  
 processing well default to tmp/default containing 3 tags and 2 shards
