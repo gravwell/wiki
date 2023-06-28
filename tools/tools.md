@@ -79,8 +79,8 @@ Time Tester will walk each string provided on the command line and attempt to pr
 The tester can set the timegrinder config values and define custom timestamp formats in the same way that Gravwell ingesters can.
 
 ```
-./timetester -h
-Usage of ./timetester:
+gravwell_timetester -h
+Usage of gravwell_timetester:
   -custom string
         Path to custom time format configuration file
   -enable-left-most-seed
