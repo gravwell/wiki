@@ -79,8 +79,8 @@ Time Tester will walk each string provided on the command line and attempt to pr
 The tester can set the timegrinder config values and define custom timestamp formats in the same way that Gravwell ingesters can.
 
 ```
-./timetester -h
-Usage of ./timetester:
+gravwell_timetester -h
+Usage of gravwell_timetester:
   -custom string
         Path to custom time format configuration file
   -enable-left-most-seed
@@ -179,3 +179,44 @@ sudo systemctl status gravwell_webserver
 ```
 
 The tool will return with confirmation that the user account has been unlocked and the default password to which it has been reset.
+
+## Export
+
+The export tool (`/usr/local/sbin/gravwell_export`) outputs the entries in a given indexer or well within an indexer to one or more compressed JSON archives of entries. The output files can natively be reingested to Gravwell. The DATA portion of an entry is base64 encoded, while the TAG, SRC, and Timestamp are strings. 
+
+### Usage
+
+To export data, run the export tool with the server address and other necessary configuration options, as shown below. The tool will prompt for login credentials, and begin to export data. 
+
+```
+Usage of gravwell_export:
+  -insecure
+    	Do NOT enforce webserver certificates, TLS operates in insecure mode
+  -insecure-no-https
+    	Use insecure HTTP connection, passwords are shipped plaintext
+  -max-duration string
+    	maximum duration in the past to export data
+  -output string
+    	Output directory
+  -s string
+    	Address and port of Gravwell webserver
+  -well string
+    	limit export to a specific well
+```
+
+For example:
+
+```
+/usr/local/sbin/gravwell_export -output tmp/ -s 10.0.0.1
+Username:  admin
+Password:  
+processing well default to tmp/default containing 3 tags and 2 shards
+Total Data Processed: 8.00 MB                                     
+DONE
+
+ls -l tmp/default 
+total 8196
+-rw-r--r-- 1 gravwell gravwell 4891411 Jun 28 14:31 2023-06-26-21:54:08.json
+-rw-r--r-- 1 gravwell gravwell 3494587 Jun 28 14:31 2023-06-28-10:18:40.json
+```
+
