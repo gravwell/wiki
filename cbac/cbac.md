@@ -14,13 +14,15 @@ Enable-CBAC=true
 
 Because CBAC has a deny-all default policy, if this is the first time enabling CBAC, _all_ non-admin users will begin with no capabilities or tag access. 
 
-## Granting Capabilities to Users and Groups
+## Capability Access
+
+### Granting Capabilities to Users and Groups
 
 Admin users can grant capability and tag access to both users and groups via the Users and Groups view under Administrator->Users and Administrator->Groups.
 
 ![CBAC User Editor](cbac_user.png)
 
-When creating or editing a user or group, select the "Capabilities" tab and select the capabilities you wish to add. Users that are part of a group will also inherit capabilities from that group.
+When creating or editing a user or group, select the "Capabilities" tab and select the capabilities you wish to add. Users that are part of a group will also inherit capabilities from that group. Note how, in the screenshot above, the user has been added to the "foobar" group and is therefore inheriting the Dashboard capabilities assigned to that group.
 
 Tag access is configured by selecting the Tags tab, and selecting the tags the user or group has access to.
 
@@ -28,11 +30,11 @@ Users that don't have access to a particular feature will see a menu system with
 
 ![CBAC Menu](cbac_menu.png)
 
-## Granting Capabilities in Practice
+### Granting Capabilities in Practice
 
 In practice, it is less common to grant capabilities to individual users; instead, administrators create groups with specific roles and assign users to those groups. For example, creating a group named "IT Users" that has access to IT-related tags (syslog, router logs, firewall logs, etc.), and a group named "Incident Response Users" that has access to IDS and other security related data, allows the admin to grant access to users based on their role. Users that need access to both IT and Incident response data in this example can simply be added to both groups.
 
-## List of CBAC Capabilities
+### List of CBAC Capabilities
 
 | Capability Name | Description |
 |--------|-------|
@@ -96,18 +98,56 @@ In practice, it is less common to grant capabilities to individual users; instea
 | SecretRead | Read and access secrets. |
 | SecretWrite | Create, update, and delete secrets. |
 
-## Determining a CBAC Grant
+### Determining a CBAC Grant
 
 A user is granted access based on the combination of capabilities and tags that are granted directly to the user and also those granted to any groups the user belongs to.
 
 For example, user "Bob" has access to Search and Resources (but nothing else), and the "gravwell" tag. Bob is also a member of a group that grants access to "Dashboards" and the "default" tag. As a result, "Bob" has access to Search, Resources, and Dashboards, and both the "gravwell" and "default" tags.
 
-## CBAC Restrictions in Search
+### CBAC Restrictions in Search
 
 CBAC capabilities also apply to search. A user that does not have access to resources will still be able to invoke the `lookup` module (and other resource-based modules), but that module will list no resources as being available. Similarly, macros, auto extractors, and related features in the `anko` and legacy `eval` modules will be restricted based on the user's CBAC grants.
 
-## Caveats 
+### Caveats 
 
 - Some capabilities require both read and write grants in order to function correctly, such as Resources and Playbooks.
 - The GUI automatically selects read access for a given feature if any of the write capabilities for that feature are selected. If write-only access is needed, you must use the Gravwell command line tool to configure the capability.
 - When CBAC is enabled, the `Webserver-Ingest-Groups` configuration parameter is ignored.
+
+## Tag Access
+
+When CBAC is enabled, regular users do not have access to *any* tags by default. Access to tags is granted to users and groups in a similar manner to capabilities. By default, new users do not have access to any tags:
+
+![](tag1.png)
+
+You can add access to individual tags by typing the tag name in the "Find or create new tag grant" bar and hitting enter. In the following screenshot, we have already created a grant for the "default" tag and are prepared to create a new one for "gravwell":
+
+![](tag2.png)
+
+### Tag Globbing
+
+You can also use [glob wildcards](https://tldp.org/LDP/GNU-Linux-Tools-Summary/html/x11655.htm) to specify multiple tags. For instance, `zeek*` matches all tags beginning with `zeek`. Note that even if you don't have any tags which match the glob *yet*, you can still add the pattern now and the user will get access to matching tags as they are created.
+
+![](tag3.png)
+
+### Group Grants
+
+As with capabilities, users will inherit tag grants from their groups:
+
+![](tag4.png)
+
+Tag grants for groups are set in the exact same way as user grants.
+
+### Tag Grant Shortcuts
+
+There are two shortcut buttons at the top of the Tag Access section in the user editor page: **Grant Existing Tags**, and **Grant All Possible Tags**.
+
+![](tag5.png)
+
+Selecting "Grant Existing Tags" will add individual grants for each tag which currently exists on the system, as shown below. This means that the user will *not* have access to new tags unless you go in and click the button again!
+
+![](tag6.png)
+
+Selecting "Grant All Possible Tags" adds a wildcard grant `*`, which matches all possible tags (see screenshot below). Note that this user will be able to access all tags created in the future.
+
+![](tag7.png)
