@@ -350,52 +350,52 @@ Example:		`Search-Relay-Buffer-Size=8`
 Description:	The Search-Relay-Buffer-Size parameter controls how many entry blocks the webserver will accept from each indexer while still waiting for outstanding blocks from another indexer. As search entries flow in temporally, it is possible that one indexer may still be processing older entries while another has moved ahead to more recent entries. Because the webserver must process entries in temporal order, it will buffer entries from the indexer which is "ahead" while waiting for the slower indexer to catch up. In general, the default value will help prevent memory problems while still providing acceptable performance. On systems with large amounts of memory, it may be useful to increase this value.
 
 ### **Max-Log-Files**
-Applies to:	Webserver and Indexer
-Default Value:	10
-Example:	3
-Description:	The maximum number of access, info, warn, or error logs that the webserver and indexer will keep when rotating log files in `/opt/gravwell/log`.  Old log files are compressed and typically consume around 450kb each, data in the log files are also ingested into the `gravwell` tag.
+Applies to:		Webserver and Indexer  
+Default Value:	10  
+Example:		3  
+Description:	The maximum number of access, info, warn, or error logs that the webserver and indexer will keep when rotating log files in `/opt/gravwell/log`.  Old log files are compressed and typically consume around 450kb each. Data in the log files are also ingested into the `gravwell` tag.  
 
 ### **Max-Email-Size**
-Applies to:	Webserver
-Default Value:	0 (unlimited)
-Example:	8
-Description:	Some email providers have a maximum email size limit and will behave unexpectedly when large emails are sent or received, this setting controls the size of an email at the generation step and enables early errors within the Gravwell stack.
+Applies to:		Webserver  
+Default Value:	0 (unlimited)  
+Example:		8  
+Description:	Some email providers have a maximum email size limit and will behave unexpectedly when large emails are sent or received.  This setting controls the size of an email at the generation step and enables early errors within the Gravwell stack.
 
 ### **Max-Payload-Size-MB**
-Applies to:	Webserver
-Default Value:	0 (Disabled)
-Example:	16
+Applies to:		Webserver  
+Default Value:	0 (Disabled)  
+Example:		16  
 Description:	Some HTTP proxies and/or load-balancers may fail when very large JSON payloads are relayed through them.  This setting allows for setting an upper bound on the size of a single JSON payload when responding to an HTTP REST request.  You probably do not want this and should not set it.
 
 ### **Webserver-Access-Control-Allow-Origin**
-Applies to:	Webserver
-Default Value:	`` (empty)
-Example:	`google.com`
-Description:	This setting allows for manually specifying Allow-Origin HTTP headers on web requests, this can be useful if you are storing the Gravwell web application on a CDN and want to allow some files to be served by a different domain.
+Applies to:		Webserver  
+Default Value:	(empty)  
+Example:		`google.com`  
+Description:	This setting allows for manually specifying Allow-Origin HTTP headers on web requests.  This can be useful if you are storing the Gravwell web application on a CDN and want to allow some files to be served by a different domain.
 
 ### **Enable-CBAC**
-Applies to:	Webserver
-Default Value:	false
-Example:	true
-Description:	This setting enables the Gravwell CBAC fine grained access control system, see the [CBAC](/cbac/cbac.html) documentation for more information.
+Applies to:		Webserver  
+Default Value:	false  
+Example:		true  
+Description:	This setting enables the Gravwell CBAC fine grained access control system. See the [CBAC](/cbac/cbac) documentation for more information.
 
 ### **Ingester-State-Tracking-File**
-Applies to:	Indexer
+Applies to:		Indexer  
 Default Value:	`/opt/gravwell/etc/ingester_states.json`
-Example:	`/mnt/storage/ingester_states.json`
+Example:		`/mnt/storage/ingester_states.json`  
 Description:	The Gravwell indexers track each ingester that has successfully connected to them so that the system can identify and display when previously seen ingesters are missing.  This file maintains that state.
 
 ### **Disable-Access-Log-Self-Ingest**
-Applies to:	Webserver
-Default Value:	false
-Example:	true
+Applies to:		Webserver  
+Default Value:	false  
+Example:		true  
 Description:	This setting allows for maintaining the file access log but not ingesting it into the `gravwell` tag; this parameter is useful when you may want to keep an access log but do not want to clutter the `gravwell` tag with HTTP access logs.
 
 ### **Tag-Accelerator-Definitions**
-Applies to:	Webserver
-Default Value:	(empty)
-Example:	`/opt/gravwell/etc/default.defs`
-Description:	Gravwell allows for creating per-tag accelerator definitions so that you can finely tune your acceleration behavior when ingesting extremely large data sets.  This configuration parameter can be specified multiple times so that you can load accelerator definitions from multiple files.  See the [Accelerators](configuration/accelerators.html) section for more information.
+Applies to:		Webserver  
+Default Value:	(empty)  
+Example:		`/opt/gravwell/etc/default.defs`  
+Description:	Gravwell allows for creating per-tag accelerator definitions so that you can finely tune your acceleration behavior when ingesting extremely large data sets.  This configuration parameter can be specified multiple times so that you can load accelerator definitions from multiple files.  See the [Accelerators](/configuration/accelerators) section for more information.
 
 ### **Max-Search-History**
 Applies to:        Webserver  
@@ -627,16 +627,16 @@ Example:		`Disable-Library-Repository=true`
 Description:	Scheduled scripts may import additional libraries using the `include` function. Setting `Disable-Library-Repository` to true disables this functionality.
 
 ### **Login-Fail-Lock-Count**
-Applies to:	Webserver
-Default Value:	0 (disabled)
-Example:	5
-Description:	Gravwell can automatically lock user accounts on multiple successive login attempts which can prevent brute force attacks.  By default this system is disabled, but setting a value > 0 for both `Login-Fail-Lock-Count` and `Login-Fail-Lock-Duration` will enable it.
+Applies to:		Webserver  
+Default Value:	0 (disabled)  
+Example:		5  
+Description:	Gravwell can automatically lock user accounts on multiple successive login attempts which can prevent brute force attacks.  By default this system is disabled, but setting a value > 0 for both `Login-Fail-Lock-Count` and `Login-Fail-Lock-Duration` will enable it.  The `Login-Fail-Lock-Count` setting specifies how many failed attempts a user can make within a given time period (`Login-Fail-Lock-Duration`) before the account is locked. 
 
 ### **Login-Fail-Lock-Duration**
-Applies to:	Webserver
-Default Value:	0 (disabled)
-Example:	5
-Description:	Gravwell can automatically lock user accounts on multiple successive login attempts which can prevent brute force attacks.  By default this system is disabled, but setting a value > 0 for both `Login-Fail-Lock-Count` and `Login-Fail-Lock-Duration` will enable it.  The `Login-Fail-Lock-Duration` value specifies the duration in which multiple failed login attempts are accumulated in to lock an account, for example you may set the count as 10 and the duration as 3 which means if the user `bob` fails a login 10 times in 3 minutes his account will be locked and an admin must unlock it.
+Applies to:		Webserver  
+Default Value:	0 (disabled)  
+Example:		5  
+Description:	Gravwell can automatically lock user accounts on multiple successive login attempts which can prevent brute force attacks.  By default this system is disabled, but setting a value > 0 for both `Login-Fail-Lock-Count` and `Login-Fail-Lock-Duration` will enable it.  The user account will be locked if the user makes `Login-Fail-Lock-Count` number of failed attempts within the number of minutes specified as the  `Login-Fail-Lock-Duration` value.  For example, you may set the count as 10 and the duration as 3 which means if the user `bob` fails a login 10 times in 3 minutes his account will be locked and an admin must unlock it.
 
 
 ### **Gravwell-Kit-Server**
