@@ -41,6 +41,7 @@ anonymize <anonymize/anonymize>
 awk <awk/awk>
 base64 <base64/base64>
 communityid <communityid/communityid>
+concat <concat/concat>
 diff <diff/diff>
 dns <dns/dns>
 enrich <enrich/enrich>
@@ -56,7 +57,6 @@ hexlify <hexlify/hexlify>
 ip <ip/ip>
 ipexist <ipexist/ipexist>
 iplookup <iplookup/iplookup>
-join <join/join>
 langfind <langfind/langfind>
 length <length/length>
 limit <limit/limit>
@@ -93,6 +93,7 @@ words <words/words>
 * [awk](awk/awk) - execute AWK code.
 * [base64](base64/base64) - encodes or decodes base64 strings.
 * [communityid](communityid/communityid) - calculate Zeek community ID values.
+* [concat](concat/concat) - concatenate two or more enumerated values into a single enumerated value.
 * [diff](diff/diff) - compare fields between entries.
 * [dns](dns/dns) - do DNS and reverse DNS lookups.
 * [enrich](enrich/enrich) - manually attach enumerated values to entries.
@@ -108,7 +109,6 @@ words <words/words>
 * [ip](ip/ip) - convert & filter IP addresses.
 * [ipexist](ipexist/ipexist) - check if IP address exists in a lookup table.
 * [iplookup](iplookup/iplookup) - enrich entries by looking up IP addresses in a table which can contain CIDR subnets rather that individual IPs.
-* [join](join/join) - join two or more enumerated values into a single enumerated value.
 * [langfind](langfind/langfind) - classify the language of text.
 * [length](length/length) - compute the length of entries or enumerated values.
 * [limit](limit/limit) - limit the number of entries which will pass further down the pipeline.
