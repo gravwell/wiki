@@ -6,7 +6,7 @@ In this document, we assume the following:
 
 * The Gravwell instance has a valid DNS name of gravwell.example.com.
 * The Gravwell instance is publically available with valid SSL certificates.
-* You are an Okta admin and can establish new application and assign users to it.
+* You are an Okta admin and can establish a new application and assign users to it.
 
 
 ## Creating The Okta Application
@@ -23,7 +23,7 @@ Make sure to set the appropriate fully qualified URL for your SSO URL and SP Ent
 
 ![](setup_1.png)
 
-Next configure Attribute Statements so that user information such as names, emails, and groups can be transmitted from Okta to Gravwell during account creation.  The `uid` and `mail` attributes are manditory, but we suggest adding `givenNam` and `surName` too.  Also add the Group Attribute Statements to describe which groups will be sent from Okta to Gravwell; you can filter which groups are sent using a prefix, postfix, or even a regular expression.  For this exampel we are sending all groups.
+Next configure Attribute Statements so that user information such as names, emails, and groups can be transmitted from Okta to Gravwell during account creation.  The `uid` and `mail` attributes are manditory, but we suggest adding `givenName` and `surName` too.  Also add the Group Attribute Statements to describe which groups will be sent from Okta to Gravwell; you can filter which groups are sent using a prefix, postfix, or even a regular expression.  For this example we are sending all groups.
 
 ![](setup_2.png)
 
@@ -89,7 +89,7 @@ If you wish to double check the configuration XML click `Preview the SAML Assert
 </saml2:Assertion>
 ```
 
-After finalizing your application integration, Okta will show a `Sign On Methods` screen containing a SAML 2.0 Metadata URL; copy the URL (you will need it for your `gravwell.conf` configuration).
+After finalizing your application integration, Okta will show a `Sign On Methods` screen containing a SAML 2.0 Metadata URL. Copy the URL (you will need it for your `gravwell.conf` configuration).
 
 Next go to your Okta application and assign people and groups to the application; the group assignments can control which groups are passed to Gravwell as well as which users can log into the application.
 
@@ -119,13 +119,13 @@ Do not forget to adjust the Gravwell-Server-URL and Provider-Metadata-URL.
 ### Gravwell configuration block details
 The `Gravwell-Server-URL` parameter should contain the URL used to access your Gravwell server.
 
-The `Provider-Metadata-URL` parameter points at the Okta provided metadata URL, this will be unique for each app integration.
+The `Provider-Metadata-URL` parameter points at the Okta provided metadata URL; this will be unique for each app integration.
 
 Note the `Group-Mapping=group1:groupOne` option. This tells Gravwell that users in the Okta group named "group1" should be placed into a Gravwell internal group named "groupOne". You can repeat the `Group-Mapping` parameter multiple times to include multiple groups.
 
 The remaining config options tell Gravwell how to map attributes in the SSO request to Gravwell user accounts. These do not need to be modified, but they should match the values you specify in the Okta setup page.
 
-Once you've saved the configuration file, you can restart the Gravwell webserver:
+Once you've saved the configuration file, you can restart the Gravwell webserver.
 
 ## Restart Gravwell and test login
 
