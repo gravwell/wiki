@@ -39,6 +39,10 @@ Gravwell can be configured to receive a list of group memberships with the user'
 
 Documentation on setting up SSO with Keycloak is separated into its own page. [Click here](sso-keycloak/keycloak) to read it.
 
+## Setting up Okta
+
+Documentation on setting up SSO with Okta is separated into its own page. [Click here](sso-okta/okta) to read it.
+
 ## Setting up Azure Active Directory
 
 Documentation on setting up SSO with Azure Active Directory is separated into its own page. [Click here](sso-azure/azure) to read it.
