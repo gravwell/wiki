@@ -57,6 +57,7 @@ Gravwell Administration </admin/admin>
 Gravwell Single Sign-On </configuration/sso>
 Configuring SSO for Azure Active Directory </configuration/sso-azure/azure>
 Configuring Keycloak SSO with Gravwell </configuration/sso-keycloak/keycloak>
+Configuring OKTA SSO with Gravwell </configuration/sso-okta/okta>
 ```
 
 ## Cluster Topology
