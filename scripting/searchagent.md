@@ -10,7 +10,11 @@ $ ps aux | grep gravwell_searchagent
 
 ## High Availability / Failover
 
-From Gravwell 5.4.0, the search agent is HA-enabled. If multiple search agents connect to a webserver, the webserver will select one to run automations; the other will go into an idle state, periodically checking in with the webserver. If the originally-selected search agent goes offline, the webserver will tell the idle search agent to take over. If you have a cluster of webservers all synchronized by a [datastore](/distributed/frontend), the selected search agent is communicated to *all* web servers; this takes care of the common situation where multiple webservers are all running a search agent connecting to the default 127.0.0.1.
+From Gravwell 5.4.0, the search agent is HA-enabled. If multiple search agents connect to a webserver, the webserver will select one to run automations; the other will go into an idle state, periodically checking in with the webserver. If the originally-selected search agent goes offline, the webserver will tell the idle search agent to take over.
+
+If you have a cluster of webservers synchronized by a [datastore](/distributed/frontend), the selected search agent is communicated to *all* web servers; this takes care of the common situation where multiple webservers are all running a search agent connecting to the default 127.0.0.1.
+
+No special configuration is needed to enable HA search agents, but you should take care to ensure that each search agent has a unique `Searchagent-UUID` parameter in its configuration (see the configuration section below).
 
 ## Disabling the search agent
 
