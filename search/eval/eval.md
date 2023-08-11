@@ -291,13 +291,13 @@ Deletes the given enumerated value.
 
 	function has(ev string) bool
 
-has() returns true if the given EV exists.
+Returns true if the given EV exists.
 
 #### in
 
 	function in(ev string, string...) bool
 
-in() returns true if any of the given strings match the given EV.
+Returns true if any of the given strings match the given EV.
 
 Example
 
@@ -334,7 +334,7 @@ Formats a string according to the given format and any number of expressions. pr
 
 	function set_data(data <expression>)
 
-set_data overwrites the entry's DATA field. This is different than creating an enumerated value named DATA.
+Overwrites the entry's DATA field. This is different than creating an enumerated value named DATA.
 
 ### String manipulation
 
