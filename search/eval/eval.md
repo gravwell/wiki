@@ -279,18 +279,462 @@ return false;
 
 ## Built-in functions
 
-`eval` has several built-in functions:
+### Convenience
+
+#### delete
+
+	function delete(key string)
+
+Deletes the given enumerated value.
+
+#### has
+
+	function has(ev string) bool
+
+Returns true if the given EV exists.
+
+#### in
+
+	function in(ev string, string...) bool
+
+Returns true if any of the given strings match the given EV.
+
+Example
 
 ```
-round     Round floating-point number to nearest even 
-len	  Returns an integer length of the variable
-floor     Returns the integer part of a floating-point number
-ceil 	  Returns the integer part of a floating-point number after rounding to nearest even
-delete    Deletes the enumerated value in the entry
-rand      Returns a random 64-bit integer
-log	  Logs a message according to the logging configuration in the deployment's gravwell.conf
-has       Returns true if the specified EV exists
+vegetable = "potato";
+hasPotato = in(vegetable, "turnip", "potato", "cabbage");
 ```
+
+#### len
+
+	function len(<expression>) int
+
+Return the length of the given expression or enumerated value.
+
+#### log
+
+	function log(<expression>)
+
+Log the given expression to the "gravwell" tag.
+
+#### match
+
+	function match(input string, pattern string) bool
+
+Returns true if the regular expression in pattern matches the given input. Regular expressions use the [RE2 syntax](https://github.com/google/re2/wiki/Syntax).
+
+#### printf
+
+	function printf(format string, <expression>...) string
+
+Formats a string according to the given format and any number of expressions. printf uses the formatting rules and verbs defined in [Golang's fmt.Printf()](https://pkg.go.dev/fmt#hdr-Printing) function.
+
+#### set_data
+
+	function set_data(data <expression>)
+
+Overwrites the entry's DATA field. This is different than creating an enumerated value named DATA.
+
+### String manipulation
+
+#### strings_count
+
+	function strings_count(input string, pattern string) int
+
+Counts the number of non-overlapping instances of pattern in the given input. If pattern is an empty string, strings_count returns 1 + the number of Unicode code points in the input.
+
+#### strings_hasprefix
+
+	function strings_hasprefix(input string, prefix string) bool
+
+Returns true if the string input begins with prefix.
+
+#### strings_hassuffix
+
+	function strings_hassuffix(input string, suffix string) bool
+
+Returns true if the string input ends with suffix.
+
+#### strings_index
+
+	function strings_index(input string, pattern string) int
+
+Returns the index of the first instance of pattern in the input, or -1 if pattern is not in input.
+
+#### strings_replace
+
+	function strings_replace(input string, old string, new sting, n int) string
+
+Replace returns a copy of the string s with the first n non-overlapping instances of old replaced by new. If n is -1, there is no limit on the number of replacements.
+
+#### strings_tolower
+
+	function strings_tolower(input string) string
+
+Returns the input with all letters mapped to their lower case.
+
+#### strings_totitle
+
+	function strings_totitle(input string) string
+
+Returns the input with all letters mapped to their Unicode title case.
+
+#### strings_toupper
+
+	function strings_toupper(input string) string
+
+Returns the input with all letters mapped to their upper case.
+
+#### strings_trim
+
+	function strings_trim(input string, cutset string) string
+
+Returns the input with all leading and trailing code points in cutset removed.
+
+#### strings_trimleft
+
+	function strings_trimleft(input string, cutset string) string
+
+Returns the input with all leading code points in the cutset removed.
+
+#### strings_trimprefix
+
+	function strings_trimprefix(input string, prefix string) string
+
+Returns the input with the leading prefix removed.
+
+#### strings_trimright
+
+	function strings_trimright(input string, cutset string) string
+
+Returns the input with all trailing code points in the cutset removed.
+
+#### strings_trimspace
+
+	function strings_trimspace(input string) string
+
+Returns the input with all leading and trailing whitespace removed.
+
+#### strings_trimsuffix
+
+	function strings_trimsuffix(input string, suffix string) string
+
+Returns the input with the trailing suffix removed.
+
+
+### Hash
+
+#### hash_md5
+
+	function hash_md5(input <expression>) string
+
+Returns the MD5 sum of the given input.
+
+#### hash_sha1
+
+	function hash_sha1(input <expression>) string
+
+Returns the SHA1 sum of the given input.
+
+#### hash_sha256
+
+	function hash_sha256(input <expression>) string
+
+Returns the SHA256 sum of the given input.
+
+#### hash_sha512
+
+	function hash_sha512(input <expression>) string
+
+Returns the SHA512 sum of the given input.
+
+
+### Path
+
+#### path_base
+
+	function path_base(path string) string
+
+Returns the last elements of the given path. Trailing slashes are removed before extracting the last element.
+
+#### path_clean
+
+	function path_clean(path string) string
+
+Returns the shortest path name equivalent to the given path. For example, "/../a/b/../././/c" would return as "/a/c".
+
+#### path_dir
+
+	function path_dir(path string) string
+
+Returns all but the last element of path.
+
+#### path_ext
+
+	function path_ext(path string) string
+
+Returns the file name extension used by path.
+
+#### path_isabs
+
+	function path_isabs(path string) bool
+
+Returns true if the path is absolute (no relative path elements).
+
+#### path_join
+
+	function path_join(string...) string
+
+Joins any number of path elements into a single path, adding slashes between elements.
+
+#### path_match
+
+	function path_match(pattern string, name string) bool
+
+Returns true if the name matches the given pattern. 
+
+The pattern syntax is identical to [Golang's path.Match()](https://pkg.go.dev/path#Match) function.
+
+
+### Random
+
+#### rand_float
+
+	function rand_float() float
+
+Returns a random 64-bit float in the interval [0.0,1.0)
+
+#### rand_int
+
+	function rand_int() int
+
+Returns a randomm, non-negative, 64-bit integer.
+
+#### rand_intn
+
+	function rand_intn(n int) int
+
+Returns a random, non-negative, 64-bit integer in the range [0,n).
+
+#### rand_normal
+
+	function rand_normal() float
+
+Returns a normally distributed 64-bit float with standard normal distribution (mean = 0, stddev = 1). To produce a different normal distribution, you can adjust the output using:
+
+```
+sample = rand_normal() * desiredStdDev + desiredMean;
+```
+
+### Encoding
+
+#### base64_decode
+
+	function base64_decode(input string) string
+
+Returns the decoded form of the given base64 input.
+
+#### base64_encode
+
+	function base64_encode(input string) string
+
+Returns the encoded base64 form of the given input.
+
+#### hex_decode
+
+	function hex_decode(input string) string
+
+Returns the decoded form of the given hexadecimal string.
+
+#### hex_encode
+
+	function hex_encode(input string) string
+
+Returns the encoded hexadecimal form of the given input.
+
+#### html_escape
+
+	function html_escape(input string) string
+
+Returns the input with special characters like "<" changed to their escaped HTML form. It escapes only five characters: <, >, &, ', and ".
+
+#### html_unescape
+
+	function html_unescape(input string) string
+
+Returns the input with escaped HTML entities such as "\&lt;" in their unescaped form.
+
+#### json
+
+	function json(input string) bool
+
+Returns true if the given input is valid JSON.
+
+#### json_append
+
+	function json_append(array string, value <expression>) string
+
+Appends the value to the JSON array given in input.
+
+#### json_array
+
+	function json_array(value <expression>) string
+
+Returns a JSON array of the given value. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
+
+
+#### json_get
+
+	function json_get(object string, key string) boo/float/string
+
+Returns a typed item from the given object with the given key.
+
+#### json_index
+
+	function json_index(array string, index int) bool/float/string
+
+Returns a typed item from the given array at the given index.
+
+#### json_len
+
+	function json_len(array string) int
+
+Returns the length of the given JSON array.
+
+#### json_object
+
+	function json_object(key string, value <expression>) string
+
+Returns a JSON object of the given key/value pair. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
+
+#### json_pretty
+
+	function json_pretty(input string) string {
+
+Pretty prints the given JSON input.
+
+#### json_set
+
+	function json_set(object string, key string, value <expression>) string
+
+Sets a key/value pair in the given object. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
+
+
+### Math
+
+```{note}
+Some math functions retain their legacy function names for backwards compatability.
+```
+
+#### ceil
+
+	function ceil(x float) float
+
+Returns the least integer value greater than or equal to x.
+
+#### floor
+
+	function floor(x float) float
+
+Returns the greatest integer value less than or equal to x.
+
+#### math_abs
+
+	function math_abs(x float) float
+
+Returns the absolut value of x.
+
+#### math_ceil
+
+	function math_ceil(x float) float
+
+Same as ceil(). Returns the least integer value greater than or equal to x.
+
+#### math_floor
+
+	function math_floor(x float) float
+
+Same as floor(). Returns the greatest integer value less than or equal to x.
+
+#### math_log
+
+	function math_log(x float) float
+
+Returns the natural logarithm of x.
+
+#### math_log10
+
+	function math_log10(x float) float
+
+Returns the decimal logarithm of x.
+
+#### math_log2
+
+	function math_log2(x float) float
+
+Returns the binary logarithm of x.
+
+#### math_max
+
+	function math_max(x float, y float) float
+
+Returns the larger of x or y.
+
+#### math_min
+
+	function math_min(x float, y float) float
+
+Returns the smaller of x or y.
+
+#### math_mod
+
+	function math_mod(x float, y float) float
+
+Returns the floating-point remainder of x/y.
+
+#### math_pow
+
+	function math_pow(x float, y float) float
+
+Returns the base-x exponential of y.
+
+#### math_remainder
+
+	function math_remainder(x float, y float) float
+
+Returns the IEEE 754 floating-point remainder of x/y.
+
+#### math_round
+
+	function math_round(x float) float
+
+Same as round(). Returns the nearest integer, rounding half away from zero.
+
+#### math_roundtoeven
+
+	function math_roundtoeven(x float) float
+
+Returns the nearest integer, rounding ties to even.
+
+#### math_sqrt
+
+	function math_sqrt(x float) float
+
+Returns the square root of x.
+
+#### math_trunc
+
+	function math_trunc(x float) float
+
+Returns the integer value of x.
+
+#### round
+
+	function round(x float) float
+
+Returns the nearest integer, rounding half away from zero.
+
 
 ## Acceleration and eval
 
