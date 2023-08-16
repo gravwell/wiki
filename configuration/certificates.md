@@ -75,7 +75,7 @@ First, we will generate a 1-year certificate in `/opt/gravwell/etc` using `gence
 
 ```
 cd /opt/gravwell/etc
-sudo -u gravwell ../bin/gencert -h HOSTNAME
+sudo -u gravwell ../bin/gencert -host HOSTNAME
 ```
 
 Make sure to replace HOSTNAME with either the hostname or the IP address of your Gravwell system. You can specify multiple hostnames or IPs by separating them with commas, e.g. `gencert -h gravwell.floren.lan,10.0.0.1,192.168.0.3`
