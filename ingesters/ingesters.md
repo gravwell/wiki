@@ -27,7 +27,6 @@ Azure Event Hubs <eventhubs>
 collectd <collectd>
 Federator <federators/federator>
 File Follower <file_follow>
-Windows File Follower <win_file_follow>
 GCP PubSub <pubsub>
 HTTP <http>
 IPMI <ipmi>
@@ -45,6 +44,7 @@ Shodan <shodan>
 Simple Relay <simple_relay>
 SNMP Trap <snmp>
 Windows Events <winevent>
+Windows File Follower <win_file_follow>
 ```
 
 | Ingester | Description |
@@ -53,7 +53,6 @@ Windows Events <winevent>
 | [Azure Event Hubs](eventhubs) | Consume from Azure Event Hubs. |
 | [collectd](collectd) | Ingest collectd samples. |
 | [File Follower](file_follow) | Watch and ingest files on disk, such as logs. |
-| [Windows File Follower](win_file_follow) | Watch and ingest files on Windows, such as logs and EVTX files. |
 | [GCP PubSub](pubsub) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
 | [HTTP](http) | Create HTTP listeners on multiple URL paths. |
 | [IPMI](ipmi) | Periodically collect SDR and SEL records from IPMI devices. |
@@ -70,6 +69,7 @@ Windows Events <winevent>
 | [Simple Relay](simple_relay) | Ingest any text over TCP/UDP, syslog, and more. |
 | [SNMP Trap](snmp) | Receive and ingest SNMP trap messages. |
 | [Windows Events](winevent) | Collect Windows events. |
+| [Windows File Follower](win_file_follow) | Watch and ingest files on Windows, such as logs and EVTX files. |
 
 
 ## Tags

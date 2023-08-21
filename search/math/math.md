@@ -119,4 +119,4 @@ The search above will output every unique combination of IP + port, provided the
 
 The optional `-maxtracked` flag sets the maximum number of unique keys to track per operation, e.g. `unique -maxtracked 5000 DstIP`. This is used to help avoid memory exhaustion if you run `stats count by DstIP` and there are millions of IPv6 addresses in the data. If the maxtracked value is exceeded, the search will terminate with an error suggesting you should increase the max value. Defaults to 100000000.
 
-Refer to the [stats module documentation](/search/stats/stats.md) for more information about maxtracked.
+Refer to the [stats module documentation](/search/stats/stats) for more information about maxtracked.

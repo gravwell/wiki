@@ -1,20 +1,30 @@
 # Downloads
 
+## Windows Ingesters
+
+| Ingester Name | Installer    | More Info |
+| :------------ | :----------- | :-------- |
+| Windows Events | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_win_events_5.3.1.msi"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">1da0cd7e0e76fdd8d5eece8e00d359f543a06e88901a453a4893fc11adb828fa</span></code>'>(SHA256)</a> | [Documentation](/ingesters/winevent) |
+| Windows File Follower | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_file_follow_5.3.1.msi"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">d8d4d924c6ecc17e14d6a869a895b561ca8448f3c4ea7da0fbf0b19b3d62a799</span></code>'>(SHA256)</a> | [Documentation](/ingesters/win_file_follow) |
+
+
+## Other Installers
+
 ```{attention}
 The Debian and RHEL repositories are more easily maintained than these standalone installers and are the recommended methods of installation. See the [quickstart instructions](quickstart).
 ```
 
-## Gravwell Core
+### Gravwell Core
 
 The Gravwell core installer contains the indexer and webserver frontend. You'll need a license; either get a Community Edition free license, or contact info@gravwell.io for commercial options.
 
 Download Gravwell Core Installer <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_5.3.1.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">46c4d898ca7076234012cc666872a3e476a0fc85ac4e619b2d7d49f4219c5199</span></code>'>(SHA256)</a>
 
-## Ingesters
+### Ingesters
 
 The core suite of ingesters are available for download as installable packages.  Ingesters designed to operate on Linux machines are typically self contained, statically linked executables that are agnostic to the hosts package management system (with the exception of the NetworkCapture ingester).  Windows based ingesters are distributed as executable MSI packages.  Source code for many ingesters can be found at the [Gravwell Github](https://github.com/gravwell/gravwell/tree/master/ingesters) repository.
 
-### Current Ingester Releases
+#### Current Ingester Releases
 | Ingester Name | Installer    | More Info |
 | :------------ | :----------- | :-------- |
 | Amazon Kinesis | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_kinesis_ingest_installer_5.3.1.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">2dba32dbdadbd867c47c94851e102deabccd5ba5038da4210538bf184bf15ee8</span></code>'>(SHA256)</a> | [Documentation](/ingesters/kinesis)|
@@ -35,17 +45,15 @@ The core suite of ingesters are available for download as installable packages. 
 | Office 365 Logs | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_o365_installer_5.3.1.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">19d5fbc781afc359be0783c9060c3d939ec9f6cb1983cc8c940fe7ec3b7cabac</span></code>'>(SHA256)</a> | [Documentation](/ingesters/o365)|
 | Simple Relay | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_simple_relay_installer_5.3.1.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">03bbbfaecd495cf0f56ff3bda2e18ffd3e147b731ad739e0f239546148b8e477</span></code>'>(SHA256)</a> | [Documentation](/ingesters/simple_relay)|
 | SNMP Traps | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_snmp_ingest_installer_5.3.1.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">209c14e6e1edecfe3ec1e17c9a80cb66cf626c87d0cab6a60a272b2222580e34</span></code>'>(SHA256)</a> | [Documentation](/ingesters/snmp)|
-| Windows Events | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_win_events_5.3.1.msi"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">1da0cd7e0e76fdd8d5eece8e00d359f543a06e88901a453a4893fc11adb828fa</span></code>'>(SHA256)</a> | [Documentation](/ingesters/winevent) |
-| Windows File Follower | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_file_follow_5.3.1.msi"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">d8d4d924c6ecc17e14d6a869a895b561ca8448f3c4ea7da0fbf0b19b3d62a799</span></code>'>(SHA256)</a> | [Documentation](/ingesters/win_file_follow) |
 
-## Other downloads
+### Other downloads
 
 Some Gravwell components are distributed as optional additional installers, such as the search agent and the datastore.
 
 | Component Name | Installer    | More Info |
 | :------------- | :----------- | :-------- |
 | Datastore | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_datastore_installer_5.3.1.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">293b6d0d7a7e0367b1d171d8c5ae1725f5bcfe23ff8c4be70e88895dfdb7df15</span></code>'>(SHA256)</a> | [Documentation](/distributed/frontend) |
-| Cloud Archive Server | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_cloudarchive_server_installer_5.3.1.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">e60fb448ce22679378a9f003d6642ea179237a37030fa618ea87070128d0d9a2</span></code>'>(SHA256)</a> | [Documentation](/configuration/archive.md) |
+| Cloud Archive Server | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_cloudarchive_server_installer_5.3.1.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">e60fb448ce22679378a9f003d6642ea179237a37030fa618ea87070128d0d9a2</span></code>'>(SHA256)</a> | [Documentation](/configuration/archive) |
 | Offline Replicator | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_offline_replication_installer_5.3.1.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">c8e777b46382992e8210b24b8212bba612c01c15169b7751af85db659e770c76</span></code>'>(SHA256)</a> | [Documentation](/configuration/replication) |
 | Load Balancer | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_loadbalancer_installer_5.3.1.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">a3d8c147284eeb10d3bd861f018f4e87a322d7156227c7f8d8c588123049c4f5</span></code>'>(SHA256)</a> | [Documentation](/distributed/loadbalancer) |
 | Gravwell Tools | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_tools_5.3.1.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">41f83fc9d23bb177e335605932e765d4360c427cbaf4626eb2a41545bb0f0f2f</span></code>'>(SHA256)</a> | [Documentation](/tools/tools)|
