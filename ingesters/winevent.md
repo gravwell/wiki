@@ -45,7 +45,11 @@ The Windows Event ingester uses the unified global configuration block described
 
 ## Installation
 
-Download the Gravwell Windows ingester installer from the [Downloads page](/quickstart/downloads).
+Download the Gravwell Windows Events installer: 
+
+| Ingester Name | Installer    | More Info |
+| :------------ | :----------- | :-------- |
+| Windows Events | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_win_events_5.3.1.msi"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">1da0cd7e0e76fdd8d5eece8e00d359f543a06e88901a453a4893fc11adb828fa</span></code>'>(SHA256)</a> | [Documentation](/ingesters/winevent) |
 
 Run the .msi installation wizard to install the Gravwell events service.  On first installation the installation wizard will prompt to configure the indexer endpoint and ingest secret.  Subsequent installations and/or upgrades will identify a resident configuration file and will not prompt.
 

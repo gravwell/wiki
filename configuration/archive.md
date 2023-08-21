@@ -67,7 +67,7 @@ On Redhat:
 yum install gravwell-cloudarchive-server
 ```
 
-As a standalone shell installer (downloaded from [the downloads page](/quickstart/downloads.md)):
+As a standalone shell installer (downloaded from [the downloads page](/quickstart/downloads)):
 
 ```
 sh gravwell_cloudarchive_server_installer_x.x.x.sh
