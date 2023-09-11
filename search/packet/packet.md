@@ -55,6 +55,16 @@ Renamed enumerated values can also be used with filters:
 tag=pcap packet ipv4.SrcIP="8.8.8.8" as foo | table foo
 ```
 
+## Examples
+
+The following command will find all DNS queries for Tumblr:
+
+```gravwell
+tag=pcap packet udp.DstPort==53 udp.Payload | grep -e Payload "tumblr" | text
+```
+
+The `udp.DstPort==53` component specifies that we should only match on packets destined for UDP port 53, while the `udp.Payload` component specifies that the payload portion of each packet should be extracted into an enumerated value. We then use the `grep` module to search the payload for the word “tumblr” and send the results to the `text` renderer for display.
+
 ## List of Packet Processing Submodules
 
 ### Ethernet
@@ -201,13 +211,9 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | modbus | ReqResp | | modbus.ReqResp
 | modbus | Payload | | modbus.Payload
 
-For example, the following command will find all DNS queries for Tumblr:
-
-```gravwell
-tag=pcap packet udp.DstPort==53 udp.Payload | grep -e Payload "tumblr" | text
+```{note}
+The Modbus layer is typically the last layer, which means that the Payload value is almost always empty.  When parsing Modbus packets the ReqResp value will contain read/write command addresses and values.
 ```
-
-The `udp.DstPort==53` component specifies that we should only match on packets destined for UDP port 53, while the `udp.Payload` component specifies that the payload portion of each packet should be extracted into an enumerated value. We then use the `grep` module to search the payload for the word “tumblr” and send the results to the `text` renderer for display.
 
 ### MPLS
 
