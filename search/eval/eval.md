@@ -166,7 +166,15 @@ The `type()` built-in function can be used at runtime to determine the type of a
 `eval` can attempt to cast a variable to another type using the following cast operators.
 
 ```
-int
+int (equivalent to int64)
+uint8
+int8
+uint16
+int16
+uint32
+int32
+uint64
+int64
 float
 string
 ip
@@ -305,6 +313,12 @@ Example
 vegetable = "potato";
 hasPotato = in(vegetable, "turnip", "potato", "cabbage");
 ```
+
+#### unix
+
+	function unix(ev) int
+
+Returns a UNIX time of the given enumerated value.
 
 #### len
 
@@ -751,7 +765,7 @@ This query will provide the acceleration hints of "webserver" OR "indexer" to th
 The eval syntax is expressed using a [variant](https://github.com/gravwell/pbpg) of Extended Backus-Naur Form (EBNF):
 
 ```
-Program                  = ( "(" Expression ")" EOF ) | ( "(" Vars StatementList ")" EOF ) | ( "(" StatementList ")" EOF ) | ( Expression EOF ) | ( Vars StatementList EOF ) | ( StatementList EOF )
+Program                  = ( "(" Expression ")" EOF ) | ( "(" Vars StatementList ")" EOF ) | ( "(" StatementList ")" EOF ) | ( "(" Assignment ")" EOF ) | ( Expression EOF ) | ( Vars StatementList EOF ) | ( StatementList EOF ) | ( Assignment EOF )
 Vars                     = VarSpec { VarSpec }
 VarSpec                  = "var" VarSpecAssignment { "," VarSpecAssignment } ";"
 VarSpecAssignment        = AssignmentIdentifier [ "=" Expression ]
@@ -787,5 +801,5 @@ RelationalOp             = "<" | ">" | "<=" | ">="
 ShiftOp                  = "<<" | ">>"
 AdditiveOp               = "+" | "-"
 MultiplicativeOp         = "*" | "/" | "%"
-Cast                     = "int" | "float" | "string" | "mac" | "ip" | "time" | "duration" | "type" | "bool"
+Cast                     = "int" | "float" | "string" | "mac" | "ip" | "time" | "duration" | "type" | "bool" | "location" | "byte" | "int8" | "uint8" | "int16" | "uint16" | "int32" | "uint32" | "int64" | "uint64"
 ```
