@@ -22,6 +22,8 @@ iplookup -r <resource> -e IP network as "Business Unit"
 * `-v`: The "-v" flag inverts the flow logic in the lookup module, meaning that successful matches are suppressed and missed matches are passed on.  The `-v` flag is not compatible with enrichments
 * `-e <arg>`: The "-e" flag specifies the enumerated value to use when matching against the resource list.  "-e" is a required flag.
 * `-cidr <arg>`: The "-cidr" flag specifies the column to use in the resource CSV that contains the CIDR specifications.  If no "-cidr" flag is specified the `iplookup` module assumes a column named `CIDR`.
+* `-ip <arg>`: The "-ip" flag specifies the column to use in the resource CSV that contains the IP component of a CIDR specification.  The `-ip` flag requires the `-subnet` flag and cannot be combined with the `-cider` flag.
+* `-subnet <arg>`: The "-subnet" flag specifies the column to use in the resource CSV that contains the subnet component of a CIDR specification.  The `-subnet` flag requires the `-ip` flag and cannot be combined with the `-cider` flag.
 
 ## Setting up an iplookup resource
 
@@ -39,6 +41,16 @@ CIDR,network,owner
 
 ```{warning}
 If two CIDRs contain overlapping definitions, the larger definition takes precedence.  That means that if you define `192.168.1.0/24` and `192.168.0.0/16` the definition for `192.168.1.0/24` will be ignored and lookups will match `192.168.0.0/16`.
+```
+
+Here is an example resource containing independent columns for IP and subnets.  Notice that some subnets are defined using a subnet mask as an IP and some are as an integer, iplookup also ignores leading slashes.
+
+```
+ip,netmask,network,owner
+10.0.0.0,8,storage,Bob
+192.168.1.0,255.255.255.0,research,Tim
+1.2.3.0,/21,corporate,CEO
+2001:4860:4860:FE08::0,48,corporate ipv6,CEO
 ```
 
 ## Example Searches
