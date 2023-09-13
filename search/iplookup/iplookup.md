@@ -22,8 +22,8 @@ iplookup -r <resource> -e IP network as "Business Unit"
 * `-v`: The "-v" flag inverts the flow logic in the lookup module, meaning that successful matches are suppressed and missed matches are passed on.  The `-v` flag is not compatible with enrichments
 * `-e <arg>`: The "-e" flag specifies the enumerated value to use when matching against the resource list.  "-e" is a required flag.
 * `-cidr <arg>`: The "-cidr" flag specifies the column to use in the resource CSV that contains the CIDR specifications.  If no "-cidr" flag is specified the `iplookup` module assumes a column named `CIDR`.
-* `-ip <arg>`: The "-ip" flag specifies the column to use in the resource CSV that contains the IP component of a CIDR specification.  The `-ip` flag requires the `-subnet` flag and cannot be combined with the `-cider` flag.
-* `-subnet <arg>`: The "-subnet" flag specifies the column to use in the resource CSV that contains the subnet component of a CIDR specification.  The `-subnet` flag requires the `-ip` flag and cannot be combined with the `-cider` flag.
+* `-ip <arg>`: The "-ip" flag specifies the column to use in the resource CSV that contains the IP component of a CIDR specification.  The `-ip` flag requires the `-subnet` flag and cannot be combined with the `-cidr` flag.
+* `-subnet <arg>`: The "-subnet" flag specifies the column to use in the resource CSV that contains the subnet component of a CIDR specification.  The `-subnet` flag requires the `-ip` flag and cannot be combined with the `-cidr` flag.
 
 ## Setting up an iplookup resource
 
