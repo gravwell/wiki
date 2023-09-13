@@ -293,29 +293,66 @@ The HTTP ingester supports a listener block that is API compatible with the Splu
 
 ```
 [HEC-Compatible-Listener "testing"]
-	URL="/services/collector/event"
+	URL="/services/collector"
 	TokenValue="thisisyourtoken"
 	Tag-Name=HECStuff
 
 ```
 
-The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items. If the `URL` configuration item is omitted, it will default to `/services/collector/event`.
+The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items. If the `URL` configuration item is omitted, it will default to `/services/collector`.
 
 Both `Listener` and `HEC-Compatible-Listener` configuration blocks can be specified on the same HTTP ingester.
 
 The `HEC-Compatible-Listener` supports the following configuration parameters:
 
-| Parameter                 | Type         | Required | Default Value                | Description                         |
-|---------------------------|--------------|----------|------------------------------|-------------------------------------|
-| URL                       | string       | NO       | `/services/collector/event`  | Endpoint URL for Splunk events. |
-| TokenValue                | string       | YES      |                              | Authentication Token. |
-| Tag-Name                  | string       | YES      |                              | Tag assigned to entries received by the endpoint. |
-| Ignore-Timestamps         | boolean      | NO       | false                        | Do not extract or process timestamps, use current time. |
-| Ack                       | boolean      | NO       | false                        | Acknowledge receipt and respond with entry IDs. |
-| Max-Size                  | unsigned int | NO       | 524288 (512k)                | Maximum size for each decoded entry. |
-| Tag-Match                 | string array | NO       |                              | Sourcetype value to tag mapping, multiple can be specified. |
-| Preprocessor              | string array | NO       |                              | Set of preprocessors to apply to entries. |
+| Parameter         | Type         | Required | Default Value         | Description                                                 |
+|-------------------|--------------|----------|-----------------------|-------------------------------------------------------------|
+| URL               | string       | NO       | `/services/collector` | Endpoint URL for Splunk events.                             |
+| TokenValue        | string       | YES      |                       | Authentication Token.                                       |
+| Tag-Name          | string       | YES      |                       | Tag assigned to entries received by the endpoint.           |
+| Ignore-Timestamps | boolean      | NO       | false                 | Do not extract or process timestamps, use current time.     |
+| Ack               | boolean      | NO       | false                 | Acknowledge receipt and respond with entry IDs.             |
+| Max-Size          | unsigned int | NO       | 524288 (512k)         | Maximum size for each decoded entry.                        |
+| Tag-Match         | string array | NO       |                       | Sourcetype value to tag mapping, multiple can be specified. |
+| Preprocessor      | string array | NO       |                       | Set of preprocessors to apply to entries.                   |
 
+### Using the HEC-Compatible Listener
+
+A `HEC-Compatible-Listener` should work with all the examples shown in the [Splunk documentation](https://docs.splunk.com/Documentation/Splunk/9.0.3/Data/HECExamples). The body of your request should be a JSON structure with the desired contents of the entry's DATA field in `event`:
+
+```
+curl "http://example.org/services/collector" -H "Authorization: Splunk thisisyourtoken" \
+-d '{"event": {"key1": "value1", "key2": "value2"}}'
+```
+
+![](hec1.png)
+
+You can attach intrinsic enumerated values by setting the `fields` value of the body too:
+
+```
+curl "http://example.org/services/collector" -H "Authorization: Splunk thisisyourtoken" \
+-d '{"event": "Hello, world!", "fields": {"device": "macbook", "user": "bob"}}'
+```
+
+![](hec2.png)
+
+You can also send raw strings, rather than JSON-formatted events, by appending `/raw` to the URL:
+
+```
+curl "http://example.org/services/collector" -H "Authorization: Splunk thisisyourtoken" \
+-d 'here is some raw data'
+```
+
+![](hec3.png)
+
+The listener supports gzip-encoded data, too:
+
+```
+echo '{"event": "Hello, world!", "fields": {"device": "macbook", "user": "bob"}}' \
+| gzip \
+| curl "http://example.org/services/collector" -H "Authorization: Splunk thisisyourtoken" \
+--data-binary @- -H "Content-Encoding: gzip"
+```
 
 ## Health Checks
 

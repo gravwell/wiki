@@ -219,8 +219,13 @@ Compound queries create ephemeral resources that exist only during the query, ho
 
 ## Comments
 
-Queries support C-Style comments anywhere in the query text. Comments are saved in the search history, and are useful for debugging queries and adding inline notes. For example:
+Gravwell supports two types of comments. 
+
+1. Any input between ANSI-C style comment specifiers `/* */`.
+2. Line comments, which begin with a double slash `//` and stop at the end of the line. 
+
+Comments are saved in the search history, and are useful for debugging queries and adding inline notes. For example:
 
 ```gravwell
-tag=foo json foo.bar /* a c-style comment that has no impact on the search */ baz | table
+tag=foo json foo.bar /* a c-style comment that has no impact on the search */ baz | table // another comment!
 ```
