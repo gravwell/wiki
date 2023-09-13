@@ -320,7 +320,7 @@ Log-Source-Override=::1
 
 ### Attach
 
-All ingesters support the `Attach` global configuration stanza, which allows creating [intrinsic enumerated values](intrinsic_enumerated_values) to be attached to entries during ingest. Intrinsic enumerated values can later be accessed with the [intrinsic](/search/intrinsic/intrinsic) search module.
+All ingesters support the `Attach` global configuration stanza, which allows [intrinsic enumerated values](intrinsic_enumerated_values) to be attached to entries during ingest. Intrinsic enumerated values can later be accessed with the [intrinsic](/search/intrinsic/intrinsic) search module.
 
 The `Attach` stanza takes any key/value pair, and will attach it to every entry as an enumerated value at the time of ingest. For example:
 
