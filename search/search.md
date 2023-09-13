@@ -130,9 +130,9 @@ Further examples throughout the documentation should help clarify the use of enu
 (intrinsic_enumerated_values)=
 ## Intrinsic Enumerated Values
 
-Intrinsic Enumerated Values are Enumerated Values which are created at the time of ingest. Intrinsic enumerated values are optionally created by ingesters and often contain metadata or pre-processed extractions. Use the [intrinsic](intrinsic/intrinsic) module to attach and work with intrinsic enumerated values.
+Intrinsic Enumerated Values are Enumerated Values which are created at the time of ingest. Intrinsic enumerated values are optionally created by ingesters and often contain metadata or pre-processed extractions. Use the [intrinsic](intrinsic/intrinsic) module to work with intrinsic enumerated values.
 
-After attaching an intrinsic enumerated value, they are treated the same as regular enumerated values.
+After extracting an intrinsic enumerated value, they are treated the same as regular enumerated values.
 
 ## Quoting and tokenizing
 
