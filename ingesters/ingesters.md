@@ -318,6 +318,29 @@ Log-Source-Override=DEAD:BEEF::FEED:FEBE
 Log-Source-Override=::1
 ```
 
+### Attach
+
+All ingesters support the `Attach` global configuration stanza, which allows [intrinsic enumerated values](intrinsic_enumerated_values) to be attached to entries during ingest. Intrinsic enumerated values can later be accessed with the [intrinsic](/search/intrinsic/intrinsic) search module.
+
+The `Attach` stanza takes any key/value pair, and will attach it to every entry as an enumerated value at the time of ingest. For example:
+
+```
+[Attach]
+	foo = "bar"
+	ingester = "my ingester"
+```
+
+Will attach an EV "foo" with the contents "bar" to every entry, as well as "ingester" with the value "my ingester".
+
+Additionally, the below variables can be used to populate values:
+
+```
+[Attach]
+	time = $NOW 		# add the current timestamp
+	host = $HOSTNAME	# add the hostname the ingester is running on
+	uuid = $UUID		# add the ingester's UUID
+```
+
 ## Data Consumer Configuration
 
 Besides the global configuration options, each ingester which uses a config file will need to define at least one *data consumer*. A data consumer is a config definition which tells the ingester:

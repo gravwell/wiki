@@ -76,6 +76,7 @@ csv <csv/csv>
 dump <dump/dump>
 fields <fields/fields>
 grok <grok/grok>
+intrinsic <intrinsic/intrinsic>
 ip <ip/ip>
 ipfix <ipfix/ipfix>
 j1939 <j1939/j1939>
@@ -101,6 +102,7 @@ xml <xml/xml>
 * [dump](dump/dump) - dump entries from a resource into the pipeline.
 * [fields](fields/fields) - extract data from entries using arbitrary field separators.
 * [grok](grok/grok) - extract data from complicated text structures using pre-defined regular expressions.
+* [intrinsic](intrinsic/intrinsic) - populate entries with enumerated values that were created at ingest time.
 * [ip](ip/ip) - convert & filter IP addresses.
 * [ipfix](ipfix/ipfix) - extract data from IPFIX records.
 * [j1939](j1939/j1939) - parse J1939 data.
