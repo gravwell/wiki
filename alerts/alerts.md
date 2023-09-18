@@ -1,6 +1,6 @@
 # Alerts
 
-Alerts are a Gravwell feature which allow the user to tie sources of intelligence (such as periodic [scheduled searches](/scripting/scheduledsearch)) to actions (such as a [flow](/flows/flows) that files a ticket). This can make it much simpler to take automatic action when something of interest occurs.
+Alerts are a Gravwell feature which allow the user to tie sources of intelligence (such as periodic [scheduled searches](/scripting/scheduledsearch)) to actions (such as a [flow](/flows/flows) that files a ticket). This can make it much simpler to take automatic action when something of interest occurs; rather than defining multiple flows which each run a query and send an email if there are results, you can define a single flow which sends an email, then trigger it with any one of many scheduled searches.
 
 Some basic terminology:
 
@@ -19,7 +19,17 @@ Alerts are defined in the Alerts page, found under the Automation sub-menu. Clic
 
 ![](newalert.png)
 
-Note that we have populated the Name, Description, and Target Tag fields, but nothing else yet -- we need to go define our dispatchers and consumers before we can add them to the alert.
+Note that we have populated the Name, Description, Target Tag, and Max Events fields, but nothing else yet -- we need to go define our dispatchers and consumers before we can add them to the alert.
+
+### Max Events
+
+The "Max Events" configuration option is an important safeguard against accidentally sending yourself thousands of emails. Basically, when a dispatcher fires, Gravwell will only process *up to* Max Events results from the search. Suppose you have a scheduled search dispatcher which normally generates one or two results, which are emailed out via a flow consumer. If a new data source is added and the scheduled search suddenly returns thousands of results each time, you could be getting thousands of emails -- unless you've been cautious and set Max Events to a low value!
+
+Gravwell sets a very low default for Max Events, because it is extremely easy to misjudge your dispatchers and generate too many events! The option can go up to 8192, which should be more than enough; if you need more events per dispatcher trigger, alerts might not be the right solution for that particular use case.
+
+```{note}
+Setting Max Events to 0 is equivalent to setting it to 8192, the max value
+```
 
 ### Selecting a Tag
 
