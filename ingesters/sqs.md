@@ -33,6 +33,7 @@ The configuration file is at `/opt/gravwell/etc/sqs.conf`. The ingester will als
 	Secret="..."
 	Assume-Local-Timezone=false #Default for assume localtime is false
 	Source-Override="DEAD::BEEF" #override the source for just this Queue 
+	Credentials-Type="static"
 
 [Queue "default"]
 	Region="us-west-1"
@@ -41,6 +42,16 @@ The configuration file is at `/opt/gravwell/etc/sqs.conf`. The ingester will als
 	AKID="AKID..."
 	Secret="..."
 ```
+
+## Credentials-Type Authentication Options
+
+Both listener types (Bucket and SQS-S3-Listener) support multiple authentication methods. By default, the "static" method is used, which requires that you set the ID and Secret fields for the listener. The following additional methods are supported, and can be used by setting the `Credentials-Type` field:
+
+| Credential Type | Description |
+|-----------------|-------------|
+| static	  | Default credential type. Uses the AKID and Secret fields set in the listener. |
+| environment	  | Uses the `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` environment variables to authenticate. |
+| ec2role	  | Uses the host-based EC2 role authentication method. See [Amazon EC2 Documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-metadata.html) for more information. |
 
 ## Installation
 If you're using the Gravwell Debian repository, installation is just a single apt command:
