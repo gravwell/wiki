@@ -24,3 +24,11 @@ Scripting Overview <scripting/scripting>
 The Anko Module <scripting/anko>
 The Eval Module <scripting/eval>
 ```
+
+```{toctree}
+---
+maxdepth: 1
+caption: Alerts
+---
+Alerts <alerts/alerts>
+```
