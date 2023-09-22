@@ -32,11 +32,17 @@ Below, we have defined a simple scheduled search which runs every minute and cou
 
 ![](countsearch.png)
 
-Note that we have selected the "run after saving" option. This tells the searchagent to run the search as soon as it can, then begin the regular schedule. This is particularly useful when you're running searches to update a lookup table.
+Note that we have selected the "Enable this scheduled query" option, which automatically enables Backfill Scheduling. Backfill Scheduling is intended to help cover any potential lapses in which Gravwell is unable to run a scheduled search on schedule -- for instance, during an upgrade. If a scheduled run is missed, Gravwell will go back and run the search over the missed timespan as soon as possible.
 
 After clicking Save, the search now shows up in the scheduled search listing and will soon run, updating the 'Last Run' field:
 
 ![](lastrun.png)
+
+### Timeframe Offsets
+
+It may not always be appropriate for your scheduled search to query up to "now". For example, you may be ingesting some logs in a batched process that runs every ten minutes; running a query over the last hour will most likely miss data!
+
+Setting a timeframe offset helps with this problem. It simply shifts the start and end times over which the query runs. Consider a scheduled search with the timeframe set to 1 hour. Normally, this search executes over the data from 1 hour ago to the current time. If, however, we set a timeframe offset of 30 minutes, the search will execute over data ranging from 1 hour 30 minutes ago to 30 minutes ago.
 
 ## Managing Scheduled Scripts
 
