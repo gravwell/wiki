@@ -2,6 +2,10 @@
 
 Math modules operate on the pipeline to perform statistical analysis. They are also important when information is condensed over a timeline. For example, if the temperature is measured 10 times per second but the user requests it to be displayed by the second, a math module is used to condense that data.
 
+## Supported Options
+
+* `-maxtracked`: sets the maximum number of unique keys to track per operation, e.g. `count -maxtracked 5000 by DstIP`. This is used to help avoid memory exhaustion if there are millions of IPv6 addresses in the data. If the maxtracked value is exceeded, the search will terminate with an error suggesting you should increase the max value. Defaults to 100000000. Refer to the [stats module documentation](/search/stats/stats) for more information about maxtracked.
+
 (sum_module)=
 
 ## Sum
