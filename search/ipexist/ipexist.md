@@ -2,6 +2,10 @@
 
 The ipexist module is designed to perform simple existence checks on IP addresses as fast as possible. It uses Gravwell's [ipexist library](https://github.com/gravwell/ipexist) to manage sets of IP addresses and quickly query the existence of a given IP within the set. Users specify one or more enumerated values to match against the set; by default, if all enumerated values match addresses within the set, the entry is passed.
 
+```{note}
+The ipexist module only operates on IPv4 addresses. All entries that attempt to match on an IPv6 address will be dropped.
+```
+
 ## Supported Options
 
 * `-r <resource>`: The "-r" flag specifies the name of a resource containing an ipexist-formatted lookup set. This flag may be specified multiple times to attempt lookups across multiple resources. See below for more information on creating these sets.
