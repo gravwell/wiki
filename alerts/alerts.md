@@ -70,6 +70,10 @@ If we click "Save and Exit", then log in as root over SSH, the next run of the S
 
 Having verified that events are being detected and logged, we can now move on to defining consumers to actually take action on these events -- but first, we'll take steps to make sure the events all have the right format.
 
+```{note}
+Dispatcher searches should use either `table`, `text`, or `raw` as their renderer. If table is used, the alert will use the columns of the table as the "fields" of each event. If text or raw are used, the alert will use the enumerated values attached to each entry as fields.
+```
+
 ## Setting a Validation Schema
 
 If you refer back to the queries used in our dispatchers, you'll note that we were careful to emit the same three field names in both: Hostname, remotehost, and service.
