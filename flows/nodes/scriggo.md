@@ -54,6 +54,16 @@ The `Payload` interface can get and set native types into the flow payload simil
 Defining a new struct type in your Go program and setting it into the flow Payload may result in undefined behavior, because that type information won't make it outside the Go flow node.
 ```
 
+### Blocking Flow Execution
+
+If you call `gravwell.Block()`, further execution will be blocked--nodes downstream of the Go node will not be executed.
+
+```
+if payload.Get(`flow.Name`) == "foo" {
+	gravwell.Block()
+}
+```
+
 ### Other Package Types
 
 | Name     | Type/Prototype      | Description                                                    |

@@ -2,7 +2,7 @@
 
 # Gravwell Docs
 
-This site contains documentation for Gravwell, plus other resources such as Changelogs.
+This site contains documentation for Gravwell, plus other resources such as [Downloads](quickstart/downloads) and [Release Notes](changelog/list).
 
 If you're just starting out with Gravwell, we recommend reading the [Quick Start](quickstart/quickstart) first, then moving on to the [Search pipeline](search/search) documentation to learn more.
 
@@ -17,6 +17,7 @@ Configuration <architecture/architecture>
 Ingesters <ingesters/ingesters>
 Searching with Gravwell <gravwell>
 Automation <automation>
+Downloads <quickstart/downloads>
 API <api/api>
 Release Notes <changelog/list>
 ```

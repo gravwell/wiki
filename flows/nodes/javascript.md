@@ -18,7 +18,20 @@ Variables in the payload are accessed in JavaScript code with the prefix `payloa
 
 The Libraries configuration section allows you to load JavaScript libraries. It is a key-value configuration block: the key is the name of the library, and the value is the contents of the library (usually a variable in the payload). Note that the key name is for organizational purposes only and is not used by the JavaScript node itself -- but it can help you, the user, remember that the variable named "response" being loaded as a library actually contains the MomentJS library!
 
+## Blocking Flow Execution
 
+If the Javascript code evaluates to `false`, further execution will be blocked--nodes downstream of the Javascript node will not be executed. The easiest way to accomplish this is by putting your actual logic into a function and calling that:
+
+```
+function doit() {
+	if (payload.SomeValue == "foo") {
+		return false
+	}
+	return true
+}
+
+doit()
+```
 
 ## Examples
 

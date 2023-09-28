@@ -97,12 +97,17 @@ whitespace = Characters from Unicode's whitespace category and Unicode category 
 
 ### Comments
 
-A comment is any input between ANSI-C style comment specifiers `/* */`, and is not considered part of the input to Gravwell. 
+Gravwell supports two types of comments. 
+
+1. Any input between ANSI-C style comment specifiers `/* */`.
+2. Line comments, which begin with a double slash `//` and stop at the end of the line. 
+
+Comments are not considered part of the input to Gravwell. 
 
 For example,
 
 ```
-kv myKey /* this is my key extraction */ | table
+kv myKey /* this is my key extraction */ | table // an end of line comment!
 ```
 
 is implicitly reduced to
@@ -114,7 +119,9 @@ kv myKey | table
 A comments is defined as
 
 ```
-comment       = '/' '*' { unicode_print | whitespace } '*' '/' 
+comment       = c_style | double_slash
+c_style	      = '/' '*' { unicode_print | whitespace } '*' '/' 
+double_slash  = '//' { any character except newline } ( '\n' | EOF )
 whitespace    = Characters from Unicode's whitespace category and Unicode category Z
 unicode_print = Characters from Unicode categories L, M, N, P, and S
 ```
@@ -322,20 +329,4 @@ EvalFragment      = evalfragment
 
 Special           = Whitespace "(" | ")" | ";" | "=" | "<" | "!" | ">" | "~" | "%" | "^" | "&" | "*" | "," | "+" | "." | ":" | "[" | "]" | "/"
 Op                = Whitespace "<=" | ">=" | "==" | "!=" | "~" | "!~" | "<" | ">"
-RString           = rstring
-QuotedString      = quotestring
-String            = string
-JSONModuleName    = JSONModuleString
-SpecialModuleName = specialModuleString
-ModuleName        = string
-QueryName         = string
-CLvalue           = clval
-MCLvalue          = mclval
-CRvalue           = crstring
-Whitespace        = whitespace
-RawString         = rawstring
-JSONString        = jsonString
-AT                = compoundAt
-SEMICOLON         = compoundSemicolon
-HocName           = "hoc" | "eval"
 ```
