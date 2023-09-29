@@ -19,6 +19,12 @@ Enumerated values passed to the ip module can be compared against IP addresses o
 | ~ | Subset | IP must be a member of the given subnet
 | !~ | Not subset | IP must not be a member of the given subnet
 
+It is possible to apply multiple filters to the same EV, even without the `-or` flag. For example, to filter entries that aren't in the `10.0.0.0/24` and the `192.168.0.0/24` subnets, simply add another filter for the same EV:
+
+```gravwell
+tag=json json ipaddr | ip ipaddr !~ 10.0.0.0/24 ipaddr !~ 192.168.0.0/24
+```
+
 The ip module defines the keyword PRIVATE to match any of the standard private networks:
 
 * 10.0.0.0/8

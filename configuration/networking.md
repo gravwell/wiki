@@ -18,9 +18,9 @@ This port is used by ingesters to connect to indexers and upload entries via une
 
 This port is used by ingesters to connect to indexers and upload entries via TLS-encrypted communications. The default port is TCP 4024, but it can be changed using the `TLS-Ingest-Port` option in gravwell.conf. Because ingesters and indexers are often on entirely different networks, it is essential that firewalls are configured such that the *ingesters* are allowed to connect to this port on the *indexers*.
 
-## Indexer Replication Port: TCP 9606
+## Indexer Replication Port: TCP 9406
 
-This port is used by indexers to communicate with each other for [replication](/configuration/replication). The default port is 9606 if not otherwise specified in the `Peer` and `Listen-Address` options of the Replication portion of gravwell.conf. Only indexers use this port.
+This port is used by indexers to communicate with each other for [replication](/configuration/replication). The default port is 9406 if not otherwise specified in the `Peer` and `Listen-Address` options of the Replication portion of gravwell.conf. Only indexers use this port.
 
 ## Datastore Port: TCP 9405
 
@@ -38,7 +38,7 @@ The commands shown here will only *temporarily* open ports if you do not use the
 
 ```
 sudo firewall-cmd --zone=public --add-port=9404/tcp --permanent
-sudo firewall-cmd --zone=public --add-port=9405/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=9406/tcp --permanent
 sudo firewall-cmd --zone=public --add-port=4023/tcp --permanent
 sudo firewall-cmd --zone=public --add-port=4024/tcp --permanent
 sudo firewall-cmd --reload

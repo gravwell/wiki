@@ -27,7 +27,6 @@ Azure Event Hubs <eventhubs>
 collectd <collectd>
 Federator <federators/federator>
 File Follower <file_follow>
-Windows File Follower <win_file_follow>
 GCP PubSub <pubsub>
 HTTP <http>
 IPMI <ipmi>
@@ -45,6 +44,7 @@ Shodan <shodan>
 Simple Relay <simple_relay>
 SNMP Trap <snmp>
 Windows Events <winevent>
+Windows File Follower <win_file_follow>
 ```
 
 | Ingester | Description |
@@ -53,7 +53,6 @@ Windows Events <winevent>
 | [Azure Event Hubs](eventhubs) | Consume from Azure Event Hubs. |
 | [collectd](collectd) | Ingest collectd samples. |
 | [File Follower](file_follow) | Watch and ingest files on disk, such as logs. |
-| [Windows File Follower](win_file_follow) | Watch and ingest files on Windows, such as logs and EVTX files. |
 | [GCP PubSub](pubsub) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
 | [HTTP](http) | Create HTTP listeners on multiple URL paths. |
 | [IPMI](ipmi) | Periodically collect SDR and SEL records from IPMI devices. |
@@ -70,6 +69,7 @@ Windows Events <winevent>
 | [Simple Relay](simple_relay) | Ingest any text over TCP/UDP, syslog, and more. |
 | [SNMP Trap](snmp) | Receive and ingest SNMP trap messages. |
 | [Windows Events](winevent) | Collect Windows events. |
+| [Windows File Follower](win_file_follow) | Watch and ingest files on Windows, such as logs and EVTX files. |
 
 
 ## Tags
@@ -316,6 +316,29 @@ Log-Source-Override=10.0.0.1
 Log-Source-Override=0.0.0.0
 Log-Source-Override=DEAD:BEEF::FEED:FEBE
 Log-Source-Override=::1
+```
+
+### Attach
+
+All ingesters support the `Attach` global configuration stanza, which allows [intrinsic enumerated values](intrinsic_enumerated_values) to be attached to entries during ingest. Intrinsic enumerated values can later be accessed with the [intrinsic](/search/intrinsic/intrinsic) search module.
+
+The `Attach` stanza takes any key/value pair, and will attach it to every entry as an enumerated value at the time of ingest. For example:
+
+```
+[Attach]
+	foo = "bar"
+	ingester = "my ingester"
+```
+
+Will attach an EV "foo" with the contents "bar" to every entry, as well as "ingester" with the value "my ingester".
+
+Additionally, the below variables can be used to populate values:
+
+```
+[Attach]
+	time = $NOW 		# add the current timestamp
+	host = $HOSTNAME	# add the hostname the ingester is running on
+	uuid = $UUID		# add the ingester's UUID
 ```
 
 ## Data Consumer Configuration

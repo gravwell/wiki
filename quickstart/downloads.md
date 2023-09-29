@@ -1,20 +1,30 @@
 # Downloads
 
+## Windows Ingesters
+
+| Ingester Name | Installer    | More Info |
+| :------------ | :----------- | :-------- |
+| Windows Events | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_win_events_5.3.1.msi"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">1da0cd7e0e76fdd8d5eece8e00d359f543a06e88901a453a4893fc11adb828fa</span></code>'>(SHA256)</a> | [Documentation](/ingesters/winevent) |
+| Windows File Follower | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.3.1/installers/gravwell_file_follow_5.3.1.msi"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">d8d4d924c6ecc17e14d6a869a895b561ca8448f3c4ea7da0fbf0b19b3d62a799</span></code>'>(SHA256)</a> | [Documentation](/ingesters/win_file_follow) |
+
+
+## Other Installers
+
 ```{attention}
 The Debian and RHEL repositories are more easily maintained than these standalone installers and are the recommended methods of installation. See the [quickstart instructions](quickstart).
 ```
 
-## Gravwell Core
+### Gravwell Core
 
 The Gravwell core installer contains the indexer and webserver frontend. You'll need a license; either get a Community Edition free license, or contact info@gravwell.io for commercial options.
 
 Download Gravwell Core Installer <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.4.0/installers/gravwell_5.4.0.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">fc275bd2f346268bd62e3bc1a0f73dc7cb93ed1d4592fd5003d3c6a3045bbbac</span></code>'>(SHA256)</a>
 
-## Ingesters
+### Ingesters
 
 The core suite of ingesters are available for download as installable packages.  Ingesters designed to operate on Linux machines are typically self contained, statically linked executables that are agnostic to the hosts package management system (with the exception of the NetworkCapture ingester).  Windows based ingesters are distributed as executable MSI packages.  Source code for many ingesters can be found at the [Gravwell Github](https://github.com/gravwell/gravwell/tree/master/ingesters) repository.
 
-### Current Ingester Releases
+#### Current Ingester Releases
 | Ingester Name | Installer    | More Info |
 | :------------ | :----------- | :-------- |
 | Amazon Kinesis | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.4.0/installers/gravwell_kinesis_ingest_installer_5.4.0.sh"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">d48441ddc6b297ac20d58c3df4722dcdfe0fe57f189e71e768c60bb4bbe98fc1</span></code>'>(SHA256)</a> | [Documentation](/ingesters/kinesis)|
@@ -38,7 +48,7 @@ The core suite of ingesters are available for download as installable packages. 
 | Windows Events | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.4.0/installers/gravwell_win_events_5.4.0.msi"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">14347b5038e2c544b055c953f7d8185887b54c3bb02a78c50190cd737ffc2200</span></code>'>(SHA256)</a> | [Documentation](/ingesters/winevent) |
 | Windows File Follower | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.4.0/installers/gravwell_file_follow_5.4.0.msi"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">0a2d87c356482f1612fd1e0e5f3f2089aaf40208d588b629cdeb825c103b96b9</span></code>'>(SHA256)</a> | [Documentation](/ingesters/win_file_follow) |
 
-## Other downloads
+### Other downloads
 
 Some Gravwell components are distributed as optional additional installers, such as the search agent and the datastore.
 
