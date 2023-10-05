@@ -31,3 +31,10 @@ Connected Ingesters:
 The output in Slack looks like this:
 
 ![](slack-output.png)
+
+## Slack Bot Tokens and Scopes
+
+The Slack Message node requires a valid Slack Bot token in order to send messages; a valid Slack Bot token will begin with the characters `xoxo`. Slack bots/apps must also be a member of the target workspace and channel as well as have access to the following OAuth scopes:
+
+* `chat:write`: Allows the bot to send messages in chat.
+* `incoming-webook`: Allows access to the webhook API to initiate message requests.
