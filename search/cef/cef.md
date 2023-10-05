@@ -20,6 +20,7 @@ Extracted header and key values are extracted into enumerated values with the sa
 ## Supported Options
 
 * `-e`: The “-e” option specifies that the CEF module should operate on an enumerated value.  Operating on enumerated values can be useful when you have extracted a CEF record using upstream modules.  You could e.g. extract CEF records from raw PCAP and pass the records into the CEF module.
+* `-s` : The “-s” option specifies that the CEF module operate in a strict mode. If any extractions fail, CEF will drop the entry.
 
 ## Processing Operators
 
