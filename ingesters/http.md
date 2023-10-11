@@ -354,6 +354,22 @@ echo '{"event": "Hello, world!", "fields": {"device": "macbook", "user": "bob"}}
 --data-binary @- -H "Content-Encoding: gzip"
 ```
 
+#### Tag-Match
+
+By specifying one or more Sourcetype:Tag pairs with the Tag-Match configuration option, the HEC-Compatible listener can route events to specific tags by a named source type. 
+
+For example, to route all Sourcetype "foo" events to the tag "bar":
+
+```
+Tag-Match=foo:bar
+```
+
+Multiple Tag-Match pairs can be given:
+
+```
+Tag-Match=foo:bar ping:pong
+```
+
 ## Health Checks
 
 Some systems (such as AWS load-balancers) require an unauthenticated URL that can be probed and interpreted as "proof of life".  The HTTP ingester can be configured to provide a URL which will always return a 200 OK when accessed with any method, body, and/or query parameters.  To enable this health check endpoint, add the `Health-Check-URL` stanza to the Global configuration block.
@@ -372,5 +388,4 @@ Log-File="/opt/gravwell/log/http_ingester.log"
 Health-Check-URL="/logbot/are/you/alive"
 
 ```
-
 

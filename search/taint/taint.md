@@ -34,7 +34,7 @@ taint -f <known value> <src> <dest>
 * `-pz <arg>`: The -pz flag specifies the value for a patient zero (starting point).  Taint will look in the <src> enumerated values for the patient zero value to start tainting.
 * `-f <arg>`: The -f flag specifies the value for a known infection.  Taint will look in enumerated values specified by <src> for the known-infected value and begin tracking taints.
 * `-b`: The -b flag specifies that infections are bidirectional, and if either side has been tainted in the past, the taint is transferred to the other.
-* `-a`: The -a flag specifies that all entries should pass through the taint module, meaning that the taint module will NOT drop entries that do not contain tainted values.
+* `-a`: The -a flag specifies that all entries should pass through the taint module, meaning that the taint module will NOT drop entries that do not contain the source or destination enumerated values.
 
 ## Examples
 
