@@ -28,3 +28,11 @@ tag=pcap packet tcp.DstPort tcp.DstIP | eval DstPort < 1024 | unique DstPort Dst
 ```
 
 The search above will output every unique combination of IP + port, provided the port is less than 1024. This is a useful way to find servers on a network, for instance.
+
+In addition, unique supports the "over" operator, allowing for finding unique values over a given time window, similar to the stats module. For example:
+
+```gravwell
+tag=pcap packet tcp.DstPort | unique DstPort over 1h | table DstPort
+```
+
+This query will find unique destination ports, split into 1 hour windows.
