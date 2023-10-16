@@ -1,6 +1,6 @@
 # IPexist
 
-The ipexist module is designed to perform simple existence checks on IP addresses as fast as possible. It uses Gravwell's [ipexist library](https://github.com/gravwell/ipexist) to manage sets of IP addresses and quickly query the existence of a given IP within the set. Users specify one or more enumerated values to match against the set; by default, if all enumerated values match addresses within the set, the entry is passed.
+The ipexist module is designed to perform simple existence checks on IP addresses as fast as possible. It uses Gravwell's [ipexist library](https://github.com/gravwell/gravwell/tree/master/ipexist) to manage sets of IP addresses and quickly query the existence of a given IP within the set. Users specify one or more enumerated values to match against the set; by default, if all enumerated values match addresses within the set, the entry is passed.
 
 ```{note}
 The ipexist module only operates on IPv4 addresses. All entries that attempt to match on an IPv6 address will be dropped.
@@ -14,7 +14,7 @@ The ipexist module only operates on IPv4 addresses. All entries that attempt to 
 
 ## Creating IP sets
 
-The ipexist module uses a specific format to store sets of IPv4 addresses that is designed to allow fast lookups while also remaining relatively space-efficient. This format is implemented in the [ipexist library](https://github.com/gravwell/ipexist), which includes a tool to generate the sets at the command line.
+The ipexist module uses a specific format to store sets of IPv4 addresses that is designed to allow fast lookups while also remaining relatively space-efficient. This format is implemented in the [ipexist library](https://github.com/gravwell/gravwell/tree/master/ipexist), which includes a tool to generate the sets at the command line.
 
 First, fetch the tool:
 
