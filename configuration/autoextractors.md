@@ -1,6 +1,6 @@
 # Gravwell Auto-Extractors
 
-Gravwell enables per-tag extraction definitions that can ease the complexity of interacting with unstructured data and data formats that are not self-describing.  Unstructured data often requires complicated regular expressions to extract desired data fields, which can be time consuming to produce and prone to errors.
+Gravwell enables tag extraction definitions that can ease the complexity of interacting with unstructured data and data formats that are not self-describing.  Unstructured data often requires complicated regular expressions to extract desired data fields, which can be time consuming to produce and prone to errors.
 
 Auto-extractors are simply definitions that can be applied to tags and describe how to correctly extract fields from the data in a given tag. The "ax" module then automatically invokes the appropriate functionality of other modules. 
 
@@ -20,16 +20,12 @@ The following fields must be populated:
 
 * Name - A human-friendly name for the extraction
 * Description - A human-friendly string that describes the extraction
-* Tag - The tag associated with the extraction; the dropdown will list existing tags
+* Tags - The tags associated with the extraction
 * Module - The processing module used for extraction (regex, slice, csv, fields, etc.)
 * Parameters / Regex - The extraction definition
 * Arguments / Options - Module-specific arguments used to change the behavior of the extraction module (optional)
 
 An extractor may be edited after creation by clicking the pencil (edit) icon on its tile.
-
-```{note}
-Only a single extraction can be defined per tag per user.
-```
 
 ```{note}
 Auto-extractors always operate on the full underlying data of an entry.  They cannot be used to perform extractions on Enumerated Values (the "-e" argument is disallowed)
@@ -45,7 +41,7 @@ Older versions of Gravwell managed auto-extractors as files in `/opt/gravwell/ex
 
 Each extractor contains a header and the following parameters:
 
-* tag - The tag associated with the extraction
+* tags - The tags associated with the extraction. Tags are specified as an array: [ "foo", "bar" ]
 * name - A human-friendly name for the extraction
 * desc - A human-friendly string that describes the extraction
 * module - The processing module used for extraction (regex, slice, csv, fields, etc.)
@@ -57,7 +53,7 @@ Here is a sample auto-extraction file designed to pull some basic data from an A
 ```
 #Simple extraction to pull ip, method, url, proto, and status from apache access logs
 [[extraction]]
-	tag="apache"
+	tags=["apache"]
 	name="apacheaccess"
 	desc="Apache 2.0 access log extraction to pull requester items"
 	module="regex"
@@ -80,7 +76,7 @@ Multiple extractions can be specified in a single file by simply establishing a 
 ```
 #Simple extraction to pull ip, method, url, proto, and status from apache access logs
 [[extraction]]
-	tag="apache"
+	tags=["apache"]
 	name="apacheaccess"
 	desc="Apache 2.0 access log extraction to pull requester items"
 	module="regex"
@@ -89,18 +85,18 @@ Multiple extractions can be specified in a single file by simply establishing a 
 
 #Extraction to apply names to CSV data
 [[extraction]]
-	tag="locs"
+	tags=["locs","locs2"]
 	name="locationrecords"
 	desc="AX extraction for CSV location data"
 	module="csv"
 	params="date, name, country, city, hash, a comma ,\"field with comma,\""
 ```
 
-The second extraction for the "locs" tag demonstrates the omission of non-essential parameters (here we don't specify args) and using backslashes to allow double quotes in strings.  Extractions only have 3 essential parameters:
+The second extraction for the "locs" and "locs2" tags demonstrates the omission of non-essential parameters (here we don't specify args) and using backslashes to allow double quotes in strings.  Extractions only have 3 essential parameters:
 
 * module
 * params
-* tag
+* tags
 
 ## Filtering
 
@@ -151,7 +147,7 @@ With the following auto-extractor configuration declaration:
 	name="testcsv"
 	desc="CSV auto-extraction for the super ugly CSV data"
 	module="csv"
-	tag="csvdata"
+	tags=["csvdata"]
 	params="ts, name, id, guid, src, srcport, dst, dstport, data, country, city, hash"
 ```
 
@@ -193,7 +189,7 @@ An auto-extraction configuration to accomplish the same thing is:
 
 ```
 [[extraction]]
-	tag="tagfields"
+	tags=["tagfields"]
 	name="tabfields"
 	desc="Tab delimited fields"
 	module="fields"
@@ -225,7 +221,7 @@ But with an appropriate auto-extraction configuration (shown below) the query ca
 
 ```
 [[extraction]]
-	tag="barfields"
+	tags="[barfields"]
 	name="barfields"
 	desc="bar | delimited fields with quotes and cleaning"
 	module="fields"
@@ -265,7 +261,7 @@ Here is our example extractor definition:
 ```
 [[extraction]]
 	module="regex"
-	tag="test"
+	tags=["test"]
 	params='(?P<ts>\S+)\s\[(?P<app>\S+)\]\s<(?P<uuid>\S+)>\s(?P<src>\S+)\s(?P<srcport>\d+)\s(?P<dst>\S+)\s(?P<dstport>\d+)\s(?P<path>\S+)\s(?P<useragent>.+)\s\{(?P<email>\S+)\}$'
 ```
 
@@ -345,7 +341,7 @@ From our manual query we can then generate the following auto-extraction configu
 
 ```
 [[extraction]]
-	tag="keg"
+	tags=["keg"]
 	name="kegdata"
 	desc="binary temperature control extractions"
 	module="slice"
