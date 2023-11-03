@@ -361,7 +361,7 @@ Each of the HEC endpoints support sending multiple entries in a single request; 
 
 The structured data endpoints allow for specifying a sourcetype value which will be applied to the `Tag-Match` config parameter, if a match is found a new tag is applied.  The raw endpoints can provide a sourcetype as a query parameter, or a direct tag value can be provided to bypass the sourcetype translations entirely and explicitly specify the tag.
 
-This curl command shows shows sending several structured entries to the structured endpoint:
+This curl command shows sending several structured entries to the structured endpoint:
 
 ```
 curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/event \
