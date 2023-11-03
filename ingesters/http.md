@@ -402,7 +402,7 @@ curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/raw?tag=
     hello, welcome to raw #3'
 ```
 
-This curl command shows shows sending several entries to the structured endpoint with a default tag and setting specific entry sourcetypes:
+This curl command shows sending several entries to the structured endpoint with a default tag and setting specific entry sourcetypes:
 
 ```
 curl --http1.1 -X POST -v http://example.gravwell.io/services/collector \
