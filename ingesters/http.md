@@ -382,7 +382,7 @@ curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/raw \
 ```
 
 
-This curl command shows sending several entries to the raw endpoint and providing a sourcetype and tag as a query parameter.
+The following curl commands show sending several entries to the raw endpoint and providing a sourcetype and tag as a query parameter.
 
 Override the sourcetype to use the Tag-Match parameter.
 ```
