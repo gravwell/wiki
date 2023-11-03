@@ -436,7 +436,7 @@ Some characters that are supported in a Splunk sourcetype are not supported in a
 
 #### Debug-Posts
 
-The `Debug-Posts` configuration option allows for gathering additional data on each HTTP POST request to the HTTP ingester endpoint.  Only successful transactions will be logged when using the `Debug-Posts` configuration option, authentication failures, structure failures, or just bad requests are logged using the existing systems.  The bebug logs are sent to the `gravwell` tag.
+The `Debug-Posts` configuration option allows for gathering additional data on each HTTP POST request to the HTTP ingester endpoint.  Only successful transactions will be logged when using the `Debug-Posts` configuration option.  Authentication failures, structure failures, or just bad requests are logged using the existing systems.  The debug logs are sent to the `gravwell` tag.
 
 Here is a raw log entry emitted from a HEC debug post:
 ```
