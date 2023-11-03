@@ -373,7 +373,7 @@ Tag-Match=`"look:mom:i:have:colons":look_mom_i_have_no_colons`
 ```
 
 ```{note}
-Some characters are that are supported in a Splunk sourcetype are not in a Gravwell tag, if you need to specify a sourcetype with special characters surround the Tag-Match argument in backticks to specify a raw string and surround the sourcetype in double quotes.
+Some characters that are supported in a Splunk sourcetype are not supported in a Gravwell tag. If you need to specify a sourcetype with special characters, surround the Tag-Match argument in backticks to specify a raw string and surround the sourcetype in double quotes.
 ```
 
 ## Health Checks
