@@ -393,7 +393,7 @@ curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/raw?sour
     hello, welcome to raw #3'
 ```
 
-Override the tag value directly.
+Override the tag value directly:
 ```
 curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/raw?tag=testing \
     -H "Authorization: Splunk thisisyourtoken" -d '
