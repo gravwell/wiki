@@ -357,7 +357,7 @@ echo '{"event": "Hello, world!", "fields": {"device": "macbook", "user": "bob"}}
 
 #### Sending Multiple Entries
 
-Each of the HEC endpoints support sending mutiple entries in a single request; batching up multiple entries in a single request is dramatically more efficient than one entry per request.
+Each of the HEC endpoints support sending multiple entries in a single request; batching up multiple entries in a single request is dramatically more efficient than one entry per request.
 
 The structured data endpoints allow for specifying a sourcetype value which will be applied to the `Tag-Match` config parameter, if a match is found a new tag is applied.  The raw endpoints can provide a sourcetype as a query parameter, or a direct tag value can be provided to bypass the sourcetype translations entirely and explicitely specify the tag.
 
