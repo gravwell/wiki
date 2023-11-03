@@ -371,7 +371,7 @@ curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/event \
     {"event": "Hello, this is yet another structured event"}'
 ```
 
-This curl command shows shows sending several entries to the raw endpoint:
+This curl command shows sending several entries to the raw endpoint:
 
 ```
 curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/raw \
