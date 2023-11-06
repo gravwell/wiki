@@ -1,6 +1,6 @@
 # IPexist
 
-The ipexist module is designed to perform simple existence checks on IP addresses as fast as possible. It uses Gravwell's [ipexist library](https://github.com/gravwell/ipexist) to manage sets of IP addresses and quickly query the existence of a given IP within the set. Users specify one or more enumerated values to match against the set; by default, if all enumerated values match addresses within the set, the entry is passed.
+The ipexist module is designed to perform simple existence checks on IP addresses as fast as possible. It uses Gravwell's [ipexist library](https://github.com/gravwell/gravwell/tree/master/ipexist) to manage sets of IP addresses and quickly query the existence of a given IP within the set. Users specify one or more enumerated values to match against the set; by default, if all enumerated values match addresses within the set, the entry is passed.
 
 ```{note}
 The ipexist module only operates on IPv4 addresses. All entries that attempt to match on an IPv6 address will be dropped.
@@ -14,11 +14,17 @@ The ipexist module only operates on IPv4 addresses. All entries that attempt to 
 
 ## Creating IP sets
 
-The ipexist module uses a specific format to store sets of IPv4 addresses that is designed to allow fast lookups while also remaining relatively space-efficient. This format is implemented in the [ipexist library](https://github.com/gravwell/ipexist), which includes a tool to generate the sets at the command line.
+The ipexist module uses a specific format to store sets of IPv4 addresses that is designed to allow fast lookups while also remaining relatively space-efficient. This format is implemented in the [ipexist library](https://github.com/gravwell/gravwell/tree/master/ipexist), which includes a tool to generate the sets at the command line.
 
-First, fetch the tool:
+In order to install the tool, you need to have git and the Golang compiler installed.
 
-	go get github.com/gravwell/ipexist/textinput
+First, clone the opensource Gravwell repository:
+
+	git clone https://github.com/gravwell/gravwell
+
+Then build the tool:
+
+	cd gravwell/ipexist/textinput && go build
 
 Then populate a text file with the list of ip addresses you wish to have in the set, one IP per line. Ordering does not matter:
 
@@ -29,7 +35,7 @@ Then populate a text file with the list of ip addresses you wish to have in the 
 
 Then run the textinput tool, giving it the path to the input file and a path for the output:
 
-	$GOPATH/bin/textinput -i /path/to/inputfile -o /path/to/outputfile
+	./textinput -i /path/to/inputfile -o /path/to/outputfile
 
 This should produce a properly-formatted output file which can be uploaded as a resource for use with the ipexist module.
 
