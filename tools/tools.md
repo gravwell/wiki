@@ -222,7 +222,7 @@ total 8196
 
 ### Output Data Structure
 
-The export tool outputs data in a JSON structure that is to be easy to work with by a variety of tools; the native golang types are documented on our open source repo [here](https://pkg.go.dev/github.com/gravwell/gravwell/v3@v3.8.24/client/types#SearchEntry) and [here](https://pkg.go.dev/github.com/gravwell/gravwell/v3@v3.8.24/client/types#EnumeratedPair):
+The export tool outputs data in a JSON structure which is easy to work with using a variety of tools; the native golang types are documented on our open source repo [here](https://pkg.go.dev/github.com/gravwell/gravwell/v3@v3.8.24/client/types#SearchEntry) and [here](https://pkg.go.dev/github.com/gravwell/gravwell/v3@v3.8.24/client/types#EnumeratedPair):
 
 The basic types are:
 
