@@ -182,7 +182,7 @@ The tool will return with confirmation that the user account has been unlocked a
 
 ## Export
 
-The export tool (`/usr/local/sbin/gravwell_export`) outputs the entries in a given indexer or well within an indexer to one or more compressed JSON archives of entries. The output files can natively be reingested to Gravwell. The DATA portion of an entry is base64 encoded, while the TAG, SRC, and Timestamp are strings. 
+The export tool (`/usr/local/sbin/gravwell_export`) outputs the entries in a given indexer or well within an indexer to one or more compressed JSON archives of entries. The output files can natively be re-ingested to Gravwell. The DATA portion of an entry is base64 encoded, while the TAG, SRC, and Timestamp are strings.  Intrinsic EVs attached to data at ingest are exported under the `Enumerated` field.
 
 ### Usage
 
@@ -220,3 +220,74 @@ total 8196
 -rw-r--r-- 1 gravwell gravwell 3494587 Jun 28 14:31 2023-06-28-10:18:40.json
 ```
 
+### Output Data Structure
+
+The export tool outputs data in a JSON structure which is easy to work with using a variety of tools; the native golang types are documented on our open source repo [here](https://pkg.go.dev/github.com/gravwell/gravwell/v3@v3.8.24/client/types#SearchEntry) and [here](https://pkg.go.dev/github.com/gravwell/gravwell/v3@v3.8.24/client/types#EnumeratedPair):
+
+The basic types are:
+
+```
+type SearchEntry struct {
+	TS         entry.Timestamp
+	SRC        net.IP
+	Tag        entry.EntryTag
+	Data       []byte
+	Enumerated []EnumeratedPair
+}
+
+type EnumeratedPair struct {
+	Name     string
+	Value    string             `json:"ValueStr"`
+	RawValue RawEnumeratedValue `json:"Value"`
+}
+
+type RawEnumeratedValue struct {
+	Type uint16
+	Data []byte
+}
+```
+
+An example JSON encoded entry from the export tool is:
+
+```
+{
+  "TS": "2023-11-06T13:32:33.736216872Z",
+  "Tag": "testdata",
+  "SRC": "172.19.100.1",
+  "Data": "Q2hlY2tFVnMsIG5vdGhpbmcgaW50ZXJlc3RpbmcgaGVyZQ==",
+  "Enumerated": [
+    {
+      "Name": "_type",
+      "ValueStr": "intrinsic evs",
+      "Value": {
+        "Type": 13,
+        "Data": "aW50cmluc2ljIGV2cw=="
+      }
+    },
+    {
+      "Name": "ts",
+      "ValueStr": "2023-11-06T13:32:33.736216872Z",
+      "Value": {
+        "Type": 16,
+        "Data": "8eHa3A4AAAAox+Er"
+      }
+    },
+    {
+      "Name": "user",
+      "ValueStr": "jaydenwilliams474",
+      "Value": {
+        "Type": 13,
+        "Data": "amF5ZGVud2lsbGlhbXM0NzQ="
+      }
+    },
+    {
+      "Name": "name",
+      "ValueStr": "William Robinson",
+      "Value": {
+        "Type": 13,
+        "Data": "V2lsbGlhbSBSb2JpbnNvbg=="
+      }
+    }
+  ]
+}
+```
