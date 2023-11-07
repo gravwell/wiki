@@ -293,29 +293,165 @@ The HTTP ingester supports a listener block that is API compatible with the Splu
 
 ```
 [HEC-Compatible-Listener "testing"]
-	URL="/services/collector/event"
+	URL="/services/collector"
 	TokenValue="thisisyourtoken"
 	Tag-Name=HECStuff
 
 ```
 
-The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items. If the `URL` configuration item is omitted, it will default to `/services/collector/event`.
+The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items. If the `URL` configuration item is omitted, it will default to `/services/collector`.
 
 Both `Listener` and `HEC-Compatible-Listener` configuration blocks can be specified on the same HTTP ingester.
 
 The `HEC-Compatible-Listener` supports the following configuration parameters:
 
-| Parameter                 | Type         | Required | Default Value                | Description                         |
-|---------------------------|--------------|----------|------------------------------|-------------------------------------|
-| URL                       | string       | NO       | `/services/collector/event`  | Endpoint URL for Splunk events. |
-| TokenValue                | string       | YES      |                              | Authentication Token. |
-| Tag-Name                  | string       | YES      |                              | Tag assigned to entries received by the endpoint. |
-| Ignore-Timestamps         | boolean      | NO       | false                        | Do not extract or process timestamps, use current time. |
-| Ack                       | boolean      | NO       | false                        | Acknowledge receipt and respond with entry IDs. |
-| Max-Size                  | unsigned int | NO       | 524288 (512k)                | Maximum size for each decoded entry. |
-| Tag-Match                 | string array | NO       |                              | Sourcetype value to tag mapping, multiple can be specified. |
-| Preprocessor              | string array | NO       |                              | Set of preprocessors to apply to entries. |
+| Parameter         | Type         | Required | Default Value         | Description                                                 |
+|-------------------|--------------|----------|-----------------------|-------------------------------------------------------------|
+| URL               | string       | NO       | `/services/collector` | Endpoint URL for Splunk events.                             |
+| TokenValue        | string       | YES      |                       | Authentication Token.                                       |
+| Tag-Name          | string       | YES      |                       | Tag assigned to entries received by the endpoint.           |
+| Ignore-Timestamps | boolean      | NO       | false                 | Do not extract or process timestamps, use current time.     |
+| Ack               | boolean      | NO       | false                 | Acknowledge receipt and respond with entry IDs.             |
+| Max-Size          | unsigned int | NO       | 524288 (512k)         | Maximum size for each decoded entry.                        |
+| Tag-Match         | string array | NO       |                       | Sourcetype value to tag mapping, multiple can be specified. |
+| Debug-Posts       | boolean      | NO       | false                 | Emit additional debugging info on the gravwell tag for each POST. |
+| Preprocessor      | string array | NO       |                       | Set of preprocessors to apply to entries.                   |
 
+### Using the HEC-Compatible Listener
+
+A `HEC-Compatible-Listener` should work with all the examples shown in the [Splunk documentation](https://docs.splunk.com/Documentation/Splunk/9.0.3/Data/HECExamples). The body of your request should be a JSON structure with the desired contents of the entry's DATA field in `event`:
+
+```
+curl "http://example.org/services/collector" -H "Authorization: Splunk thisisyourtoken" \
+-d '{"event": {"key1": "value1", "key2": "value2"}}'
+```
+
+![](hec1.png)
+
+You can attach intrinsic enumerated values by setting the `fields` value of the body too:
+
+```
+curl "http://example.org/services/collector" -H "Authorization: Splunk thisisyourtoken" \
+-d '{"event": "Hello, world!", "fields": {"device": "macbook", "user": "bob"}}'
+```
+
+![](hec2.png)
+
+You can also send raw strings, rather than JSON-formatted events, by appending `/raw` to the URL:
+
+```
+curl "http://example.org/services/collector" -H "Authorization: Splunk thisisyourtoken" \
+-d 'here is some raw data'
+```
+
+![](hec3.png)
+
+The listener supports gzip-encoded data, too:
+
+```
+echo '{"event": "Hello, world!", "fields": {"device": "macbook", "user": "bob"}}' \
+| gzip \
+| curl "http://example.org/services/collector" -H "Authorization: Splunk thisisyourtoken" \
+--data-binary @- -H "Content-Encoding: gzip"
+```
+
+#### Sending Multiple Entries
+
+Each of the HEC endpoints support sending multiple entries in a single request; batching up multiple entries in a single request is dramatically more efficient than one entry per request.
+
+The structured data endpoints allow for specifying a sourcetype value which will be applied to the `Tag-Match` config parameter; if a match is found, a new tag is applied.  The raw endpoints can provide a sourcetype as a query parameter, or a direct tag value can be provided to bypass the sourcetype translations entirely and explicitly specify the tag.
+
+This curl command shows sending several structured entries to the structured endpoint:
+
+```
+curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/event \
+    -H "Authorization: Splunk thisisyourtoken" -d '
+    {"event": "Hello, this is a structured event"}
+    {"event": "Hello, this is another structured event"}
+    {"event": "Hello, this is yet another structured event"}'
+```
+
+This curl command shows sending several entries to the raw endpoint:
+
+```
+curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/raw \
+    -H "Authorization: Splunk thisisyourtoken" -d '
+    hello, welcome to raw #1
+    hello, welcome to raw #2
+    hello, welcome to raw #3'
+```
+
+
+The following curl commands show sending several entries to the raw endpoint and providing a sourcetype and tag as a query parameter.
+
+Override the sourcetype to use the Tag-Match parameter:
+```
+curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/raw?sourcetype=foobar \
+    -H "Authorization: Splunk thisisyourtoken" -d '
+    hello, welcome to raw #1
+    hello, welcome to raw #2
+    hello, welcome to raw #3'
+```
+
+Override the tag value directly:
+```
+curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/raw?tag=testing \
+    -H "Authorization: Splunk thisisyourtoken" -d '
+    hello, welcome to raw #1
+    hello, welcome to raw #2
+    hello, welcome to raw #3'
+```
+
+This curl command shows sending several entries to the structured endpoint with a default tag and setting specific entry sourcetypes:
+
+```
+curl --http1.1 -X POST -v http://example.gravwell.io/services/collector \
+    -H "Authorization: Splunk thisisyourtoken" -d '
+    {"event": "invalid sourcetype things", "sourcetype": "things", "time": 1699034250}
+    {"time": 1699034251, "sourcetype": "stuff", "event": "valid sourcetype stuff"}
+    {"time": 1699034252, "event": "no sourcetype, use default"}'
+```
+
+#### Tag-Match
+
+By specifying one or more Sourcetype:Tag pairs with the Tag-Match configuration option, the HEC-Compatible listener can route events to specific tags by a named source type. 
+
+For example, to route all Sourcetype "foo" events to the tag "bar":
+
+```
+Tag-Match=foo:bar
+```
+
+Multiple Tag-Match pairs can be given:
+
+```
+Tag-Match="foo:bar"
+Tag-Match=`ping:pong`
+Tag-Match=`"look:mom:i:have:colons":look_mom_i_have_no_colons`
+```
+
+```{note}
+Some characters that are supported in a Splunk sourcetype are not supported in a Gravwell tag. If you need to specify a sourcetype with special characters, surround the Tag-Match argument in backticks to specify a raw string and surround the sourcetype in double quotes.
+```
+
+#### Debug-Posts
+
+The `Debug-Posts` configuration option allows for gathering additional data on each HTTP POST request to the HTTP ingester endpoint.  Only successful transactions will be logged when using the `Debug-Posts` configuration option.  Authentication failures, structure failures, or just bad requests are logged using the existing systems.  The debug logs are sent to the `gravwell` tag.
+
+Here is a raw log entry emitted from a HEC debug post:
+```
+<14>1 2023-11-03T18:01:54.201875Z example.gravwell.io httpingester - HttpIngester/hec.go:234 [gw@1 host="172.19.0.1" method="POST" url="/services/collector" bytes="255" entries="3"] HEC request
+```
+
+Generating a table of the relevent data might use the following query:
+
+```
+tag=gravwell syslog Appname==httpingester Message == "HEC request" Hostname 
+  Structured[gw@1].host Structured[gw@1].url Structured[gw@1].bytes Structured[gw@1].entries
+| table Hostname host url bytes entries TIMESTAMP
+```
+
+![](hec_debug1.png)
 
 ## Health Checks
 
@@ -335,5 +471,4 @@ Log-File="/opt/gravwell/log/http_ingester.log"
 Health-Check-URL="/logbot/are/you/alive"
 
 ```
-
 

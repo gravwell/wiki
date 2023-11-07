@@ -135,6 +135,22 @@ We can also extract components from within array elements:
 json Metadata.[0].Value as Username
 ```
 
+## Empty array indices
+
+If the array index syntax is used without an index, the json module will find and return the first array element that satisfies the extraction. For example, given the input:
+
+```
+{ "Metadata": [ {"Value": "john"}, {"Value": "Albuquerque", "State": "NM"} ] }
+```
+
+The query
+
+```gravwell
+json Metadata.[].State
+```
+
+Will iterate through the array until it finds the first object with a "State" field, and extract that.
+
 ## Empty Fields and the Strict Flag
 
 The module makes a distinction between fields which are not defined and fields which contain the empty string. Consider the following entries:

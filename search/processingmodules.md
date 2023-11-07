@@ -31,7 +31,7 @@ These can be used just like user-defined enumerated values, thus `table foo bar 
 
 ```{toctree}
 ---
-maxdepth: 1
+maxdepth: 2
 hidden: true
 ---
 abs <abs/abs>
@@ -82,6 +82,7 @@ transaction <transaction/transaction>
 Trim Modules (list) <trim/trim>
 truncate <truncate/truncate>
 unescape <unescape/unescape>
+unique <unique/unique>
 upper/lower <upperlower/upperlower>
 words <words/words>
 ```
@@ -123,7 +124,6 @@ words <words/words>
   * min - find a minimum value.
   * stddev - calculate standard deviation.
   * sum - sum up enumerated values.
-  * unique - eliminate duplicate entries.
   * variance - find variance of enumerated values.
 * [nosort](nosort/nosort) - disable sorting in the pipeline.
 * [packetlayer](packetlayer/packetlayer) - parse portions of a packet.
@@ -149,5 +149,6 @@ words <words/words>
   * trimsuffix - remove the provided suffix.
 * [truncate](truncate/truncate) - truncate entries or enumerated values to a specified number of characters.
 * [unescape](unescape/unescape) - convert escaped text into an unescaped representation.
+* [unique](unique/unique) - eliminate duplicate entries.
 * [upper](upperlower/upperlower) - convert text to upper-case.
 * [words](words/words) - highly optimized search for individual words.
