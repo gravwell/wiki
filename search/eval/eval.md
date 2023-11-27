@@ -803,3 +803,7 @@ AdditiveOp               = "+" | "-"
 MultiplicativeOp         = "*" | "/" | "%"
 Cast                     = "int" | "float" | "string" | "mac" | "ip" | "time" | "duration" | "type" | "bool" | "location" | "byte" | "int8" | "uint8" | "int16" | "uint16" | "int32" | "uint32" | "int64" | "uint64"
 ```
+
+## Legacy Eval
+
+There is a legacy version of eval that you may still see in older queries. For more details, see the [Legacy eval page](legacy-eval) for reference.
