@@ -167,7 +167,7 @@ Multiple `Splunk` blocks may be defined, although each must have a unique name. 
 | Server	| X	| The hostname or IP address of the Splunk server. Port 8089 must be accessible. | `splunk.example.org` |
 | Token		| X	| A valid Splunk auth token. | `eyJraWQiOj[...]nlHnn4Oivew` |
 | Ingest-From-Unix-Time | | A Unix timestamp which specifies the default "start" time to use when copying entries from the Splunk server. This may be overridden on a per-sourcetype basis. | 1625100000 |
-| Index-Sourcetype-To-Tag | | A mapping of a Splunk index and sourcetype pair to a Gravwell tag. Can be set interactively from within the migrate tool. | `main,json:importedjson` (maps the index "main" and sourcetype "json" to the Gravwell tag "importedjson") |
+| Index-Sourcetype-To-Tag | | A mapping of a Splunk index and sourcetype pair to a Gravwell tag; format is `index,sourcetype,tag`. Can also be set interactively from within the migrate tool. | `main,json,importedjson` (maps the index "main" and sourcetype "json" to the Gravwell tag "importedjson") |
 | Preprocessor |              | Specify preprocessors to be applied to entries as they are consumed from Splunk.  More than one preprocessor can be specified and they are executed in order. | `Preprocessor="logins"` |
 
 ```{note}
