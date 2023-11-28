@@ -91,6 +91,32 @@ A pre-extractor is a regular expression which will match the desired timestamp a
 
 In our example, `Extraction-Regex` looks for the string `"end_time":`, followed by a space, followed by a quoted string; the capture group is the contents of the quoted string. This means that the time parser will be operating on just the substring `2023_11_28_09_32_01` instead of the entire entry.
 
+```{note}
+Exactly one named capture group in the Extraction-Regex must be defined.  If no named capture groups are contained in the regex the configuration will be rejected.
+```
+
+#### Pre-extractions With Named Time Formats
+
+Incoming data may also contain timestamps in formats that cannot be reliably extracted without first performing a pre-extraction, this is often the case with embedded `unix`, `unixmilli`, and `unixnano` timestamps.  The Pre-extraction `Extraction-Regex` can be combined with a named format so that timestamp formats that are already defined in [Timegrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#Format) or other custom `TimeFormat` definitions can be directly referenced.
+
+For example, consider the following entry:
+
+```
+[task completed] tss:1701200161 tse:1701200161.1234 value:1700000000
+```
+
+There are two unix timestamps in the JSON data and one value that would probably match a unix timestamp, we can declare that the Pre-Extraction grab a specific field and then pass it to the already defined UnixMilli timestamp processor.  An example definition which extracts the timestamp in `tse` field and treat it as a `UnixSeconds` timestamp would look like the following:
+
+```
+[TimeFormat "tseextractor"]
+	Format="UnixSeconds"
+	Extraction-Regex=`\s+tss:(?P<ts>\d+)`
+```
+
+```{note}
+Notice that a Regex is not defined because we are using an already defined timestamp extraction format.
+```
+
 ### Time Formats
 
 The `Format` component uses the [Go standard time format specification](https://golang.org/pkg/time/#pkg-constants).  Long story short, you must describe the date `Mon Jan 2 15:04:05 MST 2006` using whatever format you choose.
