@@ -97,24 +97,22 @@ Exactly one named capture group in the Extraction-Regex must be defined.  If no 
 
 #### Pre-extractions With Named Time Formats
 
-Incoming data may also contain timestamps in formats that cannot be reliably extracted without first performing a pre-extraction, this is often the case with embedded `unix`, `unixmilli`, and `unixnano` timestamps.  The Pre-extraction `Extraction-Regex` can be combined with a named format so that timestamp formats that are already defined in [Timegrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#Format) or other custom `TimeFormat` definitions can be directly referenced.
-
-For example, consider the following entry:
+Incoming data may also contain timestamps in formats that have already been defined in [timegrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#Format but that cannot be reliably extracted without first performing a pre-extraction. This is often the case with embedded `unix`, `unixmilli`, and `unixnano` timestamps.  The Pre-extraction `Extraction-Regex` can be combined with a named format so that timestamp formats that are already defined in [Timegrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#Format). For example, consider the following entry:
 
 ```
 [task completed] tss:1701200161 tse:1701200161.1234 value:1700000000
 ```
 
-There are two unix timestamps in the JSON data and one value that would probably match a unix timestamp, we can declare that the Pre-Extraction grab a specific field and then pass it to the already defined UnixMilli timestamp processor.  An example definition which extracts the timestamp in `tse` field and treat it as a `UnixSeconds` timestamp would look like the following:
+There are two Unix timestamps in the JSON data and one other value that would probably match a Unix timestamp. We can use a Pre-Extraction to grab a specific field and then pass it to the already defined UnixMilli timestamp processor.  An example definition which extracts the timestamp from the `tse` field and treats it as a `UnixSeconds` timestamp would look like this:
 
 ```
 [TimeFormat "tseextractor"]
 	Format="UnixSeconds"
-	Extraction-Regex=`\s+tss:(?P<ts>\d+)`
+	Extraction-Regex=`\s+tse:(?P<ts>\d+)`
 ```
 
 ```{note}
-Notice that a Regex is not defined because we are using an already defined timestamp extraction format.
+Notice that a Regex is not defined because we are using an already-defined timestamp extraction format.
 ```
 
 ### Time Formats
