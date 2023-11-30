@@ -1,5 +1,9 @@
 # Regex Timestamp Extraction Preprocessor
 
+```{note}
+Gravwell now has [custom time formats](/ingesters/customtime/customtime), which can do the same job as the regex timestamp preprocessor but more efficiently. This preprocessor is kept for compatibility reasons.
+```
+
 Ingesters will typically attempt to extract a timestamp from an entry by looking for the first thing which appears to be a valid timestamp and parsing it. In combination with additional ingester configuration rules for parsing timestamps (specifying a specific timestamp format to look for, etc.) this is usually sufficient to properly extract the appropriate timestamp, but some data sources may defy these straightforward methods. Consider a situation where a network device may send CSV-formatted event logs wrapped in syslog--a situation we have seen at Gravwell! The regex timestamp extractor can be used to skip the timestamp in the syslog header and instead extract the timestamp contained in the CSV logs.
 
 The Regex Timestamp Extraction preprocessor Type is `regextimestamp`.

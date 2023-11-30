@@ -70,6 +70,51 @@ This format would handle the following logs, appropriately applying the current 
 The custom timestamp format names can be used in [Timestamp-Format-Override](time_parsing_overrides) values.  For example we can force the timestamp format to our custom format using `Timestamp-Format-Override="foo"`.
 ```
 
+### Pre-extraction
+
+Sometimes, incoming data contains multiple timestamps or timestamp-like fields in the same format. For instance, consider the following log entry:
+
+```
+{ "message": "task completed", "start_time": "2023_11_28_09_00_00", "end_time": "2023_11_28_09_32_01" }
+```
+
+There are two fields (`start_time` and `end_time`) in the data, both using the same time format. If we want to be sure to extract the `end_time` field, we can add a *pre-extractor* to our TimeFormat definition with the `Extraction-Regex` option:
+
+```
+[TimeFormat "foo"]
+	Format="2006_01_02_15_04_05"
+	Regex=`\d{4}_\d{1,2}_\d{1,2}_\d{1,2}_\d{1,2}_\d{1,2}`
+	Extraction-Regex=`"end_time":\s*"(?P<ts>[^"]+)"`
+```
+
+A pre-extractor is a regular expression which will match the desired timestamp and which contains a single *named capture group* (in this example, the group is named `ts`). The pre-extractor is evaluated first, then the contents of the named capture group will be evaluated against the `Format` and `Regex` arguments as normal.
+
+In our example, `Extraction-Regex` looks for the string `"end_time":`, followed by a space, followed by a quoted string; the capture group is the contents of the quoted string. This means that the time parser will be operating on just the substring `2023_11_28_09_32_01` instead of the entire entry.
+
+```{note}
+Exactly one named capture group in the Extraction-Regex must be defined.  If no named capture groups are contained in the regex the configuration will be rejected.
+```
+
+#### Pre-extractions With Named Time Formats
+
+Incoming data may also contain timestamps in formats that have already been defined in [timegrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#Format but that cannot be reliably extracted without first performing a pre-extraction. This is often the case with embedded `unix`, `unixmilli`, and `unixnano` timestamps.  The Pre-extraction `Extraction-Regex` can be combined with a named format so that timestamp formats that are already defined in [Timegrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#Format). For example, consider the following entry:
+
+```
+[task completed] tss:1701200161 tse:1701200161.1234 value:1700000000
+```
+
+There are two Unix timestamps in the JSON data and one other value that would probably match a Unix timestamp. We can use a Pre-Extraction to grab a specific field and then pass it to the already defined UnixMilli timestamp processor.  An example definition which extracts the timestamp from the `tse` field and treats it as a `UnixSeconds` timestamp would look like this:
+
+```
+[TimeFormat "tseextractor"]
+	Format="UnixSeconds"
+	Extraction-Regex=`\s+tse:(?P<ts>\d+)`
+```
+
+```{note}
+Notice that a Regex is not defined because we are using an already-defined timestamp extraction format.
+```
+
 ### Time Formats
 
 The `Format` component uses the [Go standard time format specification](https://golang.org/pkg/time/#pkg-constants).  Long story short, you must describe the date `Mon Jan 2 15:04:05 MST 2006` using whatever format you choose.

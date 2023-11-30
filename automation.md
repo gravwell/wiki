@@ -21,8 +21,6 @@ caption: Scheduled Searches & Scripts
 ---
 Scheduled Searches & Scripts <scripting/scheduledsearch>
 Scripting Overview <scripting/scripting>
-The Anko Module <scripting/anko>
-The Eval Module <scripting/eval>
 ```
 
 ```{toctree}
