@@ -439,3 +439,47 @@ hidden: true
 Migrating Data <migrate/migrate>
 The Migration Tool </migrate/migrate>
 ```
+
+## Starting Multiple Ingesters with Systemd
+
+There are use cases where you may need to instantiate multiple copies of the same ingester with different configurations. For example, you may need to have two simple-relay ingesters running on the same machine, but with different global configurations. Systemd simplifies this through the use of [service templates](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#:~:text=It%20is%20possible%20for%20systemd,is%20called%20a%20%22template%22.).
+
+Below is an example service template for simple-relay, that allows specifying the configuration file and enabling multiple copies of the simple-relay service.
+
+The below file requires an '@' at the end of the filename. We'll name this file `/etc/systemd/system/gravwell_simple_relay@.service`
+
+```
+[Install]
+WantedBy=multi-user.target
+
+[Unit]
+Description=Gravwell Log Relay Service, Config: %i
+After=network-online.target
+OnFailure=gravwell_crash_reporter@%n.service
+
+[Service]
+Type=simple
+ExecStart=/opt/gravwell/bin/gravwell_simple_relay -stderr %n -config-file %i
+ExecStopPost=/opt/gravwell/bin/gravwell_crash_reporter -exit-check %n
+WorkingDirectory=/opt/gravwell
+Restart=always
+User=gravwell
+Group=gravwell
+StandardOutput=null
+StandardError=journal
+LimitNPROC=infinity
+LimitNOFILE=infinity
+TimeoutStopSec=5
+KillMode=process
+KillSignal=SIGINT
+```
+
+Note the use of `%i` in the service file. This allows us to use variable substitution when enabling this service file. We can enable it as many times as needed by specifying the config file in the "name" of the service file:
+
+```
+sudo systemctl enable gravwell_simple_relay@/opt/gravwell/etc/config1.conf
+sudo systemctl enable gravwell_simple_relay@/opt/gravwell/etc/config2.conf
+```
+
+This will create two instances of the service defined above, each with a different config file, as specified in the commands above.
+
