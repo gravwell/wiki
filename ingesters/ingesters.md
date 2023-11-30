@@ -440,11 +440,11 @@ Migrating Data <migrate/migrate>
 The Migration Tool </migrate/migrate>
 ```
 
-## Starting Multiple Ingesters with Systemd
+## Starting the Same Ingester Multiple Times with Systemd
 
 There are use cases where you may need to instantiate multiple copies of the same ingester with different configurations. For example, you may need to have two simple-relay ingesters running on the same machine, but with different global configurations. Systemd simplifies this through the use of [service templates](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#:~:text=It%20is%20possible%20for%20systemd,is%20called%20a%20%22template%22.).
 
-Below is an example service template for simple-relay, that allows specifying the configuration file and enabling multiple copies of the simple-relay service.
+Below is an example service template for simple-relay that allows specifying the configuration file and enabling multiple copies of the simple-relay service.
 
 The below file requires an '@' at the end of the filename. We'll name this file `/etc/systemd/system/gravwell_simple_relay@.service`
 
