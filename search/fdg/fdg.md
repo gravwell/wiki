@@ -13,7 +13,7 @@ The force directed graph (fdg) module is used to generate a directed graph using
 One example where a force directed graph can prove useful is to identify relationships between addresses on a network. Generating a weighted force directed graph of IPV4 traffic while grouping nodes into a class C network can be accomplished with the query:
 
 ```gravwell
-tag=pcap packet ipv4.SrcIP ipv4.DstIP ipv4.Length | sum Length by SrcIP,DstIP | subnet SrcIP /24 as SrcSub | subnet DstIP /24 as DstSub | fdg -v sum -sg SrcSub -dg DstSub SrcIP DstIP
+tag=pcap packet ipv4.SrcIP ipv4.DstIP ipv4.Length | sum Length by SrcIP DstIP | subnet SrcIP /24 as SrcSub | subnet DstIP /24 as DstSub | fdg -v sum -sg SrcSub -dg DstSub SrcIP DstIP
 ```
 
 ![](fdg1.png)

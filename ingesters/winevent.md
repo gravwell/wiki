@@ -26,8 +26,8 @@ The Windows Event ingester uses the unified global configuration block described
 	EventID=1,2,3,4 #also look for events 1, 2, 3, and 4
 	Level=verbose #Only look for verbose entries
 	Max-Reachback=72h #start looking for logs up to 72 hours in the past
-	Request_Buffer=16 #use a large 16MB buffer for high throughput
-	Request_Size=1024 #Request up to 1024 entries per API call for high throughput
+	Request-Buffer=16 #use a large 16MB buffer for high throughput
+	Request-Size=1024 #Request up to 1024 entries per API call for high throughput
 
 [EventChannel "System Critical and Error"]
 	Channel=System #pull from the system channel
