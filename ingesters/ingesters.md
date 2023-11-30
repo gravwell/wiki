@@ -481,5 +481,5 @@ sudo systemctl enable gravwell_simple_relay@/opt/gravwell/etc/config1.conf
 sudo systemctl enable gravwell_simple_relay@/opt/gravwell/etc/config2.conf
 ```
 
-This will create two instances of the service defined above, each with a different config file, as specified in the commands above.
+This will create two instances of the service defined above, each with a different config file, as specified in the commands above. Additionally, the use of "enable" in the commands above will cause these instantiations to persist across reboots and start at boot time.
 
