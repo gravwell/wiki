@@ -14,7 +14,7 @@ The invocation for the "packetlayer" module is identical to the "packet" module,
 Protocol layers above layer 3 are often stream based, relying on lower layers to handle transport, which often means that multiple layer 4+ messages may be in a single layer 3 payload.  An example query leveraging the packet layer processor to extract these messages uses the packet module to get to the tcp layer payload and the packetlayer module to extract multiple Modbus payloads.
 
 ```gravwell
-tag=pcap tcp.Port == 502 tcp.Payload | packetlayer -m -e Payload modbus.Transaction != 0 modbus.Unit | count by Unit | chart count by Unit
+tag=pcap packet tcp.Port == 502 tcp.Payload | packetlayer -m -e Payload modbus.Transaction != 0 modbus.Unit | count by Unit | chart count by Unit
 ```
 
 ## Extracting Wrapped Packet Transports
@@ -22,5 +22,5 @@ tag=pcap tcp.Port == 502 tcp.Payload | packetlayer -m -e Payload modbus.Transact
 We occasionally encounter transport protocols that are not documented or hand rolled by angry developers.  Using the packetlayer module we can still maintain sanity.
 
 ```gravwell
-tag=pcap ipv6.SrcIP udp.Port == 31337 udp.Payload | slice Payload[0:4] as id Payload[4:] as payload2 | packetlayer -e payload2 modbus.Transaction != 0 modbus.Unit | count by Unit | chart count by Unit
+tag=pcap packet ipv6.SrcIP udp.Port == 31337 udp.Payload | slice Payload[0:4] as id Payload[4:] as payload2 | packetlayer -e payload2 modbus.Transaction != 0 modbus.Unit | count by Unit | chart count by Unit
 ```
