@@ -1,7 +1,69 @@
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 200;
+  src: url(/_static/fonts/Roboto_Slab/static/RobotoSlab-ExtraLight.ttf);
+}
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 400;
+  src: url(/_static/fonts/Roboto_Slab/static/RobotoSlab-Regular.ttf);
+}
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 500;
+  src: url(/_static/fonts/Roboto_Slab/static/RobotoSlab-Medium.ttf);
+}
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: normal;
+  font-weight: 700;
+  src: url(/_static/fonts/Roboto_Slab/static/RobotoSlab-Bold.ttf);
+}
+
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 300;
+  src: url(/_static/fonts/Lato/Lato-Light.ttf);
+}
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  src: url(/_static/fonts/Lato/Lato-Regular.ttf);
+}
+@font-face {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  src: url(/_static/fonts/Lato/Lato-Bold.ttf);
+}
+@font-face {
+  font-family: "Lato";
+  font-style: italic;
+  font-weight: 300;
+  src: url(/_static/fonts/Lato/Lato-LightItalic.ttf);
+}
+@font-face {
+  font-family: "Lato";
+  font-style: italic;
+  font-weight: 400;
+  src: url(/_static/fonts/Lato/Lato-Italic.ttf);
+}
+@font-face {
+  font-family: "Lato";
+  font-style: italic;
+  font-weight: 700;
+  src: url(/_static/fonts/Lato/Lato-BoldItalic.ttf);
+}
+
 html[data-theme="light"],
 html[data-theme="dark"] {
   --pst-font-family-base: Lato, var(--pst-font-family-base-system);
-  --pst-font-family-heading: Erbaum, var(--pst-font-family-base-system);
+  --pst-font-family-heading: "Roboto Slab", var(--pst-font-family-base-system);
   --pst-font-family-monospace: Courier, var(--pst-font-family-monospace-system);
 }
 
@@ -90,19 +152,20 @@ nav.bd-links p.bd-links__title {
   max-width: 380px;
 }
 
-div.docutils  {
-    position: relative;
+div.docutils {
+  position: relative;
 }
 
 /* Show the copybutton */
-div.docutils:hover button.copybtn, button.copybtn.success {
-	opacity: 1;
+div.docutils:hover button.copybtn,
+button.copybtn.success {
+  opacity: 1;
 }
 
 div.docutils button.copybtn:hover {
-    background-color: rgb(235, 235, 235);
+  background-color: rgb(235, 235, 235);
 }
 
 div.docutils button.copybtn:active {
-    background-color: rgb(187, 187, 187);
+  background-color: rgb(187, 187, 187);
 }
