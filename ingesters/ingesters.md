@@ -332,7 +332,7 @@ The `Attach` stanza takes any key/value pair, and will attach it to every entry 
 
 Will attach an EV "foo" with the contents "bar" to every entry, as well as "ingester" with the value "my ingester".
 
-Additionally, dynamic values can be attached which are resolved from the host environment, dynamic values begin with a `$` character.  There are 3 special dynamic values which are not resolved from environment variables, they are `$NOW`, `$HOSTNAME`, `$UUID`.  If an environment variable cannot be found, he below variables can be used to populate values:
+Additionally, dynamic values can be attached which are resolved from the host environment. Dynamic values begin with a `$` character.  There are 3 special dynamic values which are not resolved from environment variables: `$NOW`, `$HOSTNAME`, `$UUID`.  If an environment variable cannot be found, the below variables can be used to populate values:
 
 ```
 [Attach]
