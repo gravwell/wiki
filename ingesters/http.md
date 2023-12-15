@@ -446,7 +446,7 @@ The `tag` parameter only sets the default; structured entries that contain a `so
 	URL="/services/collector"
 	TokenValue="thisisyourtoken"
 	Tag-Name=stuff
-    Tag-Match="foo:bar"
+	Tag-Match="foo:bar"
 ```
 
 ```
