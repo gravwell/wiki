@@ -439,7 +439,7 @@ Some characters that are supported in a Splunk sourcetype are not supported in a
 
 The HEC compatible routes also support a direct tag override by specifying a tag string in the request URL.  Regardless of defined route, requests can specify a default destination tag by setting a URL parameter named `tag`.  If a specified tag is invalid or not allowed for the ingester, the request will fail with a 400 error.
 
-The `tag` parameter only sets the default, structured entries that contain a `sourcetype` value will still attempt a lookup against the `Tag-Match` values.  Consider the following configuration and requests:
+The `tag` parameter only sets the default; structured entries that contain a `sourcetype` value will still attempt a lookup against the `Tag-Match` values.  Consider the following configuration and requests:
 
 ```
 [HEC-Compatible-Listener "testing"]
