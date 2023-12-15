@@ -339,7 +339,7 @@ Additionally, dynamic values can be attached which are resolved from the host en
 	time = $NOW 		# add the current timestamp
 	host = $HOSTNAME	# add the hostname the ingester is running on
 	uuid = $UUID		# add the ingester's UUID
-    home = $HOME        # add the environment variable "HOME"
+	home = $HOME        # add the environment variable "HOME"
 ```
 
 ## Data Consumer Configuration
