@@ -120,6 +120,7 @@ Listener configuration blocks support the following configuration parameters:
 | TokenName                 | string       | NO       |      | Authorization token name, required when using preshared-token or preshared-parameter authentication method.|
 | TokenValue                | string       | NO       |      | Authorization token value, required when using preshared-token or preshared-parameter authentication method.|
 | Preprocessor              | string array | NO       |      | Set of preprocessors to apply to entries. |
+| Attach-URL-Parameter      | string array | NO       |      | Set of URL parameter values that will be attached to all entries in a request if they are found in the request URL. |
 
 ### Listener Authentication
 
@@ -296,7 +297,6 @@ The HTTP ingester supports a listener block that is API compatible with the Splu
 	URL="/services/collector"
 	TokenValue="thisisyourtoken"
 	Tag-Name=HECStuff
-
 ```
 
 The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items. If the `URL` configuration item is omitted, it will default to `/services/collector`.
@@ -316,6 +316,7 @@ The `HEC-Compatible-Listener` supports the following configuration parameters:
 | Tag-Match         | string array | NO       |                       | Sourcetype value to tag mapping, multiple can be specified. |
 | Debug-Posts       | boolean      | NO       | false                 | Emit additional debugging info on the gravwell tag for each POST. |
 | Preprocessor      | string array | NO       |                       | Set of preprocessors to apply to entries.                   |
+| Attach-URL-Parameter | string array | NO       |      | Set of URL parameter values that will be attached to all entries in a request if they are found in the request URL. |
 
 ### Using the HEC-Compatible Listener
 
@@ -434,6 +435,37 @@ Tag-Match=`"look:mom:i:have:colons":look_mom_i_have_no_colons`
 Some characters that are supported in a Splunk sourcetype are not supported in a Gravwell tag. If you need to specify a sourcetype with special characters, surround the Tag-Match argument in backticks to specify a raw string and surround the sourcetype in double quotes.
 ```
 
+#### Tag-Override
+
+The HEC compatible routes also support a direct tag override by specifying a tag string in the request URL.  Regardless of defined route, requests can specify a default destination tag by setting a URL parameter named `tag`.  If a specified tag is invalid or not allowed for the ingester, the request will fail with a 400 error.
+
+The `tag` parameter only sets the default; structured entries that contain a `sourcetype` value will still attempt a lookup against the `Tag-Match` values.  Consider the following configuration and requests:
+
+```
+[HEC-Compatible-Listener "testing"]
+	URL="/services/collector"
+	TokenValue="thisisyourtoken"
+	Tag-Name=stuff
+	Tag-Match="foo:bar"
+```
+
+```
+curl -X POST -v http://example.gravwell.io/services/collector?tag=testing \
+    -H "Authorization: Splunk thisisyourtoken" -d '
+    {"event": "invalid sourcetype things", "sourcetype": "things", "time": 1699034250}
+    {"time": 1699034251, "sourcetype": "foo", "event": "valid sourcetype foo"}
+    {"time": 1699034252, "event": "no sourcetype, use default"}'
+```
+
+The resulting entries will have the following tags:
+
+| TAG     | DATA    |
+|---------|---------|
+| testing | `invalid sourcetype things` |
+| bar     | `valid sourcetype foo` |
+| testing | `no sourcetype, use default` |
+
+
 #### Debug-Posts
 
 The `Debug-Posts` configuration option allows for gathering additional data on each HTTP POST request to the HTTP ingester endpoint.  Only successful transactions will be logged when using the `Debug-Posts` configuration option.  Authentication failures, structure failures, or just bad requests are logged using the existing systems.  The debug logs are sent to the `gravwell` tag.
@@ -443,7 +475,7 @@ Here is a raw log entry emitted from a HEC debug post:
 <14>1 2023-11-03T18:01:54.201875Z example.gravwell.io httpingester - HttpIngester/hec.go:234 [gw@1 host="172.19.0.1" method="POST" url="/services/collector" bytes="255" entries="3"] HEC request
 ```
 
-Generating a table of the relevent data might use the following query:
+Generating a table of the relevant data might use the following query:
 
 ```
 tag=gravwell syslog Appname==httpingester Message == "HEC request" Hostname 
@@ -471,4 +503,3 @@ Log-File="/opt/gravwell/log/http_ingester.log"
 Health-Check-URL="/logbot/are/you/alive"
 
 ```
-
