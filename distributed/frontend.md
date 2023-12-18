@@ -1,4 +1,4 @@
-# Distributed Gravwell Webserver
+# Distributed Gravwell Webservers
 
 Just as Gravwell is designed to have multiple indexers operating at once, it can also have multiple webservers operating at once, pointing to the same set of indexers. Having multiple webservers allows for load balancing and high availability. Even if you only have a single webserver, deploying a datastore can provide useful resiliency, since the datastore can be used to restore a failed webserver or vice versa.
 
@@ -110,3 +110,9 @@ Most operations, like running a search or creating a new dashboard, can happen e
 ## Load balancing
 
 Gravwell now offers a custom load balancing component specifically designed to distribute users across multiple webservers with minimal configuration. See [the load balancing configuration page](loadbalancer) for information on setting it up.
+
+## Search Agent Configuration
+
+From Gravwell 5.4.0, you can run multiple search agents in your cluster to provide fault tolerance: one agent will be selected to as the active search agent, with others waiting idle unless the active agent goes offline. Refer to the [search agent](/scripting/searchagent) documentation for more information.
+
+Prior to Gravwell 5.4.0, take care to disable all but one search agent on your cluster. If multiple search agents are running simultaneously in an older version of Gravwell, the same automation may be run multiple times.

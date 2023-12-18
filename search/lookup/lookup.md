@@ -120,3 +120,26 @@ tag=default json City | lookup -r places City name (lat long) | table
 It matches the enumerated value City against the table's "name" column, then when a match is found it extracts both "lat" and "long", as shown below:
 
 ![](city.png)
+
+### Events that occurred last week but not this week
+
+This example uses two searches, one to build a resource of events seen during a given week, and a second that uses lookup with the invert flag to filter out events that were seen during a different week, leaving only events that were seen during the first week, but not the second. This is useful for investigating behavior that "has gone away" over time.
+
+In this example, we'll look at unique IP addresses that were seen during week 1. When rendering, we'll add the "-save" option to the table renderer to turn the table into a resource that we can later reference:
+
+```
+tag=ips ax ip | table -save ips_this_week
+```
+
+![](invert1.png)
+
+This provides a list of IPs that were seen during week 1.
+
+Next we will run a query over a different week, and use the lookup module to _drop_ all entries that hit in the resource we just created. This has the effect of only leaving entries that have IP addresses seen in week 1 but not in week 2:
+
+```
+tag=ips ax ip | lookup -v -s -r ips_this_week ip ip | table
+```
+
+![](invert2.png)
+

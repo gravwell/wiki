@@ -1,6 +1,8 @@
-# The eval module
+:orphan:
 
-As introduced in [the search modules documentation](searchmodule_list), Gravwell's eval module is a general tool for manipulating search entries when other modules may fall short. It uses the [Anko scripting language](scripting) to provide generic scriptability within the pipeline.
+# Legacy Eval
+
+The legacy eval module uses the [Anko scripting language](/scripting/scripting) to provide generic scriptability within the pipeline.
 
 The eval module has several important restrictions:
 
@@ -13,7 +15,7 @@ The eval module has several important restrictions:
 To make the structure of your eval expression more clear, hit Ctrl-Enter while typing the query to insert newlines if needed.
 ```
 
-See the generic description of the scripting languages used in [the Anko scripting language documentation](scripting) for more details about the language itself.
+See the generic description of the scripting languages used in [the Anko scripting language documentation](/scripting/scripting) for more details about the language itself.
 
 ## Filtering: Expressions vs. Statements
 

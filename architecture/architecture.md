@@ -35,6 +35,7 @@ Performance Tuning </tuning/tuning>
 Gravwell Metrics and Crash Reporting </metrics>
 Capability Based Access Control (CBAC) </cbac/cbac>
 Common Problems & Caveats </configuration/caveats>
+Internal Logging and the Gravwell Tag </internal>
 ```
 
 ```{toctree}
@@ -57,6 +58,7 @@ Gravwell Administration </admin/admin>
 Gravwell Single Sign-On </configuration/sso>
 Configuring SSO for Azure Active Directory </configuration/sso-azure/azure>
 Configuring Keycloak SSO with Gravwell </configuration/sso-keycloak/keycloak>
+Configuring OKTA SSO with Gravwell </configuration/sso-okta/okta>
 ```
 
 ## Cluster Topology

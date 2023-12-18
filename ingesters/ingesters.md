@@ -27,7 +27,6 @@ Azure Event Hubs <eventhubs>
 collectd <collectd>
 Federator <federators/federator>
 File Follower <file_follow>
-Windows File Follower <win_file_follow>
 GCP PubSub <pubsub>
 HTTP <http>
 IPMI <ipmi>
@@ -45,6 +44,7 @@ Shodan <shodan>
 Simple Relay <simple_relay>
 SNMP Trap <snmp>
 Windows Events <winevent>
+Windows File Follower <win_file_follow>
 ```
 
 | Ingester | Description |
@@ -53,7 +53,6 @@ Windows Events <winevent>
 | [Azure Event Hubs](eventhubs) | Consume from Azure Event Hubs. |
 | [collectd](collectd) | Ingest collectd samples. |
 | [File Follower](file_follow) | Watch and ingest files on disk, such as logs. |
-| [Windows File Follower](win_file_follow) | Watch and ingest files on Windows, such as logs and EVTX files. |
 | [GCP PubSub](pubsub) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
 | [HTTP](http) | Create HTTP listeners on multiple URL paths. |
 | [IPMI](ipmi) | Periodically collect SDR and SEL records from IPMI devices. |
@@ -70,6 +69,7 @@ Windows Events <winevent>
 | [Simple Relay](simple_relay) | Ingest any text over TCP/UDP, syslog, and more. |
 | [SNMP Trap](snmp) | Receive and ingest SNMP trap messages. |
 | [Windows Events](winevent) | Collect Windows events. |
+| [Windows File Follower](win_file_follow) | Watch and ingest files on Windows, such as logs and EVTX files. |
 
 
 ## Tags
@@ -318,6 +318,29 @@ Log-Source-Override=DEAD:BEEF::FEED:FEBE
 Log-Source-Override=::1
 ```
 
+### Attach
+
+All ingesters support the `Attach` global configuration stanza, which allows [intrinsic enumerated values](intrinsic_enumerated_values) to be attached to entries during ingest. Intrinsic enumerated values can later be accessed with the [intrinsic](/search/intrinsic/intrinsic) search module.
+
+The `Attach` stanza takes any key/value pair, and will attach it to every entry as an enumerated value at the time of ingest. For example:
+
+```
+[Attach]
+	foo = "bar"
+	ingester = "my ingester"
+```
+
+Will attach an EV "foo" with the contents "bar" to every entry, as well as "ingester" with the value "my ingester".
+
+Additionally, the below variables can be used to populate values:
+
+```
+[Attach]
+	time = $NOW 		# add the current timestamp
+	host = $HOSTNAME	# add the hostname the ingester is running on
+	uuid = $UUID		# add the ingester's UUID
+```
+
 ## Data Consumer Configuration
 
 Besides the global configuration options, each ingester which uses a config file will need to define at least one *data consumer*. A data consumer is a config definition which tells the ingester:
@@ -416,3 +439,47 @@ hidden: true
 Migrating Data <migrate/migrate>
 The Migration Tool </migrate/migrate>
 ```
+
+## Starting the Same Ingester Multiple Times with Systemd
+
+There are use cases where you may need to instantiate multiple copies of the same ingester with different configurations. For example, you may need to have two simple-relay ingesters running on the same machine, but with different global configurations. Systemd simplifies this through the use of [service templates](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#:~:text=It%20is%20possible%20for%20systemd,is%20called%20a%20%22template%22.).
+
+Below is an example service template for simple-relay that allows specifying the configuration file and enabling multiple copies of the simple-relay service.
+
+The below file requires an '@' at the end of the filename. We'll name this file `/etc/systemd/system/gravwell_simple_relay@.service`
+
+```
+[Install]
+WantedBy=multi-user.target
+
+[Unit]
+Description=Gravwell Log Relay Service, Config: %i
+After=network-online.target
+OnFailure=gravwell_crash_reporter@%n.service
+
+[Service]
+Type=simple
+ExecStart=/opt/gravwell/bin/gravwell_simple_relay -stderr %n -config-file %i
+ExecStopPost=/opt/gravwell/bin/gravwell_crash_reporter -exit-check %n
+WorkingDirectory=/opt/gravwell
+Restart=always
+User=gravwell
+Group=gravwell
+StandardOutput=null
+StandardError=journal
+LimitNPROC=infinity
+LimitNOFILE=infinity
+TimeoutStopSec=5
+KillMode=process
+KillSignal=SIGINT
+```
+
+Note the use of `%i` in the service file. This allows us to use variable substitution when enabling this service file. We can enable it as many times as needed by specifying the config file in the "name" of the service file:
+
+```
+sudo systemctl enable gravwell_simple_relay@/opt/gravwell/etc/config1.conf
+sudo systemctl enable gravwell_simple_relay@/opt/gravwell/etc/config2.conf
+```
+
+This will create two instances of the service defined above, each with a different config file, as specified in the commands above. Additionally, the use of "enable" in the commands above will cause these instantiations to persist across reboots and start at boot time.
+

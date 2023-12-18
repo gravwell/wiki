@@ -11,7 +11,7 @@ The Gravwell user interface provides a built-in editor for creating and testing 
 (scripting_built-in_functions)=
 ## Built-in functions
 
-Scripts can use built-in functions that mostly match those available for the [anko](/scripting/anko) module, with some additions for launching and managing searches. The functions are listed below in the format `functionName(<functionArgs>) <returnValues>`.  These functions are provided as convenience wrappers for specific functionality, however the complete [Gravwell client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) is available using the `getClient` wrapper.  The `getClient` wrapper will return a client object that is signed in as the user executing the script. 
+Scripts can use built-in functions that mostly match those available for the [anko](scripting) module, with some additions for launching and managing searches. The functions are listed below in the format `functionName(<functionArgs>) <returnValues>`.  These functions are provided as convenience wrappers for specific functionality, however the complete [Gravwell client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) is available using the `getClient` wrapper.  The `getClient` wrapper will return a client object that is signed in as the user executing the script. 
 
 ## Controlling Versions
 
@@ -197,7 +197,7 @@ The following functions provide basic HTTP functionality:
 * `httpGet(url) (string, error)` performs an HTTP GET request on the given URL, returning the response body as a string.
 * `httpPost(url, contentType, data) (response, error)` performs an HTTP POST request to the given URL with the specified content type (e.g. "application/json") and the given data as the POST body.
 
-More elaborate HTTP operations are possible with the "net/http" library. See the package documentation in the [anko document](anko) for a description of what is available, or see below for an example.
+More elaborate HTTP operations are possible with the "net/http" library. See the package documentation in the [anko document](scripting) for a description of what is available, or see below for an example.
 
 If the user has configured their personal email settings within Gravwell, the `email` function is a very simple way to send an email:
 

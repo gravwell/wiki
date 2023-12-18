@@ -8,6 +8,14 @@ You can verify the search agent is running with the following command:
 $ ps aux | grep gravwell_searchagent
 ```
 
+## High Availability / Failover
+
+From Gravwell 5.4.0, the search agent is HA-enabled. If multiple search agents connect to a webserver, the webserver will select one to run automations; the other will go into an idle state, periodically checking in with the webserver. If the originally-selected search agent goes offline, the webserver will tell the idle search agent to take over.
+
+If you have a cluster of webservers synchronized by a [datastore](/distributed/frontend), the selected search agent is communicated to *all* web servers; this takes care of the common situation where multiple webservers are all running a search agent connecting to the default 127.0.0.1.
+
+No special configuration is needed to enable HA search agents, but you should take care to ensure that each search agent has a unique `Searchagent-UUID` parameter in its configuration (see the configuration section below).
+
 ## Disabling the search agent
 
 The search agent is installed by default but can be disabled if desired by running the following:
@@ -23,6 +31,7 @@ The search agent is configured in `/opt/gravwell/etc/searchagent.conf`. An examp
 
 ```
 [global]
+Searchagent-UUID="4762fc89-feeb-4507-9875-8124813e49db"
 Webserver-Address=127.0.0.1:80
 Insecure-Skip-TLS-Verify=true
 Insecure-Use-HTTP=true
@@ -35,6 +44,14 @@ Log-Level=INFO
 This configuration is suitable when running the search agent on the same node as the webserver, provided the webserver is configured to use HTTP rather than HTTPS. Note that the webserver is located on the loopback interface (127.0.0.1) and that HTTP is explicitly enabled.
 
 The individual configuration options available for the Search Agent configuration file are described below.
+
+**Searchagent-UUID**
+
+The `Searchagent-UUID` parameter specifies a unique ID for the search agent. If none is specified, the search agent will automatically generate a UUID the first time it runs. We strongly recommend letting the search agent define this field for you rather than setting it manually.
+
+```{warning}
+If you are running a cluster with multiple search agents (see the HA section above) and are deploying a common configuration file to all of them, it is *critical* that every search agent has a different UUID. The webservers use the search agent UUIDs to select the active agent; if multiple agents have the same UUID, this will not work correctly.
+```
 
 **Webserver-Address**
 

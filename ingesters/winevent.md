@@ -26,8 +26,8 @@ The Windows Event ingester uses the unified global configuration block described
 	EventID=1,2,3,4 #also look for events 1, 2, 3, and 4
 	Level=verbose #Only look for verbose entries
 	Max-Reachback=72h #start looking for logs up to 72 hours in the past
-	Request_Buffer=16 #use a large 16MB buffer for high throughput
-	Request_Size=1024 #Request up to 1024 entries per API call for high throughput
+	Request-Buffer=16 #use a large 16MB buffer for high throughput
+	Request-Size=1024 #Request up to 1024 entries per API call for high throughput
 
 [EventChannel "System Critical and Error"]
 	Channel=System #pull from the system channel
@@ -45,7 +45,11 @@ The Windows Event ingester uses the unified global configuration block described
 
 ## Installation
 
-Download the Gravwell Windows ingester installer from the [Downloads page](/quickstart/downloads).
+Download the Gravwell Windows Events installer: 
+
+| Ingester Name | Installer    | More Info |
+| :------------ | :----------- | :-------- |
+| Windows Events | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.4.3/installers/gravwell_win_events_5.4.3.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">83f8de1a0ef2f1a0612b74b5624c11f3a3d3aa5c898e494ad12afc9f3d28029e</span></code>'>(SHA256)</a> | [Documentation](/ingesters/winevent) |
 
 Run the .msi installation wizard to install the Gravwell events service.  On first installation the installation wizard will prompt to configure the indexer endpoint and ingest secret.  Subsequent installations and/or upgrades will identify a resident configuration file and will not prompt.
 
