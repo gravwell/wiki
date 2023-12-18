@@ -14,7 +14,7 @@ Download the Gravwell Windows File Follower installer:
 
 | Ingester Name | Installer    | More Info |
 | :------------ | :----------- | :-------- |
-| Windows File Follower | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.4.3/installers/gravwell_file_follow_5.4.3.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">9b666f3b8fbef7614bbcce0f615ec012e8e252d0069b802d02a8f7e2f7f5cc04</span></code>'>(SHA256)</a> | [Documentation](/ingesters/win_file_follow) |
+| Windows File Follower | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.4.3/installers/gravwell_file_follow_5.4.3.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">4abaadbf25a512fc1dc55197da2664b8e518b0285f2d2034facd69dabe97695e</span></code>'>(SHA256)</a> | [Documentation](/ingesters/win_file_follow) |
 
 The Gravwell Windows file follower is installed using a signed MSI package.  Gravwell signs both the Windows executable and MSI installer with our private key pairs, but depending on download volumes, you may see a warning about the MSI being untrusted.  This is due to the way Microsoft "weighs" files.   Basically, as they see more people download and install a given package, it becomes more trustworthy.  Don't worry though, we have a well audited build pipeline and we sign every package.
 
