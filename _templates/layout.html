@@ -15,9 +15,9 @@
   {{ super() }}
 
   <script>
-    $(document).ready(function(){
-      $('[data-toggle="popover"]').popover();
-    });
+    const popoverTriggerList = Array.from(
+      document.querySelectorAll('[data-bs-toggle="popover"]')
+    ).map((el) => new bootstrap.Popover(el));
   </script>
 
 {% endblock scripts_end %}
