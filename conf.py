@@ -31,6 +31,7 @@ extensions = [
     "sphinx_design",
     "notfound.extension",
     "sphinx_copybutton",
+    "sphinx_favicon",
 ]
 
 myst_enable_extensions = [
@@ -41,7 +42,7 @@ myst_enable_extensions = [
 
 
 templates_path = ["_templates"]
-exclude_patterns = ["README.md", "_build", "Thumbs.db", ".DS_Store", "env"]
+exclude_patterns = ["README.md", "_build", "Thumbs.db", ".DS_Store", "env", "_vendor"]
 
 language = "en"
 
@@ -56,16 +57,9 @@ html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
 html_theme_options = {
     "logo": {
-        "image_light": "images/Gravwell-Color.svg",
-        "image_dark": "images/Gravwell-Color-Reverse.svg",
+        "image_light": "_static/images/Gravwell-Color.svg",
+        "image_dark": "_static/images/Gravwell-Color-Reverse.svg",
     },
-    "favicons": [
-        {
-            "rel": "icon",
-            "sizes": "48x48",
-            "href": "favicon.ico",
-        },
-    ],
     "icon_links": [
         {
             # Label for this link
@@ -89,13 +83,25 @@ html_theme_options = {
         },
     ],
     "header_links_before_dropdown": 6,
-    "footer_items": [
-        "git-commit-footer",
-        "copyright",
+    "footer_start": [
         "sphinx-version",
+        "theme-version",
     ],
+    "footer_end": [
+        "copyright",
+        "git-commit-footer",
+    ],
+    "navigation_with_keys": False,
 }
 
+# sphinx-favicon
+favicons = [
+    {
+        "rel": "icon",
+        "sizes": "48x48",
+        "href": "favicon.ico",
+    },
+]
 
 # -- Gravwell Query Language Config ----------------------------
 
