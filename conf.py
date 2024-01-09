@@ -92,6 +92,20 @@ html_theme_options = {
         "git-commit-footer",
     ],
     "navigation_with_keys": False,
+    #
+    # Version switcher
+    #
+    "switcher": {
+        "json_url": "https://docs.gravwell.io/_static/versions.json",
+        # The `version` field of each entry in verions.json must match a vN.N.N release name
+        "version_match": release,
+    },
+    # Show a warning banner if the user's looking at any page other than latest
+    "show_version_warning_banner": True,
+    # Don't fail to compile just because the version switcher file (json_url) isn't reachable
+    "check_switcher": False,
+    # include the version switcher next to the logo
+    "navbar_start": ["navbar-logo", "version-switcher"],
 }
 
 # sphinx-favicon
