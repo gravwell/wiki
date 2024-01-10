@@ -138,9 +138,20 @@ nav.bd-links p.bd-links__title {
   background: unset;
 }
 
+@media (max-width: 959px) {
+  .navbar-brand.logo img {
+    height: 90%;
+  }
+}
+
 @media (min-width: 960px) {
   .bd-page-width {
     max-width: 1800px;
+  }
+
+  .navbar-brand.logo img {
+    height: 80%;
+    margin-top: 14px;
   }
 }
 
