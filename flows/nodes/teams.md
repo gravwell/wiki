@@ -36,4 +36,4 @@ The output in Teams looks like this:
 
 To learn how to create webhooks, visit the [Microsoft Documentation](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook?tabs=dotnet).
 
-The ability to create Teams webhooks is controlled by system subscription levels and regions; Depending on your Teams subscription level and/or permission level you may not be allowed to create incoming webhooks.  Teams organizations in GovCloud cannot create incoming webhooks.
+The ability to create Teams webhooks is controlled by system subscription levels and regions; depending on your Teams subscription level and/or permission level you may not be allowed to create incoming webhooks.  Teams organizations in GovCloud cannot create incoming webhooks.
