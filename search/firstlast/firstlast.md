@@ -7,3 +7,27 @@ The modules use the same syntax. Each optionally takes one or more enumerated va
 ```
 first [enumerated value]...
 ```
+
+## Examples
+
+To get just the first entry in a query by time, simply invoke the `first` module with no arguments:
+
+```gravwell
+tag=gravwell first
+```
+
+To get the first entry for each unique value of the enumerated value "foo", invoke `first` with the argument "foo":
+
+```gravwell
+tag=gravwell json foo | first foo
+```
+
+## Caveats
+
+The first and last module operate on the timestamp of entries for most queries. However, if you write a query that isn't ordered temporally, first/last will operate simply on the first or last entry seen in the search pipeline. For example:
+
+```gravwell
+tag=gravwell json foo | sort by foo | first
+```
+
+This query will give you the first entry seen, after sorting by foo.
