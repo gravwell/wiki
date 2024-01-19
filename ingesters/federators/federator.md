@@ -28,7 +28,8 @@ The Federator is an entry relay: ingesters connect to the Federator and send it 
  * Ingesting data across geographically diverse regions when there may not be robust connectivity
  * Providing an authentication barrier between network segments
  * Reducing the number of connections to an indexer
- * Controlling the tags an data source group can provide
+ * Controlling the tags a data source group can provide
+ * Providing a connection buffer between a large number of ingesters and indexers
 
 ## Installation
 
@@ -77,6 +78,27 @@ The following example configuration connects to two upstream indexers in a *prot
 ```
 
 Ingesters in the DMZ can connect to the Federator at 192.168.220.105:4024 using TLS encryption. These ingesters are **only** allowed to send entries tagged with the `apache` and `nginx` tags. Ingesters in the business network segment can connect via cleartext to 10.0.0.121:4023 and send entries tagged `windows` and `syslog`. Any mis-tagged entries will be rejected by the Federator; acceptable entries are passed to the two indexers specified in the Global section.
+
+### IngestListener Configuration
+
+An `IngestListener` can be configured to listen on any combination of cleartext connections, TLS connections, or Unix named pipe connections.  Each listener must contain at least one `listener` and may only define a single instance of any listener type; this means a single `IngestListener` cannot listen on multiple cleartext connections.  To enable multiple listeners of the same type, define multiple `IngestListener` blocks.
+
+Each `IngestListener` supports the following configuration options:
+
+| Parameter     | Type    | Description |
+|---------------|---------|-------------|
+| Ingest-Secret | string | Ingest authentication token |
+| Tags      | string (list) | Tags allowed to be ingested, wildcards are supported |
+| Preprocessor | string (list) | Name of a preprocessor to apply to ingested data, many Preprocessor parameters can be applied |
+| Pipe-Bind | string | Path to a Unix named pipe listener |
+| Cleartext-Bind | string | IP:Port which defines a port and optional IP address for cleartext connections |
+| TLS-Bind | string | IP:Port which defines a port and optional IP address for TLS connections |
+| Cert-File | string | Path to an X509 public certificate file for use in TLS listeners |
+| Key-File  | string | Path to an X509 private key file for use in TLS listeners |
+| Low-Memory-Mode | bool | Optional mode to enable lower memory usage in transport buffers (default false) |
+| Disable-Ingester-Tracking | bool | Optional mode to disable downstream ingester tracking (default false) |
+
+The `Low-Memory-Mode` and `Disable-Ingester-Tracking` options are useful when supporting many transient ingesters or when you expect many hundreds or thousands of ingesters to connect.  The Gravwell ingest system is designed to be low latency and high throughput, which incurs some additional memory overhead as we allocate larger read buffers. The larger read buffers may make it difficult to support many ingesters, so these options allow for reducing ingest overhead at the expense of potentially slower ingest rates and the loss of ingester config tracking.
 
 ## Troubleshooting
 
