@@ -28,13 +28,14 @@ let
   custom-pydata-sphinx-theme = with pkgs.python310.pkgs;
     buildPythonPackage rec {
       pname = "pydata-sphinx-theme";
-      version = "0.15.1";
-
+      version = "0.15.2";
       format = "wheel";
 
-      disabled = pythonOlder "3.8";
-
-      src = ./_vendor/pydata_sphinx_theme-0.15.1-py3-none-any.whl;
+      src = pkgs.fetchurl {
+        url =
+          "https://files.pythonhosted.org/packages/bc/ef/1700096a5c1d17c2d99332b0759c7ca70346aac917ceafa4c380f085d359/pydata_sphinx_theme-0.15.2-py3-none-any.whl";
+        hash = "sha256-DF+h+pipsm2uWQZm/1dvJ+Jse6cI/udU7Lngc1ntRYg=";
+      };
 
       propagatedBuildInputs = [
         sphinx
@@ -46,7 +47,6 @@ let
       ];
 
       pythonImportsCheck = [ "pydata_sphinx_theme" ];
-
     };
 
   pythonBundle = pkgs.python310.withPackages (ps:
