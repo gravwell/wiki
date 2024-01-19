@@ -147,7 +147,8 @@ except subprocess.CalledProcessError:
 
 # Variables to substitute in HTML template files
 html_context = {
-    "git_commit": f"{commit_id}{'*' if is_dirty_tree else ''}",
+    "git_commit": commit_id,
+    "git_dirty_tree": is_dirty_tree,
 }
 
 # Variables to substitute in Markdown files
