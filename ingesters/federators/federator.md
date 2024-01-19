@@ -98,7 +98,7 @@ Each `IngestListener` supports the following configuration options:
 | Low-Memory-Mode | bool | Optional mode to enable lower memory usage in transport buffers (default false) |
 | Disable-Ingester-Tracking | bool | Optional mode to disable downstream ingester tracking (default false) |
 
-The `Low-Memory-Mode` and `Disable-Ingester-Tracking` options are useful when supporting many transient ingesters or when you expect many hundreds or thousands of ingesters to connect.  The Gravwell ingest system is designed to be low latency and high throughput which incurs some additional memory overhead as we allocate larger read buffers; the larger read buffers may make it difficult to support many many ingesters; these options allow for reducing ingest overhead at the expense of potentially slower ingest rates and the loss of ingester config tracking.
+The `Low-Memory-Mode` and `Disable-Ingester-Tracking` options are useful when supporting many transient ingesters or when you expect many hundreds or thousands of ingesters to connect.  The Gravwell ingest system is designed to be low latency and high throughput, which incurs some additional memory overhead as we allocate larger read buffers. The larger read buffers may make it difficult to support many ingesters, so these options allow for reducing ingest overhead at the expense of potentially slower ingest rates and the loss of ingester config tracking.
 
 ## Troubleshooting
 
