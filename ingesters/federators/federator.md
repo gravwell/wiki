@@ -28,7 +28,7 @@ The Federator is an entry relay: ingesters connect to the Federator and send it 
  * Ingesting data across geographically diverse regions when there may not be robust connectivity
  * Providing an authentication barrier between network segments
  * Reducing the number of connections to an indexer
- * Controlling the tags an data source group can provide
+ * Controlling the tags a data source group can provide
  * Providing a connection buffer between a large number of ingesters and indexers
 
 ## Installation
