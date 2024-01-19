@@ -81,7 +81,7 @@ Ingesters in the DMZ can connect to the Federator at 192.168.220.105:4024 using 
 
 ### IngestListener Configuration
 
-An `IngestListener` can be configured to listen on any combination of a cleartext connection, TLS connection, or Unix named pipe connection.  Each listener must contain at least one `listener` and may only define a single instance of any listener type; this means a single `IngestListener` cannot listen on multiple cleartext connections.  To enable multiple listeners of the same type, define multiple `IngestListener` blocks.
+An `IngestListener` can be configured to listen on any combination of cleartext connections, TLS connections, or Unix named pipe connections.  Each listener must contain at least one `listener` and may only define a single instance of any listener type; this means a single `IngestListener` cannot listen on multiple cleartext connections.  To enable multiple listeners of the same type, define multiple `IngestListener` blocks.
 
 Each `IngestListener` supports the following configuration options:
 
