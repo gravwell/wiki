@@ -106,6 +106,8 @@ html_theme_options = {
     "check_switcher": False,
     # include the version switcher next to the logo
     "navbar_start": ["navbar-logo", "version-switcher"],
+    # use custom center for navbar, so that we can better manage responsiveness
+    "navbar_center": ["dynamic-navbar"],
 }
 
 # sphinx-favicon
