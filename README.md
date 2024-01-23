@@ -34,60 +34,43 @@ Assume we're using a web server to serve a directory as `docs.gravwell.io`.
 If we wanted to serve v5.4.5, v5.4.4, and v5.4.3 as shown above, we could structure the directory like this:
 
 ```
-docs/     <- the full build of v5.4.5
+docs/     <- the full build of v5.4.5. Serve this directory as `/`
 ├─ 404.html
 ├─ index.html
 ├─ ...
-├─ v5.4.4   <- the full build of v5.4.4
+├─ v5.4.4/   <- the full build of v5.4.4
 │  ├─ 404.html
 │  ├─ index.html
 │  ├─ ...
-├─ v5.4.3   <- the full build of v5.4.3
+├─ v5.4.3/   <- the full build of v5.4.3
 │  ├─ 404.html
 │  ├─ index.html
 │  ├─ ...
 ```
 
-Nesting previous versions in the latest version works the way we want it to.
-
-To deploy a new version:
-
-1. Copy all `docs/vN.N.N/` directories somewhere safe
-2. Rename `docs/` to `vN.N.N+1` (or whatever version it is)
-3. Add the docs for the new version in `docs/`
-   - Don't forget to update `_static/versions.json`!
-4. Move all `v.N.N.N` and `vN.N.N+1` back into `docs/`
+Builds of previous versions in are nested within the latest version, so we end up with the paths we want.
 
 Links would also work:
 
 ```
 docs/
-├─ latest/      <- a link to v5.4.5
+├─ latest/      <- a link to v5.4.5. Serve this directory as `/`
 │  ├─ v5.4.4/   <- a link to v5.4.4
 │  ├─ v5.4.3/   <- a link to v5.4.3
 │  ├─ ...
-├─ v5.4.5   <- the full build of v5.4.5
+├─ v5.4.5/   <- the full build of v5.4.5
 │  ├─ 404.html
 │  ├─ index.html
 │  ├─ ...
-├─ v5.4.4   <- the full build of v5.4.4
+├─ v5.4.4/   <- the full build of v5.4.4
 │  ├─ 404.html
 │  ├─ index.html
 │  ├─ ...
-├─ v5.4.3   <- the full build of v5.4.3
+├─ v5.4.3/   <- the full build of v5.4.3
 │  ├─ 404.html
 │  ├─ index.html
 │  ├─ ...
 ```
-
-To deploy a new version:
-
-1. Remove all `vN.N.N` links from `latest/`
-2. Remove `latest/`
-3. Add new docs build to `docs/`
-   - Don't forget to update `_static/versions.json`!
-4. Re-create `latest/`, this time pointing to the new release
-5. Re-create `vN.N.N` links as desired in `latest/`
 
 ### versions.json
 
@@ -95,7 +78,7 @@ To deploy a new version:
 
 As implied by the path, only the `versions.json` that's included in the latest docs version needs to be up-to-date. It doesn't matter if any `.../vN.N.N/_static/versions.json` is out of date. Only the file at `/_static/verions.json` is used.
 
-The [PyData Sphinx Theme docs](https://pydata-sphinx-theme.readthedocs.io/en/stable/user_guide/version-dropdown.html#add-a-json-file-to-define-your-switcher-s-versions) explain the optins in more detail, but here's a quick summary / example:
+The [PyData Sphinx Theme docs](https://pydata-sphinx-theme.readthedocs.io/en/stable/user_guide/version-dropdown.html#add-a-json-file-to-define-your-switcher-s-versions) explain the options in more detail, but here's a quick summary / example:
 
 ```js
 [
