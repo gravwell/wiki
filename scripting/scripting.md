@@ -23,6 +23,7 @@ This document describes the Anko programming language itself. Documentation for 
 * [`anko` documentation](/search/anko/anko) 
 * [`eval` documentation](/search/eval/eval) 
 
+(search-scripts)=
 ## Search Scripts
 
 Where the `anko` and `eval` modules run scripts *inside* search pipelines, Gravwell also supports scripts which *launch* searches of their own and operate on the results. This is useful for automated queries, e.g. a script which runs every morning at 6 a.m. to look for particular suspicious network behavior.
