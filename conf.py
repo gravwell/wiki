@@ -92,6 +92,22 @@ html_theme_options = {
         "git-commit-footer",
     ],
     "navigation_with_keys": False,
+    #
+    # Version switcher
+    #
+    "switcher": {
+        "json_url": "https://docs.gravwell.io/_static/versions.json",
+        # The `version` field of each entry in verions.json must match a vN.N.N release name
+        "version_match": release,
+    },
+    # Show a warning banner if the user's looking at any page other than latest
+    "show_version_warning_banner": True,
+    # Don't fail to compile just because the version switcher file (json_url) isn't reachable
+    "check_switcher": False,
+    # include the version switcher next to the logo
+    "navbar_start": ["navbar-logo", "version-switcher"],
+    # use custom center for navbar, so that we can better manage responsiveness
+    "navbar_center": ["dynamic-navbar"],
 }
 
 # sphinx-favicon
@@ -133,7 +149,8 @@ except subprocess.CalledProcessError:
 
 # Variables to substitute in HTML template files
 html_context = {
-    "git_commit": f"{commit_id}{'*' if is_dirty_tree else ''}",
+    "git_commit": commit_id,
+    "git_dirty_tree": is_dirty_tree,
 }
 
 # Variables to substitute in Markdown files
