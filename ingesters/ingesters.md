@@ -112,6 +112,7 @@ When an *ingester* connects to an indexer, it sends a list of tag names it inten
 Most of the core ingesters support a common set of global configuration parameters.  The shared Global configuration parameters are implemented using the [ingest config](https://godoc.org/github.com/gravwell/ingest/config#IngestConfig) package.  Global configuration parameters should be specified in the Global section of each Gravwell ingester config file.  The following Global ingester parameters are available:
 
 * Ingest-Secret
+* Ingest-Secret-File
 * Connection-Timeout
 * Rate-Limit
 * Enable-Compression
@@ -131,6 +132,13 @@ Most of the core ingesters support a common set of global configuration paramete
 ### Ingest-Secret
 
 The Ingest-Secret parameter specifies the token to be used for ingest authentication.  The token specified here MUST match the Ingest-Auth parameter for Gravwell indexers.
+
+### Ingest-Secret-File
+
+There may be instances where it is undesirable to load ingest secrets as cleartext strings directly from a configuration file; the `Ingest-Secret-File` parameter allows for specifying a file which contains the `Ingest-Secret`.  The `Ingest-Secret-File` should contain the full path to a file containing only the secret value, the file must be readable by the calling ingester.  If both `Ingest-Secret` and `Ingest-Secret-File` are specified, the `Ingest-Secret` value takes precedence; if the `Ingest-Secret` is populated via an environment variable, `Ingest-Secret-File` is ignored.
+
+
+See the section in [Environment Variables](/configuration/environment-variables.html) for additional methods to divorce secrets from config files.
 
 ### Connection-Timeout
 
