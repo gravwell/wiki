@@ -65,6 +65,22 @@ If we modify the If node's config so the statement is `search.Count < 1` and re-
 
 ![](debug-if-false.png)
 
+## Enabled vs Disabled Nodes
+
+Individual nodes in a flow can be disabled in order to execute parts of a flow without running the entire flow. This feature can be useful for troubleshooting or debugging a flow. For example, one may disable an Email node while troubleshooting a flow in order to avoid sending unnecessary emails.
+
+Nodes are enabled by default. A node can be disabled or re-enabled via the node's right-click menu, the configuration pane, or buttons in the toolbar.
+
+![Nodes can be disabled via the right-click menu or configuration pane](disable-node.png)
+
+When a node is disabled, it blocks its own execution and the execution of all downstream nodes.
+
+Consider the following flow: The PDF node is grayed out and has a ⛔ badge which indicates that it has been disabled. The Email and Slack File nodes which are downstream from the PDF node are also grayed out. As explained in the Design Issues pane (and in each node's tooltip), those nodes are disabled because each has a disabled node upstream.
+
+![A disabled node also blocks execution to downstream nodes](disabled-upstream-node.png)
+
+The If and Gravwell Notification nodes, however, are unaffected by the disabled PDF node. Neither If nor Gravwell Notification are downstream from PDF, so they will execute as usual.
+
 ## Settings
 
 Once you're happy with a flow, the final step is to give it a schedule and enable it. This is done in the "Settings" page, accessible via a button in the toolbar:
