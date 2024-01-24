@@ -61,7 +61,7 @@ Ingest-Secret = IngestSecrets
 Connection-Timeout = 0
 Pipe-Backend-target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
 Log-Level=ERROR #options are OFF INFO WARN ERROR
-State-Store-Location=/opt/gravwell/etc/o365_ingest.state
+State-Store-Location=/opt/gravwell/etc/msgraph_ingest.state
 
 Client-ID=79fb8690-109f-11ea-a253-2b12a0d35073
 Client-Secret="<secret>"
