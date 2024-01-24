@@ -6,6 +6,8 @@ The indexer, webserver, and ingester components support configuring some paramet
 GRAVWELL_INGEST_SECRET=MyIngestSecret /opt/gravwell/bin/gravwell_federator
 ```
 
+### Loading Values From Files
+
 If "_FILE" is added to the end of the environment variable name, Gravwell assumes the variable contains the path to a file which in turn contains the desired data. This is particularly useful in combination with [Docker's "secrets" feature](https://docs.docker.com/engine/swarm/secrets/).
 
 ```
