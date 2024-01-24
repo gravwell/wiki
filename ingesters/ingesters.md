@@ -138,7 +138,7 @@ The Ingest-Secret parameter specifies the token to be used for ingest authentica
 There may be instances where it is undesirable to load ingest secrets as cleartext strings directly from a configuration file; the `Ingest-Secret-File` parameter allows for specifying a file which contains the `Ingest-Secret`.  The `Ingest-Secret-File` should contain the full path to a file containing only the secret value, the file must be readable by the calling ingester.  If both `Ingest-Secret` and `Ingest-Secret-File` are specified, the `Ingest-Secret` value takes precedence; if the `Ingest-Secret` is populated via an environment variable, `Ingest-Secret-File` is ignored.
 
 
-See the page on [Environment Variables](/configuration/environment-variables.html) for additional methods to divorce secrets from config files.
+See the page on [Environment Variables](/configuration/environment-variables) for additional methods to divorce secrets from config files.
 
 ### Connection-Timeout
 
