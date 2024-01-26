@@ -195,6 +195,19 @@ The styles below use media queries to dictate which of the 8 navbars will show g
   display: none;
 }
 
+/* When we've collapsed to the hamburger menu, only show the navbar that contains all 8 links */
+@media (width < 960px) {
+  #nav-1,
+  #nav-2,
+  #nav-3,
+  #nav-4,
+  #nav-5,
+  #nav-6,
+  #nav-7 {
+    display: none;
+  }
+}
+
 /* Depending on the width of the page, we decide which nav to show */
 
 @media (960px <= width < 1035px) {
