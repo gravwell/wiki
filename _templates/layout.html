@@ -15,9 +15,18 @@
   {{ super() }}
 
   <script>
-    $(document).ready(function(){
-      $('[data-toggle="popover"]').popover();
-    });
+    const popoverTriggerList = Array.from(
+      document.querySelectorAll('[data-bs-toggle="popover"]')
+    ).map((el) => new bootstrap.Popover(el));
   </script>
 
 {% endblock scripts_end %}
+
+{# Search wasn't showing matches because sphinx's searchtools.js wasn't finding role="main" #}
+{# This overrides the docs_boxy block to add the role attribute. Fixes search troubles. #}
+{% block docs_body %}
+  {% include "components/searchbox.html" %}
+  <article class="bd-article" role="main">
+    {% block body %}{% endblock %}
+  </article>
+{% endblock docs_body %}
