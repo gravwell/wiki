@@ -3,7 +3,7 @@
 The `truncate` module preserves only the first N characters (or bytes when using binary mode) of enumerated values. For example, to truncate all but the first 20 characters of the EV "Message":
 
 ```gravwell
-tag=data json IP Message | truncate -e Message 20 | table
+tag=data json IP Message | truncate Message 20 | table
 ```
 
 `truncate` only operates on string and byte slice enumerated values and by default assumes data is UTF-8 encoded. You can override this behavior by using the `-binary` flag.
