@@ -129,6 +129,7 @@ Each follower specifies at minimum a base directory and a filename filtering pat
 | Timestamp-Format-String   | string |          |               | Format string used for parsing timestamps. |
 | Preprocessor              | string(s) |       |               | List of preprocessors to use when processing entries after extraction. |
 | Attach-Filename           | bool  |           | false         | Attach complete filepath to each entry. |
+| Trim                      | bool  |           | false         | Trim leading and trailing space characters from each entry. |
 
 
 ### Base-Directory
@@ -339,3 +340,29 @@ The format defined using these options will be inserted at the top of the list o
 ### Attach-Filename
 
 Each follower has the option to attach the complete file path of the source file to each entry at the time of ingest using the `Attach-Filename=true` parameter to the Follower configuration block.  Setting `Attach-Filename=true` to the follower will attach a value named `file` to each entry which is available at query time in Gravwell.  Be aware that attaching long file paths to entries will have an impact on storage; compression will reduce that impact but it will not eliminate it.
+
+### Trim
+
+Each follower has the option to trim leading and trailing spaces from entries prior to ingest; this option can be useful when your data sources have leading or trailing spaces, tabs, newlines, and other whitespace characters in the ASCII character set.  Trim does not trim whitespace characters in the UTF-8 (or any other non-ASCII encoding) character sets.
+
+The Trim flag can be useful when ingesting entries that have unusual record breaks.  For example, consider the following set of log entries:
+
+```
+starting action baking:
+   * pouring milk
+   * adding cheese
+   * mixing
+   * inserting into oven
+   * setting temperature
+   * remove from oven
+   * set on cooling rack
+starting action consumption:
+   * fending off children
+   * hiding in closet
+   * denying existence of fresh-baked cookies
+starting action cleanup:
+   * washing cookie sheet
+   * replace cookie sheet
+```
+
+You may wish to have each multiline action be a single entry; this can be accomplished with "Regex-Delimiter=`\n\S`" which will break records on a newline that does not have spaces afterwords.  However, a `Regex-Delimiter` that uses newlines will also capture newlines in the entries; adding the `Trim=true` config option will remove the leading and trailing newlinges (and any other space characters).  Trim will not remove any interior whitespace characters.
