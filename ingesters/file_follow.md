@@ -365,4 +365,4 @@ starting action cleanup:
    * replace cookie sheet
 ```
 
-You may wish to have each multiline action be a single entry; this can be accomplished with "Regex-Delimiter=`\n\S`" which will break records on a newline that does not have spaces afterwords.  However, a `Regex-Delimiter` that uses newlines will also capture newlines in the entries; adding the `Trim=true` config option will remove the leading and trailing newlinges (and any other space characters).  Trim will not remove any interior whitespace characters.
+You may wish to have each multiline action be a single entry; this can be accomplished with "Regex-Delimiter=`\n\S`" which will break records on a newline that does not have spaces afterwords.  However, a `Regex-Delimiter` that uses newlines will also capture newlines in the entries; adding the `Trim=true` config option will remove the leading and trailing newlines (and any other space characters).  Trim will not remove any interior whitespace characters.
