@@ -1,0 +1,54 @@
+name: "Build HTML"
+on: workflow_dispatch
+env:
+  HTML_BUILD: docs_${{github.sha}}.tar.gz
+jobs:
+  html-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Nix
+        uses: cachix/install-nix-action@v25
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+      - name: Build and package documentation
+        run: |
+          # Fail on any error
+          set -e
+
+          # Make temporary location for build results
+          export BUILD_DEST="$( mktemp --directory --tmpdir=${{ runner.temp }} )"
+
+          # Fetch all remote refs
+          git fetch --all
+
+          # Pull latest from main branch
+          git checkout master
+          git pull
+
+          # There should only be one marked "preferred": the latest release
+          cat _static/versions.json | jq -r 'map(select(.preferred)) | length | if . != 1 then ("exactly one version should be marked preferred\n" | halt_error(1)) else "ok" end '
+
+          # Build and copy to build destination
+          nix-build
+          cp -r ./result/html $BUILD_DEST
+          chmod --recursive +w $BUILD_DEST
+
+          # Checkout and build each non-latest version listed in versions.json. Then copy them to build destination.
+          for v in $(cat _static/versions.json | jq -r 'map(select(.preferred != true)) | map(.version) | join(" ")')
+          do
+              git checkout release/$v
+              git pull
+              nix-build
+              cp -r ./result/html $BUILD_DEST/html/$v
+              chmod --recursive +w $BUILD_DEST
+          done
+
+          tar -C $BUILD_DEST -czf ${{ env.HTML_BUILD }} html
+      - name: Upload HTML Build
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: wiki-build
+          path: ${{ env.HTML_BUILD }}
+          if-no-files-found: error
+          retention-days: 0
