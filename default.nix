@@ -62,7 +62,19 @@ let
       sphinx-notfound-page
     ]);
 
-in {
-  inherit pkgs;
-  chosenPackages = [ pythonBundle pkgs.gnumake pkgs.git custom-aspell ];
+in pkgs.stdenv.mkDerivation {
+  name = "gravwell-wiki";
+  src = ./.;
+
+  buildInputs = [ pythonBundle pkgs.gnumake pkgs.git custom-aspell ];
+  buildPhase = ''
+    make clean html
+  '';
+
+  installPhase = ''
+    mkdir -p $out
+    cp -r _build/html $out
+  '';
+
+  LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
 }
