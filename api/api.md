@@ -1,6 +1,6 @@
 # REST API
 
-This section documents many parts of the REST API provided by the Gravwell webserver, we also host an interactive [Swagger OpenAPI documentation instance](https://api.docs.gravwell.io).
+This section documents many parts of the REST API provided by the Gravwell webserver. We also host an interactive [Swagger OpenAPI documentation instance](https://api.docs.gravwell.io).
 
 
 Complete open source clients are available for [Golang](https://github.com/gravwell/gravwell) with [hosted documentation](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client).
