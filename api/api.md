@@ -1,6 +1,9 @@
 # REST API
 
-This section documents part of the REST API provided by the Gravwell webserver. For complete, up-to-date information about the REST API, please refer to the Gravwell Go Client <https://pkg.go.dev/github.com/gravwell/gravwell/v3/client>
+This section documents many parts of the REST API provided by the Gravwell webserver, we also host an interactive [Swagger OpenAPI documentation instance](https://api.docs.gravwell.io).
+
+
+Complete open source clients are available for [Golang](https://github.com/gravwell/gravwell) with [hosted documentation](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client).
 
 
 The test API located at `/api/test` can be used to verify that the webserver is up and functioning. The test API is unauthenticated and always responds with a StatusOK 200 and an empty body if the webserver is available.
