@@ -133,6 +133,14 @@ Storage-based constraints are not an instant hard limit.  Be sure to leave a lit
 
 ## Storage Available-Based Ageout Rules
 
+```{attention}
+Be careful when configuring storage available-based ageout rules. These rules apply to the available storage of the disk partition the well is configured on. If disk space is used by another data source, or even a process outside of Gravwell, the rules will still be enforced. This means that external data can cause data deletion when using this option.
+```
+
+```{attention}
+Be careful when configuring storage available-based ageout rules with multiple wells. If multiple wells are configured on the same disk partition, it's possible to have well configurations "compete" for available disk space. This is especially true if two wells have different storage available-based ageout rules. This means that wells on the same with that use this option can cause each other to delete data.
+```
+
 Well storage constraints can also be applied based on availability of storage.  Some wells may be low priority, consuming storage only when it is available.  Using the storage reserve directives allows a well to consume as much space as it wants, so long as some percentage of available storage is maintained on the volume.  A storage availability rule essentially allows the well to act as a "second class" well, consuming disk space only when no one else is.  Specifying `Hot-Storage-Reserve=5` ensures that should the hot storage volume drop below 5% free space the well will begin migrating or deleting its oldest shards.  The reserve directives apply to the underlying volume hosting the storage location, meaning that if the volume is also hosting other wells or other arbitrary file storage, the well can pull back its storage usage as needed.
 
 An example well configuration which will use the hot location as long as there is 30% free space on the volume, and will use the cold volume as long as there is 10% free space:
