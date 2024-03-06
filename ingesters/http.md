@@ -479,7 +479,7 @@ Consider the following configuration:
 	TokenValue="thisisyourtoken"
 	Tag-Name=stuff
 	Tag-Match="foo:bar"
-    Routed-Token-Value="supersekrettoken:baz"
+        Routed-Token-Value="supersekrettoken:baz"
 ```
 
 Given the following curl request:
