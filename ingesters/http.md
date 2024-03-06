@@ -317,7 +317,8 @@ The `HEC-Compatible-Listener` supports the following configuration parameters:
 | Routed-Token-Value | string array | NO       |                       | Token value used for authentication and tag routing.        |
 | Debug-Posts        | boolean      | NO       | false                 | Emit additional debugging info on the gravwell tag for each POST. |
 | Preprocessor       | string array | NO       |                       | Set of preprocessors to apply to entries.                   |
-| Attach-URL-Parameter | string array | NO       |      | Set of URL parameter values that will be attached to all entries in a request if they are found in the request URL. |
+| Attach-URL-Parameter | string array | NO     |      | Set of URL parameter values that will be attached to all entries in a request if they are found in the request URL. |
+| Token-Name         | string       | NO       |                       | Optional override of authentication token name, default is "Splunk". |
 
 ### Using the HEC-Compatible Listener
 
@@ -484,7 +485,7 @@ Consider the following configuration:
 
 Given the following curl request:
 ```
-curl -X POST -v http://example.gravwell.io/services/collector?tag=testing \
+curl -X POST -v http://example.gravwell.io/services/collector \
     -H "Authorization: Splunk supersekrettoken" -d '
     {"event": "invalid sourcetype things", "sourcetype": "things", "time": 1699034250}
     {"time": 1699034251, "sourcetype": "foo", "event": "valid sourcetype foo"}
@@ -519,6 +520,19 @@ tag=gravwell syslog Appname==httpingester Message == "HEC request" Hostname
 ```
 
 ![](hec_debug1.png)
+
+
+#### Token-Name
+
+Many third party services which are designed to send data to a HEC compatible listener have been observed sending authentication tokens with various random names; the default expected authentication header structure is `Authentication: Splunk <token>`, but we have seen everything from "User" to "user_name".  The `Token-Name` configuration parameter can override the Authorization header token name so that the HEC compatible listener can still authenticate and support third party services that doe not adhere to the HEC guidance.
+
+An example curl command that would authenticate with a `Token-Name` of `foobar` and a `TokenValue` of `soopersekrit` would be:
+
+```
+curl -X POST -v http://example.gravwell.io/services/collector \
+    -H "Authorization: foobar soopersekrit" -d '
+    {"event": "sample event", "time": 1699034250}
+```
 
 ## Health Checks
 
