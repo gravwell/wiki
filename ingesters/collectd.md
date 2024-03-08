@@ -20,7 +20,7 @@ The collectd ingester uses the unified global configuration block described in t
 
 The configuration file is at `/opt/gravwell/etc/collectd.conf`. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/collectd.conf.d`).
 
-The Gravwell collectd ingester is designed to accept the native binary collectd data formats as exported by the `network` plugin which uses the UDP transport.  A basic `network` plugin definition which ships data a Gravwell ingester might look like so:
+The Gravwell collectd ingester is designed to accept the native binary collectd data formats as exported by the `network` plugin which uses the UDP transport.  A basic `network` plugin definition which ships data to a Gravwell ingester might look like so:
 
 ```
 <Plugin network>
