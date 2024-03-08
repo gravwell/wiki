@@ -110,7 +110,7 @@ Each Collector block must contain a unique name and non-overlapping Bind-Strings
 | Bind-String          | string       | YES      |               |              |
 | Tag-Name             | string       | NO       |               | Tag to be assigned to data ingested on this listener. |
 | Source-Override      | string       | NO       |               | Override the source IP assigned to entries ingested on this listener. |
-| Security-Level       | string       | YES      |               | Collectd data transport security encoding, must match the value in the network plugin. |
+| Security-Level       | string       | YES      |               | Collectd data transport security encoding, must match the value in the network Plugin. |
 | User                 | string       | YES      |               | Collectd data transport username, must match the value in the network Plugin. |
 | Password             | string       | YES      |               | Collectd data transport password, must match the value in the network Plugin. |
 | Encoder              | string       | NO       | json          | Output data format, default is JSON and published Gravwell kits expect JSON. |
