@@ -107,7 +107,7 @@ Each Collector block must contain a unique name and non-overlapping Bind-Strings
 
 | Parameter            | Type         | Required | Default Value | Description  |
 |----------------------|--------------|----------|---------------|--------------|
-| Bind-String          | string       | YES      |               |              |
+| Bind-String          | string       | YES      |               | An IP:Port combination specifying an address to listen on for the interface.  `0.0.0.0:25826` is a good default. |
 | Tag-Name             | string       | NO       |               | Tag to be assigned to data ingested on this listener. |
 | Source-Override      | string       | NO       |               | Override the source IP assigned to entries ingested on this listener. |
 | Security-Level       | string       | YES      |               | Collectd data transport security encoding, must match the value in the network plugin. |
@@ -197,7 +197,7 @@ Tag-Plugin-Override = disk : diskdata  # Map the disk plugin data to the "diskda
 
 ## Example Collect Configuration
 
-The Collectd system is a plugin-based system instrumentation and testing framework. There is no standard Collectd deployment and every plugin can send a unique set of fields and structures.   The only hard requirement for configuring the Collectd system with Gravwell is a proper `network` Plugin definition with matching username, password, and Security-Level.  Here are two basic configurations that will collect some reasonable metrics and send them to Gravwell:
+The Collectd system is a plugin-based system instrumentation and testing framework. There is no standard Collectd deployment and every plugin can send a unique set of fields and structures.   The only hard requirement for configuring the Collectd system with Gravwell is a proper `network` Plugin definition with matching username, password, and Security-Level.  Here are basic configurations for both the Gravwell Collectd ingester and the Collectd service that will collect some reasonable metrics and send them to Gravwell:
 
 
 ### /etc/collectd/collectd.conf
