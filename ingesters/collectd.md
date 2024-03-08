@@ -20,6 +20,23 @@ The collectd ingester uses the unified global configuration block described in t
 
 The configuration file is at `/opt/gravwell/etc/collectd.conf`. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/collectd.conf.d`).
 
+The Gravwell collectd ingester is designed to accept the native binary collectd data formats as exported by the `network` plugin which uses the UDP transport.  A basic `network` plugin definition which ships data a Gravwell ingester might look like so:
+
+```
+<Plugin network>
+	<Server "10.0.0.70" "25826">
+		SecurityLevel Encrypt
+		Username "user"
+		Password "secret"
+		ResolveInterval 14400
+	</Server>
+	CacheFlush 1800
+	MaxPacketSize 1452
+	ReportStats false
+	TimeToLive 128
+</Plugin>
+```
+
 ## Collector Examples
 
 ```
@@ -87,6 +104,20 @@ By default the collectd ingester reads a configuration file located at _/opt/gra
 ### Collector Configuration Options
 
 Each Collector block must contain a unique name and non-overlapping Bind-Strings.  You cannot have multiple Collectors that are bound to the same interface on the same port.
+
+| Parameter            | Type         | Required | Default Value | Description  |
+|----------------------|--------------|----------|---------------|--------------|
+| Bind-String          | string       | YES      |               |              |
+| Tag-Name             | string       | NO       |               | Tag to be assigned to data ingested on this listener |
+| Source-Override      | string       | NO       |               | Override the source IP assigned to entries ingested on the listener |
+| Security-Level       | string       | YES      |               | Collectd data transport security encoding, must match the value in the network plugin. |
+| User                 | string       | YES      |               | Collectd data transport username, must match the value in the network Plugin. |
+| Password             | string       | YES      |               | Collectd data transport password, must match the value in network Plugin. |
+| Encoder              | string       | NO       | json          | Output data format, default is JSON and published Gravwell kits expect JSON. |
+| Tag-Plugin-Override  | string array | NO       |               | Optional set of plugin to tag mappings. |
+| Preprocessor         | string array | NO       |               | Set of preprocessors to apply to entries. |
+
+
 
 #### Bind-String
 
@@ -161,4 +192,100 @@ Tag-Plugin-Override=cpu:collectdcpu # Map CPU plugin data to the "collectdcpu" t
 Tag-Plugin-Override=memory:memstats # Map the memory plugin data to the "memstats" tag.
 Tag-Plugin-Override= df : diskdata  # Map the df plugin data to the "diskdata" tag.
 Tag-Plugin-Override = disk : diskdata  # Map the disk plugin data to the "diskdata" tag.
+```
+
+
+## Example Collect Configuration
+
+The Collectd system is a plugin based system instrumentation and testing framework, there is no standard Collectd deployment and every plugin can send a unique set of fields and structures.   The only hard requirement for configuring the Collectd system with Gravwell is a proper `network` Plugin definition with matching username, password, and Security-Level.  Here are two basic configurations that will collect some reasonable metrics and send them to Gravwell:
+
+
+### /etc/collectd/collectd.conf
+
+```
+Hostname "server.example.com"
+FQDNLookup false
+
+AutoLoadPlugin true
+
+CollectInternalStats false
+
+Interval 10
+
+<Plugin network>
+	<Server "10.0.0.70" "25826">
+		SecurityLevel Encrypt
+		Username "user"
+		Password "secret"
+		ResolveInterval 14400
+	</Server>
+	CacheFlush 1800
+	MaxPacketSize 1452
+	ReportStats false
+	TimeToLive 128
+</Plugin>
+
+<Plugin cpu>
+	ReportByCpu true
+	ReportByState true
+	ValuesPercentage false
+	ReportNumCpu false
+	ReportGuestState false
+	SubtractGuestState true
+</Plugin>
+
+<Plugin df>
+	# ignore rootfs; else, the root file-system would appear twice, causing
+	# one of the updates to fail and spam the log
+	FSType rootfs
+	# ignore the usual virtual / temporary file-systems
+	FSType sysfs
+	FSType proc
+	FSType devtmpfs
+	FSType devpts
+	FSType tmpfs
+	FSType fusectl
+	FSType cgroup
+	IgnoreSelected true
+
+	ValuesPercentage true
+</Plugin>
+
+<Plugin ethstat>
+	Interface "eno1"
+	Map "rx_csum_offload_errors" "if_rx_errors" "checksum_offload"
+	Map "multicast" "if_multicast"
+	MappedOnly false
+</Plugin>
+
+<Plugin load>
+	ReportRelative true
+</Plugin>
+
+<Plugin memory>
+	ValuesAbsolute false
+	ValuesPercentage true
+</Plugin>
+```
+
+### /opt/gravwell/etc/collectd.conf
+
+```
+[Global]
+Ingester-UUID="5cb70d8d-3800-4044-bae1-308f00b6f7b5"
+Ingest-Secret = "SuperHardSecrets"
+Connection-Timeout = 0
+Insecure-Skip-TLS-Verify=false
+Cleartext-Backend-Target=10.0.0.42 #example of adding a cleartext connection
+Ingest-Cache-Path=/opt/gravwell/cache/collectd.cache
+Max-Ingest-Cache=1024 #Number of MB to store, localcache will only store 1GB before stopping.  This is a safety net
+Log-Level=INFO
+Log-File=/opt/gravwell/log/collectd.log
+
+[Collector "default"]
+	Bind-String=0.0.0.0:25826
+	Tag-Name=collectd
+	Security-Level=encrypt
+	User=user
+	Password=secret
 ```
