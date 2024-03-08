@@ -197,7 +197,7 @@ Tag-Plugin-Override = disk : diskdata  # Map the disk plugin data to the "diskda
 
 ## Example Collect Configuration
 
-The Collectd system is a plugin based system instrumentation and testing framework, there is no standard Collectd deployment and every plugin can send a unique set of fields and structures.   The only hard requirement for configuring the Collectd system with Gravwell is a proper `network` Plugin definition with matching username, password, and Security-Level.  Here are two basic configurations that will collect some reasonable metrics and send them to Gravwell:
+The Collectd system is a plugin-based system instrumentation and testing framework. There is no standard Collectd deployment and every plugin can send a unique set of fields and structures.   The only hard requirement for configuring the Collectd system with Gravwell is a proper `network` Plugin definition with matching username, password, and Security-Level.  Here are two basic configurations that will collect some reasonable metrics and send them to Gravwell:
 
 
 ### /etc/collectd/collectd.conf
