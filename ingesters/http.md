@@ -387,6 +387,16 @@ The `Amazon-Firehose-Listener` type supports the [Amazon Firehose](https://aws.a
 
 In the above example, the HTTP ingester will listen on the `/foo` path for an Amazon Firehose request, authenticated with the token "thisisyourtoken", and ingesting to tag "bar". In the AWS console, you would set the Firehose endpoint to `your.domain/foo`, and provide the same token.
 
+The `Amazon-Firehose-Listener` supports the following configuration parameters:
+
+| Parameter         | Type         | Required | Default Value         | Description                                                 |
+|-------------------|--------------|----------|-----------------------|-------------------------------------------------------------|
+| URL               | string       | YES       | | Endpoint URL for Amazon Firehose events.                             |
+| TokenValue        | string       | YES      |                       | Authentication Token.                                       |
+| Tag-Name          | string       | YES      |                       | Tag assigned to entries received by the endpoint.           |
+| Ignore-Timestamps | boolean      | NO       | false                 | Do not extract or process timestamps, use current time.     |
+| Preprocessor      | string array | NO       |                       | Set of preprocessors to apply to entries.                   |
+
 ## Health Checks
 
 Some systems (such as AWS load-balancers) require an unauthenticated URL that can be probed and interpreted as "proof of life".  The HTTP ingester can be configured to provide a URL which will always return a 200 OK when accessed with any method, body, and/or query parameters.  To enable this health check endpoint, add the `Health-Check-URL` stanza to the Global configuration block.
