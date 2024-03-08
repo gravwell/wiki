@@ -26,7 +26,7 @@ The configuration file is at `/opt/gravwell/etc/gravwell_http_ingester.conf`. Th
 
 In addition to the universal configuration parameters used by all ingesters, the HTTP POST ingester has two additional global configuration parameters that control the behavior of the embedded webserver.  The first configuration parameter is the `Bind` option, which specifies the interface and port that the webserver listens on.  The second is the `Max-Body` parameter, which controls how large of a POST the webserver will allow.  The Max-Body parameter is a good safety net to prevent rogue processes from attempting to upload very large files into your Gravwell instance as a single entry.  Gravwell can support up to 1GB as a single entry, but we wouldn't recommend it.
 
-Multiple "Listener" definitions can be defined allowing specific URLs to send entries to specific tags.  In the example configuration we define two listeners which accept data from a weather IOT device and a smart thermostat.
+Multiple "Listener" definitions can be defined allowing specific URLs to send entries to specific tags. 
 
 ```
  Example using basic authentication
@@ -90,6 +90,10 @@ If the Gravwell services are present on the same machine, the installation scrip
 
 By default the HTTP Ingester runs a cleartext HTTP server, but it can be configured to run an HTTPS server using x509 TLS certificates.  To configure the HTTP Ingester as an HTTPS server provide a certificate and key PEM files in the Global configuration space using the `TLS-Certificate-File` and `TLS-Key-File` parameters.
 
+```{note}
+The Amazon-Firehose-Listener type requires the use of HTTPS.
+```
+
 An example global configuration with HTTPS enabled might look like the following:
 
 ```
@@ -100,7 +104,7 @@ An example global configuration with HTTPS enabled might look like the following
 
 ### Listener Configuration Options
 
-Listener configuration blocks support the following configuration parameters:
+Listener configuration blocks (except the Amazon-Firehose-Listener) support the following configuration parameters:
 
 
 | Parameter                 | Type         | Required | Default Value                | Description                         |
@@ -533,6 +537,29 @@ curl -X POST -v http://example.gravwell.io/services/collector \
     -H "Authorization: foobar soopersekrit" -d '
     {"event": "sample event", "time": 1699034250}
 ```
+
+## Amazon Firehose support
+
+The `Amazon-Firehose-Listener` type supports the [Amazon Firehose](https://aws.amazon.com/firehose/) API. The Firehose API requires the use of HTTPS and an authentication token. 
+
+```
+[Amazon-Firehose-Listener "foo"]
+	URL="/foo"
+	TokenValue="thisisyourtoken" #set the access control token
+	Tag-Name=bar
+```
+
+In the above example, the HTTP ingester will listen on the `/foo` path for an Amazon Firehose request, authenticated with the token "thisisyourtoken", and ingesting to tag "bar". In the AWS console, you would set the Firehose endpoint to `your.domain/foo`, and provide the same token.
+
+The `Amazon-Firehose-Listener` supports the following configuration parameters:
+
+| Parameter         | Type         | Required | Default Value         | Description                                                 |
+|-------------------|--------------|----------|-----------------------|-------------------------------------------------------------|
+| URL               | string       | YES       | | Endpoint URL for Amazon Firehose events.                             |
+| TokenValue        | string       | YES      |                       | Authentication Token.                                       |
+| Tag-Name          | string       | YES      |                       | Tag assigned to entries received by the endpoint.           |
+| Ignore-Timestamps | boolean      | NO       | false                 | Do not extract or process timestamps, use current time.     |
+| Preprocessor      | string array | NO       |                       | Set of preprocessors to apply to entries.                   |
 
 ## Health Checks
 
