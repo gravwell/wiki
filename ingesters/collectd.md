@@ -114,7 +114,7 @@ Each Collector block must contain a unique name and non-overlapping Bind-Strings
 | User                 | string       | YES      |               | Collectd data transport username, must match the value in the network Plugin. |
 | Password             | string       | YES      |               | Collectd data transport password, must match the value in the network Plugin. |
 | Encoder              | string       | NO       | json          | Output data format, default is JSON and published Gravwell kits expect JSON. |
-| Tag-Plugin-Override  | string array | NO       |               | Optional set of plugin to tag mappings. |
+| Tag-Plugin-Override  | string array | NO       |               | Optional set of plugin-to-tag mappings. |
 | Preprocessor         | string array | NO       |               | Set of preprocessors to apply to entries. |
 
 
