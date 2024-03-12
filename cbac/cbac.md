@@ -78,7 +78,7 @@ In practice, it is less common to grant capabilities to individual users; instea
 | ScheduleRead | View a flow, script, or scheduled search and its results. |
 | ScheduleWrite | Create and edit a flow, script, or scheduled search. |
 | SOARLibs | Import an external library into a script. |
-| SOAREmail | Send an email in a script. |
+| SOAREmail | Send an email in a script or a flow. |
 | PlaybookRead | View a playbook. |
 | PlaybookWrite | Create and edit a playbook. |
 | LicenseRead | View the license. |
