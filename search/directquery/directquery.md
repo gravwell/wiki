@@ -46,8 +46,8 @@ curl -X POST \
 ### JSON Object
 
 ```
-curl -X POST -H -d '{"SearchString":"tag=gravwell limit 10"}' \
-   "Gravwell-Token: aFOa_YbO7Pe0MAqK08PSD-oTrEZxopc5JBf0hu0W5_Vo-FxWsjHp" \
+curl -X POST -d '{"SearchString":"tag=gravwell limit 10"}' \
+   -H "Gravwell-Token: aFOa_YbO7Pe0MAqK08PSD-oTrEZxopc5JBf0hu0W5_Vo-FxWsjHp" \
    http://10.0.0.1/api/parse
 ```
 
