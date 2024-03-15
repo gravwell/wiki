@@ -86,6 +86,36 @@ If you click "Uninstall", the kit will be removed, unless you have manually chan
 
 ![](uninstall-warn.png)
 
+## Building Kits
+
+In addition to installing kits from the official kit repository, you can build and distribute your own kits based on existing assets in your Gravwell instance. 
+
+![](build-1.png)
+
+To begin building a kit, navigate to the kits menu and select the "Build" option.
+
+![](build-2.png)
+
+Kits can be configured to restrict installation to specific versions of Gravwell, and are themselves versioned. If you build multiple versions of the same kit, remember to increment the version so that Gravwell can correctly upgrade the kit.
+
+The only required fields in the information menu are the name of the kit and the identifier. The identifier can be any unique string.
+
+![](build-3.png)
+
+The next step requires that you provide a description of the kit. This description is shown in the kit tile when browsing and installing kits.
+
+![](build-4.png)
+
+The assets menu allows you to select any assets that should be packaged into the kit. In this example, we select dashboards, and then select "My Dashboard". The dashboard has two queries in it, which are automatically selected by the kit builder as dependencies. 
+
+![](build-5.png)
+
+In the licenses menu, you can provide one or more licenses that the user must agree to during kit install. 
+
+![](build-6.png)
+
+Finally, you can download the packaged kit and distribute it!
+
 ## The Kit Server
 
 By default, Gravwell will check for available kits at `https://kits.gravwell.io/kits/list`. If you don't see any kits listed in the "Available Kits" page, make sure you can hit that server from your Gravwell webserver. We are currently working on a toolset to allow self-hosted kit servers.
