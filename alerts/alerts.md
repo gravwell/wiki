@@ -86,7 +86,7 @@ Dispatcher searches should use either `table`, `text`, or `raw` as their rendere
 ```
 
 ```{warning}
-You can select scheduled searches belonging to other users as dispatchers, but be aware that if the owner of the search decides to change it, your alert may stop working!
+If you have been granted access to a scheduled search that you don't own, you will be able to select it as an alert dispatcher, but be aware that if the owner of the search decides to change it, your alert may stop working!
 ```
 
 ## Setting a Validation Schema
