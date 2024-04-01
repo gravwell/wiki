@@ -11,6 +11,7 @@ This node can perform HTTP requests with considerable flexibility. It can send i
 * `Max Result Size`: If set, the node will read no more than this many *bytes* in the HTTP response.
 * `Skip TLS Verify`: If set to true, the node will not validate the TLS certificate of the HTTP server. Use with caution!
 * `Request Headers`: May be used to set headers on the outgoing HTTP request, such as authentication tokens.
+* `Decode Body`: If set to true, the node will attempt to decode the response body into a structure.
 
 ## Output
 
@@ -19,6 +20,7 @@ The HTTP node sets several items in the outgoing payload:
 * `response`: The body of the HTTP response, if any.
 * `status`: A string representation of the HTTP status, e.g. "200 OK".
 * `statuscode`: The numeric HTTP response code, e.g. 200.
+
 
 ## Example
 
@@ -39,3 +41,11 @@ Body: <15>1 2022-03-15T23:27:16.315639Z web1.floren.lan webserver 0 - [gw@1 host
 ```
 
 Note the headers; the `Accept-Encoding` and `User-Agent` headers are automatically set by the search agent.
+
+### Example With Decode Body
+
+The HTTP node can return data of any type, by default the node will store the response data as an array of bytes; when working with binary data or grabbing a remote file to us as a resource this is the most useful form.  Many use cases for the HTTP node may want to natively process an HTTP response so that the flow can more easily handle the response data; examples may include better display of text data or accessing fields in a JSON response.
+
+This example performs an HTTP GET request on a remote API which returns JSON data using the HTTP node with `Decode Body` set to true; because the `Decode Body` value is set to true the HTTP node will look at the `Content-Type` returned by the HTTP request and determine if it can decode the response into an object.   Because the remote endpoint returns a JSON object we can decode that into the payload as structured data which can then be processed in the flow.  The decoded response payloads make it easy to take the response from one API and use it to create a request to another without having to manually decode the HTTP response. 
+
+![](http_api_example.png)
