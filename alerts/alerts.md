@@ -43,10 +43,6 @@ The "Max Events" configuration option is an important safeguard against accident
 
 Gravwell sets a very low default for Max Events, because it is extremely easy to misjudge your dispatchers and generate too many events! The option can go up to 8192, which should be more than enough; if you need more events per dispatcher trigger, alerts might not be the right solution for that particular use case.
 
-```{note}
-Setting Max Events to 0 is equivalent to setting it to 8192, the max value
-```
-
 ### Search Retention
 
 The search retention option will allow any search that dispatches the Alert to be saved as a Persistent Search for a specified period of time. The retention time is configurable with a default of 7 days. After that time, the Persistent Search will be automatically deleted.
