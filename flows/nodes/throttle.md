@@ -7,7 +7,7 @@ The throttle node can operate in *basic* mode, where it allows execution exactly
 ## Configuration
 
 * `Duration`, required: how long to wait between executions. The node will block any downstream nodes from executing if it has been less than Duration since the last time it allowed execution.
-* `Keys`, optional: a list of variables to use as keys. The contents of the specified variables will be checked at run time; execution will only be allowed to continue if that particular set of values as *not* been seen in the specified duration.
+* `Keys`, optional: a list of variables to use as keys. The contents of the specified variables will be checked at run time; execution will only be allowed to continue if that particular set of values has *not* been seen in the specified duration.
 
 ## Output
 
