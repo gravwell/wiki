@@ -2,15 +2,20 @@
 
 The Throttle node allows you to control how often certain nodes within a flow are executed. For instance, suppose you want to run a query every minute to check for a particular event, but you don't want to send out an *email* about that event more than once an hour. Injecting a Throttle node in front of the Email node accomplishes that.
 
+The throttle node can operate in *basic* mode, where it allows execution exactly once in a given duration, or it can operate in *keyed* mode, where it allows execution once per duration for **each different combination of key values**. Keyed mode is explained further below.
+
 ## Configuration
 
 * `Duration`, required: how long to wait between executions. The node will block any downstream nodes from executing if it has been less than Duration since the last time it allowed execution.
+* `Keys`, optional: a list of variables to use as keys. The contents of the specified variables will be checked at run time; execution will only be allowed to continue if that particular set of values as *not* been seen in the specified duration.
 
 ## Output
 
 The node does not modify the payload.
 
-## Example
+## Examples
+
+### Basic Throttling
 
 This example runs a query which checks for ingesters disconnecting; if any are found, it generates a message listing them and sends that message to a Mattermost channel. The flow is configured to run *once a minute*, but to avoid spamming Mattermost we will only send a message *hourly* at most.
 
@@ -44,3 +49,48 @@ Bounced ingesters:
 And the [Mattermost Message](mattermost) node sends the results to a Mattermost channel:
 
 ![](throttle-output.png)
+
+### Keyed Throttling
+
+The previous example has a weakness: it notifies no more than once per hour, meaning if one ingester goes offline shortly after another, we won't find out about that second ingester's problem until nearly an hour later.
+
+We can make up for this deficiency by combining [Alerts](/alerts/alerts) and *keyed throttling*.
+
+First, we create a scheduled search using a modified version of the query above, configuring it to run every minute over the last hour of data. This query returns one entry for each unique ingester that goes offline:
+
+```gravwell
+tag=gravwell syslog Hostname Message~"Ingest routine exiting" Structured.ingester Structured.ingesterversion Structured.ingesteruuid Structured.client 
+| alias Hostname indexer 
+| unique ingesteruuid 
+| table ingester ingesteruuid
+```
+
+![](throttle-scheduled-search.png)
+
+Then we create an alert with that search as a dispatcher, and define a schema with some of the fields we care about:
+
+![](throttle-alert.png)
+
+Last, we create a flow which consumes the output of that alert. Recall that when an alert triggers a flow, it triggers it once per line from the scheduled search results, meaning this flow will run once for every ingester. We create the flow and associate it with the alert:
+
+![](throttle-flow1.png)
+
+Then lay out the nodes as seen below:
+
+![](throttle-flow2.png)
+
+Note that we have referenced `event.Contents.ingester` and `event.Contents.ingesteruuid` in the Keys configuration for the Throttle node. This tells it to allow execution once per hour for every combination seen in the those two variables (which come from the alert we defined above).
+
+The [Text Template](template) node generates a simple message using those same two variables:
+
+```
+Ingester {{ .event.Contents.ingester }} ( {{ .event.Contents.ingesteruuid }} ) went down!
+```
+
+And the [Mattermost Message](mattermost) node sends the results to a Mattermost channel:
+
+![](throttle-keyed-output.png)
+
+Note that there are two separate messages there, one for each ingester that went down. If another ingester goes down -- either a different type of ingester, like File Follower, or another Network Capture or Simple Relay ingester with a different UUID -- an alert will be sent to that effect immediately:
+
+![](throttle-keyed-output2.png)
