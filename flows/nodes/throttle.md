@@ -13,6 +13,12 @@ The throttle node can operate in *basic* mode, where it allows execution exactly
 
 The node does not modify the payload.
 
+## Throttling Modes
+
+To operate in **basic mode**, set only the `Duration` config. In this mode, the Throttle node will allow execution to continue to "downstream" nodes once per duration. This can be useful when your flow runs frequently, perhaps every minute, to check for rare events, but you don't want to take *action* on those events more than once in a given time period.
+
+To operate in **keyed mode**, set the `Duration` and then select one or more variables in the `Keys` config. At runtime, the Throttle node will read the values of each of those variables. It will then check when that particular combination was last seen. If the time delta exceeds `Duration`, execution is allowed to continue. This mode is especially useful when working with [Alerts](/alerts/alerts).
+
 ## Examples
 
 ### Basic Throttling
