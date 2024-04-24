@@ -11,40 +11,6 @@ The Netflow ingester acts as a Netflow collector (see [the Wikipedia article](ht
 
 ## Installation
 
-```{include} installation_instructions_template 
-```
-
-## Basic Configuration
-
-The Netflow ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the Netflow ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
-
-The configuration file is at `/opt/gravwell/etc/netflow_capture.conf`. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/netflow_capture.conf.d`).
-
-## Collector Examples
-
-```
-[Collector "netflow v5"]
-	Bind-String="0.0.0.0:2055" #we are binding to all interfaces
-	Tag-Name=netflow
-	Assume-Local-Timezone=true
-	Session-Dump-Enabled=true
-
-[Collector "ipfix"]
-	Tag-Name=ipfix
-	Bind-String="0.0.0.0:4739"
-	Flow-Type=ipfix
-```
-
-```{note}
-By default the Netflow ingester will listen for both Netflowv5 on UDP port 2055 and NetflowV9/IPFix on UDP port 4739.  It is highly reccomended that one of the listeners is disabled.
-```
-
-```{note}
-The default NetflowV9 and/or IPFix port of 4739 is somewhat disagreed upon by major networking manufacturers; some equipment expects to send NetflowV9 traffic to UDP port 6343.  Adjust the configuration file accordingly.
-```
-
-## Installation
-
 If you're using the Gravwell Debian repository, installation is just a single apt command:
 
 ```
@@ -75,3 +41,28 @@ Log-Level=INFO
 Note that this configuration sends entries to a local indexer via `/opt/gravwell/comms/pipe`. Entries are tagged 'netflow'.
 
 You can configure any number of `Collector` entries listening on different ports with different tags; this can help organize the data more clearly.
+
+## Collector Examples
+
+```
+[Collector "netflow v5"]
+	Bind-String="0.0.0.0:2055" #we are binding to all interfaces
+	Tag-Name=netflow
+	Assume-Local-Timezone=true
+	Session-Dump-Enabled=true
+
+[Collector "ipfix"]
+	Tag-Name=ipfix
+	Bind-String="0.0.0.0:4739"
+	Flow-Type=ipfix
+```
+
+```{note}
+By default the Netflow ingester will listen for both Netflowv5 on UDP port 2055 and NetflowV9/IPFix on UDP port 4739.  It is highly reccomended that one of the listeners is disabled.
+```
+
+```{note}
+The default NetflowV9 and/or IPFix port of 4739 is somewhat disagreed upon by major networking manufacturers; some equipment expects to send NetflowV9 traffic to UDP port 6343.  Adjust the configuration file accordingly.
+```
+
+
