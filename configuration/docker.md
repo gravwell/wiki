@@ -121,7 +121,7 @@ Now we can configure our Netflow generators to send records to port 2055 of the 
 
 ## Customizing services
 
-The official Gravwell docker container contains a service management system that makes launching and controlling multiple services within the container very easy.  The manager controls service restarts, error reporting, and back off controls.  Gravwell has open-sourced the [manager](https://github.com/gravwell/manager) application on [github](https://github.com/gravwell) under the BSD 3-Clause license.  So if you want a very small and easily configured systemd like service manager for your docker containers, have at it.
+The official Gravwell docker container contains a service management system that makes launching and controlling multiple services within the container very easy.  The manager controls service restarts, error reporting, and back off controls.  Gravwell has open-sourced the [manager](https://github.com/gravwell/gravwell/tree/master/manager) application on [github](https://github.com/gravwell) under the BSD 3-Clause license.  So if you want a very small and easily configured systemd like service manager for your docker containers, have at it.
 
 The official gravwell Docker image contains the full Gravwell stack (indexer and webserver) as well as the Simple Relay ingester.  The default manager configuration is:
 
@@ -174,7 +174,7 @@ If you would like to disable the integrated SimpleRelay ingester, add "-e DISABL
 docker run --name gravwell -e GRAVWELL_INGEST_SECRET=MyIngestSecret -e DISABLE_SIMPLE_RELAY=TRUE -e DISABLE_WEBSERVER=TRUE -e DISABLE_SEARCHAGENT=TRUE gravwell/gravwell:latest
 ```
 
-For more information about the service manager visit the [GitHub page](https://github.com/gravwell/manager).
+For more information about the service manager visit the [GitHub page](https://github.com/gravwell/gravwell/tree/master/manager).
 
 ### Customizing ingester containers
 
