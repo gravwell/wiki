@@ -2,7 +2,7 @@
 
 This section will include basic descriptions for various terms and items used within Gravwell,   as well as links to the location in the documentation where more detailed information can be found.
 
-## Primary Architecture
+### Primary Components
 
 [Indexer](/configuration/configuration.html#indexer-configuration)
   The Indexer is the Primary component in a Gravwell Deployment. It is responsible for the Storage, retrieval, and processing of data.
@@ -25,4 +25,22 @@ This section will include basic descriptions for various terms and items used wi
 [API](/api/api.html)
   An API is an Application Programing Interface.  Gravwell uses a REST API which can be leveraged for direct queries and some scripting.  Gravwell also has the capability to interact with the API's of various other applications within it's automation systems.
 
+[Search Agent](/scripting/searchagent.html)
+  The Gravwell Search Agent is the component which runs Automations
+
+[Datastore](/distributed/frontend.html#the-datastore-server)
+  The Datastore is the server/process which allows for the syncing of data across multiple Gravwell Webservers.  
+
+[Overwatch](/distributed/overwatch.html)
+   Gravwell Overwatch is a Advanced Deployment configuration where you can have specialized webservers that can query multiple self contained Gravwell Clusters.   
+
+[CBAC / Capability Based Access Controls](/cbac/cbac.html)
   
+
+### Indexer Terms
+
+### Ingesters
+
+### Search
+
+
