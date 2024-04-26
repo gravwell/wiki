@@ -35,6 +35,7 @@ The most important items in the configuration file are the `Ingest-Auth`, `Contr
 In clustered Gravwell installations, it is essential that all nodes are configured with the same `Ingest-Auth` and `Control-Auth` values to enable proper intercommunication.
 ```
 
+(configuration_webserver)=
 ## Webserver Configuration
 
 The webserver acts as the focusing point for all searches, and provides an interactive interface into Gravwell.  While the webserver does not require significant storage, it can benefit from small pools of very fast storage so that even when a search hands back large amounts of data, users can quickly navigate their results.  The webserver also participates in the search pipeline and often performs some of the filtering, metadata extraction, and rendering of data.  When deploying a webserver, we recommend a reasonably sized solid state disk (NVME if possible), a memory pool of 16GB of RAM or more, and at least 4 physical cores.  Gravwell is built to be extremely concurrent, so more CPU cores and additional memory can yield significant performance benefits.  An Intel E5 or AMD Epyc chip with 32GB of memory or more is a good choice, and more is always better.
@@ -67,6 +68,7 @@ By default, Gravwell does not generate TLS certificates. For instructions on set
 * Firewalls blocking access to indexer or webserver ports
   * The default is 9404
 
+(configuration_indexer)=
 ## Indexer Configuration
 
 Indexers are the storage centers of Gravwell and are responsible for storing, retrieving, and processing data.  Indexers perform the first heavy lifting when executing a query, first finding the data then pushing it into the search pipeline.  The search pipeline will perform as much work as possible in parallel on the indexers for efficiency.  Indexers benefit from high-speed low-latency storage and as much RAM as possible.  Gravwell can take advantage of file system caches, which means that as you are running multiple queries over the same data it won’t even have to go to the disks.  We have seen Gravwell operate at over 5GB/s per node on well-cached data.  The more memory, the more data can be cached.  When searching over large pools that exceed the memory capacity of even the largest machines, high speed RAID arrays can help increase throughput.

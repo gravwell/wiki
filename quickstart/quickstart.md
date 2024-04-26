@@ -49,6 +49,7 @@ End User License Agreement </eula>
 Open-Source Library Licenses </open_source>
 ```
 
+(system_requirements)=
 ## System Requirements
 
 ### Hardware
