@@ -48,7 +48,7 @@ jobs:
       - name: Upload HTML Build
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: wiki-build
+          name: docs_${{github.sha}}
           path: ${{ env.HTML_BUILD }}
           if-no-files-found: error
           retention-days: 0
