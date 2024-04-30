@@ -24,7 +24,6 @@ hidden: true
 Advanced Gravwell Configuration </configuration/configuration>
 Environment Variables </configuration/environment-variables>
 Configuration Parameters </configuration/parameters>
-Indexer Configuration </configuration/indexer-default-config>
 Compression </configuration/compression>
 Data Ageout </configuration/ageout>
 Cloud Archive </configuration/archive>
