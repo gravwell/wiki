@@ -17,7 +17,7 @@ This section contains basic “quick start” instructions for getting Gravwell 
 
 This guide is suitable for Community Edition users as well as users with a paid single-node Gravwell subscription.
 
-You may find the [installation checklist](checklist) a useful companion to this document.
+You may find the [installation checklist](checklist) and the [glossary](/glossary/glossary) useful companions to this document.
 
 If you are interested in a complete training package, please see the [complete training PDF](https://github.com/gravwell/training/releases/download/v5.4.7/gravwell_training_v5.4.7.pdf).  The Gravwell training PDF is the complete training manual which is paired with labs and exercises. The exercises are built from the open source [Gravwell Training](https://github.com/gravwell/training) repository.
 
@@ -49,6 +49,7 @@ End User License Agreement </eula>
 Open-Source Library Licenses </open_source>
 ```
 
+(system_requirements)=
 ## System Requirements
 
 ### Hardware
