@@ -1,212 +1,181 @@
 # Gravwell Glossary
 
-This section will include basic descriptions for various terms and items used within Gravwell,   as well as links to the location in the documentation where more detailed information can be found.
+This section defines common terms used in Gravwell, as well as links to documentation where more detailed information can be found.
 
-### Primary Components and General terms
+## General
 
-[Indexer](/configuration/configuration.html#indexer-configuration)
-  The Indexer is the Primary component in a Gravwell Deployment. It is responsible for the Storage, retrieval, and processing of data.
+[Entry](entries)
+	An entry is the most basic unit of data in Gravwell. An entry may contain a syslog event, or a Netflow binary record, or a raw packet. Each entry contains four basic built-in fields: DATA, the actual data such as a syslog record; TAG, a tag assigned for organization; SRC, the IP address from which the entry originated; and TIMESTAMP, the time associated with the entry.
+	
+[Indexer](configuration_indexer)
+  The indexer is the primary component in a Gravwell Deployment. It is responsible for the storage, retrieval, and processing of data.
 
-[Webserver](/configuration/configuration.html#webserver-configuration)
-  The Webserver acts as the focusing point for all searches, and provides an interactive interface into Gravwell. (The GUI)
+[Webserver](configuration_webserver)
+  The webserver is the component which coordinates searches across the indexers and serves Gravwell's web interface.
 
-[Cluster](/distributed/cluster.html)
-   A Multi-System Deployment of Gravwell
+[Cluster](/distributed/cluster)
+   A multi-system deployment of Gravwell. This may range from a single webserver and a single indexer, all the way up to multiple webservers, multiple indexers, a datastore, and a load balancer.
 
-[Load Balancer](/distributed/loadbalancer.html)
-   A Load Balancer is a system which will split an incoming workload across multiple systems.   Gravwell provides a custom load balancer designed for use with Gravwell webservers to simplify your clustered deployment
+[Load Balancer](/distributed/loadbalancer)
+   A load balancer is a system which will split an incoming web workload across multiple systems. Gravwell provides a custom load balancer designed for use with Gravwell webservers to simplify a clustered deployment
 
-[Ingester](/ingesters/ingesters.html)
-  The Ingester is the primary method of getting data into the Gravwell Indexers. They can be homed on the same system as the Indexer, or remote systems depending on your needs.  Ingesters are generally designed to handle a specific data source or data type.  Multiple Ingesters can sit on a single system. 
+[Ingester](/ingesters/ingesters)
+  The ingesters are the primary method of getting entries into the Gravwell indexers. They can reside on the same system as the indexer or webserver, or they can be installed on separate machines, depending on your needs.  Ingesters are generally designed to handle a specific data source or data type. Multiple ingesters can sit on a single system. 
 
-[Federator](/ingesters/federators/federator.html)
-  A Federator is an entry Relay.  It can optionally be deployed between Ingesters and the Indexer data flow.  It's most common use is as a trust boundary.
+[Federator](/ingesters/federators/federator)
+  A federator is an entry relay. It sits between ingesters and indexers and may be used for several reasons. If a deployment has many indexers, a federator can be deployed so ingesters only need to be pointed at the single federator rather than all the indexers. It can also be used to provide a restricted ingest point for less-trusted data sources, e.g. only allowing ingest to a subset of tags. It is also a useful way to allow incoming entries from the Internet without directly exposing the indexers.
 
-[API](/api/api.html)
-  An API is an Application Programing Interface.  Gravwell uses a REST API which can be leveraged for direct queries and some scripting.  Gravwell also has the capability to interact with the API's of various other applications within it's automation systems.
+[API](/api/api)
+  Gravwell uses a REST API (Application Programming Interface) which can control essentially every feature in the system. The direct search API is particularly useful in that it lets external systems query data from Gravwell in a single HTTP request. Gravwell also has the capability to interact with the APIs of various other applications within its automation systems.
 
-[License](/license/license.html)
-   In Gravwell the License is used to enable the application and enable the features based off the License tier which you have subscribed.
+[License](/license/license)
+   The license allows the application to run. Once uploaded to the webserver at install time, it will be automatically distributed to the indexers. License updates are generally automatic.
    
-[Search Agent](/scripting/searchagent.html)
-  The Gravwell Search Agent is the component which runs Automations
+[Search Agent](/scripting/searchagent)
+  The search agent is the component which runs automations.
 
-[Datastore](/distributed/frontend.html#the-datastore-server)
-  The Datastore is the server/process which allows for the syncing of data across multiple Gravwell Webservers.  
+[Datastore](datastore_server)
+  The Datastore is a component which synchronizes data across multiple Gravwell webservers.
 
-[Overwatch](/distributed/overwatch.html)
-   Gravwell Overwatch is a Advanced Deployment configuration where you can have specialized webservers that can query multiple self contained Gravwell Clusters.   
+[Overwatch](/distributed/overwatch)
+   Overwatch is a advanced deployment where you can have specialized webservers that can query multiple self-contained Gravwell clusters.
 
-[CBAC / Capability Based Access Controls](/cbac/cbac.html)
-   Capability Based Access Controls allows configuring fine grained access by user or group to various Gravwell features, functionality, and/or tags
+[CBAC / Capability Based Access Controls](/cbac/cbac)
+   Capability Based Access Controls is a feature which allows configuration of fine-grained access (by user or by group) to individual Gravwell features, functionality, and/or tags.
 
-[SSO / Single Sign-On](/configuration/sso.html)
-   The ability to leverage any SAML-Compliant Identity Provider to log into Gravwell
+[SSO / Single Sign-On](/configuration/sso)
+   Gravwell can be configured to use a SAML-Compliant Identity Provider for user authentication.
 
-[Docker](/configuration/docker.html)
-   A Containerized Environment that allows the installation, management, and configuration of an application abstracted outside of the host operating system(OS).  Gravwell publishes containers to Dockerhub for a number of components.
+[Docker](/configuration/docker)
+   Gravwell publishes containers to Dockerhub for a number of components.
 
 [Community Edition / CE](https://www.gravwell.io/pricing)
-    The Free License for Personal or Commercial use of Gravwell perfect for small commercial projects,  Community home labs,  or experimentation of the Gravwell Platform.
+    A free, ingest-limited license for personal or commercial use of Gravwell. Intended for small commercial projects, home labs, or experimentation of the Gravwell platform.
 
-[Self-Hosted / On-Prem](/quickstart/quickstart.html#system-requirements)
-    Application run on your own servers.  In the context of Gravwell these systems can be owned/leased systems in a location you control,  or a system you manage in a public cloud environment (AWS / Azure / GCP / Oracle / etc).  The application can be installed and managed via a standard linux package manager (Redhat RPM or Debian .deb formats),  Docker containers,  or via a distribution-agnostic self-extracting installer.
+[Self-Hosted / On-Prem](system_requirements)
+     In the context of Gravwell, self-hosted systems are considered to be any Gravwell deployment where the management of the hardware & operating system is under the control of the customer, rather than Gravwell Inc. This can include owned/leased systems in a customer datacenter, or customer-managed VMs in a public cloud environment (AWS / Azure / GCP / Oracle / etc).  The application can be installed and managed via a standard Linux package manager (Redhat RPM or Debian .deb formats),  Docker containers,  or via a distribution-agnostic self-extracting installer.
 
 [Cloud / Managed Hosting](https://www.gravwell.io/pricing/enterprise-cloud-edition)
-    The Application run on servers Managed by Gravwell.   In the Context of Gravwell,  We will handle the hardware, Operating System, and software management,  allowing you to focus on your data and application.
+	Gravwell can be licensed as a SaaS product, hosted in the cloud and managed by Gravwell Inc.
 
-[Configuration / .Conf file](/configuration/configuration.html#configuration-files-overlay-directories)
-   All components of Gravwell will use a `.conf` file to store and set the variables and options needed to function.  These are generally contained in the `/opt/gravwell/etc` directory, and are read and applied when the application is started.
+[Configuration / .conf file](configuration_overlays)
+   All components of Gravwell use a `.conf` file to store and set the variables and options needed to function.  These are generally contained in the `/opt/gravwell/etc` directory, and are read and applied when the application is started.
 
-[TLS / SSL](/configuration/certificates.html)
-   Encryption protocols that allow you to securely authenticate and transport data across a network.  SSL (Secure Socket Layer) is the older standard which is being depreciated in favor of the more modern TLS (Transport Layer Security) standards. In addition to enabling HTTPS access to the Webserver GUI,  Gravwell supports TLS listeners on several Ingesters,  as well as TLS Communication between the Ingesters, Federators, and Indexers.
+[TLS / SSL](/configuration/certificates)
+   Encryption protocols to securely transport data across a network. In addition to enabling HTTPS access to the web UI,  Gravwell supports TLS listeners on several ingesters, as well as TLS communication between the ingesters, federators, and indexers.
 
-[Structure on Read](/search/search.html)
-  Gravwell is a Structure on Read data lake,  where data is ingested in it's raw form directly into the system and any structure is applied to that data when its read. This allows for a lot of flexibility as you do not need to know how the data looks or "normalize" it before you send it into Gravwell,  and if that structure changes for any reason (Ex.  Errors or unexpected behavior in the source device,   Vendor format changes on an upgrade,  enabling additional options on the source device to receive more detailed information) it will not prevent the data from being ingested or cause a data loss scenario.   By retaining all the data in it's native format,  it also makes it easier to ask questions retroactively on historical data knowing you have not lost any visibility since it was generated.
+[Structure-on-Read](/search/search)
+  Gravwell is a "structure-on-read" data lake,  where data is ingested directly into the system with no pre-processing required; structure is then applied to that data at *search time*. This allows for a lot of flexibility as you do not need to know how the data looks or "normalize" it before sending it into Gravwell, and if that structure changes for any reason (e.g.  errors or unexpected behavior in the source device, vendor format changes on an upgrade, enabling additional options on the source device to receive more detailed information) it will not prevent the data from being ingested or cause a data loss scenario.  By retaining all the data in its native format, it also makes it easier to ask questions retroactively on historical data knowing you have not lost any visibility since it was generated.
   
 
-### GUI / Interface
+## GUI / Interface
 
-[Search Query / Query Studio](/gui/queries/queries.html)
-   A Search Query is the most basic function within Gravwell, where you can ask questions of the data within the system.   Query Studio is the primary interface for building and submitting the queries you may have.
+[Search Query / Query Studio](/gui/queries/queries)
+   A search query is the most basic function within Gravwell, where you can ask questions of the data within the system. A query is a string which specifies what data should be accessed, how it should be filtered and processed, and how it should be displayed to the user. Query Studio is the primary interface for building and submitting queries.
 
-[Query Syntax / grav.y](/search/spec.html)
-   The basic syntax/grammer/rules upon which queries are written and inputted into the system.  We designed the language to be as easy and flexible as possible using some basic frameworks and concepts well established within the technical community.  From a high level,  if you are familiar with Linux CLI concepts such as the use of Pipes `|` to build a command pipeline, quoting `"` and escaping special characters,   or C style opperators `==` ``!=` `/*  */`,  you should be have no issues  understanding how to build a search query.
+[Query Syntax / grav.y](/search/spec)
+   The basic syntax/grammar/rules upon which queries are written. From a high level, if you are familiar with Linux CLI concepts such as the use of pipes `|` to build a command pipeline, quoting `"` and escaping special characters, and logical operators (e.g. `==` ``!=`),  you should be have no issues understanding how to build a search query.
 
-[Search History](/gui/queries/queries.html#accessing-search-history)
-  A list of past searches run on the system.
+[Search History](search_history)
+  A page showing a list of past searches run on the system.
+  
+[Persistent Searches](/gui/persistent/persistent)
+	A page showing a list of searches on the system. Searches will appear in Persistent Searches when they are actively running, were set into a background state, or have had their results saved.
 
-[Query Library / Saved Search](/gui/queries/queries.html#accessing-the-query-library)
-    A collection of previously saved searches
+[Query Library](/gui/querylibrary/querylibrary)
+    A collection of query strings saved by the user for later re-use (or distributed in a kit). A query library item can be used in a dashboard tile or referenced in a scheduled search or flow.
 
-[Search Timeframe](/gui/queries/queries.html#selecting-a-timeframe)
-   The Period of time you wish your search to cover.
+[Search Timeframe](timeframe_selector)
+   The period of time you wish your search to cover.
 
-[Search Results](/gui/queries/queries.html#search-results-page)
-   The results of the search that was run
+[Scheduled Search](/scripting/scheduledsearch)
+	A Gravwell query which will be run automatically on a given schedule. The schedule is defined using cron format, meaning searches may run as frequently as every minute.
 
-[Scheduled Search](/scripting/scheduledsearch.html#managing-scheduled-searches)   
-     An automated Search scheduled using standard CRON notation.  Scheduled searches can either be a manually inputted search, or utilize a saved search from the Query Library.
+[Template](/gui/templates/templates)
+  Templates are essentially stored queries which contain a variable. Templates may be used in actionables or dashboards to provide basic investigative functionality, e.g. clicking an IP address and searching for all traffic it originated.
 
-[Template](/gui/templates/templates.html)
-  Templates are essentially stored queries which contain a Variable.
+[Macros](/search/macros)
+   Macros are essentially string replacement rules for use in queries.  They allow the creation of pre-defined variables containing strings that can then be called within the search pipeline. For instance, a macro may be used to store a long and complex regular expression.
 
-[Macros](/search/macros.html)
-   Macros are essentially string replacement rules.  They allow the creation of pre-defined variables containing strings that can then be called within the search pipeline.  Common uses might be a long regex string that you'd like to easily and neatly call within a search,  or a commonly used set of processing you do on some data before asking your question,  or even a list of tags/ips/users/etc which you may commonly need to insert into your search string.
-
-[Dashboards](/gui/dashboards/dashboards.html)
+[Dashboards](/gui/dashboards/dashboards)
    Dashboards are Gravwell's way of showing the results from multiple searches at the same time. A Dashboard contains many *tiles*, each associated with a Gravwell query.
 
 [Investigative Dashboard](/gui/dashboards/dashboards.html#investigative-dashboards)
-   A Special type of Dashboard that leverages Templates instead of standard queries.  Unlike traditional Dashboards, the Template's variables will give the different tiles a more dynamic quality.  They get their name from the common use case of people able to plug in a specific IP/Username/Hostname/etc and run multiple searches against that data in a single pane to investigate what you can find around the specific pivot point.
+   A special type of dashboard that leverages templates instead of standard queries. When an investigative dashboard is launched, it sets the variables for its templates, either by prompting the user directly or automatically if the user has accessed the dashboard through an actionable. Investigative dashboards get their name from the common use case: a dashboard which takes a specific IP/username/hostname/etc and run multiple searches to investigate that variable.
 
-[Persistent Search](/gui/persistent/persistent.html)
-    A Persistent Search allows a User to send a long-running search to the background,  or save search results for later analysis or sharing.
+[Labels](/gui/labels/labels)
+   Gravwell allows the assignment of labels to various items for organizational purposes.  Labels can be used to help group or filter items within the GUI.
 
-[Labels](/gui/labels/labels.html)
-   Gravwell allows the assignment of "Labels" to various items for organizational purposes.  Labels can be used to help group or filter items within the GUI.
+[Resources](/resources/resources)
+   Resources allow users to store persistent data for use in searches. They can be manually uploaded by users or automatically created by some search modules.  Common uses include storing lookup tables for data enrichment, whitelists/blacklists, and GeoIP databases.
 
-[Resources](/resources/resources.html)
-   Resources allow users to store persistent data for use in searches. They can be manually uploaded by users, or automatically created by some search modules.  Common uses could include lookup tables data enhancement,  whitelist/blacklists,  regex strings, and/or anko scripts.
+[Auto-Extractors](/configuration/autoextractors)
+   Auto-extractors provide search-time information on the structure of data in a given tag. Because Gravwell is a structure-on-read system, the user generally needs to know what sort of structure to apply to any given entry. Once an appropriate structure has been determined for a given tag, it can be stored in an *auto-extractor* definition for later use.
 
-[Auto-Extractors](/configuration/autoextractors.html)
-   Auto Extractors enable configuration of pre-defined extraction and definition to the unstructured data and data formats that are not self-describing.  They are a huge Quality of Life and daily usage improvement that will greatly simplify making use of the non-normalized data you work with on a daily basis.
+[Kits](/kits/kits)
+   Kits are Gravwell's way of bundling up a lot of related items (dashboards, queries, scheduled searches, autoextractors, scripts, etc.) for easy installation on other systems.  Gravwell Inc. provides pre-built kits for common use cases, but users can also build their own kits from within the Gravwell UI.
 
-[Kits](/kits/kits.htm)
-   Kits are Gravwell's way of bundling up a lot of related items (Dashboards, Queries, Scheduled Searches, Autoextractors, scripts, etc) for easy installation to other systems.  Gravwell Inc provides pre-built kits for common use cases,  but users can also built their own kits from within the Gravwell UI.
+[User Files](/gui/files/files)
+   Gravwell users can upload small files for use in playbooks, as cover images for custom kits, etc.
 
-[User Files](/gui/files/files.html)
-   Gravwell Users can upload small files for use in Playbooks,  as cover images for custom kits,  etc.
+[Playbooks](/gui/playbooks/playbooks)
+    Playbooks are hypertext documents which help guide users through common tasks, describe functionality, and record information about data in the system. Playbooks can include a mix of text, images, links, resources, and executable queries. 
 
-[Playbooks](/gui/playbooks/playbooks.html)
-    Playbooks are hypertext documents within Gravwell  which help guide users through common tasks,  describe functionality, and record information about data in the system.  Playbooks can include a mix of text, images, links, resources,  and executable queries. 
+[Actionables](/gui/actionables/actionables)
+   Actionables provide a way to create custom menus that key on any text rendered in a query, enabling users to take different actions on that text via the menu. For instance, an actionable could be defined to provide a menu of options whenever an IP address is clicked. Actionables can be used to open external URLS, submit new Gravwell queries, launch dashboards, and execute templates.
 
-[Actionables](/gui/actionables/actionables.html)
-   Actionals provide a way to create custom menus that key on any text rendered in a query, enabling users to take different actions on that text via the menu. Actionables can be used to open external URLS that key on data,  submit new gravwell queries,  launch dashboards, and execute templates.
+[Secrets](/gui/secrets/secrets)
+  Gravwell can store secret strings (e.g. API tokens) for use in flows and scripts; this feature is intended to provide a basic level of defense against leaking secrets accidentally. Once entered, a secret's contents cannot be easily extracted/read by a user; however, they may change the value later.
 
-[Secrets](/gui/secrets/secrets.html)
-  Gravwell can store secret strings for use in flows.  This can be used to securely store items like API tokens within Gravwell which can then be used in a variety of Flows and Alerts without exposing the underlying secret data to users.  Once entered a secret's contents cannot be extracted/read by a user,   however they may change the value later.
+[Email](/configuration/email)
+   Gravwell can be configured to send emails via automated scripts and flows.  The outgoing SMTP server information can be specified by individual users, or the Gravwell administrator can define a system-wide server for all users.
 
-[Email](/configuration/email.html)
-   Gravwell can be configured to send emails via automated scripts and flows.   The outgoing smtp server information must be configured by the user or the system admin to allow the functionality.
-
-[Topology](/gui/systems-health.html#topology)
-   The Topology is the layout of the system's deployment.  Gravwell's Systems and Health options will allow you to view the basic topology layout of the system so you can see how the different physical and logical components are layed out within your deployment.
-
-[CLI / Command Line Interface](/cli/cli.html)
-    Gravwell has a command line client that can be used to remotely manage gravwell or perform basic searches.
-
-
+[CLI / Command Line Interface](/cli/cli)
+    Gravwell has a command line client that can be used to remotely manage Gravwell or perform basic searches.
 
     
-### Indexer Terms
+## Indexer
 
-[Storage](/architecture/architecture.html#indexer-storage-topology)
-   Storage, in it's most basic form, is the physical location where your data will be placed.  ie.  Your SSD and Disk based drives.  Due to the nature of ingesting large amounts of data and also searching through that data, Disc performance will be a primary factor in the system's overall performance.
+[Storage](indexer_storage_topology)
+	"Storage" is the general term used for entries residing on disk. Gravwell organizes entries in several ways: they are logically grouped into *wells*, and then temporally grouped into *hot* and *cold* storage tiers.
 
-[Tags](/search/search.html#tag-specification)
-   A Tag is used as a method to logically seperate data of different types. A Tag is assigned to an entry at Ingest time. It can also be used along with CBAC to limit access in the system to data.  A Tag is also the primary way of informing and filtering the search pipeline to the specific data you wish to query,  so it can be useful to apply unique tags to different types of data.
+[Tags](tag_specification)
+   Tags are used to logically organize entries. A tag is assigned to each entry at ingest time, thus incoming syslog data may be tagged "syslog", while webserver logs might be tagged "apache", Netflow v5 records are tagged "netflow", and Windows event logs get tagged "winlog". When running a search, the first part of the query string specifies which tags should be accessed, e.g. `tag=syslog grep Failed`.
    
-[Storage Wells](/configuration/configuration.html#tags-and-wells)
-  A Storage Well is where you can configure a variety of parameters informing the system how to store and manage the raw data being ingested into the system.  Keeping with the "Data Lake" analogy where every piece of data brought in is a drop of water,   a Well would be where you would tell the system which Storage pool and where its located, to  place that drop of data.
+[Storage Wells](configuration_tags_and_wells)
+	Wells are the organizational structure used to group tagged entries on the disk. The user running Gravwell queries will be unaware of which wells his or her entries are coming from, but by thoughtful well configuration it is possible to achieve optimal query performance. A well configuration specifies where on the disk data should be stored, which tags should go into the well, and what data ageout strategy (if any) should be used.
 
-[Data Shard](/configuration/configuration.html#tags-and-wells)
-  Wells store the data on-disk in Shards,  with each shard generally containing 1.5 days worth of data. 
-  
-[Data Ageout](/configuration.html#data-ageout)
-  Gravwell supports an ageout system whereby data management policies can be applied to individual wells. This allows for the automated management of data at the shard level, for example allowing for a hands off ability to optomize physical storage and well usage or compliance with data retention policies.    Despite the name,  Ageout can be configured around Total Storage,  Storage Availability, or Time based criteria.
+[Data Shard](configuration_tags_and_wells)
+	Each individual well further segments its data into *shards*. Each shard contains approximately 1.5 days worth of entries.
 
-[Hot Storage](/configuration/ageout.html#basic-configuration)
-   Every Well has a Hot storage location that would be defined by the `Location` directive.  This is the physical location (based off the unix path) where data is stored when it is first ingested. 
+[Data Ageout](/configuration/ageout)
+  Gravwell supports an ageout system whereby data management policies can be applied to individual wells. Entries can be evicted from a given well based on their age, the total storage consumed by the well, or the amount of free space remaining on the disk.
 
-[Cold Storage](/configuration/ageout.html#basic-configuration)
-    Cold storage is an optional location that can be defined within a Well Configuration, and is used in conjunction with ageout rules to move data from the Hot to Cold location.   A common use case with Cold storage would be regularly accessed data would initially go into a Hot Storage location housed on high speed NVME type storage,   but after its no longer needed for regular searches could be moved to less expensive and slower Spinner type hard disc drives.
+[Hot Storage](/configuration/ageout.html)
+   Every well has a "hot" storage location which holds the most recent data. This should be the fastest storage available, as it will generally be the most frequently accessed.
 
-[Cloud Archive](/configuration/archive.html)
-  Gravwell supports an ageout mechanism called Cloud Archive,  where indexers can upload shards to a cloud archive server before deletion from the indexers.   This is ideal for data that must be retained long term but no longer needs to be actively searched.
+[Cold Storage](/configuration/ageout.html)
+	Wells may optionally have a "cold" storage location. Data may be sent from hot storage to cold storage based on a variety of ageout constraints. Cold storage frequently uses slower storage technology, as "cold" data is assumed to be accessed less frequently.
 
-[Replication](/configuration/replication.html)
-   Gravwell supports the ability to transparently replicate data across distributed indexers allowing for a fault-tolerant high availability system that protects access to your data.
+[Cloud Archive](/configuration/archive)
+  The final tier of storage is called "cloud archive", where indexers can upload shards to a dedicated archive server before deleting them from the indexers. This is ideal for data that must be retained long-term but no longer needs to be actively searched.
 
-[Query Acceleration](/configuration.html#query-acceleration) 
-   Gravwell supports the notion of "accelerators" for individual wells, which allow you to apply parsers to data at ingest to generate optimization blocks. Accelerators are extremely useful for needle-in-haystack style queries, where you need to zero in on data that has specific field values very quickly.
+[Replication](/configuration/replication)
+   Gravwell supports the ability to transparently replicate data across distributed indexers. If an indexer goes offline, the other indexers can serve their replicated copies of its data in queries until the indexer is repaired. If an indexer loses data due to e.g. a bad disk, it can restore from the replicated copies.
 
-[UUID](/configuration/parameters.html#indexer-uuid)
-  A Unique Identifier for system within the Gravwell cluster.   No two devices should have the same UUID or you may see unexpected behaviour
+[Query Acceleration](/configuration/accelerators) 
+   Gravwell supports the notion of "accelerators" for individual wells and/or tags. Accelerators can parse data at ingest time and build indexes based on the contents of the entries; at search time, these indexes can be used to narrow down which entries are actually processed, speeding up queries. The most basic accelerator, "fulltext", simply builds a full-text index of the entries; this allows very rapid text-based searching. Other accelerators can parse & index CSV, JSON, Netflow, packets, and other formats.
 
-[Pipe Ingest](/configuration/parameters.html#pipe-ingest-path)
-  While the "normal" method of transporting data from an ingester to the indexer involves transporting over a network connection, The system also supports the use of a unix named pipe that ingesters located on the same system can utilize for a high speed and low latency transport.   Names pipes can also be utilized to facilitate transport over unusual network transports or non-IP based interconnects.
+[Data Compression](/configuration/compression)
+   Storage is compressed by default, which allows shifting some load from storage to CPU. For many log types, such as syslog data, it can also improve query speed as less data must be read from physical disks.
 
-[Ingest Secret](/configuration/parameters.html#ingest-auth)
-  The Ingest Secret is a shared token that is used to authenticate Ingesters to the Indexer (or Federator)
+## Search
 
-[Control Secret](/configuration/parameters.html#control-auth)
-  The Control Secret is a shared token that is used to Authenticate Ingesters to Webservers and visa versa
+[Search Pipeline](/search/search)
+   The search pipeline is the core of Gravwell's functionality. Entries are pulled from the indexer disks, fields are extracted, filters are applied, statistics may be computed, and finally the results are presented to the user as a table, graph, or map.
 
-[Search Agent Secret](/configuration/parameters.html#search-agent-auth)
-   The Search Agent Secrect is a shared token that is used to Authenticate the Search Agent to the Webserver
+[Extraction Modules](/search/extractionmodules)
+   Extraction modules are used to pull specific information out of the raw underlying data. For example, the `netflow` module parses entries containing Netflow records; one might use the `netflow` module to extract the src and dst fields from a data set.
 
-[Data Compression](/configuration/compression.html)
-   Storage is compressed by default which allows shifting of some load from Storage to CPU. For many log types, Such as syslog data which compresses effectively, it can improve performance speed as less data must be read from physical disks,  and allow for more efficient use of the mass storage devices.
-
-### Search
-
-[Entry](/search/search.html#entries)
-   Entries are your basic unit of data within Gravwell.  Entries are generated by the Ingester and sent to the indexer where they are stored until queried.  Every Entry contains 4 fields:  DATA, TIMESTAMP, SRC, and TAG.   The DATA field is the raw data sent to the Ingester,  the TIMESTAMP is the time extracted or applied to the entry which will be used to determine it's shard placement,  SRC will by default be the Source IP which the ingester received the data from,  and the TAG is the Gravwell Tag that will be used to determine where to place the data by the ingester.
-
-[Search Pipeline](/search/search.html#search)
-   The Search Pipeline is the core of Gravwell's functionality and operates in a similar fasion to the Linux/Unix Command line.   At it's most basic,  the Pipe will consist of at least 1 Extraction Module,  1 or more Filtering/processing modules,  and a Rendering Module.   As the data flows from the initial extraction module that pulls the data into the pipeline, it will be modified and transformed as it moves through the pipeline until it reaches the render module and the results are displayed.
-
-[Extraction Modules](/search/search.html#extraction-modules)
-   Extraction Modules are used to pull specific information out of the raw underlying data
-
-[Enumerated Value / EV](/search/search.html#enumerated-values)
-   Enumerated Values are special data elements which are created and used within the search pipeline.  All Entries contain the DATA, TIMESTAMP, SRC, and TAG EV's by default.  As the data moves through the pipeline additional Fields/EV's may be extracted and attached to the entry in the pipeline to facilitate additional processing and the eventual rendering of the results.
-   
-### Ingesters
-
-[Attach](
-
-### Search
-
-
+[Enumerated Value / EV](enumerated_values)
+   Enumerated Values are special data elements which can be attached to entries during a search.  All entries contain the DATA, TIMESTAMP, SRC, and TAG "special" EVs by default.  As the data moves through the pipeline, modules may attach additional enumerated values to the entry in the pipeline; the `netflow` module might be used to extract the `src` IP address from each record, then later the `stats` module can count how many times each different source IP was seen in the data.

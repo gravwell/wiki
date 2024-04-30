@@ -25,7 +25,7 @@ As you type, the autocomplete menu will automatically open with suggestions to h
 |                   Error Hints | Hover underlined text               | 
 | Other Hints and Documentation | Hover                               |
 
-
+(search_history)=
 ### Accessing search history
 
 To re-run a previous search, use the arrow to open the right-hand pane and choose History in the dropdown:
@@ -40,6 +40,7 @@ The queries stored in the query library are also available through the right-han
 
 ![](search-library.png)
 
+(timeframe_selector)=
 ## Selecting a Timeframe
 
 By default, queries run over the last hour of data. This is easily changed by clicking on the calendar icon or timeframe above the query and selecting a timeframe from the dropdown:
