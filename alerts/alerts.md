@@ -101,13 +101,14 @@ If we were to add another field, "foobar", which is *not* output by the dispatch
 
 Schemas are entirely optional, but highly recommended. They make it easier to define dispatchers and to test/debug consumers.
 
+(define-a-consumer)=
 ## Defining a Consumer
 
 Currently, [flows](/flows/flows) are the only type of consumer supported for alerts. When a flow executes as a consumer, the incoming payload contains an additional item named `event` which contains the event sent by the dispatcher. 
 
 ### Building a Consumer Flow
 
-We can test our flow in development as though it were triggered by an alert by selecting the alert from the Alert Context dropdown:
+We can test our flow in development as though it were triggered by an alert by selecting the alert from the Alert Context dropdown. Alerts that are already connected to this flow are listed as **Linked Alerts**, and alerts that are _not_ connected to this flow are listed as **Other Alerts**:
 
 ![](flow-context-menu.png)
 
