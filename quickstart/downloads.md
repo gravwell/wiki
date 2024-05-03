@@ -7,6 +7,11 @@
 | Windows Events | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.4.0/installers/gravwell_win_events_5.4.0.msi"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">14347b5038e2c544b055c953f7d8185887b54c3bb02a78c50190cd737ffc2200</span></code>'>(SHA256)</a> | [Documentation](/ingesters/winevent) |
 | Windows File Follower | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.4.0/installers/gravwell_file_follow_5.4.0.msi"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">0a2d87c356482f1612fd1e0e5f3f2089aaf40208d588b629cdeb825c103b96b9</span></code>'>(SHA256)</a> | [Documentation](/ingesters/win_file_follow) |
 
+## macOS Ingesters
+
+| Ingester Name | Installer    | More Info |
+| :------------ | :----------- | :-------- |
+| File Follower | <a data-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.4.0/installers/GravwellFileFollower-5.4.0.pkg"><i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-custom-class="hash-popover" href="javascript:void\(0\)" data-toggle="popover" data-placement="bottom" data-html="true" data-content='<code class="docutils literal notranslate"><span class="pre">14347b5038e2c544b055c953f7d8185887b54c3bb02a78c50190cd737ffc2200</span></code>'>(SHA256)</a> | [Documentation](/ingesters/file_follow) |
 
 ## Other Installers
 
