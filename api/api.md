@@ -1,86 +1,40 @@
-# API
+# REST API
 
-This section documents the web API used between the GUI and the "frontend" webserver.
+This section contains links to documentation about direct query REST APIs, token authentication, and some scripting API interfaces.  More complete API documentation is available on the interactive [Swagger OpenAPI documentation instance](https://api.docs.gravwell.io).
 
-The bulk of the API is RESTful. The exception to this rule is the searching API which uses websockets due to the nature of data exchange and transfer involved in launching and observing data from a search.
 
-## APIs & Objects
+Complete open source clients are available for [Golang](https://github.com/gravwell/gravwell) with [hosted documentation](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client).
+
+
+The test API located at `/api/test` can be used to verify that the webserver is up and functioning. The test API is unauthenticated and always responds with a StatusOK 200 and an empty body if the webserver is available.
 
 ```{toctree}
 ---
 maxdepth: 1
-caption: Basic APIs
+caption: Authenticating with the REST API
 ---
-Login <login>
-User Preferences <userprefs>
-User account controls <account>
-User group controls <groups>
-Notifications <notifications>
-Search Controls <searchctrl>
-Downloading Search Results <download>
-Search History <searchhistory>
-Logging <loglevel>
-Ingesting Entries <ingest>
-Miscellaneous APIs <misc>
-System Management <management>
+API Tokens System </tokens/tokens>
 ```
 
 ```{toctree}
 ---
 maxdepth: 1
-caption: API Objects
----
-Auto-extractors <extractors>
-Dashboards <dashboards>
-Kits <kits>
-Macros <macros>
-Playbooks <playbooks>
-Resources <resources>
-Scheduled Searches <scheduledsearches>
-Search Library <searchlibrary>
-Templates <templates>
-Actionables <actionables>
-User Files <userfiles>
-```
-
-```{toctree}
----
-maxdepth: 1
-caption: Search and Stats
+caption: REST APIs
 ---
 Gravwell Direct Query API </search/directquery/directquery>
 ```
 
+----
+
+# Scripting API
+
+This section documents the API available in [Script](#search-scripts) automations. The libraries and functions documented below can be used to accomplish complex tasks using Gravwell's scripting engine.
 
 ```{toctree}
 ---
 maxdepth: 1
-caption: Automation Scripting
+caption: Script Automations
 ---
 Automation Script APIs & Examples </scripting/scriptingsearch>
 ```
 
-## System Stats
-
-The system stats may be accessed via REST calls.
-
-```{toctree}
----
-maxdepth: 1
-caption: System Stats (REST)
----
-REST Stats API <stats-json>
-```
-
-## Test API
-
-The System contains a test API located at _/api/test_ which can be used to test if the webserver is alive and functioning.  The test API is entirely unauthenticated and always responds with a StatusOK 200 and an empty body.
-
-## Tokens
-```{toctree}
----
-maxdepth: 1
-caption: API Tokens System
----
-API Tokens System </tokens/tokens>
-```

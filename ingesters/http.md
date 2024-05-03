@@ -26,7 +26,7 @@ The configuration file is at `/opt/gravwell/etc/gravwell_http_ingester.conf`. Th
 
 In addition to the universal configuration parameters used by all ingesters, the HTTP POST ingester has two additional global configuration parameters that control the behavior of the embedded webserver.  The first configuration parameter is the `Bind` option, which specifies the interface and port that the webserver listens on.  The second is the `Max-Body` parameter, which controls how large of a POST the webserver will allow.  The Max-Body parameter is a good safety net to prevent rogue processes from attempting to upload very large files into your Gravwell instance as a single entry.  Gravwell can support up to 1GB as a single entry, but we wouldn't recommend it.
 
-Multiple "Listener" definitions can be defined allowing specific URLs to send entries to specific tags.  In the example configuration we define two listeners which accept data from a weather IOT device and a smart thermostat.
+Multiple "Listener" definitions can be defined allowing specific URLs to send entries to specific tags. 
 
 ```
  Example using basic authentication
@@ -90,6 +90,10 @@ If the Gravwell services are present on the same machine, the installation scrip
 
 By default the HTTP Ingester runs a cleartext HTTP server, but it can be configured to run an HTTPS server using x509 TLS certificates.  To configure the HTTP Ingester as an HTTPS server provide a certificate and key PEM files in the Global configuration space using the `TLS-Certificate-File` and `TLS-Key-File` parameters.
 
+```{note}
+The Amazon-Firehose-Listener type requires the use of HTTPS.
+```
+
 An example global configuration with HTTPS enabled might look like the following:
 
 ```
@@ -100,7 +104,7 @@ An example global configuration with HTTPS enabled might look like the following
 
 ### Listener Configuration Options
 
-Listener configuration blocks support the following configuration parameters:
+Listener configuration blocks (except the Amazon-Firehose-Listener) support the following configuration parameters:
 
 
 | Parameter                 | Type         | Required | Default Value                | Description                         |
@@ -120,6 +124,7 @@ Listener configuration blocks support the following configuration parameters:
 | TokenName                 | string       | NO       |      | Authorization token name, required when using preshared-token or preshared-parameter authentication method.|
 | TokenValue                | string       | NO       |      | Authorization token value, required when using preshared-token or preshared-parameter authentication method.|
 | Preprocessor              | string array | NO       |      | Set of preprocessors to apply to entries. |
+| Attach-URL-Parameter      | string array | NO       |      | Set of URL parameter values that will be attached to all entries in a request if they are found in the request URL. |
 
 ### Listener Authentication
 
@@ -296,7 +301,6 @@ The HTTP ingester supports a listener block that is API compatible with the Splu
 	URL="/services/collector"
 	TokenValue="thisisyourtoken"
 	Tag-Name=HECStuff
-
 ```
 
 The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` configuration items. If the `URL` configuration item is omitted, it will default to `/services/collector`.
@@ -305,16 +309,20 @@ Both `Listener` and `HEC-Compatible-Listener` configuration blocks can be specif
 
 The `HEC-Compatible-Listener` supports the following configuration parameters:
 
-| Parameter         | Type         | Required | Default Value         | Description                                                 |
-|-------------------|--------------|----------|-----------------------|-------------------------------------------------------------|
-| URL               | string       | NO       | `/services/collector` | Endpoint URL for Splunk events.                             |
-| TokenValue        | string       | YES      |                       | Authentication Token.                                       |
-| Tag-Name          | string       | YES      |                       | Tag assigned to entries received by the endpoint.           |
-| Ignore-Timestamps | boolean      | NO       | false                 | Do not extract or process timestamps, use current time.     |
-| Ack               | boolean      | NO       | false                 | Acknowledge receipt and respond with entry IDs.             |
-| Max-Size          | unsigned int | NO       | 524288 (512k)         | Maximum size for each decoded entry.                        |
-| Tag-Match         | string array | NO       |                       | Sourcetype value to tag mapping, multiple can be specified. |
-| Preprocessor      | string array | NO       |                       | Set of preprocessors to apply to entries.                   |
+| Parameter          | Type         | Required | Default Value         | Description                                                 |
+|--------------------|--------------|----------|-----------------------|-------------------------------------------------------------|
+| URL                | string       | NO       | `/services/collector` | Endpoint URL for Splunk events.                             |
+| TokenValue         | string       | YES      |                       | Authentication Token.                                       |
+| Tag-Name           | string       | YES      |                       | Tag assigned to entries received by the endpoint.           |
+| Ignore-Timestamps  | boolean      | NO       | false                 | Do not extract or process timestamps, use current time.     |
+| Ack                | boolean      | NO       | false                 | Acknowledge receipt and respond with entry IDs.             |
+| Max-Size           | unsigned int | NO       | 524288 (512k)         | Maximum size for each decoded entry.                        |
+| Tag-Match          | string array | NO       |                       | Sourcetype value to tag mapping, multiple can be specified. |
+| Routed-Token-Value | string array | NO       |                       | Token value used for authentication and tag routing.        |
+| Debug-Posts        | boolean      | NO       | false                 | Emit additional debugging info on the gravwell tag for each POST. |
+| Preprocessor       | string array | NO       |                       | Set of preprocessors to apply to entries.                   |
+| Attach-URL-Parameter | string array | NO     |      | Set of URL parameter values that will be attached to all entries in a request if they are found in the request URL. |
+| Token-Name         | string       | NO       |                       | Optional override of authentication token name, default is "Splunk". |
 
 ### Using the HEC-Compatible Listener
 
@@ -354,6 +362,63 @@ echo '{"event": "Hello, world!", "fields": {"device": "macbook", "user": "bob"}}
 --data-binary @- -H "Content-Encoding: gzip"
 ```
 
+#### Sending Multiple Entries
+
+Each of the HEC endpoints support sending multiple entries in a single request; batching up multiple entries in a single request is dramatically more efficient than one entry per request.
+
+The structured data endpoints allow for specifying a sourcetype value which will be applied to the `Tag-Match` config parameter; if a match is found, a new tag is applied.  The raw endpoints can provide a sourcetype as a query parameter, or a direct tag value can be provided to bypass the sourcetype translations entirely and explicitly specify the tag.
+
+This curl command shows sending several structured entries to the structured endpoint:
+
+```
+curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/event \
+    -H "Authorization: Splunk thisisyourtoken" -d '
+    {"event": "Hello, this is a structured event"}
+    {"event": "Hello, this is another structured event"}
+    {"event": "Hello, this is yet another structured event"}'
+```
+
+This curl command shows sending several entries to the raw endpoint:
+
+```
+curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/raw \
+    -H "Authorization: Splunk thisisyourtoken" -d '
+    hello, welcome to raw #1
+    hello, welcome to raw #2
+    hello, welcome to raw #3'
+```
+
+
+The following curl commands show sending several entries to the raw endpoint and providing a sourcetype and tag as a query parameter.
+
+Override the sourcetype to use the Tag-Match parameter:
+```
+curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/raw?sourcetype=foobar \
+    -H "Authorization: Splunk thisisyourtoken" -d '
+    hello, welcome to raw #1
+    hello, welcome to raw #2
+    hello, welcome to raw #3'
+```
+
+Override the tag value directly:
+```
+curl --http1.1 -X POST -v http://example.gravwell.io/services/collector/raw?tag=testing \
+    -H "Authorization: Splunk thisisyourtoken" -d '
+    hello, welcome to raw #1
+    hello, welcome to raw #2
+    hello, welcome to raw #3'
+```
+
+This curl command shows sending several entries to the structured endpoint with a default tag and setting specific entry sourcetypes:
+
+```
+curl --http1.1 -X POST -v http://example.gravwell.io/services/collector \
+    -H "Authorization: Splunk thisisyourtoken" -d '
+    {"event": "invalid sourcetype things", "sourcetype": "things", "time": 1699034250}
+    {"time": 1699034251, "sourcetype": "stuff", "event": "valid sourcetype stuff"}
+    {"time": 1699034252, "event": "no sourcetype, use default"}'
+```
+
 #### Tag-Match
 
 By specifying one or more Sourcetype:Tag pairs with the Tag-Match configuration option, the HEC-Compatible listener can route events to specific tags by a named source type. 
@@ -367,8 +432,134 @@ Tag-Match=foo:bar
 Multiple Tag-Match pairs can be given:
 
 ```
-Tag-Match=foo:bar ping:pong
+Tag-Match="foo:bar"
+Tag-Match=`ping:pong`
+Tag-Match=`"look:mom:i:have:colons":look_mom_i_have_no_colons`
 ```
+
+```{note}
+Some characters that are supported in a Splunk sourcetype are not supported in a Gravwell tag. If you need to specify a sourcetype with special characters, surround the Tag-Match argument in backticks to specify a raw string and surround the sourcetype in double quotes.
+```
+
+#### Tag-Override
+
+The HEC compatible routes also support a direct tag override by specifying a tag string in the request URL.  Regardless of defined route, requests can specify a default destination tag by setting a URL parameter named `tag`.  If a specified tag is invalid or not allowed for the ingester, the request will fail with a 400 error.
+
+The `tag` parameter only sets the default; structured entries that contain a `sourcetype` value will still attempt a lookup against the `Tag-Match` values.  Consider the following configuration and requests:
+
+```
+[HEC-Compatible-Listener "testing"]
+	URL="/services/collector"
+	TokenValue="thisisyourtoken"
+	Tag-Name=stuff
+	Tag-Match="foo:bar"
+```
+
+```
+curl -X POST -v http://example.gravwell.io/services/collector?tag=testing \
+    -H "Authorization: Splunk thisisyourtoken" -d '
+    {"event": "invalid sourcetype things", "sourcetype": "things", "time": 1699034250}
+    {"time": 1699034251, "sourcetype": "foo", "event": "valid sourcetype foo"}
+    {"time": 1699034252, "event": "no sourcetype, use default"}'
+```
+
+The resulting entries will have the following tags:
+
+| TAG     | DATA    |
+|---------|---------|
+| testing | `invalid sourcetype things` |
+| bar     | `valid sourcetype foo` |
+| testing | `no sourcetype, use default` |
+
+
+#### Routed-Token-Value
+
+The HEC compatible routes support routing data to a specific tag based on the authentication token used; this can be especially useful for third-party systems that do not support altering the default HEC URL.  A `Routed-Token-Value` enables multiple data sources to use the same HEC URL and still be routed to the appropriate tag even if the data producer is not providing sourcetype values in the request.  A `Routed-Token-Value` is used in the exact same way as a traditional HEC token when performing authentication; the HTTP HEC handler will determine the appropriate tag if no other overrides are present.  It is valid to combine a `Routed-Token-Value` with sourcetype overrides on specific entries and a default `TokenValue` is not required if at lease one `Routed-Token-Value` is specified.
+
+Consider the following configuration:
+
+```
+[HEC-Compatible-Listener "testing"]
+	URL="/services/collector"
+	TokenValue="thisisyourtoken"
+	Tag-Name=stuff
+	Tag-Match="foo:bar"
+        Routed-Token-Value="supersekrettoken:baz"
+```
+
+Given the following curl request:
+```
+curl -X POST -v http://example.gravwell.io/services/collector \
+    -H "Authorization: Splunk supersekrettoken" -d '
+    {"event": "invalid sourcetype things", "sourcetype": "things", "time": 1699034250}
+    {"time": 1699034251, "sourcetype": "foo", "event": "valid sourcetype foo"}
+    {"time": 1699034252, "event": "no sourcetype, use default"}'
+```
+
+The resulting entries will have the following tags:
+
+| TAG     | DATA    |
+|---------|---------|
+| baz     | `invalid sourcetype things` |
+| bar     | `valid sourcetype foo` |
+| baz     | `no sourcetype, use default` |
+
+
+
+#### Debug-Posts
+
+The `Debug-Posts` configuration option allows for gathering additional data on each HTTP POST request to the HTTP ingester endpoint.  Only successful transactions will be logged when using the `Debug-Posts` configuration option.  Authentication failures, structure failures, or just bad requests are logged using the existing systems.  The debug logs are sent to the `gravwell` tag.
+
+Here is a raw log entry emitted from a HEC debug post:
+```
+<14>1 2023-11-03T18:01:54.201875Z example.gravwell.io httpingester - HttpIngester/hec.go:234 [gw@1 host="172.19.0.1" method="POST" url="/services/collector" bytes="255" entries="3"] HEC request
+```
+
+Generating a table of the relevant data might use the following query:
+
+```
+tag=gravwell syslog Appname==httpingester Message == "HEC request" Hostname 
+  Structured[gw@1].host Structured[gw@1].url Structured[gw@1].bytes Structured[gw@1].entries
+| table Hostname host url bytes entries TIMESTAMP
+```
+
+![](hec_debug1.png)
+
+
+#### Token-Name
+
+Many third party services which are designed to send data to a HEC compatible listener have been observed sending authentication tokens with various random names; the default expected authentication header structure is `Authentication: Splunk <token>`, but we have seen everything from "User" to "user_name".  The `Token-Name` configuration parameter can override the Authorization header token name so that the HEC compatible listener can still authenticate and support third party services that do not adhere to the HEC guidance.
+
+An example curl command that would authenticate with a `Token-Name` of `foobar` and a `TokenValue` of `soopersekrit` would be:
+
+```
+curl -X POST -v http://example.gravwell.io/services/collector \
+    -H "Authorization: foobar soopersekrit" -d '
+    {"event": "sample event", "time": 1699034250}
+```
+
+## Amazon Firehose support
+
+The `Amazon-Firehose-Listener` type supports the [Amazon Firehose](https://aws.amazon.com/firehose/) API. The Firehose API requires the use of HTTPS and an authentication token. 
+
+```
+[Amazon-Firehose-Listener "foo"]
+	URL="/foo"
+	TokenValue="thisisyourtoken" #set the access control token
+	Tag-Name=bar
+```
+
+In the above example, the HTTP ingester will listen on the `/foo` path for an Amazon Firehose request, authenticated with the token "thisisyourtoken", and ingesting to tag "bar". In the AWS console, you would set the Firehose endpoint to `your.domain/foo`, and provide the same token.
+
+The `Amazon-Firehose-Listener` supports the following configuration parameters:
+
+| Parameter         | Type         | Required | Default Value         | Description                                                 |
+|-------------------|--------------|----------|-----------------------|-------------------------------------------------------------|
+| URL               | string       | YES       | | Endpoint URL for Amazon Firehose events.                             |
+| TokenValue        | string       | YES      |                       | Authentication Token.                                       |
+| Tag-Name          | string       | YES      |                       | Tag assigned to entries received by the endpoint.           |
+| Ignore-Timestamps | boolean      | NO       | false                 | Do not extract or process timestamps, use current time.     |
+| Preprocessor      | string array | NO       |                       | Set of preprocessors to apply to entries.                   |
 
 ## Health Checks
 
@@ -389,3 +580,8 @@ Health-Check-URL="/logbot/are/you/alive"
 
 ```
 
+## Timestamp Formats
+
+The HEC data format expects the timestamps to be Unix timestamps in seconds formatted as an integer or optionally a floating point number; the limited documentation also states that the timestamp should be encoded in the JSON object as a number.  The Gravwell HEC compatible ingester will make a best effort to extract and process timestamps generated by data providers that communicate with HEC endpoints However, if a timestamp cannot be interpreted at all, the endpoint will return a 400 response rather than attempt to process a potentially invalid timestamp.
+
+The HEC compatible endpoint contains special processing logic for timestamps where any Unix timestamps that are approximately the zero time will be treated as "NOW" and given the timestamp of ingest.  For example, a HEC event with the timestamp of `"time": 42` will be assigned the current UTC time.

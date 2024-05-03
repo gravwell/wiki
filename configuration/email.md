@@ -21,7 +21,7 @@ System administrators can configure a single SMTP server for all or some subset 
 
 This type of configuration is often useful if many users may be generating automations and you want a central "alert" Email inbox that all the users can use.  The Global Email configuration is a system level configuration and is not tied to a specific account, nor will it be included in system backups.
 
-The shared email configuration is specified by including a `[Shared-Email-Config]` block in either the `gravwell.conf` (typically located at `/opt/gravwell/etc/gravwell.conf`) or as a configuration overlay file in `/opt/gravwell/etc/gravwell.conf.d/`.
+The shared email configuration is specified by including a `[Shared-Mail-Config]` block in either the `gravwell.conf` (typically located at `/opt/gravwell/etc/gravwell.conf`) or as a configuration overlay file in `/opt/gravwell/etc/gravwell.conf.d/`.
 
 Here is an example configuration block which grants access to a few groups and enforces sender and destination addresses:
 
@@ -42,7 +42,7 @@ Here is an example configuration block which grants access to a few groups and e
 
 ### Required Shared Email Configuration Parameters
 
-At a minimum, the `[Shared-Email-Config]` requires the following SMTP parameters:
+At a minimum, the `[Shared-Mail-Config]` requires the following SMTP parameters:
 
 * `Server`: FQDN of an SMTP server.
 * `Port`: SMTP server port.

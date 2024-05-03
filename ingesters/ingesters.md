@@ -112,6 +112,7 @@ When an *ingester* connects to an indexer, it sends a list of tag names it inten
 Most of the core ingesters support a common set of global configuration parameters.  The shared Global configuration parameters are implemented using the [ingest config](https://godoc.org/github.com/gravwell/ingest/config#IngestConfig) package.  Global configuration parameters should be specified in the Global section of each Gravwell ingester config file.  The following Global ingester parameters are available:
 
 * Ingest-Secret
+* Ingest-Secret-File
 * Connection-Timeout
 * Rate-Limit
 * Enable-Compression
@@ -131,6 +132,13 @@ Most of the core ingesters support a common set of global configuration paramete
 ### Ingest-Secret
 
 The Ingest-Secret parameter specifies the token to be used for ingest authentication.  The token specified here MUST match the Ingest-Auth parameter for Gravwell indexers.
+
+### Ingest-Secret-File
+
+There may be instances where it is undesirable to load ingest secrets as cleartext strings directly from a configuration file; the `Ingest-Secret-File` parameter allows for specifying a file which contains the `Ingest-Secret`.  The `Ingest-Secret-File` should contain the full path to a file containing only the secret value, the file must be readable by the calling ingester.  If both `Ingest-Secret` and `Ingest-Secret-File` are specified, the `Ingest-Secret` value takes precedence; if the `Ingest-Secret` is populated via an environment variable, `Ingest-Secret-File` is ignored.
+
+
+See the page on [Environment Variables](/configuration/environment-variables) for additional methods to divorce secrets from config files.
 
 ### Connection-Timeout
 
@@ -332,13 +340,14 @@ The `Attach` stanza takes any key/value pair, and will attach it to every entry 
 
 Will attach an EV "foo" with the contents "bar" to every entry, as well as "ingester" with the value "my ingester".
 
-Additionally, the below variables can be used to populate values:
+Additionally, dynamic values can be attached which are resolved from the host environment. Dynamic values begin with a `$` character.  There are 3 special dynamic values which are not resolved from environment variables: `$NOW`, `$HOSTNAME`, `$UUID`.  If an environment variable cannot be found, the below variables can be used to populate values:
 
 ```
 [Attach]
 	time = $NOW 		# add the current timestamp
 	host = $HOSTNAME	# add the hostname the ingester is running on
 	uuid = $UUID		# add the ingester's UUID
+	home = $HOME        # add the environment variable "HOME"
 ```
 
 ## Data Consumer Configuration
@@ -367,13 +376,48 @@ Note how it specifies the data source (via the `Base-Directory` and `File-Filter
 
 ### Timestamp Extraction
 
-All ingesters attach a timestamp to each entry sent to an indexer. Most ingesters extract timestamps from the data being ingested, such as the timestamp field in Syslog, and ingesters will extract timestamps as appropriate to the data. When an ingester cannot extract a timestamp, or the input data does not have a timestamp at a known position in the input data, the ingester will attempt to find a timestamp (see the [list of timestamp formats](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#Format)) using a number of formats. 
+All ingesters attach a timestamp to each entry sent to an indexer. Most ingesters extract timestamps from the data being ingested, such as the timestamp field in Syslog, and ingesters will extract timestamps as appropriate to the data. When an ingester cannot extract a timestamp, or the input data does not have a timestamp at a known position in the input data, the ingester will attempt to find a timestamp using a number of formats. 
 
 If the ingester still cannot find a valid timestamp, the current time will be applied to the entry. 
 
 When an ingester attempts to find a timestamp based on the list of timestamp formats, it will always try the last successful format first. For example, if an entry has a timestamp `02 Jan 06 15:04 MST`, the ingester will attempt to parse the next entry with the same timestamp format. If it does not match, then the ingester will attempt all other timestamp formats. 
 
 There are several ways to change the behavior of how timestamps are parsed, detailed in the next section. Additionally, fully custom timestamp formats can be provided in [some ingesters](/ingesters/customtime/customtime).
+
+Below is the list of time formats that will be searched.
+
+| Timestamp Name | Example |
+|----------|-------------|
+|AnsiCFormat                 | `Jan _2 15:04:05 2006`|
+|UnixFormat                  | `Jan _2 15:04:05 MST 2006`|
+|RubyFormat                  | `Jan _2 15:04:05 -0700 2006`|
+|RFC822Format                | `02 Jan 06 15:04 MST`|
+|RFC822ZFormat               | `02 Jan 06 15:04 -0700`|
+|RFC850Format                | `02-Jan-06 15:04:05 MST`|
+|RFC1123Format               | `02 Jan 2006 15:04:05 MST`|
+|RFC1123ZFormat              | `02 Jan 2006 15:04:05 -0700`|
+|RFC3339Format               | `2006-01-02T15:04:05Z07:00`|
+|RFC3339NanoFormat           | `2006-01-02T15:04:05.999999999Z07:00`|
+|ZonelessRFC3339Format       | `2006-01-02T15:04:05.999999999`|
+|ApacheFormat                | `_2/Jan/2006:15:04:05 -0700`|
+|ApacheNoTzFormat            | `_2/Jan/2006:15:04:05`|
+|NGINXFormat                 | `2006/01/02 15:04:05`|
+|SyslogFormat                | `Jan _2 15:04:05`|
+|SyslogFileFormat            | `2006-01-02T15:04:05.999999999-07:00`|
+|SyslogFileTZFormat          | `2006-01-02T15:04:05.999999999-0700`|
+|DPKGFormat                  | `2006-01-02 15:04:05`|
+|SyslogVariantFormat         | `Jan 02 2006 15:04:05`|
+|UnpaddedDateTimeFormat      | `2006-1-2 15:04:05`|
+|UnpaddedMilliDateTimeFormat | `2006-1-2 15:04:05.999999999`|
+|UnixSecondsFormat           | `1234567890`          |
+|UnixMilliFormat             | `1136473445.99`       |
+|UnixMsFormat                | `1136473445000`       |
+|UnixNanoFormat              | `1136473445000000000` |
+|LDAPFormat                  | `123456789012345678`  |
+|UKFormat                    | `02/01/2006 15:04:05,99999`|
+|GravwellFormat              | `1-2-2006 15:04:05.99999`|
+|BindFormat                  | `02-Jan-2006 15:04:05.999`|
+|DirectAdminFormat           | `2006:01:02-15:04:05`|
 
 ### Time Zones
 
@@ -439,3 +483,47 @@ hidden: true
 Migrating Data <migrate/migrate>
 The Migration Tool </migrate/migrate>
 ```
+
+## Starting the Same Ingester Multiple Times with Systemd
+
+There are use cases where you may need to instantiate multiple copies of the same ingester with different configurations. For example, you may need to have two simple-relay ingesters running on the same machine, but with different global configurations. Systemd simplifies this through the use of [service templates](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#:~:text=It%20is%20possible%20for%20systemd,is%20called%20a%20%22template%22.).
+
+Below is an example service template for simple-relay that allows specifying the configuration file and enabling multiple copies of the simple-relay service.
+
+The below file requires an '@' at the end of the filename. We'll name this file `/etc/systemd/system/gravwell_simple_relay@.service`
+
+```
+[Install]
+WantedBy=multi-user.target
+
+[Unit]
+Description=Gravwell Log Relay Service, Config: %i
+After=network-online.target
+OnFailure=gravwell_crash_reporter@%n.service
+
+[Service]
+Type=simple
+ExecStart=/opt/gravwell/bin/gravwell_simple_relay -stderr %n -config-file %i
+ExecStopPost=/opt/gravwell/bin/gravwell_crash_reporter -exit-check %n
+WorkingDirectory=/opt/gravwell
+Restart=always
+User=gravwell
+Group=gravwell
+StandardOutput=null
+StandardError=journal
+LimitNPROC=infinity
+LimitNOFILE=infinity
+TimeoutStopSec=5
+KillMode=process
+KillSignal=SIGINT
+```
+
+Note the use of `%i` in the service file. This allows us to use variable substitution when enabling this service file. We can enable it as many times as needed by specifying the config file in the "name" of the service file:
+
+```
+sudo systemctl enable gravwell_simple_relay@/opt/gravwell/etc/config1.conf
+sudo systemctl enable gravwell_simple_relay@/opt/gravwell/etc/config2.conf
+```
+
+This will create two instances of the service defined above, each with a different config file, as specified in the commands above. Additionally, the use of "enable" in the commands above will cause these instantiations to persist across reboots and start at boot time.
+

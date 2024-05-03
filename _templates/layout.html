@@ -5,8 +5,9 @@
 
   <!-- add `style` or `link` tags with your CSS `@font-face` declarations here -->
   <!-- ... and optionally preload the `woff2` for snappier page loads -->
-  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet" type="text/css">
-  <link href="https://use.typekit.net/gel7sic.css" rel="stylesheet" type="text/css">
+
+  <!-- Note: We're trying to self-host assets https://github.com/gravwell/wiki/issues/813 -->
+  <!-- Avoid linking to external assets if possible -->
 
 {% endblock %}
 
@@ -14,9 +15,18 @@
   {{ super() }}
 
   <script>
-    $(document).ready(function(){
-      $('[data-toggle="popover"]').popover();
-    });
+    const popoverTriggerList = Array.from(
+      document.querySelectorAll('[data-bs-toggle="popover"]')
+    ).map((el) => new bootstrap.Popover(el));
   </script>
 
 {% endblock scripts_end %}
+
+{# Search wasn't showing matches because sphinx's searchtools.js wasn't finding role="main" #}
+{# This overrides the docs_boxy block to add the role attribute. Fixes search troubles. #}
+{% block docs_body %}
+  {% include "components/searchbox.html" %}
+  <article class="bd-article" role="main">
+    {% block body %}{% endblock %}
+  </article>
+{% endblock docs_body %}
