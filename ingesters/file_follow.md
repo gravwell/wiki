@@ -339,3 +339,22 @@ The format defined using these options will be inserted at the top of the list o
 ### Attach-Filename
 
 Each follower has the option to attach the complete file path of the source file to each entry at the time of ingest using the `Attach-Filename=true` parameter to the Follower configuration block.  Setting `Attach-Filename=true` to the follower will attach a value named `file` to each entry which is available at query time in Gravwell.  Be aware that attaching long file paths to entries will have an impact on storage; compression will reduce that impact but it will not eliminate it.
+
+## macOS Configuration
+
+The macOS file follower installs to `/Library/Gravwell/FileFollower` and enables a `launchd` script to enable file follower at startup. To configure file follower on macOS, edit `/Library/Gravwell/FileFollower/file_follow.conf` and restart the file follower service with:
+
+```
+launchctl kickstart -k system/io.gravwell.filefollower
+```
+
+To disable the service, use:
+
+```
+launchctl disable system/io.gravwell.filefollower
+```
+
+To remove file follower from macOS, remove the following:
+
+1. `/Library/Gravwell/FileFollower`
+2. `/Library/LaunchDaemons/io.gravwell.filefollower.plist`
