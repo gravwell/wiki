@@ -366,3 +366,22 @@ starting action cleanup:
 ```
 
 You may wish to have each multiline action be a single entry; this can be accomplished with "Regex-Delimiter=`\n\S`" which will break records on a newline that does not have spaces afterwords.  However, a `Regex-Delimiter` that uses newlines will also capture newlines in the entries; adding the `Trim=true` config option will remove the leading and trailing newlines (and any other space characters).  Trim will not remove any interior whitespace characters.
+
+## macOS Configuration
+
+The macOS file follower installs to `/Library/Gravwell/FileFollower` and enables a `launchd` script to enable file follower at startup. To configure file follower on macOS, edit `/Library/Gravwell/FileFollower/file_follow.conf` and restart the file follower service with:
+
+```
+launchctl kickstart -k system/io.gravwell.filefollower
+```
+
+To disable the service, use:
+
+```
+launchctl disable system/io.gravwell.filefollower
+```
+
+To remove file follower from macOS, remove the following:
+
+1. `/Library/Gravwell/FileFollower`
+2. `/Library/LaunchDaemons/io.gravwell.filefollower.plist`

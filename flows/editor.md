@@ -18,18 +18,22 @@ Nodes are instantiated by dragging them from the palette onto the canvas. Once o
 
 The toolbar contains buttons for quick access to editor functionality. From left to right:
 
-* Flow Designer: shows the flow canvas (default view).
-* Info & Scheduling: shows options to set flow name, description, scheduling, sharing, etc.
-* Enable scheduling: toggle to quickly enable/disable automatic execution of the flow.
-* Save: save the flow.
-* Debug: run the flow
-* Clear selection: deselects any currently-selected node.
-* Delete: delete the selected node.
-* Delete all: delete all nodes (requires confirmation).
-* Export flow: download the flow specification, for backup or sharing.
-* Import flow: upload a previously-exported flow spec.
-* Fit all nodes on screen: zoom & center the canvas so that *all* nodes are visible.
-* Fullscreen: puts the editor into fullscreen mode.
+* **Flow Designer**: shows the flow canvas (default view).
+* **Settings**: shows options to set flow name, description, scheduling, sharing, etc.
+* **Save**: saves the flow.
+* **Schedule Status**: indicates if this flow is configured to automatically run on a schedule.
+* **Alert Status**: indicates if this flow is configured as a [Consumer for an Alert](#define-a-consumer).
+* **Debug**: runs the flow.
+* **Deubg Context**: indicates which debug context (if any) will be used when debugging the flow. [Read more](#define-a-consumer)
+* **Edit Debug Context**: opens a debug context editor.
+* **Delete**: delete the selected node.
+* **Delete all**: delete all nodes (requires confirmation).
+* **Disable Node**: disables the selected node [Read more](#disabled-flow-nodes)
+* **Enable Node**: enables the selected node [Read more](#disabled-flow-nodes)
+* **Export flow**: download the flow specification, for backup or sharing.
+* **Import flow**: upload a previously-exported flow spec.
+* **Fit all nodes on screen**: zoom & center the canvas so that *all* nodes are visible.
+* **Fullscreen**: puts the editor into fullscreen mode.
 
 ## Configuring Nodes
 
@@ -65,6 +69,17 @@ If we modify the If node's config so the statement is `search.Count < 1` and re-
 
 ![](debug-if-false.png)
 
+### Debugging with Contexts
+
+When designing a flow that will be consumed by an alert, it can be useful to simulate dispatching an alert. Debug contexts allow you to build artificial alert payloads which are provided to your flow during debug runs.
+
+```{note}
+Debug contexts are only relevant for **alert consumers**. If your flow runs on a schedule, it will not be provided a context when it is executed by the Search Agent.
+```
+
+To learn more about debugging with contexts, see our docs on [Defining a Consumer](#define-a-consumer).
+
+(disabled-flow-nodes)=
 ## Enabled vs Disabled Nodes
 
 Individual nodes in a flow can be disabled in order to execute parts of a flow without running the entire flow. This feature can be useful for troubleshooting or debugging a flow. For example, one may disable an Email node while troubleshooting a flow in order to avoid sending unnecessary emails.

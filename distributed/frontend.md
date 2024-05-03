@@ -8,6 +8,7 @@ Once configured, distributed webservers will synchronize resources, users, dashb
 The datastore is a single point of failure for your distributed webserver system. If the datastore goes down, your webservers will continue to function in a degraded state, but it is *critical* that you restore it as soon as possible. Refer to the Disaster Recovery section below for more information, and be sure to take [frequent backups](/admin/backuprestore) for safety.
 ```
 
+(datastore_server)=
 ## The datastore server
 
 Gravwell uses a separate server process called the datastore to keep webservers in sync. It must run on its own machine; it cannot share a server with a Gravwell webserver or indexer. Fetch the datastore installer from [the downloads page](/quickstart/downloads), then run it on the machine which will contain the datastore.
