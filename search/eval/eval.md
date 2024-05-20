@@ -624,7 +624,7 @@ Returns a JSON object of the given key/value pair. The value's type is evaluated
 
 #### json_pretty
 
-	function json_pretty(input string) string {
+	function json_pretty(input string) string
 
 Pretty prints the given JSON input.
 
@@ -634,7 +634,97 @@ Pretty prints the given JSON input.
 
 Sets a key/value pair in the given object. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
 
+#### pretty_size
 
+    function pretty_size(input string) string
+
+Converts a number to an abreviated pretty printed size, 1234567 becomes "1.18 MB".
+
+#### pretty_count
+
+    function pretty_count(input string) string
+
+Converts a number to an abreviated pretty printed magnitude, 1234567 becomes "1.24 M".
+
+#### pretty_count
+
+    function pretty_count(input string) string
+
+Converts a number to an abreviated pretty printed magnitude, 1234567 becomes "1.24 M".
+
+#### pretty_rate
+
+    function pretty_rate(number, duration) string
+
+Converts a number to an abreviated pretty printed rate in bytes, kilobytes, or megabytes per second given a magnitude and duration; "pretty_rate(1234567, "2s")" becomes "588.87 KB/s".
+
+#### pretty_line_rate
+
+    function pretty_line_rate(number, duration) string
+
+Converts a number to an abreviated pretty printed line rate in bits, kilobits, and megabits per second given a magnitude and duration; "pretty_line_rate(1234567, "2s")" becomes "4.71 Mb/s".
+
+### Math
+
+```{note}
+Some math functions retain their legacy function names for backwards compatability.
+```
+
+#### ceil
+
+	function ceil(x float) float
+
+Returns the least integer value greater than or equal to x.
+
+#### floor
+
+	function floor(x float) float
+
+Returns the greatest integer value less than or equal to x.
+
+#### math_abs
+
+	function math_abs(x float) float
+
+Returns the absolut value of x.
+
+#### math_ceil
+
+	function math_ceil(x float) float
+
+Same as ceil(). Returns the least integer value greater than or equal to x.
+
+#### math_floor
+
+	function math_floor(x float) float
+
+Same as floor(). Returns the greatest integer value less than or equal to x.
+
+#### math_log
+
+	function math_log(x float) float
+
+Returns the natural logarithm of x.
+
+#### math_log10
+
+	function math_log10(x float) float
+
+Returns the decimal logarithm of x.
+
+#### math_log2
+
+	function math_log2(x float) float
+
+Returns the binary logarithm of x.
+
+#### math_max
+
+	function math_max(x float, y float) float
+
+Returns the larger of x or y.
+
+#### math_min
 ### Math
 
 ```{note}
