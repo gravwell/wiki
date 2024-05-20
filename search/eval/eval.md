@@ -436,6 +436,35 @@ Returns the input with all leading and trailing whitespace removed.
 
 Returns the input with the trailing suffix removed.
 
+#### pretty_size
+
+    function pretty_size(input string) string
+
+Converts a number to an abreviated pretty printed size, 1234567 becomes "1.18 MB".
+
+#### pretty_count
+
+    function pretty_count(input string) string
+
+Converts a number to an abreviated pretty printed magnitude, 1234567 becomes "1.24 M".
+
+#### pretty_count
+
+    function pretty_count(input string) string
+
+Converts a number to an abreviated pretty printed magnitude, 1234567 becomes "1.24 M".
+
+#### pretty_rate
+
+    function pretty_rate(number, duration) string
+
+Converts a number to an abreviated pretty printed rate in bytes, kilobytes, or megabytes per second given a magnitude and duration; "pretty_rate(1234567, "2s")" becomes "588.87 KB/s".
+
+#### pretty_line_rate
+
+    function pretty_line_rate(number, duration) string
+
+Converts a number to an abreviated pretty printed line rate in bits, kilobits, and megabits per second given a magnitude and duration; "pretty_line_rate(1234567, "2s")" becomes "4.71 Mb/s".
 
 ### Hash
 
@@ -633,36 +662,6 @@ Pretty prints the given JSON input.
 	function json_set(object string, key string, value <expression>) string
 
 Sets a key/value pair in the given object. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
-
-#### pretty_size
-
-    function pretty_size(input string) string
-
-Converts a number to an abreviated pretty printed size, 1234567 becomes "1.18 MB".
-
-#### pretty_count
-
-    function pretty_count(input string) string
-
-Converts a number to an abreviated pretty printed magnitude, 1234567 becomes "1.24 M".
-
-#### pretty_count
-
-    function pretty_count(input string) string
-
-Converts a number to an abreviated pretty printed magnitude, 1234567 becomes "1.24 M".
-
-#### pretty_rate
-
-    function pretty_rate(number, duration) string
-
-Converts a number to an abreviated pretty printed rate in bytes, kilobytes, or megabytes per second given a magnitude and duration; "pretty_rate(1234567, "2s")" becomes "588.87 KB/s".
-
-#### pretty_line_rate
-
-    function pretty_line_rate(number, duration) string
-
-Converts a number to an abreviated pretty printed line rate in bits, kilobits, and megabits per second given a magnitude and duration; "pretty_line_rate(1234567, "2s")" becomes "4.71 Mb/s".
 
 ### Math
 
