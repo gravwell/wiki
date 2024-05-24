@@ -91,6 +91,14 @@ If, however, Gravwell is using self-signed certificates, you must manually downl
 
 On the next page of the wizard, you will be prompted to set a display name. "Gravwell" or something similar would be fine. In the further pages of the wizard, you should be able to leave the defaults.
 
+#### Change Hash Algorithm
+
+At this time, Gravwell's SAML implementation requires SHA-1 signatures, but Windows AD FS defaults to SHA-256. Open the properties dialog for the newly-created relying party, select the Advanced tab, and change the hash algorithm to SHA-1:
+
+![](sso-hash-algo.png)
+
+If you forget to make this change, upon attempting to log in you will see a "Forbidden" page. The Gravwell webserver stderr file at `/dev/shm/gravwell_webserver.service` will contain an error message from the SAML library with the status `urn:oasis:names:tc:SAML:2.0:status:Responder` indicating that the responder (AD FS) experienced a problem. If you see these symptoms, double-check the hash algorithm in AD FS.
+
 ### Edit Claims Issuance Policy for Relying Party
 
 You must now add a few claims issuance transform rules to the relying policy. Select "Edit Claim Issuance Policy" for the newly-created relying party:
