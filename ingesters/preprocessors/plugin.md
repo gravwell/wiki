@@ -124,12 +124,84 @@ func main() {
 
 ### Caveats
 
-The Scriggo engine is **NOT** a complete implementation of the Golang spec, there are limititations and missing features.  Some notable missing features is its lack of method declarations.  While you can execute methods on native types you cannot define methods for your own types.  For a complete list of limitations see the [Scriggo limitations page](https://scriggo.com/limitations).
+The Scriggo engine is **NOT** a complete implementation of the Golang spec, there are limitations and missing features.  One notable missing feature is its lack of method declarations.  While you can execute methods on native types, you cannot define methods for your own types.  For a complete list of limitations, see the [Scriggo limitations page](https://scriggo.com/limitations).
 
 The plugin preprocessor incurs overhead and may not be as performant as a native preprocessor, in most cases the Gravwell ingest system is fast enough that simple plugins will not adversely affect ingest performance.  However, if you are performing complex operations or attempting to operate on a very high speed ingest pipeline we advise that you enable `Cache-Mode=always` on the ingester.
 
 ```{warning}
 The Scriggo plugin engine allows for creating goroutines in a plugin. More often than not, this will decrease performance due to nature of the Scriggo interpreter.  Concurrency and synchronization primitives may also behave unexpectedly due to the abstracted runtime.  Be forewarned, a Scriggo plugin is not well suited to fan out and crunch heavy data.
+```
+
+### Debugging
+
+The plugin system disables *stdin*, *stdout*, and *stderr* by default which means that any calls to `println`, `fmt.Println`, etc...  will return immediately with no effect.  To enable debug output, set the `Debug` configuration parameter to true and launch the ingester by hand using the `-v` flag.  For example, the following plugin and config snippet will print every entry as a string on the [File Follower](/ingesters/file_follow.html) ingester.
+
+
+#### Example Plugin
+
+```
+package main
+
+import (
+    "fmt"
+    "gravwell"
+
+    "github.com/gravwell/gravwell/v3/ingest/entry"
+)
+
+const (
+    PluginName = "example"
+)
+
+func Start() error {
+    return nil
+}
+
+func Close() error {
+    return nil
+}
+
+func Config(cm gravwell.ConfigMap, tgr gravwell.Tagger) error {
+    return nil
+}
+
+func Flush() []*entry.Entry {
+    return nil
+}
+
+func Process(ents []*entry.Entry) ([]*entry.Entry, error) {
+    for _, v := range ents {
+        fmt.Println(v.TS, string(v.Data))
+    }
+    return nil, nil
+}
+
+func main() {
+    if err := gravwell.Execute(PluginName, Config, Start, Close, Process, Flush); err != nil {
+        panic(err) //panic on failure, generally not needed
+    }
+}
+```
+
+#### Example Config
+
+```
+[Preprocessor "print_all"]
+	Type=plugin
+	Plugin-Path=/opt/gravwell/etc/print_entries.go
+	Debug=true
+```
+
+#### Example Output
+```
+gravwell@demo:/opt/gravwell$ /opt/gravwell/bin/gravwell_file_follow -v
+Handling 4 tags over 1 targets
+Rate limiting connection to 0 bps
+Started ingester muxer
+Waiting for connections to indexers ... Successfully connected to ingesters
+Started ingester muxer
+
+2024-06-01 12:23:51.8732498 -0700 MST wlp0s20f3: Associated with 81:2b:a8:72:13:fb
 ```
 
 ## Examples
