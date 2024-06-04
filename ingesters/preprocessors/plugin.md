@@ -124,7 +124,7 @@ func main() {
 
 ### Caveats
 
-The Scriggo engine is **NOT** a complete implementation of the Golang spec, there are limitations and missing features.  Some notable missing features is its lack of method declarations.  While you can execute methods on native types you cannot define methods for your own types.  For a complete list of limitations see the [Scriggo limitations page](https://scriggo.com/limitations).
+The Scriggo engine is **NOT** a complete implementation of the Golang spec, there are limitations and missing features.  One notable missing feature is its lack of method declarations.  While you can execute methods on native types, you cannot define methods for your own types.  For a complete list of limitations, see the [Scriggo limitations page](https://scriggo.com/limitations).
 
 The plugin preprocessor incurs overhead and may not be as performant as a native preprocessor, in most cases the Gravwell ingest system is fast enough that simple plugins will not adversely affect ingest performance.  However, if you are performing complex operations or attempting to operate on a very high speed ingest pipeline we advise that you enable `Cache-Mode=always` on the ingester.
 
