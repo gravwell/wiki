@@ -527,3 +527,34 @@ sudo systemctl enable gravwell_simple_relay@/opt/gravwell/etc/config2.conf
 
 This will create two instances of the service defined above, each with a different config file, as specified in the commands above. Additionally, the use of "enable" in the commands above will cause these instantiations to persist across reboots and start at boot time.
 
+## Non-interactive installation of Gravwell Ingesters
+
+It is possible to install ingesters in non-interactive mode. This is useful for batch deployment. When installing using non-interactive modes, the installer will attempt to use certain configuration options, such as indexer authentication keys, if they can be detected from an existing indexer configuration file. Otherwise, the installation will leave a default configuration, requiring the user to make modifications before starting the ingester.
+
+### Debian
+
+To install packages in non-interactive mode on Debian, use the `DEBIAN_FRONTEND` environment variable when using `apt` or `apt-get`. For example, to install Simple Relay:
+
+```
+DEBIAN_FRONTEND=noninteractive apt-get -y install gravwell-simple-relay
+```
+
+### Redhat
+
+Gravwell packages for Redhat are already non-interactive. To additionally answer "yes" to `yum` prompting to install dependencies, you can use the `-y` flag:
+
+```
+yum -y install gravwell-simple-relay
+```
+
+### Windows
+
+Gravwell packages for windows can perform non-interactive installation using standard `msiexec` flags like `/quiet` and `/i`.  See the complete documentation on [silent installation](/ingesters/winevent.html#silent-installation) for more information.
+
+### macOS
+
+To install in non-interactive mode in macOS, you must use the terminal and execute the installer command with root privileges. For example, to install File Follower on macOS:
+
+```
+sudo installer -store -pkg GravwellFileFollower.pkg -target /
+```
