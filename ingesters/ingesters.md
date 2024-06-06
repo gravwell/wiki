@@ -549,6 +549,8 @@ yum -y install gravwell-simple-relay
 
 ### Windows
 
+Gravwell packages for windows can perform non-interactive installation using standard `msiexec` flags like `/quiet` and `/i`.  See the complete documentation on [silent installation](/ingesters/winevent.html#silent-installation) for more information.
+
 ### macOS
 
 To install in non-interactive mode in macOS, you must use the terminal and execute the installer command with root privileges. For example, to install File Follower on macOS:
