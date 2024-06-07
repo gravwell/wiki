@@ -18,7 +18,7 @@ The `dump` module will extract all columns from a CSV or lookup table resource i
 
 ### Supported Filter Operators
 
-The `dump` module allows for a filtering based on equality.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any column in a row that fails the filter specification will be not be injected into the pipeline.
+The `dump` module can filter based on equality.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any column in a row that fails the filter specification will be not be injected into the pipeline.
 
 | Operator | Name | Description |
 |----------|------|-------------|

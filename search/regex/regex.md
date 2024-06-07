@@ -34,7 +34,7 @@ Storing especially large regular expressions in resource files can clean up quer
 
 ## Inline Filtering
 
-The regex module supports inline filtering to allow for down-selecting data directly within the regex module.  The inline filtering also enables regex to engage accelerators to dramatically reduce the amount of data that needs to be processed.  Inline filtering is achieved in the same manner as other modules by using comparison operators.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
+The regex module supports inline filtering for down-selecting data directly within the regex module.  The inline filtering also enables regex to engage accelerators to dramatically reduce the amount of data that needs to be processed.  Inline filtering is achieved in the same manner as other modules by using comparison operators.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
 
 
 | Operator | Name | Description |

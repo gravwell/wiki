@@ -129,7 +129,7 @@ The Scriggo engine is **NOT** a complete implementation of the Golang spec, ther
 The plugin preprocessor incurs overhead and may not be as performant as a native preprocessor, in most cases the Gravwell ingest system is fast enough that simple plugins will not adversely affect ingest performance.  However, if you are performing complex operations or attempting to operate on a very high speed ingest pipeline we advise that you enable `Cache-Mode=always` on the ingester.
 
 ```{warning}
-The Scriggo plugin engine allows for creating goroutines in a plugin. More often than not, this will decrease performance due to nature of the Scriggo interpreter.  Concurrency and synchronization primitives may also behave unexpectedly due to the abstracted runtime.  Be forewarned, a Scriggo plugin is not well suited to fan out and crunch heavy data.
+The Scriggo plugin engine allows the creation of goroutines in a plugin. More often than not, this will decrease performance due to nature of the Scriggo interpreter.  Concurrency and synchronization primitives may also behave unexpectedly due to the abstracted runtime.  Be forewarned, a Scriggo plugin is not well suited to fan out and crunch heavy data.
 ```
 
 ### Debugging

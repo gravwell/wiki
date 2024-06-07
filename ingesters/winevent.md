@@ -170,7 +170,7 @@ Restart the Gravwell service via standard windows service management.
 
 ## Windows Event Forwarding
 
-The Gravwell Winevent ingester can be combined with Windows Event Forwarding (WEF) to simplify deployments and reduce the number of endpoints the ingester must be installed on.  Windows Event Forwarding is an integrated Windows service that allows for forwarding events to a central collection point using integrated Windows functionality.  More information on WEF can be found on [several](https://learn.microsoft.com/en-us/windows/security/threat-protection/use-windows-event-forwarding-to-assist-in-intrusion-detection) [Microsoft](https://social.technet.microsoft.com/wiki/contents/articles/33895.windows-event-forwarding-survival-guide.aspx) [resources](https://learn.microsoft.com/en-us/defender-for-identity/configure-event-forwarding).
+The Gravwell Winevent ingester can be combined with Windows Event Forwarding (WEF) to simplify deployments and reduce the number of endpoints the ingester must be installed on.  Windows Event Forwarding is an integrated Windows service that forwards events to a central collection point using integrated Windows functionality.  More information on WEF can be found on [several](https://learn.microsoft.com/en-us/windows/security/threat-protection/use-windows-event-forwarding-to-assist-in-intrusion-detection) [Microsoft](https://social.technet.microsoft.com/wiki/contents/articles/33895.windows-event-forwarding-survival-guide.aspx) [resources](https://learn.microsoft.com/en-us/defender-for-identity/configure-event-forwarding).
 
 Configuring Windows Event Forwarding is beyond the scope of this document, but actually collecting the forwarded events is very simple.
 
