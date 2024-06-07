@@ -389,7 +389,7 @@ Description:	The Gravwell indexers track each ingester that has successfully con
 Applies to:		Webserver  
 Default Value:	false  
 Example:		true  
-Description:	If enabled, the Gravwell webserver will maintain the access log (if enabled) but will not ingest the logs into the `gravwell` tag. This parameter is useful when you may want to keep an access log but do not want to clutter the `gravwell` tag.
+Description:	If enabled, the Gravwell webserver will maintain the access log (if enabled) but will not ingest the logs into the `gravwell` tag. This parameter is useful when you want to keep an access log but do not want to clutter the `gravwell` tag.
 
 ### **Tag-Accelerator-Definitions**
 Applies to:		Webserver  

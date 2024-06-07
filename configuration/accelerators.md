@@ -259,7 +259,7 @@ While the fulltext accelerator may be the most flexible, it is also the most cos
 
 ### Fulltext Arguments
 
-The fulltext accelerator supports a few options for refining the types of data that is indexed and removing fields that incur significant storage overhead but may not help much at query time.
+The fulltext accelerator supports a few options for refining the types of data that are indexed and removing fields that incur significant storage overhead but may not help much at query time.
 
 | Argument | Description | Example | Default State |
 |----------|-------------|---------|---------------|
