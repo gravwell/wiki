@@ -14,7 +14,7 @@ The `json` module does not unescape extracted fields that may have been escaped 
 
 ## Filtering Operators
 
-The JSON module allows for a filtering based on equality. If a filter is enabled that specifies equality ("equal" or "not equal") any entry that fails the filter specification will be dropped entirely.
+The JSON module can filter based on equality and substring matching. If a filter is enabled that specifies equality ("equal" or "not equal"), any entry that fails the filter specification will be dropped entirely.
 
 | Operator | Name       | Description                      |
 | -------- | ---------- | -------------------------------- |

@@ -75,7 +75,7 @@ The `Keep-Priority` field is necessary if you plan to analyze syslog entries wit
 
 Each listener contains a set of universal configuration values, regardless of whether the listener is a line, RFC5424, RFC6587, regex, or JSON reader.
 
-Listeners support several configuration parameters which allow for specifying protocols, listening interfaces and ports, and fine tuning ingest behavior.
+Listeners support several configuration parameters for specifying protocols, listening interfaces and ports, and fine tuning ingest behavior.
 
 | Parameter     | Type    | Default Value     | Description |
 |---------------|---------|-------------------|-------------|

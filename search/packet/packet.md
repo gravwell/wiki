@@ -4,7 +4,7 @@ The Packet pipeline module extracts fields from Ethernet, IPv4, IPv6, TCP, and U
 
 The packet module is useful both for filtering traffic down to specific protocols and for extracting specific fields from packets for analysis--see the examples for more.
 
-Some field modules allow for flexible section where it is desirable to filter on a field that may have a source and destination.  To accommodate selection on IPs, Ports, MACs where there are both a source and destination, the special fields Port, IP, MAC are available.  If either source or destination matches an enumerated value with the field will be populated with the component that matched.  For example, tcp.Port==80 will match whenever either tcp.SrcPort or tcp.DstPort are equal to 80; tcp.Port != 80 will ensure that if either the source or destination ports are 80 the packet is filtered.
+Some field modules allow flexible selection where it is desirable to filter on a field that may have a source and destination.  To accommodate selection on IPs, Ports, MACs where there are both a source and destination, the special fields Port, IP, MAC are available.  If either source or destination matches an enumerated value with the field will be populated with the component that matched.  For example, tcp.Port==80 will match whenever either tcp.SrcPort or tcp.DstPort are equal to 80; tcp.Port != 80 will ensure that if either the source or destination ports are 80 the packet is filtered.
 
 ## Supported Options
 
@@ -25,7 +25,7 @@ Some field modules allow for flexible section where it is desirable to filter on
 
 ## Packet Processing Submodules
 
-The packet processor supports submodules which allow for breaking out specific fields in a packet. Each submodule and field supports a set of operators that allow the packet processor to also filter events based on the subfields.  The following sub modules are available:
+The packet processor supports submodules for breaking out specific fields in a packet. Each submodule and field supports a set of operators that allow the packet processor to also filter events based on the subfields.  The following sub modules are available:
 
 | Submodule | Description |
 |-----------|-------------|
@@ -217,7 +217,7 @@ The Modbus layer is typically the last layer, which means that the Payload value
 
 ### MPLS
 
-The packet search module can decode MPLS headers and allows for selective filtering.  The following MPLS fields are available.
+The packet search module can decode MPLS headers and allows selective filtering.  The following MPLS fields are available.
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------

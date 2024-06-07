@@ -1,6 +1,6 @@
 # Gravwell License System
 
-Gravwell provides several license tiers that enable additional features and capabilities.  The most basic license tier is the Community Edition and the most advanced tier is the Unlimited license.  The Community Edition license allows for limited ingest on a single indexer and is the only license tier that is not unlimited ingest, all other license tiers have no ingest limit.
+Gravwell provides several license tiers that enable additional features and capabilities.  The most basic license tier is the Community Edition and the most advanced tier is the Unlimited license.  The Community Edition license allows limited ingest on a single indexer; it is the only license tier that does *not* have unlimited ingest.
 
 Gravwell installations are licensed using a license file that is located at the path /opt/gravwell/etc/license by default.  The license location can be controlled in the gravwell.conf file by setting the License-Location variable in the [Global] configuration block.  Gravwell will validate the license at each startup and periodically check it.
 

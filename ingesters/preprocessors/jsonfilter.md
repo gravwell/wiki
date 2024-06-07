@@ -22,7 +22,7 @@ If a field is specified in the configuration but is not present on an entry, the
 
 ## Common Use Cases
 
-The json field filtering preprocessor can down select entries based on fields within the entries.  This allows for building blacklists and whitelists on data flows to ensure that data either does or does not make it to storage.
+The json field filtering preprocessor can down select entries based on fields within the entries.  This can be used to build blacklists and whitelists on data flows to ensure that specific data either does or does not make it to storage.
 
 ## Example: Simple Whitelisting
 
