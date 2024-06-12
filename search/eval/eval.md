@@ -448,12 +448,6 @@ Converts a number to an abreviated pretty printed size, 1234567 becomes "1.18 MB
 
 Converts a number to an abreviated pretty printed magnitude, 1234567 becomes "1.24 M".
 
-#### pretty_count
-
-    function pretty_count(input string) string
-
-Converts a number to an abreviated pretty printed magnitude, 1234567 becomes "1.24 M".
-
 #### pretty_rate
 
     function pretty_rate(number, duration) string
