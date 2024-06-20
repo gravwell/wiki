@@ -134,7 +134,7 @@ The Scriggo plugin engine allows the creation of goroutines in a plugin. More of
 
 ### Debugging
 
-The plugin system disables *stdin*, *stdout*, and *stderr* by default which means that any calls to `println`, `fmt.Println`, etc...  will return immediately with no effect.  To enable debug output, set the `Debug` configuration parameter to true and launch the ingester by hand using the `-v` flag.  For example, the following plugin and config snippet will print every entry as a string on the [File Follower](/ingesters/file_follow.html) ingester.
+The plugin system disables *stdin*, *stdout*, and *stderr* by default which means that any calls to `println`, `fmt.Println`, etc...  will return immediately with no effect.  To enable debug output, set the `Debug` configuration parameter to true and launch the ingester by hand using the `-v` flag.  For example, the following plugin and config snippet will print every entry as a string on the [File Follower](/ingesters/file_follow) ingester.
 
 
 #### Example Plugin
