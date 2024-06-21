@@ -4,6 +4,7 @@ about: Use this template for a task. A task should be used for refactoring, auto
 labels: task, Low
 title: "[FEATURE SCOPE]: [TITLE]"
 ---
+
 <!--
 ## Instructions
 Labels for change type and priority are automatically assigned at the time of creation. 
@@ -19,6 +20,7 @@ please set the priority to High.
 If this task does not meet the above criteria but is more important,
 please set the priority to Medium. 
 -->
+# Task
 
 ## What needs to be done?
 

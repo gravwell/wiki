@@ -549,7 +549,7 @@ yum -y install gravwell-simple-relay
 
 ### Windows
 
-Gravwell packages for windows can perform non-interactive installation using standard `msiexec` flags like `/quiet` and `/i`.  See the complete documentation on [silent installation](/ingesters/winevent.html#silent-installation) for more information.
+Gravwell packages for windows can perform non-interactive installation using standard `msiexec` flags like `/quiet` and `/i`.  See the complete documentation on <a href="/ingesters/winevent.html#silent-installation">silent installation</a> for more information.
 
 ### macOS
 

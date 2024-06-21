@@ -4,6 +4,7 @@ about: Use this template for an epic. An epic is used to document a task list th
 labels: epic, Low
 title: "[FEATURE SCOPE]: [TITLE]"
 ---
+
 <!--
 ## Instructions
 Labels for change type and priority are automatically assigned at the time of creation. 
@@ -17,6 +18,7 @@ please set the priority to High.
 If this describes a secondary release objective,
 please set the priority to Medium. 
 -->
+# Epic
 
 ## Overview
 
