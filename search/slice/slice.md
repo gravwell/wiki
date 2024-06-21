@@ -53,7 +53,7 @@ An integral function of the slice module is casting the data to the appropriate 
 
 ## Inline filtering
 
-The slice module supports inline filtering which allows for very fast processing of binary data.  Every type does not support every filter operation.  For example attempting to find a subset in a floating point number does not make any sense, nor does applying "less than" to a byte slice.  Below is the complete list of filter operators and a table showing which operators can be applied to which types:
+The slice module supports inline filtering for very fast processing of binary data.  Every type does not support every filter operation.  For example attempting to find a subset in a floating point number does not make any sense, nor does applying "less than" to a byte slice.  Below is the complete list of filter operators and a table showing which operators can be applied to which types:
 
 ### Filter Operators
 

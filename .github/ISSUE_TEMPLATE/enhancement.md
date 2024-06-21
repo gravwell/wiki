@@ -4,6 +4,7 @@ about: Use this template for requesting an enhancement. An enhancement is an imp
 labels: enhancement, Low
 title: "[FEATURE SCOPE]: [TITLE]"
 ---
+
 <!--
 ## Instructions
 Labels for change type and priority are automatically assigned at the time of creation. 
@@ -20,6 +21,8 @@ please set the priority to High.
 If this request does not meet the above criteria but is more important,
 please set the priority to Medium. 
 -->
+
+# Enhancement
 
 ## What is the enhancement to be made?
 

@@ -88,7 +88,7 @@ Description:        Sets the path to the gravwell license file, the path must be
 Applies to:        Indexer and Webserver  
 Default Value:        `/opt/gravwell/etc`  
 Example:        `Config-Location=/tmp/path/to/etc`  
-Description:        The config location allows for specifying an alternate location for housing all other configuration parameters.  Specifying an alternate Config-Location allows for setting a single parameter without requiring that all other parameters be specified with the alternate path.
+Description:        The config location specifies an alternate location for housing all other configuration parameters, rather than requiring that all other parameters be specified with the alternate path.
 
 ### **Web-Port**
 Applies to:        Webserver  
@@ -142,7 +142,7 @@ Description:		The Datastore-Port parameter selects the port on which the datasto
 Applies to:			Webserver  
 Default Value:
 Example:			`Datastore=10.0.0.1:9405`  
-Description:		The Datastore parameter specifies that the webserver should connect to a datastore to synchronize its dashboards, resources, user preferences, and search history. This allows for [distributed webservers](/distributed/frontend) but should only be set if needed. By default, webservers do not connect to a datastore.
+Description:		The Datastore parameter specifies that the webserver should connect to a datastore to synchronize its dashboards, resources, user preferences, and search history. This enables [distributed webservers](/distributed/frontend) but should only be set if needed. By default, webservers do not connect to a datastore.
 
 ### **Datastore-Update-Interval**
 Applies to:			Webserver  
@@ -340,7 +340,7 @@ Description:        The Saved-Store parameter specifies where saved searches wil
 Applies to:        Indexer and Webserver  
 Default Value:        `2`  
 Example:        `Search-Pipeline-Buffer-Size=8`  
-Description:        The Search-Pipeline-Buffer-Size specifies how many blocks can be in transit between each module during a search.  Larger sizes allow for better buffering and potentially higher throughput searches at the expense of resident memory usage.  Indexers are more sensitive to the pipeline size, but also use a shared memory technique whereby the system can evict and re-instantiate memory at will; the webserver typically keeps all entries resident when moving through the pipeline and relies on condensing modules to reduce the memory load.  If your system uses higher latency storage systems like spinning disks, it can be advantageous to increase this buffer size.
+Description:        The Search-Pipeline-Buffer-Size specifies how many blocks can be in transit between each module during a search.  Larger sizes enable better buffering and potentially higher throughput searches at the expense of resident memory usage.  Indexers are more sensitive to the pipeline size, but also use a shared memory technique whereby the system can evict and re-instantiate memory at will; the webserver typically keeps all entries resident when moving through the pipeline and relies on condensing modules to reduce the memory load.  If your system uses higher latency storage systems like spinning disks, it can be advantageous to increase this buffer size.
 Increasing this parameter may make searches perform better, but it will directly impact the number of running searches the system can handle at once!  If you know you are storing extremely large entries like video frames, PE executables, or audio files you may need to reduce the buffer size to limit resident memory usage. If you see your host kernel invoking the Out Of Memory (OOM) firing and killing the Gravwell process, this is the first knob to turn.
 
 ### **Search-Relay-Buffer-Size**
@@ -365,13 +365,13 @@ Description:	Some email providers have a maximum email size limit and will behav
 Applies to:		Webserver  
 Default Value:	0 (Disabled)  
 Example:		16  
-Description:	Some HTTP proxies and/or load-balancers may fail when very large JSON payloads are relayed through them.  This setting allows for setting an upper bound on the size of a single JSON payload when responding to an HTTP REST request.  You probably do not want this and should not set it.
+Description:	Some HTTP proxies and/or load-balancers may fail when very large JSON payloads are relayed through them.  This setting defines an upper bound on the size of a single JSON payload when responding to an HTTP REST request.  You probably do not want this and should not set it.
 
 ### **Webserver-Access-Control-Allow-Origin**
 Applies to:		Webserver  
 Default Value:	(empty)  
 Example:		`google.com`  
-Description:	This setting allows for manually specifying Allow-Origin HTTP headers on web requests.  This can be useful if you are storing the Gravwell web application on a CDN and want to allow some files to be served by a different domain.
+Description:	This setting can be used to manually specify `Allow-Origin` HTTP headers on web requests.  This can be useful if you are storing the Gravwell web application on a CDN and want to allow some files to be served by a different domain.
 
 ### **Enable-CBAC**
 Applies to:		Webserver  
@@ -389,13 +389,13 @@ Description:	The Gravwell indexers track each ingester that has successfully con
 Applies to:		Webserver  
 Default Value:	false  
 Example:		true  
-Description:	This setting allows for maintaining the file access log but not ingesting it into the `gravwell` tag; this parameter is useful when you may want to keep an access log but do not want to clutter the `gravwell` tag with HTTP access logs.
+Description:	If enabled, the Gravwell webserver will maintain the access log (if enabled) but will not ingest the logs into the `gravwell` tag. This parameter is useful when you want to keep an access log but do not want to clutter the `gravwell` tag.
 
 ### **Tag-Accelerator-Definitions**
 Applies to:		Webserver  
 Default Value:	(empty)  
 Example:		`/opt/gravwell/etc/default.defs`  
-Description:	Gravwell allows for creating per-tag accelerator definitions so that you can finely tune your acceleration behavior when ingesting extremely large data sets.  This configuration parameter can be specified multiple times so that you can load accelerator definitions from multiple files.  See the [Accelerators](/configuration/accelerators) section for more information.
+Description:	This parameter specifies a file containing per-tag accelerator definitions, so that you can fine-tune your acceleration behavior when ingesting extremely large data sets. This configuration parameter can be specified multiple times so that you can load accelerator definitions from multiple files. See the [Accelerators](/configuration/accelerators) section for more information.
 
 ### **Max-Search-History**
 Applies to:        Webserver  
@@ -643,7 +643,7 @@ Description:	Gravwell can automatically lock user accounts on multiple successiv
 Applies to:	Webserver  
 Default Value:	https://kits.gravwell.io/kits  
 Example:	`Gravwell-Kit-Server=http://internal.mycompany.io/gravwell/kits`  
-Description:	Allows for overriding the Gravwell kitserver host, this can be useful in airgapped or segmented deployments where you host a mirror of the Gravwell kitserver.  Set this value to an empty string to completely disable access to the remote kitserver.  
+Description:	Overrides the Gravwell kitserver host. This can be useful in airgapped or segmented deployments where you host a mirror of the Gravwell kitserver.  Set this value to an empty string to completely disable access to the remote kitserver.
 Example:
 ```
 Gravwell-Kit-Server="" #disable remote access to gravwell kitserver

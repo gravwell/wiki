@@ -59,7 +59,7 @@ This section defines common terms used in Gravwell, as well as links to document
    Gravwell can be configured to use a SAML-Compliant Identity Provider for user authentication.
 
 [Structure-on-Read](/search/search)
-  Gravwell is a "structure-on-read" data lake,  where data is ingested directly into the system with no pre-processing required; structure is then applied to that data at *search time*. This allows for a lot of flexibility as you do not need to know how the data looks or "normalize" it before sending it into Gravwell, and if that structure changes for any reason (e.g.  errors or unexpected behavior in the source device, vendor format changes on an upgrade, enabling additional options on the source device to receive more detailed information) it will not prevent the data from being ingested or cause a data loss scenario.  By retaining all the data in its native format, it also makes it easier to ask questions retroactively on historical data knowing you have not lost any visibility since it was generated.
+  Gravwell is a "structure-on-read" data lake,  where data is ingested directly into the system with no pre-processing required; structure is then applied to that data at *search time*. This allows a lot of flexibility as you do not need to know how the data looks or "normalize" it before sending it into Gravwell, and if that structure changes for any reason (e.g.  errors or unexpected behavior in the source device, vendor format changes on an upgrade, enabling additional options on the source device to receive more detailed information) it will not prevent the data from being ingested or cause a data loss scenario.  By retaining all the data in its native format, it also makes it easier to ask questions retroactively on historical data knowing you have not lost any visibility since it was generated.
 
 [TLS / SSL](/configuration/certificates)
    Encryption protocols to securely transport data across a network. In addition to enabling HTTPS access to the web UI,  Gravwell supports TLS listeners on several ingesters, as well as TLS communication between the ingesters, federators, and indexers.
@@ -84,7 +84,7 @@ This section defines common terms used in Gravwell, as well as links to document
 [Email](/configuration/email)
    Gravwell can be configured to send emails via automated scripts and flows.  The outgoing SMTP server information can be specified by individual users, or the Gravwell administrator can define a system-wide server for all users.
 
-[Investigative Dashboard](/gui/dashboards/dashboards.html#investigative-dashboards)
+<a href="/gui/dashboards/dashboards.html#investigative-dashboards">Investigative Dashboard</a>
    A special type of dashboard that leverages templates instead of standard queries. When an investigative dashboard is launched, it sets the variables for its templates, either by prompting the user directly or automatically if the user has accessed the dashboard through an actionable. Investigative dashboards get their name from the common use case: a dashboard which takes a specific IP/username/hostname/etc and runs multiple searches to investigate that variable.
 
 [Kits](/kits/kits)
@@ -137,7 +137,7 @@ This section defines common terms used in Gravwell, as well as links to document
 [Cloud Archive](/configuration/archive)
   The final tier of storage is called "cloud archive", where indexers can upload shards to a dedicated archive server before deleting them from the indexers. This is ideal for data that must be retained long-term but no longer needs to be actively searched.
 
-[Cold Storage](/configuration/ageout.html)
+[Cold Storage](/configuration/ageout)
 	Wells may optionally have a "cold" storage location. Data may be sent from hot storage to cold storage based on a variety of ageout constraints. Cold storage frequently uses slower storage technology, as "cold" data is assumed to be accessed less frequently.
 
 [Data Ageout](/configuration/ageout)
@@ -149,7 +149,7 @@ This section defines common terms used in Gravwell, as well as links to document
 [Data Shard](configuration_tags_and_wells)
 	Each individual well further segments its data into *shards*. Each shard contains approximately 1.5 days worth of entries.
 
-[Hot Storage](/configuration/ageout.html)
+[Hot Storage](/configuration/ageout)
    Every well has a "hot" storage location which holds the most recent data. This should be the fastest storage available, as it will generally be the most frequently accessed.
 
 [Query Acceleration](/configuration/accelerators) 

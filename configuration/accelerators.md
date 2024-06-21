@@ -10,7 +10,7 @@ Gravwell accelerators use a filtering technique that works best when data is rel
 
 Tags are always included in the acceleration, regardless of the extraction module in use.  Even when the query does not specify inline filters, the acceleration system can help narrow down and accelerate queries when there are multiple tags in a single well.
 
-Most acceleration modules incur about a 1-1.5% storage overhead when using the bloom engine, but extremely low-throughput wells may consume more storage.  If a well typically sees about 1-10 entries per second, acceleration may incur a 5-10% storage penalty, where a well with 10-15 thousand entries per second may see as little as 0.5% storage overhead.  Gravwell accelerators also allow for user specified collision rate adjustments.  If you can spare the storage, a lower collision rate may increase accuracy and speed up queries while increasing storage overhead.  Reducing the accuracy reduces the storage penalty but decreases accuracy and reduces the effectiveness of the accelerator.  The index engine will consume significantly more space depending on the number of fields extracted and the variability of the extracted data.  For example, full text indexing may cause the accelerator files to consume as much space as the stored data files.
+Most acceleration modules incur about a 1-1.5% storage overhead when using the bloom engine, but extremely low-throughput wells may consume more storage.  If a well typically sees about 1-10 entries per second, acceleration may incur a 5-10% storage penalty, where a well with 10-15 thousand entries per second may see as little as 0.5% storage overhead.  Gravwell accelerators also allow user-specified collision rate adjustments.  If you can spare the storage, a lower collision rate may increase accuracy and speed up queries while increasing storage overhead.  Reducing the accuracy reduces the storage penalty but decreases accuracy and reduces the effectiveness of the accelerator.  The index engine will consume significantly more space depending on the number of fields extracted and the variability of the extracted data.  For example, full text indexing may cause the accelerator files to consume as much space as the stored data files.
 
 Accelerators must operate on the direct data portion of an entry (with the exception of the src accelerator which directly operates on the SRC field).
 
@@ -113,9 +113,9 @@ The json search module will transparently invoke the acceleration framework and 
 (accelerating_specific_tags)=
 ### Accelerating Specific Tags
 
-The acceleration system allows for acceleration at the well or tag levels, this allows you to specify a basic acceleration scheme on a well then specify specific accelerator configurations for specific tags or groups of tags.
+The acceleration system allows acceleration at the well or tag levels. This allows you to specify a basic acceleration scheme on a well then specify specific accelerator configurations for specific tags or groups of tags.
 
-Per tag acceleration is enabled by including one or more `Tag-Accelerator-Definitions` in the `[global]` configuration block in your `gravwell.conf`.  The `Tag-Accelerator-Definitions` configuration parameter should point to a file containing `Tag-Accelerator` blocks.  The `Tag-Accelerator` blocks allow for specifying a set of tags and an accelerator configuration for those specific tags.
+Per tag acceleration is enabled by including one or more `Tag-Accelerator-Definitions` in the `[global]` configuration block in your `gravwell.conf`.  The `Tag-Accelerator-Definitions` configuration parameter should point to a file containing `Tag-Accelerator` blocks.  The `Tag-Accelerator` blocks are used to specify a set of tags and an accelerator configuration for those specific tags.
 
 For example, lets look at a definition where a well has a default Acceleration schema (or none at all) and several tags are singled out.  In this example we are going to define two wells in addition to the default well.  We will then include an accelerator definition file that will specify specific accelerators for tags.
 
@@ -259,7 +259,7 @@ While the fulltext accelerator may be the most flexible, it is also the most cos
 
 ### Fulltext Arguments
 
-The fulltext accelerator supports a few options which allow for refining the types of data that is indexed and removing fields that incur significant storage overhead but may not help much at query time.
+The fulltext accelerator supports a few options for refining the types of data that are indexed and removing fields that incur significant storage overhead but may not help much at query time.
 
 | Argument | Description | Example | Default State |
 |----------|-------------|---------|---------------|
@@ -444,7 +444,7 @@ The winlog accelerator is permissive ('-or' flag is implied).  So specify any fi
 
 ## Netflow
 
-The [netflow](/search/netflow/netflow) module allows for accelerating on netflow V5 fields and speeding up queries on large amounts of netflow data.  While the netflow module is very fast and the data is extremely compact, it can still be beneficial to engage acceleration if you have very large netflow data volumes.  The netflow module can use any of the direct netflow fields, but cannot use the pivot helper fields.  This means that you must specify `Src` or `Dst` and not `IP`.  The `IP` and `Port` fields cannot be specified in the acceleration arguments.
+The [netflow](/search/netflow/netflow) module accelerates on Netflow V5 fields and speeding up queries on large amounts of netflow data.  While the `netflow` module is very fast and the data is extremely compact, it can still be beneficial to engage acceleration if you have very large Netflow data volumes.  The `netflow` module can use any of the direct Netflow fields, but cannot use the pivot helper fields.  This means that you must specify `Src` or `Dst` and not `IP`.  The `IP` and `Port` fields cannot be specified in the acceleration arguments.
 
 ```{note}
 The helper extractions `Timestamp` and `Duration` cannot be used in accelerators.

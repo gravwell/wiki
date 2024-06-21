@@ -46,7 +46,7 @@ xml A."My.Element" as MyElement
 
 ## Filtering
 
-The xml module allows for simple pre-filtering of data, to avoid invoking addition modules (like eval) when possible. Because of the way XML works, there are a few peculiarities in how the xml module handles filtering, so it is important to read this section carefully.
+The xml module can do simple pre-filtering of data. Because of the way XML works, there are a few peculiarities in how the xml module handles filtering, so it is important to read this section carefully.
 
 The module can test if an element value is equal to a literal value. If so, the requested element is extracted and the search entry is passed along the pipeline. Consider this search:
 

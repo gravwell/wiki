@@ -32,9 +32,7 @@ Notice that chart generated a legend with the IP and Port concatenated, the key 
 
 ## Multiple Chart Categories
 
-The `chart` renderer can also plot multiple independent data sources.  We might want to plot the min, max, and mean of a stream of data.  Chart allows for specifying multiple groups of data.
-
-The following query generates the `min`, `max`, and `mean` of packet lengths over time and displays the results on a single chart:
+The `chart` renderer can also plot multiple independent data sources--for instance, we might want to plot the min, max, and mean of a stream of data. The following query generates the `min`, `max`, and `mean` of packet lengths over time and displays the results on a single chart:
 
 ```gravwell
 tag=pcap packet ipv4.IP ~ 192.168.0.0/16 tcp.Port | length | stats min(length) max(length) mean(length)| chart min max mean
@@ -78,7 +76,7 @@ tag=pcap packet ipv4.IP ~ 192.168.0.0/16 tcp.Port | length | stats mean(length) 
 
 ## Chart Limiting and Grouping
 
-The user interface for charting allows for a rapid transition between line, area, bar, pie, and donut charts. The charting renderer will automatically limit the plotted lines or bar groups to 24 values. If you would like to see more lines or fewer lines, you can add the `limit <n>` argument which tells the charting library to not introduce the “other” grouping until it reaches the given limit of `n` values. If there are more groups than the allowable limits, chart generates an `other` group that is comprised of everything not in the displayed groups. The limit maximum specifies the total number of data sets for a category; if the limit is 4 there may be 3 keyed sets and 1 other group.
+The user interface for charting allows the user to switch rapidly between different chart styles (line, bar, pie, etc.). The charting renderer will automatically limit the plotted lines or bar groups to 24 values. If you would like to see more lines or fewer lines, you can add the `limit <n>` argument which tells the charting library to not introduce the “other” grouping until it reaches the given limit of `n` values. If there are more groups than the allowable limits, chart generates an `other` group that is comprised of everything not in the displayed groups. The limit maximum specifies the total number of data sets for a category; if the limit is 4 there may be 3 keyed sets and 1 other group.
 
 The chart renderer runs a pre-scan at the beginning of every query in order to determine which data sets will be drawn and which will be grouped into the `other` group.  Chart will scan until either 1/3 of the query timespan is covered, or it receives enough data to make a decision.  If multiple data sets are being drawn, chart creates an other group for each category of data if needed.  For example, if we were running a query with the following chart parameters `chart foo bar baz by X` there might be three other groups, one for each category `foo`, `bar`, `baz`. 
 
