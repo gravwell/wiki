@@ -124,7 +124,7 @@ Each follower specifies at minimum a base directory and a filename filtering pat
 | Ignore-Glob               | string(s) |       |               | Set of glob patterns that specify entries to ignore, multiple can be specified. |
 | Timestamp-Format-Override | string |          |               | Optional timestamp format override for parsing timestamps. |
 | Timestamp-Delimited       | bool   |          | false         | Indicate that entries should be delimited by timestamps.  Requires Timestamp-Format-Override. |
-| Regex-Delimiter           | string |          |               | Delimit entries using a timestamp rather than lines. |
+| Regex-Delimiter           | string |          |               | Regular expression that defines a delimiter for splitting an entry. |
 | Timestamp-Regex           | string |          |               | Regular expression used for identifying a timestamp within data. |
 | Timestamp-Format-String   | string |          |               | Format string used for parsing timestamps. |
 | Preprocessor              | string(s) |       |               | List of preprocessors to use when processing entries after extraction. |
