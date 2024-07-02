@@ -157,28 +157,50 @@ The Splunk migration tool is [fully documented here](/migrate/migrate).
 
 ##  Account Unlock
 
-The Account Unlock tool can be used to unlock and reset the password for any account.  While an Admin user can perform this same functionality via the User Administration screens in the GUI,  or via the Gravwell CLI,  there may be times when you do not have a secondary Admin user who can make the changes for you.  This tool provides a Break Glass ability for you to reset the password on an account or system when you do not have another way to do so.
+The account unlock tool is a last-resort method for unlocking accounts, resetting passwords, or clearing MFA configurations.  While an admin user can perform these same functions via the User Administration screens in the UI or via the Gravwell CLI, if the *admin's* account is the one in trouble, this tool can fix it.
 
-You can find the tool at [https://update.gravwell.io/files/tools/accountUnlock.](https://update.gravwell.io/files/tools/accountUnlock)  
+The account unlock tool is included in the installers for the core Gravwell system (webserver/indexer/searchagent) and for the datastore. It will be installed to `/opt/gravwell/bin/account_unlock`.
 
-MD5: f299262fddf05d067a8b60e975bfb72a
+```{warning}
+Before using the account unlock tool, you *must* shut down the Gravwell webserver! The webserver maintains a lock on the user database, so the tool cannot make any changes while the webserver is running.
+```
 
-SHA256: 0583805315f5420ce14aada8d3a63fa6638aad8fcf251989a5f819ad8709d0a9
+The tool takes the following options:
 
-To use the tool:
-1. Download the tool on your system and make it executable
-2. Stop the gravwell webserver (it has a lock on the user database)
-3. As the root user (or user gravwell) run the accountUnlock tool with the account you want to reset as the argument
-4. Restart the gravwell webserver
+* `-clear-mfa`: Clear MFA configuration, potentially forcing user to re-configure on next login
+* `-lock`: If set, specified accounts will be locked rather than unlocked
+* `-reset-password <password>`: If set, user password will be reset to this value
+* `-override-userdb-path <path>`: Override the path to the webstore file
+
+By default, the tool will always unlock any specified accounts, as well as performing additional actions (clearing MFA or resetting password) specified by the flags. If the `-lock` flag is used, the specified accounts will be *locked* rather than unlocked, in addition to any other actions specified.
+
+To unlock the admin account and reset its password:
 
 ```
 sudo systemctl stop gravwell_webserver
-sudo /tmp/accountUnlock admin
+sudo /opt/gravwell/bin/account_unlock -reset-password changeme admin
 sudo systemctl restart gravwell_webserver
-sudo systemctl status gravwell_webserver
 ```
 
-The tool will return with confirmation that the user account has been unlocked and the default password to which it has been reset.
+To reset a user's MFA configuration and lock the account:
+
+```
+sudo systemctl stop gravwell_webserver
+sudo /opt/gravwell/bin/account_unlock -clear-mfa -lock jsmith
+sudo systemctl restart gravwell_webserver
+```
+
+### Account Unlock with Distributed Webservers
+
+When you have [distributed webservers](/distributed/frontend), you cannot run the account unlock tool on the webserver, because any changes will be overwritten immediately from the datastore component, which is considered the source of truth for user accounts. Instead, run the command *on the datastore system*, being sure to stop the datastore process itself first:
+
+```
+sudo systemctl stop gravwell_datastore
+sudo /opt/gravwell/bin/account_unlock -reset-password changeme admin
+sudo systemctl start gravwell_datastore
+```
+
+The changes should be rapidly propagated to the webservers from the datastore.
 
 ## Export
 
