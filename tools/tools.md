@@ -192,7 +192,7 @@ sudo systemctl restart gravwell_webserver
 
 ### Account Unlock with Distributed Webservers
 
-When you have [distributed webservers](/distributed/frontend), you cannot run the account unlock tool on the webserver, because any changes will be overwritten immediately from the datastore component, which is considered the source of truth for user accounts. Instead, run the command *on the datastore system*, being sure to stop the datastore process itself first:
+When you have [distributed webservers](/distributed/frontend), you cannot run the account unlock tool on the webserver because any changes will be overwritten immediately from the datastore component, which is considered the source of truth for user accounts. Instead, run the command *on the datastore system*, being sure to stop the datastore process itself first:
 
 ```
 sudo systemctl stop gravwell_datastore
