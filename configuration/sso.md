@@ -35,6 +35,14 @@ Gravwell can be configured to receive a list of group memberships with the user'
 * `Groups-Attribute` [default: "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"]: defines the SAML attribute which contains the list of groups to which the user belongs. You will typically have to explicitly configure the SSO provider to send the group list.
 * `Group-Mapping`: Defines one of the groups which may be automatically created if listed in the user's group memberships. This may be specified multiple times to allow multiple groups. The argument should consist of two names separated by a colon; the first is the SSO server-side name for the group (typically a name for AD FS, a UUID for Azure, etc.) and the second is the name Gravwell should use. Thus, if we define `Group-Mapping=Gravwell Users:gravwell-users`, if we receive a login token for a user who is a member of the group "Gravwell Users", we will create a local group named "gravwell-users" and add the user to it.
 
+Gravwell can also enable/disable the administrator flag on user accounts based on additional attributes in the SAML message:
+
+* `Admin-Attribute`: Defines a SAML attribute that contains a true/false value to determine if a user should be an administrator or not. If this attribute exists on the SAML assertion, the user's admin flag will be set correspondingly. Thus, if we specify `Admin-Attribute=isAdmin` and receive a SAML message with an "isAdmin" attribute containing the string "true", the user will be made an admin. The following values are considered "true" for the purposes of this attribute: "true", "TRUE", "t", "T", "1". Anything else is false.
+
+```{note}
+If `Admin-Attribute` is not configured, Gravwell will not modify the user's admin flag during SSO login, meaning accounts may be manually set as admins. If `Admin-Attribute` is configured but the SSO IdP does not send the desired attribute, Gravwell will not modify the user's admin flag.
+```
+
 ## Setting up Keycloak
 
 Documentation on setting up SSO with Keycloak is separated into its own page. [Click here](sso-keycloak/keycloak) to read it.
