@@ -718,67 +718,6 @@ Returns the binary logarithm of x.
 Returns the larger of x or y.
 
 #### math_min
-### Math
-
-```{note}
-Some math functions retain their legacy function names for backwards compatability.
-```
-
-#### ceil
-
-	function ceil(x float) float
-
-Returns the least integer value greater than or equal to x.
-
-#### floor
-
-	function floor(x float) float
-
-Returns the greatest integer value less than or equal to x.
-
-#### math_abs
-
-	function math_abs(x float) float
-
-Returns the absolut value of x.
-
-#### math_ceil
-
-	function math_ceil(x float) float
-
-Same as ceil(). Returns the least integer value greater than or equal to x.
-
-#### math_floor
-
-	function math_floor(x float) float
-
-Same as floor(). Returns the greatest integer value less than or equal to x.
-
-#### math_log
-
-	function math_log(x float) float
-
-Returns the natural logarithm of x.
-
-#### math_log10
-
-	function math_log10(x float) float
-
-Returns the decimal logarithm of x.
-
-#### math_log2
-
-	function math_log2(x float) float
-
-Returns the binary logarithm of x.
-
-#### math_max
-
-	function math_max(x float, y float) float
-
-Returns the larger of x or y.
-
-#### math_min
 
 	function math_min(x float, y float) float
 
