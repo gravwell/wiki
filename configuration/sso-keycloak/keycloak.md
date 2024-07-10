@@ -111,3 +111,33 @@ systemctl restart gravwell_webserver
 ```
 
 Then go to your Gravwell login screen; you should see the "Login with SSO" button underneath the regular username & password fields. Clicking this button will take you to the Keycloak login page, where you can enter credentials for a valid Keycloak user. This should log you in to Gravwell.
+
+## Setting the Admin flag on users
+
+With the `Admin-Attribute` configuration option, we can use Keycloak to determine which users should be Gravwell admins. Assuming we've added the following to our `[SSO]` stanza in `gravwell.conf`:
+
+```
+	Admin-Attribute=isAdmin
+```
+
+We will then configure Keycloak to send an appropriate attribute named "isAdmin" with each message. First, we'll go to the "Realm settings" page, find the "User profile" tab, and click "Create attribute". We'll then populate the form as below:
+
+![](admin-attribute.png)
+
+We can add a Validator to make sure it is always set to "true" or "false". Select "Add Validator", then choose the "options" type and enter two options:
+
+![](admin-attribute-options.png)
+
+Save the validator, then save the attribute.
+
+Next, go to the "Client scopes" page and select the Gravwell scope we defined earlier. Open the Mappers tab, then click "Add mapper" and pick "By configuration". Select the "User Attribute" configuration and populate it as follows:
+
+![](admin-attribute-mapper.png)
+
+Finally, set the `isAdmin` attribute as desired on your users:
+
+![](admin-attribute-user.png)
+
+When this user logs in, they will be flagged as a Gravwell admin:
+
+![](admin-sso.png)
