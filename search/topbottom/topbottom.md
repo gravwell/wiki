@@ -53,7 +53,7 @@ The `top` and `bottom` modules are however far more performant than using sort/l
 
 ## Flags
 
-- `-n <number>`: The "-n" flag specifies the number of entries to track. The default is 10. 
+- `-n <number>`: The "-n" flag specifies the number of entries to return. The default is 10. 
 
 ## Examples
 
