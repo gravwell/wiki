@@ -35,7 +35,7 @@ The output will be:
 
 In the example above, `top` took the top two values of `foo` first, and where `foo` had the same value, took the top value of `bar` instead.
 
-Values must be numeric or able to be casted to a number. Non-numeric values are ignored.
+Values must be numeric or able to be cast to a number. Non-numeric values are ignored.
 
 The top module is functionally equivalent to sorting with a limit. For example:
 
