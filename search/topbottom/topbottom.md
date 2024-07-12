@@ -37,7 +37,7 @@ In the example above, `top` took the top two values of `foo` first, and where `f
 
 Values must be numeric or able to be cast to a number. Non-numeric values are ignored.
 
-The top module is functionally equivalent to sorting with a limit. For example:
+The top and bottom modules are functionally equivalent to sorting with a limit. For example:
 
 ```gravwell
 tag=foo json foo | top -n 10 foo
