@@ -9,7 +9,7 @@ tag=foo json foo | top -n 10 foo
 The output is sorted in descending order for the `top` module and in ascending order for the `bottom` module.
 
 The modules use the same syntax. Each optionally takes one or more enumerated values. The modules will emit the top/bottom values of the given value. If no enumerated value is provided, the `DATA` field is used.
-If multiple enumerated values are provided, the modules will sort by the top/bottom values of the enumerated values, in the provided order. If a two entries have the same value for a given enumerated value, the second enumerated value will be used.
+If multiple enumerated values are provided, the modules will sort by the top/bottom values of the enumerated values in the provided order. If two entries have the same value for a given enumerated value, the second enumerated value will be used.
 
 For example, given:
 
