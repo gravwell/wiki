@@ -78,6 +78,7 @@ strings <strings/strings>
 subnet <subnet/subnet>
 taint <taint/taint>
 time <time/time>
+top/bottom <topbottom/topbottom>
 transaction <transaction/transaction>
 Trim Modules (list) <trim/trim>
 truncate <truncate/truncate>
@@ -139,6 +140,7 @@ words <words/words>
 * [subnet](subnet/subnet) - extract & filter based on IP subnets.
 * [taint](taint/taint) - taint tracking.
 * [time](time/time) - convert strings to time enumerated values, and vice versa.
+* [top/bottom](topbottom/topbottom) - display the top/bottom N values.
 * [transaction](transaction/transaction) - group multiple entries into single-entry "transactions" based on keys.
 * [Trim Modules (list)](trim/trim) - various string trim functions.
   * trim - remove leading and trailing Unicode code points.
