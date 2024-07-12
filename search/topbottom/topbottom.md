@@ -33,7 +33,7 @@ The output will be:
 | 10  | 200 | 
 | 10  | 100 |
 
-In the example above, `top` took the top two values of `foo` first, and where `foo` had the same value, took the top value of `bar` instead.
+In the example above, three of the four original entries all have the same value 10 for `foo`. In order to find the top 2 as requested in the query, `top` then looks at the values of `bar`, and uses the top values 200 and 100 to determine which two entries to keep. 
 
 Values must be numeric or able to be cast to a number. Non-numeric values are ignored.
 
