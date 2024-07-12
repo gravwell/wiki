@@ -43,6 +43,7 @@ myst_enable_extensions = [
 
 templates_path = ["_templates"]
 exclude_patterns = [
+    ".github",
     "README.md",
     "_build",
     "Thumbs.db",
