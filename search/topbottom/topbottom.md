@@ -6,7 +6,7 @@ The `top` and `bottom` modules show the top or bottom N values of a given enumer
 tag=foo json foo | top -n 10 foo
 ```
 
-The output is sorted in descending order (ascending for the `bottom` module).
+The output is sorted in descending order for the `top` module and in ascending order for the `bottom` module.
 
 The modules use the same syntax. Each optionally takes one or more enumerated values. The modules will emit the top/bottom values of the given value. If no enumerated value is provided, the `DATA` field is used.
 
