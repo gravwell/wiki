@@ -6,7 +6,7 @@ The fields module is used to extract and filter data from search entries into en
 
 Fields are extracted by specifying an index into data from a base of zero.  An index is specified using a positive integer surrounded by square brackets.  Multiple fields can be extracted by providing multiple directives.  Field extraction indexes do not need be be specified in order.
 
-Extracted index fields can be renamed by appending the directive `as <name>` immediately after a field index value.  For example, to extract the 6th field from a piece of data into an enumerated value with the name "uri" the extraction directive would be `[5] as uri`.  If no rename directive is provided the extracted values are given the name that matches the index.  Extracted fields also support filters which allows for quickly filtering entries based on equality or contained values.  Filters must be specified before the renaming statement.  An example fields directive which only allows entries to pass by where the 1st field is the value "stuff" would be `[0]=="stuff"`.  To only allow entries where the 1st field does not equal the value "stuff" and rename the 1st field to "things" the directive would be `[0] != "stuff" as things`.
+Extracted index fields can be renamed by appending the directive `as <name>` immediately after a field index value.  For example, to extract the 6th field from a piece of data into an enumerated value with the name "uri" the extraction directive would be `[5] as uri`.  If no rename directive is provided the extracted values are given the name that matches the index.  Extracted fields also support filter specifications for quickly filtering entries based on equality or contained values.  Filters must be specified before the renaming statement.  An example fields directive which only allows entries to pass by where the 1st field is the value "stuff" would be `[0]=="stuff"`.  To only allow entries where the 1st field does not equal the value "stuff" and rename the 1st field to "things" the directive would be `[0] != "stuff" as things`.
 
 ```{attention}
 Field extraction indexes can be specified as base 10, base 8, or base 16.  The default name applied is the original text value of the index.  An extraction directive of [0xA] will extract the 11th field with the name "0xA", while [010] will extract the 9th field and apply the name "010".
@@ -26,7 +26,7 @@ To specify filter values and or extraction names which contain special character
 
 ## Filtering Operators
 
-The fields module allows for a filtering based on equality.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
+The fields module can filter based on equality.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
 
 | Operator | Name | Description |
 |----------|------|-------------|

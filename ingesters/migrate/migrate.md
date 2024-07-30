@@ -6,7 +6,7 @@ This section will explore the available tools to migrate existing data and give 
 
 ## Migration Caveats
 
-Most Gravwell licenses are unlimited, meaning that when it is time to migrate massive quantities of data in you are only limited by the resources available to accept and index that data.  However, the one exception is the free Community Edition license which has hard ingest limits.  All other license types are either unlimited or allow for bursting to accommodate data migration.
+Most Gravwell licenses are unlimited, meaning that when it is time to migrate massive quantities of data in you are only limited by the resources available to accept and index that data.  However, the one exception is the free Community Edition license which has hard ingest limits.  All other license types are either unlimited or allow bursting to accommodate data migration.
 
 ## Splunk Migration
 

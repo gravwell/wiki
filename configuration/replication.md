@@ -118,7 +118,7 @@ Replication is controlled by the "Replication" configuration group in the gravwe
 
 ## Disabling Replication Per Well
 
-The replication engine will replicate all data across all wells by default, however it may be desired to control which datasets are replicated due to costs, priorities, or just when testing Gravwell.  Some users find it useful to have a "test" well where data can be ingested and aged out quickly and replicating that test data may not make much sense.  Gravwell allows for disabling replication on a per well basis by adding the configuration stanza `Disable-Replication=true` inside the well configuration block.  When replication is disabled, the engine will not communicate the wells existence or push any data to replication peers; tags however are always replicated, even if they are assigned to a well with replication disabled.
+The replication engine will replicate all data across all wells by default, however it may be desired to control which datasets are replicated due to costs, priorities, or just when testing Gravwell.  Some users find it useful to have a "test" well where data can be ingested and aged out quickly and replicating that test data may not make much sense.  Replication can be disabled on a per-well basis by adding the configuration stanza `Disable-Replication=true` inside the well configuration block.  When replication is disabled, the engine will not communicate the wells existence or push any data to replication peers; tags however are always replicated, even if they are assigned to a well with replication disabled.
 
 An example configuration snippet where replication is enabled on an indexer but a specific well is excluded is as follows:
 

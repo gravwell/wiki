@@ -70,22 +70,6 @@ Multiple "Listener" definitions can be defined allowing specific URLs to send en
 	TokenValue=Secret
 ```
 
-## Installation
-
-If you're using the Gravwell Debian repository, installation is just a single apt command:
-
-```
-apt-get install gravwell-http-ingester
-```
-
-Otherwise, download the installer from the [Downloads page](/quickstart/downloads). Using a terminal on the Gravwell server, issue the following command as a superuser (e.g. via the `sudo` command) to install the ingester:
-
-```console
-root@gravserver ~ # bash gravwell_http_ingester_installer_3.0.0.sh
-```
-
-If the Gravwell services are present on the same machine, the installation script will automatically extract and configure the `Ingest-Auth` parameter and set it appropriately. However, if your ingester is not resident on the same machine as a pre-existing Gravwell backend, the installer will prompt for the authentication token and the IP address of the Gravwell indexer. You can set these values during installation or leave them blank and modify the configuration file in `/opt/gravwell/etc/gravwell_http_ingester.conf` manually.
-
 ## Configuring HTTPS
 
 By default the HTTP Ingester runs a cleartext HTTP server, but it can be configured to run an HTTPS server using x509 TLS certificates.  To configure the HTTP Ingester as an HTTPS server provide a certificate and key PEM files in the Global configuration space using the `TLS-Certificate-File` and `TLS-Key-File` parameters.
@@ -366,7 +350,7 @@ echo '{"event": "Hello, world!", "fields": {"device": "macbook", "user": "bob"}}
 
 Each of the HEC endpoints support sending multiple entries in a single request; batching up multiple entries in a single request is dramatically more efficient than one entry per request.
 
-The structured data endpoints allow for specifying a sourcetype value which will be applied to the `Tag-Match` config parameter; if a match is found, a new tag is applied.  The raw endpoints can provide a sourcetype as a query parameter, or a direct tag value can be provided to bypass the sourcetype translations entirely and explicitly specify the tag.
+The structured data endpoints can specify a sourcetype value which will be applied to the `Tag-Match` config parameter; if a match is found, a new tag is applied.  The raw endpoints can provide a sourcetype as a query parameter, or a direct tag value can be provided to bypass the sourcetype translations entirely and explicitly specify the tag.
 
 This curl command shows sending several structured entries to the structured endpoint:
 
@@ -508,7 +492,7 @@ The resulting entries will have the following tags:
 
 #### Debug-Posts
 
-The `Debug-Posts` configuration option allows for gathering additional data on each HTTP POST request to the HTTP ingester endpoint.  Only successful transactions will be logged when using the `Debug-Posts` configuration option.  Authentication failures, structure failures, or just bad requests are logged using the existing systems.  The debug logs are sent to the `gravwell` tag.
+The `Debug-Posts` configuration option enables additional logging on each HTTP POST request to the HTTP ingester endpoint.  Only successful transactions will be logged when using the `Debug-Posts` configuration option.  Authentication failures, structure failures, or just bad requests are logged using the existing systems.  The debug logs are sent to the `gravwell` tag.
 
 Here is a raw log entry emitted from a HEC debug post:
 ```
@@ -528,7 +512,7 @@ tag=gravwell syslog Appname==httpingester Message == "HEC request" Hostname
 
 #### Token-Name
 
-Many third party services which are designed to send data to a HEC compatible listener have been observed sending authentication tokens with various random names; the default expected authentication header structure is `Authentication: Splunk <token>`, but we have seen everything from "User" to "user_name".  The `Token-Name` configuration parameter can override the Authorization header token name so that the HEC compatible listener can still authenticate and support third party services that do not adhere to the HEC guidance.
+Many third party services which are designed to send data to a HEC compatible listener have been observed sending authentication tokens with various random names; the default expected authentication header structure is `Authorization: Splunk <token>`, but we have seen everything from "User" to "user_name".  The `Token-Name` configuration parameter can override the Authorization header token name so that the HEC compatible listener can still authenticate and support third party services that do not adhere to the HEC guidance.
 
 An example curl command that would authenticate with a `Token-Name` of `foobar` and a `TokenValue` of `soopersekrit` would be:
 

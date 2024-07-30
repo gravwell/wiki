@@ -124,7 +124,7 @@ Each follower specifies at minimum a base directory and a filename filtering pat
 | Ignore-Glob               | string(s) |       |               | Set of glob patterns that specify entries to ignore, multiple can be specified. |
 | Timestamp-Format-Override | string |          |               | Optional timestamp format override for parsing timestamps. |
 | Timestamp-Delimited       | bool   |          | false         | Indicate that entries should be delimited by timestamps.  Requires Timestamp-Format-Override. |
-| Regex-Delimiter           | string |          |               | Delimit entries using a timestamp rather than lines. |
+| Regex-Delimiter           | string |          |               | Regular expression that defines a delimiter for splitting an entry. |
 | Timestamp-Regex           | string |          |               | Regular expression used for identifying a timestamp within data. |
 | Timestamp-Format-String   | string |          |               | Format string used for parsing timestamps. |
 | Preprocessor              | string(s) |       |               | List of preprocessors to use when processing entries after extraction. |
@@ -366,3 +366,22 @@ starting action cleanup:
 ```
 
 You may wish to have each multiline action be a single entry; this can be accomplished with "Regex-Delimiter=`\n\S`" which will break records on a newline that does not have spaces afterwords.  However, a `Regex-Delimiter` that uses newlines will also capture newlines in the entries; adding the `Trim=true` config option will remove the leading and trailing newlines (and any other space characters).  Trim will not remove any interior whitespace characters.
+
+## macOS Configuration
+
+The macOS file follower installs to `/Library/Gravwell/FileFollower` and enables a `launchd` script to enable file follower at startup. To configure file follower on macOS, edit `/Library/Gravwell/FileFollower/file_follow.conf` and restart the file follower service with:
+
+```
+launchctl kickstart -k system/io.gravwell.filefollower
+```
+
+To disable the service, use:
+
+```
+launchctl disable system/io.gravwell.filefollower
+```
+
+To remove file follower from macOS, remove the following:
+
+1. `/Library/Gravwell/FileFollower`
+2. `/Library/LaunchDaemons/io.gravwell.filefollower.plist`

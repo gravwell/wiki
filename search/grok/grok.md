@@ -51,7 +51,7 @@ We filter for PUT and the IP using the words module to engage indexing and reduc
 
 Grok can dramatically simplify complicated regular expressions and allow mere mortals to crack apart large log fragments.  However, a grok pattern designed to extract and validate every field in a log is going to be complex and slow.  If you don't need every field, consider using fragments and primitives.  A smaller grok pattern that only extracts a few items can be dramatically faster than a complete pattern that extracts everything.
 
-For example, let's look at two queries that compile response code counts for each HTTP method and display them in a stackgraph, the first query uses grok with the `COMBINEDAPACHELOG` pattern allows for a very simple query:
+For example, let's look at two queries that compile response code counts for each HTTP method and display them in a stackgraph. The first query uses grok with the `COMBINEDAPACHELOG` pattern for a very simple query:
 
 ```gravwell
 tag=apache grok "%{COMBINEDAPACHELOG}" | stats count by verb response | stackgraph verb response count

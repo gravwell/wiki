@@ -8,7 +8,7 @@ A notable exception is data that will not compress much (if at all). In this sit
 
 Gravwell supports two types of compression: default and transparent compression.  Default compression uses the [snappy](https://en.wikipedia.org/wiki/Snappy_%28compression%29) compression system to perform compression and decompression in userspace.  The default compression system is compatible with all filesystems.  The transparent compression system uses the underlying filesystem to provide transparent block level compression.
 
-Transparent compression allows for offloading compression/decompression work to the host kernel while maintaining an uncompressed page cache.  Transparent compression can allow for very fast and efficient compression/decompression but requires that the underlying filesystem support transparent compression.  Currently the [BTRFS](https://btrfs.wiki.kernel.org/index.php/Main_Page) and [ZFS](https://wiki.archlinux.org/index.php/ZFS) filesystem are supported.
+Transparent compression offloads compression/decompression work to the host kernel while maintaining an uncompressed page cache.  Transparent compression can provide very fast and efficient compression/decompression but requires that the underlying filesystem support transparent compression.  Currently the [BTRFS](https://btrfs.wiki.kernel.org/index.php/Main_Page) and [ZFS](https://wiki.archlinux.org/index.php/ZFS) filesystem are supported.
 
 ```{attention}
 Transparent compression has important implications for ageout rules involving total storage. Please refer to the [ageout documentation](ageout) for more information.

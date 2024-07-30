@@ -17,7 +17,7 @@ By default, the maclookup module expects the macdb database to be in a resource 
 
 ## Processing Operators
 
-The maclookup extractors support direct operators that allow for very fast filtering in the module. These filters can enable fast filtering of entries based on manufacturer, address, or country. Extraction filters support equal to (==), not equal to (!=), and subset (~) operators. Multiple operators can be specified in a single invocation of the maclookup module, and the output enumerated value names can be modified using the "as" directive. 
+The maclookup extractors support direct operators for very fast filtering in the module. These filters can enable fast filtering of entries based on manufacturer, address, or country. Extraction filters support equal to (==), not equal to (!=), and subset (~) operators. Multiple operators can be specified in a single invocation of the maclookup module, and the output enumerated value names can be modified using the "as" directive. 
 
 | Operator | Name | Description
 |----------|------|-------------
