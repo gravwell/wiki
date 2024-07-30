@@ -1,9 +1,13 @@
 [
   {
-    "name": "v5.4.10 (latest)",
-    "version": "v5.4.10",
+    "name": "v5.4.11 (latest)",
+    "version": "v5.4.11",
     "url": "https://docs.gravwell.io/",
     "preferred": true
+  },
+  {
+    "version": "v5.4.10",
+    "url": "https://docs.gravwell.io/v5.4.10/"
   },
   {
     "version": "v5.4.9",
