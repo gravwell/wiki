@@ -8,6 +8,11 @@ The modules use the same syntax. Each optionally takes one or more enumerated va
 first [enumerated value]...
 ```
 
+## Supported Options
+
+* `-maxtracked <arg>`: Set the maximum number of entries to track when using keys.
+* `-maxsize <arg>`: Set the maximum number of MB to hold in memory when tracking using keys.
+
 ## Examples
 
 To get just the first entry in a query by time, simply invoke the `first` module with no arguments:
