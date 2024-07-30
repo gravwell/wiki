@@ -10,7 +10,7 @@ The `filetype` module is used to fingerprint a number of filetypes, and put that
 
 The `filetype` module requires that a single argument be provided which specifies the output enumerated value name to be populated with the MIME type value.  If the `filetype` module cannot identify a suitable MIME type for the given value the enumerated value will not be produced.
 
-`filetype` allows for inline filtering using the standard string filter types.  Filters can cause entries to be dropped if a the filter explicitly forbids a value or if the filter requires a value but the MIME type cannot be resolved.
+`filetype` does inline filtering using the standard string filter types.  Filters can cause entries to be dropped if a the filter explicitly forbids a value or if the filter requires a value but the MIME type cannot be resolved.
 
 The supported filter operators are:
 

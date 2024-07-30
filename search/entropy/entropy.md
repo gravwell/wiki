@@ -8,7 +8,7 @@ Syntax:
 entropy [enumerated value] [by ...] [over <duration>]
 ```
 
-The `entropy` module syntax allows for specifying an enumerated value to calculate entropy over. If not specified, `entropy` will calculate entropy over the entire DATA field. The module also supports specifying one or more arguments to group by, using the `by` keyword. For example, to calcaulte entropy on the enumerated value `foo`, grouped by `bar` and `baz`:
+The `entropy` module syntax can take an enumerated value name to calculate entropy over. If none is specified, `entropy` will calculate entropy over the entire DATA field. The module also supports specifying one or more arguments to group by, using the `by` keyword. For example, to calcaulte entropy on the enumerated value `foo`, grouped by `bar` and `baz`:
 
 ```gravwell
 tag=gravwell entropy foo by bar baz

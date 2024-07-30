@@ -6,7 +6,7 @@ The csv module is designed to extract and filter data from comma separated value
 
 Fields are extracted by specifying an index into data from a base of zero.  An index is specified using a positive integer surrounded by square brackets.  Multiple columns can be extracted by providing multiple directives.  Column extraction indexes do not need be be specified in order.
 
-Extracted columns can be renamed by appending the directive `as <name>` immediately after a field index value.  For example, to extract the 6th column from a piece of data into an enumerated value with the name "uri" the extraction directive would be `[5] as uri`.  If no rename directive is provided the extracted values are given the name that matches the index.  Extracted columns also support filters which allows for quickly filtering entries based on equality or contained values.  Filters must be specified before the renaming statement.  An example column directive which only allows entries to pass by where the 1st column is the value "stuff" would be `[0]=="stuff"`.  To only allow entries where the 1st column does not equal the value "stuff" and rename the 1st field to "things" the directive would be `[0] != "stuff" as things`.
+Extracted columns can be renamed by appending the directive `as <name>` immediately after a field index value.  For example, to extract the 6th column from a piece of data into an enumerated value with the name "uri" the extraction directive would be `[5] as uri`.  If no rename directive is provided the extracted values are given the name that matches the index.  Extracted columns also support filters based on equality or contained values.  Filters must be specified before the renaming statement.  An example column directive which only allows entries to pass by where the 1st column is the value "stuff" would be `[0]=="stuff"`.  To only allow entries where the 1st column does not equal the value "stuff" and rename the 1st field to "things" the directive would be `[0] != "stuff" as things`.
 
 ```{attention}
 Column extraction indexes can be specified as base 10, base 8, or base 16.  The default name applied is the original text value of the index.  An extraction directive of [0xA] will extract the 11th column with the name "0xA", while [010] will extract the 9th column and apply the name "010".
@@ -23,7 +23,7 @@ To specify filter values and or extraction names which contain special character
 
 ## Filtering Operators
 
-The csv module allows for a filtering based on equality.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
+The csv module can filter based on equality.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
 
 | Operator | Name | Description |
 |----------|------|-------------|

@@ -20,7 +20,7 @@ Case-insensitive search is significantly slower. If you must do case-insensitive
 ```
 
 ```{attention}
-The `-w` word match implies a simple match as the wildcards allow for crossing word boundaries.
+The `-w` word match implies a simple match, as using wildcards could cross word boundaries.
 ```
 
 ## Parameter Structure

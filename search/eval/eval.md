@@ -436,7 +436,6 @@ Returns the input with all leading and trailing whitespace removed.
 
 Returns the input with the trailing suffix removed.
 
-
 ### Hash
 
 #### hash_md5
@@ -624,7 +623,7 @@ Returns a JSON object of the given key/value pair. The value's type is evaluated
 
 #### json_pretty
 
-	function json_pretty(input string) string {
+	function json_pretty(input string) string
 
 Pretty prints the given JSON input.
 
@@ -633,7 +632,6 @@ Pretty prints the given JSON input.
 	function json_set(object string, key string, value <expression>) string
 
 Sets a key/value pair in the given object. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
-
 
 ### Math
 

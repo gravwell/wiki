@@ -36,7 +36,7 @@ Finally, the [Email](email) node sends the resulting PDF to the recipient:
 
 ## Formatting
 
-The PDF node is designed to perform a best effort formatting of data, this includes automatically resizing images, formatting tables to control text size, and adding headers for individual sections.  However, it may be useful to override some of the automatic formatting and force specific fonts and/or table formatting.  The two font size controls and optional table auto scaling control allow for manually setting font sizes and/or forcing table formatting.
+The PDF node is designed to perform a best effort formatting of data, this includes automatically resizing images, formatting tables to control text size, and adding headers for individual sections.  However, it may be useful to override some of the automatic formatting and force specific fonts and/or table formatting.  The two font size controls and optional table auto scaling control can be used to manually set font sizes and/or force table formatting.
 
 ![](pdf-example5.png)
 

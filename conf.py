@@ -21,7 +21,7 @@ from gravy_lexer import GravwellLexer
 project = "Gravwell"
 copyright = f"Gravwell, Inc. {date.today().year}"
 author = "Gravwell, Inc."
-release = "v5.4.4"
+release = "v5.4.11"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -42,7 +42,15 @@ myst_enable_extensions = [
 
 
 templates_path = ["_templates"]
-exclude_patterns = ["README.md", "_build", "Thumbs.db", ".DS_Store", "env", "_vendor"]
+exclude_patterns = [
+    ".github",
+    "README.md",
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "env",
+    "_vendor",
+]
 
 language = "en"
 

@@ -1,6 +1,6 @@
 # Gravwell Direct Query API
 
-The Gravwell Direct Query API is designed to provide atomic, REST-powered access to the Gravwell query system.  This API allows for simple integration with external tools and systems that do not normally know how to interact with Gravwell.  The API is designed to be as flexible as possible and support tools that know how to interact with an HTTP API.
+The Gravwell Direct Query API is designed to provide atomic, REST-powered access to the Gravwell query system.  This API provides an option for simple integrations with external tools and systems that do not normally know how to interact with Gravwell.  The API is designed to be as flexible as possible and support tools that know how to interact with an HTTP API.
 
 The Direct Query API is authenticated and requires a valid Gravwell account with access to the Gravwell query system.  Most users will want to generate a [Gravwell Token](/tokens/tokens) and use that to access the query API.
 
@@ -46,8 +46,8 @@ curl -X POST \
 ### JSON Object
 
 ```
-curl -X POST -H -d '{"SearchString":"tag=gravwell limit 10"}' \
-   "Gravwell-Token: aFOa_YbO7Pe0MAqK08PSD-oTrEZxopc5JBf0hu0W5_Vo-FxWsjHp" \
+curl -X POST -d '{"SearchString":"tag=gravwell limit 10"}' \
+   -H "Gravwell-Token: aFOa_YbO7Pe0MAqK08PSD-oTrEZxopc5JBf0hu0W5_Vo-FxWsjHp" \
    http://10.0.0.1/api/parse
 ```
 
