@@ -10,8 +10,8 @@ first [enumerated value]...
 
 ## Supported Options
 
-* `-maxtracked <arg>`: Set the maximum number of entries to track when using keys.
-* `-maxsize <arg>`: Set the maximum number of MB to hold in memory when tracking using keys.
+* `-maxtracked <arg>`: sets the maximum number of unique keys to track per operation, e.g. `first -maxtracked 5000 DstIP`. This is used to help avoid memory exhaustion if there are millions of IPv6 addresses in the data. If the maxtracked value is exceeded, the search will terminate with an error suggesting you should increase the max value. Defaults to 100000000. Refer to the [stats module documentation](/search/stats/stats) for more information about maxtracked.
+* `-maxsize <arg>`: sets the maximum amount of memory in megabytes to hold when tracking using keys.
 
 ## Examples
 
