@@ -6,7 +6,7 @@ As of Gravwell 5.5.0, any user may choose to enable MFA for their account, or ad
 
 ## Requiring MFA
 
-To enable MFA, add the following line to the `[Global]` block of your webserver's `gravwell.conf`:
+To require all users to configure and use MFA, add the following line to the `[Global]` block of your webserver's `gravwell.conf`:
 
 ```
 MFA-Required=true
@@ -26,7 +26,7 @@ If MFA is required, users will be prompted to set it up the next time they log i
 
 Those who use authenticator apps on their smartphones can simply scan the QR code to set it up; users of PC-based systems such as KeePassXC will need to click "Or enter code manually" and copy the code into their authenticator program by hand.
 
-Once the authenticator is set up, use it to get a one-time code and enter it into the verification field, then click Verify. Assuming everything was configured correctly, the login process will complete and a list of one-time-use recovery codes will be displayed:
+Once the authenticator is set up, use it to get a one-time code and enter it into the verification field, then click "Verify". Assuming everything was configured correctly, the login process will complete and a list of one-time-use recovery codes will be displayed:
 
 ![](mfa-setup-recovery.png)
 
