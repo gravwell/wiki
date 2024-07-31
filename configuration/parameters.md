@@ -674,6 +674,18 @@ Default Value:	false
 Example:	`Disable-Indexer-Overload-Warning=true`  
 Description: If this parameter is set, the indexer will not send notifications when it considers itself 'overloaded'.
 
+### **MFA-Required**
+Applies to: Webserver
+Default Value: false
+Example: `MFA-Required=true`
+Description: If set to true, all local (non-SSO) users will be required to configure and use MFA for authentication.
+
+### **MFA-Issuer-Name**
+Applies to: Webserver
+Default Value: Gravwell
+Example: `MFA-Issuer-Name="BigCo Gravwell Cluster"`
+Description: Sets the "issuer" field for TOTP MFA authentication. This controls the name which will appear in your authentication application. The default, "Gravwell", is suitable for most cases.
+
 ## Password Control
 
 The `[Password-Control]` configuration section can be used to enforce password complexity rules when users are created or passwords are changed. Options set in this block apply only to webservers. These complexity configuration rules do not apply when using Single Sign On.

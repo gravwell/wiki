@@ -43,6 +43,7 @@ maxdepth: 1
 caption: Securing Gravwell
 hidden: true
 ---
+Multi-Factor Authentication </configuration/mfa/mfa>
 Hardening a Gravwell Installation </configuration/hardening>
 Configuring TLS Certificates </configuration/certificates>
 ```
