@@ -50,7 +50,7 @@ Flows are a no-code system for developing advanced automations which are run by 
    Overwatch is an advanced deployment where you can have specialized webservers that can query multiple Gravwell clusters.
 
 [Scheduled Script](/scripting/scheduledsearch)
-A user-authored script which is run automatically on a given schedule. The schedule is defined using cron format, meaning searches may run as frequently as every minute.
+A user-authored script which is run automatically on a given schedule. The schedule is defined using cron format, meaning scripts may run as frequently as every minute.
 
 [Scheduled Search](/scripting/scheduledsearch)
 A Gravwell query which will be run automatically on a given schedule. The schedule is defined using cron format, meaning searches may run as frequently as every minute.
