@@ -189,7 +189,7 @@ Multiple queries can be combined into a single query string to be run sequential
 [Federator](/ingesters/federators/federator)
   A federator is an entry relay. It sits between ingesters and indexers and may be used for several reasons. If a deployment has many indexers, a federator can be deployed so ingesters only need to be pointed at the single federator rather than all the indexers. It can also be used to provide a restricted ingest point for less-trusted data sources, e.g. only allowing ingest to a subset of tags. It is also a useful way to allow incoming entries from the Internet without directly exposing the indexers.
   
-[Preprocessor](/preprocessors/preprocessors)
+[Preprocessor](/ingesters/preprocessors/preprocessors)
 Ingesters can be configured to apply additional preprocessing to entries before sending them to the indexer. For instance, the entry's tag may be modified based on the contents of the entry.
 
 [Timegrinder](/ingesters/customtime/customtime)
