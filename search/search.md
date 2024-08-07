@@ -274,6 +274,12 @@ start=-1h tag=default json foo | table
 
 In the example above, the `end=` constraint is omitted, which sets the end of the range to the time at which the query is executed.
 
+Additionally, relative and concrete timestamps can be combined. For example, to search from January 2nd, 2006, up to an hour ago:
+
+```gravwell
+start="2006-01-02T15:04:05Z07:00" end=-1h tag=default json foo table
+```
+
 ```{note}
 If start/end time constraints are provided, the GUI time picker timeframe will be ignored.
 ```
