@@ -99,3 +99,16 @@ You can test the config by running `/opt/gravwell/bin/gravwell_kinesis_ingester 
 Most of the fields are self-explanatory, but the `Iterator-Type` setting deserves a note. This setting selects where the ingester starts reading data **if it does not have a state file entry** for the stream/shard. The default is "LATEST", which means the ingester will ignore all existing records and only read records created after the ingester starts. By setting it to TRIM_HORIZON, the ingester will start reading records from the oldest available. In most situations we recommend setting it to TRIM_HORIZON so you can fetch older data; on further runs of the ingester, the state file will maintain the sequence number and prevent duplicate ingestion.
 
 The Kinesis ingester does not provide the `Ignore-Timestamps` option found in many other ingesters. Kinesis messages include an arrival timestamp; by default, the ingester will use that as the Gravwell timestamp. If `Parse-Time=true` is specified in the data consumer definition, the ingester will instead attempt to extract a timestamp from the message body.
+
+### Custom Kinesis endpoints
+
+By default, the Kinesis ingester will use the default AWS endpoint when establishing Kinesis streams. If you need to override this for any reason, such as configuring for internal DNS, you can set the `Endpoint` configuration option. For example, to connect to `example.com` instead of the default AWS endpoint:
+
+```
+[KinesisStream "custom"]
+	Endpoint="example.com" 
+	Region="us-west-1"
+	Tag-Name=kinesis
+	Stream-Name=MyKinesisStreamName	
+	Iterator-Type=TRIM_HORIZON
+```
