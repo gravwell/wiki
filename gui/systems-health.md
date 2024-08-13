@@ -10,7 +10,7 @@ This page shows information about the data stored in the indexers of the Gravwel
 
 ![](storage.png)
 
-The Storage section shows a summary of how much data is in the system, with separate stats for hot and cold storage. The "dropper" graphic indicates how fast new entries are entering the system.
+The Storage section shows a summary of how much data is in the system, with separate stats for hot and cold storage. The Ingest chart shows the rate at which new data has been entering the system.
 
 At the bottom of the page, the Search Agent section shows information about the search agent component and when it last "checked in".
 
@@ -50,7 +50,7 @@ Each card has several different display options, selected via the links in the u
 
 ## Disks
 
-The Disks page contains information about disk storage on the cluster. Only disks which contain Gravwell data will be displayed, to avoid clutter. In the screenshot below, the root disk of indexer `be1` has been expanded to show the wells contained in Gravwell's storage area on that disk.
+The Disks page contains information about disk storage on the cluster. Only disks which contain Gravwell data will be displayed, to avoid clutter.
 
 ![](disks.png)
 

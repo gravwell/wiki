@@ -231,6 +231,60 @@ This gives us a table of just connections that didn't have a corresponding DNS q
 Compound queries create ephemeral resources that exist only during the query, however those resources can and do consume disk space and are restricted by the [Resource-Max-Size](config_params_resource-max-size)` global configuration variable which defaults to 512MB.  If the ephemeral resource is larger than the specified size the query will fail.
 ```
 
+(specify-search-timeframe-in-query)=
+## Specifying the search timeframe in query
+
+It is possible to specify the timeframe in the query, using both relative and concrete time, instead of using the GUI time range picker. This is useful for creating portable queries that contain the exact timeframe needed using only the query itself.
+
+Specifying the search timeframe in the query is done by providing one or both of `start=` and `end=` constraints. These are provided at the beginning of the query, similar to the tag specification. The order of constraints (including the tag specification) does not matter. The `start/end` constraints take a string consisting of an offset or a concrete timestamp. 
+
+For example, to search over the last 10 hours, except the last hour, you can specify the time constraints as offset durations:
+
+```gravwell
+tag=default start=-10h end=-1h json foo | table
+```
+
+In the example above, we provide a start range of `-10h`, meaning "10 hours in the past from now". Additionally, the end range is `-1h`. Durations consist of a signed offset, and use the following letters as units of time:
+
+| Unit | Description |
+|--------|-------|
+| us | microseconds | 
+| ms | milliseconds | 
+| s | seconds|
+| m | minutes |
+| h | hours |
+| d | days |
+| w | weeks |
+| y | years |
+
+It is also possible to use concrete timestamps. Any timestamp supported by [timegrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#pkg-constants) can be interpreted as a concrete timestamp.
+
+For example:
+
+```gravwell
+start="2006-01-02T15:04:05Z07:00" end="2006-01-02T23:04:05Z07:00" tag=default json foo table
+```
+
+The example above uses RFC3339 timestamps to specify a concrete time range.
+
+If `start=` or `end=` is used individually, the omitted constraint will be interpreted as "now". For example, to simply search over the last hour:
+
+```gravwell
+start=-1h tag=default json foo | table
+```
+
+In the example above, the `end=` constraint is omitted, which sets the end of the range to the time at which the query is executed.
+
+Additionally, relative and concrete timestamps can be combined. For example, to search from January 2nd, 2006, up to an hour ago:
+
+```gravwell
+start="2006-01-02T15:04:05Z07:00" end=-1h tag=default json foo table
+```
+
+```{note}
+If start/end time constraints are provided, the GUI time picker timeframe will be ignored.
+```
+
 ## Comments
 
 Gravwell supports two types of comments. 

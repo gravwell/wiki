@@ -42,7 +42,7 @@ Gravwell users and groups loosely follow the Unix patterns.  At a high level, Gr
 
 User and group management is the sole responsibility of admin users. Non-admins cannot modify users or change user group memberships.
 
-## Default Accounts
+### Default Accounts
 
 Default Gravwell installations have a single user named `admin` with the password `changeme`.  This default account uses the coveted UID of 1.  Gravwell treats UID 1 in the same way that Unix treats UID 0.  It is special and cannot be deleted, locked, or otherwise disabled.  You should protect this account carefully!
 
@@ -55,6 +55,10 @@ A default installation also contains a basic `users` group.  This group is just 
 Gravwell uses the [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) hashing system to store and validate logins.  This means that passwords are **NEVER** stored plaintext and we have no way to recover them.
 
 We start with a pretty aggressive bcrypt hash cost of 12 and routinely re-evaluate whether we need to increase that cost. 
+
+## Enforcing MFA
+
+[Requiring MFA](/configuration/mfa/mfa) will force all Gravwell users (except [SSO](/configuration/sso) users, who authenticate separately) to configure a second authentication method for login, e.g. an authenticator app. This makes brute-forcing logins essentially impossible and is highly recommended if the Gravwell server is exposed to the Internet.
 
 ## Installation Components
 

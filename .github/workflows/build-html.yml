@@ -42,6 +42,7 @@ jobs:
               nix-build
               cp -r ./result/html $BUILD_DEST/html/$v
               chmod --recursive +w $BUILD_DEST
+              echo "Disallow: /$v/" >> $BUILD_DEST/html/robots.txt
           done
 
           tar -C $BUILD_DEST -czf ${{ env.HTML_BUILD }} html
