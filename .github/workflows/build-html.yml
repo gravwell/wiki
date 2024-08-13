@@ -23,7 +23,7 @@ jobs:
           git fetch --all
 
           # Pull latest from main branch
-          git checkout master
+          git checkout main
           git pull
 
           # There should only be one marked "preferred": the latest release
