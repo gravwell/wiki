@@ -155,6 +155,7 @@ The system will correctly interpret the first timestamp and lock onto the `Unpad
 
 The Splunk migration tool is [fully documented here](/migrate/migrate).
 
+(account-unlock-tool)=
 ##  Account Unlock
 
 The account unlock tool is a last-resort method for unlocking accounts, resetting passwords, or clearing MFA configurations.  While an admin user can perform these same functions via the User Administration screens in the UI or via the Gravwell CLI, if the *admin's* account is the one in trouble, this tool can fix it.
