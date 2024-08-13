@@ -231,6 +231,7 @@ This gives us a table of just connections that didn't have a corresponding DNS q
 Compound queries create ephemeral resources that exist only during the query, however those resources can and do consume disk space and are restricted by the [Resource-Max-Size](config_params_resource-max-size)` global configuration variable which defaults to 512MB.  If the ephemeral resource is larger than the specified size the query will fail.
 ```
 
+(specify-search-timeframe-in-query)=
 ## Specifying the search timeframe in query
 
 It is possible to specify the timeframe in the query, using both relative and concrete time, instead of using the GUI time range picker. This is useful for creating portable queries that contain the exact timeframe needed using only the query itself.
