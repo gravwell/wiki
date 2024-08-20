@@ -32,7 +32,7 @@ The following parameters configure the connection to the Kafka cluster:
 
 | Parameter | Type | Descriptions | Required |
 |-----------|------|--------------| -------- |
-| Leader    | host:port | The Kafka cluster leader/broker.  This should be an IP or hostname, if no port is specified the default port of 9092 is appended | YES |
+| Leader    | slice of host:port | The set of Kafka cluster leader/broker.  This should be an IP or hostname; if no port is specified the default port of 9092 is appended. Multiple can be specified. | YES |
 | Topic     | string | The Kafka topic this consumer will read from | YES |
 | Consumer-Group | string | The Kafka consumer group this ingester is a member of; default is `gravwell`. |
 | Rebalance-Strategy | string | The re-balancing strategy to use when reading from Kafka. Options are `roundrobin` (default), `sticky`, and `range`. |
@@ -80,7 +80,8 @@ As with most ingesters, each consumer may also specify [preprocessors](/ingester
 
 # This consumer does not specify a Tags parameter, so all entries will get the Default-Tag
 [Consumer "test"]
-	Leader="127.0.0.1:9092"
+	Leader="kafka1.example.org" #leader one
+	Leader="kafka2.example.org" #leader two
 	Default-Tag=test
 	Topic=test
 	Consumer-Group=mygroup
