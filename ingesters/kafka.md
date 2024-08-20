@@ -32,7 +32,7 @@ The following parameters configure the connection to the Kafka cluster:
 
 | Parameter | Type | Descriptions | Required |
 |-----------|------|--------------| -------- |
-| Leader    | slice of host:port | The set of Kafka cluster leader/broker.  This should be an IP or hostname, if no port is specified the default port of 9092 is appended. Multiple can be specified. | YES |
+| Leader    | slice of host:port | The set of Kafka cluster leader/broker.  This should be an IP or hostname; if no port is specified the default port of 9092 is appended. Multiple can be specified. | YES |
 | Topic     | string | The Kafka topic this consumer will read from | YES |
 | Consumer-Group | string | The Kafka consumer group this ingester is a member of; default is `gravwell`. |
 | Rebalance-Strategy | string | The re-balancing strategy to use when reading from Kafka. Options are `roundrobin` (default), `sticky`, and `range`. |
