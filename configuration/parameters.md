@@ -166,7 +166,7 @@ Description:	The Datastore-Insecure-Skip-TLS-Verify parameter instructs the webs
 Applies to:		Webserver  
 Default Value:
 Example:		`External-Addr=10.0.0.1:443`  
-Description:	The External-Addr parameter specifies the address other webservers should use to contact this webserver. This parameter is **required** when using a datastore, as it allows a user on one webserver to load the results of a search performed on another webserver.
+Description:	The External-Addr parameter specifies the IP address or hostname that other webservers should use to contact this webserver. This parameter is **required** when using a datastore, as it allows a user on one webserver to load the results of a search performed on another webserver. If your webservers are using TLS, this address should match one of the names in the certificate.
 
 ### **Search-Forwarding-Insecure-Skip-TLS-Verify**
 Applies to:		Webserver  
