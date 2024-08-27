@@ -848,11 +848,6 @@ Default Value:
 Example:		`Accelerator-Args="username hostname \"strange-field.with.specials\".subfield"`  
 Description:	Setting the `Accelerator-Args` parameter (and the `Accelerator-Name` parameter) enables acceleration on the well. See [the acceleration documentation](/configuration/accelerators) for more information.
 
-#### **Accelerate-On-Source**
-Default Value:	false  
-Example:		`Accelerate-On-Source=true`  
-Description:	Specifies that the SRC field of each module should be included. This allows combining a module like CEF with SRC.
-
 #### **Accelerator-Engine-Override**
 Default Value:	"index"  
 Example:		`Accelerator-Engine-Override=bloom`  
