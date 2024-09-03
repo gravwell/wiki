@@ -11,7 +11,7 @@
 
 | Ingester Name | Installer    | More Info |
 | :------------ | :----------- | :-------- |
-| File Follower | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.5.3/installers/GravwellFileFollower-5.5.2.pkg">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void\(0\)" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">dd9d369b1adb97d652a6159dc6a680e240e337ae25e9f1b654e0b1de73fb9f64</span></code>'>(SHA256)</a> | [Documentation](/ingesters/file_follow) |
+| File Follower | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.5.3/installers/GravwellFileFollower-5.5.3.pkg">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void\(0\)" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">dd9d369b1adb97d652a6159dc6a680e240e337ae25e9f1b654e0b1de73fb9f64</span></code>'>(SHA256)</a> | [Documentation](/ingesters/file_follow) |
 
 ## Other Installers
 
