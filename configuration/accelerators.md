@@ -56,7 +56,6 @@ Accelerators are configured on a per-well basis.  Each well can specify an accel
 | Accelerator-Name  | Specifies the field extraction module to use at ingest. | Accelerator-Name="json" |
 | Accelerator-Args  | Specifies arguments for the acceleration module, typically the fields to extract. | Accelerator-Args="username hostname appname" |
 | Collision-Rate | Controls the accuracy for the acceleration modules using the bloom engine.  Must be between 0.1 and 0.000001. Defaults to 0.001. | Collision-Rate=0.01
-| Accelerate-On-Source | Specifies that the SRC field of each module should be included.  This allows combining a module like CEF with SRC. | Accelerate-On-Source=true
 | Accelerator-Engine-Override | Specifies the engine to use for indexing.  By default the index engine is used. | Accelerator-Engine-Override=index
 
 ### Supported Extraction Modules
@@ -84,7 +83,6 @@ Below is an example configuration which extracts the 2nd, 4th, and 5th field in 
 	Tags=bro
 	Accelerator-Name="fields"
 	Accelerator-Args="-d \"\t\" [2] [4] [5]"
-	Accelerate-On-Source=true
 	Collision-Rate=0.0001
 ```
 
@@ -500,7 +498,7 @@ The packet accelerator also requires direct fields, this means you cannot use th
 
 ## SRC
 
-The src accelerator can be used when only the entry's source field should be accelerated.  However, it is essentially possible to combine the src accelerator with other accelerators by enabling the "Accelerate-On-Source" flag and using src search module in your queries.  See the [src search module](/search/src/src) for more information on filtering.
+The src accelerator can be used when only the entry's source field should be accelerated. See the [src search module](/search/src/src) for more information on filtering.
 
 ### Example Well Configuration
 
@@ -519,7 +517,6 @@ The src accelerator can be used when only the entry's source field should be acc
 	Tags=app
 	Accelerator-Name="fields"
 	Accelerator-Args="-d \",\" [1] [2] [5] [3]"
-	Accelerate-On-Source=true
 ```
 
 The following query invokes both the fields accelerator and the src accelerator to specify specific log types coming from specific sources.
