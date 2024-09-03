@@ -16,6 +16,9 @@ jobs:
           # Fail on any error
           set -e
 
+          # Install relevant tools
+          sudo apt-get install -y jdupes
+
           # Make temporary location for build results
           export BUILD_DEST="$( mktemp --directory --tmpdir=${{ runner.temp }} )"
 
@@ -44,6 +47,9 @@ jobs:
               chmod --recursive +w $BUILD_DEST
               echo "Disallow: /$v/" >> $BUILD_DEST/html/robots.txt
           done
+
+          # Replace duplicates with soft links
+          jdupes --recurse --link-soft $BUILD_DEST
 
           tar -C $BUILD_DEST -czf ${{ env.HTML_BUILD }} html
       - name: Upload HTML Build
