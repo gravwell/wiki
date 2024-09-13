@@ -47,3 +47,22 @@ Here is a handy table that explains the events leading up to and after license e
 | Expiration | A notification indicating that the license is expired, 14 day grace period begins | T - 0 |
 | Ingest Disabled | Ingest is disabled and a notification indicating that the license is expired | T + 15 days |
 | Query Disabled | Searching is disabled and a notification indicating that the license is expired | T + 30 days |
+
+## Gravwell License Types
+
+| Type                | Identifier  | Basic Features | Unlimited Ingest | Cluster | Replication | CBAC | HA Webservers | SSO | AI Logbot | Notes                                               |
+|---------------------|-------------|:--------------:|:----------------:|:-------:|:-----------:|:----:|:-------------:|:---:|:---------:|:----------------------------------------------------|
+| Free                | UNLICENSED  | ✅             |                  |         |             |      |               |     |           | 2GB/day ingest, no licensing required, non-commercial use only. |
+| Community Edition   | community   | ✅             |                  |         |             |      |               |     | 🗸         | 14.95 GB/day ingest, authorized for commercial use. |                               
+| Pro                 | single      | ✅             |   ✅             |         |             |      |               |     | 🗸         | Single indexer, unlimited ingest, limited features. |
+| Enterprise          | single      | ✅             |   ✅             |         |  ✅         | ✅   |               | ✅  | 🗸         | Single indexer, full feature set, offline replication supported. |
+| Cluster             | cluster     | ✅             |   ✅             |  ✅     |  ✅         | ✅   |    ✅         | ✅  | 🗸         | Cluster deployment with online replication, distributed webservers, and full feature set. | 
+| Unlimited           | unlimited   | ✅             |   ✅             |  ✅     |  ✅         | ✅   |    ✅         | ✅  | 🗸         | Cluster deployment no limit on indexer count; the *go nuts* license tier. |
+| Cloud               | cloud       | ✅             |                  | <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/> | <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/>  | ✅   | <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/>  | ✅  | ✅  | Gravwell managed cloud deployment, opaque infrastructure with contract defined ingest. |
+
+
+🗸 - rate limited
+
+✅ - full support
+
+<img src="/_static/favicon.ico" alt="gravwell managed" width="20"/> - Gravwell managed
