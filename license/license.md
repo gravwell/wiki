@@ -52,7 +52,7 @@ Here is a handy table that explains the events leading up to and after license e
 
 | Type                | Identifier  | Basic Features | Unlimited Ingest | Cluster | Replication | CBAC | HA Webservers | SSO | AI Logbot | Notes                                               |
 |---------------------|-------------|:--------------:|:----------------:|:-------:|:-----------:|:----:|:-------------:|:---:|:---------:|:----------------------------------------------------|
-| Unlicensed          | UNLICENSED  | ✅             |                  |         |             |      |               |     |           | Free with 2GB/day ingest, no licensing required, non-commercial use only, never expires. |
+| Free                | free        | ✅             |                  |         |             |      |               |     |           | Free with 2GB/day ingest, no sign-up required, non-commercial use only, never expires. |
 | Community Edition   | community   | ✅             |                  |         |             |      |               |     | 🗸         | Free signup with 14.95 GB/day ingest, authorized for commercial use, [free licenses with instant delivery](https://www.gravwell.io/community-edition). |
 | Pro                 | single      | ✅             |   ✅             |         |             |      |               |     | 🗸         | Single indexer, unlimited ingest, limited features. |
 | Enterprise          | single      | ✅             |   ✅             |         |  ✅         | ✅   |               | ✅  | 🗸         | Single indexer, full feature set, offline replication supported. |
