@@ -14,7 +14,7 @@ The Gravwell administrator has three options for certificates:
 
 When connecting to a TLS-secured service, the client will check that the server's certificate is valid for the *hostname* the client is trying to access. If you have a valid certificate for `gravwell.example.org`, but you decide to access your Gravwell server directly by IP, e.g. `https://10.0.0.2/`, your web browser will most likely warn you that the certificate presented is invalid. Components of a Gravwell cluster may also communicate with each other over TLS-secured connections, and unless they are specifically configured to skip certificate validation these services will *fail* if the hostname they are given doesn't match the names on the certificate.
 
-When provisioning your TLS certificates, make sure the Common Name (CN) and Subject Alternative Names (SANs) cover *all* hostnames or IP addresses you will ever use to connect to the system. If you have multiple DNS entries for the same system -- for example, if your webserver is accessible from both the Internet and within your own LAN namespace -- be sure all those names are in the certificate!
+When provisioning your TLS certificates, make sure the Common Name (CN) and Subject Alternative Names (SANs) cover *all* hostnames or IP addresses you will ever use to connect to the system. If you have multiple DNS entries for the same system -- for example, if your webserver is accessible from both the Internet (`gravwell.example.org`) and within your own LAN namespace (`gravwell.internal.lan`) -- be sure all those names are in the certificate!
 
 Here's a brief list of some of the ways Gravwell components communicate via TLS connections; make sure your certificates are appropriate for any of these situations you intend to deploy:
 
