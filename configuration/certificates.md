@@ -10,6 +10,22 @@ The Gravwell administrator has three options for certificates:
 * Install a properly-signed TLS certificate. This is the ideal configuration, but typically requires the Gravwell instance to have a publicly-accessible hostname.
 * Install a self-signed certificate. This makes sense when you want to encrypt traffic to Gravwell but for one reason or another cannot get a properly signed certificate.
 
+## Hostnames in TLS Certificates
+
+When connecting to a TLS-secured service, the client will check that the server's certificate is valid for the *hostname* the client is trying to access. If you have a valid certificate for `gravwell.example.org`, but you decide to access your Gravwell server directly by IP, e.g. `https://10.0.0.2/`, your web browser will most likely warn you that the certificate presented is invalid. Components of a Gravwell cluster may also communicate with each other over TLS-secured connections, and unless they are specifically configured to skip certificate validation these services will *fail* if the hostname they are given doesn't match the names on the certificate.
+
+When provisioning your TLS certificates, make sure the Common Name (CN) and Subject Alternative Names (SANs) cover *all* hostnames or IP addresses you will ever use to connect to the system. If you have multiple DNS entries for the same system -- for example, if your webserver is accessible from both the Internet (`gravwell.example.org`) and within your own LAN namespace (`gravwell.internal.lan`) -- be sure all those names are in the certificate!
+
+Here's a brief list of some of the ways Gravwell components communicate via TLS connections; make sure your certificates are appropriate for any of these situations you intend to deploy:
+
+- Ingesters talk to indexers (`Encrypted-Backend-Target` in the [ingester config file](/ingesters/ingesters))
+- Indexers talk to other indexers via [replication](/configuration/replication)
+- Indexers talk to the [cloud archive service](/configuration/archive)
+- Webservers in a cluster talk to the [datastore](/distributed/frontend)
+- Webservers in a cluster talk to other webservers (`External-Addr`, see [docs](/distributed/frontend))
+
+Generally, you will see entries in the relevant component's log files if there is a TLS problem; if you see logs about invalid certificates, but you believe that your certificate should be correct, double-check the hostnames you've set in the config files against the hostnames present in the certificate's CN and SAN fields.
+
 ## Allowed TLS Ciphers
 
 A number of TLS ciphers are considered cryptographically insecure, so Gravwell only supports the following TLS ciphers:
