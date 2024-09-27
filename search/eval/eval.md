@@ -378,7 +378,7 @@ Returns the index of the first instance of pattern in the input, or -1 if patter
 
 #### strings_replace
 
-	function strings_replace(input string, old string, new sting, n int) string
+	function strings_replace(input string, old string, new string, n int) string
 
 Replace returns a copy of the string s with the first n non-overlapping instances of old replaced by new. If n is -1, there is no limit on the number of replacements.
 
