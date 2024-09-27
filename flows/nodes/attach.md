@@ -15,7 +15,7 @@ The node inserts an object (named `search` by default) into the payload containi
 
 ## Example
 
-In this example, we will build a flow which, when triggered from an alert, attaches to the search which triggered the alert and sends the search results to a Mattermost channel.
+In this example, we will build a flow which, when triggered from an [alert](/alerts/alerts), attaches to the search which triggered the alert and sends the search results to a Mattermost channel.
 
 First, we build a scheduled search; for testing, we're running the following query:
 
@@ -26,6 +26,10 @@ tag=gravwell limit 3 | syslog Appname Hostname | table Appname Hostname
 Next, we create an Alert and set that scheduled search as a dispatcher:
 
 ![](attach-alert.png)
+
+```{note}
+Observe that the alert has "Max Events" set to 1. That's because our flow will be connecting to the dispatching search and retrieving *all* results from the search, so we only want the alert to run the flow at most once per execution of the search. Setting Max Events to 1 accomplishes this.
+```
 
 Finally, we create a flow using the Attach node and the Mattermost node and associate it with the alert:
 
