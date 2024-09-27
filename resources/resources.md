@@ -87,7 +87,7 @@ Changes to the resource description will not be saved unless the "Save" button i
 ```
 
 ```{note}
-All resources are validated using a one way hash, the hash displayed is a base64 encoded MD5 hash.
+All resources are validated using a one way hash. The hash displayed is a base64-encoded MD5 hash.
 ```
 
 ## Using resources
