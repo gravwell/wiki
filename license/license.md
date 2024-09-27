@@ -26,7 +26,7 @@ Updating a Gravwell license can be performed using the CLI or GUI without restar
 
 ## License Expiration
 
-All Gravwell licenses have an expiration date and once a license has expired Gravwell will not start.  A license expires in four discrete steps:
+All Gravwell licenses except the Free edition have an expiration date and once a license has expired Gravwell will not start.  A license expires in four discrete steps:
 
 1. Warning about upcoming expiration
 2. Expiration grace period
