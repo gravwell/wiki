@@ -86,6 +86,10 @@ To change the actual contents of the resource, drag a file into the gray 'File' 
 Changes to the resource description will not be saved unless the "Save" button is clicked.
 ```
 
+```{note}
+All resources are validated using a one way hash, the hash displayed is a base64 encoded MD5 hash.
+```
+
 ## Using resources
 
 Resources are used by some search modules. This example will use the 'lookup' module to do a basic reference lookup of MAC address to hostname (which we originally generated from a csv file).
