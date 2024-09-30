@@ -39,7 +39,6 @@ Gravwell will never delete data due to license expiration, all stored data, reso
 
 Here is a handy table that explains the events leading up to and after license expiration.
 
-
 | Event | Description | Time to License Expiration |
 |-------|-------------|:--------------------------:|
 | Warning 1 | A notification indicating that the license will expire in less than 30 days | T - 30 days |
@@ -67,3 +66,19 @@ Here is a handy table that explains the events leading up to and after license e
 ✅ - full support
 
 <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/> - Gravwell managed
+
+## Free Tier Feature Availability Warnings
+
+As illustrated above, not all features are available when using Free Tier. Gravwell will display warning messages if it detects state that is incompatible with Free Tier
+
+![CBAC is not compatible with Free Tier](free-tier-error.png)
+
+Please consult the following table for advice on resolving Free Tier errors, should you encounter them.
+
+| Message                          | Fix                                                                                                 |
+| -------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `Overwatch enabled`              | Ensure you're not running an [Overwatch webserver](#gravwell-overwatch)                             |
+| `<N> Remote-Indexers configured` | Ensure your `gravwell.conf` has no more than one [remote indexer configured](remote-indexers-conig) |
+| `CBAC enabled`                   | Ensure `Enable-CBAC` is not set in your `gravwell.conf` ([CBAC docs](#enabling-cbac))               |
+| `Remote Datastore enabled`       | Ensure `Datastore` is not set in your `gravwell.conf` ([Datastore Server docs](#datastore_server))  |
+| `Replication configured`         | Ensure your `gravwell.conf` does not have a [replication section](#data-replication)                |
