@@ -59,7 +59,7 @@ Time-based ageout manages data based on time retention requirements.  For exampl
 A shard will only be aged-out when its *most recent* entries exceed the duration.
 ```
 
-An example well configuration using only a hot pool of data and deleting data that is more than 30 days old:
+An example well configuration using only a hot pool of data and deleting data with a timestamp that is more than 30 days old:
 
 ```
 [Storage-Well "syslog"]
@@ -82,8 +82,9 @@ An example configuration in which data is moved from the hot pool to the cold po
 ```
 
 ```{note}
-In the above configuration, data will be deleted permanently when it is 90 days old, having spent 7 days in the hot pool and 83 days in the cold pool.
+In the above configuration, data will be deleted permanently when the entriy timestamps are 90 days old, having spent 7 days in the hot pool and 83 days in the cold pool.  The `Hot-Duration` and `Cold-Duration` values are not cumulative, they specify the maximum age of entries.
 ```
+
 The Time based ageout is invoked once per day, sweeping each pool for shards that can be aged out.  By default the sweep happens at midnight UTC, but the execution time can be overridden in the well configuration with the Ageout-Time-Override directive.  The override directive is specified in 24 hour UTC time.
 
 An example configuration that overrides the ageout time checks to occur at 7PM UTC:
@@ -97,6 +98,10 @@ An example configuration that overrides the ageout time checks to occur at 7PM U
 	Cold-Duration=90D
 	Delete-Frozen-Data=true
 	Ageout-Time-Override=19:00
+```
+
+```{warning}
+Data age is calculated as the time difference between now and the timestamp on the entry; if an entry is ingested with a timestamp 90 days in the past its age is considered to be 90 days.  Ingesting historical data with a time based ageout may cause the data to be aged out immediately.
 ```
 
 ## Total Storage-Based Ageout Rules
