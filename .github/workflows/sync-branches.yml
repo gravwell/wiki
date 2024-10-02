@@ -1,0 +1,47 @@
+jobs:
+  debug:
+    name: Debug
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Echo (some of) github context"
+        run: |
+          echo ${{ github.repository }}
+          echo ${{ github.ref }}
+          echo ${{ github.ref_name }}
+
+  sync:
+    # Avoid running sync jobs on forks
+    if: "${{ github.repository == 'gravwell/wiki' }}"
+    strategy:
+      fail-fast: false
+      matrix:
+        branches:
+          - source_pattern: main
+            target_pattern: next-patch
+
+          - source_pattern: next-patch
+            target_pattern: next-minor
+
+          - source_pattern: next-minor
+            target_pattern: next-major
+
+    name: "${{ matrix.branches.source_pattern }} => ${{ matrix.branches.target_pattern }}"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open/Update PR
+        id: sync-branches
+        uses: "gravwell/sync-branches@v1"
+        with:
+          GITHUB_TOKEN: "${{ github.token }}"
+          source_pattern: ${{ matrix.branches.source_pattern }}
+          target_pattern: ${{ matrix.branches.target_pattern }}
+          use_intermediate_branch: "True"
+          source_conflict_label: "src conflict"
+          target_conflict_label: "conflict"
+
+name: Sync branches
+on:
+  push: {}
+permissions:
+  contents: write
+  pull-requests: write
