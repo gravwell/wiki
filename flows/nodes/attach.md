@@ -11,7 +11,7 @@ The most common use of the Attach node is to connect to the scheduled search whi
 
 ## Output
 
-The node inserts an object (named `search` by default) into the payload containing information about the search. The component fields are documented in the [Run Query node's documentation](runquery).
+The node inserts an object (named `search` by default) containing information about the search into the payload. The component fields are documented in the [Run Query node's documentation](runquery).
 
 ## Example
 
