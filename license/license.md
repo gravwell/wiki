@@ -26,7 +26,7 @@ Updating a Gravwell license can be performed using the CLI or GUI without restar
 
 ## License Expiration
 
-All Gravwell licenses have an expiration date and once a license has expired Gravwell will not start.  A license expires in four discrete steps:
+All Gravwell licenses except the Free edition have an expiration date and once a license has expired Gravwell will not start.  A license expires in four discrete steps:
 
 1. Warning about upcoming expiration
 2. Expiration grace period
@@ -47,3 +47,23 @@ Here is a handy table that explains the events leading up to and after license e
 | Expiration | A notification indicating that the license is expired, 14 day grace period begins | T - 0 |
 | Ingest Disabled | Ingest is disabled and a notification indicating that the license is expired | T + 15 days |
 | Query Disabled | Searching is disabled and a notification indicating that the license is expired | T + 30 days |
+
+## Gravwell License Types
+
+| Type                | Identifier  | Basic Features | Unlimited Ingest | Cluster | Replication | CBAC | HA Webservers | SSO | Notes                                               |
+|---------------------|-------------|:--------------:|:----------------:|:-------:|:-----------:|:----:|:-------------:|:---:|:----------------------------------------------------|
+| Free                | free        | ✅             |                  |         |             |      |               |     | Free with 2GB/day ingest, no sign-up required, non-commercial use only, never expires. |
+| Community Edition   | community   | ✅             |                  |         |             |      |               |     | Free signup with 13.9 GB/day ingest, authorized for commercial use, [free licenses with instant delivery](https://www.gravwell.io/community-edition). |
+| CE Advanced         | community   | ✅             |                  |         |             |      |               |     | Free signup with 50 GB/day ingest, authorized for commercial use, [free license](https://www.gravwell.io/community-edition-advanced) after validation.  Business email required. |
+| Pro                 | single      | ✅             |   ✅             |         |             |      |               |     | Single indexer, unlimited ingest, limited features. |
+| Enterprise          | single      | ✅             |   ✅             |         |  ✅         | ✅   |               | ✅  | Single indexer, full feature set, offline replication supported. |
+| Cluster             | cluster     | ✅             |   ✅             |  ✅     |  ✅         | ✅   |    ✅         | ✅  | Cluster deployment with online replication, distributed webservers, and full feature set. | 
+| Unlimited           | unlimited   | ✅             |   ✅             |  ✅     |  ✅         | ✅   |    ✅         | ✅  | Cluster deployment no limit on indexer count; the *go nuts* license tier. |
+| Cloud               | cloud       | ✅             |                  | <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/> | <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/>  | ✅   | <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/>  | ✅  | ✅  | Gravwell managed cloud deployment, opaque infrastructure with contract defined ingest. |
+
+
+🗸 - rate limited
+
+✅ - full support
+
+<img src="/_static/favicon.ico" alt="gravwell managed" width="20"/> - Gravwell managed
