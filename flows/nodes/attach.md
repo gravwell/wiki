@@ -1,6 +1,6 @@
 # Attach
 
-The Attach node connects to an existing Gravwell query, specified by a search ID. Like the [Run Query](runquery) node, it outputs a structure into the payload (named `search` by default) which contains information about the search and allows other nodes to access the results.
+The Attach node connects to an existing Gravwell query, specified by a search ID. Like the [Run Query](runquery) node, it outputs a structure (named `search` by default) containing information about the search into the payload and allows other nodes to access the results.
 
 The most common use of the Attach node is to connect to the scheduled search which triggered the [Alert](/alerts/alerts) for which the current flow is a consumer. See the example below for more information on this use case.
 
