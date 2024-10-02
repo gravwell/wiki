@@ -237,6 +237,18 @@ if ( foo == "bar" ) {
 }
 ```
 
+Eval also supports `else if` statements of arbitrary length. For example:
+
+```
+if ( foo == "bar" ) {
+	output = "foo is bar!";
+} else if ( foo == "baz" ) {
+    output = "foo is baz!";
+} else {
+	output = "foo is not bar!";
+}
+```
+
 ### for statements
 
 "for" statements specify the repeated execution of a block. "for" statements use the C-style syntax of an initializer, condition, and post statement, and are contained in parentheses `( )` and separated by semicolons `;`. Code blocks are contained in braces `{ }`. For example, to iterate 10 times over a code block:
