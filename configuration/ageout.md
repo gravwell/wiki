@@ -82,7 +82,7 @@ An example configuration in which data is moved from the hot pool to the cold po
 ```
 
 ```{note}
-In the above configuration, data will be deleted permanently when the entriy timestamps are 90 days old, having spent 7 days in the hot pool and 83 days in the cold pool.  The `Hot-Duration` and `Cold-Duration` values are not cumulative, they specify the maximum age of entries.
+In the above configuration, data will be deleted permanently when the entry timestamps are 90 days old, having spent 7 days in the hot pool and 83 days in the cold pool.  The `Hot-Duration` and `Cold-Duration` values are not cumulative; they specify the maximum age of entries.
 ```
 
 The Time based ageout is invoked once per day, sweeping each pool for shards that can be aged out.  By default the sweep happens at midnight UTC, but the execution time can be overridden in the well configuration with the Ageout-Time-Override directive.  The override directive is specified in 24 hour UTC time.
