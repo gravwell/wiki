@@ -101,7 +101,7 @@ An example configuration that overrides the ageout time checks to occur at 7PM U
 ```
 
 ```{warning}
-Data age is calculated as the time difference between now and the timestamp on the entry; if an entry is ingested with a timestamp 90 days in the past its age is considered to be 90 days.  Ingesting historical data with a time based ageout may cause the data to be aged out immediately.
+Data age is calculated as the time difference between now and the timestamp on the entry; if an entry is ingested with a timestamp 90 days in the past, its age is considered to be 90 days.  Ingesting historical data with a time based ageout may cause the data to be aged out immediately.
 ```
 
 ## Total Storage-Based Ageout Rules
