@@ -63,6 +63,7 @@ maxdepth: 1
 hidden: true
 ---
 
+Attach <nodes/attach>
 Background/Save query <nodes/bgsave>
 Email <nodes/email>
 Flow Storage Read <nodes/storageread>
@@ -98,6 +99,7 @@ Throttle <nodes/throttle>
 Update Resources <nodes/resourceupdate>
 ```
 
+* [Attach](nodes/attach): Attach to an existing Gravwell query.
 * [Background/Save Search](nodes/bgsave): Save or background a Gravwell query.
 * [Email](nodes/email): send email.
 * [Flow Storage Read](nodes/storageread): read items from a persistent storage.
