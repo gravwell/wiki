@@ -67,13 +67,13 @@ Here is a handy table that explains the events leading up to and after license e
 
 <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/> - Gravwell managed
 
-## Free Tier Feature Availability Warnings
+## Free Edition Feature Availability Warnings
 
-As illustrated above, not all features are available when using Free Tier. Gravwell will display warning messages if it detects state that is incompatible with Free Tier
+As illustrated above, not all features are available when using the Free edition. Gravwell will display warning messages if it detects state that is incompatible with the Free version.
 
 ![CBAC is not compatible with Free Tier](free-tier-error.png)
 
-Please consult the following table for advice on resolving Free Tier errors, should you encounter them.
+Please consult the following table for advice on resolving Free edition availability warnings, should you encounter them.
 
 | Message                          | Fix                                                                                                 |
 | -------------------------------- | --------------------------------------------------------------------------------------------------- |
