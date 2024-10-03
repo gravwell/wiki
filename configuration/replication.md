@@ -1,3 +1,4 @@
+(data-replication)=
 # Data Replication
 
 Replication is included with all Gravwell Cluster Edition licenses, allowing for fault-tolerant high availability deployments.  The Gravwell replication engine transparently manages data replication across distributed indexers with automatic failover, load balanced data distribution, and compression.  Gravwell also provides fine tuned control over exactly which wells are included in replication and how the data is distributed across peers.  Customers can rapidly deploy a Gravwell cluster with uniform data distribution, or design a replication scheme that can tolerate entire data center failures using region-aware peer selection.  The online failover system also allows continued access to data even when some indexers are offline.
