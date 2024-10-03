@@ -62,11 +62,14 @@ let
       sphinx-notfound-page
     ]);
 
+  dedup-links = import ./_tools/dedup-links;
+
 in pkgs.stdenv.mkDerivation {
   name = "gravwell-wiki";
   src = ./.;
 
-  buildInputs = [ pythonBundle pkgs.gnumake pkgs.git custom-aspell ];
+  buildInputs =
+    [ pythonBundle pkgs.gnumake pkgs.git custom-aspell dedup-links ];
   buildPhase = ''
     make clean html
   '';
