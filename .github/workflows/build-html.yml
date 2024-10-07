@@ -1,9 +1,9 @@
 name: "Build HTML"
 
 on:
-  push:
-    branches:
-      - "main"
+  release:
+    types:
+      - published
 
 permissions:
   contents: read
