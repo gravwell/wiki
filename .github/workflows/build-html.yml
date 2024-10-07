@@ -30,6 +30,9 @@ jobs:
           # Be chatty
           set -x
 
+          # Install prereqs
+          sudo apt install -y moreutils
+
           build_docs () {
             if [[ "${{ vars.VERSION_LIST_URL }}" != "" ]]
             then
@@ -52,10 +55,20 @@ jobs:
           # There should only be one marked "preferred": the latest release
           cat _static/versions.json | jq -r 'map(select(.preferred)) | length | if . != 1 then ("exactly one version should be marked preferred\n" | halt_error(1)) else "ok" end '
 
+          # Adjust the urls in versions.json by prepending the base path, if it's present
+          if [[ "${{ vars.BASE_PATH }}" != "" ]]
+          then
+            cat _static/versions.json | jq '.[].url |= "${{ vars.BASE_PATH }}\(.)"' | sponge _static/versions.json
+            cat _static/versions.json
+          fi
+
           # Build and copy to build destination
           build_docs
           cp -r ./result/html $BUILD_DEST
           chmod --recursive +w $BUILD_DEST
+
+          # Reset the versions file to avoid git-related confustion
+          git checkout _static/versions.json
 
           # Checkout and build each non-latest version listed in versions.json. Then copy them to build destination.
           for v in $(cat _static/versions.json | jq -r 'map(select(.preferred != true)) | map(.version) | join(" ")')

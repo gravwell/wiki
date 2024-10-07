@@ -23,7 +23,8 @@ copyright = f"Gravwell, Inc. {date.today().year}"
 author = "Gravwell, Inc."
 release = "v5.5.6"
 
-version_list_url = os.environ.get("VERSION_LIST_URL", "https://docs.gravwell.io/_static/versions.json")
+# Default to localhost:8080, so the version switcher looks OK on livehtml
+version_list_url = os.environ.get("VERSION_LIST_URL", "http://localhost:8000/_static/versions.json")
 print("Using version_list_url:", version_list_url)
 
 # -- General configuration ---------------------------------------------------
