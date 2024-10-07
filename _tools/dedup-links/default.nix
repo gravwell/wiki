@@ -12,6 +12,5 @@ in buildGoModule {
   name = "dedup-links";
   src = ./.;
 
-  
   vendorHash = "sha256-zSh3L3N7ak80nrx9c2lA1bBVcqRbVP1HYX4X3lWQmCc=";
 }
