@@ -1,9 +1,24 @@
 name: "Build HTML"
-on: workflow_dispatch
-env:
-  HTML_BUILD: docs_${{github.sha}}.tar.gz
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   html-build:
+    name: Build HTML
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,8 +31,20 @@ jobs:
           # Fail on any error
           set -e
 
-          # Install relevant tools
-          sudo apt-get install -y jdupes
+          # Be chatty
+          set -x
+
+          # Install prereqs
+          sudo apt install -y moreutils
+
+          build_docs () {
+            if [[ "${{ vars.VERSION_LIST_URL }}" != "" ]]
+            then
+              nix-build --arg VERSION_LIST_URL '${{ vars.VERSION_LIST_URL }}'
+            else
+              nix-build
+            fi
+          }
 
           # Make temporary location for build results
           export BUILD_DEST="$( mktemp --directory --tmpdir=${{ runner.temp }} )"
@@ -25,37 +52,66 @@ jobs:
           # Fetch all remote refs
           git fetch --all
 
-          # Pull latest from main branch
-          git checkout main
-          git pull
+          # Checkout the tag that triggered this run
+          git checkout ${{ github.ref_name }}
 
           # There should only be one marked "preferred": the latest release
           cat _static/versions.json | jq -r 'map(select(.preferred)) | length | if . != 1 then ("exactly one version should be marked preferred\n" | halt_error(1)) else "ok" end '
 
+          # Adjust the urls in versions.json by prepending the base path, if it's present
+          if [[ "${{ vars.BASE_PATH }}" != "" ]]
+          then
+            cat _static/versions.json | jq '.[].url |= "${{ vars.BASE_PATH }}\(.)"' | sponge _static/versions.json
+            cat _static/versions.json
+          fi
+
           # Build and copy to build destination
-          nix-build
+          build_docs
           cp -r ./result/html $BUILD_DEST
           chmod --recursive +w $BUILD_DEST
+
+          # Reset the versions file to avoid git-related confustion
+          git checkout _static/versions.json
 
           # Checkout and build each non-latest version listed in versions.json. Then copy them to build destination.
           for v in $(cat _static/versions.json | jq -r 'map(select(.preferred != true)) | map(.version) | join(" ")')
           do
               git checkout release/$v
               git pull
-              nix-build
+
+              build_docs
+
               cp -r ./result/html $BUILD_DEST/html/$v
               chmod --recursive +w $BUILD_DEST
               echo "Disallow: /$v/" >> $BUILD_DEST/html/robots.txt
           done
 
-          # Replace duplicates with soft links
-          jdupes --recurse --link-soft $BUILD_DEST
+          # Go back to the triggering branch
+          git checkout ${{ github.ref_name }}
 
-          tar -C $BUILD_DEST -czf ${{ env.HTML_BUILD }} html
-      - name: Upload HTML Build
-        uses: actions/upload-artifact@v4.3.1
+          # Deduplicate images
+          if [[ "${{ vars.BASE_PATH }}" != "" ]]
+          then
+            nix-shell --run "dedup-links --baseurl=${{ vars.BASE_PATH }} $BUILD_DEST/html"
+          else
+            nix-shell --run "dedup-links $BUILD_DEST/html"
+          fi
+
+          echo "BUILD_DEST=${BUILD_DEST}" >> "$GITHUB_ENV"
+
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: docs_${{github.sha}}
-          path: ${{ env.HTML_BUILD }}
-          if-no-files-found: error
-          retention-days: 0
+          path: "${{ env.BUILD_DEST }}/html"
+
+  deploy:
+    name: Deploy Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: html-build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
