@@ -1,5 +1,9 @@
 name: "Build HTML"
-on: workflow_dispatch
+
+on:
+  push:
+    branches:
+      - "main"
 
 permissions:
   contents: read
@@ -48,8 +52,8 @@ jobs:
           # Fetch all remote refs
           git fetch --all
 
-          # Pull latest from main branch
-          git checkout main
+          # Pull latest from branch that triggered this run
+          git checkout ${{ github.ref_name }}
           git pull
 
           # There should only be one marked "preferred": the latest release
@@ -83,8 +87,10 @@ jobs:
               echo "Disallow: /$v/" >> $BUILD_DEST/html/robots.txt
           done
 
-          git checkout main
+          # Go back to the triggering branch
+          git checkout ${{ github.ref_name }}
 
+          # Deduplicate images
           if [[ "${{ vars.BASE_PATH }}" != "" ]]
           then
             nix-shell --run "dedup-links --baseurl=${{ vars.BASE_PATH }} $BUILD_DEST/html"
