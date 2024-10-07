@@ -1,3 +1,4 @@
+{ VERSION_LIST_URL ? null }:
 let
   # use a specific (although arbitrarily chosen) version of the Nix package collection
   pkgs = import (fetchTarball {
@@ -62,11 +63,16 @@ let
       sphinx-notfound-page
     ]);
 
+  dedup-links = import ./_tools/dedup-links;
+
 in pkgs.stdenv.mkDerivation {
   name = "gravwell-wiki";
   src = ./.;
 
-  buildInputs = [ pythonBundle pkgs.gnumake pkgs.git custom-aspell ];
+  VERSION_LIST_URL = VERSION_LIST_URL;
+
+  buildInputs =
+    [ pythonBundle pkgs.gnumake pkgs.git custom-aspell dedup-links ];
   buildPhase = ''
     make clean html
   '';
