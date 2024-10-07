@@ -1,3 +1,4 @@
+(gravwell-overwatch)=
 # Gravwell Overwatch
 
 For any number of reasons it may be advantageous to run multiple separate instances of Gravwell. A Managed Security Service Provider (MSSP) might set up a Gravwell indexer+webserver instance for each of their customers for easy separation of data and simpler user management. However, while you don't want Customer A to access Customer B's data, it would be useful for the MSSP to be able to query across Customer A and Customer B simultaneously.

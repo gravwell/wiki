@@ -4,6 +4,7 @@ Capability Based Access Control (CBAC) is a feature access system that enables u
 
 CBAC is based around a deny-all default policy. Capabilities and tag access must be granted to each user (or group a user belongs to) in order to access those features. Admin users are not restricted by CBAC and always have full system access.
 
+(enabling-cbac)=
 ## Enabling CBAC
 
 CBAC is enabled by adding the following clause to the global section of the webserver's `gravwell.conf` and restarting the webserver:
