@@ -27,6 +27,18 @@ jobs:
           # Fail on any error
           set -e
 
+          # Be chatty
+          set -x
+
+          build_docs () {
+            if [[ "${{ vars.VERSION_LIST_URL }}" != "" ]]
+            then
+              nix-build --arg VERSION_LIST_URL '${{ vars.VERSION_LIST_URL }}'
+            else
+              nix-build
+            fi
+          }
+
           # Make temporary location for build results
           export BUILD_DEST="$( mktemp --directory --tmpdir=${{ runner.temp }} )"
 
@@ -41,7 +53,7 @@ jobs:
           cat _static/versions.json | jq -r 'map(select(.preferred)) | length | if . != 1 then ("exactly one version should be marked preferred\n" | halt_error(1)) else "ok" end '
 
           # Build and copy to build destination
-          nix-build
+          build_docs
           cp -r ./result/html $BUILD_DEST
           chmod --recursive +w $BUILD_DEST
 
@@ -50,14 +62,22 @@ jobs:
           do
               git checkout release/$v
               git pull
-              nix-build
+
+              build_docs
+
               cp -r ./result/html $BUILD_DEST/html/$v
               chmod --recursive +w $BUILD_DEST
               echo "Disallow: /$v/" >> $BUILD_DEST/html/robots.txt
           done
 
           git checkout main
-          nix-shell --run "dedup-links $BUILD_DEST/html"
+
+          if [[ "${{ vars.BASE_PATH }}" != "" ]]
+          then
+            nix-shell --run "dedup-links --baseurl=${{ vars.BASE_PATH }} $BUILD_DEST/html"
+          else
+            nix-shell --run "dedup-links $BUILD_DEST/html"
+          fi
 
           echo "BUILD_DEST=${BUILD_DEST}" >> "$GITHUB_ENV"
 
