@@ -52,9 +52,8 @@ jobs:
           # Fetch all remote refs
           git fetch --all
 
-          # Pull latest from branch that triggered this run
+          # Checkout the tag that triggered this run
           git checkout ${{ github.ref_name }}
-          git pull
 
           # There should only be one marked "preferred": the latest release
           cat _static/versions.json | jq -r 'map(select(.preferred)) | length | if . != 1 then ("exactly one version should be marked preferred\n" | halt_error(1)) else "ok" end '
