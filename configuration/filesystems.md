@@ -21,17 +21,17 @@ The Ext4 filesystem is well supported and an excellent default choice as a backi
 
 ### XFS
 
-The XFS filesystem is extremely fast, well tested, and praised by kernel developers.  XFS supports a wide array of configuration options to optimize the filesystem for specific storage device topology.
+The XFS filesystem is extremely fast, well tested, and praised by kernel developers.  XFS supports a wide array of configuration options to optimize the filesystem for a specific storage device topology.
 
 ### BTRFS
 
-The BTRFS filesystem has been a core part of the Linux kernel for over a decade, but due to some rocky starts and conservative warnings about stability early on in its life cycle it gets a bad rap.  Gravwell extensively tests the BTRFS filesystem in transparent compression topology and has found it to be exceedingly fast, memory efficient, and well supported.  While BTRFS is supported all the way back to Linux Kernel 3.2, 5.X and newer kernels contain a highly optimized and stable code base.  Gravwell recommends BTRFS with ZSTD compression for a hot store when transparent compression is enabled and users want the best performance.
+The BTRFS filesystem has been a core part of the Linux kernel for over a decade, but due to some rocky starts and conservative warnings about stability early on in its life cycle it gets a bad rap.  Gravwell extensively tests the BTRFS filesystem in a transparent compression topology and has found it to be exceedingly fast, memory efficient, and well supported.  While BTRFS is supported all the way back to Linux Kernel 3.2, 5.X and newer kernels contain a highly optimized and stable code base.  Gravwell recommends BTRFS with ZSTD compression for a hot store when transparent compression is enabled and users want the best performance.
 
 ### ZFS
 
 The ZFS filesystem has long been praised as **THE** next generation filesystem. It has a stable, well-maintained code base with robust documentation.  However, ZFS is in a bit of a strange situation in the Linux kernel in that many distributions do not natively support it and the kernel maintainers believe it has an incompatible license.  ZFS also employs its own caching strategy that is not well blended with the Linux page cache; this means you need to manually tune the ZFS ARC cache and be aware that the ARC cache competes for memory with the Gravwell processes.  When memory gets tight, ZFS will not free memory in the same way that BTRFS may.  That being said, the additional configuration options available in ZFS make it a good choice for cold storage when compression ratios are of the utmost importance.
 
-Gravwell recommends ZFS when transparent compression is desired for a cold storage tier and compression efficiency is more important than raw speed.  Setting the block size to 1MB and the compression system to zstd-10 can yield impression compression ratios that still perform well.  ZFS however is significantly slower than BTRFS when using transparent compression and a fast storage device.  ZFS also does not support the ability to disable COW and compression on a per file basis, so ZFS will attempt to compress and fragment highly orthogonal data structures like well indexes.
+Gravwell recommends ZFS when transparent compression is desired for a cold storage tier and compression efficiency is more important than raw speed.  Setting the block size to 1MB and the compression system to zstd-10 can yield impressive compression ratios that still perform well.  ZFS however is significantly slower than BTRFS when using transparent compression and a fast storage device.  ZFS also does not support the ability to disable copy-on-write and compression on a per file basis, so ZFS will attempt to compress and fragment highly orthogonal data structures like well indexes.
 
 ### NFSv4
 
