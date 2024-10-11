@@ -103,6 +103,14 @@ Tag-to-well mappings are defined in the `/opt/gravwell/etc/gravwell.conf` config
 
 The well named "raw" is thus used to store data tagged "pcap" and "video", which we could reasonably assume will consume a significant amount of storage.
 
+
+(well_storage)=
+#### Well Storage
+
+Gravwell Indexers require seekable POSIX compliant filesystems for hot and cold storage volumes.  Picking the right filesystem for your well storage can open up opportunities for optimizations and fault tolerance above and beyond what Gravwell offers in the default configuration.
+
+See the section on [Filesystems](/configuration/filesystems) for more details on supported filesystems and filesystem options.
+
 #### Tag Restrictions and Gotchas
 
 Tag names can only contain alpha numeric values; dashes, underscores, special characters, etc are not allowed in tag names.  Tags should be simple names like "syslog" or "apache" that are easy to type and reflect the type of data in use.
