@@ -50,4 +50,4 @@ Gravwell requires full, robust POSIX compatibility. The following filesystems ar
 * SMB/CIFS
 * FUSE mounts
 
-Other POSIX compliant filesystems like EXT2, EXT3, and ReiserFS are not tested.  Cluster filesystems such as GlusterFS, LusterFS, and CephFS are fully POSIX compliant and customers have reported good results, however Gravwell has not done extensive extensive testing and does not officially support them.
+Other POSIX compliant filesystems like EXT2, EXT3, and ReiserFS are not tested.  Cluster filesystems such as GlusterFS, LusterFS, and CephFS are fully POSIX compliant and customers have reported good results, however Gravwell has not done extensive testing and does not officially support them.
