@@ -42,7 +42,7 @@ Gravwell Indexers also maintain long-lived file handles with very high I/O requi
 
 ## Unsupported Filesystems
 
-Gravwell requires full robust POSIX compatibility. The following filesystems are not supported at all.  Gravwell may still function, but we make no guarantees about performance, reliability, or correctness.
+Gravwell requires full, robust POSIX compatibility. The following filesystems are not supported at all.  Gravwell may still function, but we make no guarantees about performance, reliability, or correctness.
 
 * FAT32
 * VFAT
