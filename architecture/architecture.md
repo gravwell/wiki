@@ -8,6 +8,7 @@ maxdepth: 1
 caption: Architecture
 hidden: true
 ---
+Filesystems </configuration/filesystems>
 Networking Considerations for Gravwell </configuration/networking>
 Gravwell Clusters </distributed/cluster>
 Distributed Gravwell Webserver </distributed/frontend>

@@ -54,6 +54,7 @@ exclude_patterns = [
     ".DS_Store",
     "env",
     "_vendor",
+    "_tools",
 ]
 
 language = "en"
