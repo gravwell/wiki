@@ -37,7 +37,7 @@ Gravwell recommends ZFS when transparent compression is desired for a cold stora
 
 Some customers desire storage arrays to be fully remote with dedicated storage appliances doing the dirty work of data management.  Gravwell tentatively supports NFSv4 with a few caveats.  The filesystem must be configured with all supporting daemons and mount options such that file permissions can be properly mapped to the NFS volume.  While it is possible to disable user/group management on NFS entirely, this is not recommended.
 
-Gravwell Indexers also maintain long lived file handles with very high I/O requirements. NFS, being a network filesystem, suffers from network interruptions, which can cause process hangs, unexpected performance drops, and increased complexity of management.  Gravwell only tests on NFSv4 and generally does not recommend it.
+Gravwell Indexers also maintain long-lived file handles with very high I/O requirements. NFS, being a network filesystem, suffers from network interruptions, which can cause process hangs, unexpected performance drops, and increased complexity of management.  Gravwell only tests on NFSv4 and generally does not recommend it.
 
 
 ## Unsupported Filesystems
