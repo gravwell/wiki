@@ -97,7 +97,7 @@ Exactly one named capture group in the Extraction-Regex must be defined.  If no 
 
 #### Pre-extractions With Named Time Formats
 
-Incoming data may also contain timestamps in formats that have already been defined in [timegrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#Format but that cannot be reliably extracted without first performing a pre-extraction. This is often the case with embedded `unix`, `unixmilli`, and `unixnano` timestamps.  The Pre-extraction `Extraction-Regex` can be combined with a named format so that timestamp formats that are already defined in [Timegrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#Format). For example, consider the following entry:
+Incoming data may also contain timestamps in formats that have already been defined in [timegrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#Format) but that cannot be reliably extracted without first performing a pre-extraction. This is often the case with embedded `unix`, `unixmilli`, and `unixnano` timestamps.  The Pre-extraction `Extraction-Regex` can be combined with a named format so that timestamp formats that are already defined in [Timegrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#Format). For example, consider the following entry:
 
 ```
 [task completed] tss:1701200161 tse:1701200161.1234 value:1700000000

@@ -69,7 +69,7 @@ By default, Gravwell does not generate TLS certificates. For instructions on set
 (configuration_indexer)=
 ## Indexer Configuration
 
-Indexers are the storage centers of Gravwell and are responsible for storing, retrieving, and processing data.  Indexers perform the first heavy lifting when executing a query, first finding the data then pushing it into the search pipeline.  The search pipeline will perform as much work as possible in parallel on the indexers for efficiency.  Indexers benefit from high-speed low-latency storage and as much RAM as possible.  Gravwell can take advantage of file system caches, which means that as you are running multiple queries over the same data it won’t even have to go to the disks.  We have seen Gravwell operate at over 5GB/s per node on well-cached data.  The more memory, the more data can be cached.  When searching over large pools that exceed the memory capacity of even the largest machines, high speed RAID arrays can help increase throughput.
+Indexers are the storage centers of Gravwell and are responsible for storing, retrieving, and processing data.  Indexers perform the first heavy lifting when executing a query, first finding the data then pushing it into the search pipeline.  The search pipeline will perform as much work as possible in parallel on the indexers for efficiency.  Indexers benefit from high-speed low-latency storage and as much RAM as possible.  Gravwell can take advantage of filesystem caches, which means that as you are running multiple queries over the same data it won’t even have to go to the disks.  We have seen Gravwell operate at over 5GB/s per node on well-cached data.  The more memory, the more data can be cached.  When searching over large pools that exceed the memory capacity of even the largest machines, high speed RAID arrays can help increase throughput.
 
 We recommend indexers have at least 32GB of memory with 8 CPU cores.  If possible, Gravwell also recommends a very high speed NVME solid state disk that can act as a hot well, holding just a few days of of the most recent data and aging out to the slower spinning disk pools.  The hot well enables very fast access to the most recent data, while enabling Gravwell to organize and consolidate older data so that he can be searched as efficiently as possible.
 
@@ -102,6 +102,14 @@ Tag-to-well mappings are defined in the `/opt/gravwell/etc/gravwell.conf` config
 ```
 
 The well named "raw" is thus used to store data tagged "pcap" and "video", which we could reasonably assume will consume a significant amount of storage.
+
+
+(well_storage)=
+#### Well Storage
+
+Gravwell Indexers require seekable POSIX compliant filesystems for hot and cold storage volumes.  Picking the right filesystem for your well storage can open up opportunities for optimizations and fault tolerance above and beyond what Gravwell offers in the default configuration.
+
+See the section on [Filesystems](/configuration/filesystems) for more details on supported filesystems and filesystem options.
 
 #### Tag Restrictions and Gotchas
 
