@@ -232,7 +232,7 @@ Example: `Enable-Transparent-Compression=true`
 
 These parameters control kernel-level, transparent compression of data in the wells. If enabled, Gravwell can instruct the `btrfs` filesystem to transparently compress data. This is more efficient than user-mode compression. Setting `Enable-Transparent-Compression` true automatically turns off user-mode compression. Note that setting `Disable-Compression=true` will disable transparent compression.
 
-Additionally, transparent compression also has performance benefits by taking advantage of memory de-duplication, if you need the best possible performance from Gravwell, combining transparent compression with a well tuned BTFS file system is the best way to achieve it.
+Additionally, transparent compression also has performance benefits by taking advantage of memory de-duplication, if you need the best possible performance from Gravwell, combining transparent compression with a well tuned BTFS filesystem is the best way to achieve it.
 
 ##### Acceleration
 
