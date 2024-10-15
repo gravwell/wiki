@@ -285,6 +285,10 @@ start="2006-01-02T15:04:05Z07:00" end=-1h tag=default json foo table
 If start/end time constraints are provided, the GUI time picker timeframe will be ignored.
 ```
 
+```{note}
+The start/end constraints cannot be used in the inner query portion of compound queries. Only the main query can use these constraints.
+```
+
 ## Comments
 
 Gravwell supports two types of comments. 

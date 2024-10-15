@@ -1,3 +1,4 @@
+(data-replication)=
 # Data Replication
 
 Replication is included with all Gravwell Cluster Edition licenses, allowing for fault-tolerant high availability deployments.  The Gravwell replication engine transparently manages data replication across distributed indexers with automatic failover, load balanced data distribution, and compression.  Gravwell also provides fine tuned control over exactly which wells are included in replication and how the data is distributed across peers.  Customers can rapidly deploy a Gravwell cluster with uniform data distribution, or design a replication scheme that can tolerate entire data center failures using region-aware peer selection.  The online failover system also allows continued access to data even when some indexers are offline.
@@ -113,7 +114,7 @@ Replication is controlled by the "Replication" configuration group in the gravwe
 | Connect-Wait-Timeout | Connect-Wait-Timeout=30 | Specifies the number of seconds an Indexer should wait when attempting to connect to replication peers during startup. |
 | Disable-Server | Disable-Server=true | Disable the indexer replication server, it will only act as a client.  This is important when using offline replication. | 
 | Disable-Compression | Disable-Compression=true | Disable compression on the storage for the replicated data. |
-| Enable-Transparent-Compression | Enable-Transparent-Compression=true | Enable transparent compression on using the host file system for replicated data. |
+| Enable-Transparent-Compression | Enable-Transparent-Compression=true | Enable transparent compression on using the host filesystem for replicated data. |
 | Enable-Transport-Compression | Enable-Transparent-Compression=true | Enable transport compression when transmitting data to replication peer.  Defaults to `true`. |
 
 ## Disabling Replication Per Well
