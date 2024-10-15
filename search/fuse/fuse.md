@@ -13,7 +13,7 @@ You can think of fuse like a simpler version of [lookup](/search/lookup/lookup),
 
 ## Supported Options
 
-* `-maxtracked <arg>`: sets the maximum number of unique keys to track per operation. The query will abort if this value is exceeded. Defaults to 1000000
+* `-maxtracked <arg>`: sets the maximum number of unique keys to track per operation. The query will abort if this value is exceeded. Defaults to 1000000.
 * `-maxsize <arg>`: sets the maximum amount of memory in megabytes to hold when tracking keys. Defaults to 1GB.
 * `-pushpop`: This flag enables "push-pop" mode. In this mode, fuse *always* stores the current value of the data enumerated values and *always* loads the previous values. See below for a detailed example.
 
