@@ -86,6 +86,29 @@ This program will initialize a variable "count" to 0, and the value will persist
 
 To use a persistent variable, it must be declared with `var <variable name>;`. Optionally, you can initialize the variable to a value with the syntax `var <variable name> = <expression>;` 
 
+Persistent variables are not attached to entries like other variables. In order to use a persistent variable's value outside of eval, it must be assigned to a regular variable. 
+ 
+### Persistent Maps
+
+Like persistent variables, eval can also create persistent maps, which behave like key/value objects. A map uses strings as keys, and can store any eval variable type except maps. Maps are declared with the `map` keyword, and accessed like other variables. To access a specific key in a map, the notation `map[key]` is used. 
+
+For example, to count each unique Appname in a list of syslog entries, a map can be used with the syslog Appname as the key:
+
+```
+tag=gravwell
+  syslog Appname
+| eval
+    map appnames;
+    if (Appname == "")                         
+        appnames[Appname] = 0;                  // The key doesn't exist. Create one.
+    else 
+        appnames[Appname]=appnames[Appname]+1;  // The key does exist. Increment.
+```
+
+Like persistent variables, maps are not attached to entries. Values must be assigned to regular variables in order to use them outside of eval.
+
+Maps have a limit of 1000000 keys. Any new key assigned to a map after this limit is reached will be discarded.
+
 ### Keywords
 
 The following keywords are reserved and may not be used as identifiers.
@@ -801,11 +824,11 @@ The eval syntax is expressed using a [variant](https://github.com/gravwell/pbpg)
 ```
 Program                  = ( "(" Expression ")" EOF ) | ( "(" Vars StatementList ")" EOF ) | ( "(" StatementList ")" EOF ) | ( "(" Assignment ")" EOF ) | ( Expression EOF ) | ( Vars StatementList EOF ) | ( StatementList EOF ) | ( Assignment EOF )
 Vars                     = VarSpec { VarSpec }
-VarSpec                  = "var" VarSpecAssignment { "," VarSpecAssignment } ";"
+VarSpec                  = ( "var" VarSpecAssignment { "," VarSpecAssignment } ";" ) | ( "map" AssignmentIdentifier ";" )
 VarSpecAssignment        = AssignmentIdentifier [ "=" Expression ]
 StatementList            = Statement { Statement }
 Statement                = ( "if" "(" Expression ")" Statement "else" Statement ) | ( "if" "(" Expression ")" Statement ) | ( "for" "(" Assignment ";" Expression ";" Assignment ")" "{" StatementList "}" ) | "{" StatementList "}" | Function ";" | Assignment ";" | "return" Expression ";" | "break" ";" | "continue" ";" | ";"
-Assignment               = ( AssignmentIdentifier "=" Expression ) | Expression
+Assignment               = ( AssignmentIdentifier "[" Expression "]" "=" Expression ) | ( AssignmentIdentifier "=" Expression ) | Expression
 Expression               = ( LogicalOrExpression "?" Expression ":" LogicalOrExpression ) | LogicalOrExpression
 LogicalOrExpression      = LogicalAndExpression { LogicalOrOp LogicalAndExpression }
 LogicalAndExpression     = InclusiveOrExpression { LogicalAndOp InclusiveOrExpression }
@@ -819,7 +842,7 @@ AdditiveExpression       = MultiplicativeExpression { AdditiveOp MultiplicativeE
 MultiplicativeExpression = UnaryExpression { MultiplicativeOp UnaryExpression }
 UnaryExpression          = UnaryOp PostfixExpression | PostfixExpression
 PostfixExpression        = PrimaryExpression [ PostfixOp ]
-PrimaryExpression        = NestedExpression | Identifier | Literal
+PrimaryExpression        = NestedExpression | ( Identifier "[" Expression "]" ) | Identifier | Literal
 NestedExpression         = ( Function ) | ( Cast "(" Expression ")" ) | ( "(" Expression ")" )
 Literal                  = DecimalLiteral | FloatLiteral | StringLiteral | "true" | "false"
 Function                 = FunctionName "(" [ Expression { "," Expression } ] ")"
