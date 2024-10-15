@@ -2,6 +2,8 @@
 
 Gravwell Indexers require robust, seekable, and POSIX complaint filesystems in order to function properly.  The Gravwell system makes extensive use of memory mapping, madvise calls, and filesystem specific optimizations to maximize compression ratios and query throughput.  Picking a good filesystem for your deployment is critical to ensuring a manageable and fast Gravwell system.
 
+## Supported Filesystems
+
 Gravwell officially supports the following Linux filesystems.
 
 | Filesystem | Minimum Kernel Version | Supports Transparent Compression |
