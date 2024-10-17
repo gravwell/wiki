@@ -21,6 +21,10 @@ File Follower uses the Linux Kernel `inotify` subsystem. `inotify` is usually co
 On RHEL/CentOS, `/var/log` belongs to the "root" group, not "adm" as we assume. File Follower runs in the adm group by default, so if you want it to read `/var/log` you need to `chgrp -R adm /var/log` OR change the group in the systemd unit file.
 ```
 
+```{attention}
+File Follower attempts to track files that are renamed in a directory. Due to limitations in Linux inotify, BSD/macOS kqueue, and Windows, it is not always possible to guarantee a rename event is followed. As a result, renaming files in a watched directory (for example, log file rotation) can result in the renamed file being ingested again. If possible, avoid performing file renaming in a watched directory.
+```
+
 ## Installation
 
 ```{include} installation_instructions_template 
