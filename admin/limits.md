@@ -19,6 +19,10 @@ If you're seeing messages about render storage limits when running your searches
 
 To prevent users from filling up the disk with over-large queries, use the `Render-Store-Limit` parameter in the webserver's gravwell.conf file. Setting `Render-Store-Limit=64`, for instance, would set a limit of 64 MB of on-disk storage per query. The default is 1024MB; this gives users a great deal of space to work with while hopefully preventing free space issues on modern disks.
 
+### Partial Results In Renderer Storage Limited Scenarios
+
+Attempting to download, share, or save results for a search that has reached the render storage limit will display a warning about partial results. If you're seeing this message, it's important to understand that the data entries for this action will only be valid up to the point where the render storage limit was reached, regardless of what the overview chart indicates.
+
 ## Gravwell Resource Size
 
 User-created [resources](/resources/resources) can take up a lot of space on disk, on both the webserver and the indexers. In addition, one of the most common uses of resources is to provide lookup tables; in order to use a resource as a lookup table, the *entire* resource must be loaded into memory, meaning that running many simultaneous queries with extremely large lookup tables can put the system at risk of an out-of-memory state. The `Resource-Max-Size` parameter in gravwell.conf specifies a limit, in bytes, for resource size. Thus, setting `Resource-Max-Size=20971520` will limit resources to no more than 20 megabytes.
