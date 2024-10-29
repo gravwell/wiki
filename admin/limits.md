@@ -21,7 +21,7 @@ To prevent users from filling up the disk with over-large queries, use the `Rend
 
 ### Partial Results In Renderer Storage Limited Scenarios
 
-Attempting to download results for a search that has reached the render storage limit will display a warning about downloading partial results. If you're seeing this message, it's important to understand that the downloaded data will only be valid up to the point where the render storage limit was reached, regardless of what the overview chart indicates.
+Attempting to download, share, or save results for a search that has reached the render storage limit will display a warning about partial results. If you're seeing this message, it's important to understand that the data entries for this action will only be valid up to the point where the render storage limit was reached, regardless of what the overview chart indicates.
 
 ## Gravwell Resource Size
 
