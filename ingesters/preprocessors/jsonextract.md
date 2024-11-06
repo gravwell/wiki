@@ -10,7 +10,7 @@ The JSON Extraction preprocessor Type is `jsonextract`.
 
 * `Extractions` (string, required): This specifies the field or fields (comma-separated) to be extracted from the JSON. Given an input of `{"foo":"a", "bar":2, "baz":{"frog": "womble"}}`, you could specify `Extractions=foo`, `Extractions=foo,bar`, `Extractions=baz.frog,foo`, etc.
 * `Force-JSON-Object` (boolean, optional): By default, if a single extraction is specified the preprocessor will replace the entry contents with the contents of that extension; thus selecting `Extraction=foo` will change an entry containing `{"foo":"a", "bar":2, "baz":{"frog": "womble"}}` to simply contain `a`. If this option is set, the preprocessor will always output a full JSON structure, e.g. `{"foo":"a"}`.
-* `Drop-Misses` (boolean, optional): If set to true, the preprocessor will drop entries for which it was unable to extract the requested fields. By default, these entries are passed.
+* `Drop-Misses` (boolean, optional): If set to true, the preprocessor will drop entries for which it was unable to extract any of requested fields. By default, these entries are passed if any field is extracted.
 * `Strict-Extraction` (boolean, optional): By default, the preprocessor will pass along an entry if at least one of the extractions succeeds. If this parameter is set to true, it will require that all extractions succeed.
 
 ## Common Use Cases
