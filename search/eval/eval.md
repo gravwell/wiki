@@ -238,6 +238,55 @@ Expressions that operate on enumerated values that don't exist have undefined be
 	}
 ```
 
+### Type Promotion in Expressions
+
+Type promotion is used to satisfy boolean and arithmetic expressions of two or more enumerated values of different types. For example, the expression `1 + 2.14` contains an integer and a floating-point value. In this example, the integer will be "promoted" (converted) to a floating-point value, and the addition will result in a floating-point value. 
+
+Eval also supports implicit conversion of mixed types as a form of type polymorphism. This is also considered in the type promotion logic. For example, `5 + "10"` can be seen to mean "the integer 5 plus the numeric representation of the string 10". Eval will convert the string to the integer 10 in this example.
+
+Not all types are compatible. Eval will attempt to determine a common real type for two given EVs using the following logic, in order:
+
+* If either is a Location, try to convert the other to a Location.
+* If either is an IP, try to convert the other to an IP.
+* If either is a MAC, try to convert the other to a MAC.
+* If either is a timestamp, try to convert the other to a timestamp.
+* If either is a float, try to convert the other to a float.
+* If either is an integer, try to convert the other to an integer.
+
+If none of these cases apply, the EVs remain their original types.
+
+Timestamps and durations have three special cases:
+
+* A timestamp plus a duration results in a timestamp.
+* A timestamp minus a duration results in a timestamp.
+* A timestamp minus a timestamp results in a duration.
+
+When type promotion results in two integers, or two integers are provided in an expression, additional promotion logic is applied, conforming to a modified form of the [ISO/IEC 9899:2011 C standard](https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1548.pdf) rank rules:
+
+* No two signed integer types shall have the same rank, even if they have the same representation.
+* The rank of a signed integer type shall be greater than the rank of any signed integer type with less precision.
+* An int is equivalent to an int64.
+* The rank of int64 shall be greater than the rank of int32, which shall be greater than the rank of int16, which shall be greater than the rank of int8.
+* The rank of any unsigned integer type shall equal the rank of the corresponding signed integer type, if any.
+* The rank of byte shall equal the rank of uint8.
+* The rank of bool shall be less than the rank of all other integer types.
+* For all integer types T1, T2, and T3, if T1 has greater rank than T2 and T2 has greater rank than T3, then T1 has greater rank than T3.
+
+After integer promotion, the "usual arithmetic conversions" apply, in order:
+
+* If both operands have the same type, no further conversion is needed.
+* If both operands are of the same integer type (signed or unsigned), the operand with the type of lesser integer conversion rank is converted to the type of the operand with greater rank.
+* If the operand that has unsigned integer type has rank greater than or equal to the rank of the type of the other operand, the operand with signed integer type is converted to the type of the operand with unsigned integer type.
+* If the type of the operand with signed integer type can represent all of the values of the type of the operand with unsigned integer type, the operand with unsigned integer type is converted to the type of the operand with signed integer type.
+* Otherwise, both operands are converted to the unsigned integer type corresponding to the type of the operand with signed integer type.
+
+#### Failed Type Promotions
+
+When type promotion fails, the expression is also considered to have "failed". This has two consequences in eval:
+
+* When used in an assignment, e.g. `foo = "bar" + 5;`, the result is an empty value for "foo".
+* When used in a conditional (if, for), the conditional always resolves as `false`.
+
 ## Statements
 
 Statements control program execution. For example, `if (foo == "bar") { ... }` contains an "if" statement, which will determine how the program is to proceed.
