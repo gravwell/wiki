@@ -255,7 +255,7 @@ Not all types are compatible. Eval will attempt to determine a common real type 
 
 If none of these cases apply, the EVs remain their original types.
 
-Timestamps and durations have two special cases:
+Timestamps and durations have three special cases:
 
 * A timestamp plus a duration results in a timestamp.
 * A timestamp minus a duration results in a timestamp.
