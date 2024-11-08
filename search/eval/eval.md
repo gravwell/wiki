@@ -282,17 +282,31 @@ After integer promotion, the "usual arithmetic conversions" apply, in order:
 
 #### Failed Type Promotions
 
-When type promotion fails, the expression is also considered to have "failed". The result of an operation on a failed type promotion is undefined. This is important for conditional expressions. For example:
+When type promotion fails, the expression is also considered to have "failed". The result of an operation on a failed type promotion is undefined. This is important for conditional expressions. To avoid scenarios like this, the user is encouraged to use `type()` checks and casting before conditional comparison. For example, given the following eval program:
 
 ```
-if (500 < "foo") {
-    ...
-} else {
-    ...
+x = "foo";
+y = 5;
+
+if ( x < y ) {
+    output = "x is less than y";
 }
 ```
 
-This `if` statement is meaningless, but one of the paths in the `if/else` will be executed, and the chosen path is undefined. To avoid scenarios like this, the user is encouraged to use `type()` checks before conditional comparison.
+The comparison result is undefined and the `output =` statement may be executed. To guard against this, add `type/cast` checks first:
+
+```
+x = "foo";
+y = 5;
+
+if ( type(int(x)) == "int" ) { // The cast succeeded, we can do the comparison
+    if ( x < y ) {
+        output = "x is less than y";
+    }
+} else {
+    output = "x isn't a number";
+}
+```
 
 ## Statements
 
