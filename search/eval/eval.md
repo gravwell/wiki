@@ -282,10 +282,17 @@ After integer promotion, the "usual arithmetic conversions" apply, in order:
 
 #### Failed Type Promotions
 
-When type promotion fails, the expression is also considered to have "failed". This has two consequences in eval:
+When type promotion fails, the expression is also considered to have "failed". The result of an operation on a failed type promotion is undefined. This is important for conditional expressions. For example:
 
-* When used in an assignment, e.g. `foo = "bar" + 5;`, the result is an empty value for "foo".
-* When used in a conditional (if, for), the conditional always resolves as `false`.
+```
+if (500 < "foo") {
+    ...
+} else {
+    ...
+}
+```
+
+This `if` statement is meaningless, but one of the paths in the `if/else` will be executed, and the chosen path is undefined. To avoid scenarios like this, the user is encouraged to use `type()` checks before conditional comparison.
 
 ## Statements
 
