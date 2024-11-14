@@ -41,7 +41,8 @@ jobs:
 
 name: Sync branches
 on:
-  push: {}
+  push:
+    branches: '**'
 permissions:
   contents: write
   pull-requests: write
