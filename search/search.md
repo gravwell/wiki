@@ -262,7 +262,7 @@ It is also possible to use concrete timestamps. Any timestamp supported by [time
 For example:
 
 ```gravwell
-start="2006-01-02T15:04:05Z07:00" end="2006-01-02T23:04:05Z07:00" tag=default json foo table
+start="2006-01-02T15:04:05Z" end="2006-01-02T23:04:05Z" tag=default json foo table
 ```
 
 The example above uses RFC3339 timestamps to specify a concrete time range.
@@ -278,7 +278,7 @@ In the example above, the `end=` constraint is omitted, which sets the end of th
 Additionally, relative and concrete timestamps can be combined. For example, to search from January 2nd, 2006, up to an hour ago:
 
 ```gravwell
-start="2006-01-02T15:04:05Z07:00" end=-1h tag=default json foo table
+start="2006-01-02T15:04:05Z" end=-1h tag=default json foo table
 ```
 
 ```{note}
