@@ -1,7 +1,7 @@
 ---
 name: Feature Request
 about: Use this template for requesting a new feature. This template should be used to request a new feature or functionality that does not currently exist in the application.
-labels: feature, Low
+labels: 05 - feature, 03 - Low
 title: "[FEATURE SCOPE]: [TITLE]"
 ---
 
