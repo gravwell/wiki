@@ -1,7 +1,7 @@
 ---
 name: Task
 about: Use this template for a task. A task should be used for refactoring, automated testing, configuration changes, or other supporting tasks that are not directly related to product development.
-labels: task, Low
+labels: 08 - task, 03 - Low
 title: "[FEATURE SCOPE]: [TITLE]"
 ---
 
