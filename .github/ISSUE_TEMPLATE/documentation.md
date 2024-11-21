@@ -1,7 +1,7 @@
 ---
 name: Documentation
 about: Use this template for documentation needs.
-labels: documentation, Low
+labels: 09 - documentation, 03 - Low
 title: "[FEATURE SCOPE]: [TITLE]"
 ---
 
