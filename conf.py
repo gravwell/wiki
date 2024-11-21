@@ -21,7 +21,7 @@ from gravy_lexer import GravwellLexer
 project = "Gravwell"
 copyright = f"Gravwell, Inc. {date.today().year}"
 author = "Gravwell, Inc."
-release = "v5.6.6"
+release = "v5.6.7"
 
 # Default to localhost:8000, so the version switcher looks OK on livehtml
 version_list_url = os.environ.get(
