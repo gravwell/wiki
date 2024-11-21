@@ -1,7 +1,7 @@
 ---
 name: Enhancement
 about: Use this template for requesting an enhancement. An enhancement is an improvement or extension of an existing feature. Enhancements should be used to document UX improvements.
-labels: enhancement, Low
+labels: 06 - enhancement, 03 - Low
 title: "[FEATURE SCOPE]: [TITLE]"
 ---
 

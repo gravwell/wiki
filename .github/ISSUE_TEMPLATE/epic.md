@@ -1,7 +1,7 @@
 ---
 name: Epic
 about: Use this template for an epic. An epic is used to document a task list that must be accomplished in order to complete a project or a larger goal 
-labels: epic, Low
+labels: 04 - epic, 03 - Low
 title: "[FEATURE SCOPE]: [TITLE]"
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: Bug Report
-about: Use this template for reporting a bug. A bug is an unexpected problem or unintended behavoir that breaks functionality. However, UX improvements should be documented as an enhancement.
-labels: bug, Low
+about: Use this template for reporting a bug. A bug is an unexpected problem or unintended behavior that breaks functionality. However, UX improvements should be documented as an enhancement.
+labels: 07 - bug, 03 - Low
 title: "[FEATURE SCOPE]: [BUG TITLE]"
 ---
 
