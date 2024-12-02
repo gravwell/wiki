@@ -868,7 +868,7 @@ Returns the square root of x.
 
 	function math_trunc(x float) float
 
-Returns the integer value of x.
+Returns the integer value of x by dropping decimal digits. For example, `3.1` and `3.9` will both return `3`. 
 
 #### round
 
