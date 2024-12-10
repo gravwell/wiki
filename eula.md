@@ -89,9 +89,9 @@ Embedded in, or bundled with, this product are open source software (OSS)  compo
 You may receive a copy of,distribute and/or modify any open source code for the OSS component under the terms of their respective licenses, which may be Apache License Version 2.0, the modified BSD license and the MIT license.  In the event of conflicts between Gravwell license conditions and the Open Source Software license conditions, the Open Source Software conditions shall prevail with respect to the Open Source Software portions of the software.
 On written request within three years from the date of product purchase and against payment of our expenses, Gravwell will supply source code for any OSS component identified below inline with the terms of the applicable license. For this, please contact us at:
 
-Gravwell Inc
+Gravwell, Inc.
 OSS Component Division
-P.O. box 2819
-Coeur d’Alene, ID  83814-2819
+PO Box 51534
+Idaho Falls, ID 83405-1534
 
 Generally, the identified OSS components are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY, without even implied warranty such as for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE,and without liability for any Gravwell entity other than as explicitely documented in your purchase contract.
