@@ -4,7 +4,7 @@ The maclookup module uses a custom MAC prefix database to extract Manufacturer, 
 
 ## Setting Up Databases
 
-Before using the maclookup module, you must install a [resource](/resources/resources) containing the macdb database. 
+Before using the maclookup module, you must have the mac_prefixes database as a Resource in your Gravwell instance. The mac_prefixes resource is included in the Gravwell Network Enrichment Kit, which you can find by browsing the available kits in the Kits section of the UI.
 
 By default, the maclookup module expects the macdb database to be in a resource named "macdb". This will allow you to do extractions without specifying the resource name explicitly.
 
