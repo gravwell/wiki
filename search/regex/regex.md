@@ -283,7 +283,7 @@ Flag syntax is `xyz` (set) or `-xyz` (clear) or `xy-z` (set `xy`, clear
 `[\p{Name}]` |   named Unicode property inside character class (≡ `\p{Name}`)
 `[^\p{Name}]`|   named Unicode property inside negated character class (≡ `\P{Name}`)
 
-
+(perl)=
 |     |  Perl character classes (all ASCII-only)
 |------|------------------------------------------------
 `\d` |  digits (≡ `[0-9]`)
@@ -297,6 +297,7 @@ Flag syntax is `xyz` (set) or `-xyz` (clear) or `xy-z` (set `xy`, clear
 `\v` |  vertical space [(NOT SUPPORTED)]
 `\V` |  not vertical space [(NOT SUPPORTED)]
 
+(ascii)=
 |                | ASCII character classes
 |----------------|----------------------------------------------------------------------------------
 `[[:alnum:]]` |   alphanumeric (≡ `[0-9A-Za-z]`)
