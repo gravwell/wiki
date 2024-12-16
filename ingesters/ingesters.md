@@ -326,6 +326,7 @@ Log-Source-Override=DEAD:BEEF::FEED:FEBE
 Log-Source-Override=::1
 ```
 
+(attach-target)=
 ### Attach
 
 All ingesters support the `Attach` global configuration stanza, which allows [intrinsic enumerated values](intrinsic_enumerated_values) to be attached to entries during ingest. Intrinsic enumerated values can later be accessed with the [intrinsic](/search/intrinsic/intrinsic) search module.
