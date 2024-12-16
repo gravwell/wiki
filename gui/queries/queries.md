@@ -44,7 +44,7 @@ The queries stored in the query library are also available through the right-han
 ## Selecting a Timeframe
 
 ```{note}
-Timeframes are always aligned to one second boundaries. Sub-second timeframes will be automatically truncated to the closest second.
+Timeframes are always aligned to one second boundaries. Sub-second timeframes will be automatically rounded down to the second.
 ```
 
 By default, queries run over the last hour of data. This is easily changed by clicking on the calendar icon or timeframe above the query and selecting a timeframe from the dropdown:

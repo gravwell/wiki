@@ -286,7 +286,7 @@ If start/end time constraints are provided, the GUI time picker timeframe will b
 ```
 
 ```{note}
-Timeframes are always aligned to one second boundaries. Sub-second timeframes will be automatically truncated to the closest second.
+Timeframes are always aligned to one second boundaries. Sub-second timeframes will be automatically rounded down to the second.
 ```
 
 ## Comments
