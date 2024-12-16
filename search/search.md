@@ -285,6 +285,10 @@ start="2006-01-02T15:04:05Z" end=-1h tag=default json foo table
 If start/end time constraints are provided, the GUI time picker timeframe will be ignored.
 ```
 
+```{note}
+Timeframes are always aligned to one second boundaries. Sub-second timeframes will be automatically truncated to the closest second.
+```
+
 ## Comments
 
 Gravwell supports two types of comments. 
