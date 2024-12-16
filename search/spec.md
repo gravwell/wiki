@@ -230,6 +230,9 @@ All input before the first module in a query represents the query constraints. U
 | Constraint | Description | Example |
 |------------|-------------|---------|
 | tag | The tag(s) to extract. Supports comma separated lists and wildcards. Defaults to "tag=default" if omitted. | tag=dns,zeek* |
+| start | Provide the query starting timeframe in the query. Supports both concrete timestamps and offsets. If "end" is omitted when "start" is used, "end" will be set to the current time. | start="2006-01-02T15:04:05Z", start=-1h |
+| end | Provide the query ending timeframe in the query. Supports both concrete timestamps and offsets. If "start" is omitted when "end" is used, "start" will be set to the current time. | end="2006-01-02T15:04:05Z", end=-1h |
+
 
 ### Modules
 
