@@ -249,6 +249,11 @@ Note that the tag `zeekconn` can be matched against both accelerators, however t
 	Tags=foo*
 ```
 
+(intrinsic-acceleration-target)=
+## Acceleration with Intrinsic Enumerated Values
+
+When acceleration is enabled, [intrinsic enumerated values](#attach-target) will always be accelerated with the fulltext engine. This enables queries using the [intrinsic](/search/intrinsic/intrinsic) module to be accelerated. No specific configuration is required for acceleration with intrinsic EVs other than having acceleration enabled.
+
 ## Fulltext
 
 The fulltext accelerator is designed to index words within text logs and is considered the most flexible acceleration option.  Many of the other search modules support invoking the fulltext accelerator when executing queries.  However, the primary search module for engaging with the fulltext accelerator is the [grep](/search/grep/grep) module with the `-w` flag.  Much like the Unix grep utility, `grep -w` specifies that the provided filter is expected to a word, rather than a subset of bytes.  Running a search with `words foo bar baz` will look for the words foo, bar, and baz and engage the fulltext accelerator.
@@ -685,7 +690,6 @@ The results show why fulltext may often be worth the storage and ingest penalty:
 | regexindex | 57s       | ~0X     |
 | fulltextindex   | 2.99s      | 12.49X  |
 | fulltextbloom   | 3.40s      | 12.49X  |
-
 
 #### Query AX modules
 

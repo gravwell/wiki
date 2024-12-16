@@ -902,7 +902,7 @@ Description:	Sets the storage location for data replicated from other Gravwell i
 ### **Max-Replicated-Data-GB**
 Default Value:  
 Example:		`Max-Replicated-Data-GB=100`  
-Description:	Sets, in gigabytes, the maximum amount of replicated data to store. When this is exceeded, the indexer will begin walking the replicated data to clean up; it will first remove any shards which have been deleted on the original indexer, then it will begin deleting the oldest shards. Once the storage size is below the limit, deletion will stop.
+Description:	Sets, in gigabytes, the maximum amount of replicated data to store. When this is exceeded, the indexer will begin walking the replicated data to clean up; it will first remove any shards which have been deleted on the original indexer, then cold shards, then by oldest date. Once the storage size is below the limit, deletion will stop.
 
 ### **Replication-Secret-Override**
 Default Value:  
