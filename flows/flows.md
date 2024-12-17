@@ -68,7 +68,7 @@ The first node to execute will always receive a payload pre-loaded with the foll
             - `Type`: the type of the consumer (currently, always "flow")
         - `Created`: the time at which the alert was created.
         - `Dispatcher`: information about the scheduled search which triggered the alert.
-            - `EventCount`: the number of events created by the specific run of the scheduled search.
+            - `EventCount`: the number of events created by the specific run of the dispatcher.
             - `EventsElided`: set to true if there were more events than allowed by the alert's Max Events option.
             - `ID`: the unique ID of the triggering scheduled search definition.
             - `Labels`: any labels applied to the dispatcher.
