@@ -72,7 +72,7 @@ The first node to execute will always receive a payload pre-loaded with the foll
             - `EventsElided`: set to true if there were more events than allowed by the alert's Max Events option.
             - `ID`: the unique ID of the triggering dispatcher.
             - `Labels`: any labels applied to the dispatcher.
-            - `Name`: the name of the scheduled search.
+            - `Name`: the name of the dispatcher.
             - `SearchID`: the ID of the particular search which generated the events.
             - `Type`: the type of the dispatcher (current, always "scheduledsearch")
         - `EventIndex`: of the events which triggered the alert, the number (starting from 0) which is being processed by the current flow execution.
