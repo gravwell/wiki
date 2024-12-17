@@ -67,7 +67,7 @@ The first node to execute will always receive a payload pre-loaded with the foll
             - `Name`: the name of the consumer.
             - `Type`: the type of the consumer (currently, always "flow")
         - `Created`: the time at which the alert was created.
-        - `Dispatcher`: information about the scheduled search which triggered the alert.
+        - `Dispatcher`: information about the automation which triggered the alert.
             - `EventCount`: the number of events created by the specific run of the dispatcher.
             - `EventsElided`: set to true if there were more events than allowed by the alert's Max Events option.
             - `ID`: the unique ID of the triggering dispatcher.
@@ -75,7 +75,7 @@ The first node to execute will always receive a payload pre-loaded with the foll
             - `Name`: the name of the dispatcher.
             - `SearchID`: the ID of the particular search which generated the events.
             - `Type`: the type of the dispatcher (current, always "scheduledsearch")
-        - `EventIndex`: of the events which triggered the alert, the number (starting from 0) which is being processed by the current flow execution.
+        - `EventIndex`: dispatchers may emit multiple events, each processed by a single run of the consumer; this field represents the 0-indexed event number which is being processed by the current flow execution.
         - `TargetTag`: the tag into which events for this alert will be ingested.
         - `UID`: the user ID of the alert's owner.
         - `UserMetadata`: user-specified additional fields defined on the alert.
