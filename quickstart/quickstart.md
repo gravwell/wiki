@@ -1,14 +1,37 @@
 <script>
 function calculate(){
 	var ingest = document.getElementById("ingest").value;
+	if (ingest == 0) { return; }
 	var cores = Math.ceil(ingest / 30);
 	var memory = Math.ceil(ingest / 6);
 	if (cores < 2) { cores = 2; }
 	if (memory < 4) { memory = 4; }
+	var indexers = Math.ceil(ingest / 250);
+	cores = Math.ceil(cores / indexers);
+	memory = Math.ceil(memory / indexers);
+	memory = Math.pow(2, Math.ceil(Math.log(memory)/Math.log(2)));
+	cores = Math.pow(2, Math.ceil(Math.log(cores)/Math.log(2)));
 	document.getElementById("corecount").innerHTML = cores;
 	document.getElementById("memsize").innerHTML = memory;
+	document.getElementById("indexerCount").innerHTML = indexers;
 }
-calculate()
+function calculateStorage(){
+	var daily = document.getElementById("dailydata").value;
+	var retention = document.getElementById("retention").value;
+	var compressionFactor = document.getElementById("compressionFactor").value;
+	var accelRatio = 2.0
+	if (document.getElementById('ftIndex').checked) {
+accelRatio = 2.0
+}
+if (document.getElementById('ftBloom').checked) {
+accelRatio = 1.1
+}
+if (document.getElementById('none').checked) {
+accelRatio = 1.0
+}
+	var storage = Math.ceil(accelRatio * daily * retention * compressionFactor);
+	document.getElementById("storageSize").innerHTML = storage;
+}
 </script>
 
 # Quick Start
@@ -53,21 +76,42 @@ Open-Source Library Licenses </open_source>
 (system_requirements)=
 ## System Requirements
 
-### Hardware
+(hardware_calculator)=
+### Hardware Estimator
 
 We strongly recommend at least 4GB of RAM and 2 CPU cores to run Gravwell Community Edition; this should be sufficient up to the CE ingest limit. If you have a paid license, you should scale up your hardware as your daily data ingest increases. In general, we recommend the following rule of thumb:
 
 * One CPU core per 30 GB/day ingest.
 * 1 GB of RAM per 6 GB/day ingest.
 
+Note that as your ingest scales to the hundreds or thousands of gigabytes per day, you'll usually want more cores and memory per indexer, as queries simply tend to become more "expensive" -- and you're often running more of them in such a large deployment!
+
 We provide a basic calculator below; just enter your expected daily ingest in gigabytes:
 
-|                                  |                                                                                  |
-| -------------------------------- | -------------------------------------------------------------------------------- |
-| **Expected Ingest Per Day (GB)** | <input type='number' id='ingest' onInput='calculate()' placeholder="Gigabytes"/> |
-| **Recommended CPU Core Count**   | <span id="corecount">--</span>                                                   |
-| **Recommended RAM**              | <span id="memsize">--</span> GB                                                  |
+|                                                                |                                                                                  |
+|----------------------------------------------------------------|----------------------------------------------------------------------------------|
+| **Expected Ingest Per Day (GB)**                               | <input type='number' id='ingest' onInput='calculate()' placeholder="Gigabytes"/> |
+| <span style="color:blue">**Recommended # of Indexers**</span>            | <span style="color:blue"><span id="indexerCount">--</span></span>                  |
+| <span style="color:blue">**Recommended Per-Indexer Core Count**</span> | <span style="color:blue"><span id="corecount">--</span></span>                   |
+| <span style="color:blue">**Recommended Per-Indexer RAM**</span>            | <span style="color:blue"><span id="memsize">--</span> GB</span>                  |
 
+```{note}
+These are only very rough estimates, and of course performance will vary based on the hardware you select: eight Ivy Bridge cores are not comparable to eight AMD Epyc cores!
+```
+
+You can estimate your storage requirements using the following calculator:
+
+|                                                              |                                                                                                                 |
+|--------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| **Daily Data Volume (GB)**                                        | <input type='number' id='dailydata' onInput='calculateStorage()' placeholder="Gigabytes"/>                      |
+| **Required Retention (days)**                                       | <input type='number' id='retention' onInput='calculateStorage()' placeholder="Days"/>                           |
+| **Estimated Compression Factor†**                            | <input type='number' id='compressionFactor' onInput='calculateStorage()' value="0.2">                           |
+| **Acceleration Storage Type‡**                                       | <div><input type="radio" id="ftIndex" name="accel" value="index" onInput='calculateStorage()' checked/><label for="ftIndex">Indexing</label><br><input type="radio" id="ftBloom" name="accel" value="bloom" onInput='calculateStorage()'/><label for="ftBloom">Bloom</label><br><input type="radio" id="none" name="accel" value="none" onInput='calculateStorage()'/><label for="none">None</label></br></div> |
+| <span style="color:blue">**Recommended Storage Size**</span> | <span style="color:blue"><span id="storageSize">--</span> GB</span>                                             |
+
+**†** Value between 0 and 1.0 representing how compressed the raw data will be on disk. Most text-based logs compress to about 20% of their size, so we use a default of 0.2. If you intend to disable compression entirely, or if you'll be ingesting lots of binary data, set this to 1.0.
+
+**‡** We assume fulltext acceleration for this calculator. Storing the acceleration data using true indexing is the most expensive; using a bloom filter instead can reduce storage overhead significantly at the cost of potentially worse performance. Disabling acceleration entirely (by selecting "None") is usually not recommended, as it makes queries very disk-intensive.
 
 ## Installation
 Installing Gravwell on a single machine is quite simple--just follow the instructions in this section. For more advanced environments involving multiple systems, review the Advanced Topics section.
