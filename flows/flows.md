@@ -39,6 +39,51 @@ One node's output socket may be connected to the *inputs* of multiple other node
 
 The node receives an incoming payload through its *input* socket, then passes its outgoing payload via the *output* socket. In most cases, the outgoing payload will be a modified version of the incoming payload.
 
+The first node to execute will always receive a payload pre-loaded with the following items:
+
+- `flow` (structure containing information about the flow & the current execution)
+    - `Debug`: set to true if the flow was run manually in the flow editor.
+    - `Description`: the Description field of the flow definition.
+    - `Executed`: the time at which the flow started execution.
+    - `Interval`: the number of nanoseconds between executions according to the flow schedule.
+    - `Labels`: any labels attached to the flow.
+    - `LastRun`: the time at which the flow was last executed.
+    - `MaxRunDuration`: how long the flow can run, in nanoseconds, before being terminated.
+    - `Name`: the name of the flow.
+    - `NetworkAllowed`: if true, the flow is allowed to use network functions such as the HTTP node.
+    - `Scheduled`: the time at which the flow was scheduled to run; if run manually, the time at which the request was sent.
+    - `UID`: the user ID of the flow's owner.
+    - `User`: the username of the flow's owner.
+- `event` (structure containing information about the event which triggered an [Alert](/alerts/alerts) to launch the flow)
+    - `Contents`: (structure containing enumerated values from the triggering event)
+    - `Metadata`: (structure containing information about the alert which was triggered)
+        - `AlertActivation`: a UUID referring to a specific activation of the given alert.
+        - `AlertID`: the unique ID of the alert that was triggered.
+        - `AlertLabels`: any labels attached to the alert.
+        - `AlertName`: the name of the triggered alert.
+        - `Consumers`: an array containing information about all consumers of the alert.
+            - `ID`: the unique ID of the consumer.
+            - `Labels`: any labels applied to the consumer.
+            - `Name`: the name of the consumer.
+            - `Type`: the type of the consumer (currently, always "flow")
+        - `Created`: the time at which the alert was created.
+        - `Dispatcher`: information about the scheduled search which triggered the alert.
+            - `EventCount`: the number of events created by the specific run of the scheduled search.
+            - `EventsElided`: set to true if there were more events than allowed by the alert's Max Events option.
+            - `ID`: the unique ID of the triggering scheduled search definition.
+            - `Labels`: any labels applied to the dispatcher.
+            - `Name`: the name of the scheduled search.
+            - `SearchID`: the ID of the particular search which generated the events.
+            - `Type`: the type of the dispatcher (current, always "scheduledsearch")
+        - `EventIndex`: of the events which triggered the alert, the number (starting from 0) which is being processed by the current flow execution.
+        - `TargetTag`: the tag into which events for this alert will be ingested.
+        - `UID`: the user ID of the alert's owner.
+        - `UserMetadata`: user-specified additional fields defined on the alert.
+        - `Username`: the username of the alert's owner.
+    - `Type`: a constant string, "event" (not particularly useful in flows)
+
+The `event` fields can be particularly useful when generating messages about an event, for example the Text Template node could be used to generate a human-friendly message formatting `event.Metadata.Dispatcher.Name` and `event.Metadata.AlertName`, plus the values in `event.Contents`. See the [Alerts documentation](/alerts/alerts) for examples.
+
 ### Execution order
 
 Nodes are always executed one at a time. A node can be executed if all nodes upstream of it (its *dependencies*) have executed. If multiple nodes are ready to execute, one will be chosen at random. In the example below, both the "Run a Query" node and the "HTTP" node are candidates to run first. After the Query node finishes, the If node can execute; when it is done, the Slack Message node may run. We say that the If node is *downstream* of the Query node, and the Slack node is *downstream* of both the If and Query nodes.
