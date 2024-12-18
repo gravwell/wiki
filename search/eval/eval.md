@@ -360,7 +360,7 @@ switch (int(foo)) {
 }
 ```
 
-Switch expressions are compared to the case expressions to determine which case to move execution to. Multiple cases can be true at the same time, and execution is moved to the first case that resolves true, from top to bottom. If no case resolves, an optional "default" case can be provided, otherwise execution moves to the end of the switch statement.
+Switch expressions are compared to the case expressions to determine which case to move execution to. Multiple cases can be true at the same time, and execution is moved to the first case that resolves true, from top to bottom. If no case resolves, an optional "default" case can be provided, otherwise execution moves to the end of the switch statement. If the default case is provided, it must be the last case in the switch statement.
 
 Switch statements follow C-family semantics, and fallthrough is implied. This means that execution will continue from the case that resolves true until the end of the switch statement is reached, or a `break` statement is reached. For example:
 
