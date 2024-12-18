@@ -120,9 +120,6 @@ for
 break		
 continue
 return
-
-(the remaining keywords are not currently supported, but are reserved)
-
 case
 default
 switch
@@ -341,6 +338,42 @@ if ( foo == "bar" ) {
 	output = "foo is not bar!";
 }
 ```
+
+### switch statements
+
+`switch` statements provide multi-way execution. In a `switch` statement, an expression is compared to an arbitrary number of cases, which can also contain expressions, and execution is moved to the first case that resolves true. 
+
+Switch statements are composed of an expression enclosed in `()`, with any number of cases, and zero or one default case. Cases contain expressions followed by a `:`. After a case, any number of statements can be provided.
+
+For example:
+
+```
+switch (int(foo)) {
+    case 1:
+        output = "foo is one";
+        break;
+    case 2:
+        output = "foo is two";
+        break;
+    default:
+        output = "foo is neither one nor two";
+}
+```
+
+Switch expressions are compared to the case expressions to determine which case to move execution to. Multiple cases can be true at the same time, and execution is moved to the first case that resolves true, from top to bottom. If no case resolves, an optional "default" case can be provided, otherwise execution moves to the end of the switch statement. If the default case is provided, it must be the last case in the switch statement.
+
+Switch statements follow C-family semantics, and fallthrough is implied. This means that execution will continue from the case that resolves true until the end of the switch statement is reached, or a `break` statement is reached. For example:
+
+```
+switch (int(foo)) {
+    case 1:
+        output = "started at the first case";
+    case 2:
+        output = output + " and continued into the second case";
+}
+```
+
+In this example, if `foo` equals 1, the output will become, "started at the first case and continued into the second case", because no break statement was provided to stop execution.
 
 ### for statements
 
