@@ -4,9 +4,13 @@
 
 This site contains documentation for Gravwell, plus other resources such as [Downloads](quickstart/downloads) and [Release Notes](changelog/list).
 
-If you're just starting out with Gravwell, we recommend reading the [Quick Start](quickstart/quickstart) first, then moving on to the [Search pipeline](search/search) documentation to learn more. If you're confused, the [Glossary](glossary/glossary) defines some of the technical terminology used throughout the documentation.
+If you're just starting out with Gravwell, we recommend reading the [Quick Start](quickstart/quickstart) first, then moving on to the [Search pipeline](search/search) documentation to learn more. 
 
-Gravwell is pleased to announce our free [Community Edition](https://www.gravwell.io/download)!
+If you're confused, the [Glossary](glossary/glossary) defines some of the technical terminology used throughout the documentation.
+
+```{note}
+Gravwell is pleased to announce our new [no-licensed-required tier](https://www.gravwell.io/blog/gravwell-5.6.0-new-license-tiers) (and the Community Advanced option for even more free ingest)!
+```
 
 ```{toctree}
 ---
