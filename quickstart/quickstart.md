@@ -96,7 +96,7 @@ We provide a basic calculator below; just enter your expected daily ingest in gi
 | <span style="color:blue">**Recommended Per-Indexer RAM**</span>            | <span style="color:blue"><span id="memsize">--</span> GB</span>                  |
 
 ```{note}
-These are only very rough estimates, and of course performance will vary based on the hardware you select: eight Ivy Bridge cores are not comparable to eight AMD Epyc cores!
+These are only very rough estimates, and of course performance will vary based on the hardware you select: eight Xeon Ivy Bridge cores are not comparable to eight Epyc Turin or Xeon Granit Rapids cores!
 ```
 
 You can estimate your storage requirements using the following calculator:
