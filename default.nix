@@ -26,6 +26,20 @@ let
       pythonImportsCheck = [ "sphinx_favicon" ];
     };
 
+  datatemplates = with pkgs.python310.pkgs;
+    buildPythonPackage rec {
+      pname = "sphinxcontrib.datatemplates";
+      version = "0.11.0 ";
+      format = "wheel";
+      src = pkgs.fetchurl {
+        url =
+          "https://files.pythonhosted.org/packages/d4/8d/7a7dd95ad1eedec8dc770570c8b1f3dc1d13357383635607b6629ccf329c/sphinxcontrib.datatemplates-0.11.0-py3-none-any.whl";
+        hash = "sha256-iNAvXtqzK4ghHrtyqQVT42dqVzeHe60d5BL4QFisKC4=";
+      };
+      propagatedBuildInputs = [ sphinx defusedxml pyyaml ];
+      pythonImportsCheck = [ "sphinxcontrib.datatemplates" ];
+    };
+
   custom-pydata-sphinx-theme = with pkgs.python310.pkgs;
     buildPythonPackage rec {
       pname = "pydata-sphinx-theme";
@@ -61,6 +75,7 @@ let
       sphinx-design
       black
       sphinx-notfound-page
+      datatemplates
     ]);
 
   dedup-links = import ./_tools/dedup-links;
