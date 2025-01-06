@@ -73,6 +73,7 @@ html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 html_extra_path = ["open_source"]
 html_css_files = ["css/custom.css"]
+html_search_scorer = "search_scorer.js"
 html_theme_options = {
     "logo": {
         "image_light": "_static/images/Gravwell-Color.svg",
