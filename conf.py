@@ -2,6 +2,7 @@ import os
 import pathlib
 import subprocess
 import sys
+import json
 from datetime import date
 
 from sphinx.highlighting import lexers
@@ -21,7 +22,7 @@ from gravy_lexer import GravwellLexer
 project = "Gravwell"
 copyright = f"Gravwell, Inc. {date.today().year}"
 author = "Gravwell, Inc."
-release = "v5.6.8"
+release = "v5.6.9"
 
 # Default to localhost:8000, so the version switcher looks OK on livehtml
 version_list_url = os.environ.get(
@@ -38,6 +39,7 @@ extensions = [
     "notfound.extension",
     "sphinx_copybutton",
     "sphinx_favicon",
+    "sphinxcontrib.datatemplates",
 ]
 
 myst_enable_extensions = [
@@ -69,7 +71,9 @@ html_copy_source = False
 
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
+html_extra_path = ["open_source"]
 html_css_files = ["css/custom.css"]
+html_search_scorer = "search_scorer.js"
 html_theme_options = {
     "logo": {
         "image_light": "_static/images/Gravwell-Color.svg",
@@ -173,3 +177,44 @@ myst_substitutions = {}
 
 # Copy button
 copybutton_selector = "div.highlight pre,div.docutils pre.literal-block"
+
+
+# Re-generate open_source.json at the beginning of each build.
+# This keeps open_source.json up-to-date as files change.
+def build_inited_handler(_app):
+    open_source_dir = "open_source/"
+    open_source_files = sorted(
+        [
+            {
+                "name": os.path.join(root[len(open_source_dir) :], f),
+                "path": os.path.join(root, f),
+            }
+            for root, _dirs, files in os.walk(open_source_dir)
+            for f in files
+        ],
+        key=lambda x: x["path"],
+    )
+
+    # If the content of open_source.json hasn't changed, return early.
+    #
+    # Writing open_source.json will re-trigger a build on "make livehtml".
+    # Without the early return, "make livehtml" will infinitely loop.
+    try:
+        with open("open_source.json", "r") as jsonFile:
+            current_content = json.load(jsonFile)
+            if current_content == open_source_files:
+                return
+    except OSError:
+        # If the file doesn't exist, we'll just create it
+        pass
+
+    with open("open_source.json", "w") as jsonFile:
+        json.dump(
+            open_source_files,
+            jsonFile,
+            indent=2,
+        )
+
+
+def setup(app):
+    app.connect("builder-inited", build_inited_handler)
