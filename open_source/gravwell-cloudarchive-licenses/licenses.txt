@@ -12,7 +12,7 @@ github.com/klauspost/compress/internal/race,https://github.com/klauspost/compres
 github.com/klauspost/compress/s2,https://github.com/klauspost/compress/blob/v1.17.11/s2/LICENSE,BSD-3-Clause
 github.com/klauspost/compress/snappy,https://github.com/klauspost/compress/blob/v1.17.11/snappy/LICENSE,BSD-3-Clause
 github.com/shirou/gopsutil,https://github.com/shirou/gopsutil/blob/v2.20.9/LICENSE,BSD-3-Clause
-golang.org/x/crypto,https://cs.opensource.google/go/x/crypto/+/v0.26.0:LICENSE,BSD-3-Clause
-golang.org/x/sys/unix,https://cs.opensource.google/go/x/sys/+/v0.26.0:LICENSE,BSD-3-Clause
+golang.org/x/crypto,https://cs.opensource.google/go/x/crypto/+/v0.31.0:LICENSE,BSD-3-Clause
+golang.org/x/sys/unix,https://cs.opensource.google/go/x/sys/+/v0.28.0:LICENSE,BSD-3-Clause
 golang.org/x/time/rate,https://cs.opensource.google/go/x/time/+/v0.6.0:LICENSE,BSD-3-Clause
 gopkg.in/warnings.v0,https://github.com/go-warnings/warnings/blob/v0.1.2/LICENSE,BSD-2-Clause
