@@ -14,9 +14,11 @@ To get the pre-built aggregates flow, install the Gravwell kit by selecting "Kit
 
 ![](gravwell-kit.png)
 
-The kit installs a flow named "Tag Aggregates". Note that there should only be one instance of this flow installed per system, or you will generate duplicate aggs!
+The kit installs a flow named "Tag Aggregates". The flow will begin running automatically. By default, it runs every minute, generating statistics about the number and size of entries in each tag and ingesting those statistics into the `_aggs_tags` tag.
 
-The flow will begin running automatically. By default, it runs every minute, generating statistics about the number and size of entries in each tag and ingesting those statistics into the `_aggs_tags` tag.
+```{warning}
+There should only be one instance of this flow installed per system, or you will generate duplicate aggs!
+```
 
 Now that the flow is running and generating aggs, it is instructive to take a look at what it actually *does*. The flow is composed of 3 nodes: Sleep, Run Query, and Ingest.
 
@@ -84,7 +86,7 @@ tag=pcap packet tcp.Port
 
 ![](port-table.png)
 
-However, if we're doing full packet capture, there may be *huge* quantities of packets involved, and the query could take quite a while. If we wish to include this information in a dashboard and refer to it often, it makes sense to craft a custom agg flow. We can actually base it on the same pre-built flow as before (select the 3-dot menu on the Tag Aggregates flow & click "Duplicate", but be sure to disable the flow until you've modified it!), we just need to make a few tweaks:
+However, if we're doing full packet capture, there may be *huge* quantities of packets involved, and the query could take quite a while. If we wish to include this information in a dashboard and refer to it often, it makes sense to craft a custom agg flow. We can actually base it on the same pre-built flow as before (select the 3-dot menu on the Tag Aggregates flow & click "Duplicate"; note that duplicate flows are disabled by default, but don't enable it until you've modified the flow or you'll get duplicate aggs!), we just need to make a few tweaks:
 
 * Rename the flow to something like "Packet Port Aggregates".
 * Change the Run Query node's query to match the one above instead of the default.
