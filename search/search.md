@@ -336,4 +336,4 @@ Additionally, you can force a table based search into non-temporal mode by using
 tag=foo json foo == "bar" | stats count over 10m | table -nt
 ```
 
-By adding the `-nt` flag to the table module, we put the otherwise temporal search into non-temporal mode. The result is that we'll now see an entry for every 10 minute window (because of our stats module) instead of one just one entry summarizing the count for the selected window.
+By adding the `-nt` flag to the table module, we put the otherwise temporal search into non-temporal mode. The result is that we'll now see an entry for every 10 minute window (because of our stats module) instead of just one entry summarizing the count for the selected window.
