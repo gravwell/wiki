@@ -1,6 +1,6 @@
 # Persistent Searches
 
-Gravwell users may wish to [send long-running searches to the background or save search results](/gui/queries/queries), or [schedule searches](/scripting/scheduledsearch) to run periodically. To review the search results at a later time, use the *Persistent Searches* page, found in the Searches section of the main menu:
+Gravwell users may wish to [send long-running searches to the background](background_search), [save search results](search_results), or [schedule searches](/scripting/scheduledsearch) to run periodically. To review the search results at a later time, use the *Persistent Searches* page, found in the Searches section of the main menu:
 
 ![](persistent-menu.png)
 
