@@ -1,7 +1,7 @@
 {# Create a bunch of headers that are hidden by default. #}
 {# Use style in custom.css to show at appropriate page widths. #}
 
-{% for i in range(1, 9) %}
+{% for i in range(1, 10) %}
 <nav id="nav-{{loop.index}}" class="navbar-nav default-hidden-nav">
   <ul class="bd-navbar-elements navbar-nav">
     {{ generate_header_nav_html(n_links_before_dropdown=loop.index, dropdown_text=theme_header_dropdown_text) }}
