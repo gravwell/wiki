@@ -312,7 +312,7 @@ Gravwell performs searches in two modes: temporal and non-temporal. When you sea
 tag=foo json foo == "bar" | table
 ```
 
-This query doesn't transform the data, instead it simply filters entries down to those with a json field named "foo" containing the string "bar". This will result in a temporal search, and when executed, Gravwell will allow you to zoom in to different regions of time over the search results, and will by default sort the data by time, newest entries first.
+This query doesn't transform the data, instead it simply filters entries down to those with a json field named "foo" containing the string "bar". This will result in a temporal search. Gravwell will allow you to zoom in to different regions of time over the search results and will by default sort the data by time, newest entries first.
 
 Now take this query:
 
