@@ -439,6 +439,12 @@ Deletes the given enumerated value.
 
 Returns true if the given EV exists.
 
+#### has_key
+
+	function has_key(map string, key string) bool
+
+Returns true if the given key exists in the given map.
+
 #### in
 
 	function in(ev string, string...) bool

@@ -82,6 +82,7 @@ Finally, "ISO 8601 duration" allows you to specify a duration in [ISO-8601 forma
 "Preview" tells Gravwell to just go find "something" without regard to time.  This means that the system will look at the specific tags in use and ask the indexers for time ranges where the data could exist and then begin sampling it.  The data may be in the future or it may be way in the past.  This is a good option for testing queries.
 ```
 
+(search_results)=
 ## Search Results Page
 
 When you run a query, Gravwell displays the *search results page* to show the output. From this page, you can drill down into subsections of the results, modify & re-run the query, change the timeframe, save the results, and more.
@@ -165,7 +166,7 @@ Note that the timeframe button on the query bar now has a dot on it. This indica
 ```{note}
 Not all queries will display the timeframe selector. Some modules or module options (like the table renderer's `-nt` flag) force Gravwell into *non-temporal mode*, which disallows zooming.
 ```
-
+(background_search)=
 ## Run search in background
 
 This option is useful when a search is taking longer than expected to complete. Clicking "Run search in background" will make the search continue running in the background even after you navigate away from the results page; this allows you to do other things while the search completes. You can monitor the search's status and view the completed results from the [Persistent Searches](/gui/persistent/persistent) page. Note that backgrounded searches do *not* persist across webserver restarts; to keep results around permanently, use the "Save results" option.

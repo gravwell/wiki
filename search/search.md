@@ -230,7 +230,7 @@ This gives us a table of just connections that didn't have a corresponding DNS q
 ![](compound-ex2.png)
 
 ```{note}
-Compound queries create ephemeral resources that exist only during the query, however those resources can and do consume disk space and are restricted by the [Resource-Max-Size](config_params_resource-max-size)` global configuration variable which defaults to 512MB.  If the ephemeral resource is larger than the specified size the query will fail.
+Compound queries create ephemeral resources that exist only during the query, however those resources can and do consume disk space and are restricted by the [Render-Store-Limit](config_params_render_store_limit) global configuration variable which defaults to 1024MB. If the ephemeral resource is larger than the specified size, the query will fail.
 ```
 
 (specify-search-timeframe-in-query)=
@@ -303,3 +303,37 @@ Comments are saved in the search history, and are useful for debugging queries a
 ```gravwell
 tag=foo json foo.bar /* a c-style comment that has no impact on the search */ baz | table // another comment!
 ```
+
+## Temporal vs Non-temporal Searches
+
+Gravwell performs searches in two modes: temporal and non-temporal. When you search over time without transforming data, Gravwell will usually perform the search in temporal mode. This mode is often seen with queries that are charted over time, or simple queries using the table renderer. For example, take the following query:
+
+```gravwell
+tag=foo json foo == "bar" | table
+```
+
+This query doesn't transform the data, instead it simply filters entries down to those with a json field named "foo" containing the string "bar". This will result in a temporal search. Gravwell will allow you to zoom in to different regions of time over the search results and will by default sort the data by time, newest entries first.
+
+Now take this query:
+
+```gravwell
+tag=foo json foo == "bar" | stats count | table
+```
+
+This results in a non-temporal search due to the inclusion of `stats count`. The stats module here transforms the data by dropping all entries and producing a single new entry containing the total count. This synthetic entry has a timestamp, but the timestamp is meaningless because the result is simply a count over the time window searched. In non-temporal searches, Gravwell removes the "overview" chart and doesn't allow you to zoom over time.
+
+Not all searches that transform data are non-temporal however. Consider the following query:
+
+```gravwell
+tag=foo json foo == "bar" | stats count over 10m | table
+```
+
+This results in a temporal search. By adding `over 10m` to the stats module, we reintroduce a notion of time into the search, and Gravwell will allow you to zoom across the time range, down to the resolution requested (in this case 10 minutes).
+
+Additionally, you can force a table based search into non-temporal mode by using the `-nt` flag. This is useful for inspecting each value of a temporal search without having to zoom. Let's take our last example:
+
+```gravwell
+tag=foo json foo == "bar" | stats count over 10m | table -nt
+```
+
+By adding the `-nt` flag to the table module, we put the otherwise temporal search into non-temporal mode. The result is that we'll now see an entry for every 10 minute window (because of our stats module) instead of just one entry summarizing the count for the selected window.

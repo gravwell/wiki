@@ -20,6 +20,7 @@ Quick Start <quickstart/quickstart>
 Configuration <architecture/architecture>
 Ingesters <ingesters/ingesters>
 Searching with Gravwell <gravwell>
+Tips & Tricks <tips/tips>
 Automation <automation>
 Downloads <quickstart/downloads>
 API <api/api>
