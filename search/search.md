@@ -329,3 +329,11 @@ tag=foo json foo == "bar" | stats count over 10m | table
 ```
 
 This results in a temporal search. By adding `over 10m` to the stats module, we reintroduce a notion of time into the search, and Gravwell will allow you to zoom across the time range, down to the resolution requested (in this case 10 minutes).
+
+Additionally, you can force a table based search into non-temporal mode by using the `-nt` flag. This is useful for inspecting each value of a temporal search without having to zoom. Let's take our last example:
+
+```gravwell
+tag=foo json foo == "bar" | stats count over 10m | table -nt
+```
+
+By adding the `-nt` flag to the table module, we put the otherwise temporal search into non-temporal mode. The result is that we'll now see an entry for every 10 minute window (because of our stats module) instead of one.
