@@ -13,6 +13,14 @@ Flows provide a no-code method for developing advanced automations in Gravwell. 
 
 This document will describe what makes a flow, the flow editor, and how to debug & deploy your own flows.
 
+```{attention}
+An automation (Flow, Scheduled Search, or Script) runs as the user who owns the automation, except when triggered by an alert.
+
+Granting write access to an automation has important implications. When you grant a group write access to a Flow or Scheduled Search, you are granting them the ability to modify and execute it as **your user**. Consider using a machine user with the least privileges necessary as the owner of shared automations.
+
+When a flow is run in response to an [alert](/alerts/alerts), it runs as the owner of the alert. This also has implications: the alert owner is executing code defined by the flow owner. Don't use flows owned by untrusted users as consumers on your alerts.
+```
+
 ## Basic flow concepts
 
 Flows are *automations*, meaning they are normally executed on a user-specified schedule by the search agent. You can also run them manually through the user interface. The basic process of flow development is:
