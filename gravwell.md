@@ -22,7 +22,6 @@ Search Processing modules <search/processingmodules>
 Search Render modules <search/rendermodules>
 Query syntax specification (grav.y) <search/spec>
 Inline Filtering <search/filtering>
-Data Aggregation <scripting/aggs>
 Data Exploration <gui/data-explorer/de>
 ```
 
