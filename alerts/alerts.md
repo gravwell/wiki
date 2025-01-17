@@ -13,6 +13,15 @@ In brief, _dispatchers_ send _events_, which are then processed by _consumers_. 
 
 This page will show how to create and configure alerts, using as an example an alert which sends notifications whenever an admin-level account logs in, for instance when `root` logs in via ssh or `admin` logs in to Gravwell.
 
+```{important}
+There are a few important things to keep in mind regarding ownership & permissions when defining alerts:
+
+* An alert can use scheduled searches owned by other users as dispatchers, provided the alert owner has permission to view the results of those searches. Note that if the scheduled search owner changes permissions or deletes the search, the alert may no longer work properly.
+* An alert can use flows owned by other users as consumers, provided the alert owner has permission to view the flow. This has a variety of potential complications detailed below.
+  * If the flow uses resources, macros, secrets, or other items owned by the flow owner but not shared with the alert owner, the flow may not execute properly when triggered by the alert.
+  * The flow owner has the ability to modify the flow without notifying the alert owner; this means the alert may stop behaving properly, or in the case of a malicious flow owner, the flow could be used to e.g. leak the contents of the alert events.
+```
+
 ## Creating an Alert
 
 Alerts are defined in the Alerts page, found under the Automation sub-menu. Clicking "Create an alert" on this page will open a wizard to define a new alert:
@@ -143,6 +152,10 @@ And finally we'll configure the Email node to send out a message using the gener
 When we click the Debug button in the Flows editor, we should shortly receive an email containing our sample data:
 
 ![](debug-email.png)
+
+```{note}
+When a flow is run in response to an actual alert trigger, the flow's results fields (payloads, last run time, etc.) are *not* updated, both to avoid leaking any sensitive material and because a single alert activation may run the same flow dozens of times, making updating the results less useful.
+```
 
 ### Adding a Flow Consumer
 
