@@ -24,7 +24,7 @@ The configuration file is at `/opt/gravwell/etc/gravwell_http_ingester.conf`. Th
 
 ### Resource Controls Configuration
 
-The HTTP ingester is designed to handle many many connections and concurrent requests, a single moderately capable system can happily service 100k requests per second spread across many hundreds of connections.  However, no system can service an infinite number of connections nor an infinite number of concurrent requests.  The HTTP Ingester has a safety system designed to prevent overwhelming the host by limiting the number of active connections and concurrent HTTP requests.
+The HTTP ingester is designed to handle many connections and concurrent requests. A single, moderately-capable system can happily service 100k requests per second spread across many hundreds of connections.  However, no system can service an infinite number of connections nor an infinite number of concurrent requests.  The HTTP Ingester has a safety system designed to prevent overwhelming the host by limiting the number of active connections and concurrent HTTP requests.
 
 
 | Config Parameter          | Type         | Required | Default Value   | Description                         |
