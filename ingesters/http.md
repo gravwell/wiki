@@ -32,7 +32,7 @@ The HTTP ingester is designed to handle many connections and concurrent requests
 | Max-Connections           | integer      | no       | 10240           | Maximum number of active connections. Once the maximum is reached, new connections will be queued and accepted as existing connections terminate. |
 | Max-Concurrent-Requests   | integer      | no       | 16384           | Maximum number of concurrent HTTP requests for all connections.  System will return HTTP code 429 (Too Many Requests) until the number of active requests is reduced. |
 
-Maximum connection and/or maximum concurrent request controls can be disable by setting the configuration parameter to `-1` which effectively allows for limited connections or unlimited concurrent requests.
+Maximum connection and/or maximum concurrent request controls can be disabled by setting the configuration parameter to `-1`, which effectively allows for unlimited connections or unlimited concurrent requests.
 
 A request is only concurrent if it is actively being handled, setting `Max-Concurrent-Requests=10` may still allow for hundreds of thousands of requests per second if only a few clients are sending requests and each client is completing a single request at a time.
 
