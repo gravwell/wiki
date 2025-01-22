@@ -88,7 +88,7 @@ As with most ingesters, each consumer may also specify [preprocessors](/ingester
 	Synchronous=true
 	Source-Header=SRC #A custom feeder is putting its source IP in the header named "SRC"
 	Batch-Size=256 #get up to 256 messages before consuming and pushing
-    # prefer sticky but present sticky and roundrobin as options we support
+        # this config sets sticky as the preferred strategy but also offers roundrobin
 	Rebalance-Strategy=sticky
 	Rebalance-Strategy=roundrobin
 ```
