@@ -22,6 +22,21 @@ The HTTP ingester uses the unified global configuration block described in the [
 
 The configuration file is at `/opt/gravwell/etc/gravwell_http_ingester.conf`. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/gravwell_http_ingester.conf.d`).
 
+### Resource Controls Configuration
+
+The HTTP ingester is designed to handle many many connections and concurrent requests, a single moderately capable system can happily service 100k requests per second spread across many hundreds of connections.  However, no system can service an infinite number of connections nor an infinite number of concurrent requests.  The HTTP Ingester has a safety system designed to prevent overwhelming the host by limiting the number of active connections and concurrent HTTP requests.
+
+
+| Config Parameter          | Type         | Required | Default Value   | Description                         |
+|---------------------------|--------------|----------|-----------------|-------------------------------------|
+| Max-Connections           | integer      | no       | 10240           | Maximum number of active connections, new connections once the maximum is reached will be queued and accepted once existing connections terminate. |
+| Max-Concurrent-Requests   | integer      | no       | 16384           | Maximum number of concurrent HTTP requests for all connections.  System will return HTTP code 429 (Too Many Requests) until the number of active requests is reduced. |
+
+Maximum connection and/or maximum concurrent request controls can be disable by setting the configuration parameter to `-1` which effectively allows for limited connections or unlimited concurrent requests.
+
+A request is only concurrent if it is actively being handled, setting `Max-Concurrent-Requests=10` may still allow for hundreds of thousands of requests per second if only a few clients are sending requests and each client is completing a single request at a time.
+
+
 ## Listener Examples
 
 In addition to the universal configuration parameters used by all ingesters, the HTTP POST ingester has two additional global configuration parameters that control the behavior of the embedded webserver.  The first configuration parameter is the `Bind` option, which specifies the interface and port that the webserver listens on.  The second is the `Max-Body` parameter, which controls how large of a POST the webserver will allow.  The Max-Body parameter is a good safety net to prevent rogue processes from attempting to upload very large files into your Gravwell instance as a single entry.  Gravwell can support up to 1GB as a single entry, but we wouldn't recommend it.
