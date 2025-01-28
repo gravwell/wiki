@@ -61,7 +61,7 @@ During a conversation, the Logbot AI UI shows your remaining words in the conver
 
 ## How Gravwell Processes and Uses Logbot AI Data
 
-When Gravwell's Artificial Intelligence (AI) feature is enabled and any user converses with the AI, their messages as well as any attached search entries will be sent to https://api.gravwell.ai/ for processing. Because search entries may contain sensitive data, administrators may wish to limit access to the AI feature. There are multiple ways to do this::q
+When Gravwell's Artificial Intelligence (AI) feature is enabled and any user converses with the AI, their messages as well as any attached search entries will be sent to https://api.gravwell.ai/ for processing. Because search entries may contain sensitive data, administrators may wish to limit access to the AI feature. There are multiple ways to do this:
 
 
 - Per user: Capability Based Access Control ([CBAC](/cbac/cbac)) allows administrators to disable AI access to specific users or groups. 
