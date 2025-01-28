@@ -1,0 +1,77 @@
+# Logbot AI Entry Analysis
+
+```{note}
+Logbot AI is a beta feature and can make mistakes. Always check important information before relying on output from Logbot.
+```
+
+![Overview](overview.png)
+
+## Introduction
+
+Logbot AI is a Large Language Model (LLM) powered chat assistant that can be prompted to explain or summarize entries in a query. Logbot AI can be used to quickly understand new datasets, find inconsistencies in regular data, and explain abstract data fields.
+
+Logbot AI is currently in beta and is available through the Query Studio interface. Logbot AI becomes enabled after a query has executed.
+
+## Enabling Logbot AI
+
+Logbot AI is disabled by default on all Gravwell installations. To enable Gravwell globally, you must add the following to your `gravwell.conf` and restart the webserver service:
+
+```
+[AI]
+Enable=true
+```
+
+Once globally enabled, Logbot AI access can be user/group controlled via the [CBAC](/cbac/cbac) system, if your license supports it.
+
+## Logbot AI Overview
+
+```{note}
+Logbot AI can only be used with the text and raw renderers.
+```
+
+Logbot AI is accessed in Query Studio. After a search is completed, if enabled and available, the Logbot AI button will enable, allowing you to start a conversation about the current query.
+
+![AI Button](button.png)
+
+Logbot AI will prompt you to select one or more entries to explain or summarize. Click "Explain entries" (or Summarize) to open a conversation with Logbot.
+
+![Select Entries](select.png)
+
+Logbot AI will begin streaming information as a conversation in a new window. This conversation is interactive, and you can ask Logbot AI additional questions. Logbot AI maintains the context of the current conversation when asking it additional questions, up to the word limit (see below).
+
+![Conversation](conversation.png)
+
+The conversation can be erased and downloaded, and additional entries can be attached to the conversation using the menu buttons at the bottom of the conversation window.
+
+![Gear](gear.png)
+
+Once a conversation is erased, Logbot AI will lose any context about the conversation. This means that new conversations will not be able to reference information from previous ones.
+
+## API Limitations
+
+Your license affects the priority and amount of interactions allowed with Logbot AI. Two components make up Logbot AI's API limitations: words per conversation, and number of conversations.
+
+During a conversation with Logbot AI, the entire conversation is used as state for the conversation. The number of words in a conversation is limited to about 100,000 for performance reasons. Once this limit is reached, Logbot AI will not continue to interact until start a new conversation.
+
+The number of conversations allowed per month is limited by your license. 
+
+During a conversation, the Logbot AI UI shows your remaining words in the conversation, as well as the remaining conversations in the month.
+
+![API Limitations](api.png)
+
+## How Gravwell Processes and Uses Logbot AI Data
+
+When Gravwell's Artificial Intelligence (AI) feature is enabled and any user converses with the AI, their messages as well as any attached search entries will be sent to https://api.gravwell.ai/ for processing. Because search entries may contain sensitive data, administrators may wish to limit access to the AI feature. There are multiple ways to do this::q
+
+
+- Per user: Capability Based Access Control ([CBAC](/cbac/cbac)) allows administrators to disable AI access to specific users or groups. 
+- Per system: Enable-AI may be set to false in your instance's gravwell.conf to disable the AI feature for all users. 
+
+When engaging with Logbot or other Gravwell AI services, you should be cognizant of the following points which may affect data privacy:
+
+- Gravwell AI services run in Gravwell infrastructure on Gravwell GPUs (no third parties). Gravwell infrastructure is on-prem and SOC2 compliant (our servers are in cages in shared datacenters in the continental US)
+- Gravwell AI is NOT trained using any customer interactions or data and will not be in the future
+- Interactions with Gravwell AI services may be stored on Gravwell infrastructure in memory or logs until rotation/cleanup. Any deletion requests (e.g. GDPR) should be submitted to privacy@gravwell.io or as directed by any contract you may have with Gravwell
+- Gravwell humans in charge of AI services may review interactions to improve the AI services and/or prevent abuse. For example, we expect most users will ask Logbot to explain log entries, but if lots of users are asking it to write Gravwell queries (which it currently doesn't do very well), we want to be able to adapt to those needs
+
+
