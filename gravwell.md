@@ -23,7 +23,7 @@ Search Render modules <search/rendermodules>
 Query syntax specification (grav.y) <search/spec>
 Inline Filtering <search/filtering>
 Data Exploration <gui/data-explorer/de>
-Logbot AI Entry Analysis <search/ai/ai>
+Logbot AI <search/ai/ai>
 ```
 
 ```{toctree}
