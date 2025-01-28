@@ -51,7 +51,7 @@ Once a conversation is erased, Logbot AI will lose any context about the convers
 
 Your license affects the priority and amount of interactions allowed with Logbot AI. Two components make up Logbot AI's API limitations: words per conversation and number of conversations.
 
-During a conversation with Logbot AI, the entire conversation is used as state for the conversation. The number of words in a conversation is limited to about 100,000 for performance reasons. Once this limit is reached, Logbot AI will not continue to interact until start a new conversation.
+During a conversation with Logbot AI, the entire conversation is used as state for the conversation. The number of words in a conversation is limited to about 100,000 for performance reasons. Once this limit is reached, Logbot AI will not interact anymore until a new conversation is started.
 
 The number of conversations allowed per month is limited by your license. 
 
