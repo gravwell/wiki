@@ -65,7 +65,7 @@ When Gravwell's Artificial Intelligence (AI) feature is enabled and any user con
 
 
 - Per user: Capability Based Access Control ([CBAC](/cbac/cbac)) allows administrators to disable AI access to specific users or groups. 
-- Per system: Enable-AI may be set to false in your instance's gravwell.conf to disable the AI feature for all users. 
+- Per system: Enable may be set to false in the AI section of your instance's gravwell.conf to disable the AI feature for all users. 
 
 When engaging with Logbot or other Gravwell AI services, you should be cognizant of the following points which may affect data privacy:
 
