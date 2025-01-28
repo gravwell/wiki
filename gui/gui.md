@@ -77,7 +77,7 @@ Selecting "Account" will open your preferences page, shown below. Here, you can 
 
 ### Security
 
-The second tab, "Security", is where you can configure Multi-Factor Authentication (MFA). Complete documentation is available on the [MFA](/configuration/mfa) page.
+The second tab, "Security", is where you can configure Multi-Factor Authentication (MFA). Complete documentation is available on the [MFA](/configuration/mfa/mfa) page.
 
 ### Preferences
 
