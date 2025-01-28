@@ -1,4 +1,4 @@
-# Logbot AI Entry Analysis
+# Logbot AI 
 
 ```{note}
 Logbot AI is a beta feature and can make mistakes. Always check important information before relying on output from Logbot.
