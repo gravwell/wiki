@@ -705,7 +705,7 @@ Description: Enable the Logbot AI system.
 ### **AI-Server-URL**
 Default Value: https://api.gravwell.ai/  
 Example: `AI-Server-URL="https://ai.example.com"`  
-Description: Alternate AI path for remote AI requests.  
+Description: Alternate path for remote AI requests.  
 
 ## Password Control
 
