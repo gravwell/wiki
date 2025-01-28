@@ -42,7 +42,7 @@ Given three indexers (192.168.100.50, 192.168.100.51, 192.168.100.52), the confi
 
 Each node specifies the other nodes in its `Peer` fields.
 
-The replication engine relies on an internal database to maintain the state of the replication system and all peers, if no `Database-Path` is defined the system will deploy the database to a file named `replication.db` within the `Storage-Location` directory.
+The replication engine relies on an internal database to maintain the state of the replication system and all peers. If no `Database-Path` is defined, the system will deploy the database to a file named `replication.db` within the `Storage-Location` directory.
 
 ```{attention}
 The replication database is critical to the healthy operation of the replication system, it will perform frequent file syncs and often operates in synchronous IO mode.  If your replication storage system is slow or employs transparent compression it is reccomended that the replication database be stored on a high IOP storage array.  The replication database is typically only a few MB in size, even on very large deployments.
