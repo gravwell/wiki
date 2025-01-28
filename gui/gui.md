@@ -83,6 +83,7 @@ The "Chart theme" dropdown selects different color palettes which will be used w
 
 ![](interface-prefs.png)
 
+(preferences)=
 ### Preferences
 
 The third tab, "Preferences", allows you to change some default behaviors of Gravwell.
