@@ -41,7 +41,7 @@ Logbot AI will begin streaming information as a conversation in a new window. Th
 
 ![Conversation](conversation.png)
 
-The conversation can be erased and downloaded, and additional entries can be attached to the conversation using the menu buttons at the bottom of the conversation window.
+The conversation can be erased or downloaded, and additional entries can be attached to the conversation using the menu buttons at the bottom of the conversation window.
 
 ![Gear](gear.png)
 
