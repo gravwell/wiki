@@ -29,6 +29,7 @@ Compression </configuration/compression>
 Data Ageout </configuration/ageout>
 Cloud Archive </configuration/archive>
 Data Replication </configuration/replication>
+Ditto Data Duplication </configuration/ditto>
 Gravwell Searchagent </scripting/searchagent>
 Gravwell Accelerators </configuration/accelerators>
 Performance Tuning </tuning/tuning>
