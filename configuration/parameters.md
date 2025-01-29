@@ -677,16 +677,35 @@ Example:	`Disable-Indexer-Overload-Warning=true`
 Description: If this parameter is set, the indexer will not send notifications when it considers itself 'overloaded'.
 
 ### **MFA-Required**
-Applies to: Webserver
-Default Value: false
-Example: `MFA-Required=true`
-Description: If set to true, all local (non-SSO) users will be required to configure and use MFA for authentication.
+Applies to: Webserver  
+Default Value:  false  
+Example:    `MFA-Required=true`  
+Description:    If set to true, all local (non-SSO) users will be required to configure and use MFA for authentication.  
 
 ### **MFA-Issuer-Name**
-Applies to: Webserver
-Default Value: Gravwell
-Example: `MFA-Issuer-Name="BigCo Gravwell Cluster"`
-Description: Sets the "issuer" field for TOTP MFA authentication. This controls the name which will appear in your authentication application. The default, "Gravwell", is suitable for most cases.
+Applies to: Webserver  
+Default Value: Gravwell  
+Example: `MFA-Issuer-Name="BigCo Gravwell Cluster"`  
+Description: Sets the "issuer" field for TOTP MFA authentication. This controls the name which will appear in your authentication application. The default, "Gravwell", is suitable for most cases. 
+ 
+## AI
+
+The `[AI]` configuration section controls [Logbot AI](/search/ai/ai). 
+
+```
+[AI]
+Enable=true
+```
+
+### **Enable**
+Default Value: false  
+Example: `Enable=true`  
+Description: Enable the Logbot AI system.  
+
+### **AI-Server-URL**
+Default Value: https://api.gravwell.ai/  
+Example: `AI-Server-URL="https://ai.example.com"`  
+Description: Alternate path for remote AI requests.  
 
 ## Password Control
 
