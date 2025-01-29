@@ -35,7 +35,7 @@ The following parameters configure the connection to the Kafka cluster:
 | Leader    | slice of host:port | The set of Kafka cluster leader/broker.  This should be an IP or hostname; if no port is specified the default port of 9092 is appended. Multiple can be specified. | YES |
 | Topic     | string | The Kafka topic this consumer will read from | YES |
 | Consumer-Group | string | The Kafka consumer group this ingester is a member of; default is `gravwell`. |
-| Rebalance-Strategy | string | The re-balancing strategy to use when reading from Kafka. Options are `roundrobin` (default), `sticky`, and `range`. |
+| Rebalance-Strategy | slice of string | The re-balancing strategy to use when reading from Kafka. Options are `roundrobin`, `sticky`, and `range`. |
 | Auth-Type | string | Enable SASL authentiation and specify mechanism. |
 | Username | string | Specify username for SASL authentication. |
 | Password | string | Specify password for SASL authentication. |
@@ -88,7 +88,9 @@ As with most ingesters, each consumer may also specify [preprocessors](/ingester
 	Synchronous=true
 	Source-Header=SRC #A custom feeder is putting its source IP in the header named "SRC"
 	Batch-Size=256 #get up to 256 messages before consuming and pushing
+        # this config sets sticky as the preferred strategy but also offers roundrobin
 	Rebalance-Strategy=sticky
+	Rebalance-Strategy=roundrobin
 ```
 
 ```{warning}
