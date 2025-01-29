@@ -469,3 +469,19 @@ The entry gets the tag "json" because the field "field1" did not match any "Tag-
 ```
 
 The entry gets the tag "json" because the extractor could not find the field "field1".
+
+## TLS Configuration
+
+All listener types (line, syslog, regex, and JSON) support TLS connections. To enable TLS, use `tls://` in the `Bind-String` field and set the `Cert-File` and `Key-File` parameters to point at a valid TLS certificate and private key:
+
+```
+[JSONListener "testing"]
+	Bind-String=tls://0.0.0.0:7777
+	Cert-File=/opt/gravwell/etc/cert.pem
+	Key-File=/opt/gravwell/etc/key.pem
+	Extractor="field1"
+	Default-Tag=json
+	Tag-Match=test1:tag1
+	Tag-Match=test2:tag2
+	Tag-Match=test3:tag3
+```
