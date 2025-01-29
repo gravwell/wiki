@@ -39,65 +39,66 @@ In practice, it is less common to grant capabilities to individual users; instea
 
 | Capability Name | Description |
 |--------|-------|
-| Search | Search data and execute queries. |
-| Download | Download search results. |
-| SaveSearch | Save a search and add notes. |
 | AttachSearch | Load a search by search ID. |
 | BackgroundSearch | Execute a search in the background. |
-| SetSearchGroup | Assign a default group to searches. |
-| SearchHistory | View search history of authenticated user |
-| SearchAllHistory | View search history of items user has access to. |
-| SearchGroupHistory | View a group search history |
-| DashboardRead | View and launch dashboard |
-| SearchHistory | View search history of the authenticated user. |
-| SearchAllHistory | View search history of items the user has access to. |
-| SearchGroupHistory | View group search history. |
 | DashboardRead | View and launch a dashboard. |
+| DashboardRead | View and launch dashboard |
 | DashboardWrite | Create and edit a dashboard's searches and settings. |
-| ResourceRead | View a resource and use it in a query. |
-| ResourceWrite | Create and edit a resource. |
-| TemplateRead | View and execute a template. |
-| TemplateWrite | Create and edit a template. |
-| PivotRead | View and click on an actionable. |
-| PivotWrite | Create and edit an actionable. |
-| MacroRead | View and use a macro in a query. |
-| MacroRead | View a macro and use it in a query. |
-| MacroWrite | Create and edit a macro. |
-| LibraryRead | View and execute a saved query. |
-| LibraryWrite | Create and edit a saved query. |
-| ExtractorRead | View and use an extractor in a query. |
+| Download | Download search results. |
 | ExtractorRead | View an extractor and use it in a query. |
+| ExtractorRead | View and use an extractor in a query. |
 | ExtractorWrite | Create and edit an extractor. |
-| UserFileRead | View a file. |
-| UserFileWrite | Create and edit a file. |
-| KitRead | View a kit and its contents. |
-| KitWrite | Create and edit a kit. |
+| Ingest | Ingest data. |
 | KitBuild | Build a kit. |
 | KitDownload | Download a kit. |
-| ScheduleRead | View a flow, script or scheduled search and its results. |
-| ScheduleWrite | Create and edit a flow, script or scheduled search. |
-| ScheduleRead | View a flow, script, or scheduled search and its results. |
-| ScheduleWrite | Create and edit a flow, script, or scheduled search. |
-| SOARLibs | Import an external library into a script. |
-| SOAREmail | Send an email in a script or a flow. |
-| PlaybookRead | View a playbook. |
-| PlaybookWrite | Create and edit a playbook. |
+| KitRead | View a kit and its contents. |
+| KitWrite | Create and edit a kit. |
+| LibraryRead | View and execute a saved query. |
+| LibraryWrite | Create and edit a saved query. |
 | LicenseRead | View the license. |
-| Stats | View health statistics. |
-| Ingest | Ingest data. |
-| ListUsers | View the list of users. |
-| ListGroups | View the list of groups. |
 | ListGroupMembers | View the members of a group. |
+| ListGroups | View the list of groups. |
+| ListUsers | View the list of users. |
+| MacroRead | View a macro and use it in a query. |
+| MacroRead | View and use a macro in a query. |
+| MacroWrite | Create and edit a macro. |
 | NotificationRead | View notifications. |
 | NotificationWrite | Create and edit notifications. |
-| SystemInfoRead | View systems. |
+| PivotRead | View and click on an actionable. |
+| PivotWrite | Create and edit an actionable. |
+| PlaybookRead | View a playbook. |
+| PlaybookWrite | Create and edit a playbook. |
+| RemoteAIService | Interact with remotely hosted Logbot AI. |
+| ResourceRead | View a resource and use it in a query. |
+| ResourceWrite | Create and edit a resource. |
+| SOAREmail | Send an email in a script or a flow. |
+| SOARLibs | Import an external library into a script. |
+| SaveSearch | Save a search and add notes. |
+| ScheduleRead | View a flow, script or scheduled search and its results. |
+| ScheduleRead | View a flow, script, or scheduled search and its results. |
+| ScheduleWrite | Create and edit a flow, script or scheduled search. |
+| ScheduleWrite | Create and edit a flow, script, or scheduled search. |
+| Search | Search data and execute queries. |
+| SearchAllHistory | View search history of items the user has access to. |
+| SearchAllHistory | View search history of items user has access to. |
+| SearchGroupHistory | View a group search history |
+| SearchGroupHistory | View group search history. |
+| SearchHistory | View search history of authenticated user |
+| SearchHistory | View search history of the authenticated user. |
+| SecretRead | Read and access secrets. |
+| SecretRead | User can read and access secrets. |
+| SecretWrite | Create, update, and delete secrets. |
+| SecretWrite | User can create, update, and delete secrets. |
+| SetSearchGroup | Assign a default group to searches. |
+| Stats | View health statistics. |
 | SystemInfoRead | View systems info. |
+| SystemInfoRead | View systems. |
+| TemplateRead | View and execute a template. |
+| TemplateWrite | Create and edit a template. |
 | TokenRead | View API tokens. |
 | TokenWrite | Create and edit an API token. |
-| SecretRead | User can read and access secrets. |
-| SecretWrite | User can create, update, and delete secrets. |
-| SecretRead | Read and access secrets. |
-| SecretWrite | Create, update, and delete secrets. |
+| UserFileRead | View a file. |
+| UserFileWrite | Create and edit a file. |
 
 ### Determining a CBAC Grant
 
