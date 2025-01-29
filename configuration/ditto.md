@@ -31,7 +31,8 @@ Here's an example of a simple target definition:
 	Ingest-Secret=xyzzy
 	Start-Time="2024-01-01T00:00:00"
 ```
-
+```{note}
+If you are cloning data across a public network or any metered network connection we highly suggest enabling transport compression by setting `Enable-Compression=true` inside the `Ditto-Target` configuration block.
 ## Well Configuration
 
 To enable Ditto duplication for a given well, add the `Ditto-Target` parameter to the well's config block, e.g.:
