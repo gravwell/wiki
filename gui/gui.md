@@ -108,4 +108,4 @@ The "Advanced Preferences" section can be ignored by most users. Selecting "Deve
 The fourth tab, "Email Server", is extremely important for users who intend to use Gravwell to send automated email alerts.  Complete documentation is available on the [Email Configuration](/configuration/email) page.
 
 ### Capabilities
-The last tab shows a list of capabilities when Capability Based Access Control is enabled. Complete documentation is available on the [CBAC](/cbac/cbac) page.
+The last tab shows a list of granted capabilities when Capability Based Access Control is enabled. Complete documentation is available on the [CBAC](/cbac/cbac) page.
