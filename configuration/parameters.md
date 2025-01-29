@@ -686,7 +686,13 @@ Description:    If set to true, all local (non-SSO) users will be required to co
 Applies to: Webserver  
 Default Value: Gravwell  
 Example: `MFA-Issuer-Name="BigCo Gravwell Cluster"`  
-Description: Sets the "issuer" field for TOTP MFA authentication. This controls the name which will appear in your authentication application. The default, "Gravwell", is suitable for most cases. 
+Description: Sets the "issuer" field for TOTP MFA authentication. This controls the name which will appear in your authentication application. The default, "Gravwell", is suitable for most cases.
+
+### **Ditto-Max-Workers**
+Applies to: Indexer  
+Default Value: 1  
+Example: `Ditto-Max-Workers=8`  
+Description: Sets the number of parallel worker processes for [Ditto](/configuration/ditto) transfers.
  
 ## AI
 
@@ -865,7 +871,7 @@ Example:		`Accelerator-Name=json`
 Description:	Setting the `Accelerator-Name` parameter (and the `Accelerator-Args` parameter) enables acceleration on the well. See [the acceleration documentation](/configuration/accelerators) for more information.
 
 #### **Accelerator-Args**
-Default Value:	
+Default Value:	  
 Example:		`Accelerator-Args="username hostname \"strange-field.with.specials\".subfield"`  
 Description:	Setting the `Accelerator-Args` parameter (and the `Accelerator-Name` parameter) enables acceleration on the well. See [the acceleration documentation](/configuration/accelerators) for more information.
 
@@ -890,6 +896,41 @@ Description:	If set, the contents of this well will not be replicated.
 Default Value:	false  
 Example:		`Enable-Quarantine-Corrupted-Shards=true`  
 Description:	If set, corrupted shards which cannot be recovered will be copied to a quarantine location for later analysis. By default, badly corrupted shards may be deleted.
+
+#### **Ditto-Target**
+Default Value:    
+Example: `Ditto-Target=new-cluster`  
+Description: Specifies that this well should be duplicated to the given [Ditto](/configuration/ditto) target. Can be specified multiple times to duplicate to multiple targets.
+
+## Ditto Target Configuration
+
+The `[Ditto-Target]` section configures [Ditto](/configuration/ditto) target clusters, Gravwell clusters which will receive data duplicated from the local indexers' wells. This section is only applicable to indexers.
+
+Here's an example of a simple target definition:
+
+```
+[Ditto-Target "new-cluster"]
+	Encrypted-Backend-Target=newidx1.example.org
+	Encrypted-Backend-Target=newidx2.example.org
+	Ingest-Secret=xyzzy
+	Start-Time="2024-01-01T00:00:00"
+```
+
+A Ditto target uses the same basic configuration block as an [ingester](ingesters_global_configuration_parameters), specifying indexer targets and ingest secrets. 
+
+The following parameters are specific to Ditto.
+
+### **Start-Time**
+Default Value:    
+Example: `Start-Time=2025-01-01T00:00:00`  
+Example: `Start-Time=1738100446`  
+Description: If set to a timestamp (we recommend Unix epoch timestamps or RFC3339 format), this Ditto target will only be sent data from after that timestamp. Specifically, we will find the shard containing that timestamp and duplicate that shard and all following shards.
+
+### **Unresolvable-Tag-Destination**
+Default Value:    
+Example: `Unresolvable-Tag-Destination=unresolvable_ditto_tag`  
+Description: In some rare cases, the Ditto system may find entries in a shard whose tags do not correspond to any known tag (this can happen if you manually edited `tags.dat`, which is highly discouraged!). By default, these entries are dropped, but if `Unresolvable-Tag-Destination` is set, they will instead be re-tagged with the specified tag.
+
 
 ## Replication Configuration
 
