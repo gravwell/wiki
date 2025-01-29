@@ -71,18 +71,15 @@ Selecting the User Profile icon in the upper right of the screen brings up a sma
 
 ### Account
 
-Selecting "Account" will open your preferences page, shown below. Here, you can change your email address, display name, or password; be sure to click "Update Account" after making changes! The "Log out all sessions" button at the bottom of the screen will kick *all* active sessions for your account, across all client machines.
+Selecting "Account" will open your preferences page, shown below. Here, you can change your email address, display name, or password; be sure to click the appropriate "Update" button after making changes! The "Log out" button at the bottom of the screen will kick *all* active sessions for your account, across all client machines.
 
 ![](account-prefs.png)
 
-### Interface & Appearance 
+### Security
 
-The second tab of the Preferences page, "Interface & Appearance", has options for customizing the Gravwell user interface. The "Interface theme" dropdown is of particular interest, as it selects a GUI-wide color scheme (including the ever-popular dark modes). 
+The second tab, "Security", is where you can configure Multi-Factor Authentication (MFA). Complete documentation is available on the [MFA](/configuration/mfa/mfa) page.
 
-The "Chart theme" dropdown selects different color palettes which will be used when drawing charts. The editor theme & font size options control the appearance of Gravwell's built-in text editor, which is used to create automation scripts and in a few other places.
-
-![](interface-prefs.png)
-
+(preferences)=
 ### Preferences
 
 The third tab, "Preferences", allows you to change some default behaviors of Gravwell.
@@ -91,11 +88,25 @@ The third tab, "Preferences", allows you to change some default behaviors of Gra
 
 The "Home Page" dropdown menu selects which page will be displayed after logging in or clicking the Gravwell icon next to the main menu. By default, the new search page is shown, but you can chose to be shown a list of dashboards, kits, or playbooks instead.
 
+The "Left menu default visibility" dropdown sets the default visibility of the navigation menu. 
+
+The "Interface theme" dropdown is of particular interest, as it selects a GUI-wide color scheme (including the ever-popular dark modes). 
+
+The "24-Hour format" toggle enables users to change the time format to 24-hour instead of the the 12-hour AM/PM format.
+
+The "Chart theme" dropdown selects different color palettes which will be used when drawing charts. 
+
+The "Point-to-point map theme" dropdown selects the color theme to use with point-to-point maps.
+
+The "Editor theme" & "Font size" options control the appearance of Gravwell's built-in text editor, which is used to create automation scripts and in a few other places.
+
 The "Search Group Visibility" option allows you to share the results of all searches with a given group; this can be a convenient way to collaborate. In the screenshot, the user has selected the group named "foo"; all members of that group will have access to the searches this user runs in the future.
 
 The "Advanced Preferences" section can be ignored by most users. Selecting "Developer mode" enables manual editing of JSON preferences (see [this page](/configuration/gui) for more information), while toggling "Experimental Features" will enable the Experimental Features section in the main menu.
 
 ### Email Server
 
-The final tab, "Email Server", is extremely important for users who intend to use Gravwell to send automated email alerts.  Complete documentation is available on the [Email Configuration](/configuration/email) page.
+The fourth tab, "Email Server", is extremely important for users who intend to use Gravwell to send automated email alerts.  Complete documentation is available on the [Email Configuration](/configuration/email) page.
 
+### Capabilities
+The last tab shows a list of granted capabilities when Capability Based Access Control is enabled. Complete documentation is available on the [CBAC](/cbac/cbac) page.

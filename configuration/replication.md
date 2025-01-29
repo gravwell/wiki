@@ -42,6 +42,12 @@ Given three indexers (192.168.100.50, 192.168.100.51, 192.168.100.52), the confi
 
 Each node specifies the other nodes in its `Peer` fields.
 
+The replication engine relies on an internal database to maintain the state of the replication system and all peers. If no `Database-Path` is defined, the system will deploy the database to a file named `replication.db` within the `Storage-Location` directory.
+
+```{attention}
+The replication database is critical to the healthy operation of the replication system. It will perform frequent file syncs and often operates in synchronous IO mode.  If your replication storage system is slow or employs transparent compression, it is recommended that the replication database be stored on a high IOP storage array.  The replication database is typically only a few MB in size, even on very large deployments.
+```
+
 ## Region Aware Deployment
 
 The Replication system can be configured to fine tune which peers an indexer is allowed to replicate data to.  By controlling replication peers, it is possible to set up availability regions where an entire region can be taken offline without losing data so long as no subsequent losses occur in the online availability zone.
@@ -105,6 +111,8 @@ Replication is controlled by the "Replication" configuration group in the gravwe
 | Peer      | Peer=10.0.0.1:9406 | Designates a remote system acting as a replication storage node.  Multiple Peers can be specified. |
 | Listen-Address | Listen-Address=10.0.0.101:9406 | Designates the address to which the replication system should bind.  Default is to listen on all addresses on TCP port 9406. |
 | Storage-Location | Storage-Location=/mnt/storage/gravwell/replication | Designates the full path to use for replication storage. |
+| Database-Path | Database-Path=/opt/gravwell/etc/replication.db | Overrides the default replication database storage location. |
+| Database-Path | Database-Path=/mnt/storage/gravwell/replication/replication.db | Optional override to specify the location of the replication DB.  If blank, a default name will be used within the `Storage-Location` directory. |
 | Max-Replicated-Data-GB | Max-Replicated-Data-GB=4096 | Designates the maximum amount of storage the replication system will consume, in this case 4TB. |
 | Replication-Secret-Override | Replication-Secret-Override=replicationsecret | Overrides the authentication token used when establishing connections to replication peers.  By default the "Control-Auth" token from the Global configuration group is used. |
 | Disable-TLS | Disable-TLS=true | Disables TLS communication between replication peers. Defaults to false (TLS enabled). |

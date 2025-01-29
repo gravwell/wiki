@@ -49,15 +49,15 @@ Here is a handy table that explains the events leading up to and after license e
 
 ## Gravwell License Types
 
-| Type                | Identifier  | Basic Features | Unlimited Ingest | Cluster | Replication | CBAC | HA Webservers | SSO | Notes                                               |
-|---------------------|-------------|:--------------:|:----------------:|:-------:|:-----------:|:----:|:-------------:|:---:|:----------------------------------------------------|
-| Free                | free        | ✅             |                  |         |             |      |               |     | Free with 2GB/day ingest, no sign-up required, non-commercial use only, never expires. |
-| Community Edition   | community   | ✅             |                  |         |             |      |               |     | Free signup with 13.9 GB/day ingest, authorized for commercial use, [free licenses with instant delivery](https://www.gravwell.io/community-edition). |
-| CE Advanced         | community   | ✅             |                  |         |             |      |               |     | Free signup with 50 GB/day ingest, authorized for commercial use, [free license](https://www.gravwell.io/community-edition-advanced) after validation.  Business email required. |
-| Pro                 | single      | ✅             |   ✅             |         |             |      |               |     | Single indexer, unlimited ingest, limited features. |
-| Enterprise          | single      | ✅             |   ✅             |         |  ✅         | ✅   |               | ✅  | Single indexer, full feature set, offline replication supported. |
-| Cluster             | cluster     | ✅             |   ✅             |  ✅     |  ✅         | ✅   |    ✅         | ✅  | Cluster deployment with online replication, distributed webservers, and full feature set. | 
-| Unlimited           | unlimited   | ✅             |   ✅             |  ✅     |  ✅         | ✅   |    ✅         | ✅  | Cluster deployment no limit on indexer count; the *go nuts* license tier. |
+| Type                | Identifier  | Basic Features | Unlimited Ingest | Cluster | Replication | CBAC | HA Webservers | SSO | AI |Notes                                               |
+|---------------------|-------------|:--------------:|:----------------:|:-------:|:-----------:|:----:|:-------------:|:---:|:--:|----------------------------------------------------|
+| Free                | free        | ✅             |                  |         |             |      |               |     |    |Free with 2GB/day ingest, no sign-up required, non-commercial use only, never expires. |
+| Community Edition   | community   | ✅             |                  |         |             |      |               |     |    |Free signup with 13.9 GB/day ingest, authorized for commercial use, [free licenses with instant delivery](https://www.gravwell.io/community-edition). |
+| CE Advanced         | community   | ✅             |                  |         |             |      |               |     |    |Free signup with 50 GB/day ingest, authorized for commercial use, [free license](https://www.gravwell.io/community-edition-advanced) after validation.  Business email required. |
+| Pro                 | single      | ✅             |   ✅             |         |             |      |               |     | ✅ |Single indexer, unlimited ingest, limited features. |
+| Enterprise          | single      | ✅             |   ✅             |         |  ✅         | ✅   |               | ✅  | ✅ |Single indexer, full feature set, offline replication supported. |
+| Cluster             | cluster     | ✅             |   ✅             |  ✅     |  ✅         | ✅   |    ✅         | ✅  | ✅ |Cluster deployment with online replication, distributed webservers, and full feature set. | 
+| Unlimited           | unlimited   | ✅             |   ✅             |  ✅     |  ✅         | ✅   |    ✅         | ✅  | ✅ |Cluster deployment no limit on indexer count; the *go nuts* license tier. |
 | Cloud               | cloud       | ✅             |                  | <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/> | <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/>  | ✅   | <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/>  | ✅  | ✅  | Gravwell managed cloud deployment, opaque infrastructure with contract defined ingest. |
 
 
