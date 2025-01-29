@@ -1,0 +1,1 @@
+Go,https://go.dev/LICENSE,BSD-3-Clause
