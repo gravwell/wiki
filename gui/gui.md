@@ -79,6 +79,7 @@ Selecting "Account" will open your preferences page, shown below. Here, you can 
 
 The second tab, "Security", is where you can configure Multi-Factor Authentication (MFA). Complete documentation is available on the [MFA](/configuration/mfa/mfa) page.
 
+(preferences)=
 ### Preferences
 
 The third tab, "Preferences", allows you to change some default behaviors of Gravwell.
