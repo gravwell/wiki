@@ -10,7 +10,7 @@ Logbot AI is a beta feature and can make mistakes. Always check important inform
 
 Logbot AI is a Large Language Model (LLM) powered chat assistant that can be prompted to explain or summarize entries in a query. Logbot AI can be used to quickly understand new datasets, find inconsistencies in regular data, and explain abstract data fields.
 
-Logbot AI is currently in beta and is available through the Query Studio interface. Logbot AI becomes enabled after a query has executed.
+Logbot AI is currently in beta and is available through the Query Studio interface. When Logbot AI is enabled, the chat interface can be accessed from within the right side pane in Query Studio. After a query has been executed, Logbot AI can be sent log entries.
 
 ## Enabling Logbot AI
 
@@ -26,10 +26,14 @@ Once globally enabled, Logbot AI access can be user/group controlled via the [CB
 ## Logbot AI Overview
 
 ```{note}
-Logbot AI can only be used with the text and raw renderers.
+Logbot AI can only be sent log entries associated with text and raw renderer search results.
 ```
 
-Logbot AI is accessed in Query Studio. After a search is completed, if enabled and available, the Logbot AI button will enable, allowing you to start a conversation about the current query.
+When enabled and available, Logbot AI is accessed in Query Studio by two methods. First, you can begin or continue a converation at any time by opening the right side pane and selecting Logbot AI.
+
+![From Right Side Pane](from-pane.png)
+
+Second, after a search is completed, the Logbot AI button will enable, allowing you to send log entries and start a new converation.
 
 ![AI Button](button.png)
 
