@@ -21,6 +21,7 @@ These are the basic SSO configuration parameters:
 * `Gravwell-Server-URL` (required): specifies the URL to which users will be redirected once the SSO server has authenticated them. This should be the user-facing hostname or IP address of your Gravwell server.
 * `Provider-Metadata-URL` (required): specifies the URL of the SSO server's XML metadata. The path shown above (`/FederationMetadata/2007-06/FederationMetadata.xml`) should work for AD FS servers, but may need to be adjusted for other SSO providers.
 * `Insecure-Skip-TLS-Verify` [default: false]: if set to true, this parameter instructs Gravwell to ignore invalid TLS certificates when communicating with the SSO server. Set this option with care!
+* `Enable-Verbose-Logging` [default: false]: if set to true, Gravwell will emit additional information about SSO authentication every time a user logs in. This may be helpful if you are having trouble with your SSO configuration; see [the section on querying SSO logs](sso_logs) for more tips.
 
 The following are more advanced parameters which may need to be adjusted based on your SSO provider. The defaults are suitable for Microsoft AD FS servers.
 
@@ -162,3 +163,40 @@ Clicking it will take you to the Windows server's AD FS authentication page. Aut
 ![](sso-page.png)
 
 Once you click Sign In, you should be taken back to the Gravwell UI, this time logged in as the appropriate user. 
+
+(sso_logs)=
+## SSO Logs
+
+Information about SSO logins is logged to the `gravwell` tag, with a `MsgID` field containing "sso.go":
+
+```
+tag=gravwell syslog MsgID~sso.go
+```
+
+Each incoming SAML request is assigned a random transaction ID, which can be useful if you want to filter down to just the logs relating to a specific login attempt:
+
+```
+tag=gravwell syslog MsgID~sso.go transaction==1234567
+```
+
+The quickest way to identify potential problems is often by looking for the presence of the `error` field:
+
+```
+tag=gravwell syslog -s MsgID~sso.go error
+```
+
+If you are having trouble with group mappings, look for the following strings in the `Message` field of your logs:
+
+```
+"Couldn't initialize SSO group"
+"Couldn't add user to SSO group"
+"Created group via SAML"
+"added user to SSO group"
+"Removing user from group due to SSO auth"
+"found group mapping for SAML-provided group ID"
+"no group mapping for SAML-provided group ID"
+```
+
+```{note}
+Some logs are commonplace and are suppressed unless the `Enable-Verbose-Logging` configuration parameter is set; it's very helpful to turn on that parameter if you are debugging SSO problems.
+```
