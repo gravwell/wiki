@@ -7,7 +7,7 @@ The throttle node can operate in *basic* mode, where it allows execution exactly
 ## Configuration
 
 * `Duration`, required: how long to wait between executions. The node will block any downstream nodes from executing if it has been less than Duration since the last time it allowed execution.
-* `Keys`, optional: a list of variables to use as keys. The contents of the specified variables will be checked at run time; execution will only be allowed to continue if that particular set of values has *not* been seen in the specified duration.
+* `Keys`, optional: a list of variables to use as keys. The contents of the specified variables will be checked at run time; execution will only be allowed to continue if that particular set of values has *not* been seen in the specified duration. Any variables which do not exist in the payload will be ignored.
 
 ## Output
 
@@ -100,3 +100,16 @@ And the [Mattermost Message](mattermost) node sends the results to a Mattermost 
 Note that there are two separate messages there, one for each ingester that went down. If another ingester goes down -- either a different type of ingester, like File Follower, or another Network Capture or Simple Relay ingester with a different UUID -- an alert will be sent to that effect immediately:
 
 ![](throttle-keyed-output2.png)
+
+```{note}
+If any of the specified variables do not actually exist, the Throttle node will behave as if those variables were not in the list of keys for this particular execution. This means that if you have set your keys to `foo` and `bar`, each of the following combinations of keys & values is considered unique:
+
+| `foo`   | `bar`   |
+|---------|---------|
+| "a"     | [unset] |
+| [unset] | "b"     |
+| "a"     | "b"     |
+| [unset] | [unset] |
+```
+
+
