@@ -53,14 +53,6 @@ github.com/twmb/murmur3,https://github.com/twmb/murmur3/blob/v1.1.8/LICENSE,BSD-
 github.com/ungerik/go-sysfs,https://github.com/ungerik/go-sysfs/blob/7f098ddb67a6/LICENSE,MIT
 github.com/victorspringer/http-cache,https://github.com/victorspringer/http-cache/blob/2c4f8454e6e2/LICENSE,MIT
 github.com/ziutek/telnet,https://github.com/ziutek/telnet/blob/c3b780dc415b/LICENSE,BSD-3-Clause
-go.etcd.io/bbolt,https://github.com/etcd-io/bbolt/blob/v1.3.7/LICENSE,MIT
-golang.org/x/crypto,https://cs.opensource.google/go/x/crypto/+/v0.32.0:LICENSE,BSD-3-Clause
-golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.34.0:LICENSE,BSD-3-Clause
-golang.org/x/sync/semaphore,https://cs.opensource.google/go/x/sync/+/v0.10.0:LICENSE,BSD-3-Clause
-golang.org/x/sys/unix,https://cs.opensource.google/go/x/sys/+/v0.29.0:LICENSE,BSD-3-Clause
-golang.org/x/term,https://cs.opensource.google/go/x/term/+/v0.28.0:LICENSE,BSD-3-Clause
-golang.org/x/time/rate,https://cs.opensource.google/go/x/time/+/v0.9.0:LICENSE,BSD-3-Clause
-gopkg.in/warnings.v0,https://github.com/go-warnings/warnings/blob/v0.1.2/LICENSE,BSD-2-Clause
 modernc.org/libc,https://gitlab.com/cznic/libc/-/blob/v1.55.3/LICENSE,BSD-3-Clause
 modernc.org/mathutil,https://gitlab.com/cznic/mathutil/-/blob/v1.6.0/LICENSE,BSD-3-Clause
 modernc.org/memory,https://gitlab.com/cznic/memory/-/blob/v1.8.0/LICENSE,BSD-3-Clause
