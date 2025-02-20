@@ -75,9 +75,13 @@ The following example configuration connects to two upstream indexers in a *prot
        TLS-Keyfile = /opt/gravwell/etc/key.pem
        Tags=apache
        Tags=nginx
+       Max-Past-Timestamp-Delta=48h
+       Max-Future-Timestamp-Delta=24h
 ```
 
 Ingesters in the DMZ can connect to the Federator at 192.168.220.105:4024 using TLS encryption. These ingesters are **only** allowed to send entries tagged with the `apache` and `nginx` tags. Ingesters in the business network segment can connect via cleartext to 10.0.0.121:4023 and send entries tagged `windows` and `syslog`. Any mis-tagged entries will be rejected by the Federator; acceptable entries are passed to the two indexers specified in the Global section.
+
+Any entries received on the DMZ listener with timestamps more than 48 hours in the past or 24 hours in the future will have the timestamp replaced with the current time; setting these options can be helpful when ingesters you do not control may be sending data with poorly-extracted timestamps (it is surprisingly common to receive entries timestamped 1970-01-01).
 
 ### IngestListener Configuration
 
@@ -97,6 +101,8 @@ Each `IngestListener` supports the following configuration options:
 | Key-File  | string | Path to an X509 private key file for use in TLS listeners |
 | Low-Memory-Mode | bool | Optional mode to enable lower memory usage in transport buffers (default false) |
 | Disable-Ingester-Tracking | bool | Optional mode to disable downstream ingester tracking (default false) |
+| Max-Past-Timestamp-Delta | string (duration) | Optional; if set to a valid duration (e.g. "24h"), any entries received by this listener with a timestamp more than this duration into the past will have the timestamp replaced with the current time. |
+| Max-Future-Timestamp-Delta | string (duration) | Optional; if set to a valid duration (e.g. "24h"), any entries received by this listener with a timestamp more than this duration into the future will have the timestamp replaced with the current time. |
 
 The `Low-Memory-Mode` and `Disable-Ingester-Tracking` options are useful when supporting many transient ingesters or when you expect many hundreds or thousands of ingesters to connect.  The Gravwell ingest system is designed to be low latency and high throughput, which incurs some additional memory overhead as we allocate larger read buffers. The larger read buffers may make it difficult to support many ingesters, so these options allow you to reduce ingest overhead at the expense of potentially slower ingest rates and the loss of ingester config tracking.
 
