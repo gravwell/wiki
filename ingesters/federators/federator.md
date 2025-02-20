@@ -79,6 +79,7 @@ The following example configuration connects to two upstream indexers in a *prot
 
 Ingesters in the DMZ can connect to the Federator at 192.168.220.105:4024 using TLS encryption. These ingesters are **only** allowed to send entries tagged with the `apache` and `nginx` tags. Ingesters in the business network segment can connect via cleartext to 10.0.0.121:4023 and send entries tagged `windows` and `syslog`. Any mis-tagged entries will be rejected by the Federator; acceptable entries are passed to the two indexers specified in the Global section.
 
+(ingest-listener-config)=
 ### IngestListener Configuration
 
 An `IngestListener` can be configured to listen on any combination of cleartext connections, TLS connections, or Unix named pipe connections.  Each listener must contain at least one `listener` and may only define a single instance of any listener type; this means a single `IngestListener` cannot listen on multiple cleartext connections.  To enable multiple listeners of the same type, define multiple `IngestListener` blocks.
