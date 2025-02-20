@@ -83,6 +83,7 @@ Ingesters in the DMZ can connect to the Federator at 192.168.220.105:4024 using 
 
 Any entries received on the DMZ listener with timestamps more than 48 hours in the past or 24 hours in the future will have the timestamp replaced with the current time; setting these options can be helpful when ingesters you do not control may be sending data with poorly-extracted timestamps (it is surprisingly common to receive entries timestamped 1970-01-01).
 
+(ingest-listener-config)=
 ### IngestListener Configuration
 
 An `IngestListener` can be configured to listen on any combination of cleartext connections, TLS connections, or Unix named pipe connections.  Each listener must contain at least one `listener` and may only define a single instance of any listener type; this means a single `IngestListener` cannot listen on multiple cleartext connections.  To enable multiple listeners of the same type, define multiple `IngestListener` blocks.

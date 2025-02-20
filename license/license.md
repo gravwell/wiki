@@ -78,7 +78,7 @@ Please consult the following table for advice on resolving Free edition availabi
 | Message                          | Fix                                                                                                 |
 | -------------------------------- | --------------------------------------------------------------------------------------------------- |
 | `Overwatch enabled`              | Ensure you're not running an [Overwatch webserver](#gravwell-overwatch)                             |
-| `<N> Remote-Indexers configured` | Ensure your `gravwell.conf` has no more than one [remote indexer configured](remote-indexers-conig) |
+| `<N> Remote-Indexers configured` | Ensure your `gravwell.conf` has no more than one [remote indexer configured](remote-indexers-config) |
 | `CBAC enabled`                   | Ensure `Enable-CBAC` is not set in your `gravwell.conf` ([CBAC docs](#enabling-cbac))               |
 | `Remote Datastore enabled`       | Ensure `Datastore` is not set in your `gravwell.conf` ([Datastore Server docs](#datastore_server))  |
 | `Replication configured`         | Ensure your `gravwell.conf` does not have a [replication section](#data-replication)                |
