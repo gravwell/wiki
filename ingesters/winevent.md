@@ -49,7 +49,7 @@ Download the Gravwell Windows Events installer:
 
 | Ingester Name | Installer    | More Info |
 | :------------ | :----------- | :-------- |
-| Windows Events | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.7.3/installers/gravwell_win_events_5.7.3.4.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">516a47e27f1d0c4d954e9213a620a3cfef8ec8d7ffc2111121792c3c8d3e5d40</span></code>'>(SHA256)</a> | [Documentation](/ingesters/winevent) |
+| Windows Events | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.7.4/installers/gravwell_win_events_5.7.4.1.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">767fcc3606d2b9d63141dfa6404cab40731102ffb2beac3d2b15f6aee8522850</span></code>'>(SHA256)</a> | [Documentation](/ingesters/winevent) |
 
 Run the .msi installation wizard to install the Gravwell events service.  On first installation the installation wizard will prompt to configure the indexer endpoint and ingest secret.  Subsequent installations and/or upgrades will identify a resident configuration file and will not prompt.
 
