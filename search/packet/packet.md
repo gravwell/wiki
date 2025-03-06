@@ -27,19 +27,20 @@ Some field modules allow flexible selection where it is desirable to filter on a
 
 The packet processor supports submodules for breaking out specific fields in a packet. Each submodule and field supports a set of operators that allow the packet processor to also filter events based on the subfields.  The following sub modules are available:
 
-| Submodule | Description |
-|-----------|-------------|
-| eth | Ethernet frames |
-| ipv4 | IP Version 4 packets |
-| ipv6 | IP Version 6 packets |
-| tcp | TCP packets |
-| udp | UDP packets |
-| icmpv4 | ICMP packets |
-| dot1q | VLAN tagged frames |
-| dot11 | 802.11 Wireless packets |
-| dot11info | 802.11 information elements |
-| modbus | modbus/TCP packets |
-| MPLS | Multi-protocol Label Switching |
+| Submodule | Description                    |
+|-----------|--------------------------------|
+| eth       | Ethernet frames                |
+| ipv4      | IP Version 4 packets           |
+| ipv6      | IP Version 6 packets           |
+| tcp       | TCP packets                    |
+| udp       | UDP packets                    |
+| icmpv4    | ICMP packets                   |
+| icmpv6    | ICMPv6 packages                |
+| dot1q     | VLAN tagged frames             |
+| dot11     | 802.11 Wireless packets        |
+| dot11info | 802.11 information elements    |
+| modbus    | modbus/TCP packets             |
+| MPLS      | Multi-protocol Label Switching |
 
 ## Renaming Extractions
 
