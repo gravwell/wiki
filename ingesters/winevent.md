@@ -1,12 +1,36 @@
 # Windows Event Service
 
-The Gravwell Windows events ingester runs as a service on a Windows machine and sends Windows events to the Gravwell indexer.  The ingester consumes from the `System`, `Application`, `Setup`, and `Security` channels by default.  Each channel can be configured to consume from a specific set of events or providers.
+The Gravwell Windows events ingester runs as a service on a Windows machine and sends Windows events to the Gravwell indexer.  The ingester consumes from the `System`, `Application`, `Setup`, and `Security` channels in the default configuration.  Each channel can be configured to consume from a specific set of events or providers.
 
 ## Basic Configuration
 
 The Windows Event ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, the Windows Event ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
 
-## EventChannel Examples
+### Global Options
+
+In addition to the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters), the Windows Event ingester has a few additional global configuration options:
+
+* `Bookmark-Location`: The ingester uses a 'bookmark' file to keep track of where it is in event channels between runs. This file is normally placed in the ingester's Program Data directory in a file named "bookmark", but this parameter may be used to override that location.
+* `Ignore-Timestamps`: If set, the ingester will ignore any timestamps on the events it reads and instead apply the current time. This is rarely desirable!
+
+### EventChannel configuration
+
+An EventChannel maps Windows event channels to Gravwell tags and specifies any additional options desired.
+
+* `Channel`: The channel to read Windows events from, e.g. "System".
+* `Tag-Name`: The tag to which events should be sent.
+* `Max-Reachback`: By default, when an EventChannel starts for the first time, it will ingest whatever events are available on the channel -- which may be a significant amount of data! Setting `Max-Reachback=24h` instead tells the EventChannel to ignore any events older than 24 hours on first run. After the first run, the ingester will 'bookmark' the last event it saw and only read entries from that point on.
+* `Level`: Specifies the severity level of entries which should be read: verbose, information, warning, error, critical. May be specified multiple times to read multiple levels. Default is to read all levels.
+* `Provider`: Specifies that the EventChannel should only read logs from a given provider, e.g. "Windows System". May be specified multiple times.
+* `EventID`: Specifies that the EventChannel should only read logs with a particular numeric event ID. May be specified multiple times.
+* `Request-Size`: Number of events to request at a time, default 128, max 1024. A higher value can give higher throughput.
+* `Request-Buffer`: Sets a size in megabytes to read at a time, default 2, maximum 32. A higher value can give higher throughput.
+
+```{note}
+Once `Max-Reachback` has been defined for an EventChannel and the ingester has been started, it is not trivially possible to change your mind and reset the Max-Reachback to an older time. Your best option is to change the name of the EventChannel (e.g. `[EventChannel "system"]` becomes `[EventChannel "system-fixed"]`) and restart the ingester, but be aware that this will cause some events to be ingested twice.
+```
+
+### EventChannel Examples
 
 ```
 [EventChannel "system"]
@@ -49,7 +73,7 @@ Download the Gravwell Windows Events installer:
 
 | Ingester Name | Installer    | More Info |
 | :------------ | :----------- | :-------- |
-| Windows Events | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.7.4/installers/gravwell_win_events_5.7.4.1.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">767fcc3606d2b9d63141dfa6404cab40731102ffb2beac3d2b15f6aee8522850</span></code>'>(SHA256)</a> | [Documentation](/ingesters/winevent) |
+| Windows Events | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.7.5/installers/gravwell_win_events_5.7.5.1.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">e85871a915df90ea90edaeaff954892db55a534534e66e6dd3c9835c561b402b</span></code>'>(SHA256)</a> | [Documentation](/ingesters/winevent) |
 
 Run the .msi installation wizard to install the Gravwell events service.  On first installation the installation wizard will prompt to configure the indexer endpoint and ingest secret.  Subsequent installations and/or upgrades will identify a resident configuration file and will not prompt.
 
