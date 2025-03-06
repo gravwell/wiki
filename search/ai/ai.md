@@ -29,7 +29,7 @@ Once globally enabled, Logbot AI access can be user/group controlled via the [CB
 Logbot AI can only be sent log entries associated with text and raw renderer search results.
 ```
 
-When available and enabled, Logbot AI is accessable via the button in Query Studio. You can immediately begin talking to Logbot or launch a search and send entries to your conversation.
+When available and enabled, Logbot AI is accessible via the button in Query Studio. You can immediately begin talking to Logbot or launch a search and send entries to your conversation.
 
 ![Talk to Logbot](logbot-empty.png)
 
