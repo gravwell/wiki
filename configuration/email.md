@@ -1,6 +1,6 @@
 # Email Configuration
 
-Gravwell can be configured to send Emails via automated scripts and flows, but this requires that the system be configured with a valid SMTP configuration.
+Gravwell can be configured to send Emails via automated scripts and flows, but this requires that the system be configured with a valid SMTP configuration. There are two ways to configure SMTP: per-user, or system-wide. Per-user configurations always take precedence over the system-wide options.
 
 ## User Defined Email Configuration
 
@@ -15,7 +15,7 @@ Once the fields have been populated, click "Update Settings" to save them, then 
 
 If an email configuration is specified in a users preferences, Gravwell will use those credentials to send emails even if a shared Email configuration is available.  Gravwell will *NOT* fall back to the shared email configuration if a users email configuration fails.
 
-## Shared Email Configuration
+## System-wide Email Configuration
 
 System administrators can configure a single SMTP server for all or some subset of users.  The shared Email configuration is designed to allow a system administrator to configure a single SMTP server and then place restrictions on who can use the email relay, where emails can come from, and where they can be sent to.
 
