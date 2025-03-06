@@ -46,6 +46,7 @@ myst_enable_extensions = [
     "colon_fence",
     "fieldlist",
     "substitution",
+    "html_image",
 ]
 
 
