@@ -24,10 +24,10 @@ github.com/robfig/cron/v3,https://github.com/robfig/cron/blob/v3.0.0/LICENSE,MIT
 github.com/shirou/gopsutil,https://github.com/shirou/gopsutil/blob/v2.20.9/LICENSE,BSD-3-Clause
 github.com/tealeg/xlsx,https://github.com/tealeg/xlsx/blob/v1.0.5/LICENSE,BSD-3-Clause
 github.com/victorspringer/http-cache,https://github.com/victorspringer/http-cache/blob/2c4f8454e6e2/LICENSE,MIT
-golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.34.0:LICENSE,BSD-3-Clause
-golang.org/x/sys,https://cs.opensource.google/go/x/sys/+/v0.29.0:LICENSE,BSD-3-Clause
-golang.org/x/term,https://cs.opensource.google/go/x/term/+/v0.28.0:LICENSE,BSD-3-Clause
-golang.org/x/text,https://cs.opensource.google/go/x/text/+/v0.21.0:LICENSE,BSD-3-Clause
-golang.org/x/time/rate,https://cs.opensource.google/go/x/time/+/v0.9.0:LICENSE,BSD-3-Clause
+golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.35.0:LICENSE,BSD-3-Clause
+golang.org/x/sys,https://cs.opensource.google/go/x/sys/+/v0.30.0:LICENSE,BSD-3-Clause
+golang.org/x/term,https://cs.opensource.google/go/x/term/+/v0.29.0:LICENSE,BSD-3-Clause
+golang.org/x/text,https://cs.opensource.google/go/x/text/+/v0.22.0:LICENSE,BSD-3-Clause
+golang.org/x/time/rate,https://cs.opensource.google/go/x/time/+/v0.10.0:LICENSE,BSD-3-Clause
 gopkg.in/warnings.v0,https://github.com/go-warnings/warnings/blob/v0.1.2/LICENSE,BSD-2-Clause
 Go,https://go.dev/LICENSE,BSD-3-Clause
