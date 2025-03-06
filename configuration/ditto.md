@@ -33,6 +33,8 @@ Here's an example of a simple target definition:
 ```
 ```{note}
 If you are cloning data across a public network or any metered network connection we highly suggest enabling transport compression by setting `Enable-Compression=true` inside the `Ditto-Target` configuration block.
+```
+
 ## Well Configuration
 
 To enable Ditto duplication for a given well, add the `Ditto-Target` parameter to the well's config block, e.g.:
@@ -74,5 +76,7 @@ Each message contains statistics about data transferred for a particular well to
 You can monitor your transfer rates with a query like this:
 
 ```
-tag=gravwell syslog Message=="ditto client stats" Bps well "target-name" as target | stats mean(Bps) by well target | chart mean by well target
+tag=gravwell syslog Message=="ditto client stats" Bps!="0" well "target-name" as target 
+| stats mean(Bps) by well target 
+| chart mean by well target
 ```
