@@ -43,7 +43,7 @@ You'll then have the option to ask Logbot to either "explain" or "summarize" the
 
 Logbot AI will begin streaming information as a conversation. This conversation is interactive, and you can ask Logbot AI additional questions. Logbot AI maintains the context of the current conversation when asking it additional questions, up to the word limit (see below).
 
-![Conversation](conversation.png)
+<img src="/_images/conversation.png" alt="Conversation" style="max-width: 500px;">
 
 The conversation can be erased or downloaded, and additional entries can be attached to the conversation using the menu buttons at the bottom of the conversation window.
 
