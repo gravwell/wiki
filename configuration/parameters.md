@@ -540,7 +540,7 @@ Description:	If set to true, this parameter prevents the web UI from displaying 
 
 ### **Indexer-Storage-Notification-Threshold**
 Applies to:		Indexer  
-Default Value:		`90`  
+Default Value:		`85`  
 Example:		`Indexer-Storage-Notification-Threshold=98`  
 Description:		A percentage value which determines when to warn about storage usage.  If the value is above 0, a notification will be thrown whenever a storage device that is used by the Indexer uses more than the specified storage percentage.  The value MUST be between 0 and 99.
 

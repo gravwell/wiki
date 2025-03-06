@@ -29,21 +29,21 @@ Once globally enabled, Logbot AI access can be user/group controlled via the [CB
 Logbot AI can only be sent log entries associated with text and raw renderer search results.
 ```
 
-When enabled and available, Logbot AI is accessed in Query Studio by two methods. First, you can begin or continue a converation at any time by opening the right side pane and selecting Logbot AI.
+When available and enabled, Logbot AI is accessible via the button in Query Studio. You can immediately begin talking to Logbot or launch a search and send entries to your conversation.
 
-![From Right Side Pane](from-pane.png)
+![Talk to Logbot](logbot-empty.png)
 
-Second, after a search is completed, the Logbot AI button will enable, allowing you to send log entries and start a new converation.
+Entries can be right clicked to choose "Send to Logbot" or the "attach entries" button in the conversation view can be used for the same purpose.
 
-![AI Button](button.png)
+![Begin Attaching Entries](logbot-attaching.png)
 
-Logbot AI will prompt you to select one or more entries to explain or summarize. Click "Explain entries" (or Summarize) to open a conversation with Logbot.
+You'll then have the option to ask Logbot to either "explain" or "summarize" the selected entries.
 
 ![Select Entries](select.png)
 
-Logbot AI will begin streaming information as a conversation in a new window. This conversation is interactive, and you can ask Logbot AI additional questions. Logbot AI maintains the context of the current conversation when asking it additional questions, up to the word limit (see below).
+Logbot AI will begin streaming information as a conversation. This conversation is interactive, and you can ask Logbot AI additional questions. Logbot AI maintains the context of the current conversation when asking it additional questions, up to the word limit (see below).
 
-![Conversation](conversation.png)
+<img src="conversation.png" alt="Conversation" width="500px">
 
 The conversation can be erased or downloaded, and additional entries can be attached to the conversation using the menu buttons at the bottom of the conversation window.
 
