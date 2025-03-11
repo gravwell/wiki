@@ -35,7 +35,7 @@ The packet processor supports submodules for breaking out specific fields in a p
 | tcp       | TCP packets                    |
 | udp       | UDP packets                    |
 | icmpv4    | ICMP packets                   |
-| icmpv6    | ICMPv6 packages                |
+| icmpv6    | ICMPv6 packets                |
 | dot1q     | VLAN tagged frames             |
 | dot11     | 802.11 Wireless packets        |
 | dot11info | 802.11 information elements    |
