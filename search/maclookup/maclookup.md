@@ -4,15 +4,13 @@ The maclookup module uses a custom MAC prefix database to extract Manufacturer, 
 
 ## Setting Up Databases
 
-Before using the maclookup module, you must have the mac_prefixes database as a Resource in your Gravwell instance. The mac_prefixes resource is included in the Gravwell Network Enrichment Kit, which you can find by browsing the available kits in the Kits section of the UI.
-
-By default, the maclookup module expects the macdb database to be in a resource named "macdb". This will allow you to do extractions without specifying the resource name explicitly.
+Before using the maclookup module, you must have a database of MAC prefixes in a resource on the system. By default, the maclookup module expects the macdb database to be in a resource named "mac_prefixes". This will allow you to do extractions without specifying the resource name explicitly. A `mac_prefixes` resource is included in the Gravwell Network Enrichment Kit, which you can find by browsing the available kits in the Kits section of the UI, or you can manually upload the database maintained by the IEEE at [http://standards-oui.ieee.org/oui.txt](http://standards-oui.ieee.org/oui.txt).
 
 ![](maclookup.png)
 
 ## Supported Options
 
-* `-r <arg>`: The “-r” option specifies the resource name or UUID which contains a macdb database.  If no "-r" is specified the geoip module uses the default "macdb" resource name.
+* `-r <arg>`: The “-r” option specifies the resource name or UUID which contains a macdb database.  If no "-r" is specified, the geoip module uses the default "mac_prefixes" resource name.
 * `-s`: The “-s” option specifies that the maclookup module should operate in strict mode.  In strict mode, if any of the specified operators cannot resolve a MAC, the entry is dropped.
 
 ## Processing Operators
