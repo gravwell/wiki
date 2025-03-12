@@ -2,7 +2,7 @@
 
 Gravwell can be configured to send Emails via automated scripts and flows, but this requires that the system be configured with a valid SMTP configuration. There are two ways to configure SMTP: per-user or system-wide. Per-user configurations always take precedence over the system-wide options.
 
-## User Defined Email Configuration
+## User-Defined Email Configuration
 
 Users can configure their own SMTP server by first visiting their <a href="/configuration/gui.html#user-preferences">User Preferences</a> page and then clicking the "Email Server" tab.
 
