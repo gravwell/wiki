@@ -13,7 +13,7 @@ The fields are mostly self-explanatory: "Server" is an SMTP server, "Port" is th
 
 Once the fields have been populated, click "Update Settings" to save them, then click "Test Configuration" to send a test email.
 
-If an email configuration is specified in a users preferences, Gravwell will use those credentials to send emails even if a shared Email configuration is available.  Gravwell will *NOT* fall back to the shared email configuration if a users email configuration fails.
+If an email configuration is specified in a user's preferences, Gravwell will use those credentials to send emails even if a system-wide email configuration is available.  Gravwell will *NOT* fall back to the system-wide email configuration if a user's email configuration fails.
 
 ## System-wide Email Configuration
 
