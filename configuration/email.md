@@ -1,6 +1,6 @@
 # Email Configuration
 
-Gravwell can be configured to send Emails via automated scripts and flows, but this requires that the system be configured with a valid SMTP configuration. There are two ways to configure SMTP: per-user or system-wide. Per-user configurations always take precedence over the system-wide options.
+Gravwell can be configured to send Emails via automated scripts and flows, but this requires that the system be configured with a valid SMTP configuration. There are two ways to configure SMTP: user-defined or system-wide. User-defined configurations always take precedence over the system-wide options.
 
 ## User-Defined Email Configuration
 
