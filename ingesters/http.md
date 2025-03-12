@@ -113,8 +113,8 @@ Listener configuration blocks (except the Amazon-Firehose-Listener) support the 
 | Tag-Name                  | string       | YES      |                              | Tag assigned to entries received by the endpoint. |
 | Multiline                 | boolean      | NO       | false                        | Treat request body as a multiline file and process each line as an individual entry. |
 | Ignore-Timestamps         | boolean      | NO       | false                        | Do not extract or process timestamps, use current time. |
-| Assume-Local-Timzeone     | boolean      | NO       | false                        | Assume local timezone on timestamps without a specified timezone. |
-| Timzeone-Override         | string       | NO       |  | Specify a specific timezone to attach to entries if the derived timestamp does not contain a timezone. |
+| Assume-Local-Timezone     | boolean      | NO       | false                        | Assume local timezone on timestamps without a specified timezone. |
+| Timezone-Override         | string       | NO       |  | Specify a specific timezone to attach to entries if the derived timestamp does not contain a timezone. |
 | Timestamp-Format-Override | string       | NO       |    | Force timestamp processing to look for a specific timestamp format. |
 | AuthType                  | string       | NO       | none | Specify authentication type (basic, jwt, cookie, etc...). |
 | Username                  | string       | NO       |      | Username credential, required when using cookie, basic, or JWT based authentication methods. |
