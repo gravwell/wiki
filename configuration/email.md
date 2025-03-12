@@ -8,8 +8,11 @@ Users can configure their own SMTP server by first visiting their <a href="/conf
 
 ![](email-prefs.png)
 
+The fields are mostly self-explanatory: "Server" is an SMTP server, "Port" is the port to use for SMTP, "Username" and "Password" authenticate to that server. Setting "Use TLS" will cause Gravwell to send a STARTTLS command before authenticating. The "Disable TLS certificate validation" option is provided in case the server is using self-signed certificates; be cautious enabling this!
 
-The fields are mostly self-explanatory: "Server" is an SMTP server, "Port" is the port to use for SMTP, "Username" and "Password" authenticate to that server. "Use TLS" should be enabled if the server expects TLS connections. The "Disable TLS certificate validation" option is provided in case the server is using self-signed certificates; be cautious enabling this!
+```{note}
+If your email server doesn't require authentication, leave `Username` and `Password` blank.
+```
 
 Once the fields have been populated, click "Update Settings" to save them, then click "Test Configuration" to send a test email.
 
@@ -45,14 +48,14 @@ At a minimum, the `[Shared-Mail-Config]` requires the following SMTP parameters:
 
 * `Server`: FQDN of an SMTP server.
 * `Port`: SMTP server port.
-* `Username`: Username used for authenticating with the SMTP server.
-* `Password`: Password used for authenticating with the SMTP server.
 
 ### Optional Parameters
 
 The shared email configuration also has several optional parameters which can be used to enforce connection behavior, sender addresses, receiver addresses, and Gravwell group access.  The following are optional parameters:
 
-* `UseTLS`: Boolean indicating that StartTLS should be used.  Defaults to false.
+* `Username`: Username used for authenticating with the SMTP server. If unset, Gravwell attempts to send email unauthenticated.
+* `Password`: Password used for authenticating with the SMTP server. If unset, Gravwell attempts to send email unauthenticated.
+* `UseTLS`: Boolean indicating that a STARTTLS command should be issued before authenticating.  Defaults to false.
 * `InsecureSkipVerify`: Boolean indicating that we should ignore TLS certificate validation errors.  Defaults to false.
 * `Allowed-Group`: Name of a Gravwell group that is allowed to use the shared email configuration.  Multiple groups can be specified.
 * `Force-From`: Email address override for all sent mail.  The `Force-From` address will always be applied regardless of what users specify.
