@@ -55,7 +55,7 @@ The shared email configuration also has several optional parameters which can be
 
 * `Username`: Username used for authenticating with the SMTP server. If unset, Gravwell attempts to send email unauthenticated.
 * `Password`: Password used for authenticating with the SMTP server. If unset, Gravwell attempts to send email unauthenticated.
-* `UseTLS`: Boolean indicating that a STARTTLS command should be issued before authenticating.  Defaults to false.
+* `UseTLS`: Boolean indicating that a STARTTLS command should be issued before authenticating.  Note that this is different from SMTPS (SMTP wrapped in TLS), which is a distinct service that typically runs on port 465. Defaults to false.
 * `InsecureSkipVerify`: Boolean indicating that we should ignore TLS certificate validation errors.  Defaults to false.
 * `Allowed-Group`: Name of a Gravwell group that is allowed to use the shared email configuration.  Multiple groups can be specified.
 * `Force-From`: Email address override for all sent mail.  The `Force-From` address will always be applied regardless of what users specify.
