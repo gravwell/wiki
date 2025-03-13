@@ -32,6 +32,131 @@ However, if you want to filter "foo" in the example above to "my value" or "my o
 tag=gravwell json foo | eval ( foo == "my value" || foo == "my other value" )
 ```
 
+## Examples
+
+### Example: Filtering with multiple possible values
+
+This example uses `eval` to act as a simple filter. It uses the `in()` function to filter down to entries that have "indexer" or "webserver" as the Appname in a syslog entry.
+
+```
+tag=gravwell
+  syslog Appname
+| eval in(Appname, "indexer", webserver")
+| table
+```
+
+### Example: JSON encoding
+
+This example creates a JSON object of several EVs and stores the object in another EV.
+
+```
+tag=gravwell
+syslog Appname Hostname Message
+| eval
+  output = "{}"; // an empty JSON object
+  output = json_set(output, "Appname", Appname);
+  output = json_set(output, "Hostname", Hostname);
+  output = json_set(output, "Message", Message);
+| table
+```
+
+### Example: Loops
+
+This example calculates the exponential function of 5 (e⁵) by implementing the Taylor series expansion of e. It has nothing to do with the source entry, but does illustrate loops and flow control syntax in eval.
+
+```
+tag=gravwell limit 1
+
+| eval
+
+// Taylor series of eᶻ is ∑zⁿ/n! from 0 to ∞
+
+z = 5.0; // exponent
+ez = 0.0; // starting value
+
+// An int64 cannot hold a value much larger than 20!, so we are forced 
+// to stop at 20 iterations. That still gives us and accurate result to 
+// about 5 decimal places. 
+for (i = 0; i < 20; i++) {
+    // zⁿ
+    n = math_pow(z,i);
+
+    // n!
+    // eval doesn't have a factorial function built-in, 
+    // so we implement it with a for loop here. There are 
+    // much better ways to do this, but we want to 
+    // illustrate flow control and nested loops.
+    if (n == 0 || n == 1) {
+        d = 1;
+    } else {
+        d = 1;
+        for (j = 2; j <= i; j++) {
+            d = d*j;
+        }
+    }
+
+    // next value of z
+    zn = n/d;
+
+    ez = ez + zn;
+}
+| eval result = printf("e⁵ == %v", ez);
+| table result
+```
+
+### Example: Calculating leg currents of a 3-phase PDU
+
+This example calculates the individual leg currents of a 3-phase PDU, where the PDU logs entries, one phase at per entry, to Gravwell. It illustrates the use of a persistent map, comments, and math functions.
+
+```
+tag=pdus 
+  ax phase value
+| eval
+
+// THIS IS FOR 8.6kVA 3-phase PDUs. Other ratings need changes.
+
+map linepairs;
+
+Vnominal = 208.0;
+I = value/Vnominal;
+
+// save the phase currents in our map
+linepairs[phase] = I;
+
+// grab the last known currents for the other phases
+if ( phase == "L1-L2" ) {
+    l1l2 = I;
+    l2l3 = linepairs["L2-L3"];
+    l3l1 = linepairs["L3-L1"];
+} else if ( phase == "L2-L3" ) {
+    l1l2 = linepairs["L1-L2"];
+    l2l3 = I;
+    l3l1 = linepairs["L3-L1"];
+} else if ( phase == "L3-L1" ) {
+    l1l2 = linepairs["L1-L2"];
+    l2l3 = linepairs["L2-L3"];
+    l3l1 = I;
+}
+
+// calculate leg currents
+ϕr1 = -0.5;   // cos(120)
+ϕj1 = 0.866;  // sin(120)
+ϕr2 = -0.5;   // cos(-120)
+ϕj2 = -0.866; // sin(-120)
+
+// leg current is the magnitude of the phasor difference of the leg pairs on this leg:
+// leg1 = | L1L2∠120 - L3L1∠-120 |
+Ileg1 = math_sqrt( math_pow( (ϕr1*l1l2 - ϕr2*l3l1), 2 ) + math_pow( (ϕj1*l1l2 - ϕj2*l3l1) , 2 ) );
+Ileg2 = math_sqrt( math_pow( (ϕr1*l2l3 - ϕr2*l1l2), 2 ) + math_pow( (ϕj1*l2l3 - ϕj2*l1l2) , 2 ) );
+Ileg3 = math_sqrt( math_pow( (ϕr1*l3l1 - ϕr2*l2l3), 2 ) + math_pow( (ϕj1*l3l1 - ϕj2*l2l3) , 2 ) );
+
+Imax = 24.0;
+
+Ptotal = (l1l2 + l2l3 + l3l1)*Vnominal; 
+
+| chart Ileg1 Ileg2 Ileg3 Imax Ptotal
+```
+
 ## Lexical elements
 
 ### Identifiers
