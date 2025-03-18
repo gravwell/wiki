@@ -128,6 +128,8 @@ Most of the core ingesters support a common set of global configuration paramete
 * Log-File
 * Source-Override
 * Log-Source-Override
+* Timestamp-Max-Future-Delta
+* Timestamp-Max-Past-Delta
 
 ### Ingest-Secret
 
@@ -437,6 +439,7 @@ Most ingesters attempt to apply a timestamp to each entry by extracting a timest
 * `Assume-Local-Timezone` (boolean): By default, if a timestamp does not include a time zone the ingester will assume it is a UTC timestamp. Setting `Assume-Local-Timezone=true` will make the ingester instead assume whatever the local computer's timezone is. This is mutually exclusive with the Timezone-Override option.
 * `Timezone-Override` (string): Setting `Timezone-Override` tells the ingester that timestamps which don't include a timezone should be parsed in the specified timezone. Thus `Timezone-Override=US/Pacific` would tell the ingester to treat incoming timestamps as if they were in US Pacific time. See [this page](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) for a complete list of acceptable timezone names (in the 'TZ database name' column). Mutually exclusive with Assume-Local-Timezone.
 * `Timestamp-Format-Override` (string): This parameter tells the ingester to look for a specific timestamp format in the data, e.g. `Timestamp-Format-Override="RFC822"`. Refer to [the timegrinder documentation](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder) for a full list of possible overrides, with examples.
+* `Timestamp-Max-Past-Delta`, `Timestamp-Max-Future-Delta` (string): If set to a valid duration (e.g. "24h"), defines a maximum duration into the past or future for timestamps parsed by timegrinder. Timestamps outside that window are ignored; timegrinder will attempt to find another valid timestamp within the allowable window, otherwise the entry will receive the current timestamp. This can be particularly useful when entries contain multiple timestamps in the same format and the "wrong" one can appear first, e.g. `{"CreationTime": "2019-03-01T12:34:56Z", "EventTime": "2025-02-20T11:10:22Z"}`.
 
 The Kinesis and Google Pub/Sub ingesters do not provide the `Ignore-Timestamps` option. Kinesis and Pub/Sub include an arrival timestamp with every entry; by default, the ingesters will use that as the Gravwell timestamp. If `Parse-Time=true` is specified in the data consumer definition, the ingester will instead attempt to extract a timestamp from the message body. See these ingesters' respective sections for additional information.
 
