@@ -8,7 +8,7 @@ Users can configure their own SMTP server by first visiting their <a href="/conf
 
 ![](email-prefs.png)
 
-The fields are mostly self-explanatory: "Server" is an SMTP server, "Port" is the port to use for SMTP, "Username" and "Password" authenticate to that server. Setting "Use TLS" will cause Gravwell to send a STARTTLS command before authenticating. The "Disable TLS certificate validation" option is provided in case the server is using self-signed certificates; be cautious enabling this!
+The fields are mostly self-explanatory: "Server" is an SMTP server, "Port" is the port to use for SMTP, "Username" and "Password" authenticate to that server. Setting "Use STARTTLS command to negotiate a secure connection" will cause Gravwell to send a STARTTLS command before authenticating. The "Disable TLS certificate validation" option is provided in case the server is using self-signed certificates; be cautious enabling this!
 
 ```{note}
 If your email server doesn't require authentication, leave `Username` and `Password` blank.
