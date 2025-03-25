@@ -40,8 +40,8 @@ Hosted cloud deployments are always IPv6-enabled, and we recommend taking advant
 Gravwell will deploy two types of ingesters in the cloud environment for your use:
 
 * The [HTTP Ingester](/ingesters/http), with authentication enabled.
-* The [Federator](/ingesters/federator).
+* The [Federator](/ingesters/federators/federator).
 
 Many devices and software packages can forward logs to a Splunk-compatible HTTP endpoint, meaning you can integrate directly with the hosted HTTP ingester.
 
-For other data sources, such as syslog, you'll need to deploy an appropriate [ingester](/ingesters/ingesters) locally and configure it to send its data to the hosted [Federator](/ingesters/federator).
+For other data sources, such as syslog, you'll need to deploy an appropriate [ingester](/ingesters/ingesters) locally and configure it to send its data to the hosted [Federator](/ingesters/federators/federator).
