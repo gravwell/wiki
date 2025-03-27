@@ -35,3 +35,7 @@ Connected Ingesters:
 The output in Mattermost looks like this:
 
 ![](mattermost-output.png)
+
+```{note}
+Mattermost enforces a maximum payload size of approximately 8KB for webhooks.  The Mattermost node will truncate the payload to ensure that the webhook is successfully delivered and emit a debug message stating that it did so.
+```
