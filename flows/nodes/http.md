@@ -4,7 +4,7 @@ This node can perform HTTP requests with considerable flexibility. It can send i
 
 ## Configuration
 
-* `URL`, required: The URL for the request. HTTP and HTTPS are both supported.
+* `URL`, required: The URL for the request. HTTP and HTTPS are both supported as well as referencing secrets.
 * `Method`, required: The HTTP method to be used.
 * `Body`: If set, the contents of the Body config option will be sent in the body of the HTTP request.
 * `Request Timeout`: If set, the request will time out after this many seconds.
