@@ -144,3 +144,12 @@ Configure your Gravwell indexers as above, setting the `Cloud-Archive` stanza to
 ```
 
 If you disabled TLS on the server, set `Insecure-Disable-TLS=true` in the `Cloud-Archive` stanza. If you are using self-signed certs, set `Insecure-Skip-TLS-Verify=true`.
+
+These are the available parameters for the `Cloud-Archive` configuration block.
+
+* `Archive-Server` (required): specifies the destination host and port for the Cloud-Archive server.
+* `Archive-Shared-Secret` (required): specifies the user secret/password for authentication to the Cloud-Archive server.
+* `Archive-User-ID` (optional): specifies the user id for authentication to the Cloud-Archive server, defaults to zero.
+* `Insecure-Skip-TLS-Verify` (optional): specifies that the client will ignore invalid TLS certificates when connecting to the Cloud-Archive server, defaults to false.
+* `Insecure-Disable-TLS` (optional): specifies that the client will use a cleartext connection when communicating with the Cloud-Archive server, defaults to false.
+
