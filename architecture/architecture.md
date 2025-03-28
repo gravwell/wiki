@@ -37,6 +37,7 @@ Gravwell Metrics and Crash Reporting </metrics>
 Capability Based Access Control (CBAC) </cbac/cbac>
 Common Problems & Caveats </configuration/caveats>
 Internal Logging and the Gravwell Tag </internal>
+Cloud Customers </configuration/cloud>
 ```
 
 ```{toctree}

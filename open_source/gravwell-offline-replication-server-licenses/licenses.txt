@@ -4,7 +4,7 @@ github.com/crewjam/rfc5424,https://github.com/crewjam/rfc5424/blob/v0.1.0/LICENS
 github.com/dchest/siphash,https://github.com/dchest/siphash/blob/v1.2.3/LICENSE,CC0-1.0
 github.com/denisbrodbeck/machineid,https://github.com/denisbrodbeck/machineid/blob/v1.0.1/LICENSE.md,MIT
 github.com/dennwc/ioctl,https://github.com/dennwc/ioctl/blob/017804252068/LICENSE,MIT
-github.com/dolmen-go/contextio,https://github.com/dolmen-go/contextio/blob/e50796217f5f/LICENSE,Apache-2.0
+github.com/dolmen-go/contextio,https://github.com/dolmen-go/contextio/blob/v1.0.0/LICENSE,Apache-2.0
 github.com/gobwas/glob,https://github.com/djfritz/glob/blob/aee51dc1d432/LICENSE,MIT
 github.com/gofrs/flock,https://github.com/gofrs/flock/blob/v0.8.0/LICENSE,BSD-3-Clause
 github.com/golang-jwt/jwt,https://github.com/golang-jwt/jwt/blob/v3.2.2/LICENSE,MIT

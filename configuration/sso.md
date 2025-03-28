@@ -22,6 +22,7 @@ These are the basic SSO configuration parameters:
 * `Provider-Metadata-URL` (required): specifies the URL of the SSO server's XML metadata. The path shown above (`/FederationMetadata/2007-06/FederationMetadata.xml`) should work for AD FS servers, but may need to be adjusted for other SSO providers.
 * `Insecure-Skip-TLS-Verify` [default: false]: if set to true, this parameter instructs Gravwell to ignore invalid TLS certificates when communicating with the SSO server. Set this option with care!
 * `Enable-Verbose-Logging` [default: false]: if set to true, Gravwell will emit additional information about SSO authentication every time a user logs in. This may be helpful if you are having trouble with your SSO configuration; see [the section on querying SSO logs](sso_logs) for more tips.
+* `Enable-Very-Large-Sessions` [default: false]: if set to true, Gravwell will enable an alternative method of storing & distributing SAML session objects. This can be useful if your IdP is sending extremely large sessions, for example if a user is a member of dozens of groups; the usual symptom of this problem is that logins enter a redirect loop before finally giving up. This is disabled by default because it is slightly more network- and memory-intensive to use this option when also using a datastore, and because most deployments do not need it.
 
 The following are more advanced parameters which may need to be adjusted based on your SSO provider. The defaults are suitable for Microsoft AD FS servers.
 
@@ -150,6 +151,10 @@ In gravwell.conf, you'll need to add a `Groups-Attribute` field (`http://schemas
 ```
 	Groups-Attribute=http://schemas.xmlsoap.org/claims/Group
 	Group-Mapping=Gravwell Users:gravwell-users
+```
+
+```{note}
+According to the Microsoft spec, the maximum number of groups allowed in a SAML token is 150.
 ```
 
 ### Test Configuration
