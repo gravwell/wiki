@@ -1,5 +1,5 @@
 github.com/crewjam/rfc5424,https://github.com/crewjam/rfc5424/blob/v0.1.0/LICENSE,BSD-2-Clause
-github.com/dolmen-go/contextio,https://github.com/dolmen-go/contextio/blob/e50796217f5f/LICENSE,Apache-2.0
+github.com/dolmen-go/contextio,https://github.com/dolmen-go/contextio/blob/v1.0.0/LICENSE,Apache-2.0
 github.com/gofrs/flock,https://github.com/gofrs/flock/blob/v0.8.0/LICENSE,BSD-3-Clause
 github.com/golang-jwt/jwt,https://github.com/golang-jwt/jwt/blob/v3.2.2/LICENSE,MIT
 github.com/google/renameio,https://github.com/google/renameio/blob/v1.0.1/LICENSE,Apache-2.0
@@ -8,9 +8,9 @@ github.com/gorilla/mux,https://github.com/gorilla/mux/blob/v1.7.3/LICENSE,BSD-3-
 github.com/hashicorp/errwrap,https://github.com/hashicorp/errwrap/blob/v1.1.0/LICENSE,MPL-2.0
 github.com/hashicorp/go-multierror,https://github.com/hashicorp/go-multierror/blob/v1.1.1/LICENSE,MPL-2.0
 github.com/jlaffaye/ftp,https://github.com/jlaffaye/ftp/blob/v0.2.0/LICENSE,ISC
-github.com/klauspost/compress/internal,https://github.com/klauspost/compress/blob/v1.18.0/LICENSE,Apache-2.0
-github.com/klauspost/compress/internal,https://github.com/klauspost/compress/blob/v1.18.0/LICENSE,BSD-3-Clause
-github.com/klauspost/compress/internal,https://github.com/klauspost/compress/blob/v1.18.0/LICENSE,MIT
+github.com/klauspost/compress,https://github.com/klauspost/compress/blob/v1.18.0/LICENSE,Apache-2.0
+github.com/klauspost/compress,https://github.com/klauspost/compress/blob/v1.18.0/LICENSE,BSD-3-Clause
+github.com/klauspost/compress,https://github.com/klauspost/compress/blob/v1.18.0/LICENSE,MIT
 github.com/klauspost/compress/s2,https://github.com/klauspost/compress/blob/v1.18.0/s2/LICENSE,BSD-3-Clause
 github.com/klauspost/compress/snappy,https://github.com/klauspost/compress/blob/v1.18.0/snappy/LICENSE,BSD-3-Clause
 github.com/shirou/gopsutil,https://github.com/shirou/gopsutil/blob/v2.20.9/LICENSE,BSD-3-Clause
