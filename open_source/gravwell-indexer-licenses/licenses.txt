@@ -12,8 +12,8 @@ github.com/dolmen-go/contextio,https://github.com/dolmen-go/contextio/blob/v1.0.
 github.com/dustin/go-humanize,https://github.com/dustin/go-humanize/blob/v1.0.1/LICENSE,MIT
 github.com/go-sql-driver/mysql,https://github.com/go-sql-driver/mysql/blob/v1.8.1/LICENSE,MPL-2.0
 github.com/gobwas/glob,https://github.com/djfritz/glob/blob/aee51dc1d432/LICENSE,MIT
-github.com/gofrs/flock,https://github.com/gofrs/flock/blob/v0.8.0/LICENSE,BSD-3-Clause
-github.com/golang-jwt/jwt,https://github.com/golang-jwt/jwt/blob/v3.2.2/LICENSE,MIT
+github.com/gofrs/flock,https://github.com/gofrs/flock/blob/v0.12.1/LICENSE,BSD-3-Clause
+github.com/golang-jwt/jwt/v4,https://github.com/golang-jwt/jwt/blob/v4.5.2/LICENSE,MIT
 github.com/golang-sql/civil,https://github.com/golang-sql/civil/blob/cb61b32ac6fe/LICENSE,Apache-2.0
 github.com/google/btree,https://github.com/google/btree/blob/v1.0.0/LICENSE,Apache-2.0
 github.com/google/go-write,https://github.com/google/go-write/blob/56629a6b2542/LICENSE,Apache-2.0
@@ -55,7 +55,7 @@ github.com/victorspringer/http-cache,https://github.com/victorspringer/http-cach
 github.com/ziutek/telnet,https://github.com/ziutek/telnet/blob/c3b780dc415b/LICENSE,BSD-3-Clause
 go.etcd.io/bbolt,https://github.com/etcd-io/bbolt/blob/v1.3.7/LICENSE,MIT
 golang.org/x/crypto,https://cs.opensource.google/go/x/crypto/+/v0.36.0:LICENSE,BSD-3-Clause
-golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.37.0:LICENSE,BSD-3-Clause
+golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.38.0:LICENSE,BSD-3-Clause
 golang.org/x/sync/semaphore,https://cs.opensource.google/go/x/sync/+/v0.12.0:LICENSE,BSD-3-Clause
 golang.org/x/sys/unix,https://cs.opensource.google/go/x/sys/+/v0.31.0:LICENSE,BSD-3-Clause
 golang.org/x/term,https://cs.opensource.google/go/x/term/+/v0.30.0:LICENSE,BSD-3-Clause
