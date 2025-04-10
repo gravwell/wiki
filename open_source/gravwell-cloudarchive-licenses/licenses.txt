@@ -1,7 +1,7 @@
 github.com/crewjam/rfc5424,https://github.com/crewjam/rfc5424/blob/v0.1.0/LICENSE,BSD-2-Clause
 github.com/dolmen-go/contextio,https://github.com/dolmen-go/contextio/blob/v1.0.0/LICENSE,Apache-2.0
-github.com/gofrs/flock,https://github.com/gofrs/flock/blob/v0.8.0/LICENSE,BSD-3-Clause
-github.com/golang-jwt/jwt,https://github.com/golang-jwt/jwt/blob/v3.2.2/LICENSE,MIT
+github.com/gofrs/flock,https://github.com/gofrs/flock/blob/v0.12.1/LICENSE,BSD-3-Clause
+github.com/golang-jwt/jwt/v4,https://github.com/golang-jwt/jwt/blob/v4.5.2/LICENSE,MIT
 github.com/google/renameio,https://github.com/google/renameio/blob/v1.0.1/LICENSE,Apache-2.0
 github.com/google/uuid,https://github.com/google/uuid/blob/v1.6.0/LICENSE,BSD-3-Clause
 github.com/gorilla/mux,https://github.com/gorilla/mux/blob/v1.7.3/LICENSE,BSD-3-Clause

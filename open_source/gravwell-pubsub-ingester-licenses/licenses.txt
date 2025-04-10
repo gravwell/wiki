@@ -11,7 +11,7 @@ github.com/felixge/httpsnoop,https://github.com/felixge/httpsnoop/blob/v1.0.4/LI
 github.com/go-logr/logr,https://github.com/go-logr/logr/blob/v1.4.2/LICENSE,Apache-2.0
 github.com/go-logr/stdr,https://github.com/go-logr/stdr/blob/v1.2.2/LICENSE,Apache-2.0
 github.com/gobwas/glob,https://github.com/djfritz/glob/blob/aee51dc1d432/LICENSE,MIT
-github.com/gofrs/flock,https://github.com/gofrs/flock/blob/v0.8.0/LICENSE,BSD-3-Clause
+github.com/gofrs/flock,https://github.com/gofrs/flock/blob/v0.12.1/LICENSE,BSD-3-Clause
 github.com/google/gopacket,https://github.com/google/gopacket/blob/v1.1.19/LICENSE,BSD-3-Clause
 github.com/google/renameio,https://github.com/google/renameio/blob/v1.0.1/LICENSE,Apache-2.0
 github.com/google/s2a-go,https://github.com/google/s2a-go/blob/v0.1.8/LICENSE.md,Apache-2.0
@@ -39,7 +39,7 @@ go.opentelemetry.io/otel,https://github.com/open-telemetry/opentelemetry-go/blob
 go.opentelemetry.io/otel/metric,https://github.com/open-telemetry/opentelemetry-go/blob/metric/v1.29.0/metric/LICENSE,Apache-2.0
 go.opentelemetry.io/otel/trace,https://github.com/open-telemetry/opentelemetry-go/blob/trace/v1.29.0/trace/LICENSE,Apache-2.0
 golang.org/x/crypto,https://cs.opensource.google/go/x/crypto/+/v0.36.0:LICENSE,BSD-3-Clause
-golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.37.0:LICENSE,BSD-3-Clause
+golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.38.0:LICENSE,BSD-3-Clause
 golang.org/x/oauth2,https://cs.opensource.google/go/x/oauth2/+/v0.28.0:LICENSE,BSD-3-Clause
 golang.org/x/sync,https://cs.opensource.google/go/x/sync/+/v0.12.0:LICENSE,BSD-3-Clause
 golang.org/x/sys,https://cs.opensource.google/go/x/sys/+/v0.31.0:LICENSE,BSD-3-Clause
