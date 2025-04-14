@@ -80,3 +80,15 @@ tag=gravwell syslog Message=="ditto client stats" Bps!="0" well "target-name" as
 | stats mean(Bps) by well target 
 | chart mean by well target
 ```
+
+## Caveats
+
+Ditto does its best to transfer everything, but there are a few cases in which entries may be missed or duplicated.
+
+If Ditto encounters errors while attempting to copy data to the target system, it will assume none of the entries arrived and will re-try later. This can lead to *duplicate* entries on the destination cluster; we consider this preferable to *missed* entries.
+
+If a shard contains bad/corrupted blocks, Ditto will do its best to parse the contents, but it may have to skip ahead to the next valid block. 
+
+If Ditto has transferred a shard currently in hot storage, then while Ditto is working on other shards additional data is ingested into the original shard *and that shard is migrated from hot to cold*, the additional data will be "missed". The process of migrating from hot to cold can re-pack the contents of a shard for better query efficiency, but this means the offset into the shard which Ditto uses to track progress is no longer valid. Note that further data ingested *after* migration *will* be read & transferred by Ditto.
+
+To help avoid this latter situation, consider disabling ageout for the wells you are actively transferring, assuming you have enough hot storage to make this feasible.
