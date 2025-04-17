@@ -29,11 +29,11 @@ github.com/shirou/gopsutil,https://github.com/shirou/gopsutil/blob/v2.20.9/LICEN
 github.com/tealeg/xlsx,https://github.com/tealeg/xlsx/blob/v1.0.5/LICENSE,BSD-3-Clause
 github.com/victorspringer/http-cache,https://github.com/victorspringer/http-cache/blob/2c4f8454e6e2/LICENSE,MIT
 go.etcd.io/bbolt,https://github.com/etcd-io/bbolt/blob/v1.3.7/LICENSE,MIT
-golang.org/x/crypto,https://cs.opensource.google/go/x/crypto/+/v0.36.0:LICENSE,BSD-3-Clause
-golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.38.0:LICENSE,BSD-3-Clause
-golang.org/x/sys,https://cs.opensource.google/go/x/sys/+/v0.31.0:LICENSE,BSD-3-Clause
-golang.org/x/term,https://cs.opensource.google/go/x/term/+/v0.30.0:LICENSE,BSD-3-Clause
-golang.org/x/text,https://cs.opensource.google/go/x/text/+/v0.23.0:LICENSE,BSD-3-Clause
+golang.org/x/crypto,https://cs.opensource.google/go/x/crypto/+/v0.37.0:LICENSE,BSD-3-Clause
+golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.39.0:LICENSE,BSD-3-Clause
+golang.org/x/sys,https://cs.opensource.google/go/x/sys/+/v0.32.0:LICENSE,BSD-3-Clause
+golang.org/x/term,https://cs.opensource.google/go/x/term/+/v0.31.0:LICENSE,BSD-3-Clause
+golang.org/x/text,https://cs.opensource.google/go/x/text/+/v0.24.0:LICENSE,BSD-3-Clause
 golang.org/x/time/rate,https://cs.opensource.google/go/x/time/+/v0.11.0:LICENSE,BSD-3-Clause
 gopkg.in/warnings.v0,https://github.com/go-warnings/warnings/blob/v0.1.2/LICENSE,BSD-2-Clause
 Go,https://go.dev/LICENSE,BSD-3-Clause
