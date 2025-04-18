@@ -963,7 +963,7 @@ Description:	Sets the storage location for data replicated from other Gravwell i
 ### **Database-Path**
 Default Value:	`<replication storage location base>/replication.db`
 Example:		`Database-Path=/opt/gravwell/etc/replication.db`  
-Description:	Optional value to store the replication database in an alternate location; by default the replication database will be stored at the base of the location specified in `Storage-Location` as a file named `replication.db` but it can be optionally overridden to an alternate storage location.
+Description:	Optional value to store the replication database in an alternate location. By default the replication database will be stored at the base of the location specified in `Storage-Location` as a file named `replication.db`.
 
 ### **Max-Replicated-Data-GB**
 Default Value:  
