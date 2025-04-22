@@ -4,7 +4,7 @@ Joining data is a powerful way to bring together multiple datasets, enrich data 
 
 
 
-## Example 1 - Enriching data
+## Example 1 - Enriching data with Compound Search
 
 For this example we want to use the intel data below to filter our web login data to see if any of the logins were from risky IPs. Normally we would have a resource to pull from but this data changes so rapidly that we have ingested it and need to query to find the latest risk.
 
@@ -68,4 +68,31 @@ It looks like they use a password spray attack to find an account and performed 
 
 The attacker successfully logged in and performed a schema_update with the joenobody account. 
 
+## Example 2 - Enriching data with Resource
+
+In this example we will create a scheduled search that will keep a threat intel resource up-to-date and create a query that uses that resource to look for matches between web proxy logs and threat intel. 
+
+Part 1 - Creating a Resource from Log Data
+
+Let's start off with a query on the intel data to pull the latest lastSeen where the indicator has been seen in the last week by value 
+
+![LastestIntel](image-12.png)
+
+Now lets save this to a resource. I will use the `-save` and `-csv` to save the results as a csv resource
+
+![alt text](image-13.png)
+
+Now we can create a scheduled search to keep the lookup up to date. I've used a naming pattern that signifies it is a `Generator` scheduled search and has a lookup resource as a result. 
+
+![Scheduled Search](image-14.png)
+
+Now we need to set the permissions on the scheduled search and the resource it generates. 
+
+![Resource Permissions](image-15.png)
+
+Part 2 - Utilizing the Generated Lookup
+
+Now we will query our proxy logs to see if there were any matches with the threat intel data.  Using the -s with the `lookup` module allows only entries with a match through.
+
+![join](image-16.png)
 
