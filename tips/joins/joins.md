@@ -44,7 +44,7 @@ tag=web ax
 
 ## Example 2 - Multiple Data Sets
 
-Lets build off the data from the last example. Let's see what happened after a user connected to the risky IP.
+Let's build off the data from the last example. Let's see what happened after a user connected to the risky IP.
 
 If we look at the proxy logs and compare them to the threat intel from our previous example it looks like we have one hit. The user is `drevil` and the internal ip is `192.168.5.25`.
 
