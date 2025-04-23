@@ -8,7 +8,7 @@ Joining data is a powerful way to bring together multiple datasets, enrich data 
 
 For this example we want to use the intel data below to filter our web login data to see if any of the logins were from risky IPs. Normally we would have a resource to pull from but this data changes so rapidly that we have ingested it and need to query to find the latest risk.
 
-Below is a basic query of the data but we need to get the latest by IP/
+Below is a basic query of the data:
 
 ![Intel Data](image.png)
 
