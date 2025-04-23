@@ -12,7 +12,7 @@ Below is a basic query of the data:
 
 ![Intel Data](image.png)
 
-This query will give us the latest by ip and show us the fields we want to work with.
+This query will give us the latest by IP and show us the fields we want to work with:
 
 ![Latest Risk by IP](image-1.png)
 
