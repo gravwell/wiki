@@ -20,7 +20,7 @@ Below is the web login data:
 
 ![alt text](image-2.png)
 
-Now we can use a compound query to find the latest ip risk from the intel data and join it to the web login data.  If there are any matches they will show data in the `risk` `threat` and `indicator` columns. Check out [compound queries](https://docs.gravwell.io/search/spec.html#compound-queries) to read up on syntax and flags. 
+Now we can use a compound query to find the latest IP risk from the intel data and join it to the web login data.  If there are any matches they will show data in the `risk` `threat` and `indicator` columns. Check out [compound queries](https://docs.gravwell.io/search/spec.html#compound-queries) to read up on syntax and flags. 
 
 
 ![Matched Intel Data](image-3.png)
