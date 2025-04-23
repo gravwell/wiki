@@ -78,7 +78,7 @@ Let's start off with a query on the intel data to pull the latest lastSeen where
 
 ![LastestIntel](image-12.png)
 
-Now lets save this to a resource. I will use the `-save` and `-csv` to save the results as a csv resource
+Now let's save this to a resource. We will use the `-save` and `-csv` flags to save the results as a CSV resource.
 
 ![alt text](image-13.png)
 
