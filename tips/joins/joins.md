@@ -50,7 +50,7 @@ If we look at the proxy logs and compare them to the threat intel from our previ
 
 ![AV Lookup](image-5.png)
 
-Since that event show that a file was downloaded lets see if there is any activity in the AV tag from that IP. Since we can use compound searches we can keep movething them up the query.
+Since that event shows that a file was downloaded let's see if there is any activity in the AV tag from that IP. Since we can use compound searches we can keep moving them up the query.
 
 ![AV Lookup](image-6.png)
 
