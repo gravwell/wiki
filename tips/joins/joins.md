@@ -25,7 +25,7 @@ Now we can use a compound query to find the latest IP risk from the intel data a
 
 ![Matched Intel Data](image-3.png)
 
-This is great but we only want to filter out logins that did not have a match with the threat intel data. For this we can add the `-s` flag to make the lookup strict, which would require the match to be successful to show. 
+The above query shows all records, including those that didn't match any thread intel data. Now let's filter out those records. For this we can add the `-s` flag to make the lookup strict, which would require the match to be successful to show. 
 
 ![Matched Threat Intel](image-4.png)
 
