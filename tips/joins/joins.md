@@ -92,7 +92,7 @@ Now we need to set the permissions on the scheduled search and the resource it g
 
 ### Utilizing the Generated Lookup
 
-Now we will query our proxy logs to see if there were any matches with the threat intel data.  Using the -s with the `lookup` module allows only entries with a match through.
+Now we will query our proxy logs to see if there were any matches with the threat intel data.  Using the -s flag with the `lookup` module allows only entries with a match through.
 
 ![join](image-16.png)
 
