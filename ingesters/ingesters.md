@@ -27,6 +27,7 @@ Azure Event Hubs <eventhubs>
 collectd <collectd>
 Federator <federators/federator>
 File Follower <file_follow>
+Fetcher <fetcher>
 GCP PubSub <pubsub>
 HTTP <http>
 IPMI <ipmi>
