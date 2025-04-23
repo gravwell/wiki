@@ -70,7 +70,7 @@ The attacker successfully logged in and performed a schema_update with the joeno
 
 ## Example 2 - Enriching data with Resource
 
-In this example we will create a scheduled search that will keep a threat intel resource up-to-date and create a query that uses that resource to look for matches between web proxy logs and threat intel. 
+In this example we will create a scheduled search that will keep a threat intel resource up to date and create a query that uses that resource to look for matches between web proxy logs and threat intel. 
 
 Part 1 - Creating a Resource from Log Data
 
