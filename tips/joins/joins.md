@@ -72,7 +72,7 @@ The attacker successfully logged in and performed a schema_update with the joeno
 
 In this example we will create a scheduled search that will keep a threat intel resource up to date and create a query that uses that resource to look for matches between web proxy logs and threat intel. 
 
-Part 1 - Creating a Resource from Log Data
+### Creating a Resource from Log Data
 
 Let's start off with a query on the intel data to pull the latest lastSeen where the indicator has been seen in the last week by value.
 
