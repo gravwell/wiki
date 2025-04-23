@@ -54,7 +54,7 @@ Since that event shows that a file was downloaded let's see if there is any acti
 
 ![AV Lookup](image-6.png)
 
-We can see from the results that `drevil` is showing up in a few places lets expand our search to other datasources and match on `IP` or `username`.
+We can see from the results that `drevil` is showing up in a few places. Let's expand our search to other datasources and match on `IP` or `username`.
 
 ![Username Match](image-9.png)
 
