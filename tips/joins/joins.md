@@ -74,7 +74,7 @@ In this example we will create a scheduled search that will keep a threat intel 
 
 Part 1 - Creating a Resource from Log Data
 
-Let's start off with a query on the intel data to pull the latest lastSeen where the indicator has been seen in the last week by value 
+Let's start off with a query on the intel data to pull the latest lastSeen where the indicator has been seen in the last week by value.
 
 ![LastestIntel](image-12.png)
 
