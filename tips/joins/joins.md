@@ -82,7 +82,7 @@ Now let's save this to a resource. We will use the `-save` and `-csv` flags to s
 
 ![alt text](image-13.png)
 
-Now we can create a scheduled search to keep the lookup up to date. I've used a naming pattern that signifies it is a `Generator` scheduled search and has a lookup resource as a result. 
+Now we can create a scheduled search to keep the lookup up to date. We've used a naming pattern that identifies it is a `Generator` scheduled search and has a lookup resource as a result. 
 
 ![Scheduled Search](image-14.png)
 
