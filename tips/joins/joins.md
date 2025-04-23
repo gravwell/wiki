@@ -1,6 +1,6 @@
 # Joins
 
-Joining data is a powerful way to bring together multiple datasets, enrich data based off of sumarizations of other data sets or parse a single dataset multiple times with a single output. While joins are flexible you do need to keep in mind that every joined query will act as a full execution of a query. 
+Joining data is a powerful way to bring together multiple datasets, enrich data based off of summarizations of other data sets or parse a single dataset multiple times with a single output. While joins are flexible, keep in mind that every joined query will act as a full execution of a query. 
 
 
 
