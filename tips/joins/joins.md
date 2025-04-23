@@ -62,7 +62,7 @@ With this result it looks like the user could not get in with the `drevil` crede
 
 ![IP Match](image-8.png)
 
-It looks like they use a password spray attack to find an account and performed some SQL table actions. Lets find what they did.
+It looks like they use a password spray attack to find an account and performed some SQL table actions. Let's find what they did.
 
 ![Results](image-11.png)
 
