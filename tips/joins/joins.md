@@ -16,7 +16,7 @@ This query will give us the latest by ip and show us the fields we want to work 
 
 ![Latest Risk by IP](image-1.png)
 
-Below is the web login data
+Below is the web login data:
 
 ![alt text](image-2.png)
 
