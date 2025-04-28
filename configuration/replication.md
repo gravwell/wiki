@@ -122,7 +122,7 @@ Replication is controlled by the "Replication" configuration group in the gravwe
 | Disable-Server | Disable-Server=true | Disable the indexer replication server, it will only act as a client.  This is important when using offline replication. | 
 | Disable-Compression | Disable-Compression=true | Disable compression on the storage for the replicated data. |
 | Enable-Transparent-Compression | Enable-Transparent-Compression=true | Enable transparent compression on using the host filesystem for replicated data. |
-| Enable-Transport-Compression | Enable-Transparent-Compression=true | Enable transport compression when transmitting data to replication peer.  Defaults to `true`. |
+| Enable-Transport-Compression | Enable-Transparent-Compression=true | Enable transport compression when transmitting data to replication peer.  Defaults to `false`. |
 
 ## Disabling Replication Per Well
 
