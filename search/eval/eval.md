@@ -41,7 +41,7 @@ This example uses `eval` to act as a simple filter. It uses the `in()` function 
 ```
 tag=gravwell
   syslog Appname
-| eval in(Appname, "indexer", webserver")
+| eval in(Appname, "indexer", "webserver")
 | table
 ```
 
