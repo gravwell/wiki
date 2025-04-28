@@ -346,7 +346,7 @@ curl "http://example.org/services/collector" -H "Authorization: Splunk thisisyou
 You can also send raw strings, rather than JSON-formatted events, by appending `/raw` to the URL:
 
 ```
-curl "http://example.org/services/collector" -H "Authorization: Splunk thisisyourtoken" \
+curl "http://example.org/services/collector/raw" -H "Authorization: Splunk thisisyourtoken" \
 -d 'here is some raw data'
 ```
 
