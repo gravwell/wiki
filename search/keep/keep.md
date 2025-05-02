@@ -23,6 +23,6 @@ The following example removes all enumerated values except "bananas" and "potato
 ```gravwwell
 tag=data json fruit vegetables
 | fields -e fruit [0] as bananas [1] as apples
-| fields -e vegetables [0] as broccoli potatoes
+| fields -e vegetables [0] as broccoli [1] as potatoes
 | keep bananas potatoes
 ```
