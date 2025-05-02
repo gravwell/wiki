@@ -15,6 +15,7 @@ The `transaction` module transforms and groups entries in the pipeline into sing
 * `-c`: The `-c` option enables a count of the number of entries that make up a given transaction in the provided name. The default is "count".
 * `-maxsize`: The `-maxsize` flag sets the maximum size, in kilobytes, of a given transaction before it is evicted from the tracking table (see "Memory considerations" below). The default is 500kb.
 * `-maxstate`: The `-maxstate` flag sets the maximum number of transactions to track. Once exceeded, the oldest transaction will be evicted (see "Memory considerations" below). The default is 200.
+* `-maxcount`: The `-maxcount` flag sets the maximum number of entries allowed per transaction. By default this value is unlimited. If set, once an individual transaction reaches this value, the transaction will be evicted.
 
 All flags are optional.
 
