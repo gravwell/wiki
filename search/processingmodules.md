@@ -57,6 +57,7 @@ hexlify <hexlify/hexlify>
 ip <ip/ip>
 ipexist <ipexist/ipexist>
 iplookup <iplookup/iplookup>
+keep <keep/keep>
 langfind <langfind/langfind>
 length <length/length>
 limit <limit/limit>
@@ -68,6 +69,7 @@ nosort <nosort/nosort>
 packetlayer <packetlayer/packetlayer>
 printf <printf/printf>
 regex <regex/regex>
+reingest <reingest/reingest>
 require <require/require>
 slice <slice/slice>
 sort <sort/sort>
@@ -111,6 +113,7 @@ words <words/words>
 * [ip](ip/ip) - convert & filter IP addresses.
 * [ipexist](ipexist/ipexist) - check if IP address exists in a lookup table.
 * [iplookup](iplookup/iplookup) - enrich entries by looking up IP addresses in a table which can contain CIDR subnets rather that individual IPs.
+* [keep](keep/keep) - remove all enumerated values except those specified.
 * [langfind](langfind/langfind) - classify the language of text.
 * [length](length/length) - compute the length of entries or enumerated values.
 * [limit](limit/limit) - limit the number of entries which will pass further down the pipeline.
@@ -130,6 +133,7 @@ words <words/words>
 * [packetlayer](packetlayer/packetlayer) - parse portions of a packet.
 * [printf](printf/printf) - format text in the pipeline.
 * [regex](regex/regex) - match and extract data using regular expressions.
+* [reingest](reingest/reingest) - reingest data into another tag.
 * [require](require/require) - drop any entries which lack a given enumerated value.
 * [slice](slice/slice) - low-level binary parsing & extraction.
 * [sort](sort/sort) - sort entries by a given key.
