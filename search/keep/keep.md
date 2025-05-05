@@ -20,7 +20,7 @@ The keep module has no flags.
 
 The following example removes all enumerated values except "bananas" and "potatoes" from all entries:
 
-```gravwwell
+```gravwell
 tag=data json fruit vegetables
 | fields -e fruit [0] as bananas [1] as apples
 | fields -e vegetables [0] as broccoli [1] as potatoes
