@@ -176,7 +176,7 @@ The FTP backend type is an optional variation of the `file` backend type that di
 
 #### S3 Backend Type
 
-The S3 backend type is designed for system agnostic, low cost, long term storage of archive data. S3 backed storage is re-encoded and compressed into smaller chunks and then uploaded to S3-compatible storage, shards sent to S3 cannot be directly bound to by a Gravwell instance and must be re-thawed for query.  The data formats are open and designed to support alternate query data access methods like AWS S3 Select.
+The S3 backend type is designed for system-agnostic, low-cost, long-term storage of archive data. S3 backed storage is re-encoded and compressed into smaller chunks and then uploaded to S3-compatible storage. Shards sent to S3 cannot be directly bound to by a Gravwell instance and must be re-thawed for query.  The data formats are open and designed to support alternate query data access methods like AWS S3 Select.
 
 ##### Required Configuration Parameters
 
