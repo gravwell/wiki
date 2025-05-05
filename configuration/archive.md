@@ -170,7 +170,7 @@ The FTP backend type is an optional variation of the `file` backend type that di
 ##### Required Configuration Parameters
 
 * `Backend-Type`: Must be configured as "ftp" to enable the FTP backend.
-* `FTP-Server`
+* `FTP-Server`: Address:port of target FTP server.
 * `FTP-User`: May be "anonymous" for unauthenticated access.
 * `FTP-Password`: May be empty when using "anonymous" for unauthenticated access.
 
@@ -180,7 +180,7 @@ The S3 backend type is designed for system agnostic, low cost, long term storage
 
 ##### Required Configuration Parameters
 
-* `Backend-Type`: Must be configured as "ftp" to enable the FTP backend.
+* `Backend-Type`: Must be configured as "s3" to enable the S3 backend.
 * `Storage-Directory`: Directory must be writable and POSIX compliant, uploaded shards are temporarily stored until workers can process them.
 
 ##### S3 Specific Configuration Block
