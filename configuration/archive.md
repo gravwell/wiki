@@ -157,7 +157,7 @@ These are the available parameters for the `Cloud-Archive` configuration block.
 
 #### File Backend Type
 
-The File backend type is the default Cloud Archive backend plugin, if no `Backend-Type` is specified in the `[Global]` section then the `file` type is assumed.  The `file` driver is designed to store raw Gravwell shards organized in an way that allows rapid re-import or direct binding by a Gravwell instance.  Use the file type if your storage array can support seek operations and you wish to be able to directly bind a Gravwell instance to the storage location and perform queries without thawing or re-ingesting the data.
+The `file` backend type is the default Cloud Archive backend plugin. If no `Backend-Type` is specified in the `[Global]` section, then the `file` type is assumed.  The `file` driver is designed to store raw Gravwell shards organized in an way that allows rapid re-import or direct binding by a Gravwell instance.  Use the file type if your storage array can support seek operations and you wish to be able to directly bind a Gravwell instance to the storage location and perform queries without thawing or re-ingesting the data.
 
 ##### Required Configuration Parameters
 
