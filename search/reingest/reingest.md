@@ -1,6 +1,6 @@
 # Reingest
 
-The reingest module allows "reingesting" (copying) entries in the search pipeline to another tag. In addition to the raw entry data, the reingest module attaches all enumerated values as intrinsic enumerated values in copied entry.
+The reingest module allows "reingesting" (copying) entries in the search pipeline to another tag. In addition to the raw entry data, the reingest module attaches all enumerated values as intrinsic enumerated values in the copied entry.
 
 ```{note}
 The `reingest` module will copy all data in the search pipeline to the destination tag. Queries over large datasets can result in large data copies. Use with caution!
