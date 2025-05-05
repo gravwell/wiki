@@ -35,3 +35,12 @@ The following example uses the reingest module to create a simple aggregation da
 tag=* count by TAG
 | reingest -now -nodata aggs
 ```
+
+This example changes the underlying DATA field of entries using eval before reingesting:
+
+```gravwell
+tag=gravwell syslog Hostname Appname
+| eval
+    set_data( printf("hostname is %v, appname is %v", Hostname, Appname) );
+| reingest foo
+```
