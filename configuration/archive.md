@@ -157,7 +157,7 @@ These are the available parameters for the `Cloud-Archive` configuration block.
 
 #### File Backend Type
 
-The File backend type is the default Cloud Archive backend plugin, if no `Backend-Type` is specified in the `[Global]` section then the `file` type is assumed.  The `file` driver is designed to store raw Gravwell shards organized in an way that allows rapid re-import or direct binding by a Gravwell instance.  Use the file type if your storage array can support seek operations and you wish to be able to directly bind a Gravwell instance to the storage location and perform queries without thawing or re-ingesting the data.
+The `file` backend type is the default Cloud Archive backend plugin. If no `Backend-Type` is specified in the `[Global]` section, then the `file` type is assumed.  The `file` driver is designed to store raw Gravwell shards organized in an way that allows rapid re-import or direct binding by a Gravwell instance.  Use the file type if your storage array can support seek operations and you wish to be able to directly bind a Gravwell instance to the storage location and perform queries without thawing or re-ingesting the data.
 
 ##### Required Configuration Parameters
 
@@ -176,7 +176,7 @@ The FTP backend type is an optional variation of the `file` backend type that di
 
 #### S3 Backend Type
 
-The S3 backend type is designed for system agnostic, low cost, long term storage of archive data. S3 backed storage is re-encoded and compressed into smaller chunks and then uploaded to S3-compatible storage, shards sent to S3 cannot be directly bound to by a Gravwell instance and must be re-thawed for query.  The data formats are open and designed to support alternate query data access methods like AWS S3 Select.
+The S3 backend type is designed for system-agnostic, low-cost, long-term storage of archive data. S3 backed storage is re-encoded and compressed into smaller chunks and then uploaded to S3-compatible storage. Shards sent to S3 cannot be directly bound to by a Gravwell instance and must be re-thawed for query.  The data formats are open and designed to support alternate query data access methods like AWS S3 Select.
 
 ##### Required Configuration Parameters
 
