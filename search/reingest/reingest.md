@@ -31,7 +31,7 @@ tag=gravwell reingest foo
 
 The following example uses the reingest module to create a simple aggregation dataset. It counts the number of entries in all tags, and ingests those counts into a tag named "aggs".
 
-```gravwwell
+```gravwell
 tag=* count by TAG
 | reingest -now -nodata aggs
 ```
