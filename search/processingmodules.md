@@ -69,6 +69,7 @@ nosort <nosort/nosort>
 packetlayer <packetlayer/packetlayer>
 printf <printf/printf>
 regex <regex/regex>
+reingest <reingest/reingest>
 require <require/require>
 slice <slice/slice>
 sort <sort/sort>
@@ -132,6 +133,7 @@ words <words/words>
 * [packetlayer](packetlayer/packetlayer) - parse portions of a packet.
 * [printf](printf/printf) - format text in the pipeline.
 * [regex](regex/regex) - match and extract data using regular expressions.
+* [reingest](reingest/reingest) - reingest data into another tag.
 * [require](require/require) - drop any entries which lack a given enumerated value.
 * [slice](slice/slice) - low-level binary parsing & extraction.
 * [sort](sort/sort) - sort entries by a given key.
