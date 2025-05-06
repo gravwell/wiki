@@ -8,11 +8,18 @@ We welcome issues and pull requests from external contributors. This file docume
 
 * Pull requests should include a description of what you've changed and why. Spelling and grammar corrections are welcome, but if you're going to fix one spelling error, please take the time to check the rest of the file while you're at it.
 
+* Pull requests should never target `main`. You'll almost always want to target `next-patch`; any changes merged to this branch will appear in the live docs at the next release of Gravwell.
+
 * Please don't modify any `toctree` sections in the Markdown files; these help define navigation in the Gravwell docs and it's too easy to break them.
 
 Here are some basic style rules:
 
 * American English spellings (color rather than colour, etc.).
 * Markdown `single backtick` code for filenames and variables.
-* Gravwell queries should be in triple-backtick code blocks.
-* Please use ASCII quote marks, not Unicode quotes or the grave character (see https://www.cl.cam.ac.uk/~mgk25/ucs/quotes.html for more information about quotation marks).
+* Gravwell queries should be in triple-backtick code blocks, with "gravwell" specified as the lexer:
+`````
+```gravwell
+tag=gravwell limit 10
+```
+`````
+* Please use ASCII quote marks, not Unicode quotes or the grave character (see [this page](https://www.cl.cam.ac.uk/~mgk25/ucs/quotes.html) for more information about quotation marks).
