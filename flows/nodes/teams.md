@@ -43,5 +43,5 @@ Microsoft Teams has deprecated traditional Office365 Incoming Webhook funtionali
 ```
 
 ```{warning}
-The new Azure workflow system is a multipart processing pipeline, it is entirely possible for the API to return a 200 indicating successful hook delivery while failing to deliver the actual message to your channel.  Check Azure workflow logs if messages are not being delivered.
+The new Azure workflow system is a multipart processing pipeline. It is entirely possible for the API to return a 200 indicating successful hook delivery while failing to deliver the actual message to your Teams channel.  Check Azure workflow logs if messages are not being delivered.
 ```
