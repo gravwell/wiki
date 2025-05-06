@@ -194,7 +194,7 @@ This behavior can be changed by setting the `Delete-Delay` parameter in the repl
 	Disable-Server=true
 	Peer=10.0.01
 	Storage-Location=/opt/gravwell/replication_storage
-    Delete-Delay=7d
+	Delete-Delay=7d
 ```
 
 In the above example, deleted shards will only be retained in the manner above for 7 days. After that time, the shards will be deleted regardless of storage constraints.
