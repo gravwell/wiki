@@ -321,6 +321,17 @@ tag=default json foo table
 
 In the above example, the end time is given as an absolute time, and the start time is given as a relative offset from the end time. 
 
+### Time constraint summary
+
+Below is a summary of how time constraints work across all forms of use.
+
+| Time constraints | Main query | Inner query |
+|---|---|---|
+| Not set | Use GUI time picker | Use GUI time picker |
+| Absolute time | Use absolute time | Use absolute time |
+| Relative | Relative to now | Relative to main query |
+| Arithmetic | Use rules above ±duration | Use rules above ±duration |
+
 ## Comments
 
 Gravwell supports two types of comments. 
