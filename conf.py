@@ -54,6 +54,7 @@ templates_path = ["_templates"]
 exclude_patterns = [
     ".github",
     "README.md",
+    "CONTRIBUTING.md",
     "_build",
     "Thumbs.db",
     ".DS_Store",
