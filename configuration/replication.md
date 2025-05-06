@@ -123,6 +123,8 @@ Replication is controlled by the "Replication" configuration group in the gravwe
 | Disable-Compression | Disable-Compression=true | Disable compression on the storage for the replicated data. |
 | Enable-Transparent-Compression | Enable-Transparent-Compression=true | Enable transparent compression on using the host filesystem for replicated data. |
 | Enable-Transport-Compression | Enable-Transparent-Compression=true | Enable transport compression when transmitting data to replication peer.  Defaults to `false`. |
+| Delete-Delay | Delete-Delay=7d | Set the time required to delete a shard, regardless of storage constraints. Default is "forever". |
+| Storage-Reserve | Storage-Reserve=10 | Set the percentage of free disk space to keep. Default is 0. |
 
 ## Disabling Replication Per Well
 
@@ -180,6 +182,22 @@ Designing and deploying a high availability Gravwell cluster can be simple as lo
 4. Replication storage locations should be reserved exclusively for a single replication system.  For example, using the same network attached storage location for multiple indexers' `Storage-Location` will cause replication failures and data corruption.
 5. Match the compression scheme for replicated and primary data.  If you are using host based transparent compression on the indexers, it is best to mimic that behavior on the replication stores.  If compression schemes match between indexers and replication peers, the restoration process is dramatically faster.
 6. Set `Enable-Transport-Compression=false` when replication peers are on a local collision domain.  The transport compression is enabled by default but only consumes CPU when operating over local connections where bandwidth is not a concern.
+
+## Delayed deletion with Data Ageout
+
+Replication often serves as the last line of protection against lost data from peers. To further prevent accidental data loss, the replication engine will, by default, only "lazily" delete shards when ageout is enabled. For example, if Node A replicates data to Node B, and Node A ages out a shard, deleting it from hot or cold, Node B will _not_ immediately delete that shard from replication. Instead, it will make the shard unavailable for search, but leave it intact in replication storage. If and when the replication engine needs to delete old shards due to a storage constraint, it will delete these shards first.
+
+This behavior can be changed by setting the `Delete-Delay` parameter in the replication configuration. For example:
+
+```
+[Replication]
+	Disable-Server=true
+	Peer=10.0.01
+	Storage-Location=/opt/gravwell/replication_storage
+    Delete-Delay=7d
+```
+
+In the above example, deleted shards will only be retained in the manner above for 7 days. After that time, the shards will be deleted regardless of storage constraints.
 
 ## Troubleshooting
 

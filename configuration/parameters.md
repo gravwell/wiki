@@ -1015,6 +1015,16 @@ Default Value:	false
 Example:		`Enable-Transparent-Compression=true`  
 Description:	If this parameter is set to true, Gravwell will attempt to use btrfs transparent compression on the replicated data. Setting `Disable-Compression=true` will disable this!
 
+### **Delete-Delay**
+Default Value:  disabled
+Example:        `Delete-Delay=7d`
+Description:    Set the time between a replication peer deleting a hot/cold shard and replication deleting the copy. Default is to keep shards until storage constraints force a delete.
+ 
+### **Storage-Reserve**
+Default Value:  0
+Example:        `Storage-Reserve=10`
+Description:    Set the target free space, in percent, on the disk where replication storage is held. Shards will be deleted to reach this reserve percentage. Delayed deleted shards will be deleted first, followed by oldest to newest.
+
 ## Single Sign-On Configuration
 
 The `[SSO]` configuration section controls single sign-on options for the Gravwell webserver. A sample section could be as simple as this:
