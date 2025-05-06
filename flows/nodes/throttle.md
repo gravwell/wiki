@@ -9,6 +9,8 @@ The throttle node can operate in *basic* mode, where it allows execution exactly
 * `Duration`, required: how long to wait between executions. The node will block any downstream nodes from executing if it has been less than Duration since the last time it allowed execution.
 * `Keys`, optional: a list of variables to use as keys. The contents of the specified variables will be checked at run time; execution will only be allowed to continue if that particular set of values has *not* been seen in the specified duration. Any variables which do not exist in the payload will be ignored.
 
+Note: If the Duration is specified via a variable, it should be a string containing a duration, either a [Go duration](https://pkg.go.dev/time#ParseDuration) such as "2m30s" or an [ISO8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) e.g. "P1DT12H30M".
+
 ## Output
 
 The node does not modify the payload.
