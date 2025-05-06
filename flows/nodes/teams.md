@@ -41,3 +41,7 @@ The ability to create Teams webhooks is controlled by system subscription levels
 ```{note}
 Microsoft Teams has deprecated traditional Office365 Incoming Webhook funtionality, you may need to update your incoming webhook URLs.
 ```
+
+```{warning}
+The new Azure workflow system is a multipart processing pipeline, it is entirely possible for the API to return a 200 indicating successful hook delivery while failing to deliver the actual message to your channel.  Check Azure workflow logs if messages are not being delivered.
+```
