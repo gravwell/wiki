@@ -39,5 +39,5 @@ To learn how to create webhooks, visit the [Microsoft Documentation](https://sup
 The ability to create Teams webhooks is controlled by system subscription levels and regions; depending on your Teams subscription level and/or permission level, you may not be allowed to create incoming webhooks.  Teams organizations in GovCloud cannot create incoming webhooks.
 
 ```{note}
-Microsoft Teams has deprecated traditional Office365 Incoming Webhook funtionality, you may need to update your incoming webhook URLs.
+Microsoft Teams has deprecated traditional Office365 Incoming Webhook funtionality. You may need to update your incoming webhook URLs.
 ```
