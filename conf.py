@@ -22,7 +22,7 @@ from gravy_lexer import GravwellLexer
 project = "Gravwell"
 copyright = f"Gravwell, Inc. {date.today().year}"
 author = "Gravwell, Inc."
-release = "v5.7.9"
+release = "v5.8.0"
 
 # Default to localhost:8000, so the version switcher looks OK on livehtml
 version_list_url = os.environ.get(
@@ -54,6 +54,7 @@ templates_path = ["_templates"]
 exclude_patterns = [
     ".github",
     "README.md",
+    "CONTRIBUTING.md",
     "_build",
     "Thumbs.db",
     ".DS_Store",
