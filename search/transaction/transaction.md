@@ -6,6 +6,7 @@ The `transaction` module can consume a large amount of memory. Use caution when 
 
 The `transaction` module transforms and groups entries in the pipeline into single-entry "transactions" - groupings of entries - based on any number of keys. It is a powerful tool for capturing the activity of a given user, IP, etc., across multiple entries in a datastream. 
 
+(transaction-options)=
 ## Supported Options
 
 * `-e`: The `-e` option operates on an enumerated value instead of on the entire record. Multiple EVs are supported by providing additional `-e` flags.

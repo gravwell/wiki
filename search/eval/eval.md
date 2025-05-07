@@ -927,6 +927,7 @@ Pretty prints the given JSON input.
 
 Sets a key/value pair in the given object. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
 
+(eval-math)=
 ### Math
 
 ```{note}

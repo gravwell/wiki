@@ -321,6 +321,7 @@ tag=default json foo table
 
 In the above example, the end time is given as an absolute time, and the start time is given as a relative offset from the end time. 
 
+(time-constraint-summary)=
 ### Time constraint summary
 
 Below is a summary of how time constraints work across all forms of use.
