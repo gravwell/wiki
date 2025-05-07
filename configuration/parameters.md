@@ -1015,11 +1015,13 @@ Default Value:	false
 Example:		`Enable-Transparent-Compression=true`  
 Description:	If this parameter is set to true, Gravwell will attempt to use btrfs transparent compression on the replicated data. Setting `Disable-Compression=true` will disable this!
 
+(delete-delay)=
 ### **Delete-Delay**
 Default Value:  disabled
 Example:        `Delete-Delay=7d`
 Description:    Set the time between a replication peer deleting a hot/cold shard and replication deleting the copy. Default is to keep shards until storage constraints force a delete.
  
+(storage-reserve)=
 ### **Storage-Reserve**
 Default Value:  0
 Example:        `Storage-Reserve=10`
