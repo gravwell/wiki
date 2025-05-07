@@ -10,6 +10,10 @@ The Gravwell administrator has three options for certificates:
 * Install a properly-signed TLS certificate. This is the ideal configuration, but typically requires the Gravwell instance to have a publicly-accessible hostname.
 * Install a self-signed certificate. This makes sense when you want to encrypt traffic to Gravwell but for one reason or another cannot get a properly signed certificate.
 
+```{warning}
+Switching your cluster from plaintext to TLS *will break things* if you do not update *every* component which was using the plaintext methods. This is especially common when converting a webserver to HTTPS: the search agent *must* be reconfigured to use HTTPS or automations will no longer run!
+```
+
 ## Hostnames in TLS Certificates
 
 When connecting to a TLS-secured service, the client will check that the server's certificate is valid for the *hostname* the client is trying to access. If you have a valid certificate for `gravwell.example.org`, but you decide to access your Gravwell server directly by IP, e.g. `https://10.0.0.2/`, your web browser will most likely warn you that the certificate presented is invalid. Components of a Gravwell cluster may also communicate with each other over TLS-secured connections, and unless they are specifically configured to skip certificate validation these services will *fail* if the hostname they are given doesn't match the names on the certificate.
@@ -23,6 +27,7 @@ Here's a brief list of some of the ways Gravwell components communicate via TLS 
 - Indexers talk to the [cloud archive service](/configuration/archive)
 - Webservers in a cluster talk to the [datastore](/distributed/frontend)
 - Webservers in a cluster talk to other webservers (`External-Addr`, see [docs](/distributed/frontend))
+- Search Agents talk to the webservers.
 
 Generally, you will see entries in the relevant component's log files if there is a TLS problem; if you see logs about invalid certificates, but you believe that your certificate should be correct, double-check the hostnames you've set in the config files against the hostnames present in the certificate's CN and SAN fields.
 
@@ -65,11 +70,11 @@ Key-File=/etc/certs/key.pem
 These files must be readable by the "gravwell" user. However, take care to protect the key file from other users; if it is made world-readable, any user on the system can access the secret key.
 ```
 
-To enable HTTPS on the webserver, change the `Web-Port` directive from 80 to 443, then comment out the `Insecure-Disable-HTTPS` directive.
+To enable HTTPS on the **webserver**, change the `Web-Port` directive from 80 to 443, then comment out the `Insecure-Disable-HTTPS` directive.
 
-To enable TLS-encrypted ingester connections, find and uncomment the line `TLS-Ingest-Port=4024`.
+To enable TLS-encrypted **ingester** connections, find and uncomment the line `TLS-Ingest-Port=4024`.
 
-To enable HTTPS for the search agent, open /opt/gravwell/etc/searchagent.conf and comment out the `Insecure-Use-HTTP=true` line and change the port in the `Webserver-Address` line from 80 to 443.
+To enable HTTPS for the **search agent**, open /opt/gravwell/etc/searchagent.conf and comment out the `Insecure-Use-HTTP=true` line and change the port in the `Webserver-Address` line from 80 to 443.
 
 Finally, restart the webserver, indexer, and search agent:
 
@@ -96,13 +101,13 @@ sudo -u gravwell ../bin/gencert -host HOSTNAME
 
 Make sure to replace HOSTNAME with either the hostname or the IP address of your Gravwell system. You can specify multiple hostnames or IPs by separating them with commas, e.g. `gencert -h gravwell.floren.lan,10.0.0.1,192.168.0.3`
 
-Now, open gravwell.conf and uncomment the `Certificate-File` and `Key-File` directives. The defaults should point correctly to the two files we just created.
+Now, open `gravwell.conf` and uncomment the `Certificate-File` and `Key-File` directives. The defaults should point correctly to the two files we just created.
 
-To enable HTTPS on the webserver, change the `Web-Port` directive from 80 to 443, then comment out the `Insecure-Disable-HTTPS` directive.
+To enable HTTPS on the **webserver**, change the `Web-Port` directive from 80 to 443, then comment out the `Insecure-Disable-HTTPS` directive.
 
-To enable TLS-encrypted ingester connections, find and uncomment the line `TLS-Ingest-Port=4024`.
+To enable TLS-encrypted **ingester** connections, find and uncomment the line `TLS-Ingest-Port=4024`.
 
-To enable HTTPS for the search agent, open /opt/gravwell/etc/searchagent.conf and comment out the `Insecure-Use-HTTP=true` line and change the port in the `Webserver-Address` line from 80 to 443.
+To enable HTTPS for the **search agent**, open `/opt/gravwell/etc/searchagent.conf` and comment out the `Insecure-Use-HTTP=true` line and change the port in the `Webserver-Address` line from 80 to 443.
 
 Finally, restart the webserver, indexer, and search agent:
 
