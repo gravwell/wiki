@@ -6,6 +6,7 @@ The `transaction` module can consume a large amount of memory. Use caution when 
 
 The `transaction` module transforms and groups entries in the pipeline into single-entry "transactions" - groupings of entries - based on any number of keys. It is a powerful tool for capturing the activity of a given user, IP, etc., across multiple entries in a datastream. 
 
+(transaction-options)=
 ## Supported Options
 
 * `-e`: The `-e` option operates on an enumerated value instead of on the entire record. Multiple EVs are supported by providing additional `-e` flags.
@@ -15,6 +16,7 @@ The `transaction` module transforms and groups entries in the pipeline into sing
 * `-c`: The `-c` option enables a count of the number of entries that make up a given transaction in the provided name. The default is "count".
 * `-maxsize`: The `-maxsize` flag sets the maximum size, in kilobytes, of a given transaction before it is evicted from the tracking table (see "Memory considerations" below). The default is 500kb.
 * `-maxstate`: The `-maxstate` flag sets the maximum number of transactions to track. Once exceeded, the oldest transaction will be evicted (see "Memory considerations" below). The default is 200.
+* `-maxcount`: The `-maxcount` flag sets the maximum number of entries allowed per transaction. By default this value is unlimited. If set, once an individual transaction reaches this value, the transaction will be evicted.
 
 All flags are optional.
 

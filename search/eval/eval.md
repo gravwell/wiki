@@ -613,6 +613,7 @@ Returns true if the regular expression in pattern matches the given input. Regul
 
 Formats a string according to the given format and any number of expressions. printf uses the formatting rules and verbs defined in [Golang's fmt.Printf()](https://pkg.go.dev/fmt#hdr-Printing) function.
 
+(set-data-target)=
 #### set_data
 
 	function set_data(data <expression>)
@@ -926,6 +927,7 @@ Pretty prints the given JSON input.
 
 Sets a key/value pair in the given object. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
 
+(eval-math)=
 ### Math
 
 ```{note}
@@ -1040,6 +1042,77 @@ Returns the integer value of x by dropping decimal digits. For example, `3.1` an
 
 Returns the nearest integer, rounding half away from zero.
 
+#### math_acos
+
+    function math_acos(x float) float
+
+Returns the arccosine, in radians, of x.
+
+#### math_acosh
+
+    function math_acosh(x float) float
+
+Returns the inverse hyperbolic cosine of x.
+
+#### math_asin
+
+    function math_asin(x float) float
+
+Returns the arcsine, in radians, of x.
+
+#### math_asinh
+
+    function math_asinh(x float) float
+
+Returns the inverse hyperbolic sine of x.
+
+#### math_atan
+
+    function math_atan(x float) float
+
+Returns the arctangent, in radians, of x.
+
+#### math_atan2
+
+    function math_atan2(y, x float) float
+
+Returns the arctangent of y/x, using the signs of the two to determine the quadrant of the return value.
+
+#### math_cos
+
+    function math_cos(x float) float
+
+Returns the cosine of the radian argument x.
+
+#### math_cosh
+
+    function math_cosh(x float) float
+
+Returns the hyperbolic cosine of x.
+
+#### math_sin
+
+    function math_sin(x float) float
+
+Returns the sine of the radian argument x.
+
+#### math_sinh
+
+    function math_sinh(x float) float
+
+Returns the hyperbolic sine of x.
+
+#### math_tan
+
+    function math_tan(x float) float
+
+Returns the tangent of the radian argument x.
+
+#### math_tanh
+
+    function math_tanh(x float) float
+
+Returns the hyperbolic tangent of x.
 
 ## Acceleration and eval
 

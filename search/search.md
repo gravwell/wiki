@@ -291,6 +291,48 @@ If start/end time constraints are provided, the GUI time picker timeframe will b
 Timeframes are always aligned to one second boundaries. Sub-second timeframes will be automatically rounded down to the second.
 ```
 
+### Using time constraints in compound queries
+
+The `start` and `end` constraints can also be used in compound queries. When using absolute times in an inner query, the inner query will search over the specified time. 
+
+Otherwise, `start` and `end` constraints in inner queries are always relative to the time range of the main query. For example:
+
+```gravwell
+@foo{
+    start=-10h
+    tag=gravwell limit 1
+};
+
+start=-1h
+tag=gravwell limit 1
+```
+
+In the above example, the main query executes over the last hour. The inner query also has a relative offset, and it is relative to the start time of the main query -- meaning it searches over the last 11 hours (10 hours offset from the main query, which is 1 hour offset from the current time).
+
+### Time constraint arithmetic
+
+Time constraints support three verbs: `START`, `END`, and `NOW`, which can be combined with relative offsets to perform simple arithmetic offsets. For example:
+
+```gravwell
+end="2006-01-02T15:04:05Z" 
+start=END-1h
+tag=default json foo table
+```
+
+In the above example, the end time is given as an absolute time, and the start time is given as a relative offset from the end time. 
+
+(time-constraint-summary)=
+### Time constraint summary
+
+Below is a summary of how time constraints work across all forms of use.
+
+| Time constraints | Main query | Inner query |
+|---|---|---|
+| Not set | Use GUI time picker | Use GUI time picker |
+| Absolute time | Use absolute time | Use absolute time |
+| Relative | Relative to now | Relative to main query |
+| Arithmetic | Use rules above ±duration | Use rules above ±duration |
+
 ## Comments
 
 Gravwell supports two types of comments. 

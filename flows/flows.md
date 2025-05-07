@@ -100,6 +100,8 @@ Nodes are always executed one at a time. A node can be executed if all nodes ups
 
 Note that some nodes may block execution of downstream nodes. The **If** node is configured with a boolean logic expression; if that expression evaluates to *false*, none of the If node's downstream nodes are executed. Nodes which can block downstream execution will always have a note to that effect in the online documentation.
 
+If a node returns an error during execution, downstream nodes will not execute, but any other nodes which are *not* downstream will execute before the flow exits.
+
 ## Flow editor
 
 Flows are created using the flow editor. Please refer to the [flow editor documentation](editor) for a detailed description of the editor, instructions on how to use it, and information about debugging & scheduling flows.
