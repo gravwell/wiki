@@ -22,6 +22,13 @@ The HTTP ingester uses the unified global configuration block described in the [
 
 The configuration file is at `/opt/gravwell/etc/gravwell_http_ingester.conf`. The ingester will also read configuration snippets from its [configuration overlay directory](configuration_overlays) (`/opt/gravwell/etc/gravwell_http_ingester.conf.d`).
 
+### Additional Global Configuration Parameters
+
+| Config Parameter          | Type         | Required | Default Value   | Description                         |
+|---------------------------|--------------|----------|-----------------|-------------------------------------|
+| Bind                      | string       | yes      |                 | Host:Port pair specifying HTTP server bind. |
+| Health-Check-URL          | string       | no       |                 | An optional URL that provides unauthenticated ingester health check status. |
+
 ### Resource Controls Configuration
 
 The HTTP ingester is designed to handle many connections and concurrent requests. A single, moderately-capable system can happily service 100k requests per second spread across many hundreds of connections.  However, no system can service an infinite number of connections nor an infinite number of concurrent requests.  The HTTP Ingester has a safety system designed to prevent overwhelming the host by limiting the number of active connections and concurrent HTTP requests.
@@ -29,6 +36,7 @@ The HTTP ingester is designed to handle many connections and concurrent requests
 
 | Config Parameter          | Type         | Required | Default Value   | Description                         |
 |---------------------------|--------------|----------|-----------------|-------------------------------------|
+| Max-Body                  | integer      | no       | 4194304 (4MB)   | Maximum size of a request body in a single ingest request.  A low default of 4MB is used to prevent extremely large uploads from exhausting resources. |
 | Max-Connections           | integer      | no       | 10240           | Maximum number of active connections. Once the maximum is reached, new connections will be queued and accepted as existing connections terminate. |
 | Max-Concurrent-Requests   | integer      | no       | 16384           | Maximum number of concurrent HTTP requests for all connections.  System will return HTTP code 429 (Too Many Requests) until the number of active requests is reduced. |
 
@@ -174,9 +182,9 @@ Authenticating with the HTTP ingester using jwt authentication is a two step pro
 	URL="/jwt/data"
 	LoginURL="/jwt/login"
 	Tag-Name=stuff
-	AuthType=basic
-	Username=secretuser
-	Password=secretpassword
+	AuthType=auth
+	Username=user1
+	Password=pass1
 ```
 
 Sending entries requires that endpoints first authenticate to obtain a token, the token can then be reused for up to 48 hours.  If a request receives a 401 response, clients should re-authenticate.  Here is an example using curl to authenticate and then push data.
