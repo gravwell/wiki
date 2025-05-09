@@ -182,9 +182,9 @@ Authenticating with the HTTP ingester using jwt authentication is a two step pro
 	URL="/jwt/data"
 	LoginURL="/jwt/login"
 	Tag-Name=stuff
-	AuthType=basic
-	Username=secretuser
-	Password=secretpassword
+	AuthType=auth
+	Username=user1
+	Password=pass1
 ```
 
 Sending entries requires that endpoints first authenticate to obtain a token, the token can then be reused for up to 48 hours.  If a request receives a 401 response, clients should re-authenticate.  Here is an example using curl to authenticate and then push data.
