@@ -708,6 +708,7 @@ Default Value: false
 Example: `Enable=true`  
 Description: Enable the Logbot AI system.  
 
+(ai-server-url)=
 ### **AI-Server-URL**
 Default Value: https://api.gravwell.ai/  
 Example: `AI-Server-URL="https://ai.example.com"`  
