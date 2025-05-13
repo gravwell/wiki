@@ -65,7 +65,7 @@ During a conversation, the Logbot AI UI shows your remaining words in the conver
 
 ## Limiting access to AI features
 
-Gravwell's AI features use a remote service to process requests ([see below](#remote-ai-services)). Because search entries may contain sensitive data, administrators may wish to limit access to the AI feature. There are two ways to do this:
+Because search entries may contain sensitive data, administrators may wish to limit access to the AI feature. There are two ways to do this:
 
 - **Per user**: Capability Based Access Control ([CBAC](/cbac/cbac)) allows administrators to disable AI access to specific users or groups.
 - **Per system**: Enable may be set to false in the AI section of your instance's gravwell.conf to disable the AI feature for all users.
