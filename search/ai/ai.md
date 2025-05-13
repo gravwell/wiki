@@ -1,4 +1,4 @@
-# Logbot AI 
+# Logbot AI
 
 ```{note}
 Logbot AI is a beta feature and can make mistakes. Always check important information before relying on output from Logbot.
@@ -57,19 +57,27 @@ Your license affects the priority and amount of interactions allowed with Logbot
 
 During a conversation with Logbot AI, the entire conversation is used as state for the conversation. The number of words in a conversation is limited for performance reasons. Once this limit is reached, Logbot AI will not interact anymore until a new conversation is started.
 
-The number of conversations allowed per month is limited by your license. 
+The number of conversations allowed per month is limited by your license.
 
 During a conversation, the Logbot AI UI shows your remaining words in the conversation, as well as the remaining conversations in the month.
 
 ![API Limitations](api.png)
 
-## How Gravwell Processes and Uses Logbot AI Data
+## Limiting access to AI features
 
-When Gravwell's Artificial Intelligence (AI) feature is enabled and any user converses with the AI, their messages as well as any attached search entries will be sent to https://api.gravwell.ai/ for processing. Because search entries may contain sensitive data, administrators may wish to limit access to the AI feature. There are multiple ways to do this:
+Because search entries may contain sensitive data, administrators may wish to limit access to the AI feature. There are two ways to do this:
 
+- **Per user**: Capability Based Access Control ([CBAC](/cbac/cbac)) allows administrators to disable AI access to specific users or groups.
+- **Per system**: Enable may be set to false in the AI section of your instance's gravwell.conf to disable the AI feature for all users.
 
-- Per user: Capability Based Access Control ([CBAC](/cbac/cbac)) allows administrators to disable AI access to specific users or groups. 
-- Per system: Enable may be set to false in the AI section of your instance's gravwell.conf to disable the AI feature for all users. 
+(remote-ai-services)=
+## Remote AI Services
+
+When Gravwell's Artificial Intelligence (AI) feature is enabled and any user converses with the AI, their messages and any attached search entries are sent to a remote service for processing. Gravwell will send requests to the remote system specified in its [system configuration](#ai-server-url). The service is either Gravwell-hosted (`https://api.gravwell.ai/`) or self-hosted.
+
+### Gravwell-hosted AI services
+
+If your [system is configured](#ai-server-url) to use `https://api.gravwell.ai/`, your system is using a Gravwell-hosted AI service.
 
 When engaging with Logbot or other Gravwell AI services, you should be cognizant of the following points which may affect data privacy:
 
@@ -78,4 +86,6 @@ When engaging with Logbot or other Gravwell AI services, you should be cognizant
 - Interactions with Gravwell AI services may be stored on Gravwell infrastructure in memory or logs until rotation/cleanup. Any deletion requests (e.g. GDPR) should be submitted to privacy@gravwell.io or as directed by any contract you may have with Gravwell
 - Gravwell humans in charge of AI services may review interactions to improve the AI services and/or prevent abuse. For example, we expect most users will ask Logbot to explain log entries, but if lots of users are asking it to write Gravwell queries (which it currently doesn't do very well), we want to be able to adapt to those needs
 
+### Self-hosted AI services
 
+If you are using a self-hosted Gravwell AI applicance, please contact customer success with questions about your appliance.
