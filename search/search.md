@@ -309,18 +309,6 @@ tag=gravwell limit 1
 
 In the above example, the main query executes over the last hour. The inner query also has a relative offset, and it is relative to the start time of the main query -- meaning it searches over the last 11 hours (10 hours offset from the main query, which is 1 hour offset from the current time).
 
-### Time constraint arithmetic
-
-Time constraints support three verbs: `START`, `END`, and `NOW`, which can be combined with relative offsets to perform simple arithmetic offsets. For example:
-
-```gravwell
-end="2006-01-02T15:04:05Z" 
-start=END-1h
-tag=default json foo table
-```
-
-In the above example, the end time is given as an absolute time, and the start time is given as a relative offset from the end time. 
-
 (time-constraint-summary)=
 ### Time constraint summary
 
@@ -331,7 +319,6 @@ Below is a summary of how time constraints work across all forms of use.
 | Not set | Use GUI time picker | Use GUI time picker |
 | Absolute time | Use absolute time | Use absolute time |
 | Relative | Relative to now | Relative to main query |
-| Arithmetic | Use rules above ±duration | Use rules above ±duration |
 
 ## Comments
 
