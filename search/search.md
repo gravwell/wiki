@@ -291,6 +291,10 @@ If start/end time constraints are provided, the GUI time picker timeframe will b
 Timeframes are always aligned to one second boundaries. Sub-second timeframes will be automatically rounded down to the second.
 ```
 
+```{note}
+The start time cannot come after the end time.
+```
+
 ### Using time constraints in compound queries
 
 The `start` and `end` constraints can also be used in compound queries. When using absolute times in an inner query, the inner query will search over the specified time. 
