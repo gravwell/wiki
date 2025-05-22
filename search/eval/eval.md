@@ -620,6 +620,18 @@ Formats a string according to the given format and any number of expressions. pr
 
 Overwrites the entry's DATA field. This is different than creating an enumerated value named DATA.
 
+#### evs
+
+    function evs() array
+
+Returns an array of all enumerated value names attached to the entry.
+
+#### keys
+
+    function keys(map) array
+
+Returns an array of all keys in the given map.
+
 ### String manipulation
 
 #### strings_count
