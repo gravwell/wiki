@@ -292,7 +292,7 @@ Timeframes are always aligned to one second boundaries. Sub-second timeframes wi
 ```
 
 ```{note}
-The start time cannot come after the end time.
+A negative end time cannot be used without defining an earlier start time.
 ```
 
 ### Using time constraints in compound queries
