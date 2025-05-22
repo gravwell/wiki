@@ -269,7 +269,7 @@ start="2006-01-02T15:04:05Z" end="2006-01-02T23:04:05Z" tag=default json foo tab
 
 The example above uses RFC3339 timestamps to specify a concrete time range.
 
-If `start=` or `end=` is used individually, the omitted constraint will be interpreted as NOW. For example, to simply search over the last hour:
+If `start=` or `end=` is used individually, the omitted constraint will be interpreted as `NOW`. For example, to simply search over the last hour:
 
 ```gravwell
 start=-1h tag=default json foo | table
