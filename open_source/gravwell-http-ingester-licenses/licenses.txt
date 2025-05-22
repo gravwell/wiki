@@ -3,7 +3,7 @@ github.com/crewjam/rfc5424,https://github.com/crewjam/rfc5424/blob/v0.1.0/LICENS
 github.com/dchest/safefile,https://github.com/dchest/safefile/blob/855e8d98f185/LICENSE,BSD-2-Clause
 github.com/gobwas/glob,https://github.com/djfritz/glob/blob/aee51dc1d432/LICENSE,MIT
 github.com/gofrs/flock,https://github.com/gofrs/flock/blob/v0.12.1/LICENSE,BSD-3-Clause
-github.com/golang-jwt/jwt/v4,https://github.com/golang-jwt/jwt/blob/v4.5.2/LICENSE,MIT
+github.com/golang-jwt/jwt/v5,https://github.com/golang-jwt/jwt/blob/v5.2.2/LICENSE,MIT
 github.com/google/gopacket,https://github.com/google/gopacket/blob/v1.1.19/LICENSE,BSD-3-Clause
 github.com/google/renameio,https://github.com/google/renameio/blob/v1.0.1/LICENSE,Apache-2.0
 github.com/google/uuid,https://github.com/google/uuid/blob/v1.6.0/LICENSE,BSD-3-Clause
