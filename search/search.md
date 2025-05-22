@@ -312,7 +312,7 @@ In the above example, the main query executes over the last hour. The inner quer
 ### Time constraint arithmetic
 
 ```{note}
-START and END always reference the start and end times of the main query, even if used in the main query.
+START and END always reference the start and end times of the main query regardless of whether they are used in the main query or the inner part of a compound query.
 ```
 
 Time constraints support three verbs: `START`, `END`, and `NOW`, which can be combined with relative offsets to perform simple arithmetic offsets. For example:
