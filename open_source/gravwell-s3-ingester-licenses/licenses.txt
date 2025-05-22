@@ -1,6 +1,6 @@
 github.com/asergeyev/nradix,https://github.com/asergeyev/nradix/blob/3872ab85bb56/LICENSE,MIT
-github.com/aws/aws-sdk-go,https://github.com/aws/aws-sdk-go/blob/v1.55.6/LICENSE.txt,Apache-2.0
-github.com/aws/aws-sdk-go/internal/sync/singleflight,https://github.com/aws/aws-sdk-go/blob/v1.55.6/internal/sync/singleflight/LICENSE,BSD-3-Clause
+github.com/aws/aws-sdk-go,https://github.com/aws/aws-sdk-go/blob/v1.55.7/LICENSE.txt,Apache-2.0
+github.com/aws/aws-sdk-go/internal/sync/singleflight,https://github.com/aws/aws-sdk-go/blob/v1.55.7/internal/sync/singleflight/LICENSE,BSD-3-Clause
 github.com/bmatcuk/doublestar/v4,https://github.com/bmatcuk/doublestar/blob/v4.4.0/LICENSE,MIT
 github.com/crewjam/rfc5424,https://github.com/crewjam/rfc5424/blob/v0.1.0/LICENSE,BSD-2-Clause
 github.com/dchest/safefile,https://github.com/dchest/safefile/blob/855e8d98f185/LICENSE,BSD-2-Clause
