@@ -318,12 +318,18 @@ START and END always reference the start and end times of the main query, even i
 Time constraints support three verbs: `START`, `END`, and `NOW`, which can be combined with relative offsets to perform simple arithmetic offsets. For example:
 
 ```gravwell
-end="2006-01-02T15:04:05Z" 
-start=END-1h
-tag=default json foo table
+@foo{
+    start=START-2h          // start 2 hours before the main query's start time
+    end=END-1h              // end 1 hour before the main query's end time
+    tag=default json foo
+};
+
+end="2006-01-02T15:04:05Z"  // An absolute time
+start=END-1h                // start 1 hour before the absolute end time
+tag=default dump -r @foo | table
 ```
 
-In the above example, the end time is given as an absolute time, and the start time is given as a relative offset from the end time. 
+In the above example, the main query has an absolute end time, and a start time that is relative to the end time. Additionally, the inner query uses relative offsets from the main query's start and end times.
 
 (time-constraint-summary)=
 ### Time constraint summary
