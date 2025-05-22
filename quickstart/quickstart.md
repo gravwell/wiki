@@ -2,19 +2,32 @@
 function calculate(){
 	var ingest = document.getElementById("ingest").value;
 	if (ingest == 0) { return; }
+	// Compute indexer values
 	var cores = Math.ceil(ingest / 30);
 	var memory = Math.ceil(ingest / 6);
 	if (cores < 2) { cores = 2; }
 	if (memory < 4) { memory = 4; }
 	var indexers = Math.ceil(ingest / 250);
-	cores = Math.ceil(cores / indexers);
-	memory = Math.ceil(memory / indexers);
-	memory = Math.pow(2, Math.ceil(Math.log(memory)/Math.log(2)));
-	cores = Math.pow(2, Math.ceil(Math.log(cores)/Math.log(2)));
+	cores = roundNumber(Math.ceil(cores / indexers));
+	memory = roundNumber(Math.ceil(memory / indexers));
 	document.getElementById("corecount").innerHTML = cores;
 	document.getElementById("memsize").innerHTML = memory;
 	document.getElementById("indexerCount").innerHTML = indexers;
+	// Now compute the webserver stuff
+	// At low ingest, we'll just match the indexer
+	webCores = cores;
+	webMem = memory;
+	if (indexers > 1) {
+		webCores = 14 + 2*(indexers-1);
+		webMem = 56 + 8*(indexers-1);
+	}
+	document.getElementById("webcores").innerHTML = webCores;
+	document.getElementById("webmem").innerHTML = webMem;
 }
+function roundNumber(num) {
+	return Math.pow(2, Math.ceil(Math.log(num)/Math.log(2)));
+}
+
 function calculateStorage(){
 	var daily = document.getElementById("dailydata").value;
 	var retention = document.getElementById("retention").value;
@@ -42,7 +55,7 @@ This guide is suitable for Community Edition users as well as users with a paid 
 
 You may find the [installation checklist](checklist) and the [glossary](/glossary/glossary) useful companions to this document.
 
-If you are interested in a complete training package, please see the [complete training PDF](https://github.com/gravwell/training/releases/download/v5.8.0/gravwell_training_v5.8.0.pdf).  The Gravwell training PDF is the complete training manual which is paired with labs and exercises. The exercises are built from the open source [Gravwell Training](https://github.com/gravwell/training) repository.
+If you are interested in a complete training package, please see the [complete training PDF](https://github.com/gravwell/training/releases/download/v5.8.1/gravwell_training_v5.8.1.pdf).  The Gravwell training PDF is the complete training manual which is paired with labs and exercises. The exercises are built from the open source [Gravwell Training](https://github.com/gravwell/training) repository.
 
 ```{note}
 Community Edition users will need to obtain their own license from [https://www.gravwell.io/download](https://www.gravwell.io/download) before beginning installation. Paid users should already have received a license file via email.
@@ -79,21 +92,25 @@ Open-Source Library Licenses </open_source>
 (hardware_calculator)=
 ### Hardware Estimator
 
-We strongly recommend at least 4GB of RAM and 2 CPU cores to run Gravwell Community Edition; this should be sufficient up to the CE ingest limit. If you have a paid license, you should scale up your hardware as your daily data ingest increases. In general, we recommend the following rule of thumb:
+We strongly recommend at least 4GB of RAM and 2 CPU cores to run Gravwell Community Edition; this should be sufficient up to the CE ingest limit. If you have a paid license, you should scale up your hardware as your daily data ingest increases. In general, we recommend the following rules of thumb for *indexers*:
 
 * One CPU core per 30 GB/day ingest.
 * 1 GB of RAM per 6 GB/day ingest.
 
 Note that as your ingest scales to the hundreds or thousands of gigabytes per day, you'll usually want more cores and memory per indexer, as queries simply tend to become more "expensive" -- and you're often running more of them in such a large deployment!
 
-We provide a basic calculator below; just enter your expected daily ingest in gigabytes:
+If you're deploying a cluster, your *webserver* should be roughly similar to your indexers in terms of CPU and memory. Webservers don't need much storage, but will benefit from having `/opt/gravwell` on a fast disk like an NVMe drive.
 
-|                                                                |                                                                                  |
-|----------------------------------------------------------------|----------------------------------------------------------------------------------|
-| **Expected Ingest Per Day (GB)**                               | <input type='number' id='ingest' onInput='calculate()' placeholder="Gigabytes"/> |
-| <span style="color:blue">**Recommended # of Indexers**</span>            | <span style="color:blue"><span id="indexerCount">--</span></span>                  |
+Below is a simple calculator for estimating your hardware needs:
+
+|                                                                        |                                                                                  |
+|------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| **Expected Ingest Per Day (GB)**                                       | <input type='number' id='ingest' onInput='calculate()' placeholder="Gigabytes"/> |
+| <span style="color:blue">**Recommended # of Indexers**</span>          | <span style="color:blue"><span id="indexerCount">--</span></span>                |
 | <span style="color:blue">**Recommended Per-Indexer Core Count**</span> | <span style="color:blue"><span id="corecount">--</span></span>                   |
-| <span style="color:blue">**Recommended Per-Indexer RAM**</span>            | <span style="color:blue"><span id="memsize">--</span> GB</span>                  |
+| <span style="color:blue">**Recommended Per-Indexer RAM**</span>        | <span style="color:blue"><span id="memsize">--</span> GB</span>                  |
+| <span style="color:blue">**Recommended Webserver Core Count**</span>   | <span style="color:blue"><span id="webcores">--</span></span>                |
+| <span style="color:blue">**Recommended Webserver RAM**</span>   | <span style="color:blue"><span id="webmem">--</span> GB</span>                |
 
 ```{note}
 These are only very rough estimates, and of course performance will vary based on the hardware you select: eight Xeon Ivy Bridge cores are not comparable to eight Epyc Turin or Xeon Granite Rapids cores!
