@@ -60,6 +60,7 @@ syslogrouter <syslogrouter>
 csvrouter <csvrouter>
 regexrouter <regexrouter>
 srcrouter <srcrouter>
+tagrouter <tagrouter>
 regextimestamp <regextimestamp>
 regexextract <regexextract>
 forwarder <forwarder>
@@ -81,6 +82,7 @@ plugin <plugin>
 | [csvrouter](csvrouter) | Parse CSV data and route to specific tags based on column values |
 | [regexrouter](regexrouter) | Route entries to specific tags based on regular expression matches |
 | [srcrouter](srcrouter) | Route entries to specific tags based on source IP or value |
+| [tagrouter](tagRouter) | Route entries to specific tags based on the tag, or a combination of tag and either IP address or network |
 | [regextimestamp](regextimestamp) | Perform complex timestamp processing using regular expressions |
 | [regexextract](regexextract) | Perform data extractions and repacking using regular expressions |
 | [forwarder](forwarder) | Forward entries using TCP or UDP connections |
