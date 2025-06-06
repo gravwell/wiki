@@ -60,7 +60,7 @@ syslogrouter <syslogrouter>
 csvrouter <csvrouter>
 regexrouter <regexrouter>
 srcrouter <srcrouter>
-tagrouter <tagrouter>
+tagrouter <tagRouter>
 regextimestamp <regextimestamp>
 regexextract <regexextract>
 forwarder <forwarder>
