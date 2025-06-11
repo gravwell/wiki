@@ -171,3 +171,68 @@ curl -X POST \
    --output /tmp/port80.pcap \
    http://10.0.0.1/api/search/direct
 ```
+
+
+## Download API
+
+Sometimes it is useful to download results from queries that have been alunched using automations or other interfaces.  The search control API implements a `download` endpoint that can attach to any existing search and retrieve the results.  The Download API is designed to accomodate active searches, background searches, and archived searches.  If a search is active and not yet completed, the download request will stay attached to the search and stream data out as it is available; this means that if you execute a very large search that takes many minutes to complete and begin a download request the REST call will also take many minutes to finish.
+
+The download REST endpoint is made up of two required URL parameters and two optional query parameters.  The base structure of the URL is `/api/searchctrl/{id}/download/{format}`.  The `{id}` URL parameter is the numeric search ID, this ID is returned by many APIs such as scheduled searchs and status APIs.  The `{format}` parameter specifies the format for the response; the `{format}` must be compatible with the renderer in used in the query.  For example, if the query uses the [text](/search/text/text) renderer then the format values of `text`, `json`, `csv`, and `archive` are supported.  If the renderer is [chart](/search/chart/chart) then only `json`, `csv`, and `archive` values are supported.
+
+Optional query parameters `StartTS` and `EndTS` may be specified as query parameters to narrow the results returned in the download.  The arguments to `StartTS` and `EndTS` must be fully formed [RFC3339](https://datatracker.ietf.org/doc/html/rfc3339) timestamps.
+
+The download API endpoint supports authorization using JWT Bearer tokens, cookies, and [API Tokens](/tokens/tokens).
+
+### Format Compatability
+
+| Renderer    | Text    | JSON    | CSV      | PCAP    | Archive |
+| ----------- | ------- | ------- | -------- | ------- | ------- |
+| text        | ✅      | ✅      | ✅       |         | ✅      |
+| hex         | ✅      | ✅      | ✅       |         | ✅      |
+| raw         | ✅      | ✅      | ✅       |         | ✅      |
+| pcap        | ✅      | ✅      | ✅       | ✅      | ✅      |
+| chart       |         | ✅      | ✅       |         | ✅      |
+| pointmap    |         | ✅      | ✅       |         | ✅      |
+| heatmap     |         | ✅      | ✅       |         | ✅      |
+| point2point |         | ✅      | ✅       |         | ✅      |
+| fdg         |         | ✅      | ✅       |         | ✅      |
+| stackgraph  |         | ✅      | ✅       |         | ✅      |
+| gauge       |         | ✅      | ✅       |         | ✅      |
+| numbercard  |         | ✅      | ✅       |         | ✅      |
+| wordcloud   |         | ✅      | ✅       |         | ✅      |
+| fdg         |         | ✅      | ✅       |         | ✅      |
+
+### Examples
+
+Downloading a PCAP from search results:
+```
+curl -H "Gravwell-Token: aFOa_YbO7Pe0MAqK08PSD-oTrEZxopc5JBf0hu0W5_Vo-FxWsjHp" \
+   --output /tmp/port80.pcap \
+   http://10.0.0.1/api/searchctrl/12345678/download/pcap
+```
+
+Downloading results as JSON:
+```
+curl -H "Gravwell-Token: aFOa_YbO7Pe0MAqK08PSD-oTrEZxopc5JBf0hu0W5_Vo-FxWsjHp" \
+   --output /tmp/stuff.json \
+   http://10.0.0.1/api/searchctrl/12345678/download/json
+```
+
+Downloading an archive:
+```
+curl -H "Gravwell-Token: aFOa_YbO7Pe0MAqK08PSD-oTrEZxopc5JBf0hu0W5_Vo-FxWsjHp" \
+   --output /tmp/12345678.gravar \
+   http://10.0.0.1/api/searchctrl/12345678/download/archive
+```
+
+Raw results:
+```
+curl -H "Gravwell-Token: aFOa_YbO7Pe0MAqK08PSD-oTrEZxopc5JBf0hu0W5_Vo-FxWsjHp" \
+   http://10.0.0.1/api/searchctrl/12345678/download/text
+```
+
+Results with timespan downselect:
+```
+curl -H "Gravwell-Token: aFOa_YbO7Pe0MAqK08PSD-oTrEZxopc5JBf0hu0W5_Vo-FxWsjHp" \
+   "http://10.0.0.1/api/searchctrl/12345678/download/text?StartTS=2025-01-02T12:35:00Z&EndTS=2025-01-02T12:45:00Z"
+```
