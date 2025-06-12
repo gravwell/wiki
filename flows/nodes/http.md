@@ -13,6 +13,15 @@ This node can perform HTTP requests with considerable flexibility. It can send i
 * `Request Headers`: May be used to set headers on the outgoing HTTP request, such as authentication tokens.
 * `Decode Body`: If set to true, the node will attempt to decode the response body into a structure.
 
+The contents of the `Body` are treated as follows:
+
+* Strings or byte slices are sent verbatim.
+* Results from a [Gravwell Query](runquery) will be processed based on the renderer used.
+  - `raw`/`text`/`hex`: the body of the entries will be printed one per line.
+  - `table`: the results will be returned as a CSV.
+  - `pcap`: the results will be output in PCAP format.
+* All other types will be formatted to a string at best-effort using Go's [fmt](https://pkg.go.dev/fmt) library.
+
 ## Output
 
 The HTTP node sets several items in the outgoing payload:
