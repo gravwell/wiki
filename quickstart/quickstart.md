@@ -83,6 +83,7 @@ hidden: true
 ---
 Gravwell License System </license/license>
 End User License Agreement </eula>
+Transparency and Data Use </transparency>
 Open-Source Library Licenses </open_source>
 ```
 
