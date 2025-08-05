@@ -7,7 +7,7 @@
 maxdepth: 1
 caption: Current Release
 ---
-5.8.5 <5.8.5>
+5.8.6 <5.8.6>
 ```
 
 ## Previous Versions
@@ -18,6 +18,7 @@ maxdepth: 1
 caption: Previous Releases
 ---
 
+5.8.5 <5.8.5>
 5.8.4 <5.8.4>
 5.8.3 <5.8.3>
 5.8.2 <5.8.2>
