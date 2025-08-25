@@ -82,7 +82,9 @@ caption: Licensing
 hidden: true
 ---
 Gravwell License System </license/license>
-End User License Agreement </eula>
+Software License Agreement </software-license-agreement>
+Hardware Sales Terms </sales/hardware>
+Data Ingest Overage Policy </sales/overages>
 Transparency and Data Use </transparency>
 Open-Source Library Licenses </open_source>
 ```
