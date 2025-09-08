@@ -902,6 +902,11 @@ Appends the value to the JSON array given in input.
 
 Returns a JSON array of the given value. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
 
+#### json_array_set
+
+	function json_array(array string, index <expression>, value <expression>) string
+
+Set the value of the given JSON array at the given index. The updated array is returned. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
 
 #### json_get
 
@@ -914,6 +919,12 @@ Returns a typed item from the given object with the given key.
 	function json_index(array string, index int) bool/float/string
 
 Returns a typed item from the given array at the given index.
+
+#### json_keys
+
+    function json_keys(object string) array
+
+Returns an array of the keys of the given JSON object.
 
 #### json_len
 
@@ -938,6 +949,13 @@ Pretty prints the given JSON input.
 	function json_set(object string, key string, value <expression>) string
 
 Sets a key/value pair in the given object. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
+
+#### json_to_gravwell_array
+
+    function json_to_gravwell_array(array string) array
+
+Return a Gravwell array enumerated value equivalent of the given JSON array. JSON types are evaluated at runtime and individual array items will be set to their equivalent Gravwell types, or a string if no mapping exists.
+
 
 (eval-math)=
 ### Math
