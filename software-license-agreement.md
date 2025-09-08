@@ -1,4 +1,4 @@
-## Software License Agreement
+# Software License Agreement
 
 Last Updated: August 19, 2025
 
