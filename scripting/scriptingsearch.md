@@ -95,6 +95,7 @@ require(`alerts/email.ank`, cfg.email_lib_revision)
 * `delPersistentMap(mapname, key)` deletes the specified key/value pair from the given map.
 * `persistentMap(mapname)` returns the entire named map, changes to the returned map will persist automatically on successful execution.
 * `getMacro(name) string, error` returns the value of the given macro or an error if it does not exist. Note that this function does not perform macro expansion.
+* `getSecret(name) string, error` returns the value of the given secret or an error if it does not exist or if the executing user does not have access.  Note that secret values are scrubbed from debug output.
 
 ## Search entry manipulation
 
