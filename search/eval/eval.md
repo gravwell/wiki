@@ -904,9 +904,9 @@ Returns a JSON array of the given value. The value's type is evaluated at runtim
 
 #### json_array_set
 
-	function json_array(array string, index <expression>, value <expression>) string
+	function json_array_set(array string, index <expression>, value <expression>) string
 
-Set the value of the given JSON array at the given index. The updated array is returned. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
+Sets the value of the given JSON array at the given index. The updated array is returned. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
 
 #### json_get
 
@@ -954,7 +954,7 @@ Sets a key/value pair in the given object. The value's type is evaluated at runt
 
     function json_to_gravwell_array(array string) array
 
-Return a Gravwell array enumerated value equivalent of the given JSON array. JSON types are evaluated at runtime and individual array items will be set to their equivalent Gravwell types, or a string if no mapping exists.
+Returns a Gravwell array enumerated value based on the given JSON array. JSON types are evaluated at runtime and individual array items will be set to their equivalent Gravwell types, or a string if no mapping exists.
 
 
 (eval-math)=
