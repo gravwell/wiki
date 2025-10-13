@@ -5,7 +5,7 @@ OKTA is a managed identity provider that provides cloud hosted identity and auth
 In this document, we assume the following:
 
 * The Gravwell instance has a valid DNS name of gravwell.example.com.
-* The Gravwell instance is publically available with valid SSL certificates.
+* The Gravwell instance is publicly available with valid SSL certificates.
 * You are an Okta admin and can establish a new application and assign users to it.
 
 
@@ -23,7 +23,7 @@ Make sure to set the appropriate fully qualified URL for your SSO URL and SP Ent
 
 ![](setup_1.png)
 
-Next configure Attribute Statements so that user information such as names, emails, and groups can be transmitted from Okta to Gravwell during account creation.  The `uid` and `mail` attributes are manditory, but we suggest adding `givenName` and `surName` too.  Also add the Group Attribute Statements to describe which groups will be sent from Okta to Gravwell; you can filter which groups are sent using a prefix, postfix, or even a regular expression.  For this example we are sending all groups.
+Next configure Attribute Statements so that user information such as names, emails, and groups can be transmitted from Okta to Gravwell during account creation.  The `uid` and `mail` attributes are mandatory, but we suggest adding `givenName` and `surName` too.  Also add the Group Attribute Statements to describe which groups will be sent from Okta to Gravwell; you can filter which groups are sent using a prefix, postfix, or even a regular expression.  For this example we are sending all groups.
 
 ![](setup_2.png)
 
@@ -126,6 +126,32 @@ Note the `Group-Mapping=group1:groupOne` option. This tells Gravwell that users 
 The remaining config options tell Gravwell how to map attributes in the SSO request to Gravwell user accounts. These do not need to be modified, but they should match the values you specify in the Okta setup page.
 
 Once you've saved the configuration file, you can restart the Gravwell webserver.
+
+### Granting Admin Status
+
+The Gravwell SSO configuration enables setting a users admin status via SAML attributes, this is done using the `Admin-Attribute`.  The `Admin-Attribute` field expects a boolean value in the form of either `true` or `false`.  It is possible to individually specify this attribute for each user in the Okta admin control panel, but a much easier method is to just define a new group and tell Okta to deliver a boolean in this field if a user is a member of the group in Okta application `ATTRIBUTE STATEMENTS` configuration.
+
+For example, if you create a group named `gw-admin` and create a new attribute statement with the name `gw-admin` and the value `isMemberOfGroupName("gw-admin") ? "true" : "false"` Okta will deliver a boolean value in the SAML attributes of either "true" or "false" depending on whether a user is a member of the `gw-admin` group.  Granting admin status to Gravwell is now just a matter of assigning users into the `gw-admin` group.
+
+Tell Gravwell to look for that admin status in that boolean value by setting `Admin-Attribute="gw-admin"` in the SSO configuration block.
+
+
+![](admin_attribute.png)
+
+
+```
+[SSO]
+    Gravwell-Server-URL="https://gravwell.example.com"
+    Provider-Metadata-URL="https://trial-niner-niner.okta.com/app/abcdefghijklmnop/sso/saml/metadata"
+    Username-Attribute=uid
+    Given-Name-Attribute=givenName
+    Surname-Attribute=surName
+    Email-Attribute=mail
+    Admin-Attribute="gw-admin"
+    Groups-Attribute=groups
+	Group-Mapping=group1:groupOne
+	Group-Mapping=group2:groupTwo
+```
 
 ## Restart Gravwell and test login
 
