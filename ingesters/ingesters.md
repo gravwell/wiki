@@ -480,7 +480,7 @@ Source-Override=[fe80::899:b3ff:feb7:2dc6]
 (label)=
 ## Label
 
-The `Label` parameter allows for attaching an arbitrary string that will sent upstream and displayed in the [Systems & Health](/gui/systems-health) page for ingesters.  Attaching a Label to an ingester can be a helpful way to organize and/or tag ingesters with useful information.
+The `Label` parameter allows for attaching an arbitrary string that will be sent upstream and displayed in the [Systems & Health](/gui/systems-health) page for ingesters.  Attaching a Label to an ingester can be a helpful way to organize and/or tag ingesters with useful information.
 
 ```
 Label="Bob's personal ingester"
