@@ -91,7 +91,7 @@ If your webserver has self-signed TLS certificates installed, you will need to a
 
 If your webserver does not have TLS certificates installed, add the `-insecure-no-https` flag to use HTTP-only mode. Note that this is insecure: your password will be sent to the server in plain text.
 
-The CLI will require the use of a Local Account to authenticate.  Unfortunately many SSO providers require Browser functionality to complete the SSO process, which cannot be replicated or emulated via a command line interface.
+The CLI requires the use of a local account to authenticate.
 
 ### Listing Available Commands
 
