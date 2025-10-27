@@ -364,6 +364,20 @@ The `Attach` stanza takes any key/value pair, and will attach it to every entry 
 
 Will attach an EV "foo" with the contents "bar" to every entry, as well as "ingester" with the value "my ingester".
 
+Unlike other stanzas the `Attach` stanza supports arbitrary keys and will not modify the key in any way into the EV name. For example:
+
+```
+[Attach]
+	foo_foo = "bar"
+	ingester-name = "my ingester"
+```
+
+Will attach and EV "foo_foo" with the contents "bar" to every entry, as well as "ingester-name" with the value "my ingester".
+
+```{attention}
+The behavior of underscores and dashes changed in 6.0.0. Previously a dash would be converted to an underscore, and an underscore was not allowed. This will impact queries of new entries unless configs are updated to swap all dashes to underscores to match previous behavior.
+```
+
 Additionally, dynamic values can be attached which are resolved from the host environment. Dynamic values begin with a `$` character.  There are 3 special dynamic values which are not resolved from environment variables: `$NOW`, `$HOSTNAME`, `$UUID`.  If an environment variable cannot be found, the below variables can be used to populate values:
 
 ```
