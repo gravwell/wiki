@@ -45,7 +45,7 @@ This configuration defines two data consumers (Simple Relay calls them "Listener
 
 ### Testing Preprocessors
 
-The [preprocessortest](https://github.com/gravwell/gravwell/tree/main/tools/preprocessortest) program is an open source tool to provide a simple scaffolding for testing ingest preprocessor stacks, it is designed to accept a data export from Gravwell and run the raw data through a set of preprocesors without actually ingesting any data.
+The [preprocessortest](https://github.com/gravwell/gravwell/tree/main/tools/preprocessortest) program is an open source tool to provide a simple scaffolding for testing ingest preprocessor stacks. It is designed to accept a data export from Gravwell and run the raw data through a set of preprocessors without actually ingesting any data.
 
 #### Getting Started
 
