@@ -61,11 +61,11 @@ An example stack of preprocessors may have a configuration file like so:
 
 ```
 [Global]
-	Preprocessor = apprtr
+	Preprocessor=apprtr
 	Preprocessor=loginapp
 
 [Preprocessor "apprtr"]
-    Type = syslogrouter
+    Type=syslogrouter
     Template=`syslog-${Appname}`
 
 
@@ -93,7 +93,7 @@ Usage of ./preprocessortest:
     	Print each entry as its processed
 ```
 
-An example execution of the test plugin is:
+An example execution of a preprocessor stack is:
 
 ```
 
