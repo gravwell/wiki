@@ -603,7 +603,7 @@ Upon successful reload of a configuration, the ingester will emit a log to the `
 <14>1 2025-10-28T20:21:03.459615Z 8aa069286fc3 httpingester - HttpIngester/main.go:170 - loaded new config
 ```
 
-If the ingester cannot load the configuration set due to errors in the config, it will emit an error to the `gravwell` tag with `failed to parse new configuration` in the message body and continue using the same config.  Attempting to hot reload a broken config will NOT break the running ingester.
+If the ingester cannot load the configuration set due to errors in the config, it will emit an error to the `gravwell` tag with `failed to parse new configuration` in the message body and continue using the same config. Attempting to hot reload a broken config will NOT break the running ingester.
 
 ```
 <11>1 2025-10-28T20:23:23.291203Z 8aa069286fc3 httpingester - HttpIngester/main.go:166 [gw@1 error="failed to load configuration Config file \"/opt/gravwell/etc/gravwell_http_ingester.conf\" returned error failed to load \"/opt/gravwell/etc/gravwell_http_ingester.conf.d/test.conf\" 1:1: expected section header
