@@ -45,11 +45,11 @@ This configuration defines two data consumers (Simple Relay calls them "Listener
 
 ### Testing Preprocessors
 
-The [preprocessortest](https://github.com/gravwell/gravwell/tree/main/tools/preprocessortest) program is an open source tool to provide a simple scaffolding for testing ingest preprocessor stacks, it is designed to accept a data export from Gravwell and run the raw data through a set of preprocesors without actually ingesting any data.
+The [preprocessortest](https://github.com/gravwell/gravwell/tree/main/tools/preprocessortest) program is an open source tool to provide a simple scaffolding for testing ingest preprocessor stacks. It is designed to accept a data export from Gravwell and run the raw data through a set of preprocessors without actually ingesting any data.
 
 #### Getting Started
 
-First you will need to get a raw data export from some unprocessed data, this can be a simple text file that is line delimited or a JSON export of data from Gravwell.  For example, if we were working with syslog data from the `syslog` tag we might run the following query:
+First, you will need to get a raw data export from some unprocessed data; this can be a simple text file that is line delimited or a JSON export of data from Gravwell.  For example, if we were working with syslog data from the `syslog` tag we might run the following query:
 
 ```
 tag=syslog limit 1000 | raw
