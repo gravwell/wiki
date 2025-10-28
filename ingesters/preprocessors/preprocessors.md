@@ -49,7 +49,7 @@ The [preprocessortest](https://github.com/gravwell/gravwell/tree/main/tools/prep
 
 #### Getting Started
 
-First you will need to get a raw data export from some unprocessed data, this can be a simple text file that is line delimited or a JSON export of data from Gravwell.  For example, if we were working with syslog data from the `syslog` tag we might run the following query:
+First, you will need to get a raw data export from some unprocessed data; this can be a simple text file that is line delimited or a JSON export of data from Gravwell.  For example, if we were working with syslog data from the `syslog` tag we might run the following query:
 
 ```
 tag=syslog limit 1000 | raw
