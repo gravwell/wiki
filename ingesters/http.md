@@ -618,5 +618,5 @@ kill -SIGHUP `pidof gravwell_http_ingester` # use kill and the pidof command to 
 ```
 
 ```{note}
-The ingester cannot modify `[global]` configuration block items like ingester connections, TLS configuration, bound ports, request limiting controls, ingest cache controls.
+The ingester cannot dynamically reload changes to `[global]` configuration block items like ingester connections, TLS configuration, bound ports, request limiting controls, or ingest cache controls.
 ```
