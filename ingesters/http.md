@@ -610,7 +610,7 @@ If the ingester cannot load the configuration set due to errors in the config, i
 "] failed to parse new configuration
 ```
 
-A common way to signal the HTTP ingester is the `kill` or `killall` system command:
+A common way to signal the HTTP ingester is to use the `kill` or `killall` system command:
 
 ```
 killall -SIGHUP gravwell_http_ingester #use killall to resolve the process name
