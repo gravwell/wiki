@@ -595,7 +595,7 @@ The HEC compatible endpoint contains special processing logic for timestamps whe
 
 ## Dynamic Configuration Reload
 
-The HTTP ingesters supports dynamic configuration reloading for many configuration items; the ingester can dynamically reload Listener, HEC, and Amazon Firehose listener configuration blocks without restarting.  The Ingester uses the `SIGHUP` system signal as a notification mechanism to reload its configuration.
+The HTTP ingesters support dynamic configuration reloading for many configuration items; the ingester can dynamically reload Listener, HEC, and Amazon Firehose listener configuration blocks without restarting.  The Ingester uses the `SIGHUP` system signal as a notification mechanism to reload its configuration.
 
 Upon successful reload of a configuration, the ingester will emit a log to the `gravwell` tag with `loaded new config` in the `Message` portion.
 
