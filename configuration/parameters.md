@@ -146,9 +146,9 @@ Description:		The Datastore parameter specifies that the webserver should connec
 
 ### **Datastore-Update-Interval**
 Applies to:			Webserver  
-Default Value:		`10`  
-Example:			`Datastore-Update-Interval=5`  
-Description:		The Datastore-Update-Interval parameter determines how long (in seconds) the webserver should wait before checking the datastore for updates. The default value of 10 seconds is typically suitable.
+Default Value:		`5`  
+Example:			`Datastore-Update-Interval=10`
+Description:		The Datastore-Update-Interval parameter determines how long (in seconds) the webserver should wait before checking the datastore for updates. The default value of 5 seconds is typically suitable.
 
 ### **Datastore-Insecure-Disable-TLS**
 Applies to:		Webserver and Datastore  
