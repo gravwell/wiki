@@ -234,6 +234,74 @@ Like persistent variables, maps are not attached to entries. Values must be assi
 
 Maps have a limit of 1000000 keys. Any new key assigned to a map after this limit is reached will be discarded.
 
+### Arrays
+
+Eval supports the `array` enumerated value type. Arrays currently can only be created in the eval module, and appear to other modules as string representations of the array contents (for example, `[ apple orange banana ]`).
+
+#### Declaring arrays
+
+Arrays can be declared using the `{}` characters when assigning into a variable. For example:
+
+```
+foo = {1,2,3,4};
+```
+
+The above example creates a four element array, containing the integers 1, 2, 3, and 4.
+
+Arrays can have mixed types. For example:
+
+```
+foo = {1, 2, "my string!"};
+```
+
+Arrays can even contain other arrays:
+
+```
+foo = {1, 2, {"foo", "bar"}};
+```
+
+#### Indexing arrays
+
+Arrays are indexed using the `[]` characters at the end of an array variable. For example:
+
+```
+foo = {"a","b","c","d"};
+bar = foo[1];
+```
+
+In this example, `bar` will contain the string value "b".
+
+You can assign into arrays in the same way:
+
+```
+foo = {"a","b","c","d"};
+foo[0] = "bar";
+```
+
+This example replaces the first element "a", with "bar".
+
+#### Ranged sub-arrays
+
+Sub-arrays can be indexed from an array using the `:` range operator. For example:
+
+```
+foo = {"a","b","c","d"};
+bar = foo[1:3];
+```
+
+In this example, `bar` is an array containing the 1st through 3rd elements of the array (non-inclusive of the end range): `[ "b" "c" ]`.
+
+#### Array operators on strings
+
+Array indexing works on strings as well. For example:
+
+```
+foo = "I am a potato";
+foo[7] = "P";
+```
+
+This example changes the 7th character "p" to "P". 
+
 ### Keywords
 
 The following keywords are reserved and may not be used as identifiers.
@@ -279,8 +347,9 @@ The following character sequences are reserved punctuation.
 ,		Function parameter separator
 ;		Statement separator
 $		Alternative enumerated value accessor
-[ ]		Array indexing (not currently supported)
-. :		Scope and range (not currently supported)
+[ ]		Array indexing
+:       Range operator for arrays
+. :		Scope (not currently supported)
 ```
 
 ### Numbers
@@ -328,6 +397,7 @@ duration
 time
 type
 bool
+array
 ```
 
 Additionally, eval will attempt to "promote" types that can be automatically cast. For example, if "foo" contains the string "56", the expression `foo < 3.14` will cause eval to attempt to promote foo to a floating-point number before the expression is evaluated.
@@ -552,6 +622,12 @@ return false;
 
 ### Convenience
 
+#### append
+
+    function append(x array, y ev)
+
+Append y as a new element to the array x.
+
 #### delete
 
 	function delete(key string)
@@ -593,7 +669,7 @@ Returns a UNIX time of the given enumerated value.
 
 	function len(<expression>) int
 
-Return the length of the given expression or enumerated value.
+Return the length of the given expression or enumerated value. If the enumerated value is an array, it returns the length of the array.
 
 #### log
 
@@ -1159,13 +1235,15 @@ This query will provide the acceleration hints of "webserver" OR "indexer" to th
 The eval syntax is expressed using a [variant](https://github.com/gravwell/pbpg) of Extended Backus-Naur Form (EBNF):
 
 ```
-Program                  = ( "(" Expression ")" EOF ) | ( "(" Vars StatementList ")" EOF ) | ( "(" StatementList ")" EOF ) | ( "(" Assignment ")" EOF ) | ( Expression EOF ) | ( Vars StatementList EOF ) | ( StatementList EOF ) | ( Assignment EOF )
+Program                  = ( "(" Expression ")" EOF ) | ( "(" [ Vars ] StatementList ")" EOF ) | ( "(" Assignment ")" EOF ) | ( Expression EOF ) | ( [ Vars ] StatementList EOF ) | ( Assignment EOF )
 Vars                     = VarSpec { VarSpec }
 VarSpec                  = ( "var" VarSpecAssignment { "," VarSpecAssignment } ";" ) | ( "map" AssignmentIdentifier ";" )
 VarSpecAssignment        = AssignmentIdentifier [ "=" Expression ]
 StatementList            = Statement { Statement }
-Statement                = ( "if" "(" Expression ")" Statement "else" Statement ) | ( "if" "(" Expression ")" Statement ) | ( "for" "(" Assignment ";" Expression ";" Assignment ")" "{" StatementList "}" ) | "{" StatementList "}" | Function ";" | Assignment ";" | "return" Expression ";" | "break" ";" | "continue" ";" | ";"
-Assignment               = ( AssignmentIdentifier "[" Expression "]" "=" Expression ) | ( AssignmentIdentifier "=" Expression ) | Expression
+Statement                = ( "if" "(" Expression ")" Statement "else" Statement ) | ( "if" "(" Expression ")" Statement ) | ( "for" "(" Assignment ";" Expression ";" Assignment ")" "{" StatementList "}" ) | ( "switch" "(" Expression ")" "{" { ExpressionCaseClause } [ DefaultCaseClause ] "}" ) | "{" StatementList "}" | Function ";" | Assignment ";" | "return" Expression ";" | "break" ";" | "continue" ";" | ";"
+ExpressionCaseClause     = "case" Expression ":" [ StatementList ]
+DefaultCaseClause        = "default" ":" [ StatementList ]
+Assignment               = ( AssignmentIdentifier { "[" Expression "]" } "=" Expression ) | Expression
 Expression               = ( LogicalOrExpression "?" Expression ":" LogicalOrExpression ) | LogicalOrExpression
 LogicalOrExpression      = LogicalAndExpression { LogicalOrOp LogicalAndExpression }
 LogicalAndExpression     = InclusiveOrExpression { LogicalAndOp InclusiveOrExpression }
@@ -1178,10 +1256,12 @@ ShiftExpression          = AdditiveExpression { ShiftOp AdditiveExpression }
 AdditiveExpression       = MultiplicativeExpression { AdditiveOp MultiplicativeExpression }
 MultiplicativeExpression = UnaryExpression { MultiplicativeOp UnaryExpression }
 UnaryExpression          = UnaryOp PostfixExpression | PostfixExpression
-PostfixExpression        = PrimaryExpression [ PostfixOp ]
-PrimaryExpression        = NestedExpression | ( Identifier "[" Expression "]" ) | Identifier | Literal
+PostfixExpression        = ( PrimaryExpression Index { Index } ) | ( PrimaryExpression [ PostfixOp ] )
+Index                    = ( "[" Expression ":" Expression "]" ) | ( "[" Expression "]" )
+PrimaryExpression        = NestedExpression | Identifier | Literal
 NestedExpression         = ( Function ) | ( Cast "(" Expression ")" ) | ( "(" Expression ")" )
-Literal                  = DecimalLiteral | FloatLiteral | StringLiteral | "true" | "false"
+Literal                  = ArrayLiteral | DecimalLiteral | FloatLiteral | StringLiteral | "true" | "false"
+ArrayLiteral             = "{" [ Expression { "," Expression } ] "}"
 Function                 = FunctionName "(" [ Expression { "," Expression } ] ")"
 LogicalOrOp              = "||"
 LogicalAndOp             = "&&"
@@ -1195,7 +1275,7 @@ RelationalOp             = "<" | ">" | "<=" | ">="
 ShiftOp                  = "<<" | ">>"
 AdditiveOp               = "+" | "-"
 MultiplicativeOp         = "*" | "/" | "%"
-Cast                     = "int" | "float" | "string" | "mac" | "ip" | "time" | "duration" | "type" | "bool" | "location" | "byte" | "int8" | "uint8" | "int16" | "uint16" | "int32" | "uint32" | "int64" | "uint64"
+Cast                     = "int" | "float" | "string" | "mac" | "ip" | "time" | "duration" | "type" | "bool" | "location" | "byte" | "int8" | "uint8" | "int16" | "uint16" | "int32" | "uint32" | "int64" | "uint64" | "array"
 ```
 
 ## Legacy Eval
