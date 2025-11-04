@@ -302,6 +302,19 @@ foo[7] = "P";
 
 This example changes the 7th character "p" to "P". 
 
+#### Example: Iterating over keys
+
+```
+tag=data json foo
+| eval
+    k = json_to_gravwell_array(foo);
+    for (i=0; i<len(k); i++) {
+        foo[i] = strings_tolower(foo[i]);
+    }
+```
+
+In this example, we convert a JSON array to a native Gravwell array, and iterate over each element, setting each one to its lowercase equivalent.
+
 ### Keywords
 
 The following keywords are reserved and may not be used as identifiers.
