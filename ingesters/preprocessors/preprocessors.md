@@ -8,7 +8,7 @@ An ingester reads raw data from some source (a file, a network connection, an Am
 
 ![](arch.png)
 
-Each preprocessor will have the opportunity to modify the entries. The preprocessors will always be applied in the same order, meaning you could e.g. uncompress the entry's data, then modify the entry tag based on the uncompressed data.
+Each preprocessor will have the opportunity to modify the entries. The preprocessors will always be applied in the same order, meaning you could uncompress the entry's data, then modify the entry tag based on the uncompressed data.
 
 ## Configuring Preprocessors
 
@@ -42,6 +42,74 @@ Log-Level=INFO
 ```
 
 This configuration defines two data consumers (Simple Relay calls them "Listeners") named "default" and "syslog". It also defines a preprocessor named "timestamp". Note how the "default" listener includes the option `Preprocessor=timestamp`. This specifies that entries coming from that listener on port 7777 should be sent to the "timestamp" preprocessor. Because the "syslog" listener does not set any `Preprocessor` option, entries coming in on port 601 will not go through any preprocessors.
+
+### Testing Preprocessors
+
+The [preprocessortest](https://github.com/gravwell/gravwell/tree/main/tools/preprocessortest) program is an open source tool to provide a simple scaffolding for testing ingest preprocessor stacks. It is designed to accept a data export from Gravwell and run the raw data through a set of preprocessors without actually ingesting any data.
+
+#### Getting Started
+
+First, you will need to get a raw data export from some unprocessed data; this can be a simple text file that is line delimited or a JSON export of data from Gravwell.  For example, if we were working with syslog data from the `syslog` tag we might run the following query:
+
+```
+tag=syslog limit 1000 | raw
+```
+
+#### Example Test Config
+
+An example stack of preprocessors may have a configuration file like so:
+
+```
+[Global]
+	Preprocessor=apprtr
+	Preprocessor=loginapp
+
+[Preprocessor "apprtr"]
+    Type=syslogrouter
+    Template=`syslog-${Appname}`
+
+
+[Preprocessor "sshattach"]
+    Type=regexextract
+	Regex=`Failed password for( invalid user)? (?P<user>\w+) from (?P<ip>\S+)`
+	Template=`${_DATA_}`
+	Attach=user
+	Attach=ip
+```
+
+The example config is executing a [syslogrouter](https://docs.gravwell.io/ingesters/preprocessors/syslogrouter.html) preprocessor followed by a [regexattach](https://docs.gravwell.io/ingesters/preprocessors/regexextract.html) preprocessor.  The calling order is defined in the `[Global]` section.
+
+
+```
+#> ./test --help
+Usage of ./preprocessortest:
+  -config-path string
+    	Path to the plugin configuration
+  -data-path string
+    	Optional path to data export file
+  -import-format string
+    	Set the import file format manually
+  -verbose
+    	Print each entry as its processed
+```
+
+An example execution of a preprocessor stack is:
+
+```
+
+
+#> ./preprocessortest -data-path /tmp/51780259054.json -config-path /tmp/recase.conf
+
+```
+INPUT: 100
+OUTPUT: 100
+PROCESSING TIME: 251.725404ms
+PROCESSING RATE: 397.26 E/s
+```
+
+Adding the `--verbose` flag will cause the `preprocessortest` program to print every entry; if entries are not printable characters you may see garbage on the screen.
+
+The `preprocessortest` program also enables debug mode for plugins by default, so any `printf` or `println` calls will output to standard out.
 
 (ingest_preprocessors_list)=
 ## Available Preprocessors
