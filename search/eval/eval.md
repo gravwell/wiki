@@ -721,6 +721,12 @@ Returns an array of all enumerated value names attached to the entry.
 
 Returns an array of all keys in the given map.
 
+#### ip_in_cidr
+
+    function ip_in_cidr(ip, cidr string) bool
+
+Returns true if the given IP is in the given CIDR-formatted string. For example, `ip_in_cidr(src_ip, "10.2.254.0/24")`.
+
 ### String manipulation
 
 #### strings_count
