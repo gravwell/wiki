@@ -42,11 +42,9 @@ In practice, it is less common to grant capabilities to individual users; instea
 | AttachSearch | Load a search by search ID. |
 | BackgroundSearch | Execute a search in the background. |
 | DashboardRead | View and launch a dashboard. |
-| DashboardRead | View and launch dashboard |
 | DashboardWrite | Create and edit a dashboard's searches and settings. |
 | Download | Download search results. |
 | ExtractorRead | View an extractor and use it in a query. |
-| ExtractorRead | View and use an extractor in a query. |
 | ExtractorWrite | Create and edit an extractor. |
 | Ingest | Ingest data. |
 | KitBuild | Build a kit. |
@@ -60,7 +58,6 @@ In practice, it is less common to grant capabilities to individual users; instea
 | ListGroups | View the list of groups. |
 | ListUsers | View the list of users. |
 | MacroRead | View a macro and use it in a query. |
-| MacroRead | View and use a macro in a query. |
 | MacroWrite | Create and edit a macro. |
 | NotificationRead | View notifications. |
 | NotificationWrite | Create and edit notifications. |
@@ -74,25 +71,17 @@ In practice, it is less common to grant capabilities to individual users; instea
 | SOAREmail | Send an email in a script or a flow. |
 | SOARLibs | Import an external library into a script. |
 | SaveSearch | Save a search and add notes. |
-| ScheduleRead | View a flow, script or scheduled search and its results. |
 | ScheduleRead | View a flow, script, or scheduled search and its results. |
-| ScheduleWrite | Create and edit a flow, script or scheduled search. |
 | ScheduleWrite | Create and edit a flow, script, or scheduled search. |
 | Search | Search data and execute queries. |
 | SearchAllHistory | View search history of items the user has access to. |
-| SearchAllHistory | View search history of items user has access to. |
-| SearchGroupHistory | View a group search history |
 | SearchGroupHistory | View group search history. |
-| SearchHistory | View search history of authenticated user |
 | SearchHistory | View search history of the authenticated user. |
 | SecretRead | Read and access secrets. |
-| SecretRead | User can read and access secrets. |
 | SecretWrite | Create, update, and delete secrets. |
-| SecretWrite | User can create, update, and delete secrets. |
 | SetSearchGroup | Assign a default group to searches. |
 | Stats | View health statistics. |
 | SystemInfoRead | View systems info. |
-| SystemInfoRead | View systems. |
 | TemplateRead | View and execute a template. |
 | TemplateWrite | Create and edit a template. |
 | TokenRead | View API tokens. |
