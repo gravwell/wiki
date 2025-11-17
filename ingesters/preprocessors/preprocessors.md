@@ -96,11 +96,8 @@ Usage of ./preprocessortest:
 An example execution of a preprocessor stack is:
 
 ```
-
-
 #> ./preprocessortest -data-path /tmp/51780259054.json -config-path /tmp/recase.conf
 
-```
 INPUT: 100
 OUTPUT: 100
 PROCESSING TIME: 251.725404ms
