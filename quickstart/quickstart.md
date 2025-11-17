@@ -86,6 +86,7 @@ Software License Agreement </software-license-agreement>
 Hardware Sales Terms </sales/hardware>
 Data Ingest Overage Policy </sales/overages>
 Transparency and Data Use </transparency>
+Privacy Policy </privacy>
 Open-Source Library Licenses </open_source>
 ```
 
