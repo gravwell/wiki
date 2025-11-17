@@ -83,7 +83,7 @@ When engaging with Logbot or other Gravwell AI services, you should be cognizant
 
 - Gravwell AI services run in Gravwell infrastructure on Gravwell GPUs (no third parties). Gravwell infrastructure is on-prem and SOC2 compliant (our servers are in cages in shared datacenters in the continental US)
 - Gravwell AI is NOT trained using any customer interactions or data and will not be in the future
-- Interactions with Gravwell AI services may be stored on Gravwell infrastructure in memory or logs until rotation/cleanup. Any deletion requests (e.g. GDPR) should be submitted to privacy@gravwell.io or as directed by any contract you may have with Gravwell
+- Interactions with Gravwell AI services may be stored on Gravwell infrastructure in memory or logs until rotation/cleanup. Any deletion requests (e.g. GDPR) should be submitted to [privacy@gravwell.io](mailto:privacy@gravwell.io) or as directed by any contract you may have with Gravwell
 - Gravwell humans in charge of AI services may review interactions to improve the AI services and/or prevent abuse. For example, we expect most users will ask Logbot to explain log entries, but if lots of users are asking it to write Gravwell queries (which it currently doesn't do very well), we want to be able to adapt to those needs
 
 ### Self-hosted AI services
