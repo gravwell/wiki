@@ -10,7 +10,7 @@ Before using the maclookup module, you must have a database of MAC prefixes in a
 
 ## Supported Options
 
-* `-r <arg>`: The “-r” option specifies the resource name or UUID which contains a macdb database.  If no "-r" is specified, the geoip module uses the default "mac_prefixes" resource name.
+* `-r <arg>`: The “-r” option specifies the resource name or UUID which contains a macdb database.  If no "-r" is specified, the maclookup module uses the default "mac_prefixes" resource name.
 * `-s`: The “-s” option specifies that the maclookup module should operate in strict mode.  In strict mode, if any of the specified operators cannot resolve a MAC, the entry is dropped.
 
 ## Processing Operators
