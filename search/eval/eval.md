@@ -1051,6 +1051,26 @@ Sets a key/value pair in the given object. The value's type is evaluated at runt
 
 Returns a Gravwell array enumerated value based on the given JSON array. JSON types are evaluated at runtime and individual array items will be set to their equivalent Gravwell types, or a string if no mapping exists.
 
+#### evs_to_json
+
+    function evs_to_json() string
+
+Returns a JSON object containing all enumerated values attached to the current entry. Each EV name becomes a key in the JSON object, and the EV value is serialized to its corresponding JSON type (number, string, boolean, array, or object). Durations, MAC addresses, and timestamps are serialized as strings.
+
+Example
+
+```
+tag=gravwell syslog Appname Hostname Message
+| eval output = evs_to_json();
+| table output
+```
+
+This would produce output like:
+
+```
+{"Appname":"webserver","Hostname":"potato","Message":"connection established"}
+```
+
 
 (eval-math)=
 ### Math
