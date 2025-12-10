@@ -128,6 +128,7 @@ srcrouter <srcrouter>
 tagrouter <tagRouter>
 regextimestamp <regextimestamp>
 regexextract <regexextract>
+regexreplace <regexreplace>
 forwarder <forwarder>
 gravwellforwarder <gravwellforwarder>
 drop <drop>
@@ -150,6 +151,7 @@ plugin <plugin>
 | [tagrouter](tagRouter) | Route entries to specific tags based on the tag, or a combination of tag and either IP address or network |
 | [regextimestamp](regextimestamp) | Perform complex timestamp processing using regular expressions |
 | [regexextract](regexextract) | Perform data extractions and repacking using regular expressions |
+| [regexreplace](regexreplace) | Perform regex-based find and replace operations on entries |
 | [forwarder](forwarder) | Forward entries using TCP or UDP connections |
 | [gravwellforwarder](gravwellforwarder) | Forward entries using a Gravwell ingest connection |
 | [drop](drop) | Simple dropping preprocessor, it stops all entries from moving through the preprocessor chain |
