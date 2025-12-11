@@ -236,7 +236,7 @@ Maps have a limit of 1000000 keys. Any new key assigned to a map after this limi
 
 ### Arrays
 
-Eval supports the `array` enumerated value type. Arrays currently can only be created in the eval module and appear to other modules as string representations of the array contents (for example, `[ apple orange banana ]`).
+Eval supports the `array` enumerated value type. Arrays currently can only be created in the eval and regex modules and appear to other modules as string representations of the array contents (for example, `[ apple orange banana ]`).
 
 #### Declaring arrays
 
