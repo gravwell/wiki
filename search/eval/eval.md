@@ -236,7 +236,7 @@ Maps have a limit of 1000000 keys. Any new key assigned to a map after this limi
 
 ### Arrays
 
-Eval supports the `array` enumerated value type. Arrays currently can only be created in the eval module and appear to other modules as string representations of the array contents (for example, `[ apple orange banana ]`).
+Eval supports the `array` enumerated value type. Arrays currently can only be created in the eval and regex modules and appear to other modules as string representations of the array contents (for example, `[ apple orange banana ]`).
 
 #### Declaring arrays
 
@@ -1050,6 +1050,26 @@ Sets a key/value pair in the given object. The value's type is evaluated at runt
     function json_to_gravwell_array(array string) array
 
 Returns a Gravwell array enumerated value based on the given JSON array. JSON types are evaluated at runtime and individual array items will be set to their equivalent Gravwell types, or a string if no mapping exists.
+
+#### evs_to_json
+
+    function evs_to_json() string
+
+Returns a JSON object containing all enumerated values attached to the current entry. Each EV name becomes a key in the JSON object, and the EV value is serialized to its corresponding JSON type (number, string, boolean, array, or object). Durations, MAC addresses, and timestamps are serialized as strings.
+
+Example
+
+```
+tag=gravwell syslog Appname Hostname Message
+| eval output = evs_to_json();
+| table output
+```
+
+This would produce output like:
+
+```
+{"Appname":"webserver","Hostname":"potato","Message":"connection established"}
+```
 
 
 (eval-math)=

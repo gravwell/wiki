@@ -26,6 +26,7 @@ regex <argument list> <regular expression> [filter arguments]
 * `-r <arg>`: The “-r” option specifies that the regular expression statement is located in a resource file. 
 * `-v`: The "-v" option tells regex to operate in inverse mode, dropping any entries which match the regex and passing entries which do not match.
 * `-p`: The "-p" option tells regex to allow entries through if the regular expression does not match at all.  The permissive flag does not change the operation of filters.
+* `-a`: The "-a" option enables array mode, which extracts all matches of each capture group into array enumerated values instead of just the first match. This is useful when an entry contains multiple occurrences of a pattern.
 
 ```{note}
 Storing especially large regular expressions in resource files can clean up queries, and allows for easy reuse.  If `-r` is specified, do not specify a regular expression in the query -- instead the contents of the resource will be used. Handy!
@@ -69,6 +70,18 @@ The following query extracts the authentication method, username, and source IP 
 tag=syslog grep sshd | regex `shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)` 
 | table method user ip
 ```
+
+### Array Mode Example
+
+The `-a` flag extracts all matches of each capture group into array enumerated values. This is useful when a single entry contains multiple occurrences of a pattern.
+
+For example, to extract all numbers from each entry into an array:
+
+```gravwell
+tag=default regex -a `(?P<num>\d+)` | table num
+```
+
+If an entry contains "foo 123 bar 456 baz 789", the `num` enumerated value will be an array containing `[123, 456, 789]`.
 
 ## Full regular expression syntax
 
