@@ -1051,6 +1051,7 @@ Sets a key/value pair in the given object. The value's type is evaluated at runt
 
 Returns a Gravwell array enumerated value based on the given JSON array. JSON types are evaluated at runtime and individual array items will be set to their equivalent Gravwell types, or a string if no mapping exists.
 
+(eval-evs-to-json)=
 #### evs_to_json
 
     function evs_to_json() string
