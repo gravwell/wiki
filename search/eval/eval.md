@@ -236,7 +236,7 @@ Maps have a limit of 1000000 keys. Any new key assigned to a map after this limi
 
 ### Arrays
 
-Eval supports the `array` enumerated value type. Arrays currently can only be created in the eval module and appear to other modules as string representations of the array contents (for example, `[ apple orange banana ]`).
+Eval supports the `array` enumerated value type. Arrays currently can only be created in the eval and regex modules and appear to other modules as string representations of the array contents (for example, `[ apple orange banana ]`).
 
 #### Declaring arrays
 
@@ -1051,6 +1051,7 @@ Sets a key/value pair in the given object. The value's type is evaluated at runt
 
 Returns a Gravwell array enumerated value based on the given JSON array. JSON types are evaluated at runtime and individual array items will be set to their equivalent Gravwell types, or a string if no mapping exists.
 
+(eval-evs-to-json)=
 #### evs_to_json
 
     function evs_to_json() string
