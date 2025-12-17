@@ -132,6 +132,7 @@ Listener configuration blocks (except the Amazon-Firehose-Listener) support the 
 | TokenValue                | string       | NO       |      | Authorization token value, required when using preshared-token or preshared-parameter authentication method.|
 | Preprocessor              | string array | NO       |      | Set of preprocessors to apply to entries. |
 | Attach-URL-Parameter      | string array | NO       |      | Set of URL parameter values that will be attached to all entries in a request if they are found in the request URL. |
+| Buffer-Size               | integer      | NO       | 1048576 (1MB) | Only used when `Multiline` is `true`, when `false` `Max-Body` is used. Controls the max buffer size for a single line. Any line going over this limit will be dropped. Care should be taken as a buffer is created every request. |
 
 ### Listener Authentication
 

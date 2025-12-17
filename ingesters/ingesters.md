@@ -128,6 +128,7 @@ Most of the core ingesters support a common set of global configuration paramete
 * [Log-File](log-file)
 * [Source-Override](ingesters_source-override)
 * [Log-Source-Override](ingesters_log-source-override)
+* [Max-Entry-Size](max-entry-size)
 * [Timestamp-Max-Future-Delta](time_parsing_overrides)
 * [Timestamp-Max-Past-Delta](time_parsing_overrides)
 * [Label](label)
@@ -372,6 +373,22 @@ Additionally, dynamic values can be attached which are resolved from the host en
 	host = $HOSTNAME	# add the hostname the ingester is running on
 	uuid = $UUID		# add the ingester's UUID
 	home = $HOME        # add the environment variable "HOME"
+```
+
+(max-entry-size)=
+### Max-Entry-Size
+The `Max-Entry-Size` parameter will limit the maximum size of entries coming into the system. By default this is set to ~1GB. The value is specified in bytes. When exceeded the entry will be **dropped** and a log will be written noting the max size was exceeded.
+Setting this too low can result in ingest logs not being sent to gravwell either. Though those still exist in the local log files.
+
+```{attention}
+This is one of the few configuration options that will entirely drop entries. Extreme care should be taken to analyze incoming data before adjusting this.
+You can use a query like `tag=default | length | sort by length desc | table length, DATA` to see the entries sorted by size. 
+````
+
+When modifying this it is best to check that no entries are being dropped once the ingester is running. The below query can be used as a starting point for finding instances of dropped entries.
+
+```
+tag=gravwell syslog error~"Entry data exceeds maximum size"
 ```
 
 ## Data Consumer Configuration
