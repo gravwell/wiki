@@ -139,6 +139,7 @@ plugin <plugin>
 
 | Preprocessor | Purpose |
 | -------------| -------- |
+| [attach](attach) | Attaches intrinsic values to entries per processor |
 | [gzip](gzip) | Decompress gzipped data in entries |
 | [jsonextract](jsonextract) | Parse and extract elements in JSON data |
 | [jsonarraysplit](jsonarraysplit) | Parse JSON array data and split the array into individual entries |
