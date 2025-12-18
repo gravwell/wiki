@@ -378,7 +378,7 @@ Additionally, dynamic values can be attached which are resolved from the host en
 (max-entry-size)=
 ### Max-Entry-Size
 The `Max-Entry-Size` parameter will limit the maximum size of entries coming into the system. By default this is set to ~1GB. The value is specified in bytes. When exceeded the entry will be **dropped** and a log will be written noting the max size was exceeded.
-Setting this too low can result in ingest logs not being sent to gravwell either. Though those still exist in the local log files.
+Setting this too low can result in data loss.
 
 ```{attention}
 This is one of the few configuration options that will entirely drop entries. Extreme care should be taken to analyze incoming data before adjusting this.
