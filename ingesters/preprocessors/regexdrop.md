@@ -6,7 +6,7 @@ The Regex Drop preprocessor Type is `regexdrop`.
 
 ## Supported Options
 
-* `Regex` (string, required): The regular expression pattern to match against entry data. Supports standard Go regular expression syntax.
+* `Regex` (string, required): The regular expression pattern to match against entry data. Supports the [re2 regular expression syntax](https://github.com/google/re2/wiki/Syntax).
 * `Invert` (boolean, optional): When set to `true`, the matching behavior is inverted—entries that **match** the regex are kept, and entries that **don't match** are dropped. Default is `false`.
 
 ## Common Use Cases
