@@ -116,6 +116,7 @@ The `preprocessortest` program also enables debug mode for plugins by default, s
 maxdepth: 1
 hidden: true
 ---
+attach <attach>
 gzip <gzip>
 jsonextract <jsonextract>
 jsonarraysplit <jsonarraysplit>
@@ -128,6 +129,7 @@ srcrouter <srcrouter>
 tagrouter <tagRouter>
 regextimestamp <regextimestamp>
 regexextract <regexextract>
+regexdrop <regexdrop>
 regexreplace <regexreplace>
 forwarder <forwarder>
 gravwellforwarder <gravwellforwarder>
@@ -139,6 +141,7 @@ plugin <plugin>
 
 | Preprocessor | Purpose |
 | -------------| -------- |
+| [attach](attach) | Attaches intrinsic values to entries per processor |
 | [gzip](gzip) | Decompress gzipped data in entries |
 | [jsonextract](jsonextract) | Parse and extract elements in JSON data |
 | [jsonarraysplit](jsonarraysplit) | Parse JSON array data and split the array into individual entries |
