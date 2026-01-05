@@ -85,9 +85,15 @@ An example configuration in which data is moved from the hot pool to the cold po
 In the above configuration, data will be deleted permanently when the entry timestamps are 90 days old, having spent 7 days in the hot pool and 83 days in the cold pool.  The `Hot-Duration` and `Cold-Duration` values are not cumulative; they specify the maximum age of entries.
 ```
 
-The Time based ageout is invoked once per day, sweeping each pool for shards that can be aged out.  By default the sweep happens at midnight UTC, but the execution time can be overridden in the well configuration with the Ageout-Time-Override directive.  The override directive is specified in 24 hour UTC time.
+The Time based ageout is invoked once per day, sweeping each pool for shards that can be aged out. By default the sweep happens at midnight UTC, but the default time can be changed globally using the `Default-Ageout-Time` parameter in the `[Global]` section of the configuration file. Individual wells can further override this using the `Ageout-Time-Override` directive in the well configuration. Both directives are specified in 24-hour UTC time.
 
-An example configuration that overrides the ageout time checks to occur at 7PM UTC:
+An example global configuration that sets the default ageout time to 3AM UTC for all wells:
+```
+[Global]
+	Default-Ageout-Time=03:00
+```
+
+An example well configuration that overrides the ageout time checks to occur at 7PM UTC for a specific well:
 ```
 [Storage-Well "syslog"]
 	Location=/mnt/xpoint/gravwell/syslog
