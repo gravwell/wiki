@@ -866,7 +866,7 @@ Example:		`Enable-Transparent-Compression=true`
 Description:	These parameters control kernel-level, transparent compression of data in the wells. If enabled, Gravwell can instruct the `btrfs` filesystem to transparently compress data. This is more efficient than user-mode compression. Setting `Enable-Transparent-Compression` true automatically turns off user-mode compression. Note that setting `Disable-Compression=true` will **disable** transparent compression.
 
 #### **Ageout-Time-Override**
-Default Value:	(inherits from `Default-Ageout-Time` global parameter, or midnight UTC if not set)  
+Default Value:	(inherits from `Ageout-Time` global parameter, or midnight UTC if not set)  
 Example:		`Ageout-Time-Override=19:00`  
 Description:	This parameter allows you to specify a particular time (in 24-hour UTC format) at which the ageout routine should run for this well, overriding the global `Default-Ageout-Time` setting. See the [ageout documentation](/configuration/ageout) for more information.
 
