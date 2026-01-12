@@ -694,10 +694,10 @@ Default Value: 1
 Example: `Ditto-Max-Workers=8`  
 Description: Sets the number of parallel worker processes for [Ditto](/configuration/ditto) transfers.
 
-### **Default-Ageout-Time**
+### **Ageout-Time**
 Applies to:		Indexer  
 Default Value:	`00:00` (midnight UTC)  
-Example:		`Default-Ageout-Time=03:00`  
+Example:		`Ageout-Time=03:00`  
 Description:	Sets the default time of day (in 24-hour UTC format) at which time-based ageout is performed for all wells. By default, time-based ageout occurs at midnight UTC. Individual wells can override this default using the `Ageout-Time-Override` directive. See the [ageout documentation](/configuration/ageout) for more information.
  
 ## AI
