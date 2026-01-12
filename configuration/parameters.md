@@ -548,7 +548,7 @@ Description:		A percentage value which determines when to warn about storage usa
 Applies to:		Webserver and Searchagent
 Default Value:	`false`  
 Example:		`Disable-Network-Script-Functions=true`  
-Description:	Disable the DNS search module as well as network functions in the anko search module. This field should be set in both the webserver and searchagent configs. NOTE: This does not apply to network functions used by anko in automations.
+Description:	Disable network functions in certain search modules and automations. When set in the webserver, this parameter will disable the DNS search module as well as network functions in the anko search module. When set in the search agent, this parameter will disable flow nodes that use network functions (such as the HTTP node). 
 
 ### **Webserver-Enable-Frame-Embedding**
 Applies to:		Webserver  
