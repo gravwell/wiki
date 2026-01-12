@@ -868,7 +868,7 @@ Description:	These parameters control kernel-level, transparent compression of d
 #### **Ageout-Time-Override**
 Default Value:	(inherits from `Ageout-Time` global parameter, or midnight UTC if not set)  
 Example:		`Ageout-Time-Override=19:00`  
-Description:	This parameter allows you to specify a particular time (in 24-hour UTC format) at which the ageout routine should run for this well, overriding the global `Default-Ageout-Time` setting. See the [ageout documentation](/configuration/ageout) for more information.
+Description:	This parameter allows you to specify a particular time (in 24-hour UTC format) at which the ageout routine should run for this well, overriding the global `Ageout-Time` setting. See the [ageout documentation](/configuration/ageout) for more information.
 
 ### Acceleration Options
 
