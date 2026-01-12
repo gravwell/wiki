@@ -545,10 +545,10 @@ Example:		`Indexer-Storage-Notification-Threshold=98`
 Description:		A percentage value which determines when to warn about storage usage.  If the value is above 0, a notification will be thrown whenever a storage device that is used by the Indexer uses more than the specified storage percentage.  The value MUST be between 0 and 99.
 
 ### **Disable-Network-Script-Functions**
-Applies to:		Webserver  
+Applies to:		Webserver and Searchagent
 Default Value:	`false`  
 Example:		`Disable-Network-Script-Functions=true`  
-Description:	By default, anko scripts in the pipeline are allowed to use network functions such as the net/http library and the ssh/sftp utilities. Setting this to 'true' will disable those functions.
+Description:	Disable network functions in certain search modules and automations. When set in the webserver, this parameter will disable the DNS search module as well as network functions in the anko search module. When set in the search agent, this parameter will disable flow nodes that use the network, network functions in the Go flow node, and network functions in scheduled scripts.
 
 ### **Webserver-Enable-Frame-Embedding**
 Applies to:		Webserver  
