@@ -283,7 +283,7 @@ For security reasons, the anko module does not allow access to *all* packages in
 * [math/big](https://golang.org/pkg/math/big): bignums
 * [math/rand](https://golang.org/pkg/math/rand): random numbers
 * [net](https://golang.org/pkg/net): limited network functionality
-* [net/https](https://golang.org/pkg/net/https): limited HTTP functionality (client only)
+* [net/http](https://golang.org/pkg/net/http): limited HTTP functionality (client only)
 * [net/url](https://golang.org/pkg/net/url): URLs
 * [path](https://golang.org/pkg/path): paths
 * [path/filepath](https://golang.org/pkg/path/filepath): path functions specific to files
