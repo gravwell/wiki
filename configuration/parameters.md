@@ -545,10 +545,10 @@ Example:		`Indexer-Storage-Notification-Threshold=98`
 Description:		A percentage value which determines when to warn about storage usage.  If the value is above 0, a notification will be thrown whenever a storage device that is used by the Indexer uses more than the specified storage percentage.  The value MUST be between 0 and 99.
 
 ### **Disable-Network-Script-Functions**
-Applies to:		Webserver  
+Applies to:		Webserver and Searchagent
 Default Value:	`false`  
 Example:		`Disable-Network-Script-Functions=true`  
-Description:	By default, anko scripts in the pipeline are allowed to use network functions such as the net/http library and the ssh/sftp utilities. Setting this to 'true' will disable those functions.
+Description:	Disable network functions in certain search modules and automations. When set in the webserver, this parameter will disable the DNS search module as well as network functions in the anko search module. When set in the search agent, this parameter will disable flow nodes that use the network, network functions in the Go flow node, and network functions in scheduled scripts.
 
 ### **Webserver-Enable-Frame-Embedding**
 Applies to:		Webserver  
@@ -693,6 +693,12 @@ Applies to: Indexer
 Default Value: 1  
 Example: `Ditto-Max-Workers=8`  
 Description: Sets the number of parallel worker processes for [Ditto](/configuration/ditto) transfers.
+
+### **Ageout-Time**
+Applies to:		Indexer  
+Default Value:	`00:00` (midnight UTC)  
+Example:		`Ageout-Time=03:00`  
+Description:	Sets the default time of day (in 24-hour UTC format) at which time-based ageout is performed for all wells. By default, time-based ageout occurs at midnight UTC. Individual wells can override this default using the `Ageout-Time-Override` directive. See the [ageout documentation](/configuration/ageout) for more information.
  
 ## AI
 
@@ -860,9 +866,9 @@ Example:		`Enable-Transparent-Compression=true`
 Description:	These parameters control kernel-level, transparent compression of data in the wells. If enabled, Gravwell can instruct the `btrfs` filesystem to transparently compress data. This is more efficient than user-mode compression. Setting `Enable-Transparent-Compression` true automatically turns off user-mode compression. Note that setting `Disable-Compression=true` will **disable** transparent compression.
 
 #### **Ageout-Time-Override**
-Default Value:  
-Example:		`Ageout-Time-Override="3:00AM"`  
-Description:	This parameter allows you to specify a particular time at which the ageout routine should run. This is typically not needed.
+Default Value:	(inherits from `Ageout-Time` global parameter, or midnight UTC if not set)  
+Example:		`Ageout-Time-Override=19:00`  
+Description:	This parameter allows you to specify a particular time (in 24-hour UTC format) at which the ageout routine should run for this well, overriding the global `Ageout-Time` setting. See the [ageout documentation](/configuration/ageout) for more information.
 
 ### Acceleration Options
 
