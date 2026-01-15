@@ -20,7 +20,6 @@ github.com/dchest/safefile,https://github.com/dchest/safefile/blob/855e8d98f185/
 github.com/dchest/siphash,https://github.com/dchest/siphash/blob/v1.2.3/LICENSE,CC0-1.0
 github.com/denisbrodbeck/machineid,https://github.com/denisbrodbeck/machineid/blob/v1.0.1/LICENSE.md,MIT
 github.com/denisenkom/go-mssqldb,https://github.com/denisenkom/go-mssqldb/blob/v0.9.0/LICENSE.txt,BSD-3-Clause
-github.com/dennwc/ioctl,https://github.com/dennwc/ioctl/blob/017804252068/LICENSE,MIT
 github.com/fatih/color,https://github.com/fatih/color/blob/v1.9.0/LICENSE.md,MIT
 github.com/fsnotify/fsnotify,https://github.com/fsnotify/fsnotify/blob/v1.7.0/LICENSE,BSD-3-Clause
 github.com/go-openapi/errors,https://github.com/go-openapi/errors/blob/v0.20.4/LICENSE,Apache-2.0
@@ -109,7 +108,7 @@ github.com/tidwall/gjson,https://github.com/tidwall/gjson/blob/v1.14.4/LICENSE,M
 github.com/tidwall/match,https://github.com/tidwall/match/blob/v1.1.1/LICENSE,MIT
 github.com/tidwall/pretty,https://github.com/tidwall/pretty/blob/v1.2.1/LICENSE,MIT
 github.com/twmb/murmur3,https://github.com/twmb/murmur3/blob/v1.1.8/LICENSE,BSD-3-Clause
-github.com/victorspringer/http-cache,https://github.com/victorspringer/http-cache/blob/2c4f8454e6e2/LICENSE,MIT
+github.com/victorspringer/http-cache,https://github.com/nic-osullivan-gravwell/http-cache/blob/e2fd682b3cb9/LICENSE,MIT
 github.com/vjeantet/grok,https://github.com/vjeantet/grok/blob/v1.0.0/LICENSE,Apache-2.0
 github.com/xi2/httpgzip,https://github.com/xi2/httpgzip/blob/932ab5e254ae/LICENSE,MIT
 github.com/ziutek/telnet,https://github.com/ziutek/telnet/blob/c3b780dc415b/LICENSE,BSD-3-Clause
