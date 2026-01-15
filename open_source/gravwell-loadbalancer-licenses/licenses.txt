@@ -27,7 +27,7 @@ github.com/robfig/cron,https://github.com/robfig/cron/blob/v1.2.0/LICENSE,MIT
 github.com/robfig/cron/v3,https://github.com/robfig/cron/blob/v3.0.0/LICENSE,MIT
 github.com/shirou/gopsutil,https://github.com/shirou/gopsutil/blob/v2.20.9/LICENSE,BSD-3-Clause
 github.com/tealeg/xlsx,https://github.com/tealeg/xlsx/blob/v1.0.5/LICENSE,BSD-3-Clause
-github.com/victorspringer/http-cache,https://github.com/victorspringer/http-cache/blob/2c4f8454e6e2/LICENSE,MIT
+github.com/victorspringer/http-cache,https://github.com/nic-osullivan-gravwell/http-cache/blob/e2fd682b3cb9/LICENSE,MIT
 go.etcd.io/bbolt,https://github.com/etcd-io/bbolt/blob/v1.3.7/LICENSE,MIT
 golang.org/x/crypto,https://cs.opensource.google/go/x/crypto/+/v0.45.0:LICENSE,BSD-3-Clause
 golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.47.0:LICENSE,BSD-3-Clause
