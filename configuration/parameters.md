@@ -628,19 +628,6 @@ Default Value:	false
 Example:		`Disable-Library-Repository=true`  
 Description:	Scheduled scripts may import additional libraries using the `include` function. Setting `Disable-Library-Repository` to true disables this functionality.
 
-### **Login-Fail-Lock-Count**
-Applies to:		Webserver  
-Default Value:	0 (disabled)  
-Example:		5  
-Description:	Gravwell can automatically lock user accounts on multiple successive login attempts which can prevent brute force attacks.  By default this system is disabled, but setting a value > 0 for both `Login-Fail-Lock-Count` and `Login-Fail-Lock-Duration` will enable it.  The `Login-Fail-Lock-Count` setting specifies how many failed attempts a user can make within a given time period (`Login-Fail-Lock-Duration`) before the account is locked. 
-
-### **Login-Fail-Lock-Duration**
-Applies to:		Webserver  
-Default Value:	0 (disabled)  
-Example:		5  
-Description:	Gravwell can automatically lock user accounts on multiple successive login attempts which can prevent brute force attacks.  By default this system is disabled, but setting a value > 0 for both `Login-Fail-Lock-Count` and `Login-Fail-Lock-Duration` will enable it.  The user account will be locked if the user makes `Login-Fail-Lock-Count` number of failed attempts within the number of minutes specified as the  `Login-Fail-Lock-Duration` value.  For example, you may set the count as 10 and the duration as 3 which means if the user `bob` fails a login 10 times in 3 minutes his account will be locked and an admin must unlock it.
-
-
 ### **Gravwell-Kit-Server**
 Applies to:	Webserver  
 Default Value:	https://kits.gravwell.io/kits  
