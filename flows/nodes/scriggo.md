@@ -349,7 +349,6 @@ func main() {
 * github.com/buger/jsonparser
 * github.com/crewjam/rfc5424
 * github.com/dchest/siphash
-* github.com/denisbrodbeck/machineid
 * github.com/dennwc/ioctl
 * github.com/go-openapi/strfmt
 * github.com/go-yaml/yaml
@@ -358,7 +357,6 @@ func main() {
 * github.com/golang/snappy
 * github.com/gomarkdown/markdown
 * github.com/google/uuid
-* github.com/goproxy/goproxy
 * github.com/gravwell/gcfg
 * github.com/gravwell/grokky
 * github.com/gravwell/ipfix
@@ -376,13 +374,10 @@ func main() {
 * github.com/mmcloughlin/spherand
 * github.com/olekukonko/tablewriter
 * github.com/oschwald/maxminddb-golang AS maxminddb
-* github.com/phayes/freeport
 * github.com/pkg/errors
 * github.com/sijms/go-ora AS go_ora
 * github.com/smartystreets/assertions
-* github.com/spf13/viper
 * github.com/ssor/bom
 * github.com/tidwall/gjson
 * github.com/twmb/murmur3
 * github.com/vjeantet/grok
-* github.com/xi2/httpgzip
