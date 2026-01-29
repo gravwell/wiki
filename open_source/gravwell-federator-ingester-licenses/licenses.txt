@@ -25,7 +25,7 @@ github.com/shirou/gopsutil,https://github.com/shirou/gopsutil/blob/v2.20.9/LICEN
 github.com/tealeg/xlsx,https://github.com/tealeg/xlsx/blob/v1.0.5/LICENSE,BSD-3-Clause
 github.com/victorspringer/http-cache,https://github.com/nic-osullivan-gravwell/http-cache/blob/e2fd682b3cb9/LICENSE,MIT
 golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.47.0:LICENSE,BSD-3-Clause
-golang.org/x/sys,https://cs.opensource.google/go/x/sys/+/v0.38.0:LICENSE,BSD-3-Clause
+golang.org/x/sys,https://cs.opensource.google/go/x/sys/+/v0.40.0:LICENSE,BSD-3-Clause
 golang.org/x/term,https://cs.opensource.google/go/x/term/+/v0.37.0:LICENSE,BSD-3-Clause
 golang.org/x/text,https://cs.opensource.google/go/x/text/+/v0.31.0:LICENSE,BSD-3-Clause
 golang.org/x/time/rate,https://cs.opensource.google/go/x/time/+/v0.14.0:LICENSE,BSD-3-Clause
