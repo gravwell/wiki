@@ -29,7 +29,7 @@ github.com/xdg/scram,https://github.com/xdg/scram/blob/7eeb5667e42c/LICENSE,Apac
 github.com/xdg/stringprep,https://github.com/xdg/stringprep/blob/v1.0.0/LICENSE,Apache-2.0
 golang.org/x/crypto/pbkdf2,https://cs.opensource.google/go/x/crypto/+/v0.45.0:LICENSE,BSD-3-Clause
 golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.47.0:LICENSE,BSD-3-Clause
-golang.org/x/sys,https://cs.opensource.google/go/x/sys/+/v0.38.0:LICENSE,BSD-3-Clause
+golang.org/x/sys,https://cs.opensource.google/go/x/sys/+/v0.40.0:LICENSE,BSD-3-Clause
 golang.org/x/term,https://cs.opensource.google/go/x/term/+/v0.37.0:LICENSE,BSD-3-Clause
 golang.org/x/text,https://cs.opensource.google/go/x/text/+/v0.31.0:LICENSE,BSD-3-Clause
 golang.org/x/time/rate,https://cs.opensource.google/go/x/time/+/v0.14.0:LICENSE,BSD-3-Clause
