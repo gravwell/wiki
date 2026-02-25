@@ -92,7 +92,7 @@ Create a service account in the Google Cloud Console by visiting the [Service Ac
 
 ![](CreateKey.png)
 
-At a minimum the PubSub ingester requires the "Pub/Sub Subscriber" role, if the ingester is configured without a Subscription ID it will attempt to create a new subscription to the configured topic automatically, in which case the "Pub/Sub Editor" is required.
+At a minimum, the PubSub ingester requires the "Pub/Sub Subscriber" role. If the ingester is configured without a Subscription ID, it will attempt to create a new subscription to the configured topic automatically, in which case the "Pub/Sub Editor" is required.
 
 
 ![](AssignRoles.png)
