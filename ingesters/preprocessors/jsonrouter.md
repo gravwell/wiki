@@ -7,7 +7,7 @@ The JSON Router preprocessor Type is `jsonrouter`.
 ## Supported Options
 
 * `Route-Key` (string, required): This parameter specifies the JSON field path to extract from the incoming entries. It supports nested paths using dot notation, e.g. `user.role` to access a nested field. For field names containing dots or special characters, wrap the field name in quotes, e.g. `"field.with.dots"` or `user."role.level"`.
-* `Route` (string, required): At least one `Route` definition is required. This consists of two strings separated by a colon, e.g. `Route=admin:admintag`. The first string ('admin') is matched against the value extracted from the JSON field, and the second string defines the name of the tag to which matching entries should be routed. If the second string is left blank, entries matching the first string *will be dropped*.
+* `Route` (string, required): At least one `Route` definition is required. This consists of two strings separated by a colon, e.g. `Route=admin:admintag`. The first string ('admin') is matched against the value extracted from the JSON field and the second string defines the name of the tag to which matching entries should be routed. If the second string is left blank, entries matching the first string *will be dropped*.
 * `Drop-Misses` (boolean, optional): By default, entries which do not contain the specified JSON field or do not match any route will be passed through unmodified. Setting `Drop-Misses` to true will make the ingester drop any entries which do not contain valid JSON or contain a matching field but do not match any key/value pairs in the Route parameter.
 
 ```{attention}
