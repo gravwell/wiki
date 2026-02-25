@@ -8,10 +8,11 @@ The JSON Router preprocessor Type is `jsonrouter`.
 
 * `Route-Key` (string, required): This parameter specifies the JSON field path to extract from the incoming entries. It supports nested paths using dot notation, e.g. `user.role` to access a nested field. For field names containing dots or special characters, wrap the field name in quotes, e.g. `"field.with.dots"` or `user."role.level"`.
 * `Route` (string, required): At least one `Route` definition is required. This consists of two strings separated by a colon, e.g. `Route=admin:admintag`. The first string ('admin') is matched against the value extracted from the JSON field, and the second string defines the name of the tag to which matching entries should be routed. If the second string is left blank, entries matching the first string *will be dropped*.
-* `Drop-Misses` (boolean, optional): By default, entries which do not contain the specified JSON field or do not match any route will be passed through unmodified. Setting `Drop-Misses` to true will make the ingester drop any entries which 1) do not contain valid JSON with the specified field, or 2) contain the field but do not match any of the specified routes.
+* `Drop-Misses` (boolean, optional): By default, entries which do not contain the specified JSON field or do not match any route will be passed through unmodified. Setting `Drop-Misses` to true will make the ingester drop any entries which do not contain valid JSON or contain a matching field but do not match any key/value pairs in the Route parameter.
 
-```{note}
-Route-Key values with value keys and no tag name will drop data regardless of the Drop-Misses setting.  This allows for specific filtering of data based on JSON field values.
+```{attention}
+Route values with value keys and no tag name will drop data regardless of the Drop-Misses setting.  This allows for specific filtering of data based on JSON field values.
+For example, `Route=debug:` will drop all entries where the specified JSON field has the value "debug", while allowing other values to be processed according to the Drop-Misses setting.
 ```
 
 ## Example: Routing to Tag Based on JSON Field Value
@@ -98,14 +99,27 @@ In this configuration:
 
 ## Example: Field Names with Special Characters
 
+Example Data:
+```
+{
+    "data": { 
+        "event.type": {
+            "level":"high"
+        }
+    },
+    "type:name": "info:log"
+}
+```
+
+
 If your JSON field names contain dots, spaces, or other special characters, wrap them in quotes in the `Route-Key` parameter:
 
 ```
 [preprocessor "specialfields"]
         Type = jsonrouter
-        Route-Key="event.type"
-        Route=security:securitytag
-        Route=system:systemtag
+        Route-Key=`"type:name"`
+        Route=`"high:log":hightag`
+        Route=`"info:log":` #drop info:log entries entirely
 ```
 
 For nested paths where one segment contains special characters:
@@ -118,4 +132,3 @@ For nested paths where one segment contains special characters:
         Route=medium:mediumtag
 ```
 
-This will match JSON like: `{"data":{"event.type":{"level":"high"}}}`
