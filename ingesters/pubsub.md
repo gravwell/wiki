@@ -99,7 +99,7 @@ At a minimum the PubSub ingester requires the "Pub/Sub Subscriber" role, if the 
 
 The ingester will not re-use subscription IDs across restarts if no subscription ID is configured.  Gravwell highly recommends you create a subscription in the Google Cloud Console and limit the roles assigned.
 
-#### Additional Documentation
+### Additional Documentation
 
 * [Creating Access Credentials](https://developers.google.com/workspace/guides/create-credentials)
 * [Pub/Sub Quick start](https://docs.cloud.google.com/pubsub/docs/publish-receive-messages-console)
