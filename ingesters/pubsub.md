@@ -84,3 +84,24 @@ You can test the config by running `/opt/gravwell/bin/gravwell_pubsub_ingester -
 
 The PubSub ingester does not provide the `Ignore-Timestamps` option found in many other ingesters. PubSub messages include an arrival timestamp; by default, the ingester will use that as the Gravwell timestamp. If `Parse-Time=true` is specified in the data consumer definition, the ingester will instead attempt to extract a timestamp from the message body.
 
+### Google Authentication Credentials
+
+The PubSub ingester uses the Google Cloud SDK's authentication mechanism to access PubSub streams. This means that you will need to create a service account in GCP with the appropriate permissions, and then download the service account's credentials in JSON format. The path to the credentials file should be specified in the `Google-Credentials-Path` field of the configuration file.
+
+Create a service account in the Google Cloud Console by visiting the [Service Accounts page](https://console.cloud.google.com/iam-admin/serviceaccounts) and clicking "Create Service Account". Follow the prompts to create a new service account and grant it the "Pub/Sub Subscriber" role. After creating the service account, click on it in the list to view its details, then navigate to the "Keys" tab and click "Add Key" -> "Create New Key". Choose the JSON key type and click "Create" to download the credentials file. Save this file to a secure location on the machine where the PubSub ingester is installed and update the `Google-Credentials-Path` field in the configuration file to point to it.
+
+![](CreateKey.png)
+
+At a minimum, the PubSub ingester requires the "Pub/Sub Subscriber" role. If the ingester is configured without a Subscription ID, it will attempt to create a new subscription to the configured topic automatically, in which case the "Pub/Sub Editor" is required.
+
+
+![](AssignRoles.png)
+
+The ingester will not re-use subscription IDs across restarts if no subscription ID is configured.  Gravwell highly recommends you create a subscription in the Google Cloud Console and limit the roles assigned.
+
+### Additional Documentation
+
+* [Creating Access Credentials](https://developers.google.com/workspace/guides/create-credentials)
+* [Pub/Sub Quick start](https://docs.cloud.google.com/pubsub/docs/publish-receive-messages-console)
+* [Topic List](https://console.cloud.google.com/cloudpubsub/topic/list)
+* [Service Accounts](https://console.cloud.google.com/iam-admin/serviceaccounts)
