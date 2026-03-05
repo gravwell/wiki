@@ -18,4 +18,4 @@ Gravwell supports the **two most recent versions** of:
 
 ### Using other browsers?
 
-You're more than welcome to use other browsers (Brave, Opera) or older versions, but you'll be squarely off beaten path. It might work just fine, but a smooth ride is not guaranteed.
+You're more than welcome to use other browsers (Brave, Opera) or older versions, but you'll be squarely off the beaten path. It might work just fine, but a smooth ride is not guaranteed.
