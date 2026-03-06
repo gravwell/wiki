@@ -11,7 +11,7 @@ As of version 5.9.0, Gravwell supports the **two most recent versions** of:
 * **Firefox** (and the [extended support release](https://www.firefox.com/en-US/browsers/enterprise/))
 * **Edge**
 * **Safari**
-* **iOS**
+* **Safari on iOS**
 * **Android**
 
 [Read more for a granular look at Gravwell's supported browsers.](https://browsersl.ist/#q=baseline+widely+available+on+2025-10-20) All browsers listed on the right are the supported browsers.
