@@ -14,7 +14,7 @@ As of version 5.9.0, Gravwell supports the **two most recent versions** of:
 * **Safari on iOS**
 * **Android**
 
-[Read more for a granular look at Gravwell's supported browsers.](https://browsersl.ist/#q=baseline+widely+available+on+2025-10-20) All browsers listed on the right are the supported browsers.
+A more detailed description of supported browsers can be found in the "Core browser set" section of this page: https://web-platform-dx.github.io/web-features/supported-browsers/?widelyAvailableOnDate=2025-10-20&includeDownstream=false
 
 ### Using other browsers?
 
