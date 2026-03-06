@@ -14,7 +14,7 @@ As of version 5.9.0, Gravwell supports the **two most recent versions** of:
 * **iOS**
 * **Android**
 
-[Read more for a granular look at Gravwell's supported browsers.](https://browsersl.ist/#q=baseline+widely+available+on+2025-10-20)
+[Read more for a granular look at Gravwell's supported browsers.](https://browsersl.ist/#q=baseline+widely+available+on+2025-10-20) All browsers listed on the right are the supported browsers.
 
 ### Using other browsers?
 
