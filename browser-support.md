@@ -2,7 +2,7 @@
 
 To keep Gravwell fast and secure, we adhere to standards set by **Angular 21**, a web application framework. This means we focus on "evergreen" browsers. The browsers that auto-update and stay modern.
 
-[Read more](https://angular.dev/reference/versions#browser-support)
+[Read more](https://v21.angular.dev/reference/versions#browser-support)
 
 ### List of Fully Supported Browsers
 
