@@ -16,6 +16,6 @@ As of version 5.9.0, Gravwell supports the **two most recent versions** of:
 
 A more detailed description of supported browsers can be found in the "Core browser set" section of this page: https://web-platform-dx.github.io/web-features/supported-browsers/?widelyAvailableOnDate=2025-10-20&includeDownstream=false
 
-### Using other browsers?
+## Using other browsers?
 
 You're more than welcome to use other browsers (Brave, Opera) or older versions, but you'll be squarely off the beaten path. It might work just fine, but a smooth ride is not guaranteed.
