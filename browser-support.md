@@ -4,7 +4,7 @@ To keep Gravwell fast and secure, we adhere to standards set by **Angular 21**, 
 
 [Read more](https://v21.angular.dev/reference/versions#browser-support)
 
-### List of Fully Supported Browsers
+## List of Fully Supported Browsers
 
 As of version 5.9.0, Gravwell supports the **two most recent versions** of:
 * **Chrome**
