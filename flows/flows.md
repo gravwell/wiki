@@ -135,6 +135,7 @@ JavaScript <nodes/javascript>
 JSON Encode/Decode <nodes/json>
 Mattermost Message <nodes/mattermost>
 Nest Merge <nodes/nestmerge>
+PagerDuty <nodes/pagerduty>
 PDF <nodes/pdf>
 Query Log Ingest <nodes/queryalert>
 Read Macros <nodes/macroget>
@@ -171,6 +172,7 @@ Update Resources <nodes/resourceupdate>
 * [JSON Encode/Decode](nodes/json): encode and decode JSON.
 * [Mattermost Message](nodes/mattermost): send a Mattermost message.
 * [Nest Merge](nodes/nestmerge): join multiple input payloads into one.
+* [PagerDuty](nodes/pagerduty): Create incidents in PagerDuty.
 * [PDF](nodes/pdf): create PDF documents.
 * [Query Log Ingest](nodes/queryalert): convert search results to alert entries & ingest.
 * [Read Macros](nodes/macroget): read Gravwell macros.
