@@ -36,7 +36,7 @@ The PagerDuty node is configured with:
 * `Timeout`: A time out of 10 seconds, each pagerduty request attempt will wait up to 10 seconds for a response before failing and retrying.
 * `Retry Count`: 5, if the initial request fails, the node will retry up to 5 times with exponential backoff.
 
-The output in PagerDuty will display the incident with all configured details, and the flow payload will contain the deduplication key for future reference.
+The output in PagerDuty will display the incident with all configured details and the flow payload will contain the deduplication key for future reference.
 
 ![](pagerduty_config1.png)
 
