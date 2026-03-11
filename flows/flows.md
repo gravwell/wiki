@@ -148,6 +148,7 @@ Slack File <nodes/slackfile>
 Slack Message <nodes/slackmessage>
 Sleep <nodes/sleep>
 Splunk Query <nodes/splunkquery>
+SQL Query <nodes/sql>
 Stack Merge <nodes/stackmerge>
 Teams Message <nodes/teams>
 Text Template <nodes/template>
@@ -185,6 +186,7 @@ Update Resources <nodes/resourceupdate>
 * [Slack Message](nodes/slackmessage): send a message to a Slack channel.
 * [Sleep](nodes/sleep): pause flow execution for a given period of time.
 * [Splunk Query](nodes/splunkquery): run a Splunk query.
+* [SQL Query](nodes/sql): run SQL queries against external databases.
 * [Stack Merge](nodes/stackmerge): join multiple input payloads into one.
 * [Teams Message](nodes/teams): send a Microsoft Teams message.
 * [Text Template](nodes/template): format text.
