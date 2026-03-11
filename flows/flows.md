@@ -133,6 +133,7 @@ Ingest <nodes/ingest>
 Ingester Info <nodes/ingesterinfo>
 JavaScript <nodes/javascript>
 JSON Encode/Decode <nodes/json>
+Logbot <nodes/logbot>
 Mattermost Message <nodes/mattermost>
 Nest Merge <nodes/nestmerge>
 PDF <nodes/pdf>
@@ -169,6 +170,7 @@ Update Resources <nodes/resourceupdate>
 * [Ingester Info](nodes/ingesterinfo): get information about Gravwell ingesters.
 * [JavaScript](nodes/javascript): run JavaScript code.
 * [JSON Encode/Decode](nodes/json): encode and decode JSON.
+* [Logbot](nodes/logbot): analyze and explain log data using AI.
 * [Mattermost Message](nodes/mattermost): send a Mattermost message.
 * [Nest Merge](nodes/nestmerge): join multiple input payloads into one.
 * [PDF](nodes/pdf): create PDF documents.
