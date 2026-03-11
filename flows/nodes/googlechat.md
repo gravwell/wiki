@@ -10,7 +10,7 @@ The Google Chat Message node sends a message to a Google Chat space via webhook.
 * `Text`: the text message to send. This will appear as the main message text in the chat space.
 * `Fields`: optional key-value pairs to display as structured data in a single card. These will be rendered as decorated text widgets with labels.
 * `Cards`: optional named inputs that will be formatted as separate collapsible cards with titles. Each card can contain structured data, lists, or text.
-* `Retry Count`: number of retry attempts if sending fails (default: 1, which means a single attempt with no retries).
+* `Retry Count`: number of retry attempts if sending fails (default: 0, which means a single attempt with no retries).
 * `Timeout`: timeout in seconds for each request (default: 5).
 
 ![](googlechat_config.png)
