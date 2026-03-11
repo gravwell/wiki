@@ -22,7 +22,7 @@ The Google Chat node supports multiple ways to structure your messages including
 #### Named Cards
 The `Cards` configuration allows you to create multiple named cards with titles that are hidden by default
 
-When both `Fields` and `Cards` are used, the fields card appears first, and subsequent cards are collapsed.
+When both `Fields` and `Cards` are used, the fields card appears first and subsequent cards are collapsed.
 
 ![](googlechat_collapsed.png)
 
