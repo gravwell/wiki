@@ -21,7 +21,7 @@ The node adds a deduplication key to the payload. The deduplication key is retur
 
 ## Example
 
-This example runs a query to detect an unauthorized `Appname` in the `gravwell` tag, if results exist it creates a PagerDuty incident with a "high" severity.
+This example runs a query to detect an unauthorized `Appname` in the `gravwell` tag. if results exist, it creates a PagerDuty incident with a "high" severity.
 
 ![](pagerduty_flow.png)
 
