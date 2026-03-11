@@ -45,7 +45,6 @@ Use this action when you need to:
 - Reduce verbose log output to key points
 - Generate concise reports from detailed logs
 
-### Custom
 
 The `custom` action allows you to provide your own prompting without any predefined system prompt. Use the `Additional Prompts` field to specify exactly what you want Logbot to do with the input.
 
