@@ -98,7 +98,7 @@ tag=gravwell syslog MsgID ~ webserver/login.go Message != "Refreshed JWT token"
 The Logbot node configuration:
 
 * **Input**: References the formatted text output from the Text Template node
-* **Action**: Set to `summerize` to get summery of what happened
+* **Action**: Set to `summarize` to get summery of what happened
 * **Additional Prompts**: "is this a security concern?"
 * **Output Name**: Uses the default `logbot_output`
 
