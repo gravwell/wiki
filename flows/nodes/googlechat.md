@@ -20,7 +20,7 @@ The Google Chat Message node sends a message to a Google Chat space via webhook.
 The Google Chat node supports multiple ways to structure your messages including simple text, structured fields, and named cards. You can use these features in combination to create rich messages for your chat space.
 
 #### Named Cards
-The `Cards` configuration allows you to create multiple named cards with titles that are hiddent by default
+The `Cards` configuration allows you to create multiple named cards with titles that are hidden by default
 
 When both `Fields` and `Cards` are used, the fields card appears first, and subsequent cards are collapsed.
 
