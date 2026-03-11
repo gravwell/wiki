@@ -55,7 +55,7 @@ To create an integration key:
 5. Copy the **Integration Key** (routing key)
 
 ```{warning}
-Pagerduty API keys can create incidents and get people out of bed in the middle of the night, be sure to store them as secrets and restrict access as much as possible.
+Pagerduty API keys can create incidents and get people out of bed in the middle of the night. Be sure to store them as secrets and restrict access as much as possible.
 ```
 
 ```{note}
