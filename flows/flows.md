@@ -124,6 +124,7 @@ Email <nodes/email>
 Flow Storage Read <nodes/storageread>
 Flow Storage Write <nodes/storagewrite>
 Go Scripting <nodes/scriggo>
+Google Chat <nodes/googlechat>
 Gravwell Notification <nodes/notification>
 HTML Format <nodes/htmlformat>
 HTTP <nodes/http>
@@ -161,6 +162,7 @@ Update Resources <nodes/resourceupdate>
 * [Flow Storage Write](nodes/storagewrite): write items into a persistent storage.
 * [Gravwell Notification](nodes/notification): set Gravwell notifications.
 * [Go Scripting](nodes/scriggo): execute Go code in the flow.
+* [Google Chat](nodes/googlechat): send a Google Chat message.
 * [HTML Format](nodes/htmlformat): format variables as HTML.
 * [HTTP](nodes/http): do HTTP requests.
 * [If](nodes/if): perform logical operations.
