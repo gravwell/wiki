@@ -136,6 +136,7 @@ JSON Encode/Decode <nodes/json>
 Logbot <nodes/logbot>
 Mattermost Message <nodes/mattermost>
 Nest Merge <nodes/nestmerge>
+PagerDuty <nodes/pagerduty>
 PDF <nodes/pdf>
 Query Log Ingest <nodes/queryalert>
 Read Macros <nodes/macroget>
@@ -173,6 +174,7 @@ Update Resources <nodes/resourceupdate>
 * [Logbot](nodes/logbot): analyze and explain log data using AI.
 * [Mattermost Message](nodes/mattermost): send a Mattermost message.
 * [Nest Merge](nodes/nestmerge): join multiple input payloads into one.
+* [PagerDuty](nodes/pagerduty): Create incidents in PagerDuty.
 * [PDF](nodes/pdf): create PDF documents.
 * [Query Log Ingest](nodes/queryalert): convert search results to alert entries & ingest.
 * [Read Macros](nodes/macroget): read Gravwell macros.
