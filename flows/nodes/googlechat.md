@@ -67,5 +67,5 @@ Google Chat enforces rate limits on webhook messages. If you send too many messa
 ```
 
 ```{note}
-The node does not modify the payload.
+This node does not modify the payload.
 ```
