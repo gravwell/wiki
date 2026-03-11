@@ -101,7 +101,7 @@ The Logbot node configuration:
 * **Additional Prompts**: "is this a security concern?"
 * **Output Name**: Uses the default `logbot_output`
 
-When executed, Logbot analyzes the gravwell logs and produces an summery and analysis of the login attempts, including whether there are any security concerns. The output is stored in the `logbot_output` variable and can be used by downstream nodes for further processing or notifications.:
+When executed, Logbot analyzes the gravwell logs and produces a summary and analysis of the login attempts, including whether there are any security concerns. The output is stored in the `logbot_output` variable and can be used by downstream nodes for further processing or notifications.
 
 ![](logbot_results.png)
 
