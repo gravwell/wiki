@@ -58,6 +58,7 @@ ip <ip/ip>
 ipexist <ipexist/ipexist>
 iplookup <iplookup/iplookup>
 keep <keep/keep>
+kmeans <kmeans/kmeans>
 langfind <langfind/langfind>
 length <length/length>
 limit <limit/limit>
@@ -114,6 +115,7 @@ words <words/words>
 * [ipexist](ipexist/ipexist) - check if IP address exists in a lookup table.
 * [iplookup](iplookup/iplookup) - enrich entries by looking up IP addresses in a table which can contain CIDR subnets rather that individual IPs.
 * [keep](keep/keep) - remove all enumerated values except those specified.
+* [kmeans](kmeans/kmeans) - perform k-means clustering on numeric enumerated values.
 * [langfind](langfind/langfind) - classify the language of text.
 * [length](length/length) - compute the length of entries or enumerated values.
 * [limit](limit/limit) - limit the number of entries which will pass further down the pipeline.

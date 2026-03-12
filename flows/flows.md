@@ -124,6 +124,7 @@ Email <nodes/email>
 Flow Storage Read <nodes/storageread>
 Flow Storage Write <nodes/storagewrite>
 Go Scripting <nodes/scriggo>
+Google Chat <nodes/googlechat>
 Gravwell Notification <nodes/notification>
 HTML Format <nodes/htmlformat>
 HTTP <nodes/http>
@@ -133,8 +134,10 @@ Ingest <nodes/ingest>
 Ingester Info <nodes/ingesterinfo>
 JavaScript <nodes/javascript>
 JSON Encode/Decode <nodes/json>
+Logbot <nodes/logbot>
 Mattermost Message <nodes/mattermost>
 Nest Merge <nodes/nestmerge>
+PagerDuty <nodes/pagerduty>
 PDF <nodes/pdf>
 Query Log Ingest <nodes/queryalert>
 Read Macros <nodes/macroget>
@@ -147,6 +150,7 @@ Slack File <nodes/slackfile>
 Slack Message <nodes/slackmessage>
 Sleep <nodes/sleep>
 Splunk Query <nodes/splunkquery>
+SQL Query <nodes/sql>
 Stack Merge <nodes/stackmerge>
 Teams Message <nodes/teams>
 Text Template <nodes/template>
@@ -161,6 +165,7 @@ Update Resources <nodes/resourceupdate>
 * [Flow Storage Write](nodes/storagewrite): write items into a persistent storage.
 * [Gravwell Notification](nodes/notification): set Gravwell notifications.
 * [Go Scripting](nodes/scriggo): execute Go code in the flow.
+* [Google Chat](nodes/googlechat): send a Google Chat message.
 * [HTML Format](nodes/htmlformat): format variables as HTML.
 * [HTTP](nodes/http): do HTTP requests.
 * [If](nodes/if): perform logical operations.
@@ -169,8 +174,10 @@ Update Resources <nodes/resourceupdate>
 * [Ingester Info](nodes/ingesterinfo): get information about Gravwell ingesters.
 * [JavaScript](nodes/javascript): run JavaScript code.
 * [JSON Encode/Decode](nodes/json): encode and decode JSON.
+* [Logbot](nodes/logbot): analyze and explain log data using AI.
 * [Mattermost Message](nodes/mattermost): send a Mattermost message.
 * [Nest Merge](nodes/nestmerge): join multiple input payloads into one.
+* [PagerDuty](nodes/pagerduty): Create incidents in PagerDuty.
 * [PDF](nodes/pdf): create PDF documents.
 * [Query Log Ingest](nodes/queryalert): convert search results to alert entries & ingest.
 * [Read Macros](nodes/macroget): read Gravwell macros.
@@ -183,6 +190,7 @@ Update Resources <nodes/resourceupdate>
 * [Slack Message](nodes/slackmessage): send a message to a Slack channel.
 * [Sleep](nodes/sleep): pause flow execution for a given period of time.
 * [Splunk Query](nodes/splunkquery): run a Splunk query.
+* [SQL Query](nodes/sql): run SQL queries against external databases.
 * [Stack Merge](nodes/stackmerge): join multiple input payloads into one.
 * [Teams Message](nodes/teams): send a Microsoft Teams message.
 * [Text Template](nodes/template): format text.

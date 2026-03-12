@@ -4,7 +4,7 @@ Math modules operate on the pipeline to perform statistical analysis. They are a
 
 ## Supported Options
 
-* `-maxtracked`: sets the maximum number of unique keys to track per operation, e.g. `count -maxtracked 5000 by DstIP`. This is used to help avoid memory exhaustion if there are millions of IPv6 addresses in the data. If the maxtracked value is exceeded, the search will terminate with an error suggesting you should increase the max value. Defaults to 100000000. Refer to the [stats module documentation](/search/stats/stats) for more information about maxtracked.
+* `-maxtracked`: sets the maximum number of unique keys to track per operation, e.g. `count -maxtracked 5000 by DstIP`. This is used to help avoid memory exhaustion if there are millions of IPv6 addresses in the data. If the maxtracked value is exceeded, the search will terminate with an error suggesting you should increase the max value. Defaults to 1000000. Refer to the [stats module documentation](/search/stats/stats) for more information about maxtracked.
 
 (sum_module)=
 
