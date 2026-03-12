@@ -112,7 +112,7 @@ Example Data:
 ```
 
 
-If your JSON field names contain dots, spaces, or other special characters, wrap them in quotes in the `Route-Key` parameter:
+If your JSON field names contain dots, spaces, or other special characters, wrap the specific fields in quotes, and wrap the entire value in backticks in the `Route-Key` parameter:
 
 ```
 [preprocessor "specialfields"]
@@ -127,7 +127,7 @@ For nested paths where one segment contains special characters:
 ```
 [preprocessor "nestedspecial"]
         Type = jsonrouter
-        Route-Key=data."event.type".level
+        Route-Key=`data."event.type".level`
         Route=high:hightag
         Route=medium:mediumtag
 ```
