@@ -70,7 +70,7 @@ The special UID 1 admin account **IS** subject to login throttling and exponenti
 
 Setting either the `Login-Fail-Lock-Count` or `Login-Fail-Lock-Duration` to zero disables the locking of accounts.  Locked accounts can be unlocked in the user control panel.
 
-[//]: # (![](locked_account.png))
+![](locked_account.png)
 
 ## Enforcing MFA
 
