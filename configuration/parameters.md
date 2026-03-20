@@ -314,13 +314,13 @@ Default Value:
 Example:        `Web-Listen-Address=10.0.0.1`  
 Description:        The Web-Listen-Address parameter specifies the address the webserver should bind to and serve from.  By default the parameter is empty, meaning the webserver binds to all interfaces and addresses.
 
-####**Login-Fail-Lock-Count**
+#### **Login-Fail-Lock-Count**
 Applies to:        Webserver
 Default Value:        `5`
 Example:        `Login-Fail-Lock-Count=10`
-Description:        The Login-Fail-Lock-Count parameter specifies the number of sequential failed logins against a user account can occur before brute-force protection is enabled on the account.  For example, if the value is set to 4 and a user provides a bad password 4 times in a row, additional login attempts will take longer to complete, slowing down an attacker. Note: Gravwell previously locked an account after a specific number of failures; it now engages a less aggressive brute-force protection, but for legacy reasons the configuration parameter retains the 'Lock' name.
+Description:        The Login-Fail-Lock-Count parameter specifies the number of sequential failed logins that can occur against a user account before brute-force protection is enabled on the account.  For example, if the value is set to 4 and a user provides a bad password 4 times in a row, additional login attempts will take longer to complete, slowing down an attacker. Note: Gravwell previously locked an account after a specific number of failures; it now engages a less aggressive brute-force protection, but for legacy reasons the configuration parameter retains the 'Lock' name.
 
-####**Login-Fail-Lock-Duration**
+#### **Login-Fail-Lock-Duration**
 Applies to:        Webserver
 Default Value:        `5`
 Example:        `Login-Fail-Lock-Duration=10`
@@ -790,14 +790,45 @@ The configuration file should contain exactly one `Default-Well` section. It may
 
 Refer to the [ageout documentation](ageout) for more information on how wells move entries between hot, cold, and archive storage.
 
-```{note}
-`Default-Well` cannot include `Tags=` specifications; instead, the default well contains all tags *not contained in other wells*
-```
-
 ### **Location**
 Default Value:	`/opt/gravwell/storage/default` for `Default-Well`, none for `Storage-Well`  
 Example:		`Location=/opt/gravwell/storage/foo`  
 Description:	This parameter controls where the well stores "hot" data. No two wells should be allowed to point at the same directory!
+
+### **Tags**
+Every well but the `default` well must contain one or more `Tag` assignments that specify specific tags the well should contain or globbing patterns that may match tags that either exist now or may be created in the future. For example, if a well contains `Tags=foo`, then that well will contain all entries with the `foo` tag.  Well definitions can contain multiple `Tags` blocks, `Tags` definitions that specify complete tag names will create the tags on startup.
+
+Well tag definitions treat "concrete" tags with higher precedence than globbing patterns. For example, if well A contains `Tags=foobar` and well B contains `Tags=foo*`, then the `foobar` tag will be created on startup and assigned to well A with no error even though the definitions overlap.  This allows for building well definitions for data sources that may engagine many low volume tags with a few high volume tags on specific wells.  Corelight is a good example where the conn flow tags will dominate the data volumes but many other corelight tags will be generated.
+
+
+```{note}
+Overlapping or colliding glob patterns can only be resolved by applying them to tags that have been created, Gravwell cannot detect collisions of globbing patterns if a tag does not exist that would express the collision.
+```
+
+#### Example Well Definition with Tags
+
+This example well definition assigns two high volume tags to specific wells with a third well containing a globbing pattern to catch all other tags.
+
+```
+[Storage-Well "corelight-conn"]
+	Location=/opt/gravwell/storage/corelight_conn
+	Hot-Duration=365d
+	Delete-Cold-Data=true
+	Tags=corelight_conn
+
+[Storage-Well "corelight-dns"]
+	Location=/opt/gravwell/storage/corelight_dns
+	Hot-Duration=365d
+	Delete-Cold-Data=true
+	Tags=corelight_dns
+
+# catch all well definition for all other corelight tags
+[Storage-Well "corelight"]
+	Location=/opt/gravwell/storage/corelight
+	Hot-Duration=365d
+	Delete-Cold-Data=true
+	Tags=corelight*
+```
 
 ### Ageout Options
 
