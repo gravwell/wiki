@@ -7,6 +7,8 @@ The Google Chat Message node sends a message to a Google Chat space via webhook.
 ## Configuration
 
 * `Webhook`, required: a [Google Chat webhook](https://developers.google.com/chat/how-tos/webhooks) URL for the space you wish to send to.
+* `Title`: an optional title for the message. This will appear as a bold header above the main message text in the chat space.
+* `Subtitle`: an optional subtitle for the message. This will appear as smaller text below the title and above the main message text in the chat space.
 * `Text`: the text message to send. This will appear as the main message text in the chat space.
 * `Fields`: optional key-value pairs to display as structured data in a single card. These will be rendered as decorated text widgets with labels.
 * `Cards`: optional named inputs that will be formatted as separate collapsible cards with titles. Each card can contain structured data, lists, or text.
