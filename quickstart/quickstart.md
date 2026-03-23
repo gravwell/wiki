@@ -136,7 +136,7 @@ You can estimate your storage requirements using the following calculator:
 
 ## Browser Support
 
-To keep Gravwell fast and secure, we adhere to standards set by **Angular 21**, a web application framework. This means we focus on "evergreen" browsers. The browsers that auto-update and stay modern.
+To keep Gravwell fast and secure, we adhere to standards set by the Angular web application framework. This means we focus on "evergreen" browsers. The browsers that auto-update and stay modern.
 
 [Read more](https://v21.angular.dev/reference/versions#browser-support)
 
