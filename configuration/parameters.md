@@ -798,7 +798,7 @@ Description:	This parameter controls where the well stores "hot" data. No two we
 ### **Tags**
 Every well but the `default` well must contain one or more `Tag` assignments that specify specific tags the well should contain or globbing patterns that may match tags that either exist now or may be created in the future. For example, if a well contains `Tags=foo`, then that well will contain all entries with the `foo` tag.  Well definitions can contain multiple `Tags` blocks, `Tags` definitions that specify complete tag names will create the tags on startup.
 
-Well tag definitions treat "concrete" tags with higher precedence than globbing patterns. For example, if well A contains `Tags=foobar` and well B contains `Tags=foo*`, then the `foobar` tag will be created on startup and assigned to well A with no error even though the definitions overlap.  This allows for building well definitions for data sources that may engagine many low volume tags with a few high volume tags on specific wells.  Corelight is a good example where the conn flow tags will dominate the data volumes but many other corelight tags will be generated.
+Well tag definitions treat "concrete" tags with higher precedence than globbing patterns. For example, if well A contains `Tags=foobar` and well B contains `Tags=foo*`, then the `foobar` tag will be created on startup and assigned to well A with no error even though the definitions overlap.  This allows for building well definitions for data sources that may engage many low volume tags with a few high volume tags on specific wells.  Corelight is a good example where the conn flow tags will dominate the data volumes but many other corelight tags will be generated.
 
 
 ```{note}
