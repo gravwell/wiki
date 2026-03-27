@@ -167,7 +167,7 @@ The `[State]` block configures how the Hosted Runner plugins persists their stat
 ### Example Common Configuration
 
 ```
-[Global]
+[Ingest]
     Ingest-Secret = "IngestSecrets"
     Connection-Timeout = 0
     Insecure-Skip-TLS-Verify=false

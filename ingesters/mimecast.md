@@ -13,7 +13,7 @@ See the [Mimecast documentation](https://mimecastsupport.zendesk.com/hc/en-us/ar
 
 ## Configuration
 
-The Mimecast ingester is configured via `[Mimecast "name"]` stanzas in the Hosted Runner configuration file, typically `/opt/gravwell/etc/hosted_runner.conf`. The `[Global]` ingest settings and `[State]` block common to all Hosted Runner plugins are described in [Hosted Runner Configuration](hosted_runner_configuration).
+The Mimecast ingester is configured via `[Mimecast "name"]` stanzas in the Hosted Runner configuration file, typically `/opt/gravwell/etc/hosted_runner.conf`. The `[Ingest]` and `[State]` blocks common to all Hosted Runner plugins are described in [Hosted Runner Configuration](hosted_runner_configuration).
 
 ### Mimecast Stanza Parameters
 
