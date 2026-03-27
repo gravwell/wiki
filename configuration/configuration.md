@@ -134,7 +134,7 @@ Gravwell supports the notion of "accelerators" for individual wells, which allow
 (hosted_runner_configuration)=
 ## Hosted Runner Configuration
 
-The Hosted Runner is a shared process can run a number of different plugins. Rather than deploying a separate service for each integration, all hosted plugins are configured in a single file — typically `/opt/gravwell/etc/hosted_runner.conf` — and run together under one process. This reduces the infrastructure cost of lighter-weight processes.
+The Hosted Runner is a shared process that can run a number of different plugins. Rather than deploying a separate service for each integration, all hosted plugins are configured in a single file — typically `/opt/gravwell/etc/hosted_runner.conf` — and run together under one process. This reduces the infrastructure cost of lighter-weight processes.
 
 The configuration file contains three kinds of blocks:
 
