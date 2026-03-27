@@ -83,11 +83,14 @@ caption: Hosted Ingesters
 hidden: true
 ---
 Mimecast <mimecast>
+Okta <okta>
 ```
 
 | Ingester | Description |
 |----------|-------------|
 | [Mimecast](mimecast) | Ingest Mimecast MTA SIEM and audit events. |
+| [Okta](okta) | Ingest Okta system logs and user records. |
+
 ## Tags
 
 Tags are an essential Gravwell concept. Every entry has a single tag associated with it; these tags allow us to separate and categorize data at a basic level. For example, we may chose to apply the "syslog" tag to entries read from a Linux system's log files, apply "winlog" to Windows logs, and "pcap" to raw network packets. The ingesters determine which tags are applied to the entries.

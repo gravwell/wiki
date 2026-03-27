@@ -1,8 +1,24 @@
+---
+myst:
+  substitutions:
+    package: "gravwell-hosted-runner"
+    standalone: "gravwell_hosted_runner"
+    dockername: "hosted_runner"
+---
 # Mimecast Ingester
 
-Gravwell provides an ingester for [Mimecast](https://www.mimecast.com/) that polls the Mimecast MTA SIEM and Audit APIs. It ingests email security events including delivery, receipt, spam, AV, URL protection, impersonation protection, attachment protection, and audit events. Timestamps are preserved from the original events to maintain accuracy even across polling gaps or downtime.
+The [Mimecast](https://www.mimecast.com/) ingester polls the Mimecast MTA SIEM and Audit APIs. It ingests email security events including delivery, receipt, spam, AV, URL protection, impersonation protection, attachment protection, and audit events. Timestamps are preserved from the original events to maintain accuracy even across polling gaps or downtime.
 
 This ingester runs as a plugin inside the [Gravwell Hosted Runner](hosted_runner_configuration). Multiple Mimecast stanzas can coexist alongside other Hosted Runner plugins in a single configuration file.
+
+## Installation
+
+```{include} installation_instructions_template 
+```
+
+If you already have the hosted runner installed you can modify the config.
+
+## Configuration
 
 To configure the ingester you will need the following from Mimecast:
 
@@ -10,8 +26,6 @@ To configure the ingester you will need the following from Mimecast:
 * **Client Secret**: The OAuth 2.0 client secret for your API 2.0 integration
 
 See the [Mimecast documentation](https://mimecastsupport.zendesk.com/hc/en-us/articles/34000360548755-API-Integrations-Managing-API-2-0-for-Cloud-Gateway#h_01KFBA474MS5X46Z6H5XRNKPJR) for instructions on creating an API 2.0 integration and obtaining these credentials.
-
-## Configuration
 
 The Mimecast ingester is configured via `[Mimecast "name"]` stanzas in the Hosted Runner configuration file, typically `/opt/gravwell/etc/hosted_runner.conf`. The `[Ingest]` and `[State]` blocks common to all Hosted Runner plugins are described in [Hosted Runner Configuration](hosted_runner_configuration).
 
