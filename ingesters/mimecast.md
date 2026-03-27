@@ -19,18 +19,18 @@ The Mimecast ingester is configured via `[Mimecast "name"]` stanzas in the Hoste
 
 Each `[Mimecast "name"]` stanza configures an independent polling connection to the Mimecast API. You can define multiple stanzas to ingest from different API endpoints or with different tag configurations.
 
-| Parameter | Type | Default | Required | Description |
-|-----------|------|---------|----------|-------------|
-| `Ingester-UUID` | UUID | | **Yes**  | A unique UUID for this ingester instance. Used for state tracking. |
-| `Client-Id` | String | | **Yes**  | OAuth 2.0 client ID from your Mimecast API 2.0 integration. |
-| `Client-Secret` | String | | **Yes**  | OAuth 2.0 client secret from your Mimecast API 2.0 integration. |
-| `Api` | String | | **Yes**  | The Mimecast API to poll. Can be specified multiple times. See [Available APIs](available-apis). |
-| `Host` | URL | `https://api.services.mimecast.com` | No       | The Mimecast API base URL. Override for regional endpoints or testing. |
-| `Lookback` | Integer (hours) | `24` | No       | How far back in time to fetch events on first run. |
-| `Tag-Name` | String | (derived from API name) | No       | Tag to assign ingested entries. Only valid when a single `Api` is configured. Cannot be used with `Tag-Prefix`. |
-| `Tag-Prefix` | String | | No       | Prefix for auto-generated tag names. Tags will be `<prefix>-<api>`. Cannot be used with `Tag-Name`. |
-| `Requests-Per-Minute` | Integer | `5` | No       | Maximum number of API requests per minute. |
-| `Request-Interval` | Integer (seconds) | `300` | No       | How often to poll the API for new events. |
+| Parameter      | Type | Default | Required | Description |
+|----------------|------|---------|----------|-------------|
+| Ingester-UUID  | UUID | | **Yes**  | A unique UUID for this ingester instance. Used for state tracking. |
+| Client-Id      | String | | **Yes**  | OAuth 2.0 client ID from your Mimecast API 2.0 integration. |
+| Client-Secret  | String | | **Yes**  | OAuth 2.0 client secret from your Mimecast API 2.0 integration. |
+| Api            | String | | **Yes**  | The Mimecast API to poll. Can be specified multiple times. See [Available APIs](available-apis). |
+| Host           | URL | `https://api.services.mimecast.com` | No       | The Mimecast API base URL. Override for regional endpoints or testing. |
+| Lookback       | Integer (hours) | `24` | No       | How far back in time to fetch events on first run. |
+| Tag-Name       | String | (derived from API name) | No       | Tag to assign ingested entries. Only valid when a single `Api` is configured. Cannot be used with `Tag-Prefix`. |
+| Tag-Prefix     | String | | No       | Prefix for auto-generated tag names. Tags will be `<prefix>-<api>`. Cannot be used with `Tag-Name`. |
+| Requests-Per-Minute | Integer | `5` | No       | Maximum number of API requests per minute. |
+| Request-Interval | Integer (seconds) | `300` | No       | How often to poll the API for new events. |
 
 (available-apis)=
 ### Available APIs
