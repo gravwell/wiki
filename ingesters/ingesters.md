@@ -74,7 +74,7 @@ Windows File Follower <win_file_follow>
 (hosted_ingesters_list)=
 ## Hosted Ingesters
 
-Hosted ingesters run inside the [Gravwell Hosted Runner](hosted_runner_configuration), reducing the amount of infrastructure needed to run the lighter weight non-streaming ingesters.
+Hosted ingesters run inside the [Gravwell Hosted Runner](hosted_runner_configuration), reducing the amount of infrastructure needed to run the lighter-weight, non-streaming ingesters.
 
 ```{toctree}
 ---

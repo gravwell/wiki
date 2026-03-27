@@ -2,7 +2,7 @@
 
 Gravwell provides an ingester for [Mimecast](https://www.mimecast.com/) that polls the Mimecast MTA SIEM and Audit APIs. It ingests email security events including delivery, receipt, spam, AV, URL protection, impersonation protection, attachment protection, and audit events. Timestamps are preserved from the original events to maintain accuracy even across polling gaps or downtime.
 
-This ingester runs as a plugin inside the [Gravwell Hosted Runner](hosted_runner). Multiple Mimecast stanzas can coexist alongside other Hosted Runner plugins in a single configuration file.
+This ingester runs as a plugin inside the [Gravwell Hosted Runner](hosted_runner_configuration). Multiple Mimecast stanzas can coexist alongside other Hosted Runner plugins in a single configuration file.
 
 To configure the ingester you will need the following from Mimecast:
 
@@ -24,7 +24,7 @@ Each `[Mimecast "name"]` stanza configures an independent polling connection to 
 | `Ingester-UUID` | UUID | | **Yes**  | A unique UUID for this ingester instance. Used for state tracking. |
 | `Client-Id` | String | | **Yes**  | OAuth 2.0 client ID from your Mimecast API 2.0 integration. |
 | `Client-Secret` | String | | **Yes**  | OAuth 2.0 client secret from your Mimecast API 2.0 integration. |
-| `Api` | String | | **Yes**  | The Mimecast API to poll. Can be specified multiple times. See [Available APIs](#available-apis). |
+| `Api` | String | | **Yes**  | The Mimecast API to poll. Can be specified multiple times. See [Available APIs](available-apis). |
 | `Host` | URL | `https://api.services.mimecast.com` | No       | The Mimecast API base URL. Override for regional endpoints or testing. |
 | `Lookback` | Integer (hours) | `24` | No       | How far back in time to fetch events on first run. |
 | `Tag-Name` | String | (derived from API name) | No       | Tag to assign ingested entries. Only valid when a single `Api` is configured. Cannot be used with `Tag-Prefix`. |
@@ -32,6 +32,7 @@ Each `[Mimecast "name"]` stanza configures an independent polling connection to 
 | `Requests-Per-Minute` | Integer | `5` | No       | Maximum number of API requests per minute. |
 | `Request-Interval` | Integer (seconds) | `300` | No       | How often to poll the API for new events. |
 
+(available-apis)=
 ### Available APIs
 
 The following API values can be specified in the `Api` parameter:

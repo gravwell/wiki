@@ -134,7 +134,7 @@ Gravwell supports the notion of "accelerators" for individual wells, which allow
 (hosted_runner_configuration)=
 ## Hosted Runner Configuration
 
-The Hosted Runner is a shared process can run a number of different plugins. Rather than deploying a separate service for each integration, all hosted plugins are configured in a single file — typically `/opt/gravwell/etc/hosted_runner.conf` — and run together under one process. This reduces the infrastructure cost of lighter weight processes.
+The Hosted Runner is a shared process can run a number of different plugins. Rather than deploying a separate service for each integration, all hosted plugins are configured in a single file — typically `/opt/gravwell/etc/hosted_runner.conf` — and run together under one process. This reduces the infrastructure cost of lighter-weight processes.
 
 The configuration file contains three kinds of blocks:
 
@@ -159,10 +159,10 @@ The ingest cache should always be enabled for Hosted Runner deployments. Cloud A
 
 The `[State]` block configures how the Hosted Runner plugins persists their state across restarts. Plugins generally store metadata (such as last-fetched timestamps) to cleanly resume any processing or ingestion after a restart.
 
-| Parameter | Type | Default | Description                                                                                                                                                                        |
-|-----------|------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Path` | String | | **Required.** Path to the state file on disk (e.g. `/opt/gravwell/etc/hosted_runner.state`).                                                                                       |
-| `Sync` | Boolean | `false` | When `true`, flushes the state file to disk on every update. This ensures the most accurate recovery point but can be expensive on slow disks. Leave `false` for most deployments. |
+| Parameter | Type | Default | Required | Description                                                                                                                                                                  |
+|-----------|------|---------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Path` | String | | **Yes**  | Path to the state file on disk (e.g. `/opt/gravwell/etc/hosted_runner.state`).                                                                                       |
+| `Sync` | Boolean | `false` | No       | When `true`, flushes the state file to disk on every update. This ensures the most accurate recovery point but can be expensive on slow disks. Leave `false` for most deployments. |
 
 ### Example Common Configuration
 
@@ -185,7 +185,7 @@ The `[State]` block configures how the Hosted Runner plugins persists their stat
     Sync=false
 ```
 
-Plugin-specific stanzas are added below this common configuration. See the [Hosted Runner](../ingesters/hosted_runner) documentation for available plugins and their configuration options.
+Plugin-specific stanzas are added below this common configuration. See the [Hosted Ingesters](hosted_ingesters_list) documentation for available plugins and their configuration options.
 
 (password_complexity)=
 ## Password Complexity
