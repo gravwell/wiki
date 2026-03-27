@@ -71,7 +71,23 @@ Windows File Follower <win_file_follow>
 | [Windows Events](winevent) | Collect Windows events. |
 | [Windows File Follower](win_file_follow) | Watch and ingest files on Windows, such as logs and EVTX files. |
 
+(hosted_ingesters_list)=
+## Hosted Ingesters
 
+Hosted ingesters run inside the [Gravwell Hosted Runner](hosted_runner_configuration), reducing the amount of infrastructure needed to run the lighter weight non-streaming ingesters.
+
+```{toctree}
+---
+maxdepth: 1
+caption: Hosted Ingesters
+hidden: true
+---
+Mimecast <mimecast>
+```
+
+| Ingester | Description |
+|----------|-------------|
+| [Mimecast](mimecast) | Ingest Mimecast MTA SIEM and audit events. |
 ## Tags
 
 Tags are an essential Gravwell concept. Every entry has a single tag associated with it; these tags allow us to separate and categorize data at a basic level. For example, we may chose to apply the "syslog" tag to entries read from a Linux system's log files, apply "winlog" to Windows logs, and "pcap" to raw network packets. The ingesters determine which tags are applied to the entries.
