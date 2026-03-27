@@ -138,8 +138,8 @@ The Hosted Runner is a shared process can run a number of different plugins. Rat
 
 The configuration file contains three kinds of blocks:
 
-* A `[Ingest]` block with standard ingester connection settings (shared by all plugins in the process.)
-* A `[State]` block for persistent storage used by plugins (usually polling-state tracking.)
+* An `[Ingest]` block with standard ingester connection settings (shared by all plugins in the process)
+* A `[State]` block for persistent storage used by plugins (usually polling-state tracking)
 * One or more plugin-specific stanzas (e.g. `[Mimecast "name"]`)
 
 ### Ingest Block
@@ -157,7 +157,7 @@ The ingest cache should always be enabled for Hosted Runner deployments. Cloud A
 
 ### State Block
 
-The `[State]` block configures how the Hosted Runner plugins persists their state across restarts. Plugins generally store metadata (such as last-fetched timestamps) to cleanly resume any processing or ingestion after a restart.
+The `[State]` block configures how the Hosted Runner plugins persist their state across restarts. Plugins generally store metadata (such as last-fetched timestamps) to cleanly resume any processing or ingestion after a restart.
 
 | Parameter | Type | Default | Required | Description                                                                                                                                                                  |
 |-----------|------|---------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
