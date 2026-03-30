@@ -16,7 +16,7 @@ This ingester runs as a plugin inside the [Gravwell Hosted Runner](hosted_runner
 ```{include} installation_instructions_template 
 ```
 
-If you already have the hosted runner installed you can modify the config.
+If you already have the hosted runner installed, you can modify the config.
 
 ## Configuration
 
