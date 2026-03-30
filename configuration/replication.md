@@ -188,7 +188,7 @@ The following table describes the behavior for a given shard under each combinat
 |:-----------------------|:----------------|:-------------|:-------|
 |  |  |  | Replication storage grows without bound. No shards are ever deleted. Disk space will eventually be exhausted. |
 | ✅ |  |  | Storage is capped at the configured limit. No deletions occur until the cap is reached, at which point deleted-status shards are pruned first, then oldest shards. Shards deleted on the primary indexer accumulate until storage pressure forces removal. |
-|  | ✅ |  | The engine maintains the configured percentage of free disk space. Pruning follows the same deleted then oldest priority. Shards deleted on the primary indexer accumulate until disk pressure forces removal. |
+|  | ✅ |  | The engine maintains the configured percentage of free disk space. Pruning follows the same order: deleted first and then oldest priority. Shards deleted on the primary indexer accumulate until disk pressure forces removal. |
 | ✅ | ✅ |  | Both the storage cap and the free-space floor are enforced. Pruning begins as soon as either threshold is crossed. Shards deleted on the primary indexer are held indefinitely until one of the thresholds triggers cleanup. |
 |  |  | ✅ | No storage cap or disk reserve is enforced. However, shards that the remote indexer has deleted are hard-deleted from replication storage once the `Delete-Delay` period expires, regardless of available disk space. All other shards accumulate without bound. |
 | ✅ |  | ✅ | Storage is capped. Shards deleted on the primary indexer are proactively hard-deleted after the delay period, keeping the replication store lean. If the cap is still reached, oldest shards are pruned next. |
