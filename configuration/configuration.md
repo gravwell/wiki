@@ -146,10 +146,10 @@ The configuration file contains three kinds of blocks:
 
 The `[Ingest]` block is equivalent to the `[Global]` block of Gravwell ingesters (ingest secret, backend targets, log level, etc.), as described in the [ingester configuration](ingesters_global_configuration_parameters) reference. Two additional parameters are strongly recommended for all Hosted Runner deployments:
 
-| Parameter         | Description |
-|-------------------|-------------|
+| Config Parameter  | Description                                                                                                        |
+|-------------------|--------------------------------------------------------------------------------------------------------------------|
 | Ingest-Cache-Path | Path to a local ingest cache file. Enables reliable delivery if the connection to the indexer is temporarily lost. |
-| Max-Ingest-Cache  | Maximum size of the local ingest cache in MB. Acts as a safety limit on disk usage. |
+| Max-Ingest-Cache  | Maximum size of the local ingest cache in MB. Acts as a safety limit on disk usage.                                |
 
 ```{note}
 The ingest cache should always be enabled for Hosted Runner deployments. Cloud API polling intervals mean that data cannot simply be re-fetched if an indexer connection is lost — the cache ensures no events are dropped during brief outages.
@@ -159,10 +159,10 @@ The ingest cache should always be enabled for Hosted Runner deployments. Cloud A
 
 The `[State]` block configures how the Hosted Runner plugins persist their state across restarts. Plugins generally store metadata (such as last-fetched timestamps) to cleanly resume any processing or ingestion after a restart.
 
-| Parameter | Type | Default | Required | Description                                                                                                                                                                  |
-|-------|------|---------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Path | String | | **Yes**  | Path to the state file on disk (e.g. `/opt/gravwell/etc/hosted_runner.state`).                                                                                       |
-| Sync | Boolean | `false` | No       | When `true`, flushes the state file to disk on every update. This ensures the most accurate recovery point but can be expensive on slow disks. Leave `false` for most deployments. |
+| Config Parameter | Type    | Required | Default Value | Description                                                                                                                                                                        |
+|------------------|---------|----------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Path             | string  | yes      |               | Path to the state file on disk (e.g. `/opt/gravwell/etc/hosted_runner.state`).                                                                                                     |
+| Sync             | boolean | no       | false         | When `true`, flushes the state file to disk on every update. This ensures the most accurate recovery point but can be expensive on slow disks. Leave `false` for most deployments. |
 
 ### Example Common Configuration
 

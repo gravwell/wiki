@@ -33,37 +33,37 @@ The Mimecast ingester is configured via `[Mimecast "name"]` stanzas in the Hoste
 
 Each `[Mimecast "name"]` stanza configures an independent polling connection to the Mimecast API. You can define multiple stanzas to ingest from different API endpoints or with different tag configurations.
 
-| Parameter      | Type | Default | Required | Description |
-|----------------|------|---------|----------|-------------|
-| Ingester-UUID  | UUID | | **Yes**  | A unique UUID for this ingester instance. Used for state tracking. |
-| Client-Id      | String | | **Yes**  | OAuth 2.0 client ID from your Mimecast API 2.0 integration. |
-| Client-Secret  | String | | **Yes**  | OAuth 2.0 client secret from your Mimecast API 2.0 integration. |
-| Api            | String | | **Yes**  | The Mimecast API to poll. Can be specified multiple times. See [Available APIs](available-apis). |
-| Host           | URL | `https://api.services.mimecast.com` | No       | The Mimecast API base URL. Override for regional endpoints or testing. |
-| Lookback       | Integer (hours) | `24` | No       | How far back in time to fetch events on first run. |
-| Tag-Name       | String | (derived from API name) | No       | Tag to assign ingested entries. Only valid when a single `Api` is configured. Cannot be used with `Tag-Prefix`. |
-| Tag-Prefix     | String | | No       | Prefix for auto-generated tag names. Tags will be `<prefix>-<api>`. Cannot be used with `Tag-Name`. |
-| Requests-Per-Minute | Integer | `5` | No       | Maximum number of API requests per minute. |
-| Request-Interval | Integer (seconds) | `300` | No       | How often to poll the API for new events. |
+| Config Parameter    | Type              | Required | Default Value                     | Description                                                                                                     |
+|---------------------|-------------------|----------|-----------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| Ingester-UUID       | UUID              | yes      |                                   | A unique UUID for this ingester instance. Used for state tracking.                                              |
+| Client-Id           | string            | yes      |                                   | OAuth 2.0 client ID from your Mimecast API 2.0 integration.                                                     |
+| Client-Secret       | string            | yes      |                                   | OAuth 2.0 client secret from your Mimecast API 2.0 integration.                                                 |
+| Api                 | string            | yes      |                                   | The Mimecast API to poll. Can be specified multiple times. See [Available APIs](available-apis).                |
+| Host                | URL               | no       | https://api.services.mimecast.com | The Mimecast API base URL. Override for regional endpoints or testing.                                          |
+| Lookback            | integer           | no       | 24 (hours)                        | How far back in time to fetch events on first run in hours.                                                     |                                                        
+| Tag-Name            | string            | no       | (derived from API name)           | Tag to assign ingested entries. Only valid when a single `Api` is configured. Cannot be used with `Tag-Prefix`. |
+| Tag-Prefix          | string            | no       |                                   | Prefix for auto-generated tag names. Tags will be `<prefix>-<api>`. Cannot be used with `Tag-Name`.             |
+| Requests-Per-Minute | integer           | no       | 5                                 | Maximum number of API requests per minute.                                                                      |
+| Request-Interval    | integer (seconds) | no       | 300 (seconds)                     | How often to poll the API for new events in seconds                                                             |
 
 (available-apis)=
 ### Available APIs
 
 The following API values can be specified in the `Api` parameter:
 
-| API Value | Description |
-|-----------|-------------|
-| `audit` | Mimecast audit events (admin actions, policy changes, etc.) |
-| `mta-delivery` | MTA delivery events |
-| `mta-receipt` | MTA receipt events |
-| `mta-process` | MTA process events |
-| `mta-av` | MTA antivirus scan events |
-| `mta-spam` | MTA spam detection events |
-| `mta-internal` | Internal Email Protect events |
-| `mta-impersonation` | Impersonation Protect events |
-| `mta-url` | URL Protect events |
-| `mta-attachment` | Attachment Protect events |
-| `mta-journal` | MTA journal events |
+| API Value           | Description                                                 |
+|---------------------|-------------------------------------------------------------|
+| `audit`             | Mimecast audit events (admin actions, policy changes, etc.) |
+| `mta-delivery`      | MTA delivery events                                         |
+| `mta-receipt`       | MTA receipt events                                          |
+| `mta-process`       | MTA process events                                          |
+| `mta-av`            | MTA antivirus scan events                                   |
+| `mta-spam`          | MTA spam detection events                                   |
+| `mta-internal`      | Internal Email Protect events                               |
+| `mta-impersonation` | Impersonation Protect events                                |
+| `mta-url`           | URL Protect events                                          |
+| `mta-attachment`    | Attachment Protect events                                   |
+| `mta-journal`       | MTA journal events                                          |
 
 The `audit` API uses the [Mimecast Audit Events API](https://developer.services.mimecast.com/docs/auditevents/1/routes/api/audit/get-audit-events/post). All `mta-*` APIs use the [SIEM API](https://developer.services.mimecast.com/docs/threatssecurityeventsanddataforcg/1/routes/siem/v1/events/cg/get).
 

@@ -36,14 +36,14 @@ The Okta ingester is configured via `[Okta "name"]` stanzas in the Hosted Runner
 
 ### Okta Stanza Parameters
 
-| Parameter | Type | Default | Required | Description |
-|-------|------|---------|----------|-------------|
-| Ingester-UUID | UUID | | **Yes** | A unique UUID for this ingester instance. Used for state tracking. |
-| Domain | String | | **Yes** | Your Okta account domain. Must end in `okta.com` (e.g. `myorg.okta.com`). |
-| Token | String | | **Yes** | Okta SSWS API token from the Okta Admin Console. |
-| Request-Batch-Size | Integer | `100` | No | Number of log entries to request per API call. |
-| Request-Per-Minute | Integer | `60` | No | Maximum number of API requests per minute. |
-| Request-Burst | Integer | `10` | No | Burst capacity for the request rate limiter. |
+| Config Parameter   | Type    | Required | Default | Description                                                               |
+|--------------------|---------|----------|---------|---------------------------------------------------------------------------|
+| Ingester-UUID      | UUID    | yes      |         | A unique UUID for this ingester instance. Used for state tracking.        |
+| Domain             | string  | yes      |         | Your Okta account domain. Must end in `okta.com` (e.g. `myorg.okta.com`). |
+| Token              | string  | yes      |         | Okta SSWS API token from the Okta Admin Console.                          |
+| Request-Batch-Size | integer | no       | 100     | Number of log entries to request per API call.                            |
+| Request-Per-Minute | integer | no       | 60      | Maximum number of API requests per minute.                                |
+| Request-Burst      | integer | no       | 10      | Burst capacity for the request rate limiter.                              |
 
 ## Example Configuration
 
