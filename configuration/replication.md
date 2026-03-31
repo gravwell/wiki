@@ -11,7 +11,7 @@ The replication system is logically separated into "Clients" and "Peers", with e
 
 Replication connections are encrypted by default and require that indexers have functioning X509 certificates.  If the certificates are not signed by a valid certificate authority (CA) then `Insecure-Skip-TLS-Verify=true` must be added to the Replication configuration section.
 
-Replication storage nodes (nodes which receive replicated data) are allotted a specific amount of storage and will not delete data unless the `Max-Replicated-Data-GB` parameter is set. Even with `Max-Replicated-Data-GB` set, the replication system will not delete replicated shards until the storage limit has been reached.  If a remote client node deletes data as part of normal ageout, the data shard is marked as deleted and prioritized for deletion when the replication node hits its storage limit.  The replication system prioritizes deleted shards first, cold shards second, and oldest shards last.  All replicated data is compressed; if a cold storage location is provided it is usually recommended that the replication storage location have the same storage capacity as the cold and hot storage combined.
+Replication storage nodes (nodes which receive replicated data) are allotted a specific amount of storage and will not delete data unless the `Max-Replicated-Data-GB` parameter is set. Even with `Max-Replicated-Data-GB` set, the replication system will not delete replicated shards until the storage limit has been reached.  If a remote client node deletes data as part of normal ageout, the data shard is marked as deleted and prioritized for deletion when the replication node hits its storage limit.  The replication system prioritizes deleted shards first, then oldest shards.  All replicated data is compressed; if a cold storage location is provided it is usually recommended that the replication storage location have the same storage capacity as the cold and hot storage combined.
 
 ```{note}
 By default, the replication engine uses port 9406.
@@ -171,6 +171,29 @@ The replication engine takes great care to try and distribute storage load evenl
 ```{attention}
 The replication engines first priority is getting data to as safe a state as possible.  If an indexer has access to a 40GbE connection and the disks to back it up, it will use that 40GbE of bandwidth.
 ```
+
+### Replication Storage Management
+
+By default, replication storage is unbounded — the replication engine will retain all replicated shards indefinitely and never delete them, regardless of how much disk space they consume. Three configuration parameters govern how storage is managed on a replication peer: `Max-Replicated-Data-GB`, `Storage-Reserve`, and `Delete-Delay`.
+
+**Max-Replicated-Data-GB** sets a hard ceiling on the total amount of disk space the replication system may use. The engine will not delete any replicated shards until this limit has been reached. Once the limit is hit, the engine begins pruning shards according to a priority order: shards that have been deleted on the primary indexer are removed first, followed by the oldest remaining shards.
+
+**Storage-Reserve** sets a percentage of total disk capacity that must remain free at all times. Like `Max-Replicated-Data-GB`, it triggers pruning following the same order (first shards marked as deleted, then oldest shards) when free space drops below the specified threshold. Both `Max-Replicated-Data-GB` and `Storage-Reserve` can be set simultaneously; the engine will begin pruning as soon as either threshold is crossed.
+
+**Delete-Delay** controls how the replication peer handles shards that have been deleted on the *remote peer*. When a remote indexer ages out or explicitly deletes a shard, the replication peer receives a notification and marks that shard as deleted in its local state. Without `Delete-Delay`, those deleted-status shards are kept indefinitely in replication storage and are only removed when a storage threshold (`Max-Replicated-Data-GB` or `Storage-Reserve`) forces the engine to reclaim space. Setting `Delete-Delay` to a duration (e.g. `7d`) causes the engine to hard-delete those shards after the specified time has elapsed regardless of other storage management configurations.  *Delete-Delay* does not require any other storage control to be set to delete data and will not prevent other storage controls from deleting data when thresholds are met.
+
+The following table describes the behavior for a given shard under each combination of settings:
+
+| Max-Replicated-Data-GB | Storage-Reserve | Delete-Delay | Result |
+|:-----------------------|:----------------|:-------------|:-------|
+|  |  |  | Replication storage grows without bound. No shards are ever deleted. Disk space will eventually be exhausted. |
+| ✅ |  |  | Storage is capped at the configured limit. No deletions occur until the cap is reached, at which point deleted-status shards are pruned first, then oldest shards. Shards deleted on the primary indexer accumulate until storage pressure forces removal. |
+|  | ✅ |  | The engine maintains the configured percentage of free disk space. Pruning follows the same order: deleted first and then oldest priority. Shards deleted on the primary indexer accumulate until disk pressure forces removal. |
+| ✅ | ✅ |  | Both the storage cap and the free-space floor are enforced. Pruning begins as soon as either threshold is crossed. Shards deleted on the primary indexer are held indefinitely until one of the thresholds triggers cleanup. |
+|  |  | ✅ | No storage cap or disk reserve is enforced. However, shards that the remote indexer has deleted are hard-deleted from replication storage once the `Delete-Delay` period expires, regardless of available disk space. All other shards accumulate without bound. |
+| ✅ |  | ✅ | Storage is capped. Shards deleted on the primary indexer are proactively hard-deleted after the delay period, keeping the replication store lean. If the cap is still reached, oldest shards are pruned next. |
+|  | ✅ | ✅ | Free-space reserve is maintained. Shards deleted on the primary indexer are hard-deleted after the delay period. If disk pressure builds from other shards, the engine prunes oldest shards to maintain the reserve. |
+| ✅ | ✅ | ✅ | Fully managed configuration. The storage cap and free-space reserve are both enforced. Shards deleted on the primary indexer are cleaned up promptly after `Delete-Delay` expires, reducing the likelihood that storage thresholds are ever reached. Remaining shards are pruned by age if either threshold is still crossed. |
 
 ### Best Practices
 
