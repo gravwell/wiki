@@ -28,13 +28,36 @@ If you already have the hosted runner installed, you can modify the config.
 To configure the ingester you will need the following from Okta:
 
 * **Domain**: Your Okta account domain, e.g. `myorg.okta.com`
-* **API Token**: A token generated from the Okta Admin Console
+* **API Token**: A token generated from the Okta Admin Console. This should be created for a dedicated Read Only Admin service account, not a token from a user. 
 
 See the [Okta documentation](https://developer.okta.com/docs/guides/create-an-api-token/main/) for instructions on generating an API token.
 
-The Okta ingester is configured via `[Okta "name"]` stanzas in the Hosted Runner configuration file, typically `/opt/gravwell/etc/hosted_runner.conf`. The `[Ingest]` and `[State]` blocks common to all Hosted Runner plugins are described in [Hosted Runner Configuration](hosted_runner_configuration).
+### Creating an Okta Token
+
+Start by creating a dedicated Okta Service Account for logging purposes (something like "Okta Log User"). This user should be assigned to the "Read Only Admin" role. 
+
+```{attention}
+Do **not** use a token with write permissions to your Okta instance to the ingester. This gives significantly more access than is needed for monitoring. 
+```
+
+You can create an API token in the Okta Admin Console > Security > Api section. 
+
+![](okta-sidebar.png)
+
+Create a token....
+
+Once create you should see this token in your list and should double-check the role is "Read Only Admin", and that it is attached to a dedicated service account.
+
+![](okta-token-check.png)
+
+### Token Rate Limits
+Okta is extremely sensitive to rate limits so double-check your token rate limits align to the `Request-Per-Minute` Config Parameter. The Ingester primarily hits the `/api/v1/logs` endpoint.
+
+![](okta-token-rate-limits.png)
 
 ### Okta Stanza Parameters
+
+The Okta ingester is configured via `[Okta "name"]` stanzas in the Hosted Runner configuration file, typically `/opt/gravwell/etc/hosted_runner.conf`. The `[Ingest]` and `[State]` blocks common to all Hosted Runner plugins are described in [Hosted Runner Configuration](hosted_runner_configuration).
 
 | Config Parameter   | Type    | Required | Default | Description                                                               |
 |--------------------|---------|----------|---------|---------------------------------------------------------------------------|
