@@ -21,9 +21,9 @@ jobs:
     name: Build HTML
     runs-on: WikiBuilder
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Setup Nix
-        uses: cachix/install-nix-action@v25
+        uses: cachix/install-nix-action@96951a368ba55167b55f1c916f7d416bac6505fe # v31.10.3
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Build and package documentation
@@ -100,7 +100,7 @@ jobs:
           echo "BUILD_DEST=${BUILD_DEST}" >> "$GITHUB_ENV"
 
       - name: Upload pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
           path: "${{ env.BUILD_DEST }}/html"
 
@@ -114,4 +114,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
