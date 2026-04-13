@@ -44,7 +44,11 @@ You can create an API token in the Okta Admin Console > Security > Api section.
 
 ![](okta-sidebar.png)
 
-Create a token....
+![](okta-create-token.png)
+
+Once created the token value will be used in the `Token` config parameter. Make sure to copy it. 
+
+![](okta-create-token-success.png)
 
 Once create you should see this token in your list and should double-check the role is "Read Only Admin", and that it is attached to a dedicated service account.
 
@@ -57,7 +61,7 @@ Okta is extremely sensitive to rate limits so double-check your token rate limit
 
 ### Okta Stanza Parameters
 
-The Okta ingester is configured via `[Okta "name"]` stanzas in the Hosted Runner configuration file, typically `/opt/gravwell/etc/hosted_runner.conf`. The `[Ingest]` and `[State]` blocks common to all Hosted Runner plugins are described in [Hosted Runner Configuration](hosted_runner_configuration).
+The Okta ingester is configured via `[Okta "name"]` stanzas in the Hosted Runner configuration file, typically `/opt/gravwell/etc/hosted_runner.conf`. The `[Global]` and `[State]` blocks common to all Hosted Runner plugins are described in [Hosted Runner Configuration](hosted_runner_configuration).
 
 | Config Parameter   | Type    | Required | Default | Description                                                               |
 |--------------------|---------|----------|---------|---------------------------------------------------------------------------|

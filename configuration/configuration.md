@@ -134,17 +134,17 @@ Gravwell supports the notion of "accelerators" for individual wells, which allow
 (hosted_runner_configuration)=
 ## Hosted Runner Configuration
 
-The Hosted Runner is a shared process that can run a number of different plugins. Rather than deploying a separate service for each integration, all hosted plugins are configured in a single file — typically `/opt/gravwell/etc/hosted_runner.conf` — and run together under one process. This reduces the infrastructure cost of lighter-weight processes.
+The Hosted Runner is a shared process that can run a number of different plugins. Rather than deploying a separate service for each integration, all hosted plugins are configured in a single file and run together. This reduces the infrastructure cost of lighter-weight processes.
 
 The configuration file contains three kinds of blocks:
 
-* An `[Ingest]` block with standard ingester connection settings (shared by all plugins in the process)
+* A `[Global]` block with standard ingester connection settings (shared by all plugins in the process)
 * A `[State]` block for persistent storage used by plugins (usually polling-state tracking)
 * One or more plugin-specific stanzas (e.g. `[Mimecast "name"]`)
 
-### Ingest Block
+### Global Block
 
-The `[Ingest]` block is equivalent to the `[Global]` block of Gravwell ingesters (ingest secret, backend targets, log level, etc.), as described in the [ingester configuration](ingesters_global_configuration_parameters) reference. Two additional parameters are strongly recommended for all Hosted Runner deployments:
+The `[Global]` block is equivalent to the `[Global]` block of Gravwell ingesters (ingest secret, backend targets, log level, etc.), as described in the [ingester configuration](ingesters_global_configuration_parameters) reference. Two additional parameters are strongly recommended for all Hosted Runner deployments:
 
 | Config Parameter  | Description                                                                                                        |
 |-------------------|--------------------------------------------------------------------------------------------------------------------|
@@ -152,7 +152,7 @@ The `[Ingest]` block is equivalent to the `[Global]` block of Gravwell ingesters
 | Max-Ingest-Cache  | Maximum size of the local ingest cache in MB. Acts as a safety limit on disk usage.                                |
 
 ```{note}
-The ingest cache should always be enabled for Hosted Runner deployments. Cloud API polling intervals mean that data cannot simply be re-fetched if an indexer connection is lost — the cache ensures no events are dropped during brief outages.
+The ingest cache should always be enabled for Hosted Runner deployments. Cloud API polling intervals mean that data cannot simply be re-fetched if an indexer connection is lost. The cache ensures no events are dropped during brief outages.
 ```
 
 ### State Block
@@ -167,21 +167,21 @@ The `[State]` block configures how the Hosted Runner plugins persist their state
 ### Example Common Configuration
 
 ```
-[Ingest]
+[Global]
     Ingest-Secret = "IngestSecrets"
     Connection-Timeout = 0
     Insecure-Skip-TLS-Verify=false
 
     Pipe-Backend-Target=/opt/gravwell/comms/pipe
 
-    Ingest-Cache-Path=/opt/gravwell/cache/hosted_ingesters.cache
+    Ingest-Cache-Path=/opt/gravwell/cache/hosted_runner.cache
     Max-Ingest-Cache=1024
 
     Log-Level=INFO
-    Log-File=/opt/gravwell/log/hosted_ingesters.log
+    Log-File=/opt/gravwell/log/hosted_runner.log
 
 [State]
-    Path="/opt/gravwell/etc/hosted_ingesters.state"
+    Path="/opt/gravwell/etc/hosted_runner.state"
     Sync=false
 ```
 

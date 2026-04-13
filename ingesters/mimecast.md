@@ -27,7 +27,7 @@ To configure the ingester you will need the following from Mimecast:
 
 See the [Mimecast documentation](https://mimecastsupport.zendesk.com/hc/en-us/articles/34000360548755-API-Integrations-Managing-API-2-0-for-Cloud-Gateway#h_01KFBA474MS5X46Z6H5XRNKPJR) for instructions on creating an API 2.0 integration and obtaining these credentials.
 
-The Mimecast ingester is configured via `[Mimecast "name"]` stanzas in the Hosted Runner configuration file, typically `/opt/gravwell/etc/hosted_runner.conf`. The `[Ingest]` and `[State]` blocks common to all Hosted Runner plugins are described in [Hosted Runner Configuration](hosted_runner_configuration).
+The Mimecast ingester is configured via `[Mimecast "name"]` stanzas in the Hosted Runner configuration file, typically `/opt/gravwell/etc/hosted_runner.conf`. The `[Global]` and `[State]` blocks common to all Hosted Runner plugins are described in [Hosted Runner Configuration](hosted_runner_configuration).
 
 ### Mimecast Stanza Parameters
 
@@ -69,7 +69,7 @@ The `audit` API uses the [Mimecast Audit Events API](https://developer.services.
 
 ### Tag Naming
 
-By default (without `Tag-Name` or `Tag-Prefix`), ingested entries are tagged using the API name directly (e.g., `mta-delivery`, `audit`).
+By default, ingested entries are tagged using the API name directly (e.g., `mta-delivery`, `audit`).
 
 Use `Tag-Prefix` to namespace tags. For example, `Tag-Prefix=mimecast` produces tags like `mimecast-audit`, `mimecast-mta-delivery`, etc. This is useful when ingesting data from a variety of data sources to keep it clear where data came from. 
 
@@ -81,7 +81,7 @@ Use `Tag-Name` to assign a fixed tag when ingesting from exactly one API.
 
 ## Example Configuration
 
-The following example shows two Mimecast stanzas: one ingesting MTA delivery events with an explicit tag, and one ingesting audit events with a tag prefix applied. The `[Ingest]` and `[State]` blocks are omitted here — see [Hosted Runner Configuration](hosted_runner_configuration) for those common settings.
+The following example shows two Mimecast stanzas: one ingesting MTA delivery events with an explicit tag, and one ingesting audit events with a tag prefix applied. The `[Global]` and `[State]` blocks are omitted here — see [Hosted Runner Configuration](hosted_runner_configuration) for those common settings.
 
 ```
 [Mimecast "mta"]
