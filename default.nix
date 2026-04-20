@@ -90,31 +90,33 @@ let
   dedup-links = import ./_tools/dedup-links;
 
 in
-pkgs.stdenv.mkDerivation {
-  name = "gravwell-wiki";
-  src = ./.;
+pkgs.stdenv.mkDerivation (
+  {
+    name = "gravwell-wiki";
+    src = ./.;
 
-  VERSION_LIST_URL = VERSION_LIST_URL;
+    VERSION_LIST_URL = VERSION_LIST_URL;
 
-  buildInputs = [
-    pythonBundle
-    pkgs.gnumake
-    pkgs.git
-    custom-aspell
-    dedup-links
-  ];
-  buildPhase = ''
-    make clean html
-  '';
+    buildInputs = [
+      pythonBundle
+      pkgs.gnumake
+      pkgs.git
+      custom-aspell
+      dedup-links
+    ];
+    buildPhase = ''
+      make clean html
+    '';
 
-  installPhase = ''
-    mkdir -p $out
-    cp -r _build/html $out
-  '';
-}
-// pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
-  # If we're building on Linux, set locale
-  # Otherwise the variable isn't necessary
-  # https://ryantm.github.io/nixpkgs/builders/packages/locales/#:~:text=The%20simplest%20way%20to%20mitigate%20this%20problem,the%20LOCALE_ARCHIVE%20variable%20pointing%20to%20$%7BglibcLocales%7D/lib/locale/locale%2Darchive%20.
-  LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
-}
+    installPhase = ''
+      mkdir -p $out
+      cp -r _build/html $out
+    '';
+  }
+  // pkgs.lib.optionalAttrs pkgs.stdenv.isLinux {
+    # If we're building on Linux, set locale
+    # Otherwise the variable isn't necessary
+    # https://ryantm.github.io/nixpkgs/builders/packages/locales/#:~:text=The%20simplest%20way%20to%20mitigate%20this%20problem,the%20LOCALE_ARCHIVE%20variable%20pointing%20to%20$%7BglibcLocales%7D/lib/locale/locale%2Darchive%20.
+    LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
+  }
+)
