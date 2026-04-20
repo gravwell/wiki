@@ -14,7 +14,7 @@ The first step is to log into the Okta management console and click on `Applicat
 
 ![](create_app.png)
 
-Name your SAML 2.0 application and upload an image so that users know what they are interacting with; feel free to grab our logo and use it. Proceed to step two.
+Name your SAML 2.0 application and upload an image so that users know what they are interacting with; feel free to grab our logo and use it. Proceed to step 2 (`Configure SAML`).
 
 ![](okta_saml_step_one.png)
 
