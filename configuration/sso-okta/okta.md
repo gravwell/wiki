@@ -1,6 +1,6 @@
-# Configuring OKTA SSO with Gravwell
+# Configuring Okta SSO with Gravwell
 
-OKTA is a managed identity provider that provides cloud hosted identity and authentication services; if your organization uses OKTA for identity management, integrating with Gravwell is an incredibly easy process.
+Okta is a managed identity provider that provides cloud hosted identity and authentication services; if your organization uses Okta for identity management, integrating with Gravwell is an incredibly easy process.
 
 In this document, we assume the following:
 
@@ -8,94 +8,56 @@ In this document, we assume the following:
 * The Gravwell instance is publicly available with valid SSL certificates.
 * You are an Okta admin and can establish a new application and assign users to it.
 
-
 ## Creating The Okta Application
 
 The first step is to log into the Okta management console and click on `Applications`, then click `Create App Integration` to begin setting up a Gravwell integration.
 
 ![](create_app.png)
 
-Name your application and upload an image so that users know what they are interacting with; feel free to grab our logo and use it.
+Name your SAML 2.0 application and upload an image so that users know what they are interacting with; feel free to grab our logo and use it. Proceed to step two.
 
-![](general_settings.png)
+![](okta_saml_step_one.png)
 
 Make sure to set the appropriate fully qualified URL for your SSO URL and SP Entity ID URL; given the domain of `gravwell.example.com` the appropriate URLs are `https://gravwell.example.com/saml/acs` and `https://gravwell.example.com/saml/metadata`.
 
-![](setup_1.png)
+![](okta_saml_step_two.png)
 
-Next configure Attribute Statements so that user information such as names, emails, and groups can be transmitted from Okta to Gravwell during account creation.  The `uid` and `mail` attributes are mandatory, but we suggest adding `givenName` and `surName` too.  Also add the Group Attribute Statements to describe which groups will be sent from Okta to Gravwell; you can filter which groups are sent using a prefix, postfix, or even a regular expression.  For this example we are sending all groups.
+Finalize this step and use the defaults for step 3 (`Feedback`).
 
-![](setup_2.png)
+## Setting Okta SAML Attributes
 
-If you wish to double check the configuration XML click `Preview the SAML Assertion`, it may look something like this:
+Next configure Attribute Statements so that user information such as names, email addresses, and groups can be forwarded from Okta to Gravwell.
 
-```
-<?xml version="1.0" encoding="UTF-8"?>
-<saml2:Assertion ID="id12345678901234567890" IssueInstant="2023-08-08T22:22:08.424Z" Version="2.0"
-    xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion">
-    <saml2:Issuer Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity">http://www.okta.com/exk6ukjm9vpaGcPe8697</saml2:Issuer>
-    <saml2:Subject>
-        <saml2:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient">kris.watts@gravwell.io</saml2:NameID>
-        <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
-            <saml2:SubjectConfirmationData NotOnOrAfter="2023-08-08T22:27:08.424Z" Recipient="https://gravwell.example.com/saml/acs"/>
-        </saml2:SubjectConfirmation>
-    </saml2:Subject>
-    <saml2:Conditions NotBefore="2023-08-08T22:17:08.424Z" NotOnOrAfter="2023-08-08T22:27:08.424Z">
-        <saml2:AudienceRestriction>
-            <saml2:Audience>https://gravwell.example.com/saml/metadata</saml2:Audience>
-        </saml2:AudienceRestriction>
-    </saml2:Conditions>
-    <saml2:AuthnStatement AuthnInstant="2023-08-08T21:38:53.551Z" SessionIndex="id12345678.123456789">
-        <saml2:AuthnContext>
-            <saml2:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml2:AuthnContextClassRef>
-        </saml2:AuthnContext>
-    </saml2:AuthnStatement>
-    <saml2:AttributeStatement>
-        <saml2:Attribute Name="uid" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified">
-            <saml2:AttributeValue
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">user.dude@example.com
-            </saml2:AttributeValue>
-        </saml2:Attribute>
-        <saml2:Attribute Name="givenName" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified">
-            <saml2:AttributeValue
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">User
-            </saml2:AttributeValue>
-        </saml2:Attribute>
-        <saml2:Attribute Name="surName" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified">
-            <saml2:AttributeValue
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Dude
-            </saml2:AttributeValue>
-        </saml2:Attribute>
-        <saml2:Attribute Name="mail" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified">
-            <saml2:AttributeValue
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">user.dude@example.com
-            </saml2:AttributeValue>
-        </saml2:Attribute>
-        <saml2:Attribute Name="groups" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified">
-            <saml2:AttributeValue
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">group1
-            </saml2:AttributeValue>
-            <saml2:AttributeValue
-                xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">group2
-            </saml2:AttributeValue>
-        </saml2:Attribute>
-    </saml2:AttributeStatement>
-</saml2:Assertion>
-```
+Locate the newly created application in your list of Okta applications. Open the application and navigate to the `Sign On` tab. Find the `Attribute statements` block.
 
-After finalizing your application integration, Okta will show a `Sign On Methods` screen containing a SAML 2.0 Metadata URL. Copy the URL (you will need it for your `gravwell.conf` configuration).
 
-Next go to your Okta application and assign people and groups to the application; the group assignments can control which groups are passed to Gravwell as well as which users can log into the application.
+Configure Okta SAML attributes using either Option A or Option B as described below. The `uid` and `mail` attributes are mandatory, but we suggest adding `givenName` and 
+`surName` too. Set the `groups` attribute to select which Okta groups to forward from Okta to Gravwell. Both options (A and B) show how to send **all** groups.
 
-![](setup_3.png)
+![](okta_saml_attributes_empty.png)
+
+### (Option A) Attribute Statements
+
+Okta's attribute statements have migrated to using the [Okta Expression Language (EL)](https://developer.okta.com/docs/reference/okta-expression-language).
+The following example would forward all groups from Okta and grant admin access to members of Okta group `foo-admin-group`.
+
+![](okta_saml_attributes_oel.png)
+
+### (Option B) Legacy Configuration
+
+If you do not want to use EL for SAML attributes, you can still use Okta's legacy configuration as follows.
+
+![](okta_saml_attributes_legacy.png)
+
+## Okta App Assignments
+
+Next go to your Okta application and assign people and groups to the application to allow sign-on access to Gravwell.
+
+![](okta_app_assignments.png)
 
 ## Set up Gravwell configuration block
+
+You will need the metadata URL provided in the Gravwell Okta app -> `Sign On` tab -> `Metadata URL` block.
 
 On the system running the Gravwell webserver, create a file named `/opt/gravwell/etc/gravwell.conf.d/sso.conf` and paste the following into it:
 
