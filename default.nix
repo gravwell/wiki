@@ -97,5 +97,7 @@ in pkgs.stdenv.mkDerivation {
     cp -r _build/html $out
   '';
 
-  LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
+  LOCALE_ARCHIVE = if pkgs.stdenv.isLinux 
+    then "${pkgs.glibcLocales}/lib/locale/locale-archive" 
+    else "";
 }
