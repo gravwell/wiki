@@ -43,8 +43,8 @@ An example configuration for the File Follower ingester, configured to watch sev
 Ingest-Secret = IngestSecrets
 Connection-Timeout = 0
 Insecure-Skip-TLS-Verify = false
-Cleartext-Backend-target=172.20.0.1:4023 #example of adding a cleartext connection
-Cleartext-Backend-target=172.20.0.2:4023 #example of adding another cleartext connection
+Cleartext-Backend-Target=172.20.0.1:4023 #example of adding a cleartext connection
+Cleartext-Backend-Target=172.20.0.2:4023 #example of adding another cleartext connection
 #State-Store-Location="C:\\Program Files\\gravwell\\filefollow\\file_follow.cache"
 Log-Level=ERROR #options are OFF INFO WARN ERROR
 Max-Files-Watched=64

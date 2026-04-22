@@ -53,13 +53,13 @@ If the Gravwell services are present on the same machine, the installation scrip
 
 By default, the ingester will ingest security alerts as they arrive. It will also periodically query for new security score results (typically issued daily), and ingest the associated control profiles which are used to build those security score results. These three data sources are by default ingested to the tags `graph-alerts`, `graph-scores`, and `graph-profiles`, respectively.
 
-The example below shows a sample configuration which connects to an indexer on the local machine (note the `Pipe-Backend-target` setting) and feeds it logs from all supported types:
+The example below shows a sample configuration which connects to an indexer on the local machine (note the `Pipe-Backend-Target` setting) and feeds it logs from all supported types:
 
 ```
 [Global]
 Ingest-Secret = IngestSecrets
 Connection-Timeout = 0
-Pipe-Backend-target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
+Pipe-Backend-Target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
 Log-Level=ERROR #options are OFF INFO WARN ERROR
 State-Store-Location=/opt/gravwell/etc/msgraph_ingest.state
 

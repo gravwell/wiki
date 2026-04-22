@@ -94,7 +94,7 @@ To modify the indexer connection or specify multiple indexers, change the connec
 
 ```
 Ingest-Secret=YourSecretGoesHere
-Encrypted-Backend-target=ip.addr.goes.here:port
+Encrypted-Backend-Target=ip.addr.goes.here:port
 ```
 
 Once configured, this file can be copied to any other Windows system from which you would like to collect events.
