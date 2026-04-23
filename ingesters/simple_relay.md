@@ -34,9 +34,9 @@ An example configuration for the Simple Relay ingester, configured to listen on 
 Ingest-Secret = IngestSecrets
 Connection-Timeout = 0
 Insecure-Skip-TLS-Verify=false
-Cleartext-Backend-target=127.0.0.1:4023 #example of a cleartext connection
-Cleartext-Backend-target=127.1.0.1:4023 #example of second cleartext connection
-Encrypted-Backend-target=127.1.1.1:4024 #example of encrypted connection
+Cleartext-Backend-Target=127.0.0.1:4023 #example of a cleartext connection
+Cleartext-Backend-Target=127.1.0.1:4023 #example of second cleartext connection
+Encrypted-Backend-Target=127.1.1.1:4024 #example of encrypted connection
 Pipe-Backend-Target=/opt/gravwell/comms/pipe #a named pipe connection
 Ingest-Cache-Path=/opt/gravwell/cache/simple_relay.cache #local storage cache when uplinks fail
 Max-Ingest-Cache=1024 #Number of MB to store, localcache will only store 1GB before stopping

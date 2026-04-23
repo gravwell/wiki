@@ -84,7 +84,7 @@ By default the collectd ingester reads a configuration file located at _/opt/gra
 [Global]
 	Ingest-Secret = SuperSecretKey
 	Connection-Timeout = 0
-	Cleartext-Backend-target=192.168.122.100:4023
+	Cleartext-Backend-Target=192.168.122.100:4023
 	Log-Level=INFO
 
 [Collector "default"]
