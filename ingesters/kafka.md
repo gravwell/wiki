@@ -130,7 +130,7 @@ Here is an example configuration that is subscribing to two different topics usi
 [Global]
 Ingest-Secret = IngestSecrets
 Connection-Timeout = 0
-Pipe-Backend-target=/opt/gravwell/comms/pipe
+Pipe-Backend-Target=/opt/gravwell/comms/pipe
 Log-Level=INFO
 Log-File=/opt/gravwell/log/kafka.log
 

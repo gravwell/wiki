@@ -22,7 +22,7 @@ Ingester-UUID="e985bc57-8da7-4bd9-aaeb-cc8c7d489b42"
 Ingest-Secret = IngestSecrets
 Connection-Timeout = 0
 Insecure-Skip-TLS-Verify=true
-Cleartext-Backend-target=127.0.0.1:4023 #example of adding a cleartext connection
+Cleartext-Backend-Target=127.0.0.1:4023 #example of adding a cleartext connection
 Log-Level=INFO
 
 [Listener "default"]
