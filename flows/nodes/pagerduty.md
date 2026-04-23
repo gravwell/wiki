@@ -74,6 +74,6 @@ The deduplication key returned by PagerDuty can be used to send subsequent event
 
 ### PagerDuty API Size Limits
 
-Pagerduty has strict limits on the overall size of an API requests as well as the size of specific fields in an event.  The node will attempt to truncate fields that exceed PagerDuty limits, but if the overall payload exceeds limits such that the request will fail the node will begin trimming potentially un-needed fields to try and get the request out.  If a field is truncated or trimmed the log for the node will mention it in the debug log.
+Pagerduty has strict limits on the overall size of an API request as well as the size of specific fields in an event.  The node will attempt to truncate fields that exceed PagerDuty limits, but if the overall payload exceeds limits such that the request will fail, the node will begin trimming potentially un-needed fields to try and get the request out.  If a field is truncated or trimmed, the log for the node will mention it in the debug log.
 
 ![](pagerduty_truncate.png)
