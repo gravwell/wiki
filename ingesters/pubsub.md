@@ -51,14 +51,14 @@ root@gravserver ~# bash gravwell_pubsub_ingest_installer.sh
 
 If the Gravwell services are present on the same machine, the installation script should automatically extract and configure the `Ingest-Auth` parameter and set it appropriately. You will now need to open the `/opt/gravwell/etc/pubsub_ingest.conf` configuration file and set it up for your PubSub topic. Once you have modified the configuration as described below, start the service with the command `systemctl start gravwell_pubsub_ingest.service`
 
-The example below shows a sample configuration which connects to an indexer on the local machine (note the `Pipe-Backend-target` setting) and feeds it from a single PubSub topic named "mytopic", which is part of the "myproject-127400" GCP project.
+The example below shows a sample configuration which connects to an indexer on the local machine (note the `Pipe-Backend-Target` setting) and feeds it from a single PubSub topic named "mytopic", which is part of the "myproject-127400" GCP project.
 
 ```
 [Global]
 Ingest-Secret = IngestSecrets
 Connection-Timeout = 0
 Insecure-Skip-TLS-Verify = false
-Pipe-Backend-target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
+Pipe-Backend-Target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
 Log-Level=ERROR #options are OFF INFO WARN ERROR
 
 # The GCP project ID to use

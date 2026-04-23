@@ -14,7 +14,7 @@ Download the Gravwell Windows File Follower installer:
 
 | Ingester Name | Installer    | More Info |
 | :------------ | :----------- | :-------- |
-| Windows File Follower | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.8.13/installers/gravwell_file_follow_5.8.13.1.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">11a71e4100e7036810688ccb39ab12f0fd4494fb2d27d87d3cf46b4823db0ad2</span></code>'>(SHA256)</a> | [Documentation](/ingesters/win_file_follow) |
+| Windows File Follower | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.8.14/installers/gravwell_file_follow_5.8.14.1.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">4586769666f714a13b7e8b1013b2be2f60f815cd1bdaf1c7f44b143cbe3fef1c</span></code>'>(SHA256)</a> | [Documentation](/ingesters/win_file_follow) |
 
 The Gravwell Windows file follower is installed using a signed MSI package.  Gravwell signs both the Windows executable and MSI installer with our private key pairs, but depending on download volumes, you may see a warning about the MSI being untrusted.  This is due to the way Microsoft "weighs" files.   Basically, as they see more people download and install a given package, it becomes more trustworthy.  Don't worry though, we have a well audited build pipeline and we sign every package.
 
@@ -43,8 +43,8 @@ An example configuration for the File Follower ingester, configured to watch sev
 Ingest-Secret = IngestSecrets
 Connection-Timeout = 0
 Insecure-Skip-TLS-Verify = false
-Cleartext-Backend-target=172.20.0.1:4023 #example of adding a cleartext connection
-Cleartext-Backend-target=172.20.0.2:4023 #example of adding another cleartext connection
+Cleartext-Backend-Target=172.20.0.1:4023 #example of adding a cleartext connection
+Cleartext-Backend-Target=172.20.0.2:4023 #example of adding another cleartext connection
 #State-Store-Location="C:\\Program Files\\gravwell\\filefollow\\file_follow.cache"
 Log-Level=ERROR #options are OFF INFO WARN ERROR
 Max-Files-Watched=64

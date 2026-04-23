@@ -715,6 +715,12 @@ Overwrites the entry's DATA field. This is different than creating an enumerated
 
 Returns an array of all enumerated value names attached to the entry.
 
+### indirect
+
+    function indirect(<expression>)
+
+Returns an EV or string constant based on the given expression. For example, `indirect("f"+"oo")` will return the value of the EV named `foo`, if it exists. If it does not exist, the string constant "foo" will be returned.
+
 #### keys
 
     function keys(map) array

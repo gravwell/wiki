@@ -231,7 +231,7 @@ An example configuration which defines a preshared token:
 ```
 [Listener "presharedtoken"]
 	URL="/preshared/token/data"
-	Tag-name=token
+	Tag-Name=token
 	AuthType="preshared-token"
 	TokenName=foo
 	TokenValue=barbaz
@@ -256,7 +256,7 @@ An example configuration which defines a preshared parameter:
 ```
 [Listener "presharedtoken"]
 	URL="/preshared/parameter/data"
-	Tag-name=token
+	Tag-Name=token
 	AuthType="preshared-parameter"
 	TokenName=foo
 	TokenValue=barbaz
