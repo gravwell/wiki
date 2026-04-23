@@ -62,9 +62,9 @@ If the ingester is on a machine with a Gravwell backend already installed, the i
 Ingest-Secret = IngestSecrets
 Connection-Timeout = 0
 Insecure-Skip-TLS-Verify = false
-#Cleartext-Backend-target=127.1.0.1:4023 #example of adding a cleartext connection
-#Encrypted-Backend-target=127.1.1.1:4023 #example of adding an encrypted connection
-Pipe-Backend-target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
+#Cleartext-Backend-Target=127.1.0.1:4023 #example of adding a cleartext connection
+#Encrypted-Backend-Target=127.1.1.1:4023 #example of adding an encrypted connection
+Pipe-Backend-Target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
 Log-Level=INFO #options are OFF INFO WARN ERROR
 Ingest-Cache-Path=/opt/gravwell/cache/network_capture.cache
 
