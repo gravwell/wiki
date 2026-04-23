@@ -15,6 +15,9 @@ For example, the following entry contains 4 key-value pairs, using '=' as the se
 x=1 y=2 z=3 foo=bar
 ```
 
+```{note}
+When using a space " " as the separator, you must also enable -noclean.  The kv module is designed to be as flexible as possible when dealing with potentially messy key-value data, so it will attempt to clean up whitespace around values by default.  When using a space as the separator, this cleanup will remove the separator itself and cause the module to fail to extract any values.  Enabling -noclean will disable this cleanup and allow the module to extract values with a space as the separator.
+```
 
 This entry contains the same key-value pairs but uses ':' as the separator and '|' as the delimiter:
 

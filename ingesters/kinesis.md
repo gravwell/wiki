@@ -56,14 +56,14 @@ root@gravserver ~# bash gravwell_kinesis_ingest_installer.sh
 
 If the Gravwell services are present on the same machine, the installation script should automatically extract and configure the `Ingest-Auth` parameter and set it appropriately. You will now need to open the `/opt/gravwell/etc/kinesis_ingest.conf` configuration file and set it up for your Kinesis stream. Once you have modified the configuration as described below, start the service with the command `systemctl start gravwell_kinesis_ingest.service`
 
-The example below shows a sample configuration which connects to an indexer on the local machine (note the `Pipe-Backend-target` setting) and feeds it from a single Kinesis stream named "MyKinesisStreamName" in the us-west-1 region.
+The example below shows a sample configuration which connects to an indexer on the local machine (note the `Pipe-Backend-Target` setting) and feeds it from a single Kinesis stream named "MyKinesisStreamName" in the us-west-1 region.
 
 ```
 [Global]
 Ingest-Secret = IngestSecrets
 Connection-Timeout = 0
 Insecure-Skip-TLS-Verify = false
-Pipe-Backend-target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
+Pipe-Backend-Target=/opt/gravwell/comms/pipe #a named pipe connection, this should be used when ingester is on the same machine as a backend
 Log-Level=ERROR #options are OFF INFO WARN ERROR
 State-Store-Location=/opt/gravwell/etc/kinesis_ingest.state
 
