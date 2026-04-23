@@ -109,6 +109,36 @@ An example global configuration with HTTPS enabled might look like the following
 	TLS-Key-File=/opt/gravwell/etc/key.pem
 ```
 
+## Common Listener Properties
+
+The following configuration parameters are supported by **all** listener types (`Listener`, `HEC-Compatible-Listener`, and `Amazon-Firehose-Listener`):
+
+| Parameter          | Type         | Required | Default Value | Description                                                 |
+|--------------------|--------------|----------|---------------|-------------------------------------------------------------|
+| Tag-Name           | string       | YES      |               | Tag assigned to entries received by the endpoint.           |
+| Ignore-Timestamps  | boolean      | NO       | false         | Do not extract or process timestamps, use current time.     |
+| Preprocessor       | string array | NO       |               | Set of preprocessors to apply to entries.                   |
+| Debug-Posts        | boolean      | NO       | false         | Emit additional debugging info on the gravwell tag for each POST. |
+
+#### Debug-Posts
+
+The `Debug-Posts` configuration option enables additional logging on each HTTP POST request to the HTTP ingester endpoint.  Only successful transactions will be logged when using the `Debug-Posts` configuration option.  Authentication failures, structure failures, or just bad requests are logged using the existing systems.  The debug logs are sent to the `gravwell` tag.
+
+Here is a raw log entry emitted from a debug post:
+```
+<14>1 2023-11-03T18:01:54.201875Z example.gravwell.io httpingester - HttpIngester/hec.go:234 [gw@1 host="172.19.0.1" method="POST" url="/services/collector" bytes="255" entries="3"] HEC request
+```
+
+Generating a table of the relevant data might use the following query:
+
+```
+tag=gravwell syslog Appname==httpingester Message == "HEC request" Hostname 
+  Structured[gw@1].host Structured[gw@1].url Structured[gw@1].bytes Structured[gw@1].entries
+| table Hostname host url bytes entries TIMESTAMP
+```
+
+![](hec_debug1.png)
+
 ### Listener Configuration Options
 
 Listener configuration blocks (except the Amazon-Firehose-Listener) support the following configuration parameters:
@@ -117,7 +147,7 @@ Listener configuration blocks (except the Amazon-Firehose-Listener) support the 
 | Parameter                 | Type         | Required | Default Value                | Description                         |
 |---------------------------|--------------|----------|------------------------------|-------------------------------------|
 | URL                       | string       | YES      |            | Endpoint URL to handle requests. |
-| Method                    | string       | NO       | `POST``  | HTTP method for requests. |
+| Method                    | string       | NO       | `POST`  | HTTP method for requests. |
 | Tag-Name                  | string       | YES      |                              | Tag assigned to entries received by the endpoint. |
 | Multiline                 | boolean      | NO       | false                        | Treat request body as a multiline file and process each line as an individual entry. |
 | Ignore-Timestamps         | boolean      | NO       | false                        | Do not extract or process timestamps, use current time. |
@@ -315,20 +345,16 @@ The `HEC-Compatible-Listener` block requires the `TokenValue` and `Tag-Name` con
 
 Both `Listener` and `HEC-Compatible-Listener` configuration blocks can be specified on the same HTTP ingester.
 
-The `HEC-Compatible-Listener` supports the following configuration parameters:
+The `HEC-Compatible-Listener` supports the following configuration parameters (in addition to the [Common Listener Properties](#common-listener-properties)):
 
 | Parameter          | Type         | Required | Default Value         | Description                                                 |
 |--------------------|--------------|----------|-----------------------|-------------------------------------------------------------|
 | URL                | string       | NO       | `/services/collector` | Endpoint URL for Splunk events.                             |
 | TokenValue         | string       | YES      |                       | Authentication Token.                                       |
-| Tag-Name           | string       | YES      |                       | Tag assigned to entries received by the endpoint.           |
-| Ignore-Timestamps  | boolean      | NO       | false                 | Do not extract or process timestamps, use current time.     |
 | Ack                | boolean      | NO       | false                 | Acknowledge receipt and respond with entry IDs.             |
 | Max-Size           | unsigned int | NO       | 524288 (512k)         | Maximum size for each decoded entry.                        |
 | Tag-Match          | string array | NO       |                       | Sourcetype value to tag mapping, multiple can be specified. |
 | Routed-Token-Value | string array | NO       |                       | Token value used for authentication and tag routing.        |
-| Debug-Posts        | boolean      | NO       | false                 | Emit additional debugging info on the gravwell tag for each POST. |
-| Preprocessor       | string array | NO       |                       | Set of preprocessors to apply to entries.                   |
 | Attach-URL-Parameter | string array | NO     |      | Set of URL parameter values that will be attached to all entries in a request if they are found in the request URL. |
 | Token-Name         | string       | NO       |                       | Optional override of authentication token name, default is "Splunk". |
 
@@ -514,26 +540,6 @@ The resulting entries will have the following tags:
 
 
 
-#### Debug-Posts
-
-The `Debug-Posts` configuration option enables additional logging on each HTTP POST request to the HTTP ingester endpoint.  Only successful transactions will be logged when using the `Debug-Posts` configuration option.  Authentication failures, structure failures, or just bad requests are logged using the existing systems.  The debug logs are sent to the `gravwell` tag.
-
-Here is a raw log entry emitted from a HEC debug post:
-```
-<14>1 2023-11-03T18:01:54.201875Z example.gravwell.io httpingester - HttpIngester/hec.go:234 [gw@1 host="172.19.0.1" method="POST" url="/services/collector" bytes="255" entries="3"] HEC request
-```
-
-Generating a table of the relevant data might use the following query:
-
-```
-tag=gravwell syslog Appname==httpingester Message == "HEC request" Hostname 
-  Structured[gw@1].host Structured[gw@1].url Structured[gw@1].bytes Structured[gw@1].entries
-| table Hostname host url bytes entries TIMESTAMP
-```
-
-![](hec_debug1.png)
-
-
 #### Token-Name
 
 Many third party services which are designed to send data to a HEC compatible listener have been observed sending authentication tokens with various random names; the default expected authentication header structure is `Authorization: Splunk <token>`, but we have seen everything from "User" to "user_name".  The `Token-Name` configuration parameter can override the Authorization header token name so that the HEC compatible listener can still authenticate and support third party services that do not adhere to the HEC guidance.
@@ -559,15 +565,12 @@ The `Amazon-Firehose-Listener` type supports the [Amazon Firehose](https://aws.a
 
 In the above example, the HTTP ingester will listen on the `/foo` path for an Amazon Firehose request, authenticated with the token "thisisyourtoken", and ingesting to tag "bar". In the AWS console, you would set the Firehose endpoint to `your.domain/foo`, and provide the same token.
 
-The `Amazon-Firehose-Listener` supports the following configuration parameters:
+The `Amazon-Firehose-Listener` supports the following configuration parameters (in addition to the [Common Listener Properties](#common-listener-properties)):
 
 | Parameter         | Type         | Required | Default Value         | Description                                                 |
 |-------------------|--------------|----------|-----------------------|-------------------------------------------------------------|
 | URL               | string       | YES       | | Endpoint URL for Amazon Firehose events.                             |
 | TokenValue        | string       | YES      |                       | Authentication Token.                                       |
-| Tag-Name          | string       | YES      |                       | Tag assigned to entries received by the endpoint.           |
-| Ignore-Timestamps | boolean      | NO       | false                 | Do not extract or process timestamps, use current time.     |
-| Preprocessor      | string array | NO       |                       | Set of preprocessors to apply to entries.                   |
 
 ## Health Checks
 
