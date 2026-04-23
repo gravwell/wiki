@@ -5,9 +5,11 @@ The PagerDuty Create Incident node creates a PagerDuty incident for alerting and
 ## Configuration
 
 * `API Key`, required: a [PagerDuty API integration key](https://support.pagerduty.com/docs/api-access-keys) (also known as a routing key) for the desired service.
-* `Summary`, required: a brief text summary of the incident, providing a high-level description of the problem.
-* `Severity`, required: the severity level of the incident. Select from `critical`, `error`, `warning`, or `info`.
-* `Source`: an optional string identifying the source of the incident (e.g., a hostname, service name, or monitoring system).
+* `Summary`, required: a brief text summary of the incident, providing a high-level description of the problem.  If a summary is not specified it will default to the name of the flow.
+* `Severity`, required: the severity level of the incident. Select from `critical`, `error`, `warning`, or `info`.  If a severity is not specified, it will default to `error`.
+* `Source`, required: a string identifying the source of the incident (e.g., a hostname, service name, or monitoring system). If a source is not specified, it will default to the name of the flow.
+* `Component`: an optional field to specify the component of the system that is affected by the incident.
+* `Class`: an optional field to categorize the incident, which can be used for filtering and reporting in PagerDuty.
 * `Group`: an optional logical grouping for the incident, useful for organizing related incidents.
 * `Retry Count`: the number of retry attempts to make if the initial request fails. Values less than or equal to 1 mean a single attempt will be made. The node uses exponential backoff between retries.
 * `Timeout`: timeout in seconds for the PagerDuty API request. The default is 5 seconds. Values less than or equal to 0 disable the timeout.
@@ -21,7 +23,7 @@ The node adds a deduplication key to the payload. The deduplication key is retur
 
 ## Example
 
-This example runs a query to detect an unauthorized `Appname` in the `gravwell` tag. if results exist, it creates a PagerDuty incident with a "high" severity.
+This example runs a query to detect an unauthorized `Appname` in the `gravwell` tag. If results exist, it creates a PagerDuty incident with a "high" severity.
 
 ![](pagerduty_flow.png)
 
@@ -31,6 +33,9 @@ The PagerDuty node is configured with:
 * `Summary`: "foobar appname present"
 * `Severity`: "high"
 * `Source`: A reference from the flow name
+* `Component`: Is not configured and will be left blank in the incident
+* `Class`: Is not configured and will be left blank in the incident
+* `Group`: Is not configured and will be left blank in the incident
 * `Custom`: Additional fields like `search.Count` and `search.Start`
 * `Links`: A link back to the Gravwell flow
 * `Timeout`: A time out of 10 seconds, each pagerduty request attempt will wait up to 10 seconds for a response before failing and retrying.
