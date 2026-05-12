@@ -39,12 +39,12 @@ The final icon lets you set editor options such as the font size and the theme:
 Playbooks are written in [Markdown](https://www.markdownguide.org/basic-syntax/). The basic structures (headings, italics, bold, links, lists, etc.) are available and, for convenience, are also available via icons at the top of the editor pane.
 
 ```{note}
-The only major caveat of the Markdown used for playbooks is that code blocks (text wrapped in backticks, triple backticks, or indented by at least 4 spaces/1 tab) are considered *queries*; Gravwell will attempt to parse the contents of the code block as a Gravwell query. To insert plain unformatted text, use HTML `pre` tags.
+The only major caveat of the Markdown used for playbooks is that code blocks (text wrapped in triple backticks or indented by at least 4 spaces/1 tab) are considered *queries*; Gravwell will attempt to parse the contents of the code block as a Gravwell query. To insert plain unformatted text, use HTML `pre` tags.
 ```
 
 ## Inserting Queries
 
-You can insert runnable queries by wrapping the query text in triple backticks or single backticks, or by indenting it at least 4 spaces / 1 tab:
+You can insert runnable queries by wrapping the query text in triple backticks or by indenting it at least 4 spaces / 1 tab:
 
 ![](queries.png)
 
