@@ -126,7 +126,7 @@ The following tools are available via the MCP server:
 | `parse_query` | Parse and validate a Gravwell query string |
 | `save_query` | Save a query to the query library |
 | `update_query` | Update an existing saved query |
-| `list_queries` | List saved queries from the search library |
+| `list_queries` | List saved queries from the query library |
 | `search_history` | Get the user's search history |
 | `list_tags` | List all tags available to the user |
 | `sample_tag_entries` | Retrieve the last 10 entries from a tag |
