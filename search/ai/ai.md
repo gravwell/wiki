@@ -75,7 +75,7 @@ When engaging with Logbot or other Gravwell AI services, you should be cognizant
 - Interactions with Gravwell AI services may be stored on Gravwell infrastructure in memory or logs until rotation/cleanup. Any deletion requests (e.g. GDPR) should be submitted to [privacy@gravwell.io](mailto:privacy@gravwell.io) or as directed by any contract you may have with Gravwell
 - Gravwell humans in charge of AI services may review interactions to improve the AI services and/or prevent abuse
 
-### Configuring a third party LLM service.
+### Configuring a third party LLM service
 
 Instead of using the Gravwell-hosted AI service, you can configure Gravwell to use any OpenAI-compatible API endpoint (such as OpenAI, Anthropic, or a self-hosted model). This is done by setting the following parameters in the `[AI]` section of your `gravwell.conf`:
 
