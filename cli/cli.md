@@ -4,7 +4,7 @@ The Gravwell command line client can be used to remotely manage Gravwell and per
 
 The command line client is slightly limited in that it cannot render some search results (e.g. the CLI cannot draw a chart in a terminal, so it will refuse to render a search that uses the chart module).  However, the CLI does have access to all renderer modules when issuing backgrounded searches, which may be useful if an advanced user wanted to login remotely and start a few very large searches that will be ready for viewing on a full browser once they get on-site.
 
-On a typical installation, the CLI tool will be installed as `/usr/sbin/gravwell`; passing the `-h` flag will give you an idea on where to start.  By default the Gravwell client expects the webserver to be listening on the local machine, specify the `-s` flag to point it at other webservers or a remote Gravwell instance.
+The CLI tool is available through the [Gravwell tools package](/tools/tools); passing the `-h` flag will give you an idea on where to start.  By default the Gravwell client expects the webserver to be listening on the local machine, specify the `-s` flag to point it at other webservers or a remote Gravwell instance.
 
 ```
 gravwell options
@@ -70,7 +70,7 @@ EXAMPLE: gravwell -s=localhost state
 
 The Gravwell client is also a great way to perform searches on Gravwell and feed the output to other tools.  For instance if you have a custom program for processing security data, but prefer to store your log entries in Gravwell, you can run a background query using the CLI client to extract the entries, then save the results to a file for the custom program to read.
 
-## Using the CLI interactively.
+## Using the CLI interactively
 
 The Gravwell CLI client provides an interactive shell similar to those found on commercial switches. It has different "menu" levels; for example, from the top level menu one might select the 'dashboards' sub-menu, which contains commands for managing dashboards. This section will describe the basics of using the client interactively.
 
