@@ -130,6 +130,7 @@ The following tools are available via the MCP server:
 | `search_history` | Get the user's search history |
 | `list_tags` | List all tags available to the user |
 | `sample_tag_entries` | Retrieve the last 10 entries from a tag |
+| `execute_query` | Execute a Gravwell query and return results |
 | `ping_indexers` | Ping all indexers to check connectivity |
 | `system_description` | Get hardware/OS descriptions for webserver and indexers |
 | `system_stats` | Get live system statistics |
