@@ -171,6 +171,10 @@ Not all queries will display the timeframe selector. Some modules or module opti
 
 This option is useful when a search is taking longer than expected to complete. Clicking "Run search in background" will make the search continue running in the background even after you navigate away from the results page; this allows you to do other things while the search completes. You can monitor the search's status and view the completed results from the [Persistent Searches](/gui/persistent/persistent) page. Note that backgrounded searches do *not* persist across webserver restarts; to keep results around permanently, use the "Save results" option.
 
+```{warning}
+Unsaved background queries are automatically deleted after **7 days**. Save your search to preserve results permanently.
+```
+
 ![](send-background.png)
 
 ## Live Update Queries
