@@ -2,6 +2,7 @@
 
 The gravwell ingest framework is open sourced via the BSD 2-clause license, which enables it to be directly included in both open source and commercial products.  Data processors and/or generators can directly embed the ingest framework and provide an easy to configure integration with Gravwell.  This documentation page is used to highlight and where appropriate document some Gravwell integrations.
 
+(integrations_coredns)=
 ## CoreDNS
 
 CoreDNS is a highly configurable and plugin friendly DNS server meant to provide a base platform for DNS services.   The base functionality of CoreDNS provides a robust and performant DNS server that can act as a relay, proxy, or full blown DNS server.  CoreDNS is licensed under the Apache-2.0 and is available on [github](https://github.com/coredns/coredns).  To learn more about CoreDNS visit [https://coredns.io](https://coredns.io).
