@@ -108,7 +108,9 @@ An example global configuration with HTTPS enabled might look like the following
 	TLS-Certificate-File=/opt/gravwell/etc/cert.pem
 	TLS-Key-File=/opt/gravwell/etc/key.pem
 ```
-## Common Listener Properties
+
+(common-listener-properties)=
+## Common Listener Configuration Options
 
 The following configuration parameters are supported by **all** listener types (`Listener`, `HEC-Compatible-Listener`, and `Amazon-Firehose-Listener`):
 
@@ -119,7 +121,8 @@ The following configuration parameters are supported by **all** listener types (
 | Preprocessor       | string array | NO       |               | Set of preprocessors to apply to entries.                   |
 | Debug-Posts        | boolean      | NO       | false         | Emit additional debugging info on the gravwell tag for each POST. |
 
-#### Debug-Posts
+(debug-posts)=
+### Debug-Posts
 
 The `Debug-Posts` configuration option enables additional logging on each HTTP POST request to the HTTP ingester endpoint.  Only successful transactions will be logged when using the `Debug-Posts` configuration option.  Authentication failures, structure failures, or just bad requests are logged using the existing systems.  The debug logs are sent to the `gravwell` tag.
 
@@ -139,18 +142,16 @@ tag=gravwell syslog Appname==httpingester Message == "HEC request" Hostname
 ![](hec_debug1.png)
 
 (http-listener-config)=
-### Listener Configuration Options
+## Other Listener Configuration Options
 
-Listener configuration blocks (except the Amazon-Firehose-Listener) support the following configuration parameters:
+Listener configuration blocks (except the `Amazon-Firehose-Listener`) support the following configuration parameters:
 
 
 | Parameter                 | Type         | Required | Default Value                | Description                         |
 |---------------------------|--------------|----------|------------------------------|-------------------------------------|
 | URL                       | string       | YES      |            | Endpoint URL to handle requests. |
 | Method                    | string       | NO       | `POST`  | HTTP method for requests. |
-| Tag-Name                  | string       | YES      |                              | Tag assigned to entries received by the endpoint. |
 | Multiline                 | boolean      | NO       | false                        | Treat request body as a multiline file and process each line as an individual entry. |
-| Ignore-Timestamps         | boolean      | NO       | false                        | Do not extract or process timestamps, use current time. |
 | Assume-Local-Timezone     | boolean      | NO       | false                        | Assume local timezone on timestamps without a specified timezone. |
 | Timezone-Override         | string       | NO       |  | Specify a specific timezone to attach to entries if the derived timestamp does not contain a timezone. |
 | Timestamp-Format-Override | string       | NO       |    | Force timestamp processing to look for a specific timestamp format. |
@@ -160,7 +161,6 @@ Listener configuration blocks (except the Amazon-Firehose-Listener) support the 
 | LoginURL                  | string       | NO       |      | Specify login URL when performing cookie or JWT based authentication.  Required when using login based authentication methods. |
 | TokenName                 | string       | NO       |      | Authorization token name, required when using preshared-token or preshared-parameter authentication method.|
 | TokenValue                | string       | NO       |      | Authorization token value, required when using preshared-token or preshared-parameter authentication method.|
-| Preprocessor              | string array | NO       |      | Set of preprocessors to apply to entries. |
 | Attach-URL-Parameter      | string array | NO       |      | Set of URL parameter values that will be attached to all entries in a request if they are found in the request URL. |
 | Buffer-Size               | integer      | NO       | 1048576 (1MB) | Only used when `Multiline` is `true`, when `false` `Max-Body` is used. Controls the max buffer size for a single line. Any line going over this limit will be dropped. Care should be taken as a buffer is created for every request. |
 
@@ -181,7 +181,7 @@ When specifying an authentication system other than none credentials must be pro
 Like any other webpage, authentication is NOT SECURE over cleartext connections and attackers that can sniff traffic can capture tokens and cookies.
 ```
 
-### No Authentication
+#### No Authentication
 
 The default authentication method is none, allowing anyone that can reach the ingester to push entries.  The `basic` authentication mechanism uses HTTP Basic authentication, where a username and password is base64 encoded and sent with every request.
 
@@ -202,7 +202,7 @@ An example curl command to send an entry with basic authentication might look li
 curl -d "only i can say hi" --user secretuser:secretpassword -X POST http://10.0.0.1:8080/basic/data
 ```
 
-### JWT Authentication
+#### JWT Authentication
 
 The JWT authentication system uses a cryptographically signed token for authentication.  When using jwt authentication you must specify an Login URL where clients will authenticate and receive a token which must then be sent with each request.  The jwt tokens expire after 48 hours.  Authentication is performed by sending a `POST` request to the login URL with the `username` and `password` form fields populated.
 
@@ -225,7 +225,7 @@ x=$(curl -X POST -d "username=user1&password=pass1" http://127.0.0.1:8080/jwt/lo
 curl -X POST -H "Authorization: Bearer $x" -d "this is a test using JWT auth" http://127.0.0.1:8080/jwt/data #send the request with the token
 ```
 
-### Cookie Authentication
+#### Cookie Authentication
 
 The cookie authentication system is virtually identical to JWT authentication other than the method of controlling state.  Listeners that use cookie authentication require that a client login with a username and password to acquire a cookie which is set by the login page.  Subsequent requests to the ingest URL must provide the cookie in each request.
 
@@ -248,7 +248,7 @@ curl -c /tmp/cookie.txt -d "username=user1&password=pass1" localhost:8080/cookie
 curl -X POST -c /tmp/cookie.txt -b /tmp/cookie.txt -d "this is a cookie data" localhost:8080/cookie/data
 ```
 
-### Preshared Token
+#### Preshared Token
 
 The Preshared token authentication mechanism uses a preshared secret rather than a login mechanism.  The preshared secret is expected to be sent with each request in an Authorization header.  Many HTTP frameworks expect this type of ingest, such as the Splunk HEC and supporting AWS Kinesis and Lambda infrastructure.  Using a preshared token listener we can define a capture system that is a plugin replacement for Splunk HEC.
 
@@ -273,7 +273,7 @@ An example curl command the sends data using the preshared secret:
 curl -X POST -H "Authorization: foo barbaz" -d "this is a preshared token" localhost:8080/preshared/token/data
 ```
 
-### Preshared Parameter
+#### Preshared Parameter
 
 The Preshared Parameter authentication mechanism uses a preshared secret that is provided as a query parameter.  The `preshared-parameter` system can be useful when scripting or using data producers that typically do not support authentication by embedding the authentication token into the URL.
 
@@ -538,28 +538,6 @@ The resulting entries will have the following tags:
 | baz     | `invalid sourcetype things` |
 | bar     | `valid sourcetype foo` |
 | baz     | `no sourcetype, use default` |
-
-
-(debug-posts)=
-#### Debug-Posts
-
-The `Debug-Posts` configuration option enables additional logging on each HTTP POST request to the HTTP ingester endpoint.  Only successful transactions will be logged when using the `Debug-Posts` configuration option.  Authentication failures, structure failures, or just bad requests are logged using the existing systems.  The debug logs are sent to the `gravwell` tag.
-
-Here is a raw log entry emitted from a HEC debug post:
-```
-<14>1 2023-11-03T18:01:54.201875Z example.gravwell.io httpingester - HttpIngester/hec.go:234 [gw@1 host="172.19.0.1" method="POST" url="/services/collector" bytes="255" entries="3"] HEC request
-```
-
-Generating a table of the relevant data might use the following query:
-
-```
-tag=gravwell syslog Appname==httpingester Message == "HEC request" Hostname 
-  Structured[gw@1].host Structured[gw@1].url Structured[gw@1].bytes Structured[gw@1].entries
-| table Hostname host url bytes entries TIMESTAMP
-```
-
-![](hec_debug1.png)
-
 
 #### Token-Name
 
