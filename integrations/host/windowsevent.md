@@ -101,27 +101,20 @@ It is recommended that collector servers be placed in a central location relativ
 
 #### 3) Once GPOs are pushed and the servers/clients have been restarted, proceed:
 
-Verify by opening powershell on the target system and running:
-```powershell
-Get-GPO -Name "NAME OF SOURCE GPO"
-```
-
-If results come back, the GPO has been applied to the target system; otherwise an error indicates the GPO has not been applied. Check if the GPO has been linked to the target system's OU or if a linked WMI filter is causing this by opening Group Policy Management.
+* Verify by opening powershell on the target system and running:
+   * `Get-GPO -Name "NAME OF SOURCE GPO"`
+* If results come back, the GPO has been applied to the target system; otherwise an error indicates the GPO has not been applied. Check if the GPO has been linked to the target system's OU or if a linked WMI filter is causing this by opening Group Policy Management.
 
 #### 4) Copy over the XML files for the desired level of event collection and run the following for each:
-```powershell
-wecutil cs "PATH_TO_XML"
-```
+* `wecutil cs "PATH_TO_XML"`
 
 #### 5) To validate this was successful, perform one of the following:
-`wecutil es` (to show all WEC subscriptions)
-
-Open Event Viewer, select “Subscriptions” from the left tree menu
+* `wecutil es` (to show all WEC subscriptions)
+* Open Event Viewer, select “Subscriptions” from the left tree menu
 
 #### 6) Lastly, verify the “Forwarded Events” log is:
-At least sized to the maximum recommended view size: 4194240
-
-Configured to your desired retention setting
+* At least sized to the maximum recommended view size: 4194240
+* Configured to your desired retention setting
 
 #### 7) Once each client system updates group policy, you should see events showing up in the “Forwarded Events” log
 
