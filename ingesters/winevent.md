@@ -138,6 +138,7 @@ Clicking on the listed ingester will show the functional configuration as well a
 
 ![](winevent_health_1.png)
 
+(winevent_optional-sysmon-integration)=
 ## Optional Sysmon Integration
 
 The Sysmon utility, part of the sysinternals suite, is an effective and popular tool for monitoring Windows systems. There are plenty of resources with examples of good sysmon configuration files. At Gravwell, we like to use the modular sysmon config on [github from olafhartong](https://github.com/olafhartong/sysmon-modular).

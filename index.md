@@ -19,6 +19,7 @@ hidden: true
 Quick Start <quickstart/quickstart>
 Configuration <architecture/architecture>
 Ingesters <ingesters/ingesters>
+Integrations <integrations/integrations>
 Searching with Gravwell <gravwell>
 Tips & Tricks <tips/tips>
 Automation <automation>
@@ -55,10 +56,10 @@ Release Notes <changelog/list>
 
 :::
 :::{grid-item-card}
-:link: gravwell
+:link: integrations/integrations
 :link-type: doc
 
-**Searching with Gravwell**  {material-twotone}`search;3em;sd-text-primary`
+**Integrations**  {material-twotone}`integration_instructions;3em;sd-text-primary`
 
 :::
 ::::
@@ -66,12 +67,23 @@ Release Notes <changelog/list>
 ::::{grid} 2
 
 :::{grid-item-card}
+:link: gravwell
+:link-type: doc
+
+**Searching with Gravwell**  {material-twotone}`search;3em;sd-text-primary`
+
+:::
+:::{grid-item-card}
 :link: automation
 :link-type: doc
 
 **Automation**  {material-twotone}`power;3em;sd-text-primary`
 
 :::
+::::
+
+::::{grid} 2
+
 :::{grid-item-card}
 :link: /api/api
 :link-type: doc
