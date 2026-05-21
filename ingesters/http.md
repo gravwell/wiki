@@ -299,6 +299,7 @@ The HTTP Ingester can go out of spec on methods, accepting almost any ASCII stri
 curl -X SUPER_SECRET_METHOD -d "this is a test 2 using basic auth" http://127.0.0.1:8080/data
 ```
 
+(http_splunk_hec_compatibility)=
 ## Splunk HEC Compatibility
 
 The HTTP ingester supports a listener block that is API compatible with the Splunk HTTP Event Collector.  This special listener block enables a simplified configuration so that any endpoint that can send data to the Splunk HEC can also send to the Gravwell HTTP Ingester.  The HEC compatible configuration block looks like so:

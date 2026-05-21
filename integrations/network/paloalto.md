@@ -11,7 +11,7 @@ Preprocessor, [Corelight JSON to TSV](/ingesters/preprocessors/regexextract.md)
 :::
 
 ## Palo Alto Configuration
-* [Configure Syslog Monitoring](https://docs.paloaltonetworks.com/pan-os/9-1/pan-os-admin/monitoring/use-syslog-for-monitoring/configure-syslog-monitoring)
+[Configure Syslog Monitoring](https://docs.paloaltonetworks.com/pan-os/9-1/pan-os-admin/monitoring/use-syslog-for-monitoring/configure-syslog-monitoring)
 
 Configure log forwarding as described in the Palo Alto documentation:
 

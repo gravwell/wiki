@@ -24,9 +24,9 @@
 2. Scroll down to the Remote Logging Options section
 3. Check the box to enable remote logging
 4. Add the IP address of your Simple Relay ingester in the list of remote logging servers
-  * Be sure to match the port chosen for your Simple Relay listener!
+   * Be sure to match the port chosen for your Simple Relay listener!
 5. Enable the remote syslog contents as you see fit.
-  * If you want to use the firewall components in this kit, be sure to check the box for Firewall Events
+   * If you want to use the firewall components in this kit, be sure to check the box for Firewall Events
 6. Click Save
 
 You can read more about remote logging in pfSense® [here](https://docs.netgate.com/pfsense/en/latest/monitoring/logs/remote.html).

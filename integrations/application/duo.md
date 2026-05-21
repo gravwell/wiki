@@ -11,12 +11,12 @@
 
 ## Duo Configuration
 
-You will need to collect a Domain, API Key, and secret from Duo. These can be gathered by following Duos' documentation: [Duo Admin API](https://duo.com/docs/adminapi#overview)
+You will need to collect a Domain, API Key, and secret from Duo. These can be gathered by following Duo's documentation: [Duo Admin API](https://duo.com/docs/adminapi#overview)
 
 ## Gravwell Configuration
 
 The Gravwell Fetcher provides a lightweight Go-based fetcher that polls external APIs and ingests events into Gravwell. 
-The Fetcher includes an [example configuration file] (https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/gravwell_fetcher.conf.example) which you need to copy and adapt for your environment prior to running the fetcher. See the [README] (https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/README.md) for further information. 
+The Fetcher includes an [example configuration file](https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/gravwell_fetcher.conf.example) which you need to copy and adapt for your environment prior to running the fetcher. See the [README](https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/README.md) for further information. 
 
 ### Basic installation steps (example)
 
@@ -39,7 +39,9 @@ The Fetcher includes an [example configuration file] (https://github.com/gravwel
     Typical invocation (binary + config file):  
     `./gravwell\_fetcher -config /etc/gravwell/gravwell\_fetcher.conf`
 
-**Important:** the canonical example config shipped with the experiment is gravwell_fetcher.conf.example — copy it and update the values for Duo.
+```{attention}
+The canonical example config shipped with the experiment is gravwell_fetcher.conf.example — copy it and update the values for Duo.
+```
 
 ### Gravwell Storage Well Configuration
 

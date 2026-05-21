@@ -25,7 +25,8 @@ The Zeek data set contains many highly orthogonal data sources, including unique
 Gravwell supports two indexing engines designed to provide different capabilities and tradeoffs. Both engines can perform very well with the Zeek datasets. The bloom engine can provide a balance of good performance and minimal disk usage while the index engine provides precise indexing performance in exchange for greater disk and memory usage. Regardless of the chosen engine, Gravwell recommends that Zeek data be fulltext indexed with the "ignoreFloat" and "ignoreUUID" options. The following well configurations work well with Zeek data:
 
 Create or edit: `/opt/gravwell/etc/gravwell.conf.d/zeek.conf`
-**Sample Bloom Engine well config:**  
+
+**Sample Bloom Engine well config:**
 ```
 [Storage-Well "zeek"]
     Location=/opt/gravwell/storage/zeek
@@ -34,7 +35,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/zeek.conf`
     Accelerator-Args="-ignoreFloat -ignoreUUID"
     Accelerator-Engine-Override=bloom
 ```
-**Sample Index Engine well config:**  
+**Sample Index Engine well config:**
 ```
 [Storage-Well "zeek"]
     Location=/opt/gravwell/storage/zeek

@@ -5,15 +5,15 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-Ingester, • [S3 Ingester](/ingesters/s3.md#amazon-cloudtrail-log-handling) <br /> • [SQS Ingester](/ingesters/s3.md#sqs-references)
+Ingester, • [S3 Ingester](amazon_cloudtrail_log_handling) <br /> • [SQS Ingester](s3_sqs_references)
      Kit, [CloudTrail](https://github.com/gravwell/kits/tree/main/aws_cloudtrail)
 :::
 
 ## CloudTrail Configuration
 
 There are two primary methods to get CloudTrail data into Gravwell - **S3 Bucket Ingest**, and **SQS-backed ingest**. 
-* **S3 Bucket Ingester (Simplest:)** This workflow uses the [S3 Ingester](/ingesters/s3.md#amazon-cloudtrail-log-handling) to pull logs directly from the CloudTrail S3 bucket. While it only requires an identify with read access to the bucket, the polling interval may introduce a **5-15 minute delay** before logs appear in Gravwell.
-* **SQS-S3-Listener Ingester (Near Real-Time):** For faster delivery [SQS can be configured](/ingesters/s3.md#sqs-references) to notify the ingester as events are generated. 
+* **S3 Bucket Ingester (Simplest:)** This workflow uses the [S3 Ingester](amazon_cloudtrail_log_handling) to pull logs directly from the CloudTrail S3 bucket. It requires an identity with read access to the S3 bucket. The polling interval may introduce a **5-15 minute delay** before logs appear in Gravwell.
+* **SQS-S3-Listener Ingester (Near Real-Time):** For faster delivery [SQS can be configured](s3_sqs_references) to notify the ingester as events are generated. 
 
 ```{note}
 Regardless of the ingestion method CloudTrail inherently has its own internal delay between an action occurring and the event being logged by AWS.
@@ -25,7 +25,7 @@ Regardless of the ingestion method CloudTrail inherently has its own internal de
 We HIGHLY recommend creating a dedicated S3 IAM user for the Gravwell ingester. It's never a good idea to use privileged credentials for dedicated applications like data ingestion.
 ```
 
-Otherwise the ingester requires no other configuration. For additional configuration options: [S3 Ingester](/ingesters/s3.md#amazon-cloudtrail-log-handling)
+Otherwise the ingester requires no other configuration. For additional configuration options: [S3 Ingester](amazon_cloudtrail_log_handling)
 
 ### [Option 2] CloudTrail Configuration for: SQS-S3-Listener Ingest
 
@@ -115,7 +115,7 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/cloudtrail.conf`
 
 #### [Option 2] Gravwell SQS Ingester Configuration
 
-Configure S3 ingester to utilize SQS. A new configuration snippet is required that replaces [Bucket] declaration.
+Configure S3 ingester to utilize SQS. A new configuration snippet is required that replaces the [Bucket] declaration.
 
 **Sample SQS config snippet**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/cloudtrail.conf`
@@ -129,4 +129,4 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/cloudtrail.conf`
     Queue-URL="https://sqs.us-east-1.amazonaws.com/..."
     File-Filters=**/*.json.gz
 ```
-This allows the S3 ingester to pull from the SQS queue, and then will pull the S3 object items referenced by it. That log will then be processed and sent to Gravwell indexer.
+This allows the S3 ingester to pull from the SQS queue, and then will pull the S3 object items referenced by it. That log will then be processed and sent to the Gravwell indexer.

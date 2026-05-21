@@ -11,7 +11,7 @@
 
 ## Window Event Service Configuration
 
- A well defined collection strategy and data management are key to achieving data omniscience, especially with logs as cumbersome as those formatted in XML, and thus it is recommended to f the following:
+ A well defined collection strategy and data management are key to achieving data omniscience, especially with logs as cumbersome as those formatted in XML, and thus it is recommended to consider the following:
 
 *Plan your collection strategy accordingly for your environment*
 
@@ -24,9 +24,9 @@ Consider the following to create your use cases:
     * *Hardware Allocation:* Ensure available infrastructure (CPU, RAM, and Storage) meets the requirements your desired setup.
     * *Agility:* Consider if a configuration change is needed, how quickly/accurately can it be changed across your environment?
 
-### Option 1: Deploy locally (to individual windows systems)
+### [Option 1] Deploy locally (to individual windows systems)
 
-Run the .msi installation wizard to install the Gravwell events service. On first installation the installation wizard will prompt to configure the indexer endpoint and ingest secret. Subsequent installations and/or upgrades will identify a resident configuration file and will not prompt.
+Run the .msi installation wizard to install the Gravwell events service. On first installation, the installation wizard will prompt to configure the indexer endpoint and ingest secret. Subsequent installations and/or upgrades will identify a resident configuration file and will not prompt.
 
 ![](images/winevent_msi_1.png)
 
@@ -50,9 +50,9 @@ Encrypted-Backend-target=ip.addr.goes.here:port
 
 Once configured, this file can be copied to any other Windows system from which you would like to collect events.
 
-For silent installation or troubleshooting steps see: [Windows Event Ingester](/ingesters/winevent.md)
+For silent installation or troubleshooting steps: [Windows Event Ingester](/ingesters/winevent.md)
 
-### Option 2: Windows Event Forwarding
+### [Option 2] Windows Event Forwarding
 
 The Gravwell Winevent ingester can be combined with Windows Event Forwarding (WEF) to simplify deployments and reduce the number of endpoints the ingester must be installed on. Windows Event Forwarding is an integrated Windows service that forwards events to a central collection point using integrated Windows functionality. More information on WEF can be found on [several](https://learn.microsoft.com/en-us/windows/security/threat-protection/use-windows-event-forwarding-to-assist-in-intrusion-detection) [Microsoft](https://social.technet.microsoft.com/wiki/contents/articles/33895.windows-event-forwarding-survival-guide.aspx) [resources](https://learn.microsoft.com/en-us/defender-for-identity/configure-event-forwarding).
 
@@ -66,10 +66,10 @@ First you will need to install the winevent ingester on the Windows system that 
 Forwarded events will still contain the correct `Channel` in their logs.
 ```
 
-### Option 3: Deploy in a AD Domain environment with a WEC Server
+### [Option 3] Deploy in an AD Domain environment with a WEC Server
 
 ```{note}
-It is recommended that collector servers be placed in a central location relative to its source systems i.e the same forest and network as it’s source systems as well as their destination i.e. gravwell indexer
+It is recommended that collector servers be placed in a central location relative to its source systems (i.e the same forest and network as its source systems) as well as their destination (i.e. gravwell indexer).
 ```
 
 #### 1) Create the collector GPO:
@@ -80,7 +80,7 @@ It is recommended that collector servers be placed in a central location relativ
     * Disallow Digest authentication: Enabled
         * **Consider setting “Trusted Hosts” and/or only allowing Kerberos authentication**
     * Desired audit policy (unless already configured)
-    * For WinRM service, set the following:
+* For WinRM service, set the following:
     * Allow Basic authentication: Disabled
     * Allow unencrypted traffic: Disabled
     * Disallow WinRm from storing RunAs credentials: Enabled
@@ -93,32 +93,34 @@ It is recommended that collector servers be placed in a central location relativ
     * Allow unencrypted traffic: Disabled
     * Disallow Digest authentication: Enabled
         * **Consider setting “Trusted Hosts” and/or only allowing Kerberos authentication**
-    * For WinRM service, set the following:
+* For WinRM service, set the following:
     * Allow Basic authentication: Disabled
     * Allow unencrypted traffic: Disabled
     * Disallow WinRm from storing RunAs credentials: Enabled
         * **Consider disabling “Allow remote server management through WinRM” if remote management of these computers should be disable and/or only allowing Kerberos authentication as this is the most secure option available for authentication**
 
-#### 3) Once GPOs are pushed and the servers/clients have been restarted proceed
+#### 3) Once GPOs are pushed and the servers/clients have been restarted, proceed:
 
 Verify by opening powershell on the target system and running:
 ```powershell
 Get-GPO -Name "NAME OF SOURCE GPO"
 ```
 
-If results come back the GPO has been applied to the target system, otherwise an error indicates the GPO has not been applied. Check if the GPO has been linked to the target systems’ OU or if a linked WMI filter is causing this by opening Group Policy Management.
+If results come back, the GPO has been applied to the target system; otherwise an error indicates the GPO has not been applied. Check if the GPO has been linked to the target system's OU or if a linked WMI filter is causing this by opening Group Policy Management.
 
 #### 4) Copy over the XML files for the desired level of event collection and run the following for each:
 ```powershell
 wecutil cs "PATH_TO_XML"
 ```
 
-#### 5) To validate this was successful perform one of the following:
-`wecutil` es (to show all WEC subscriptions)
+#### 5) To validate this was successful, perform one of the following:
+`wecutil es` (to show all WEC subscriptions)
+
 Open Event Viewer, select “Subscriptions” from the left tree menu
 
 #### 6) Lastly, verify the “Forwarded Events” log is:
 At least sized to the maximum recommended view size: 4194240
+
 Configured to your desired retention setting
 
 #### 7) Once each client system updates group policy, you should see events showing up in the “Forwarded Events” log
@@ -148,7 +150,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/windowsevent-well.conf`
 **Sample Window Event Service config:**  
 Create or edit: `%PROGRAMDATA%\gravwell\eventlog\config.cfg`
 
-#### Option 1: Deploy locally (to individual windows systems)
+#### [Option 1] Deploy locally (to individual windows systems)
 ```ini
 [EventChannel "system"]
 	Tag-Name=windows
@@ -183,14 +185,14 @@ Create or edit: `%PROGRAMDATA%\gravwell\eventlog\config.cfg`
 	EventID=-400 # ignore event ID 400
 	EventID=-401 # AND ignore event ID 401
 ```
-#### Option 2: Windows Event Forwarding
+#### [Option 2] Windows Event Forwarding
 ```ini
 [EventChannel "WEF Events"]
     Tag-Name=windows
     Channel=ForwardedEvents
 ```
 
-#### Option 3: Deploy in a AD Domain environment with a WEC Server
+#### [Option 3] Deploy in a AD Domain environment with a WEC Server
 ```ini
 
 ```

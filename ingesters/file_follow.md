@@ -25,6 +25,7 @@ On RHEL/CentOS, `/var/log` belongs to the "root" group, not "adm" as we assume. 
 File Follower attempts to track files that are renamed in a directory. Due to limitations in Linux inotify, BSD/macOS kqueue, and Windows, it is not always possible to guarantee a rename event is followed. As a result, renaming files in a watched directory (for example, log file rotation) can result in the renamed file being ingested again. If possible, avoid performing file renaming in a watched directory.
 ```
 
+(file_follow_installation)=
 ## Installation
 
 ```{include} installation_instructions_template 

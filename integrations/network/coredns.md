@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Ingester](/ingesters/integrations.md#coredns)
+    Ingester, [Ingester](integrations_coredns)
     Kit, [CoreDNS Kit](https://github.com/gravwell/coredns)
 :::
 
@@ -29,6 +29,7 @@ setcap 'cap_net_bind_service=+ep' /tmp/coredns
 ```
 
 Configuration is performed via the CoreDNS Corefile which has the basic syntax of directive value. Comments are preceded by the “#” character.  A basic Gravwell definition looks like so:
+
 **Sample Configuration file
 ```
 gravwell {

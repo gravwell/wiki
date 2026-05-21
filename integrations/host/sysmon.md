@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Windows Event Ingester](/ingesters/winevent.md#optional-sysmon-integration)
+    Ingester, [Windows Event Ingester](winevent_optional-sysmon-integration)
          Kit, [Windows Sysmon Kit](https://github.com/gravwell/kits/tree/main/)
 :::
 

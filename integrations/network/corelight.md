@@ -65,7 +65,9 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/corelight.well`
 ### Gravwell Simple Relay Ingester Configuration
 We recommend using the **Simple Relay** ingester. The following configuration listens on port `7890`, extracts the `_path` field from the JSON payload, and dynamically routes data to descriptive tags.
 
-Note: Ensure your firewalls allows traffic on port `7890` between the Corelight sensor and the Gravwell ingester.
+```{note}
+Ensure your firewalls allows traffic on port `7890` between the Corelight sensor and the Gravwell ingester.
+```
 
 ### Gravwell JSON Listener Configuration
 File: `/opt/gravwell/etc/simple_relay.conf.d/corelight.conf`

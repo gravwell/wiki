@@ -5,9 +5,8 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, • [HTTP - HEC](/ingesters/http.md#splunk-hec-compatibility) <br /> • [Simple Relay](/ingesters/simple_relay.md)
+    Ingester, • [HTTP - HEC](http_splunk_hec_compatibility) <br /> • [Simple Relay](/ingesters/simple_relay.md)
          Kit, [GitHub Kit](https://github.com/gravwell/kits/tree/main/)
-        test, [test]({ref}splunk-hec-compatibility)
 :::
 
 ## GitHub Configuration
@@ -20,7 +19,7 @@ Follow the instructions for setting up streaming to Splunk. For the configuratio
 ### [Option 2] Using WebHooks to export Logs
 * [Creating a repository webhook](https://docs.github.com/en/enterprise-cloud@latest/webhooks/using-webhooks/creating-webhooks)
 
-Github provides webhooks for exporting logs depending on what you want to export for example for monitoring single repository, app, enterprise, global, etc.. You can follow the instructions posted point the *Payload URL* to a Gravwell Simple Relay Ingester. Change *Content Type* to *application/json*
+Github provides webhooks for exporting logs depending on what you want to export for example for monitoring single repository, app, enterprise, global, etc.. You can follow the instructions posted point the *Payload URL* to a Gravwell Simple Relay Ingester and change *Content Type* to *application/json*.
 
 
 ## Gravwell Configuration

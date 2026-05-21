@@ -11,7 +11,7 @@
 
 ## Auditd Configuration
 
-The standard method to collect Auditd logs is by installing the [gravwell-file-follow](/ingesters/file_follow.md#installation) package which can be installed through your [configured](/quickstart/quickstart.md) package manager or via a [standalone shell installer](/quickstart/downloads.md).
+The standard method to collect Auditd logs is by installing the [gravwell-file-follow](file_follow_installation) package which can be installed through your [configured](/quickstart/quickstart.md) package manager or via a [standalone shell installer](/quickstart/downloads.md).
 
 **Sample File Follower Configuration pointing to Gravwell Environment:**  
 Create or edit: `/opt/gravwell/etc/file_follow.conf`

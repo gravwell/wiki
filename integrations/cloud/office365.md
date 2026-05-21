@@ -18,7 +18,7 @@ Gravwell provides an ingester for Microsoft Office 365 logs. The ingester can pr
 * Azure Directory ID: A UUID representing your Active Directory instance, found in the Azure Active Directory dashboard.  This is sometimes called a Tenant ID.
 * Tenant Domain: The domain of your Office 365 domain, e.g. "mycorp.onmicrosoft.com"
 * Plan: The type of Office 365 subscription
- * Options are `Enterprise`, `GCC Government`, `GCC High Government`, `DOD Government`
+  * Options are `Enterprise`, `GCC Government`, `GCC High Government`, `DOD Government`
 
 ### Office 365 API
 
