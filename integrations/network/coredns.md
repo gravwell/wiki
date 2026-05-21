@@ -30,7 +30,8 @@ setcap 'cap_net_bind_service=+ep' /tmp/coredns
 
 Configuration is performed via the CoreDNS Corefile which has the basic syntax of directive value. Comments are preceded by the “#” character.  A basic Gravwell definition looks like so:
 
-**Sample Configuration file
+
+**Sample Configuration file**
 ```
 gravwell {
     Ingest-Secret IngestSecretToken
