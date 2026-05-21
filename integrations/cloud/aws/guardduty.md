@@ -5,12 +5,12 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, • [S3 Ingester](amazon_cloudtrail_log_handling)
+    Ingester, [S3 Ingester](amazon_cloudtrail_log_handling)
          Kit, [GuardDuty Kit](https://github.com/gravwell/kits/tree/main/)
 :::
 
 ## GuardDuty Configuration
-It is recommend to export GuardDuty findings to S3 bucket for ingestion.
+It is recommend to export GuardDuty findings to an S3 bucket for ingestion.
 
 **Sample KMC Policy**
 ```{note}
@@ -53,7 +53,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/guardduty-well.conf`
 
 ### Gravwell S3 Ingester Configuration
 
-The simplest workflow is to ingest the GuardDuty logs from S3 bucket using the [S3 Ingester](amazon_cloudtrail_log_handling). The polling required may introduce a 5-15 minute delay on new logs landing in Gravwell once they hit S3, but only requires an identity that can query the GuardDuty S3 bucket.
+The simplest workflow is to ingest the GuardDuty logs from an S3 bucket using the [S3 Ingester](amazon_cloudtrail_log_handling). The polling required may introduce a 5-15 minute delay on new logs landing in Gravwell once they hit S3, but only requires an identity that can query the GuardDuty S3 bucket.
 
 **Sample S3 ingester config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/guardduty.conf`
