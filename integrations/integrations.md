@@ -2,7 +2,7 @@
 
 This page covers currently supported and developed integrations. If your specific log source is not listed, Gravwell can likely still ingest it with a custom configuration.
 
-To get started with unlisted sources, please refer to our **Generic Integrations** below to see some examples integrations. Whether you are working with a new source or have suggestions for improving an existing integration, you can connect with us through the following channels:
+To get started with unlisted sources, please refer to our [Generic Integrations](generic_integrations) below to see some examples integrations. Whether you are working with a new source or have suggestions for improving an existing integration, you can connect with us through the following channels:
 * **Community:** Join the conversation on [Discord server](https://discord.com/invite/gravwell).
 * **Requests & Feedback:** Visit our [GitHub Wiki page](https://github.com/gravwell/wiki) to report issues or suggest improvements.
 * **Enterprise:** Contact the *Gravwell Customer Success* team to discuss custom plugin development or professional support.
