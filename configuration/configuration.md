@@ -131,6 +131,62 @@ A Gravwell cluster with multiple indexer nodes can be configured so that nodes r
 
 Gravwell supports the notion of "accelerators" for individual wells, which allow you apply parsers to data at ingest to generate optimization blocks.  Accelerators are just as flexible as query modules and are transparently engaged when performing queries.  Accelerators are extremely useful for needle-in-haystack style queries, where you need to zero in on data that has specific field values very quickly.  See the [Accelerators](accelerators) section for more information and configuration techniques.
 
+(hosted_runner_configuration)=
+## Hosted Runner Configuration
+
+The Hosted Runner is a shared process that can run a number of different plugins. Rather than deploying a separate service for each integration, all hosted plugins are configured in a single file and run together. This reduces the infrastructure cost of lighter-weight processes.
+
+The configuration file contains three kinds of blocks:
+
+* A `[Global]` block with standard ingester connection settings (shared by all plugins in the process)
+* A `[State]` block for persistent storage used by plugins (usually polling-state tracking)
+* One or more plugin-specific stanzas (e.g. `[Mimecast "name"]`)
+
+### Global Block
+
+The `[Global]` block is equivalent to the `[Global]` block of Gravwell ingesters (ingest secret, backend targets, log level, etc.), as described in the [ingester configuration](ingesters_global_configuration_parameters) reference. Two additional parameters are strongly recommended for all Hosted Runner deployments:
+
+| Config Parameter  | Description                                                                                                        |
+|-------------------|--------------------------------------------------------------------------------------------------------------------|
+| Ingest-Cache-Path | Path to a local ingest cache file. Enables reliable delivery if the connection to the indexer is temporarily lost. |
+| Max-Ingest-Cache  | Maximum size of the local ingest cache in MB. Acts as a safety limit on disk usage.                                |
+
+```{note}
+The ingest cache should always be enabled for Hosted Runner deployments. Cloud API polling intervals mean that data cannot simply be re-fetched if an indexer connection is lost. The cache ensures no events are dropped during brief outages.
+```
+
+### State Block
+
+The `[State]` block configures how the Hosted Runner plugins persist their state across restarts. Plugins generally store metadata (such as last-fetched timestamps) to cleanly resume any processing or ingestion after a restart.
+
+| Config Parameter | Type    | Required | Default Value | Description                                                                                                                                                                        |
+|------------------|---------|----------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Path             | string  | yes      |               | Path to the state file on disk (e.g. `/opt/gravwell/etc/hosted_runner.state`).                                                                                                     |
+| Sync             | boolean | no       | false         | When `true`, flushes the state file to disk on every update. This ensures the most accurate recovery point but can be expensive on slow disks. Leave `false` for most deployments. |
+
+### Example Common Configuration
+
+```
+[Global]
+    Ingest-Secret = "IngestSecrets"
+    Connection-Timeout = 0
+    Insecure-Skip-TLS-Verify=false
+
+    Pipe-Backend-Target=/opt/gravwell/comms/pipe
+
+    Ingest-Cache-Path=/opt/gravwell/cache/hosted_runner.cache
+    Max-Ingest-Cache=1024
+
+    Log-Level=INFO
+    Log-File=/opt/gravwell/log/hosted_runner.log
+
+[State]
+    Path="/opt/gravwell/etc/hosted_runner.state"
+    Sync=false
+```
+
+Plugin-specific stanzas are added below this common configuration. See the [Hosted Ingesters](hosted_ingesters_list) documentation for available plugins and their configuration options.
+
 (password_complexity)=
 ## Password Complexity
 

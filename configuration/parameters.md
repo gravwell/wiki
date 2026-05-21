@@ -711,15 +711,60 @@ Enable=true
 ```
 
 ### **Enable**
-Default Value: false  
-Example: `Enable=true`  
-Description: Enable the Logbot AI system.  
+Default Value: true  
+Example: `Enable=false`  
+Description: Enable or disable the Logbot AI system. When disabled, no AI features are available to any user.  
 
 (ai-server-url)=
 ### **AI-Server-URL**
 Default Value: https://api.gravwell.ai/  
 Example: `AI-Server-URL="https://ai.example.com"`  
-Description: Alternate path for remote AI requests.  
+Description: The URL of the remote AI service used for chat completions. This is either the Gravwell-hosted service or an OpenAI-compatible API endpoint.  
+
+### **Third-Party-Provider**
+Default Value: false  
+Example: `Third-Party-Provider=true`  
+Description: When set to true, Gravwell will treat the AI server as a third-party OpenAI-compatible API rather than a Gravwell AI appliance. This disables license-based authentication and stubs out the health check. Requires `Model` to be set.  
+
+### **Model**
+Default Value: (none)  
+Example: `Model="gpt-4o"`  
+Description: The model name to use for chat completions. Required when `Third-Party-Provider` is true. Ignored when using the Gravwell-hosted AI service.  
+
+### **Max-AI-Tool-Iterations**
+Default Value: 32  
+Example: `Max-AI-Tool-Iterations=16`  
+Description: The maximum number of tool-call iterations the Logbot agent can perform per chat request. 
+
+### **Include-Header**
+Default Value: (none)  
+Example: `Include-Header="Authorization: Bearer sk-abc123"`  
+Description: Additional HTTP headers to include in requests to the AI server. This is primarily used for authentication with third-party providers. Multiple headers can be specified by repeating the directive.  
+
+### **System-Prompt-File**
+Default Value: (none)  
+Example: `System-Prompt-File="/opt/gravwell/etc/ai-system-prompt.txt"`  
+Description: Path to a file containing a custom system prompt. When set, the contents of this file are used as the system prompt for all Logbot conversations.  
+
+## MCP Client
+
+The `[MCP-Client]` configuration section defines external MCP servers that Gravwell's Logbot agent can connect to for additional tools. Multiple MCP clients can be configured by providing multiple named sections.
+
+```
+[MCP-Client "my-tools"]
+	URL="https://my-mcp-server.example.com/mcp"
+	Header="Authorization: Bearer my-token"
+```
+
+### **URL**
+Default Value: (none)  
+Example: `URL="https://my-mcp-server.example.com/mcp"`  
+Description: The Streamable HTTP endpoint URL of the external MCP server. Required.  
+
+### **Header**
+Default Value: (none)  
+Example: `Header="Authorization: Bearer my-token"`  
+Description: Additional HTTP headers to include in requests to the MCP server, in "Key: Value" form. Multiple headers can be specified by repeating the directive.  
 
 ## Password Control
 
