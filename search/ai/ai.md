@@ -116,6 +116,7 @@ Gravwell exposes a [Model Context Protocol](https://modelcontextprotocol.io/) (M
 
 MCP tools are gated by [CBAC](/cbac/cbac) and any applied token permissions — users will only see tools they have permission to use.
 
+(mcp-tools)=
 ### Available MCP Tools
 
 The following tools are available via the MCP server:
@@ -162,6 +163,7 @@ The following tools are available via the MCP server:
 | `create_playbook` | Create a new playbook |
 | `update_playbook` | Update an existing playbook |
 
+(external-mcp-integrations)=
 ### Connecting External AI Tools via MCP
 
 The MCP server can be used with any MCP-compatible client. Authentication is performed using a Gravwell API token or session cookie. Below are example configurations for Github Copilot CLI and Claude Code CLI.
