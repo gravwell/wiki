@@ -55,7 +55,7 @@ This guide is suitable for Community Edition users as well as users with a paid 
 
 You may find the [installation checklist](checklist) and the [glossary](/glossary/glossary) useful companions to this document.
 
-If you are interested in a complete training package, please see the [complete training PDF](https://github.com/gravwell/training/releases/download/v5.8.14/gravwell_training_v5.8.14.pdf). The Gravwell training PDF is the complete training manual which is paired with labs and exercises. The exercises are built from the open source [Gravwell Training](https://github.com/gravwell/training) repository.
+If you are interested in a complete training package, please see the [complete training PDF](https://github.com/gravwell/training/releases/download/v5.9.0/gravwell_training_v5.9.0.pdf). The Gravwell training PDF is the complete training manual which is paired with labs and exercises. The exercises are built from the open source [Gravwell Training](https://github.com/gravwell/training) repository.
 
 ```{note}
 Community Edition users will need to obtain their own license from [https://www.gravwell.io/download](https://www.gravwell.io/download) before beginning installation. Paid users should already have received a license file via email.
@@ -133,6 +133,28 @@ You can estimate your storage requirements using the following calculator:
 **†** Value between 0 and 1.0 representing how compressed the raw data will be on disk. Most text-based logs compress to about 20% of their size, so we use a default of 0.2. If you intend to disable compression entirely, or if you'll be ingesting lots of binary data, set this to 1.0.
 
 **‡** We assume fulltext acceleration for this calculator. Storing the acceleration data using true indexing is the most expensive; using a bloom filter instead can reduce storage overhead significantly at the cost of potentially worse performance. Disabling acceleration entirely (by selecting "None") is usually not recommended, as it makes queries very disk-intensive.
+
+## Browser Support
+
+To keep Gravwell fast and secure, we adhere to standards set by the Angular web application framework. This means we focus on "evergreen" browsers. The browsers that auto-update and stay modern.
+
+[Read more](https://v21.angular.dev/reference/versions#browser-support)
+
+### List of Fully Supported Browsers
+
+As of version 5.9.0, Gravwell supports the **two most recent versions** of:
+* **Chrome**
+* **Firefox** (and the [extended support release](https://www.firefox.com/en-US/browsers/enterprise/))
+* **Edge**
+* **Safari**
+* **Safari on iOS**
+* **Android**
+
+A more detailed description of supported browsers can be found in the "Core browser set" section of this page: [Baseline, Supported browsers](https://web-platform-dx.github.io/web-features/supported-browsers/?widelyAvailableOnDate=2025-10-20&includeDownstream=false).
+
+### Using other browsers?
+
+You're more than welcome to use other browsers (Brave, Opera) or older versions, but you'll be squarely off the beaten path. It might work just fine, but a smooth ride is not guaranteed.
 
 ## Installation
 Installing Gravwell on a single machine is quite simple--just follow the instructions in this section. For more advanced environments involving multiple systems, review the Advanced Topics section.

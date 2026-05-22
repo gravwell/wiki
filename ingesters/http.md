@@ -108,7 +108,7 @@ An example global configuration with HTTPS enabled might look like the following
 	TLS-Certificate-File=/opt/gravwell/etc/cert.pem
 	TLS-Key-File=/opt/gravwell/etc/key.pem
 ```
-
+(http-listener-config)=
 ### Listener Configuration Options
 
 Listener configuration blocks (except the Amazon-Firehose-Listener) support the following configuration parameters:
@@ -132,6 +132,7 @@ Listener configuration blocks (except the Amazon-Firehose-Listener) support the 
 | TokenValue                | string       | NO       |      | Authorization token value, required when using preshared-token or preshared-parameter authentication method.|
 | Preprocessor              | string array | NO       |      | Set of preprocessors to apply to entries. |
 | Attach-URL-Parameter      | string array | NO       |      | Set of URL parameter values that will be attached to all entries in a request if they are found in the request URL. |
+| Buffer-Size               | integer      | NO       | 1048576 (1MB) | Only used when `Multiline` is `true`, when `false` `Max-Body` is used. Controls the max buffer size for a single line. Any line going over this limit will be dropped. Care should be taken as a buffer is created for every request. |
 
 ### Listener Authentication
 
@@ -513,7 +514,7 @@ The resulting entries will have the following tags:
 | baz     | `no sourcetype, use default` |
 
 
-
+(debug-posts)=
 #### Debug-Posts
 
 The `Debug-Posts` configuration option enables additional logging on each HTTP POST request to the HTTP ingester endpoint.  Only successful transactions will be logged when using the `Debug-Posts` configuration option.  Authentication failures, structure failures, or just bad requests are logged using the existing systems.  The debug logs are sent to the `gravwell` tag.

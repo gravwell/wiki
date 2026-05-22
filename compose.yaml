@@ -1,0 +1,13 @@
+services:
+  wiki:
+    image: nixos/nix
+    working_dir: /wiki
+    command: "nix-shell --command \"SPHINXOPTS='--host 0.0.0.0' make livehtml\""
+    volumes:
+      - ./:/wiki
+      - nix:/nix
+    ports:
+      - 8000:8000
+
+volumes:
+  nix: # cache for nix downloads
