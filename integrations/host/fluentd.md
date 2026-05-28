@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [HTTP Ingester](/ingesters/http.html)
+    Ingester, [HTTP Ingester](/ingesters/http)
          Kit, [Fluentd Kit](https://github.com/gravwell/kits/tree/main/fluentd)
 :::
 
