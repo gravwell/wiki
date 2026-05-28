@@ -11,7 +11,7 @@
 
 ## Fortinet Configuration
 
-To get logs flowing from your Fortinet FortiGate/FortiOS 7.6.6 device configure remote syslog logging as described in the Fortinet documentation (Log setting and target)[https://docs.fortinet.com/document/fortigate/7.6.6/administration-guide/250999/log-settings-and-targets#Remote_logging]. 
+To get logs flowing from your Fortinet FortiGate/FortiOS 7.6.6 device configure remote syslog logging as described in the Fortinet documentation [Log setting and target](https://docs.fortinet.com/document/fortigate/7.6.6/administration-guide/250999/log-settings-and-targets#Remote_logging).
 
 Recommended FortiGate syslog settings:
 
@@ -19,7 +19,7 @@ Recommended FortiGate syslog settings:
 * Use format rfc5424 (best timestamp framing) or format default (simple key=value).
 * Point the syslog server to the Simple Relay host on port 6701.
 
-Example FortiGate CLI config:
+**Example FortiGate CLI config:**
 ```
 config log syslogd setting
     set status enable
