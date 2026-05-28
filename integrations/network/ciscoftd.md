@@ -13,7 +13,7 @@
 
 Configure log forwarding as described in [Cisco FTD documentation](https://www.cisco.com/c/en/us/support/docs/security/firepower-ngfw/200479-Configure-Logging-on-FTD-via-FMC.html) 
 
-Thinks to note as you follow the log:
+Things to note as you follow the logging setup:
 * Enable EMBLEM format
 * Set IP address and port
 
