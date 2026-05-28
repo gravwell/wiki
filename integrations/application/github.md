@@ -6,7 +6,7 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, • [HTTP - HEC](http_splunk_hec_compatibility) <br /> • [Simple Relay](/ingesters/simple_relay.md)
-         Kit, [GitHub Kit](https://github.com/gravwell/kits/tree/main/)
+         Kit, [GitHub Kit](https://github.com/gravwell/kits/tree/main/github)
 :::
 
 ## GitHub Configuration
@@ -47,4 +47,9 @@ Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/github.conf`
     TokenValue="thisisyourtoken"
     Tag-Match=github:github
     Tag-Match=github-audit:github_audit
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_http_ingester.service`
 ```

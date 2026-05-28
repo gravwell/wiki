@@ -116,3 +116,8 @@ Tenant-Domain=REPLACEME # e.g. mycorp.onmicrosoft.com
 	Content-Type="DLP.All"
 	Tag-Name="365-dlp"
 ```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_o365_ingest.service`
+```
