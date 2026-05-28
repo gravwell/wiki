@@ -6,7 +6,7 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [File Follower ingester](/ingesters/file_follow.md)
-         Kit, [Auditd](https://github.com/gravwell/kits/tree/main/auditd)
+         Kit, [Auditd Kit](https://github.com/gravwell/kits/tree/main/auditd)
 :::
 
 ## Auditd Configuration
@@ -52,4 +52,9 @@ Create or edit: `/opt/gravwell/etc/file_follow.conf.d/auditd.conf`
     Base-Directory = "/var/log/audit"
     File-Filter    = "audit.log"
     Tag-Name       = auditd
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_file_follow.service`
 ```
