@@ -1,6 +1,6 @@
 # Gravwell Beta
 
-Gravwell Beta is publicly available through our Ubuntu repository and Docker images. It is updated prior to each production release, but beta features may require additional testing and improvements before they are ready for production. We have made the beta public because we are excited to share our new capabilities with you and get early feedback. 
+Gravwell Beta is publicly available through our Debian repository and Docker images. It is updated prior to each production release, but beta features may require additional testing and improvements before they are ready for production. We have made the beta public because we are excited to share our new capabilities with you and get early feedback. 
 
 ## Installation and Upgrade
 
