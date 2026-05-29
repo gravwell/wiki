@@ -49,3 +49,8 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/syslog.conf`
     Timezone-Override="America/Chicago"
     Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
 ```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_simple_relay.service`
+```

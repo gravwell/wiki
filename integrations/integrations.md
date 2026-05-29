@@ -17,16 +17,23 @@ hidden: true
 Auditd <host/auditd>
 AWS - CloudTrail <cloud/aws/cloudtrail>
 AWS - GuardDuty <cloud/aws/guardduty>
+AWS - Kinesis <cloud/aws/kinesis>
+Azure <cloud/azure>
+Bitwarden <application/bitwarden>
+Cisco ASA <network/ciscoasa>
+Cisco FTD <network/ciscoftd>
 CoreDNS <network/coredns>
 Corelight <network/corelight>
 Duo <application/duo>
+Fluentd <host/fluentd>
+Fortinet <network/fortinet>
 Github <application/github>
 IPFIX <network/ipfix>
 IPMI <generic/ipmi>
 Juniper <network/juniper>
 Netflow <network/netflow>
 Office 365 <cloud/office365>
-OpenWeatherMap <network/openweathermap>
+OpenWeatherMap <application/openweathermap>
 Palo Alto <network/paloalto>
 pfSense <network/pfsense>
 PiHole <network/pihole>
@@ -51,7 +58,20 @@ Zeek <network/zeek>
 **AWS - GuardDuty**
 :::
 
+:::{grid-item-card}
+:link: cloud/aws/kinesis
+:link-type: doc
+**AWS - Kinesis**
+:::
 
+:::{grid-item-card}
+:link: cloud/azure
+:link-type: doc
+**Azure**
+:::
+::::
+
+::::{grid} 4
 :::{grid-item-card}
 :link: cloud/office365
 :link-type: doc
@@ -61,6 +81,18 @@ Zeek <network/zeek>
 
 ## Network
 ::::{grid} 4
+:::{grid-item-card}
+:link: network/ciscoasa
+:link-type: doc
+**Cisco ASA**
+:::
+
+:::{grid-item-card}
+:link: network/ciscoftd
+:link-type: doc
+**Cisco FTD**
+:::
+
 :::{grid-item-card}
 :link: network/coredns
 :link-type: doc
@@ -72,57 +104,50 @@ Zeek <network/zeek>
 :link-type: doc
 **Corelight** 
 :::
+::::
+
+::::{grid} 4
+:::{grid-item-card}
+:link: network/fortinet
+:link-type: doc
+**Fortinet** 
+:::
 
 :::{grid-item-card}
 :link: network/ipfix
 :link-type: doc
-
-**IPFIX** 
+**IPFIX**
 :::
 
 :::{grid-item-card}
 :link: network/juniper
 :link-type: doc
-
 **Juniper** 
+:::
+
+:::{grid-item-card}
+:link: network/netflow
+:link-type: doc
+**Netflow** 
 :::
 ::::
 
 ::::{grid} 4
 :::{grid-item-card}
-:link: network/netflow
-:link-type: doc
-
-**Netflow** 
-:::
-
-:::{grid-item-card}
-:link: network/openweathermap
-:link-type: doc
-
-**Open Weather Map** 
-:::
-
-:::{grid-item-card}
 :link: network/paloalto
 :link-type: doc
-
 **Palo Alto**
 :::
 
 :::{grid-item-card}
 :link: network/pfsense
 :link-type: doc
-
 **pfSense**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: network/pihole
 :link-type: doc
-
 **PiHole**
 :::
 
@@ -131,11 +156,12 @@ Zeek <network/zeek>
 :link-type: doc
 **Thinkst**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: network/zeek
 :link-type: doc
-
 **Zeek**
 :::
 ::::
@@ -146,6 +172,12 @@ Zeek <network/zeek>
 :link: host/auditd
 :link-type: doc
 **Auditd**
+:::
+
+:::{grid-item-card}
+:link: host/fluentd
+:link-type: doc
+**Fluentd**
 :::
 
 :::{grid-item-card}
@@ -164,6 +196,13 @@ Zeek <network/zeek>
 ## Application
 ::::{grid} 4
 :::{grid-item-card}
+:link: application/bitwarden
+:link-type: doc
+**Bitwarden**
+:::
+
+
+:::{grid-item-card}
 :link: application/duo
 :link-type: doc
 **Duo**
@@ -173,6 +212,12 @@ Zeek <network/zeek>
 :link: application/github
 :link-type: doc
 **Github**
+:::
+
+:::{grid-item-card}
+:link: application/openweathermap
+:link-type: doc
+**Open Weather Map** 
 :::
 ::::
 

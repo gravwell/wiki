@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-         Kit, [Pi-hole Kit](https://github.com/gravwell/kits/tree/main/)
+         Kit, [Pi-hole Kit](https://github.com/gravwell/kits/tree/main/pihole)
 :::
 
 ## Pi-hole Configuration

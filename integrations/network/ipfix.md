@@ -43,3 +43,8 @@ Create or edit: `/opt/gravwell/etc/netflow_capture.conf.d/ipfix.conf`
 	Bind-String="0.0.0.0:4739"
 	Flow-Type=ipfix
 ```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_netflow_capture.service`
+```

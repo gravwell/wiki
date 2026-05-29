@@ -8,10 +8,6 @@ If you're just starting out with Gravwell, we recommend reading the [Quick Start
 
 If you're confused, the [Glossary](glossary/glossary) defines some of the technical terminology used throughout the documentation.
 
-```{note}
-Gravwell is pleased to announce our new [no-licensed-required tier](https://www.gravwell.io/blog/gravwell-5.6.0-new-license-tiers) (and the Community Advanced option for even more free ingest)!
-```
-
 ```{toctree}
 ---
 hidden: true
@@ -25,6 +21,7 @@ Tips & Tricks <tips/tips>
 Automation <automation>
 Downloads <quickstart/downloads>
 API <api/api>
+Gravwell Releases <releases>
 Release Notes <changelog/list>
 ```
 

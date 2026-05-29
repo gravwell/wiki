@@ -5,8 +5,8 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Gravwell Fetcher](https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/README.md)
-         Kit, [Duo Kit](https://github.com/gravwell/kits/tree/main/)
+    Ingester, [Fetcher](https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/README.md)
+         Kit, [Duo Kit](https://github.com/gravwell/kits/tree/main/duo)
 :::
 
 ## Duo Configuration

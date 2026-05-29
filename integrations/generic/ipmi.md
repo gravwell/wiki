@@ -81,3 +81,8 @@ Create or edit: `/opt/gravwell/etc/ipmi.conf.d/ipmi.conf`
     Password="pass"
     Tag-Name=ipmi
 ```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_ipmi.service`
+```

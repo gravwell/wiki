@@ -189,3 +189,7 @@ Create or edit: `%PROGRAMDATA%\gravwell\eventlog\config.cfg`
 ```ini
 
 ```
+
+```{note}
+Remember to restart the gravwell service via standard windows service management to apply the new config.
+```
