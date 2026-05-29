@@ -6,7 +6,7 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [Ingester](integrations_coredns)
-    Kit, [CoreDNS Kit](https://github.com/gravwell/coredns)
+    Kit, [CoreDNS Kit](https://github.com/gravwell/kits/tree/main/coredns)
 :::
 
 ## CoreDNS Configuration

@@ -359,3 +359,8 @@ Create or edit: `/opt/gravwell/etc/file_follow.conf.d/zeek.conf`
     File-Filter="x509.log"
     Tag-Name="zeekx509"
 ```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_file_follow.service`
+```

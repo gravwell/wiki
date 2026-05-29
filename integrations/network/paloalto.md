@@ -64,3 +64,8 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/paloalto.conf`
         Route=TRAFFIC:pan_traffic
         Route=USERID:pan_userid
 ```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_simple_relay.service`
+```
