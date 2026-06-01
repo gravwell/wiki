@@ -41,12 +41,14 @@ table <table/table>
 text <text/text>
 raw <raw/raw>
 pcap <pcap/pcap>
+hex <hex/hex>
 ```
 
 * [table](table/table) - Display tables of enumerated values.
 * [text](text/text) - Output the body of entries with minimal formatting.
 * [raw](raw/raw) - Output data completely unformatted.
 * [pcap](pcap/pcap) - Show an overview of the contents of network packets.
+* [hex](hex/hex) - Display data as hex-encoded byte sequences.
 
 ### Maps
 
