@@ -33,6 +33,7 @@ IPMI <generic/ipmi>
 Juniper <network/juniper>
 Netflow <network/netflow>
 Office 365 <cloud/office365>
+Okta <application/okta>
 OpenWeatherMap <application/openweathermap>
 Palo Alto <network/paloalto>
 pfSense <network/pfsense>
@@ -214,6 +215,14 @@ Zeek <network/zeek>
 **Github**
 :::
 
+:::{grid-item-card}
+:link: application/okta
+:link-type: doc
+**Okta** 
+:::
+::::
+
+::::{grid} 4
 :::{grid-item-card}
 :link: application/openweathermap
 :link-type: doc
