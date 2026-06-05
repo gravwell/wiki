@@ -279,11 +279,16 @@ The fulltext accelerator supports a few options for refining the types of data t
 Make sure you understand your data before enabling the `-acceptTS` and `-acceptFloat` flags as these can dramatically bloat the index when using the index engine.  The Bloom engine is less impacted by orthogonal data such as timestamps and floating point numbers.
 ```
 
+(fulltext-word-extraction-target)=
 ### Fulltext word extraction
 
-The Fulltext accelerator indexes words within text logs. It does this by extracting any word that is surrounded by any of the below non-word characters, or the beginning or end of the text. For example, the message `foo%bar` will extract "foo" and "bar" in the same way as `foo bar`, since `%` is a split character. 
+The Fulltext accelerator indexes words within text logs. It does this by extracting any word that is surrounded by any of the below non-word characters (referred to as "split characters"), or the beginning or end of the text. For example, the message `foo%bar` will extract "foo" and "bar" in the same way as `foo bar`, since `%` is a split character.
 
-The following table lists all the split characters used by the Fulltext accelerator.
+Understanding exactly how the accelerator breaks data into words is important: queries that engage the fulltext accelerator use the *same* word-breaking rules, so a query term will only match if it is a complete word as the accelerator sees it. For a search-side view of what will and will not match, see the [words module match/no-match table](#working-with-word-matches-target).
+
+#### Split characters
+
+The following table lists all the split characters used by the Fulltext accelerator. A "word" is any run of characters bounded by split characters (or by the start/end of the data).
 
 | Character | Unicode escape code |
 | --------- | ------------------- |
@@ -321,6 +326,52 @@ The following table lists all the split characters used by the Fulltext accelera
 | × | \u00D7 |
 | Unprintable Unicode whitespace characters | \u2000 - \u200a, \u1680, \u2028, \u2029, \u202f, \u205f, \u3000, \u0085 |
 
+#### Word characters
+
+Any character that is **not** in the split table above is a word character and is kept *inside* a word. Several punctuation characters are also counted as word characters:
+
+| Character | Why it is not a split character |
+| --------- | ------------------------------- |
+| `.` (period)     | Keeps IP addresses and decimals intact, e.g. `192.168.1.1` and `8.74` index as a single word. |
+| `:` (colon)      | Keeps `host:port` and timestamps intact, e.g. `192.168.1.100:8080` indexes as a single word. |
+| `-` (hyphen)     | Keeps hyphenated tokens intact, e.g. `foo-bar`. |
+| `_` (underscore) | Keeps identifiers intact, e.g. `my_field`. |
+| `@` (at sign)    | Keeps email addresses intact, e.g. `user@example.com`. |
+
+#### Trim characters
+
+After a word is extracted, leading and trailing punctuation in the following set is trimmed off so that natural-language punctuation (sentence-ending periods, list separators, etc.) does not become part of the indexed word. 
+
+| Character | Trimmed from start | Trimmed from end |
+| --------- | :----------------: | :--------------: |
+| `.` (period)        | yes | yes |
+| `:` (colon)         | yes | yes |
+| `;` (semicolon)     | yes | yes |
+| `-` (hyphen)        | no  | yes |
+| soft hyphen (U+00AD) | yes | yes |
+
+For example, the word `8.74.` is indexed as `8.74` (the trailing period is trimmed), and `:foo` is indexed as `foo` (the leading colon is trimmed). The interior periods in `8.74` are untouched because they are not at an end.
+
+#### Word extraction example
+
+Putting the rules together, consider the following log line:
+
+```
+user@example.com 192.168.1.100:8080 GET /api/v2 id=4a2f -- done.
+```
+
+The fulltext accelerator extracts the following words:
+
+| Word | Notes |
+|------|-------|
+| `user@example.com`    | `@` and `.` are word characters, so the whole address is one word |
+| `192.168.1.100:8080`  | `.` and `:` are word characters, so the `host:port` is one word |
+| `GET`                 | |
+| `api`                 | split on `/` |
+| `v2`                  | split on `/` |
+| `id`                  | split on `=` |
+| `4a2f`                | split on `=` |
+| `done`                | the trailing `.` is trimmed |
 
 ### Example Well Configuration
 
