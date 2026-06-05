@@ -284,7 +284,7 @@ Make sure you understand your data before enabling the `-acceptTS` and `-acceptF
 
 The Fulltext accelerator indexes words within text logs. It does this by extracting any word that is surrounded by any of the below non-word characters (referred to as "split characters"), or the beginning or end of the text. For example, the message `foo%bar` will extract "foo" and "bar" in the same way as `foo bar`, since `%` is a split character.
 
-Understanding exactly how the accelerator breaks data into words is important: queries that engage the fulltext accelerator (most commonly the [words](/search/words/words) module and `grep -w`) use the *same* word-breaking rules, so a query term will only match if it is a complete word as the accelerator sees it. A frequent source of confusion is expecting the accelerator to match a *substring* of a word; it cannot. For a search-side view of what will and will not match, see the [words module match/no-match table](#working-with-word-matches-target).
+Understanding exactly how the accelerator breaks data into words is important: queries that engage the fulltext accelerator use the *same* word-breaking rules, so a query term will only match if it is a complete word as the accelerator sees it. For a search-side view of what will and will not match, see the [words module match/no-match table](#working-with-word-matches-target).
 
 #### Split characters
 
