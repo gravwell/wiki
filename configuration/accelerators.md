@@ -340,7 +340,7 @@ Any character that is **not** in the split table above is a word character and i
 
 #### Trim characters
 
-After a word is extracted, leading and trailing punctuation in the following set is trimmed off so that natural-language punctuation (sentence-ending periods, list separators, etc.) does not become part of the indexed word. Trim characters are only removed from the **end** of a word; the same character is kept when it appears in the middle.
+After a word is extracted, leading and trailing punctuation in the following set is trimmed off so that natural-language punctuation (sentence-ending periods, list separators, etc.) does not become part of the indexed word. 
 
 | Character | Trimmed from start | Trimmed from end |
 | --------- | :----------------: | :--------------: |
@@ -372,8 +372,6 @@ The fulltext accelerator extracts the following words:
 | `id`                  | split on `=` |
 | `4a2f`                | split on `=` |
 | `done`                | the trailing `.` is trimmed |
-
-Note that `--` produces no word: `-` is a word character so it survives splitting, but the trailing-hyphen trim then removes both hyphens, leaving an empty word that is discarded.
 
 ### Example Well Configuration
 
