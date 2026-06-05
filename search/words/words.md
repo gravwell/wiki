@@ -48,7 +48,7 @@ tag=apache words Mozilla Windows
 
 The word match system is designed to match complete words, using the exact same word-breaking rules as the [fulltext accelerator](#fulltext-word-extraction-target). A query word matches only when it appears in the data bounded on both sides by a split character (or the start/end of the data). Most punctuation is a split character, but a handful of characters — `.` (period), `:` (colon), `-` (hyphen), `_` (underscore), and `@` (at sign) — are treated as part of a word. This is what allows IP addresses, decimals, hostnames, and email addresses to be matched as single words. Leading and trailing `.`, `:`, `;`, and `-` are trimmed from a word, so a sentence-ending period does not prevent a match.
 
-The words module cannot match a *substring* of a word. Because `.` and `:` are not split characters, `192.168.1.100:8080` is a single word; a search for `192.168.1.100` will NOT match it. See the [fulltext word extraction](#fulltext-word-extraction-target) documentation for the complete list of split and trim characters.
+The words module cannot match a *substring* of a word. Because `.` and `:` are not split characters, `192.168.1.100:8080` is a single word; a search for `192.168.1.100` will NOT match it. For substring matching, see the [grep module](/search/grep/grep). For a complete list of split and trim characters, see the [fulltext word extraction](#fulltext-word-extraction-target) documentation.
 
 Words is designed to create some additional specificity when selecting values, lets look at some example data to see what will and will not match.
 
