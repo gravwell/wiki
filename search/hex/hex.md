@@ -16,4 +16,4 @@ This renderer is particularly useful for:
 tag=gravwell hex
 ```
 
-![](text.png)
+![](hex.png)
