@@ -571,6 +571,284 @@ The `Amazon-Firehose-Listener` supports the following configuration parameters (
 | URL               | string       | YES       | | Endpoint URL for Amazon Firehose events.                             |
 | TokenValue        | string       | YES      |                       | Authentication Token.                                       |
 
+## OpenTelemetry
+
+The HTTP ingester includes native [OpenTelemetry](https://opentelemetry.io/) (OTel) listeners that accept telemetry data from standard OpenTelemetry clients using the OpenTelemetry Protocol (OTLP) over HTTP. These listeners are fully compatible with official OpenTelemetry SDKs and collectors without requiring any modification to upstream clients.
+
+Both `OpenTelemetry-Metrics-Listener` and `OpenTelemetry-Logs-Listener` configuration blocks can be defined alongside `Listener`, `HEC-Compatible-Listener`, and `Amazon-Firehose-Listener` blocks in the same HTTP ingester instance.
+
+The default URLs follow the OpenTelemetry specification, making the endpoints compatible with all standard OpenTelemetry clients without additional configuration:
+
+- `/v1/metrics` — Metrics endpoint
+- `/v1/logs` — Logs endpoint
+
+Both listener types accept OTLP data via HTTP POST and support the following content types:
+
+- `application/x-protobuf` (recommended for efficiency)
+- `application/protobuf`
+- `application/json` (useful for testing or simpler clients)
+
+If no `Content-Type` is specified, the listener will attempt to auto-detect the format.
+
+### OpenTelemetry Metrics
+
+The `OpenTelemetry-Metrics-Listener` accepts metrics in the standard OTLP format and ingests one Gravwell entry per metric data point. All supported OTLP metric types are handled: Gauge, Sum, Histogram, ExponentialHistogram, and Summary.
+
+Each entry receives enumerated values (EVs) derived from the metric data and its associated resource attributes. If `Encode-As-JSON` is enabled, the entry's DATA field will contain a JSON representation of the full metric; otherwise the DATA field is empty and all values are carried as enumerated values.
+
+#### Metrics Enumerated Values
+
+The following enumerated values are automatically attached to each metric entry:
+
+| Enumerated Value    | Source                          | Description                                                                   |
+|---------------------|---------------------------------|-------------------------------------------------------------------------------|
+| `metric`            | Metric name                     | The metric instrument name.                                                   |
+| `unit`              | Metric unit                     | Unit of measurement (e.g. `ms`, `bytes`).                                     |
+| `description`       | Metric description              | Human-readable description of the metric.                                     |
+| `type`              | Metric kind                     | One of: `gauge`, `sum`, `histogram`, `exponential_histogram`, `summary`.      |
+| `value`             | Number data point value         | Numeric value (Gauge and Sum data points).                                    |
+| `monotonic`         | Sum metadata                    | Whether the Sum metric is monotonic (`true`/`false`).                         |
+| `count`             | Histogram/Summary data point    | Total number of observations.                                                 |
+| `sum`               | Histogram/Summary data point    | Sum of all observations.                                                      |
+| `min`               | Histogram data point            | Minimum observed value (when present).                                        |
+| `max`               | Histogram data point            | Maximum observed value (when present).                                        |
+| Resource attributes | OTLP resource                   | All resource attributes (e.g. `service.name`, `host.name`).                   |
+| Data point attributes | OTLP data point               | All per-data-point attributes (e.g. `http.method`).                           |
+
+#### Metrics Listener Configuration Parameters
+
+| Parameter          | Type         | Required | Default Value   | Description                                                              |
+|--------------------|--------------|----------|-----------------|--------------------------------------------------------------------------|
+| URL                | string       | NO       | `/v1/metrics`   | HTTP endpoint path for OTLP metrics requests.                            |
+| Tag-Name           | string       | YES      |                 | Tag assigned to ingested metric entries.                                 |
+| Ignore-Timestamps  | boolean      | NO       | false           | If true, use current time instead of OTLP timestamps.                    |
+| Encode-As-JSON     | boolean      | NO       | false           | If true, encode the full metric as JSON and store in the entry DATA field. |
+| Debug-Posts        | boolean      | NO       | false           | Emit additional debug information for each POST to the `gravwell` tag.   |
+| AuthType           | string       | NO       | none            | Authentication type. See [Listener Authentication](http-listener-config). |
+| Username           | string       | NO       |                 | Username for `basic`, `jwt`, or `cookie` authentication.                 |
+| Password           | string       | NO       |                 | Password for `basic`, `jwt`, or `cookie` authentication.                 |
+| LoginURL           | string       | NO       |                 | Login endpoint URL for `jwt` or `cookie` authentication.                 |
+| TokenName          | string       | NO       | `Bearer`        | Token name for `preshared-token` or `preshared-parameter` authentication.|
+| TokenValue         | string       | NO       |                 | Token value for `preshared-token` or `preshared-parameter` authentication.|
+| Preprocessor       | string array | NO       |                 | Set of preprocessors to apply to entries.                                |
+
+#### Metrics Listener Example
+
+A minimal metrics listener using the standard OTLP endpoint:
+
+```
+[OpenTelemetry-Metrics-Listener "otel-metrics"]
+	URL="/v1/metrics"
+	Tag-Name=otel-metrics
+```
+
+A metrics listener with preshared token authentication and JSON encoding enabled:
+
+```
+[OpenTelemetry-Metrics-Listener "otel-metrics-secure"]
+	URL="/v1/metrics"
+	Tag-Name=otel-metrics
+	AuthType=preshared-token
+	TokenName=Bearer
+	TokenValue=supersecrettoken
+	Encode-As-JSON=true
+```
+
+#### JSON Metric Format
+
+When `Encode-As-JSON=true`, each entry's DATA field contains a JSON object representing the metric:
+
+```json
+{
+  "name": "http.server.request.duration",
+  "description": "HTTP server request duration",
+  "unit": "ms",
+  "type": "gauge",
+  "data_points": [
+    {
+      "time_unix_nano": 1704067200000000000,
+      "start_time_unix_nano": 1704067200000000000,
+      "value": 123.45,
+      "value_type": "double",
+      "attributes": {
+        "http.method": "GET",
+        "http.status_code": 200
+      }
+    }
+  ],
+  "resource": {
+    "service.name": "my-service",
+    "host.name": "my-host"
+  },
+  "scope": {
+    "name": "my-instrumentation",
+    "version": "1.0.0"
+  }
+}
+```
+
+#### Testing the Metrics Endpoint
+
+Test the metrics endpoint using JSON-formatted OTLP data:
+
+```
+curl -X POST http://localhost:8080/v1/metrics \
+  -H "Content-Type: application/json" \
+  -d '{
+    "resourceMetrics": [{
+      "resource": {
+        "attributes": [
+          {"key": "service.name", "value": {"stringValue": "myapp"}}
+        ]
+      },
+      "scopeMetrics": [{
+        "metrics": [{
+          "name": "requests.total",
+          "sum": {
+            "dataPoints": [{
+              "timeUnixNano": "1704067200000000000",
+              "asInt": "42",
+              "attributes": [
+                {"key": "http.method", "value": {"stringValue": "GET"}}
+              ]
+            }],
+            "isMonotonic": true
+          }
+        }]
+      }]
+    }]
+  }'
+```
+
+With preshared token authentication:
+
+```
+curl -X POST http://localhost:8080/v1/metrics \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer supersecrettoken" \
+  -d '{...}'
+```
+
+### OpenTelemetry Logs
+
+The `OpenTelemetry-Logs-Listener` accepts logs in the standard OTLP format and ingests one Gravwell entry per log record. The log body is extracted from the OTLP record and stored as the entry's DATA field. Severity, trace context, and all log and resource attributes are automatically attached as enumerated values.
+
+#### Log Body Extraction
+
+The entry DATA field contains the extracted log body. String values are stored as-is; byte values are stored as raw bytes; complex values (arrays, maps) are JSON-encoded.
+
+#### Logs Enumerated Values
+
+The following enumerated values are automatically attached to each log entry (unless `Disable-EVs=true`):
+
+| Enumerated Value    | Source                          | Description                                                                   |
+|---------------------|---------------------------------|-------------------------------------------------------------------------------|
+| `severity_number`   | Log record severity             | Severity level as a number (e.g. `9` for INFO).                               |
+| `severity_text`     | Log record severity             | Severity level as text (e.g. `INFO`, `ERROR`).                                |
+| `trace_id`          | Log record trace context        | Trace ID for correlation with distributed traces.                             |
+| `span_id`           | Log record trace context        | Span ID for correlation with distributed traces.                              |
+| `flags`             | Log record flags                | Log record flag bits (when non-zero).                                         |
+| Log attributes      | Log record attributes           | All per-record key/value attributes.                                          |
+| Scope attributes    | Instrumentation scope           | All instrumentation scope attributes.                                         |
+| Resource attributes | OTLP resource                   | All resource attributes (e.g. `service.name`, `host.name`). Always attached, even when `Disable-EVs=true`. |
+
+```{note}
+Resource attributes are always attached as enumerated values regardless of the `Disable-EVs` setting.
+```
+
+#### Logs Listener Configuration Parameters
+
+| Parameter          | Type         | Required | Default Value  | Description                                                             |
+|--------------------|--------------|----------|----------------|-------------------------------------------------------------------------|
+| URL                | string       | NO       | `/v1/logs`     | HTTP endpoint path for OTLP logs requests.                              |
+| Tag-Name           | string       | YES      |                | Tag assigned to ingested log entries.                                   |
+| Ignore-Timestamps  | boolean      | NO       | false          | If true, use current time instead of OTLP timestamps.                   |
+| Disable-EVs        | boolean      | NO       | false          | If true, do not attach severity, trace, and attribute enumerated values. Resource attributes are still attached. |
+| Debug-Posts        | boolean      | NO       | false          | Emit additional debug information for each POST to the `gravwell` tag.  |
+| AuthType           | string       | NO       | none           | Authentication type. See [Listener Authentication](http-listener-config). |
+| Username           | string       | NO       |                | Username for `basic`, `jwt`, or `cookie` authentication.                |
+| Password           | string       | NO       |                | Password for `basic`, `jwt`, or `cookie` authentication.                |
+| LoginURL           | string       | NO       |                | Login endpoint URL for `jwt` or `cookie` authentication.                |
+| TokenName          | string       | NO       | `Bearer`       | Token name for `preshared-token` or `preshared-parameter` authentication.|
+| TokenValue         | string       | NO       |                | Token value for `preshared-token` or `preshared-parameter` authentication.|
+| Preprocessor       | string array | NO       |                | Set of preprocessors to apply to entries.                               |
+
+#### Logs Listener Example
+
+A minimal logs listener using the standard OTLP endpoint:
+
+```
+[OpenTelemetry-Logs-Listener "otel-logs"]
+	URL="/v1/logs"
+	Tag-Name=otel-logs
+```
+
+A logs listener with basic authentication:
+
+```
+[OpenTelemetry-Logs-Listener "otel-logs-basic"]
+	URL="/v1/logs"
+	Tag-Name=otel-logs
+	AuthType=basic
+	Username=loguser
+	Password=logpass
+```
+
+#### Testing the Logs Endpoint
+
+Test the logs endpoint using JSON-formatted OTLP data:
+
+```
+curl -X POST http://localhost:8080/v1/logs \
+  -H "Content-Type: application/json" \
+  -d '{
+    "resourceLogs": [{
+      "resource": {
+        "attributes": [
+          {"key": "service.name", "value": {"stringValue": "myapp"}}
+        ]
+      },
+      "scopeLogs": [{
+        "logRecords": [{
+          "timeUnixNano": "1704067200000000000",
+          "severityNumber": 9,
+          "severityText": "INFO",
+          "body": {"stringValue": "User login successful"},
+          "attributes": [
+            {"key": "user.id", "value": {"stringValue": "u123"}}
+          ]
+        }]
+      }]
+    }]
+  }'
+```
+
+### Multiple OpenTelemetry Listeners
+
+Multiple OpenTelemetry listeners can be defined to route data to different tags, for example to separate production and development telemetry:
+
+```
+[OpenTelemetry-Metrics-Listener "prod"]
+	URL="/v1/metrics"
+	Tag-Name=otel-metrics-prod
+	AuthType=preshared-token
+	TokenValue=prodtoken
+
+[OpenTelemetry-Metrics-Listener "dev"]
+	URL="/dev/v1/metrics"
+	Tag-Name=otel-metrics-dev
+
+[OpenTelemetry-Logs-Listener "prod"]
+	URL="/v1/logs"
+	Tag-Name=otel-logs-prod
+	AuthType=preshared-token
+	TokenValue=prodtoken
+
+[OpenTelemetry-Logs-Listener "dev"]
+	URL="/dev/v1/logs"
+	Tag-Name=otel-logs-dev
+```
+
 ## Health Checks
 
 Some systems (such as AWS load-balancers) require an unauthenticated URL that can be probed and interpreted as "proof of life".  The HTTP ingester can be configured to provide a URL which will always return a 200 OK when accessed with any method, body, and/or query parameters.  To enable this health check endpoint, add the `Health-Check-URL` stanza to the Global configuration block.
