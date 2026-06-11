@@ -45,6 +45,10 @@ Gravwell can also enable/disable the administrator flag on user accounts based o
 If `Admin-Attribute` is not configured, Gravwell will not modify the user's admin flag during SSO login, meaning accounts may be manually set as admins. If `Admin-Attribute` is configured but the SSO IdP does not send the desired attribute, Gravwell will not modify the user's admin flag.
 ```
 
+```{note}
+SSO requires TLS certificates installed on webservers so that SAML requests can be signed and validated.  In HA webserver configurations it is important that the same certificates are installed on all webservers in case SAML identity provider responses are sent to a webserver that did not originate the request.  Certificates used for SSO may be self signed.  See [Configuring TLS Certificates](configuration/certificates.html) for more information
+```
+
 ## Setting up Keycloak
 
 Documentation on setting up SSO with Keycloak is separated into its own page. [Click here](sso-keycloak/keycloak) to read it.
