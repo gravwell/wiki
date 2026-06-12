@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [HTTP](/ingesters/simple_relay)
+    Ingester, [HTTP Ingester](/ingesters/http)
          Kit, [OpenTelemetry Kit](https://github.com/gravwell/kits/tree/main/opentelemetry)
 :::
 
@@ -249,7 +249,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/opentelemetry-well.conf`
     Tags=opentelemetry*
 ```
 
-### Gravwell Ingester Configuration: OpenTelemetry
+### Gravwell Ingester Configuration: HTTP
 **Sample OpenTelemetry config:**  
 Create or edit: `/opt/gravwell/etc/INGESTER_OpenTelemetry/opentelemetry.conf`
 ```ini
