@@ -43,7 +43,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/fortinet-well.conf`
     Location=/opt/gravwell/storage/fortinet
     Tags=fortinet*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: Simple Relay
 **Sample Fortinet config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/fortinet.conf`
 ```ini

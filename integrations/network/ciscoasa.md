@@ -37,7 +37,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/cisco-asa-well.conf`
     Location=/opt/gravwell/storage/cisco-asa
     Tags=cisco-asa*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: Simple Relay
 **Sample Cisco ASA config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay/cisco-asa.conf`
 ```ini

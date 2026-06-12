@@ -53,7 +53,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/fluentd.conf`
     Hot-Storage-Reserve=10 # adapt this for your environment's requirements
     Delete-Cold-Data=true # adapt this for your environment's requirements
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: HTTP
 **Sample HTTP config:**  
 Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/fluentd.conf`
 ```ini

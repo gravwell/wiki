@@ -66,7 +66,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/azure-well.conf`
     Location=/opt/gravwell/storage/azure
     Tags=azure*
 ```
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: Event Hub
 
 Raw Event Hub JSON records come with multiple records arrays per message which makes EV extraction cumbersome. With a preprocessor, you can split into separate events with important fields available as top-level EVs 
 

@@ -34,7 +34,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/cisco-ftd-well.conf`
     Location=/opt/gravwell/storage/cisco-ftd
     Tags=cisco-ftd*
 ```
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: Simple Relay
 **Sample Cisco FTD config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay/cisco-ftd.conf`
 ```ini

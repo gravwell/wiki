@@ -34,7 +34,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/pan-well.conf`
     Location=/opt/gravwell/storage/pan
     Tags=pan*
 ```
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: Simple Relay
 **Sample Palo Alto config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/paloalto.conf`
 ```ini

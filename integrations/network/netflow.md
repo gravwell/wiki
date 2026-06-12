@@ -35,7 +35,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/netflow-well.conf`
     Tags=netflow*
 ```
 
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: Netflow
 **Sample NetFlow config:**  
 Create or edit: `/opt/gravwell/etc/netflow_capture.conf.d/netflow.conf`
 ```ini

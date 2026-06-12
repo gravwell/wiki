@@ -122,7 +122,7 @@ Remember to restart the service to apply the new config:
 `sudo systemctl restart gravwell_hosted_runner.service`
 ```
 
-#### Sample well config: Simple Relay Ingester
+#### Sample Ingester config: Simple Relay Ingester
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/okta-well.conf`
 ```ini
 [Listener "okta"]
