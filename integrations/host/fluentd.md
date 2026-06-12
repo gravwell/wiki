@@ -11,11 +11,12 @@
 
 ## Fluentd Configuration
 
-In `/etc/fluent/fluentd.conf` a stanza will need to be added. Remember to change the endpoint to point to your Gravwell Server
+In `/etc/fluent/fluentd.conf` a stanza will need to be added. Remember to change the endpoint to point to your Gravwell Server:
 * `endpoint` will point to the http ingester
 
 **Sample Fluentd Configuration pointing to Gravwell Environment**
-Create or `/etc/fluent/fluentd.conf`
+
+Create or edit `/etc/fluent/fluentd.conf`
 ```
 <match **>
     @type http

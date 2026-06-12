@@ -11,15 +11,15 @@
 
 ## Okta Configuration
 
-There are two primary mechanisms to collect logs from Okta
+There are two primary mechanisms to collect logs from Okta:
 * Okta System Log API
 * Syslog Streaming
 
 ### [Option 1] Okta System Log API
 To configure Okta for ingestion with the API you will need the following:
 
-* Domain: Your Okta account domain, e.g. myorg.okta.com
-* API Token: A token generated from the Okta Admin Console. This should be created for a dedicated Read Only Admin service account, not a token from a user.
+* **Domain:** Your Okta account domain (e.g. myorg.okta.com).
+* **API Token:** A token generated from the Okta Admin Console. This should be created for a dedicated Read Only Admin service account, not a token from a user.
 
 See the [Okta documentation](https://developer.okta.com/docs/guides/create-an-api-token/main/) for instructions on generating an API token.
 
@@ -37,7 +37,7 @@ Do not use a token with write permissions to your Okta instance to the ingester.
 :align: center
 ```
 
-2. Create a new token
+2. Create a new token.
 
 ```{image} images/okta-create-token.png
 :align: center
@@ -49,7 +49,7 @@ Do not use a token with write permissions to your Okta instance to the ingester.
 :align: center
 ```
 
-4. Double-check the role is “Read Only Admin”, and that it is attached to a dedicated service account.
+4. Double-check the role is “Read Only Admin” and that it is attached to a dedicated service account.
 
 ```{image} images/okta-token-check.png
 :align: center
@@ -68,17 +68,17 @@ Okta is extremely sensitive to rate limits so double-check your token rate limit
 See the [Okta documentation](https://help.okta.com/oag/en-us/content/topics/access-gateway/admin-settings-logging.htm) for instructions on setting up log forwarding.
 
 1. Inside your Access Gateway instance, browse to Backups and Logs and Backups.
-2. Select Log Forwarder
-3. Click Syslog remote
+2. Select Log Forwarder.
+3. Click Syslog remote.
 4. Configure the following:
-    * Name: Choose a name for the forwarder
-    * Feed: Select the feeds you wish to capture
+    * **Name:** Choose a name for the forwarder
+    * **Feed:** Select the feeds you wish to capture
        * Audit, Access, Monitor, Audit+Access+Monitor, Aggregate (Sends all logs)
-    * Protocol: UDP or TCP (This must be set the same in the simple relay)
-    * Host: The hostname or ip address of the simple relay.
-    * Port: The port you used in your simple relay
+    * **Protocol:** UDP or TCP (This must be set the same in the simple relay)
+    * **Host:** The hostname or ip address of the simple relay
+    * **Port:** The port you used in your simple relay
 5. Validate Forwarder. (This attempts to validate the connection, so the Gravwell simple relay will need to be setup prior to this step).
-6. Click Okay
+6. Click Okay.
 
 ## Gravwell Configuration
 

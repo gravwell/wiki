@@ -17,23 +17,23 @@
 Follow the instructions for setting up streaming to Splunk. For the configuration page point to your Gravwell HTTP ingester.
 
 1. Navigate to your github enterprise page.
-2. Go to: Settings > Audit Log > Log Streaming > Configure Stream > Splunk
+2. Go to: Settings > Audit Log > Log Streaming > Configure Stream > Splunk.
 3. On the configuration page you will point th the public address and port of the Gravwell Ingester.
 4. Ensure SSL verification check box is selected.
-5. Click `Check endpoint` to verify github can connect and write to the Gravwell Ingester
-6. Save
+5. Click `Check endpoint` to verify github can connect and write to the Gravwell Ingester.
+6. Save.
 
 If you would like to include API requests in your audit log streaming:
 1. Navigate to your github enterprise page.
-2. Go to: Settings > Audit Log > Settings > API Requests
-3. `Select Enable API Request Events`
-4. Save
+2. Go to: Settings > Audit Log > Settings > API Requests.
+3. `Select Enable API Request Events`.
+4. Save.
 
 
 ### [Option 2] Using WebHooks to export Logs
 * [Creating a repository webhook](https://docs.github.com/en/enterprise-cloud@latest/webhooks/using-webhooks/creating-webhooks)
 
-Github provides webhooks for exporting logs depending on what you want to export for example for monitoring single repository, app, enterprise, global, etc.. Follow the instruction for setting up 
+Github provides webhooks for exporting logs depending on what you want to export for example for monitoring single repository, app, enterprise, global, etc. Follow the instructions for setting up: 
 
 1. On the main page of the repository select: Settings > Webhooks > Add webhook
 
@@ -46,7 +46,7 @@ Github provides webhooks for exporting logs depending on what you want to export
       * Example: `application/json`
    * **Secret:**
       * Example: `AuthenticationToken`
-   * **Which events would you like to trigger this webhook**
+   * **Which events would you like to trigger this webhook:**
       * Example: `Send me everything`
 
 ![](images/github_webhook_add.png)

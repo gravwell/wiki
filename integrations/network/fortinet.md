@@ -15,7 +15,7 @@ To get logs flowing from your Fortinet FortiGate/FortiOS 7.6.6 device configure 
 
 Recommended FortiGate syslog settings:
 
-* Use mode reliable (RFC6587 over TCP). (config log syslogd setting)
+* Use mode reliable (RFC6587 over TCP) for the config log syslogd setting.
 * Use format rfc5424 (best timestamp framing) or format default (simple key=value).
 * Point the syslog server to the Simple Relay host on port 6701.
 

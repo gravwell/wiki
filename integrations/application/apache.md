@@ -10,12 +10,12 @@
 :::
 
 ## Apache Configuration
-Apache features a highly configurable logging framework. Logging can be applied globally (on Debian/Ubuntu hosts, this is typically stored in: `/etc/apache2.conf`) or for each virtual host (typically stored in `/etc/apache2/sites-available/{VHOST_NAME}.conf`). 
+Apache features a highly configurable logging framework. Logging can be applied globally (on Debian/Ubuntu hosts, this is typically stored in `/etc/apache2.conf`) or for each virtual host (typically stored in `/etc/apache2/sites-available/{VHOST_NAME}.conf`). 
 
 Follow the steps below to configure Apache to output clean data for Gravwell ingestion.
 
 ### Define LogFormat
-Apache uses the Common Log Format by default, we will define a custom structure called called: `json_combined`. This will write the logs cleanly as JSON before ingestion into Gravwell.
+Apache uses the Common Log Format by default, so we will define a custom structure called: `json_combined`. This will write the logs cleanly as JSON before ingestion into Gravwell.
 
 You can define this globally in `/etc/apache2.conf` or inside a specific Virtual Host in `/etc/apache2/sites-available/{VHOST_NAME}.conf`.
 
@@ -55,7 +55,7 @@ ErrorLog  /var/log/apache2/error.log
 #### RewriteRule placement (Extesionless URLS)
 If you're using `mod_rewrite` to handle extensionless URLs (e.g. routing `/status` to `/status.php`), your rules must must be placed inside a  `<Directory>` block rather than directly at the global VirtualHost level.
 
-At the global VirtualHost level, `%{REQUEST_FILENAME}` treats the target as a plain URI string instead of a filesystem path. This cause `-f` (file) and `-d` (directory) checks to always evaluate false:
+At the global VirtualHost level, `%{REQUEST_FILENAME}` treats the target as a plain URI string instead of a filesystem path. This causes `-f` (file) and `-d` (directory) checks to always evaluate false:
 
 ```apache
 <Directory /var/www/html>
@@ -69,14 +69,14 @@ At the global VirtualHost level, `%{REQUEST_FILENAME}` treats the target as a pl
 #### Proxy Configuration
 If Apache sits behind a proxy, the standard remote host field will log the proxy's internal IP address instead of the real clients. We can fix this using `mod_remoteip`.
 
-1. **Enable the required modules:** Run the following commands to enable both the proxy headers adn rewrite engines
+1. **Enable the required modules:** Run the following commands to enable both the proxy headers and rewrite engines:
 
 ```bash
 a2enmod remoteip
 a2enmod rewrite   # if you need extensionless URL rewrites
 ```
 
-2. **Configure mod_remoteip:** Create a dedicated configuratio nfile at `/etc/apache2/conf-available/remoteip.conf`:
+2. **Configure mod_remoteip:** Create a dedicated configuration file at `/etc/apache2/conf-available/remoteip.conf`:
 
 ```apache
 RemoteIPHeader X-Real-IP

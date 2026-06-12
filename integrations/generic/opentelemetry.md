@@ -11,7 +11,7 @@
 
 ## OpenTelemetry Configuration
 
-OpenTelemetry uses Collectors to forward data from your application or infrastructure directly into Gravwell. While this guide demonstrates using Kubernetes it could be adapted to route logs from any OpenTelemetry compatible service.
+OpenTelemetry uses Collectors to forward data from your application or infrastructure directly into Gravwell. While this guide demonstrates using Kubernetes, it could be adapted to route logs from any OpenTelemetry compatible service.
 
 ### Example: Simple OpenTelemetry Example
 
@@ -26,7 +26,7 @@ exporters:
       insecure: true
 ```
 
-Next, update your active data pipelines under the `service` section to route your data through the new `otlphttp` exporer:
+Next, update your active data pipelines under the `service` section to route your data through the new `otlphttp` exporter:
 
 ```YAML
 service:
@@ -60,7 +60,7 @@ This example provides a native Kubernetes manifest file that sets up an OpenTele
 endpoint: http://192.168.3.50:8080
 ```
 
-This manifest utilizes Custom Resource Definitions from the OpenTelemetry Operator. The following commands provide an example that could be ran on your master node to install the operator via Helm to deploy the collector.
+This manifest utilizes Custom Resource Definitions from the OpenTelemetry Operator. The following commands provide an example that could be run on your master node to install the operator via Helm to deploy the collector.
 
 ```
 # 1. Add the OpenTelemetry Helm repository

@@ -11,7 +11,7 @@
 
 ## Auth0 Configuration
 
-Follow the auth0 Docs for setting up a [Custom Log Stream using Webhooks](https://auth0.com/docs/customize/log-streams/custom-log-streams).
+Follow the auth0 docs for setting up a [Custom Log Stream using Webhooks](https://auth0.com/docs/customize/log-streams/custom-log-streams).
 
 ```{note}
 Auth0 does not support using self-signed HTTP certificates.
@@ -29,9 +29,9 @@ Auth0 does not support using self-signed HTTP certificates.
       * Example: `application/json`
    * **Content Format:** Receive data in JSON lines, arrays, or objects.
       * Example: `JSON Lines`
-   * **Filter by Event Category** List of log stream filters.
+   * **Filter by Event Category:** List of log stream filters.
       * Example: `Filter: All`
-   * **Starting Cursor** (Optional) Specific day and time to start the stream from.
+   * **Starting Cursor:** (Optional) Specific day and time to start the stream from.
 3. Click `Save`.
 
 Verify the `Stream Status` is active in the `Health` view.
