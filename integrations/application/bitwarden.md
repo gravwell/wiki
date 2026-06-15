@@ -23,6 +23,9 @@ Bitwarden’s public API gives developers programmatic access to organizational 
 - To view the API key, log into the Bitwarden admin console as an owner and navigate to Settings > Organization info.  
 - To check that you have an organization key, check that it begins with "organization"; if it does not, you have a user API key.
 
+```{image} images/bitwarden_view_api_key.png
+:align: center
+```
 
 ## Gravwell Configuration
 
@@ -31,8 +34,16 @@ Gravwell uses its scripting interface (in the Bitwarden Kit) to request data fro
 Create a Gravwell secret named "BW_SECRET"
 - The secret value should be in the following format to properly obtain an access_token by replacing <ID> and <SECRET> with the correct values:
 
+```{image} images/bitwarden_bw_secret.png
+:align: center
+```
+
 Enable the "Bitwarden Event Logs" flow
 - Once the secret has been created and a well configured, you're ready to start collecting Bitwarden Event Logs by enabling the flow.
+
+```{image} images/bitwarden_scheduling.png
+:align: center
+```
 
 ### Status Codes
 
@@ -42,6 +53,10 @@ Enable the "Bitwarden Event Logs" flow
 - **404 (Not Found)** - Request resource doesn't exist. Check that the BITWARDEN_WEB macro is configured correctly.
 - **429 (Too Many Requests)** - Rate limit hit. Disable Ingest Bitwarden Event Logs if 429 errors continue.
 - **5XX (Server Error)** - Something went wrong on the Bitwarden end. Disable Ingest Bitwarden Event Logs if 5XX errors continue.
+
+```{image} images/bitwarden_flow.png
+:align: center
+```
 
 ### Event Log Fields
 
