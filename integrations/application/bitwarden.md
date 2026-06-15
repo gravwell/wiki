@@ -32,16 +32,16 @@ Create a Gravwell secret named "BW_SECRET"
 - The secret value should be in the following format to properly obtain an access_token by replacing <ID> and <SECRET> with the correct values:
 
 Enable the "Bitwarden Event Logs" flow
-- Once the secret has been created and a well configured, you're ready to start collecting Bitwarden Event Logs by enabling the flow
+- Once the secret has been created and a well configured, you're ready to start collecting Bitwarden Event Logs by enabling the flow.
 
 ### Status Codes
 
-- **200 (OK)** - Authentication is completing normally...Start exploring your Bitwarden event logs and org data
-- **400 (Bad Request)** - Potentially missing or malformed parameters...Check connection
-- **401 (Unauthorized)** - Token missing/expired...Check that the token
-- **404 (Not Found)** - Request resource doesn't exist...Check that the BITWARDEN_WEB macro is configured correctly
-- **429 (Too Many Requests)** - Rate limit hit...Disable Ingest Bitwarden Event Logs if 429 errors continue
-- **5XX (Server Error)** - Something went wrong on the Bitwarden end...Disable Ingest Bitwarden Event Logs if 5XX errors continue
+- **200 (OK)** - Authentication is completing normally. Start exploring your Bitwarden event logs and org data.
+- **400 (Bad Request)** - Potentially missing or malformed parameters. Check connection.
+- **401 (Unauthorized)** - Token missing/expired. Check the token.
+- **404 (Not Found)** - Request resource doesn't exist. Check that the BITWARDEN_WEB macro is configured correctly.
+- **429 (Too Many Requests)** - Rate limit hit. Disable Ingest Bitwarden Event Logs if 429 errors continue.
+- **5XX (Server Error)** - Something went wrong on the Bitwarden end. Disable Ingest Bitwarden Event Logs if 5XX errors continue.
 
 ### Event Log Fields
 
@@ -61,7 +61,7 @@ Enable the "Bitwarden Event Logs" flow
 
 Gravwell supports two indexing engines designed to provide different capabilities and tradeoffs. Both engines can perform very well with the Bitwarden datasets.
 
-* The **bloom engine** provide a balance of good performance and minimal disk usage
+* The **bloom engine** provide a balance of good performance and minimal disk usage.
 * (DEFAULT) The **index engine** provides precise indexing performance in exchange for greater disk and memory usage.
 
 Regardless of the chosen engine, Gravwell recommends that Bitwarden data be fulltext indexed with the "ignoreFloat" and "ignoreUUID" options. Either of the following configurations should perform well with Bitwarden data:

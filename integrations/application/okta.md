@@ -67,7 +67,7 @@ Okta is extremely sensitive to rate limits so double-check your token rate limit
 
 See the [Okta documentation](https://help.okta.com/oag/en-us/content/topics/access-gateway/admin-settings-logging.htm) for instructions on setting up log forwarding.
 
-1. Inside your Access Gateway instance, browse to Backups and Logs and Backups.
+1. Inside your Access Gateway instance, browse to `Backups and Logs` and then `Backups`.
 2. Select Log Forwarder.
 3. Click Syslog remote.
 4. Configure the following:

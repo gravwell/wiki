@@ -47,6 +47,7 @@ After creating an Event Hub you will need to configure Azure to send logs by fol
 2. Select Diagnostics settings and create a new setting.
 3. Select the events to log.
    
+   
    The Azure kit monitors three log planes for relevant events:
    * **Activity Log:** ARM control-plane operations: resource creates/deletes, RBAC assignments, Policy evaluations, subscription-level administrative actions.
    * **Entra ID Audit:** Directory operations: user/group/app/SP management, role assignments, conditional access policy changes.

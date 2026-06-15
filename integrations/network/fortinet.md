@@ -11,7 +11,7 @@
 
 ## Fortinet Configuration
 
-To get logs flowing from your Fortinet FortiGate/FortiOS 7.6.6 device configure remote syslog logging as described in the Fortinet documentation [Log setting and target](https://docs.fortinet.com/document/fortigate/7.6.6/administration-guide/250999/log-settings-and-targets#Remote_logging).
+To get logs flowing from your Fortinet FortiGate/FortiOS 7.6.6 device, configure remote syslog logging as described in the Fortinet documentation [Log setting and target](https://docs.fortinet.com/document/fortigate/7.6.6/administration-guide/250999/log-settings-and-targets#Remote_logging).
 
 Recommended FortiGate syslog settings:
 
