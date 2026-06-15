@@ -19,6 +19,8 @@ One or more enumerated value names must be provided as keys. These form the dime
 * `-cluster <name>`: Set the name of the enumerated value for the cluster ID assigned to each entry. Defaults to `cluster`.
 * `-distance <name>`: Set the name of the enumerated value for the Euclidean distance from the entry to its cluster centroid. Defaults to `distance`.
 * `-count <name>`: Set the name of the enumerated value for the number of entries in the associated cluster. Defaults to `count`.
+* `-centroids <name>`: Write the calculated centroids to a Gravwell resource as a CSV file. 
+* `-r <name>`: Use pre-calculated centroids generated previously with `-centroids`. Enables offline or stable centroid reuse.
 
 ## Produced Enumerated Values
 
@@ -29,6 +31,15 @@ The `kmeans` module produces three enumerated values on each entry (names are co
 | Cluster ID | `cluster` | Integer identifying which cluster the entry belongs to. |
 | Distance | `distance` | Float representing the Euclidean distance from the entry to its cluster centroid. |
 | Count | `count` | Integer representing the total number of entries in the entry's cluster. |
+
+## Pre-calculating centroids
+
+The `-centroids` flag writes the final calculated centroids to a Gravwell resource in CSV format. This is useful for:
+
+- **Stable clustering**: apply the same centroids consistently across different queries.
+- **Offline training**: compute centroids on a large training set, then apply `-r` to new queries for near-instant assignment.
+
+To use pre-calculated centroids, use the `-r` flag with the same resource name created when calculating the centroids.
 
 ## Examples
 
@@ -46,4 +57,20 @@ Identify outliers by sorting entries by their distance from the cluster centroid
 
 ```gravwell
 tag=data json x y | kmeans -k 3 x y | sort by distance desc | table x y cluster distance
+```
+
+### Export centroids for later reuse
+
+Compute centroids on a training set and save them to a resource:
+
+```gravwell
+tag=data json x y z | kmeans -k 4 -centroids cluster_model x y z |
+```
+
+### Apply pre-computed centroids to new data
+
+Use saved centroids to cluster a new dataset consistently:
+
+```gravwell
+tag=data json x y z | kmeans -k 4 -r cluster_model x y z | table x y z cluster distance
 ```
