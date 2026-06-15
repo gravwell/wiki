@@ -63,9 +63,9 @@ Okta is extremely sensitive to rate limits so double-check your token rate limit
 :align: center
 ```
 
-### [Option 2] Okta Syslog Streaming
+### [Option 2] Okta Access Gateway: Syslog Streaming
 
-See the [Okta documentation](https://help.okta.com/oag/en-us/content/topics/access-gateway/admin-settings-logging.htm) for instructions on setting up log forwarding.
+For Okta Access Gateway deployments, you can configure syslog streaming by following the [Okta documentation](https://help.okta.com/oag/en-us/content/topics/access-gateway/admin-settings-logging.htm).
 
 1. Inside your Access Gateway instance, browse to `Backups and Logs` and then `Backups`.
 2. Select Log Forwarder.
