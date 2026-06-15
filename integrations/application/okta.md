@@ -67,7 +67,7 @@ Okta is extremely sensitive to rate limits so double-check your token rate limit
 
 For Okta Access Gateway deployments, you can configure syslog streaming by following the [Okta documentation](https://help.okta.com/oag/en-us/content/topics/access-gateway/admin-settings-logging.htm).
 
-1. Inside your Access Gateway instance, browse to `Backups and Logs` and then `Backups`.
+1. Inside your Access Gateway instance, browse to Backups and Logs > Backups.
 2. Select Log Forwarder.
 3. Click Syslog remote.
 4. Configure the following:
