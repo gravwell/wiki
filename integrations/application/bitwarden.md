@@ -32,7 +32,7 @@ Bitwarden’s public API gives developers programmatic access to organizational 
 Gravwell uses its scripting interface (in the Bitwarden Kit) to request data from the Bitwarden API.
 
 **Create a Gravwell secret named "BW_SECRET"**
-- The secret value should be formatted as shown in the image to properly obtain an access_token. Make sure to replace the <ID> and <SECRET> with the correct values:
+- The secret value should be formatted as shown in the image to properly obtain an access_token. Make sure to replace the `<ID>` and `<SECRET>` with the correct values:
 
 ```grant_type=client_credentials&scope=api.organization&client_id=<ID>&client_secret=<SECRET>```
 
