@@ -46,7 +46,7 @@ If `Admin-Attribute` is not configured, Gravwell will not modify the user's admi
 ```
 
 ```{note}
-SSO requires TLS certificates to be installed on webservers so that SAML requests can be signed and validated. In HA webserver configurations it is important that the same certificates are installed on all webservers in case SAML identity provider responses are sent to a webserver that did not originate the request. Certificates used for SSO may be self-signed. See [Configuring TLS Certificates](configuration/certificates.html) for more information.
+SSO requires TLS certificates to be installed on webservers so that SAML requests can be signed and validated. In HA webserver configurations it is important that the same certificates are installed on all webservers in case SAML identity provider responses are sent to a webserver that did not originate the request. Certificates used for SSO may be self-signed. See [Configuring TLS Certificates](/configuration/certificates) for more information.
 ```
 
 ## Setting up Keycloak
