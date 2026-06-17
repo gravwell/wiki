@@ -251,7 +251,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/opentelemetry-well.conf`
 
 ### Gravwell Ingester Configuration: HTTP
 **Sample OpenTelemetry config:**  
-Create or edit: `/opt/gravwell/etc/INGESTER_OpenTelemetry/opentelemetry.conf`
+Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/opentelemetry.conf`
 ```ini
 [OpenTelemetry-Logs-Listener "kubelogs"]
     URL="/v1/logs"
@@ -264,5 +264,5 @@ Create or edit: `/opt/gravwell/etc/INGESTER_OpenTelemetry/opentelemetry.conf`
 
 ```{note}
 Remember to restart the service to apply the new config:
-`sudo systemctl restart INGESTER_OpenTelemetry.service`
+`sudo systemctl restart gravwell_http_ingester.service`
 ```
