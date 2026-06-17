@@ -34,7 +34,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/ipfix.well`
     Location=/opt/gravwell/storage/ipfix
     Tags=ipfix*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: Netflow
 **Sample IPFIX config:**  
 Create or edit: `/opt/gravwell/etc/netflow_capture.conf.d/ipfix.conf`
 ```ini

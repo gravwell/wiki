@@ -54,7 +54,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/duo-well.conf`
     Location=/opt/gravwell/storage/duo
     Tags=duo*
 ```
-### Gravwell Fetcher Configuration
+
+### Gravwell Ingester Configuration: Fetcher
 
 Setup the fetcher configuration file.
 

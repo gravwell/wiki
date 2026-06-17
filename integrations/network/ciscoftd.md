@@ -11,14 +11,14 @@
 
 ## Cisco FTD Configuration
 
-Configure log forwarding as described in [Cisco FTD documentation](https://www.cisco.com/c/en/us/support/docs/security/firepower-ngfw/200479-Configure-Logging-on-FTD-via-FMC.html) 
+Configure log forwarding as described in [Cisco FTD documentation](https://www.cisco.com/c/en/us/support/docs/security/firepower-ngfw/200479-Configure-Logging-on-FTD-via-FMC.html). 
 
 Things to note as you follow the logging setup:
 * Enable EMBLEM format
 * Set IP address and port
 
 ```{warning}
-If using TCP for syslog you probably want to check the `Allow user traffic to pass when TCP syslog server is down` check box otherwise if the FTD is unable to connect to the Gravwell ingester it will block All new connections.
+If using TCP for syslog, you probably want to check the `Allow user traffic to pass when TCP syslog server is down` check box. Otherwise, if the FTD is unable to connect to the Gravwell ingester, it will block _all_ new connections.
 ```
 
 ## Gravwell Configuration
@@ -34,7 +34,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/cisco-ftd-well.conf`
     Location=/opt/gravwell/storage/cisco-ftd
     Tags=cisco-ftd*
 ```
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: Simple Relay
 **Sample Cisco FTD config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay/cisco-ftd.conf`
 ```ini

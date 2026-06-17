@@ -27,7 +27,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/kinesis.well`
     Location=/opt/gravwell/storage/kinesis
     Tags=kinesis*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: Kinesis
 **Sample Kinesis config:**  
 Create or edit: `/opt/gravwell/etc/kinesis_ingest.conf`
 ```ini
