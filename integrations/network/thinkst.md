@@ -54,8 +54,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/thinkst-well.conf`
     Location=/opt/gravwell/storage/thinkst
     Tags=thinkst*
 ```
-### Gravwell Fetcher Configuration
 
+### Gravwell Ingester Configuration: Fetcher
 Setup the fetcher configuration file.
 
 **Sample Thinkst config:**  

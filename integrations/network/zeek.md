@@ -45,9 +45,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/zeek.conf`
     Accelerator-Engine-Override=index
 ```
 
-### Gravwell Ingester Configuration
-
-
+### Gravwell Ingester Configuration: File Follower
 **Sample File Follower config:**  
 Create or edit: `/opt/gravwell/etc/file_follow.conf.d/zeek.conf`
 ```ini

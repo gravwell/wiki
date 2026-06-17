@@ -14,7 +14,9 @@ If you successfully integrate a custom log source, please reach out to us. We wo
 ---
 hidden: true
 ---
+Apache <application/apache>
 Auditd <host/auditd>
+Auth0 <application/auth0>
 AWS - CloudTrail <cloud/aws/cloudtrail>
 AWS - GuardDuty <cloud/aws/guardduty>
 AWS - Kinesis <cloud/aws/kinesis>
@@ -32,7 +34,10 @@ IPFIX <network/ipfix>
 IPMI <generic/ipmi>
 Juniper <network/juniper>
 Netflow <network/netflow>
+Nginx <application/nginx>
 Office 365 <cloud/office365>
+Okta <application/okta>
+OpenTelemetry <generic/opentelemetry>
 OpenWeatherMap <application/openweathermap>
 Palo Alto <network/paloalto>
 pfSense <network/pfsense>
@@ -196,22 +201,47 @@ Zeek <network/zeek>
 ## Application
 ::::{grid} 4
 :::{grid-item-card}
+:link: application/apache
+:link-type: doc
+**Apache**
+:::
+
+:::{grid-item-card}
+:link: application/auth0
+:link-type: doc
+**Auth0**
+:::
+
+:::{grid-item-card}
 :link: application/bitwarden
 :link-type: doc
 **Bitwarden**
 :::
-
 
 :::{grid-item-card}
 :link: application/duo
 :link-type: doc
 **Duo**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/github
 :link-type: doc
 **Github**
+:::
+
+:::{grid-item-card}
+:link: application/nginx
+:link-type: doc
+**Nginx**
+:::
+
+:::{grid-item-card}
+:link: application/okta
+:link-type: doc
+**Okta** 
 :::
 
 :::{grid-item-card}
@@ -228,6 +258,12 @@ Zeek <network/zeek>
 :link: generic/ipmi
 :link-type: doc
 **IPMI**
+:::
+
+:::{grid-item-card}
+:link: generic/opentelemetry
+:link-type: doc
+**OpenTelemetry**
 :::
 
 :::{grid-item-card}

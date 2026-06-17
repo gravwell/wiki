@@ -26,9 +26,9 @@ github.com/tealeg/xlsx,https://github.com/tealeg/xlsx/blob/v1.0.5/LICENSE,BSD-3-
 github.com/victorspringer/http-cache,https://github.com/nic-osullivan-gravwell/http-cache/blob/e2fd682b3cb9/LICENSE,MIT
 github.com/xdg/scram,https://github.com/xdg/scram/blob/7eeb5667e42c/LICENSE,Apache-2.0
 github.com/xdg/stringprep,https://github.com/xdg/stringprep/blob/v1.0.0/LICENSE,Apache-2.0
-golang.org/x/crypto/pbkdf2,https://cs.opensource.google/go/x/crypto/+/v0.51.0:LICENSE,BSD-3-Clause
-golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.54.0:LICENSE,BSD-3-Clause
-golang.org/x/sys,https://cs.opensource.google/go/x/sys/+/v0.44.0:LICENSE,BSD-3-Clause
+golang.org/x/crypto/pbkdf2,https://cs.opensource.google/go/x/crypto/+/v0.52.0:LICENSE,BSD-3-Clause
+golang.org/x/net,https://cs.opensource.google/go/x/net/+/v0.55.0:LICENSE,BSD-3-Clause
+golang.org/x/sys,https://cs.opensource.google/go/x/sys/+/v0.45.0:LICENSE,BSD-3-Clause
 golang.org/x/term,https://cs.opensource.google/go/x/term/+/v0.43.0:LICENSE,BSD-3-Clause
 golang.org/x/text,https://cs.opensource.google/go/x/text/+/v0.37.0:LICENSE,BSD-3-Clause
 golang.org/x/time/rate,https://cs.opensource.google/go/x/time/+/v0.15.0:LICENSE,BSD-3-Clause

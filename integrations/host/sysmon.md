@@ -38,7 +38,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/sysmon-well.conf`
     Location=/opt/gravwell/storage/sysmon
     Tags=sysmon*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: Windows Event
 **Sample Sysmon config:**  
 Create or edit: `%PROGRAMDATA%\gravwell\eventlog\config.cfg`
 ```ini
