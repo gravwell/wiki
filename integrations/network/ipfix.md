@@ -34,7 +34,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/ipfix.well`
     Location=/opt/gravwell/storage/ipfix
     Tags=ipfix*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: Netflow
 **Sample IPFIX config:**  
 Create or edit: `/opt/gravwell/etc/netflow_capture.conf.d/ipfix.conf`
 ```ini
@@ -42,4 +43,9 @@ Create or edit: `/opt/gravwell/etc/netflow_capture.conf.d/ipfix.conf`
 	Tag-Name=ipfix
 	Bind-String="0.0.0.0:4739"
 	Flow-Type=ipfix
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_netflow_capture.service`
 ```

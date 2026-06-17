@@ -55,7 +55,7 @@ This guide is suitable for Community Edition users as well as users with a paid 
 
 You may find the [installation checklist](checklist) and the [glossary](/glossary/glossary) useful companions to this document.
 
-If you are interested in a complete training package, please see the [complete training PDF](https://github.com/gravwell/training/releases/download/v5.9.0/gravwell_training_v5.9.0.pdf). The Gravwell training PDF is the complete training manual which is paired with labs and exercises. The exercises are built from the open source [Gravwell Training](https://github.com/gravwell/training) repository.
+If you are interested in a complete training package, please see the [complete training PDF](https://github.com/gravwell/training/releases/download/v5.9.1/gravwell_training_v5.9.1.pdf). The Gravwell training PDF is the complete training manual which is paired with labs and exercises. The exercises are built from the open source [Gravwell Training](https://github.com/gravwell/training) repository.
 
 ```{note}
 Community Edition users will need to obtain their own license from [https://www.gravwell.io/download](https://www.gravwell.io/download) before beginning installation. Paid users should already have received a license file via email.
@@ -110,11 +110,11 @@ Below is a simple calculator for estimating your hardware needs:
 |                                                                        |                                                                                  |
 |------------------------------------------------------------------------|----------------------------------------------------------------------------------|
 | **Expected Ingest Per Day (GB)**                                       | <input type='number' id='ingest' onInput='calculate()' placeholder="Gigabytes"/> |
-| <span style="color:blue">**Recommended # of Indexers**</span>          | <span style="color:blue"><span id="indexerCount">--</span></span>                |
-| <span style="color:blue">**Recommended Per-Indexer Core Count**</span> | <span style="color:blue"><span id="corecount">--</span></span>                   |
-| <span style="color:blue">**Recommended Per-Indexer RAM**</span>        | <span style="color:blue"><span id="memsize">--</span> GB</span>                  |
-| <span style="color:blue">**Recommended Webserver Core Count**</span>   | <span style="color:blue"><span id="webcores">--</span></span>                |
-| <span style="color:blue">**Recommended Webserver RAM**</span>   | <span style="color:blue"><span id="webmem">--</span> GB</span>                |
+| <span class="sd-text-primary">**Recommended # of Indexers**</span>          | <span class="sd-text-primary"><span id="indexerCount">--</span></span>                |
+| <span class="sd-text-primary">**Recommended Per-Indexer Core Count**</span> | <span class="sd-text-primary"><span id="corecount">--</span></span>                   |
+| <span class="sd-text-primary">**Recommended Per-Indexer RAM**</span>        | <span class="sd-text-primary"><span id="memsize">--</span> GB</span>                  |
+| <span class="sd-text-primary">**Recommended Webserver Core Count**</span>   | <span class="sd-text-primary"><span id="webcores">--</span></span>                |
+| <span class="sd-text-primary">**Recommended Webserver RAM**</span>   | <span class="sd-text-primary"><span id="webmem">--</span> GB</span>                |
 
 ```{note}
 These are only very rough estimates, and of course performance will vary based on the hardware you select: eight Xeon Ivy Bridge cores are not comparable to eight Epyc Turin or Xeon Granite Rapids cores!
@@ -128,7 +128,7 @@ You can estimate your storage requirements using the following calculator:
 | **Required Retention (days)**                                       | <input type='number' id='retention' onInput='calculateStorage()' placeholder="Days"/>                           |
 | **Estimated Compression Factor†**                            | <input type='number' id='compressionFactor' onInput='calculateStorage()' value="0.2">                           |
 | **Acceleration Storage Type‡**                                       | <div><input type="radio" id="ftIndex" name="accel" value="index" onInput='calculateStorage()' checked/><label for="ftIndex">Indexing</label><br><input type="radio" id="ftBloom" name="accel" value="bloom" onInput='calculateStorage()'/><label for="ftBloom">Bloom</label><br><input type="radio" id="none" name="accel" value="none" onInput='calculateStorage()'/><label for="none">None</label></br></div> |
-| <span style="color:blue">**Recommended Storage Size**</span> | <span style="color:blue"><span id="storageSize">--</span> GB</span>                                             |
+| <span class="sd-text-primary">**Recommended Storage Size**</span> | <span class="sd-text-primary"><span id="storageSize">--</span> GB</span>                                             |
 
 **†** Value between 0 and 1.0 representing how compressed the raw data will be on disk. Most text-based logs compress to about 20% of their size, so we use a default of 0.2. If you intend to disable compression entirely, or if you'll be ingesting lots of binary data, set this to 1.0.
 

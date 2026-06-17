@@ -35,7 +35,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/netflow-well.conf`
     Tags=netflow*
 ```
 
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: Netflow
 **Sample NetFlow config:**  
 Create or edit: `/opt/gravwell/etc/netflow_capture.conf.d/netflow.conf`
 ```ini
@@ -44,4 +44,9 @@ Create or edit: `/opt/gravwell/etc/netflow_capture.conf.d/netflow.conf`
     Tag-Name=netflow
     Assume-Local-Timezone=true
     Session-Dump-Enabled=true
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_netflow_capture.service`
 ```

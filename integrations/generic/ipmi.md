@@ -71,7 +71,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/ipmi-well.conf`
     Location=/opt/gravwell/storage/ipmi
     Tags=ipmi*
 ```
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: IPMI
 **Sample IPMI config:**  
 Create or edit: `/opt/gravwell/etc/ipmi.conf.d/ipmi.conf`
 ```ini
@@ -80,4 +80,9 @@ Create or edit: `/opt/gravwell/etc/ipmi.conf.d/ipmi.conf`
     Username="user"
     Password="pass"
     Tag-Name=ipmi
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_ipmi.service`
 ```

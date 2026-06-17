@@ -6,7 +6,7 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [Windows Event Ingester](winevent_optional-sysmon-integration)
-         Kit, [Windows Sysmon Kit](https://github.com/gravwell/kits/tree/main/)
+         Kit, [Windows Sysmon Kit](https://github.com/gravwell/kits/tree/main/sysmon)
 :::
 
 ## Sysmon Configuration
@@ -38,7 +38,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/sysmon-well.conf`
     Location=/opt/gravwell/storage/sysmon
     Tags=sysmon*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: Windows Event
 **Sample Sysmon config:**  
 Create or edit: `%PROGRAMDATA%\gravwell\eventlog\config.cfg`
 ```ini
@@ -46,4 +47,8 @@ Create or edit: `%PROGRAMDATA%\gravwell\eventlog\config.cfg`
         Tag-Name=sysmon
         Provider=Microsoft-Windows-Sysmon #Only look for the provider
         Channel=Microsoft-Windows-Sysmon/Operational
+```
+
+```{note}
+Remember to restart the gravwell service via standard windows service management to apply the new config.
 ```

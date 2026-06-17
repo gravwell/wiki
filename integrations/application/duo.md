@@ -5,8 +5,8 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Gravwell Fetcher](https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/README.md)
-         Kit, [Duo Kit](https://github.com/gravwell/kits/tree/main/)
+    Ingester, [Fetcher](https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/README.md)
+         Kit, [Duo Kit](https://github.com/gravwell/kits/tree/main/duo)
 :::
 
 ## Duo Configuration
@@ -54,7 +54,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/duo-well.conf`
     Location=/opt/gravwell/storage/duo
     Tags=duo*
 ```
-### Gravwell Fetcher Configuration
+
+### Gravwell Ingester Configuration: Fetcher
 
 Setup the fetcher configuration file.
 

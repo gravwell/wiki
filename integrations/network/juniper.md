@@ -45,7 +45,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/juniper-well.conf`
     Location=/opt/gravwell/storage/juniper
     Tags=juniper*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: Simple Relay
 **Sample Juniper config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/juniper.conf`
 ```ini
@@ -56,4 +57,9 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/juniper.conf`
 	Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
 	Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
     #Key-File=/opt/gravwell/etc/key.pem
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_simple_relay.service`
 ```

@@ -7,7 +7,7 @@
 **Integration Details**
     Ingester, [Simple Relay](/ingesters/simple_relay.md)
 Preprocessor, [Corelight JSON to TSV](/ingesters/preprocessors/corelight.md)
-         Kit, [Gravell Corelight](https://github.com/gravwell/kits/tree/main/corelight)
+         Kit, [Corelight Kit](https://github.com/gravwell/kits/tree/main/corelight)
 :::
 
 ## Corelight Configuration
@@ -69,7 +69,7 @@ We recommend using the **Simple Relay** ingester. The following configuration li
 Ensure your firewalls allows traffic on port `7890` between the Corelight sensor and the Gravwell ingester.
 ```
 
-### Gravwell JSON Listener Configuration
+### Gravwell Ingester Configuration: Simple Relay
 File: `/opt/gravwell/etc/simple_relay.conf.d/corelight.conf`
 ```ini
 [JSONListener "corelight"]
@@ -185,3 +185,8 @@ File: `/opt/gravwell/etc/simple_relay.conf.d/corelight.conf`
     Tag-Match=zeek_doctor:corelight_zeek_doctor
 ```
 
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_simple_relay.service`
+```

@@ -45,9 +45,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/zeek.conf`
     Accelerator-Engine-Override=index
 ```
 
-### Gravwell Ingester Configuration
-
-
+### Gravwell Ingester Configuration: File Follower
 **Sample File Follower config:**  
 Create or edit: `/opt/gravwell/etc/file_follow.conf.d/zeek.conf`
 ```ini
@@ -358,4 +356,9 @@ Create or edit: `/opt/gravwell/etc/file_follow.conf.d/zeek.conf`
     Base-Directory="/logs/"
     File-Filter="x509.log"
     Tag-Name="zeekx509"
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_file_follow.service`
 ```

@@ -31,7 +31,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/syslog.well`
     Tags=syslog*
 ```
 
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: Simple Relay
 **Sample Syslog config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/syslog.conf`
 ```ini
@@ -48,4 +48,9 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/syslog.conf`
     Tag-Name=syslog
     Timezone-Override="America/Chicago"
     Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_simple_relay.service`
 ```

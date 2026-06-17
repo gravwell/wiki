@@ -34,7 +34,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/pan-well.conf`
     Location=/opt/gravwell/storage/pan
     Tags=pan*
 ```
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: Simple Relay
 **Sample Palo Alto config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/paloalto.conf`
 ```ini
@@ -63,4 +63,9 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/paloalto.conf`
         Route=THREAT:pan_threat
         Route=TRAFFIC:pan_traffic
         Route=USERID:pan_userid
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_simple_relay.service`
 ```

@@ -51,7 +51,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/guardduty-well.conf`
     Tags=aws-guardduty*
 ```
 
-### Gravwell S3 Ingester Configuration
+### Gravwell Ingester Configuration: S3
 
 The simplest workflow is to ingest the GuardDuty logs from an S3 bucket using the [S3 Ingester](amazon_cloudtrail_log_handling). The polling required may introduce a 5-15 minute delay on new logs landing in Gravwell once they hit S3, but only requires an identity that can query the GuardDuty S3 bucket.
 
@@ -65,4 +65,9 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/guardduty.conf`
     Bucket-ARN = "arn:aws:s3:::aws-guardduty-logs-123456-7890"
     Tag-Name="aws-guardduty"
     File-Filters=**/*.json.gz
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_simple_relay.service`
 ```

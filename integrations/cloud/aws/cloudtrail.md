@@ -96,7 +96,9 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/cloudtrail-well.conf`
     Tags=aws-cloudtrail*
 ```
 
-### [Option 1] Gravwell S3 Ingester Configuration
+### Gravwell Ingester Configuration
+
+#### [Option 1] Gravwell S3 Ingester Configuration
 
 The simplest workflow is to ingest logs from CloudTrail's S3 bucket using the [S3 Ingester](https://docs.gravwell.io/ingesters/s3.html#amazon-cloudtrail-log-handling). The polling required may introduce a 5-15 minute delay on new logs landing in Gravwell once they hit CloudTrail, but only requires an identity that can query the CloudTrail S3 bucket.
 
@@ -113,7 +115,7 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/cloudtrail.conf`
     File-Filters=**/*.json.gz
 ```
 
-#### [Option 2] Gravwell SQS Ingester Configuration
+##### [Option 2] Gravwell SQS Ingester Configuration
 
 Configure S3 ingester to utilize SQS. A new configuration snippet is required that replaces the [Bucket] declaration.
 
@@ -130,3 +132,9 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/cloudtrail.conf`
     File-Filters=**/*.json.gz
 ```
 This allows the S3 ingester to pull from the SQS queue, and then will pull the S3 object items referenced by it. That log will then be processed and sent to the Gravwell indexer.
+
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_simple_relay.service`
+```

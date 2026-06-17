@@ -6,7 +6,7 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [Simple Relay](https://docs.gravwell.io/ingesters/simple_relay.html)
-         Kit, [pfSense](https://github.com/gravwell/kits/tree/main/pfSense)
+         Kit, [pfSense Kit](https://github.com/gravwell/kits/tree/main/pfSense)
 :::
 
 ## pfSense Configuration
@@ -47,7 +47,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/pfsense-well.conf`
     Location=/opt/gravwell/storage/pfsense
     Tags=pfsense*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: Simple Relay
 **Sample pfSense config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/pfsense.conf`
 ```ini
@@ -56,4 +57,9 @@ Bind-String="udp://0.0.0.0:515" #standard UDP based RFC5424 syslog
 Reader-Type=rfc5424
 Tag-Name=pfsensesyslog
 Assume-Local-Timezone=true
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_simple_relay.service`
 ```

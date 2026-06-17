@@ -79,7 +79,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/o365.well`
 	Accelerator-Args="-ignoreFloat -ignoreUUID"
 ```
 
-### Gravwell Office 365 Ingester Configuration
+### Gravwell Ingester Configuration: Office 365
+
 **Sample Office 365 Ingester config:**  
 Create or edit: `/opt/gravwell/etc/o365_ingest.conf`
 ```ini
@@ -115,4 +116,9 @@ Tenant-Domain=REPLACEME # e.g. mycorp.onmicrosoft.com
 [ContentType "dlp"]
 	Content-Type="DLP.All"
 	Tag-Name="365-dlp"
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_o365_ingest.service`
 ```
