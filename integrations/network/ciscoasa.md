@@ -11,7 +11,7 @@
 
 ## Cisco ASA Configuration
 
-Configure log forwarding as described in [Cisco ASA documentation](https://www.cisco.com/c/en/us/support/docs/security/pix-500-series-security-appliances/63884-config-asa-00.html#toc-hId-68106104) 
+Configure log forwarding as described in [Cisco ASA documentation](https://www.cisco.com/c/en/us/support/docs/security/pix-500-series-security-appliances/63884-config-asa-00.html#toc-hId-68106104).
 
 Example Cisco ASA config:
 ```
@@ -21,7 +21,7 @@ logging facility number
 ```
 
 ```{warning}
-If using TCP for syslog you probably want to set `logging permit-hostdown` otherwise if the ASA is unable to connect to the Gravwell ingester it will block All new connections.
+If using TCP for syslog, you probably want to set `logging permit-hostdown`. Otherwise, if the ASA is unable to connect to the Gravwell ingester, it will block _all_ new connections.
 ```
 
 ## Gravwell Configuration
@@ -37,7 +37,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/cisco-asa-well.conf`
     Location=/opt/gravwell/storage/cisco-asa
     Tags=cisco-asa*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: Simple Relay
 **Sample Cisco ASA config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay/cisco-asa.conf`
 ```ini

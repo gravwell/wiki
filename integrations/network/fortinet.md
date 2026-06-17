@@ -11,11 +11,11 @@
 
 ## Fortinet Configuration
 
-To get logs flowing from your Fortinet FortiGate/FortiOS 7.6.6 device configure remote syslog logging as described in the Fortinet documentation [Log setting and target](https://docs.fortinet.com/document/fortigate/7.6.6/administration-guide/250999/log-settings-and-targets#Remote_logging).
+To get logs flowing from your Fortinet FortiGate/FortiOS device, configure remote syslog logging as described in the Fortinet documentation [Log setting and target](https://docs.fortinet.com/document/fortigate/7.6.6/administration-guide/250999/log-settings-and-targets#Remote_logging). Note that while this guide is specifically tailored for version 7.6.6, these steps may work for other versions. However, it is recommend to check the official documentation on remote logging for your specific version.
 
 Recommended FortiGate syslog settings:
 
-* Use mode reliable (RFC6587 over TCP). (config log syslogd setting)
+* Use mode reliable (RFC6587 over TCP) for the config log syslogd setting.
 * Use format rfc5424 (best timestamp framing) or format default (simple key=value).
 * Point the syslog server to the Simple Relay host on port 6701.
 
@@ -43,7 +43,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/fortinet-well.conf`
     Location=/opt/gravwell/storage/fortinet
     Tags=fortinet*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: Simple Relay
 **Sample Fortinet config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/fortinet.conf`
 ```ini

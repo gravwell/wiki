@@ -79,7 +79,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/o365.well`
 	Accelerator-Args="-ignoreFloat -ignoreUUID"
 ```
 
-### Gravwell Office 365 Ingester Configuration
+### Gravwell Ingester Configuration: Office 365
+
 **Sample Office 365 Ingester config:**  
 Create or edit: `/opt/gravwell/etc/o365_ingest.conf`
 ```ini

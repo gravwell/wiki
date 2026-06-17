@@ -47,7 +47,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/pfsense-well.conf`
     Location=/opt/gravwell/storage/pfsense
     Tags=pfsense*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: Simple Relay
 **Sample pfSense config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/pfsense.conf`
 ```ini

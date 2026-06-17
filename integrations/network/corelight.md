@@ -69,7 +69,7 @@ We recommend using the **Simple Relay** ingester. The following configuration li
 Ensure your firewalls allows traffic on port `7890` between the Corelight sensor and the Gravwell ingester.
 ```
 
-### Gravwell JSON Listener Configuration
+### Gravwell Ingester Configuration: Simple Relay
 File: `/opt/gravwell/etc/simple_relay.conf.d/corelight.conf`
 ```ini
 [JSONListener "corelight"]
