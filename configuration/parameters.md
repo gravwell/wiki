@@ -731,6 +731,7 @@ Default Value: (none)
 Example: `Model="gpt-4o"`  
 Description: The model name to use for chat completions. Required when `Third-Party-Provider` is true. Ignored when using the Gravwell-hosted AI service.  
 
+(max-ai-tokens)=
 ### **Max-AI-Tokens**
 Default Value: 16384
 Example: `Max-AI-Tokens=8192`
