@@ -17,7 +17,7 @@ Microsoft provides documentation on how to setup logging to an external partner:
 * [Using Diagnostic settings to stream logs](https://learn.microsoft.com/en-us/azure/azure-monitor/platform/diagnostic-settings?tabs=portal#create-a-diagnostic-setting)
 
 
-If you do not already have an Event Hub with these logs you can create a new Event Hub following Microsoft's documentation above. 
+If you do not already have an Event Hub with these logs, you can create a new Event Hub following Microsoft's documentation above. 
 
 In order to consume events you will need the following pieces of information:
 
@@ -43,15 +43,17 @@ Or a token may be defined for a single Event Hub:
 ![](images/eventhub-hub-tokens.png)
 
 After creating an Event Hub you will need to configure Azure to send logs by following the documentation above.
-1. Azure Portal > Activity Log > Diagnostics Settings
-2. Select Diagnostics settings and create a new setting
-3. Select the events to log
+1. Azure Portal > Activity Log > Diagnostics Settings.
+2. Select Diagnostics settings and create a new setting.
+3. Select the events to log.
+   
+   
    The Azure kit monitors three log planes for relevant events:
-   * Activity Log — ARM control-plane operations: resource creates/deletes, RBAC assignments, Policy evaluations, subscription-level administrative actions
-   * Entra ID Audit — Directory operations: user/group/app/SP management, role assignments, conditional access policy changes
-   * Entra ID Sign-in — Authentication events: interactive sign-ins, non-interactive/batch sign-ins, service principal sign-ins, managed identity sign-ins
-4. Select the Event Hub created above
-5. Save
+   * **Activity Log:** ARM control-plane operations: resource creates/deletes, RBAC assignments, Policy evaluations, subscription-level administrative actions.
+   * **Entra ID Audit:** Directory operations: user/group/app/SP management, role assignments, conditional access policy changes.
+   * **Entra ID Sign-in:** Authentication events: interactive sign-ins, non-interactive/batch sign-ins, service principal sign-ins, managed identity sign-ins.
+4. Select the Event Hub created above.
+5. Save.
 
 ## Gravwell Configuration
 
@@ -66,9 +68,9 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/azure-well.conf`
     Location=/opt/gravwell/storage/azure
     Tags=azure*
 ```
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: Event Hub
 
-Raw Event Hub JSON records come with multiple records arrays per message which makes EV extraction cumbersome. With a preprocessor, you can split into separate events with important fields available as top-level EVs 
+Raw Event Hub JSON records come with multiple records arrays per message which makes EV extraction cumbersome. With a preprocessor, you can split the JSON records into separate events with important fields available as top-level EVs. 
 
 **Sample Azure config:**  
 Create or edit: `/opt/gravwell/etc/INGESTER_Azure/azure.conf`

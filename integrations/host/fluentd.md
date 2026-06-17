@@ -11,11 +11,12 @@
 
 ## Fluentd Configuration
 
-In `/etc/fluent/fluentd.conf` a stanza will need to be added. Remember to change the endpoint to point to your Gravwell Server
+In `/etc/fluent/fluentd.conf` a stanza will need to be added. Remember to change the endpoint to point to your Gravwell Server:
 * `endpoint` will point to the http ingester
 
 **Sample Fluentd Configuration pointing to Gravwell Environment**
-Create or `/etc/fluent/fluentd.conf`
+
+Create or edit `/etc/fluent/fluentd.conf`
 ```
 <match **>
     @type http
@@ -53,7 +54,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/fluentd.conf`
     Hot-Storage-Reserve=10 # adapt this for your environment's requirements
     Delete-Cold-Data=true # adapt this for your environment's requirements
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: HTTP
 **Sample HTTP config:**  
 Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/fluentd.conf`
 ```ini

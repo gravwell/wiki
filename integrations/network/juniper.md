@@ -45,7 +45,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/juniper-well.conf`
     Location=/opt/gravwell/storage/juniper
     Tags=juniper*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: Simple Relay
 **Sample Juniper config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/juniper.conf`
 ```ini

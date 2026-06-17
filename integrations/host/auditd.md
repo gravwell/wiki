@@ -41,8 +41,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/auditd-well.conf`
     # Delete-Frozen-Data=true
 ```
 
-### Gravwell File Follower Ingester Configuration
-
+### Gravwell Ingester Configuration: File Follower
 Setup the file follower configuration file.
 
 **Sample File Follower configuration:**  

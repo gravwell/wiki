@@ -31,7 +31,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/syslog.well`
     Tags=syslog*
 ```
 
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: Simple Relay
 **Sample Syslog config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/syslog.conf`
 ```ini
