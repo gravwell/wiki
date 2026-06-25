@@ -173,7 +173,7 @@ First, we'll set up the Gravwell Debian repository by installing some prerequisi
 ```
 apt install apt-transport-https gnupg wget
 wget -O /usr/share/keyrings/gravwell.asc https://update.gravwell.io/debian/update.gravwell.io.gpg.key
-echo 'deb [ arch=amd64 signed-by=/usr/share/keyrings/gravwell.asc ] https://update.gravwell.io/debian community main' > /etc/apt/sources.list.d/gravwell.list
+echo 'deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/gravwell.asc ] https://update.gravwell.io/debian community main' > /etc/apt/sources.list.d/gravwell.list
 ```
 
 #### Update Apt and Install Gravwell
