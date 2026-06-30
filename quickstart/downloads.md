@@ -21,17 +21,28 @@ The Debian and RHEL repositories are more easily maintained than these standalon
 
 ### Gravwell Core
 
-The Gravwell core installer contains the indexer and webserver frontend. You'll need a license; either get a Community Edition free license, or contact info@gravwell.io for commercial options.
+The Gravwell core installer contains the indexer and webserver frontend. You'll need a license; either get a Community Edition free license, or contact <a href="mailto:info@gravwell.io">info@gravwell.io</a> for commercial options.
 
 | x86_64 (Intel and AMD) | ARM64 |
 | :--------------------- | :---- |
 | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.9.1/installers/gravwell_5.9.1.sh">Download <i class="fa-solid fa-download"></i></a> &nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">d75308df2ae3a40bbe9f0e39023f6b58230207c7ae9a3dbeb5ac9314fa7a902a</span></code>'>(SHA256)</a> | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.9.1/installers/gravwell_5.9.1_arm64.sh">Download <i class="fa-solid fa-download"></i></a> &nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">2280e07857de3497b109051b9a9a7dfba1a6012c5a169601b60ea701bd010964</span></code>'>(SHA256)</a> |
+
+### Hosted Runner
+
+The Hosted Runner is a single shared process that runs lightweight, non-streaming ingesters such as cloud API pollers together under one service. This consolidates multiple integrations without the overhead of a separate process per ingester.
+
+For setup and configuration, see [Hosted Runner Configuration](hosted_runner_configuration). For available ingesters and their options, see [Hosted Ingesters](hosted_ingesters_list).
+
+| x86_64 (Intel and AMD) | ARM64 |
+| :--------------------- | :---- |
+| <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.9.1/installers/gravwell_hosted_runner_installer_5.9.1.sh">Download <i class="fa-solid fa-download"></i></a> &nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">d4171fa25a7a45aa0fe6811ccc39c3397fa8c4236fbe0e3dcedd222f13a49bea</span></code>'>(SHA256)</a> | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.9.1/installers/gravwell_hosted_runner_installer_5.9.1_arm64.sh">Download <i class="fa-solid fa-download"></i></a> &nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">ee8ef5f381c542ee598b4b068ae8bdf7de4869b16da67964d7b43ee9008c86c3</span></code>'>(SHA256)</a> |
 
 ### Ingesters
 
 The core suite of ingesters are available for download as installable packages.  Ingesters designed to operate on Linux machines are typically self contained, statically linked executables that are agnostic to the hosts package management system (with the exception of the NetworkCapture ingester).  Windows based ingesters are distributed as executable MSI packages.  Source code for many ingesters can be found at the [Gravwell Github](https://github.com/gravwell/gravwell/tree/master/ingesters) repository.
 
 #### Current Ingester Releases
+
 | Ingester Name | x86_64 (Intel and ARM) | ARM64 | More Info |
 | :------------ | :--------------------- | :---- | :-------- |
 | Amazon Kinesis | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.9.1/installers/gravwell_kinesis_ingest_installer_5.9.1.sh">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">a70d6a364b0839119f7303ae2a421e4809a20f54fe3c9f1c0f1234eab2cbc297</span></code>'>(SHA256)</a>  | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.9.1/installers/gravwell_kinesis_ingest_installer_5.9.1_arm64.sh">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">1324bacbf8692a6c63d9812330f3fda92a2475e652dfb2a867bba8b918b037c4</span></code>'>(SHA256)</a> | [Documentation](/ingesters/kinesis)|
