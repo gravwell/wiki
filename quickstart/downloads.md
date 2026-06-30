@@ -29,7 +29,7 @@ The Gravwell core installer contains the indexer and webserver frontend. You'll 
 
 ### Hosted Runner
 
-The Hosted Runner is a single shared process that runs lightweight, non-streaming ingesters such as cloud API pollers together under one service. This consolidates multiple integrations without the overhead of a separate process per ingester.
+The Hosted Runner is a single shared process that runs lightweight, non-streaming ingesters (such as cloud API pollers) together under one service. This consolidates multiple integrations without the overhead of a separate process per ingester.
 
 For setup and configuration, see [Hosted Runner Configuration](hosted_runner_configuration). For available ingesters and their options, see [Hosted Ingesters](hosted_ingesters_list).
 
