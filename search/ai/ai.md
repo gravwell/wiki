@@ -102,6 +102,22 @@ Below is an example configuration that connects to OpenAI's API:
 When using a third-party provider, Gravwell does not enforce conversation or word limits via the license — those limits are governed by the third-party service. Be aware that all messages and attached search entries will be sent to the configured third-party endpoint.
 ```
 
+#### Gotchas With Third-Party LLM Services
+
+The Microsoft Azure OpenAI endpoints have slightly different URL paths and usage of the `model` parameter.  If you are using Azure OpenAI, you will need to set the `AI-Server-URL` to the base URL of your Azure OpenAI resource and remove the `/v1` that is included in the URL (e.g. `https://<your-resource-name>.openai.azure.com/openai`).  When setting a model in the Gravwell `[AI]` configuration block the `Model` paramete is the deployment name NOT the model name.
+
+![Azure Foundry Endpoint Parameters](azure_foundry_params.png)
+
+```
+[AI]
+	Enable=true
+	AI-Server-URL="AI-Server-URL="https://gravwell-slop-testing-resource.openai.azure.com/openai"
+"
+	Third-Party-Provider=true
+	Model="Kimi-K2-Test-Deployment"
+	Include-Header="Authorization: Bearer <your-azure-openai-api-key>"
+```
+
 ## Logbot Agent
 
 Logbot includes an agentic capability that allows it to autonomously use tools to answer questions and write queries. When you ask Logbot to write a query, it uses an internal tool-calling loop to inspect your available tags, sample data, validate query syntax, and iteratively build a correct Gravwell query.
