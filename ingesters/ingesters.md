@@ -82,12 +82,14 @@ maxdepth: 1
 caption: Hosted Ingesters
 hidden: true
 ---
+Microsoft Graph API <msg>
 Mimecast <mimecast>
 Okta <okta>
 ```
 
 | Ingester | Description |
 |----------|-------------|
+| [Microsoft Graph API](msg) | Ingest from Microsoft's Graph API.  |
 | [Mimecast](mimecast) | Ingest Mimecast MTA SIEM and audit events. |
 | [Okta](okta) | Ingest Okta system logs and user records. |
 
