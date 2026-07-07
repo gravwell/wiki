@@ -528,8 +528,8 @@ Generating a table of the relevant data might use the following query:
 
 ```
 tag=gravwell syslog Appname==httpingester Message == "HEC request" Hostname 
-  Structured[gw@1].host Structured[gw@1].url Structured[gw@1].code Structured[gw@1].bytes Structured[gw@1].entries
-| table Hostname host url code bytes entries TIMESTAMP
+  Structured[gw@1].host Structured[gw@1].url Structured[gw@1].bytes Structured[gw@1].entries
+| table Hostname host url bytes entries TIMESTAMP
 ```
 
 ![](hec_debug1.png)
