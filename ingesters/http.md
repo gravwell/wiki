@@ -521,15 +521,15 @@ The `Debug-Posts` configuration option enables additional logging on each HTTP P
 
 Here is a raw log entry emitted from a HEC debug post:
 ```
-<14>1 2023-11-03T18:01:54.201875Z example.gravwell.io httpingester - HttpIngester/hec.go:234 [gw@1 host="172.19.0.1" method="POST" url="/services/collector" bytes="255" entries="3"] HEC request
+<14>1 2023-11-03T18:01:54.201875Z example.gravwell.io httpingester - HttpIngester/hec.go:234 [gw@1 host="172.19.0.1" method="POST" url="/services/collector" bytes="255" entries="3" code="200"] HEC request
 ```
 
 Generating a table of the relevant data might use the following query:
 
 ```
 tag=gravwell syslog Appname==httpingester Message == "HEC request" Hostname 
-  Structured[gw@1].host Structured[gw@1].url Structured[gw@1].bytes Structured[gw@1].entries
-| table Hostname host url bytes entries TIMESTAMP
+  Structured[gw@1].host Structured[gw@1].url Structured[gw@1].code Structured[gw@1].bytes Structured[gw@1].entries
+| table Hostname host url code bytes entries TIMESTAMP
 ```
 
 ![](hec_debug1.png)
@@ -899,4 +899,37 @@ kill -SIGHUP `pidof gravwell_http_ingester` # use kill and the pidof command to 
 
 ```{note}
 The ingester cannot dynamically reload changes to `[global]` configuration block items like ingester connections, TLS configuration, bound ports, request limiting controls, or ingest cache controls.
+```
+
+## Troubleshooting
+
+When first setting up the HTTP ingester you may find that requests are not being ingested as expected. The HTTP ingester provides a few tools to help identify the cause.
+
+The [`Debug-Posts`](debug-posts) configuration option is a good first step getting you most of the relevant metadata as entries. However, if more info is needed we provide two command line flags to enable some additional output. 
+
+- `-v`: enables verbose output and will write out similar metadata to `Debug-Posts` for _all_ requests. Additionally, all headers and their values recieved will be written to stdout.
+- `-debug=[listenername]`: enables the same verbose output as above for a single listener, and only for error response codes (status >= 400).
+
+Here is an example of using `-debug` with an example config:
+
+```
+[HEC-Compatible-Listener "hec"]
+	TokenValue="token"
+	Tag-Name=HECStuff
+```
+
+```
+$ /opt/gravwell/bin/gravwell_http_ingester -debug=hec
+<15>1 2026-07-07T10:44:16.156954-05:00 example.gravwell.io httpingester - HttpIngester/debug.go:97 [gw@1 code="401" bytes="0" method="POST" url="_services_collector_event" ip="::1"] http debug
+<15>1 2026-07-07T10:44:16.157033-05:00 example.gravwell.io httpingester - HttpIngester/debug.go:99 - Content-Length: [16]
+<15>1 2026-07-07T10:44:16.15704-05:00 example.gravwell.io httpingester - HttpIngester/debug.go:99 - Content-Type: [application/x-www-form-urlencoded]
+<15>1 2026-07-07T10:44:16.157046-05:00 example.gravwell.io httpingester - HttpIngester/debug.go:99 - User-Agent: [curl/8.7.1]
+<15>1 2026-07-07T10:44:16.15705-05:00 example.gravwell.io httpingester - HttpIngester/debug.go:99 - Accept: [*/*]
+<15>1 2026-07-07T10:44:16.157054-05:00 example.gravwell.io httpingester - HttpIngester/debug.go:99 - Authorization: [Splunk badtoken]
+```
+
+```{warning}
+Extreme care should be taken here as outputting the header values will likely leak authorization secrets. 
+Due to this none of the header data is ingested to your instance. 
+These flags should only be used manually, and not as part of any automated deployment configuration. 
 ```
