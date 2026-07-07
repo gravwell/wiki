@@ -7,7 +7,7 @@ If you are a paid Gravwell customer and wish to deploy Gravwell in Docker, conta
 Once you have set up Gravwell, check out the [quickstart](/quickstart/quickstart) for some starting points on *using* Gravwell.
 
 ```{note}
-Users running Docker on MacOS should be aware that the MacOS host does not have direct IP access to containers, as explained [here](https://docs.docker.com/docker-for-mac/networking/). Be prepared to forward additional ports if you need to access container network services from the host.
+Users running Docker on MacOS should be aware that the MacOS host does not have direct IP access to containers, as explained [here](https://docs.docker.com/desktop/features/networking/). Be prepared to forward additional ports if you need to access container network services from the host.
 ```
 
 ## Create Docker network
