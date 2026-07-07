@@ -907,8 +907,8 @@ When first setting up the HTTP ingester you may find that requests are not being
 
 The [`Debug-Posts`](debug-posts) configuration option is a good first step getting you most of the relevant metadata as entries. However, if more info is needed we provide two command line flags to enable some additional output. 
 
-- `-v`: enables verbose output and will write out similar metadata to `Debug-Posts` for _all_ requests. Additionally, all headers and their values recieved will be written to stdout.
-- `-debug=[listenername]`: enables the same verbose output as above for a single listener, and only for error response codes (status >= 400).
+- `-v`: enables verbose output and will write out similar metadata to `Debug-Posts` for _all_ requests. Additionally, all headers and their values received will be written to stdout.
+- `-debug=[listenername]`: enables the same verbose output as above for a single listener and only for error response codes (status >= 400).
 
 Here is an example of using `-debug` with an example config:
 
@@ -930,6 +930,6 @@ $ /opt/gravwell/bin/gravwell_http_ingester -debug=hec
 
 ```{warning}
 Extreme care should be taken here as outputting the header values will likely leak authorization secrets. 
-Due to this none of the header data is ingested to your instance. 
-These flags should only be used manually, and not as part of any automated deployment configuration. 
+For this reason, none of the header data is ingested into your Gravwell instance. 
+These flags should only be used manually and not as part of any automated deployment configuration. 
 ```
