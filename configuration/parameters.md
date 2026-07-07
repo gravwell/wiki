@@ -261,7 +261,7 @@ Example:        `Ingest-Auth=abcdefghijklmnopqrstuvwxyzABCD`
 Description:        The Ingest-Auth parameter specifies the shared secret token that is used to authenticate ingesters to indexers.  This token can be of arbitrary length; Gravwell recommends a high entropy token of at least 24 characters.  By default the installers will generate a random token.
 
 ### **Control-Auth**
-Applies to:        Indexer and Webserver  
+Applies to:        Indexer, Datastore, and Webserver  
 Default Value:        `ControlSecrets`  
 Example:        `Control-Auth=abcdefghijklmnopqrstuvwxyzABCD`  
 Description:        The Control-Auth parameter specifies the shared secret token that is used to authenticate ingesters to webservers and vice versa.  This token can be of arbitrary length; Gravwell recommends a high entropy token of at least 24 characters.  By default the installers will generate a random token.
