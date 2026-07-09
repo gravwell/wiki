@@ -11,7 +11,9 @@ Gravwell provides an ingester which can pull security information from Microsoft
 
 * Client ID: A UUID generated for your application via the Azure management console
 * Client secret: A secret token generated for your application via the Azure console
-* Tenant Domain: The domain of your Azure domain, e.g. "mycorp.onmicrosoft.com"
+* Tenant ID: The GUID of your Azure AD tenant (e.g. "4d2066ab-7ac8-4b4c-ba62-b4e7ca2b1de6")
+  * If you do not have access to your Tenant ID, you can use your Tenant Domain (your Azure domain, e.g. "mycorp.onmicrosoft.com") as a fallback
+  * If both the Tenant ID and Tenant Domain are provided, **the Tenant ID will be used**
 
 ## Installation
 
@@ -65,7 +67,8 @@ State-Store-Location=/opt/gravwell/etc/msgraph_ingest.state
 
 Client-ID=79fb8690-109f-11ea-a253-2b12a0d35073
 Client-Secret="<secret>"
-Tenant-Domain=mycorp.onmicrosoft.com
+Tenant-ID=4d2066ab-7ac8-4b4c-ba62-b4e7ca2b1de6
+# Tenant-Domain=mycorp.onmicrosoft.com # fallback if Tenant-ID is not set
 
 [ContentType "alerts"]
 	Content-Type="alerts"
