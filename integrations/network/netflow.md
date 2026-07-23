@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [NetFlow Ingester](/ingesters/netflow.md)
+    Ingester, [NetFlow Ingester](/ingesters/netflow)
          Kit, [NetFlow v5 Kit](https://github.com/gravwell/kits/tree/main/netflowv5)
 :::
 

@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Windows Event Ingester](/ingesters/winevent.md)
+    Ingester, [Windows Event Ingester](/ingesters/winevent)
          Kit, [Window Kit](https://github.com/gravwell/kits/tree/main/)
 :::
 
@@ -17,12 +17,12 @@
 
 Consider the following to create your use cases:
 * Ingestion Strategy
-    * *Local vs Remote:* Will the Windows Events ingester be deployed locally on each target system, or will you use a `Window Event Collection (WEC)` server?
-    * *Scale:* Identify the total number of target systems to monitor and if multiple collectors are required to manage load or simplify collection across diverse subnets and DMZs.
-    * *Network Trust:* Is a `federator` required to securely traverse untrusted networks or restricted segments?
+    * **Local vs Remote:** Will the Windows Events ingester be deployed locally on each target system, or will you use a `Window Event Collection (WEC)` server?
+    * **Scale:** Identify the total number of target systems to monitor and if multiple collectors are required to manage load or simplify collection across diverse subnets and DMZs.
+    * **Network Trust:** Is a `federator` required to securely traverse untrusted networks or restricted segments?
 * Resource & Change Management
-    * *Hardware Allocation:* Ensure available infrastructure (CPU, RAM, and Storage) meets the requirements your desired setup.
-    * *Agility:* Consider if a configuration change is needed, how quickly/accurately can it be changed across your environment?
+    * **Hardware Allocation:** Ensure available infrastructure (CPU, RAM, and Storage) meets the requirements your desired setup.
+    * **Agility:** Consider if a configuration change is needed, how quickly/accurately can it be changed across your environment?
 
 ### [Option 1] Deploy locally (to individual windows systems)
 
@@ -146,37 +146,37 @@ Create or edit: `%PROGRAMDATA%\gravwell\eventlog\config.cfg`
 #### [Option 1] Deploy locally (to individual windows systems)
 ```ini
 [EventChannel "system"]
-	Tag-Name=windows
-	Channel=System #pull from the system channel
+    Tag-Name=windows
+    Channel=System #pull from the system channel
 
 [EventChannel "sysmon"]
-	Tag-Name=sysmon
-	Channel="Microsoft-Windows-Sysmon/Operational"
-	Max-Reachback=24h # reachback must be expressed in hours (h), minutes (m), or seconds(s)
+    Tag-Name=sysmon
+    Channel="Microsoft-Windows-Sysmon/Operational"
+    Max-Reachback=24h # reachback must be expressed in hours (h), minutes (m), or seconds(s)
 
 [EventChannel "Application"]
-	Channel=Application # pull from the application channel
-	Tag-Name=winApp # Apply a new tag name
-	Provider=Windows System # Only look for the provider "Windows System"
-	EventID=1000-4000 # Only look for event IDs 1000 through 4000
-	EventID=1,2,3,4 # also look for events 1, 2, 3, and 4
-	Level=verbose # Only look for verbose entries
-	Max-Reachback=72h #start looking for logs up to 72 hours in the past
-	Request-Buffer=16 # use a large 16MB buffer for high throughput
-	Request-Size=1024 # Request up to 1024 entries per API call for high throughput
+    Channel=Application # pull from the application channel
+    Tag-Name=winApp # Apply a new tag name
+    Provider=Windows System # Only look for the provider "Windows System"
+    EventID=1000-4000 # Only look for event IDs 1000 through 4000
+    EventID=1,2,3,4 # also look for events 1, 2, 3, and 4
+    Level=verbose # Only look for verbose entries
+    Max-Reachback=72h #start looking for logs up to 72 hours in the past
+    Request-Buffer=16 # use a large 16MB buffer for high throughput
+    Request-Size=1024 # Request up to 1024 entries per API call for high throughput
 
 [EventChannel "System Critical and Error"]
-	Channel=System # pull from the system channel
-	Tag-Name=winSysCrit # Apply a new tag name
-	Level=critical # look for critical entries
-	Level=error # AND for error entries
-	Max-Reachback=96h # start looking for logs up to 96 hours in the past
+    Channel=System # pull from the system channel
+    Tag-Name=winSysCrit # Apply a new tag name
+    Level=critical # look for critical entries
+    Level=error # AND for error entries
+    Max-Reachback=96h # start looking for logs up to 96 hours in the past
 
 [EventChannel "Security prune"]
-	Channel=Security # pull from the security channel
-	Tag-Name=winSec # Apply a new tag name
-	EventID=-400 # ignore event ID 400
-	EventID=-401 # AND ignore event ID 401
+    Channel=Security # pull from the security channel
+    Tag-Name=winSec # Apply a new tag name
+    EventID=-400 # ignore event ID 400
+    EventID=-401 # AND ignore event ID 401
 ```
 #### [Option 2] Windows Event Forwarding
 ```ini
