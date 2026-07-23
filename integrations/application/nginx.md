@@ -6,7 +6,6 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [File Follower](/ingesters/file_follow)
-         Kit, [Nginx Kit](https://github.com/gravwell/kits/tree/main/nginx)
 :::
 
 ## Nginx Configuration

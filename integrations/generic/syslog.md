@@ -5,9 +5,9 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Simple Relay](/ingesters/simple_relay.md)
+    Ingester, [Simple Relay](/ingesters/simple_relay)
 Preprocessor, [Syslogrouter Preprocessor](/ingesters/preprocessors/syslogrouter.md)
-         Kit, [Syslog Kit](https://github.com/gravwell/kits/tree/main/syslog)
+         Kit, [Syslog Kit](https://github.com/gravwell/kits/tree/main/syslog)  <br /> • [Linux Syslog Kit](https://github.com/gravwell/kits/tree/main/linux_syslog)
 :::
 
 ## Syslog Configuration

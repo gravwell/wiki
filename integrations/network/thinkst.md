@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Gravwell Fetcher](https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/README.md)
+    Ingester, [Fetcher](https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/README.md)
          Kit, [Thinkst Kit](https://github.com/gravwell/kits/tree/main/thinkst-canary)
 :::
 

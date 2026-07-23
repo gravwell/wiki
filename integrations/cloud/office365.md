@@ -5,13 +5,13 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Office 365](/ingesters/o365.md)
+    Ingester, [Office 365](/ingesters/o365)
          Kit, [Office 365](https://github.com/gravwell/kits/tree/main/o365)
 :::
 
 ## Office 365 Configuration
 
-Gravwell provides an ingester for Microsoft Office 365 logs. The ingester can process all supported log types. In order to configure the ingester, you will need to register a new *application* within the Azure Active Directory management portal; this will generate a set of keys which can be used to access the logs. You will need the following information:
+Gravwell provides an ingester for Microsoft Office 365 logs. The ingester can process all supported log types. In order to configure the ingester, you will need to register a new **application** within the Azure Active Directory management portal; this will generate a set of keys which can be used to access the logs. You will need the following information:
 
 * Client ID: A UUID generated for your application via the Azure management console
 * Client secret: A secret token generated for your application via the Azure console
@@ -32,7 +32,7 @@ Your subscription tier heavily influences the depth and quantity of data availab
 
 ### Creating an Azure Application
 
-To create a new Azure Application for our ingester you will need to visit the [Azure Portal](https://portal.azure.com) and log in with administrative O365 credentials.  Then you will need to go to the *App registrations* section.
+To create a new Azure Application for our ingester you will need to visit the [Azure Portal](https://portal.azure.com) and log in with administrative O365 credentials.  Then you will need to go to the **App registrations** section.
 
 ![](images/azure_portal.png)
 
@@ -98,24 +98,24 @@ Directory-ID=REPLACEME  # UUID
 Tenant-Domain=REPLACEME # e.g. mycorp.onmicrosoft.com
 
 [ContentType "azureAD"]
-	Content-Type="Audit.AzureActiveDirectory"
-	Tag-Name="365-azure"
+    Content-Type="Audit.AzureActiveDirectory"
+    Tag-Name="365-azure"
 
 [ContentType "exchange"]
-	Content-Type="Audit.Exchange"
-	Tag-Name="365-exchange"
+    Content-Type="Audit.Exchange"
+    Tag-Name="365-exchange"
 
 [ContentType "sharepoint"]
-	Content-Type="Audit.SharePoint"
-	Tag-Name="365-sharepoint"
+    Content-Type="Audit.SharePoint"
+    Tag-Name="365-sharepoint"
 
 [ContentType "general"]
-	Content-Type="Audit.General"
-	Tag-Name="365-general"
+    Content-Type="Audit.General"
+    Tag-Name="365-general"
 
 [ContentType "dlp"]
-	Content-Type="DLP.All"
-	Tag-Name="365-dlp"
+    Content-Type="DLP.All"
+    Tag-Name="365-dlp"
 ```
 
 ```{note}
