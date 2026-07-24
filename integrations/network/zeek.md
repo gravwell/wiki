@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [File Follower ingester](/ingesters/file_follow.md)
+    Ingester, [File Follower ingester](/ingesters/file_follow)
          Kit, [Zeek Kit](https://github.com/gravwell/kits/tree/main/zeek)
 :::
 

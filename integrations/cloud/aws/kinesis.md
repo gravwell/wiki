@@ -1,4 +1,4 @@
-# Kinesis
+# AWS Kinesis
 
 :::{csv-table}
 :align: left
@@ -48,17 +48,17 @@ AWS-Access-Key-ID=REPLACEMEWITHYOURKEYID
 AWS-Secret-Access-Key=REPLACEMEWITHYOURKEY
 
 [KinesisStream "stream1"]
-	Region="us-west-1"
-	Tag-Name=kinesis
-	Stream-Name=MyKinesisStreamName	# should be the stream name as created in AWS
-	Iterator-Type=TRIM_HORIZON
-	Parse-Time=false
-	Assume-Local-Timezone=true
+    Region="us-west-1"
+    Tag-Name=kinesis
+    Stream-Name=MyKinesisStreamName	# should be the stream name as created in AWS
+    Iterator-Type=TRIM_HORIZON
+    Parse-Time=false
+    Assume-Local-Timezone=true
 
 [KinesisStream "stream2"]
-	Region="us-west-1"
-	Tag-Name=kinesis
-	Stream-Name=MyKinesisStreamName	# should be the stream name as created in AWS
-	Iterator-Type=TRIM_HORIZON
-	Metrics-Interval=60
-	JSON-Metric=true
+    Region="us-west-1"
+    Tag-Name=kinesis
+    Stream-Name=MyKinesisStreamName	# should be the stream name as created in AWS
+    Iterator-Type=TRIM_HORIZON
+    Metrics-Interval=60
+    JSON-Metric=true

@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Azure Event Hubs Ingester](/ingesters/eventhubs.md)
+    Ingester, [Azure Event Hubs Ingester](/ingesters/eventhubs)
          Kit, [Azure Kit](https://github.com/gravwell/kits/tree/main/azure)
 :::
 
@@ -26,7 +26,7 @@ In order to consume events you will need the following pieces of information:
 * The name of the Shared Access Policy token to use for authentication.
 * The primary key of the Shared Access Policy token to use for authentication.
 
-The Event Hubs Namespace is a grouping which contains your Event Hubs. When the Event Hubs page is first opened within the Azure portal, the names listed are *Namespaces*; in the screenshot below, there is a single Namespace named "gravwellEventHub":
+The Event Hubs Namespace is a grouping which contains your Event Hubs. When the Event Hubs page is first opened within the Azure portal, the names listed are `Namespaces`; in the screenshot below, there is a single Namespace named "gravwellEventHub":
 
 ![](images/eventhub-namespaces.png)
 

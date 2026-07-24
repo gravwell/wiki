@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Simple Relay](/ingesters/simple_relay.md)
+    Ingester, [Simple Relay](/ingesters/simple_relay)
          Kit, [Cisco ASA Kit](https://github.com/gravwell/kits/tree/main/ciscoasa)
 :::
 
