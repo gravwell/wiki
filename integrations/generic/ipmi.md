@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [IPMI Ingester](/ingesters/ipmi.md)
+    Ingester, [IPMI Ingester](/ingesters/ipmi)
          Kit, [IPMI Kit](https://github.com/gravwell/kits/tree/main/)
 :::
 

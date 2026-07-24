@@ -29,10 +29,11 @@ Corelight <network/corelight>
 Duo <application/duo>
 Fluentd <host/fluentd>
 Fortinet <network/fortinet>
-Github <application/github>
+GitHub <application/github>
 IPFIX <network/ipfix>
 IPMI <generic/ipmi>
 Juniper <network/juniper>
+MongoDB <application/mongodb>
 Netflow <network/netflow>
 Nginx <application/nginx>
 Office 365 <cloud/office365>
@@ -42,6 +43,7 @@ OpenWeatherMap <application/openweathermap>
 Palo Alto <network/paloalto>
 pfSense <network/pfsense>
 PiHole <network/pihole>
+Proxmox <network/proxmox>
 Syslog <generic/syslog>
 Sysmon <host/sysmon>
 Thinkst <network/thinkst>
@@ -157,13 +159,19 @@ Zeek <network/zeek>
 :::
 
 :::{grid-item-card}
-:link: network/thinkst
+:link: network/proxmox
 :link-type: doc
-**Thinkst**
+**Proxmox**
 :::
 ::::
 
 ::::{grid} 4
+:::{grid-item-card}
+:link: network/thinkst
+:link-type: doc
+**Thinkst**
+:::
+
 :::{grid-item-card}
 :link: network/zeek
 :link-type: doc
@@ -229,7 +237,13 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: application/github
 :link-type: doc
-**Github**
+**GitHub**
+:::
+
+:::{grid-item-card}
+:link: application/mongodb
+:link-type: doc
+**MongoDB**
 :::
 
 :::{grid-item-card}
@@ -243,7 +257,9 @@ Zeek <network/zeek>
 :link-type: doc
 **Okta** 
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/openweathermap
 :link-type: doc
