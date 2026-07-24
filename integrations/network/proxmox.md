@@ -72,7 +72,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/proxmox-well.conf`
 
 ### Gravwell Ingester Configuration: HTTP
 **Sample Proxmox HTTP config:**  
-Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/auth0.conf`
+Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/promxox.conf`
 ```ini
 # [Option 1] Open Telemetry Metrics Listener
 [OpenTelemetry-Metrics-Listener "otel-metrics"]
