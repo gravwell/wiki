@@ -6,7 +6,6 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [HTTP Ingester](/ingesters/http)
-         Kit, [OpenTelemetry Kit](https://github.com/gravwell/kits/tree/main/opentelemetry)
 :::
 
 ## OpenTelemetry Configuration
@@ -20,7 +19,7 @@ To send data to Gravwell, modify your OpenTelemetry Collector configuration file
 ```YAML
 exporters:
   otlphttp:
-    endpoint: http://192.168.3.50:8080 # Change this line to point to your gravwell instance
+    endpoint: http://path.to.gravwell:port # Change this line to point to your gravwell instance
     encoding: json
     tls:
       insecure: true
@@ -57,7 +56,7 @@ You can validate your Collector config with:
 
 This example provides a native Kubernetes manifest file that sets up an OpenTelemetry Collector to automatically ingest logs and performance metrics from your Kubernetes cluster. To route this data to your environment, you must modify the following line in the manifest to point to your Gravwell HTTP Ingester:
 ```
-endpoint: http://192.168.3.50:8080
+endpoint: http://path.to.gravwell:port
 ```
 
 This manifest utilizes Custom Resource Definitions from the OpenTelemetry Operator. The following commands provide an example that could be run on your master node to install the operator via Helm to deploy the collector.
@@ -210,7 +209,7 @@ spec:
  
     exporters:
       otlphttp:
-        endpoint: http://192.168.3.50:8080 # Change this line to point to your gravwell instance
+        endpoint: http://path.to.gravwell:port # Change this line to point to your gravwell instance
         encoding: json
         tls:
           insecure: true
@@ -246,7 +245,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/opentelemetry-well.conf`
 ```ini
 [Storage-Well "opentelemetry"]
     Location=/opt/gravwell/storage/opentelemetry
-    Tags=opentelemetry*
+    Tags=otel-*
 ```
 
 ### Gravwell Ingester Configuration: HTTP
@@ -255,11 +254,11 @@ Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/opentelemetry.c
 ```ini
 [OpenTelemetry-Logs-Listener "kubelogs"]
     URL="/v1/logs"
-    Tag-Name=k8s-logs
+    Tag-Name=otel-k8s-logs
 
 [OpenTelemetry-Metrics-Listener "kubemetrics"]
     URL="/v1/metrics"
-    Tag-Name=k8s-metricsQ
+    Tag-Name=otel-k8s-metrics
 ```
 
 ```{note}

@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Simple Relay Ingester](https://docs.gravwell.io/ingesters/simple_relay.html)
+    Ingester, [Simple Relay](https://docs.gravwell.io/ingesters/simple_relay.html)
          Kit, [Juniper Kit](https://github.com/gravwell/kits/tree/main/juniper)
 :::
 
@@ -51,11 +51,11 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/juniper-well.conf`
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/juniper.conf`
 ```ini
 [Listener "junipertcp"]
-	Bind-String="tcp://0.0.0.0:10514" #standard RFC5424 reliable syslog
-	Reader-Type=rfc5424
-	Tag-Name=juniper
-	Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
-	Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
+    Bind-String="tcp://0.0.0.0:10514" #standard RFC5424 reliable syslog
+    Reader-Type=rfc5424
+    Tag-Name=juniper
+    Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
+    Keep-Priority=true	# leave the <nnn> priority tag at the start of each syslog entry
     #Key-File=/opt/gravwell/etc/key.pem
 ```
 
