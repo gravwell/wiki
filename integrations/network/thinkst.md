@@ -73,5 +73,5 @@ Create or edit: `/opt/gravwell/etc/gravwell_fetcher.conf.d/thinkst.conf`
     Token=""
     Domain="XXXXXXXX.canary.tools"
     StartTime="2025-01-01T00:00:01.000Z"
-    Tag-Name="thinks-incident"
+    Tag-Name="thinkst-incident"
 ```
