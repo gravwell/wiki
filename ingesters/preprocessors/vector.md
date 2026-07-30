@@ -39,7 +39,7 @@ The attached `embeddings` enumerated value is a string containing the JSON encod
 
 The vector preprocessor is commonly used to:
 
-* Enrich log or document data with embeddings at ingest time, so that vectors are available immediately at search time rather than being computed on demand.
+* Enrich log or document data with embeddings at ingest time so that vectors are available immediately at search time rather than being computed on demand.
 * Attach embeddings to LLM prompt and response data so that conversations can be compared and clustered.
 * Build a semantic index over a corpus of text data such as support tickets, commit messages, or documentation.
 
