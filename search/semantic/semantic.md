@@ -98,7 +98,7 @@ See [the configuration parameters documentation](/configuration/parameters) for 
 The model configured here must be the same model that generated the entries' embeddings at ingest time. Embeddings from different models are not comparable, and vectors of differing dimensions cannot be scored at all -- a mismatch will cause the query to fail (or, with `-p`, to pass every entry through unscored).
 ```
 
-Requests to the embedding endpoint are subject to a 10 second timeout. A single request is made per query, when the query starts.
+Requests to the embedding endpoint are subject to a 10 second timeout. A single request is made per query when the query starts.
 
 ## Examples
 
