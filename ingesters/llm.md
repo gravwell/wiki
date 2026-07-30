@@ -55,8 +55,8 @@ Clients then use `http://<ingester>:4180/v1` as their API base URL. See [Client 
 
 | Config Parameter     | Type    | Required | Default Value | Description |
 |----------------------|---------|----------|---------------|-------------|
-| State-Store-Location | string  | no       |               | Path to a persistent state file for the session tracker. When set, session state survives an ingester restart. Only message hashes are written, never prompt content. Leaving this unset keeps session state in memory only. |
-| Session-Match-Window | integer | no       | 10            | How many of a request's most recent messages the session tracker compares when deciding whether a request continues an existing conversation. Larger values are more precise but do more work per request. |
+| State-Store-Location | string  | NO       |               | Path to a persistent state file for the session tracker. When set, session state survives an ingester restart. Only message hashes are written, never prompt content. Leaving this unset keeps session state in memory only. |
+| Session-Match-Window | integer | NO       | 10            | How many of a request's most recent messages the session tracker compares when deciding whether a request continues an existing conversation. Larger values are more precise but do more work per request. |
 
 ## Listener Configuration
 
@@ -71,8 +71,8 @@ Listener blocks support the following configuration parameters:
 | Log-Mode                          | string       | NO       | `delta`          | How much of each request is ingested: `delta`, `user`, or `full`. See [Log Modes](llm_log_modes). |
 | Log-Tool-Calls                    | boolean      | NO       | false            | Capture tool invocations made by the model and the tool results sent back by the client. |
 | Log-Usage                         | boolean      | NO       | false            | Ingest the token accounting record returned with each response. |
-| Client-Authorization              | string       | NO       |                  | Bare token that inbound clients must present as `Authorization: Bearer <token>`. Requests that do not match are rejected with a 401. When unset, no client authentication is required. |
-| Upstream-Authorization            | string       | NO       |                  | Bare token injected as the `Authorization` header on the upstream request, replacing whatever the client sent. When unset, the client's own `Authorization` header is passed through unchanged. |
+| Client-Authorization              | string       | NO       |                  | Bearer token that inbound clients must present as `Authorization: Bearer <token>`. Requests that do not match are rejected with a 401. When unset, no client authentication is required. |
+| Upstream-Authorization            | string       | NO       |                  | Bearer token injected as the `Authorization` header on the upstream request, replacing whatever the client sent. When unset, the client's own `Authorization` header is passed through unchanged. |
 | Session-TTL                       | string       | NO       | `30m`            | How long idle session-matching state is retained, as a Go duration string, e.g. `"90m"`. Must be positive. |
 | Max-Body                          | integer      | NO       | 16777216 (16MB)  | Maximum size of an inbound request body. Larger requests are rejected with a 413. |
 | TLS-Certificate-File              | string       | NO       |                  | Certificate PEM file used to run the proxy listener as HTTPS. Must be set together with `TLS-Key-File`. |
@@ -133,6 +133,7 @@ Response-side events — the model's reply, its reasoning, its tool calls, and t
 `delta` mode relies on session matching to know which turns have already been ingested. See [Session Tracking](llm_session_tracking).
 ```
 
+(llm_ingested_events)=
 ## Ingested Events
 
 Each logical event becomes its own entry. The entry's DATA field holds the text of the event, and the metadata is attached as [intrinsic enumerated values](intrinsic_enumerated_values). The SRC field is set to the client's IP address, and the timestamp is the time the event was ingested.
@@ -147,7 +148,7 @@ Each logical event becomes its own entry. The entry's DATA field holds the text 
 | `response.tool_call`         | JSON arguments the model passed to the tool. | `Log-Tool-Calls` |
 | `response.usage`             | Empty; the counts are carried as enumerated values. | `Log-Usage` |
 
-Which request-side events are ingested also depends on `Log-Mode`, as described above.
+Which request-side events are ingested also depends on `Log-Mode`, as described under [Log Modes](llm_log_modes).
 
 ```{note}
 Reasoning is captured from either the `reasoning` or the `reasoning_content` field, since providers disagree on the name. Reasoning events are emitted before the reply they precede.
@@ -157,7 +158,7 @@ Reasoning is captured from either the `reasoning` or the `reasoning_content` fie
 
 | Enumerated Value    | Type    | Description |
 |---------------------|---------|-------------|
-| `event_type`        | string  | The event type, as listed above. Always present. |
+| `event_type`        | string  | The event type, as listed under [Ingested Events](llm_ingested_events). Always present. |
 | `role`              | string  | Message role: `user`, `system`, `assistant`, or `tool`. |
 | `tool_name`         | string  | Name of the tool the model invoked. Present on `response.tool_call`. |
 | `tool_call_id`      | string  | Provider-assigned identifier correlating a tool call with its result. |
@@ -178,7 +179,7 @@ Request-side events are ingested before the provider is contacted, so they carry
 
 ### Token Usage and Streaming
 
-Providers return the token accounting record at the end of a response. For buffered responses this is automatic, but for streaming responses most providers omit it unless the client asks for it. To capture usage on streamed requests, the client must set `stream_options.include_usage` to `true`; the ingester cannot add it, because rewriting the request would change what the client receives.
+Providers return the token accounting record at the end of a response. For buffered responses this is automatic, but for streaming responses most providers omit it unless the client asks for it. To capture usage on streamed requests, the client must set `stream_options.include_usage` to `true`; the ingester cannot add it because rewriting the request would change what the client receives.
 
 ```{note}
 When `Log-Usage` is enabled but no usage records are appearing for streaming traffic, this is almost always the cause.
@@ -203,7 +204,7 @@ The client IP is taken from the leading entry of the `X-Forwarded-For` header wh
 
 ## Authorization
 
-The ingester handles two independent credentials, and both are configured as bare tokens; the proxy speaks `Bearer` to the client and to the provider on your behalf.
+The ingester handles two independent credentials, and both are configured as bearer tokens; the proxy speaks `Bearer` to the client and to the provider on your behalf.
 
 `Client-Authorization` gates who may use the proxy. When set, inbound requests must present `Authorization: Bearer <token>` matching the configured value, and are rejected with a 401 before the request body is read. When unset, anyone who can reach the listener may use it.
 
@@ -316,7 +317,7 @@ Because every ingested event is a discrete entry of natural-language text, LLM t
 	Token=`sk-example-token`
 ```
 
-```{note}
+```{warning}
 Embedding requests are made synchronously as entries flow through, so the throughput of the listener becomes bound to the throughput of the embeddings endpoint. Consider whether that endpoint meters requests or charges per token before enabling this on busy traffic.
 ```
 
