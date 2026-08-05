@@ -49,27 +49,27 @@ The following values can be added with the `Sections` parameter:
 
 | Sections | Description|
 | --- | --- |
-| `APPLICATIONS` | Information about installed applications on a computer i.e. title, version |
+| `APPLICATIONS` | Information about installed applications on a computer e.g. title, version |
 | `ATTACHMENTS` | Upload and delete attachments to the inventory record using this category |
-| `CERTIFICATES` | List of certificates installed on a device i.e. issuer, name |
-| `CONFIGURATION_PROFILES` | Information about the configuration profiles installed on a mobile device i.e. name, identifier |
-| `CONTENT_CACHING` | Information collected by the `ContentCachingInformation` MDM command i.e. alerts, registrationStatus |
-| `DISK_ENCRYPTION` | Disk encryption information for partitions on a computer i.e. name, fileVault2Enabled |
+| `CERTIFICATES` | List of certificates installed on a device e.g. issuer, name |
+| `CONFIGURATION_PROFILES` | Information about the configuration profiles installed on a mobile device e.g. name, identifier |
+| `CONTENT_CACHING` | Information collected by the `ContentCachingInformation` MDM command e.g. alerts, registrationStatus |
+| `DISK_ENCRYPTION` | Disk encryption information for partitions on a computer e.g. name, fileVault2Enabled |
 | `EXTENSION_ATTRIBUTES` | List of custom data fields collected using extension attributes |
-| `GROUP_MEMBERSHIPS` | Information about local, managed groups and membership i.e. groupId, groupName |
-| `HARDWARE` | Hardware details for a computer i.e. Make, Model |
+| `GROUP_MEMBERSHIPS` | Information about local, managed groups and membership e.g. groupId, groupName |
+| `HARDWARE` | Hardware details for a computer e.g. Make, Model |
 | `IBEACONS` | Information for a computer or mobile device iBeacon (Apple’s iBeacon technology) region |
-| `LICENSED_SOFTWARE` | Information about licensed software managed by Jamf Pro i.e. appName, version  |
-| `LOCAL_USER_ACCOUNTS` | Information about managed local administrator accounts, as well as other local user accounts on a computer i.e. uid, username |
-| `OPERATING_SYSTEM` | Operating system details for a computer i.e. operatingSystem, operatingSystemVersion |
-| `PACKAGE_RECEIPTS` | Information about the packages installed on a computer i.e. cachedPackages, "Packages installed by Jamf Pro" |
-| `PRINTERS` | Information about printer profiles present on a computer i.e. name, type |
-| `PURCHASING` | Purchasing information from Apple’s Global Service Exchange (GSX) i.e. "P.O. Number", vendor |
-| `SECURITY` | View information from security related categories i.e. "System Integrity Protection", "Gatekeeper" |
-| `SERVICES` | Information about active services on a computer i.e. name |
-| `SOFTWARE_UPDATES` | Information about available software updates i.e. name, version |
-| `STORAGE` | View information from storage related categories i.e. "S.M.A.R.T. Status", serialNumber |
-| `USER_AND_LOCATION` | Displays user/location inventory attributes; populated automatically by assigning a user to a computer i.e. "Full Name", "Email address" |
+| `LICENSED_SOFTWARE` | Information about licensed software managed by Jamf Pro e.g. appName, version  |
+| `LOCAL_USER_ACCOUNTS` | Information about managed local administrator accounts, as well as other local user accounts on a computer e.g. uid, username |
+| `OPERATING_SYSTEM` | Operating system details for a computer e.g. operatingSystem, operatingSystemVersion |
+| `PACKAGE_RECEIPTS` | Information about the packages installed on a computer e.g. cachedPackages, "Packages installed by Jamf Pro" |
+| `PRINTERS` | Information about printer profiles present on a computer e.g. name, type |
+| `PURCHASING` | Purchasing information from Apple’s Global Service Exchange (GSX) e.g. "P.O. Number", vendor |
+| `SECURITY` | View information from security related categories e.g. "System Integrity Protection", "Gatekeeper" |
+| `SERVICES` | Information about active services on a computer e.g. name |
+| `SOFTWARE_UPDATES` | Information about available software updates e.g. name, version |
+| `STORAGE` | View information from storage related categories e.g. "S.M.A.R.T. Status", serialNumber |
+| `USER_AND_LOCATION` | Displays user/location inventory attributes; populated automatically by assigning a user to a computer e.g. "Full Name", "Email address" |
 
 ## Example Configuration
 
@@ -83,7 +83,7 @@ Client-Id="api-client-id"
 Client-Secret="api-client-secret"
 ```
 
-To ingest addition `Sections`:
+To ingest additional `Sections`:
 
 ```  
 [Jamf "yourserver"]

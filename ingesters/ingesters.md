@@ -92,7 +92,7 @@ Okta <okta>
 
 | Ingester | Description |
 |----------|-------------|
-| [Jamf](jamf) | Ingest from computer-inventory endpoint of Jamf Pro's v3 API |
+| [Jamf](jamf) | Ingest from the computer-inventory endpoint of Jamf Pro's v3 API |
 | [Microsoft Graph API](msg) | Ingest from Microsoft's Graph API.  |
 | [Mimecast](mimecast) | Ingest Mimecast MTA SIEM and audit events. |
 | [Okta](okta) | Ingest Okta system logs and user records. |
