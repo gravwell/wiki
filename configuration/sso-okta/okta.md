@@ -43,11 +43,92 @@ The following example would forward all groups from Okta and grant admin access 
 
 ![](okta_saml_attributes_oel.png)
 
+The expressions shown above are reproduced below so that they can be copied directly into Okta; hover over an expression and click the copy button to copy it to your clipboard.
+
+:::{list-table} Attribute statements
+:header-rows: 1
+:widths: 20 80
+:class: copy-table
+
+* - Name
+  - Expression
+* - `givenName`
+  - ```text
+    user.profile.firstName
+    ```
+* - `groups`
+  - ```text
+    user.getGroups({'group.type': {'OKTA_GROUP', 'APP_GROUP', 'BUILT_IN'}}).![profile.name]
+    ```
+* - `gw-admin`
+  - ```text
+    user.isMemberOf({'group.profile.name': 'foo-admin-group', 'operator': 'EXACT'})
+    ```
+* - `mail`
+  - ```text
+    user.profile.email
+    ```
+* - `surName`
+  - ```text
+    user.profile.lastName
+    ```
+* - `uid`
+  - ```text
+    user.profile.login
+    ```
+:::
+
+```{note}
+The `gw-admin` attribute is only required if you want to grant admin status via SSO; adjust `foo-admin-group` to match the Okta group that should receive Gravwell admin rights. See [Granting Admin Status](#granting-admin-status) for more details.
+```
+
 ### (Option B) Legacy Configuration
 
 If you do not want to use EL for SAML attributes, you can still use Okta's legacy configuration as follows.
 
 ![](okta_saml_attributes_legacy.png)
+
+The values shown above are reproduced below so that they can be copied directly into Okta; hover over a value and click the copy button to copy it to your clipboard. Leave `Name format` set to `Unspecified` for every attribute.
+
+:::{list-table} Profile attribute statements
+:header-rows: 1
+:widths: 20 80
+:class: copy-table
+
+* - Name
+  - Value
+* - `uid`
+  - ```text
+    user.login
+    ```
+* - `givenName`
+  - ```text
+    user.firstName
+    ```
+* - `surName`
+  - ```text
+    user.lastName
+    ```
+* - `mail`
+  - ```text
+    user.email
+    ```
+:::
+
+The group attribute statement uses a filter rather than a value; set the filter to `Matches regex` and use the following expression to forward all groups.
+
+:::{list-table} Group attribute statements
+:header-rows: 1
+:widths: 20 80
+:class: copy-table
+
+* - Name
+  - Filter (Matches regex)
+* - `groups`
+  - ```text
+    .*
+    ```
+:::
 
 ## Okta App Assignments
 

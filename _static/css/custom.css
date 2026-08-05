@@ -180,6 +180,23 @@ div.docutils button.copybtn:active {
 }
 
 /*
+Tables of copyable values (`:class: copy-table` on a list-table).
+
+Each value cell holds a code block so that sphinx-copybutton attaches a copy
+button to it. Tighten the code block up so it reads as a table cell, and wrap
+long values instead of giving every cell a horizontal scrollbar.
+*/
+table.copy-table div.highlight {
+  margin: 0;
+}
+
+table.copy-table div.highlight pre {
+  padding: 0.25rem 0.5rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/*
 
 BEGIN DYNAMIC NAVBAR LINKS
 
