@@ -43,9 +43,12 @@ The following example would forward all groups from Okta and grant admin access 
 
 ![](okta_saml_attributes_oel.png)
 
-The expressions shown above are reproduced below so that they can be copied directly into Okta; hover over an expression and click the copy button to copy it to your clipboard.
+::::{dropdown} Copy/paste attribute statements
+:animate: fade-in
 
-:::{list-table} Attribute statements
+Hover over an expression and click the copy button to copy it to your clipboard.
+
+:::{list-table}
 :header-rows: 1
 :widths: 20 80
 :class: copy-table
@@ -81,6 +84,7 @@ The expressions shown above are reproduced below so that they can be copied dire
 ```{note}
 The `gw-admin` attribute is only required if you want to grant admin status via SSO; adjust `foo-admin-group` to match the Okta group that should receive Gravwell admin rights. See [Granting Admin Status](#granting-admin-status) for more details.
 ```
+::::
 
 ### (Option B) Legacy Configuration
 
@@ -88,7 +92,10 @@ If you do not want to use EL for SAML attributes, you can still use Okta's legac
 
 ![](okta_saml_attributes_legacy.png)
 
-The values shown above are reproduced below so that they can be copied directly into Okta; hover over a value and click the copy button to copy it to your clipboard. Leave `Name format` set to `Unspecified` for every attribute.
+::::{dropdown} Copy/paste legacy attribute values
+:animate: fade-in
+
+Hover over a value and click the copy button to copy it to your clipboard. Leave `Name format` set to `Unspecified` for every attribute.
 
 :::{list-table} Profile attribute statements
 :header-rows: 1
@@ -129,6 +136,7 @@ The group attribute statement uses a filter rather than a value; set the filter 
     .*
     ```
 :::
+::::
 
 ## Okta App Assignments
 
