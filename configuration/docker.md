@@ -14,13 +14,27 @@ Users running Docker on MacOS should be aware that the MacOS host does not have 
 
 To keep our Gravwell containers separated from any other containers you may be running, we'll create a Docker network called `gravnet`:
 
-	docker network create gravnet
+```
+docker network create gravnet
+```
 
 ## Deploy the indexer and webserver
 
 The Gravwell indexer and webserver frontend, plus the Simple Relay ingester, are shipped in a single Docker image ([gravwell/gravwell](https://hub.docker.com/r/gravwell/gravwell/)) for convenience. We will launch it with port 80 forwarded to port 8080 on the host for access to the webserver:
 
-	docker run --net gravnet -p 8080:80 -p 4023:4023 -p 4024:4024 -d -e GRAVWELL_INGEST_SECRET=MyIngestSecret -e GRAVWELL_INGEST_AUTH=MyIngestSecret -e GRAVWELL_CONTROL_AUTH=MyControlSecret -e GRAVWELL_SEARCHAGENT_AUTH=MySearchAgentAuth --name gravwell gravwell/gravwell:latest
+```
+docker run --net gravnet \
+    -p 8080:80 \
+    -p 4023:4023 \
+    -p 4024:4024 \
+    -d \
+    -e GRAVWELL_INGEST_SECRET=MyIngestSecret \
+    -e GRAVWELL_INGEST_AUTH=MyIngestSecret \
+    -e GRAVWELL_CONTROL_AUTH=MyControlSecret \
+    -e GRAVWELL_SEARCHAGENT_AUTH=MySearchAgentAuth \
+    --name gravwell \
+    gravwell/gravwell:latest
+```
 
 Note that the new container is named `gravwell`; we will use this when pointing ingesters to the indexer.
 
@@ -81,13 +95,17 @@ The gravwell/gravwell Docker image ships with the Simple Relay [ingester](/inges
 
 To make sure we can get data into Gravwell, we can use netcat to write lines to port 7777. However, when we launched the VM, we didn't forward any of those ports to the host. Luckily, we can use `docker inspect` to get the IP address assigned to the Gravwell container:
 
-	docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' gravwell
+```
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' gravwell
+```
 
 In our case, it was **172.19.0.2**. We can then use netcat to send in some lines, hitting Ctrl-C when done:
 
-	$ netcat 172.19.0.2 7777
-	this is a test
-	this is another test
+```
+$ netcat 172.19.0.2 7777
+this is a test
+this is another test
+```
 
 ```{attention}
 MacOS users cannot access containers directly by IP, because the containers are actually run within a Linux VM. You can either use netcat from within a Docker container (either the same container or a new one), or forward port 7777 to the host when launching the Gravwell container.
@@ -103,7 +121,15 @@ Besides the Simple Relay ingester that ships with the gravwell/gravwell image, w
 
 We'll launch the Netflow ingester here, but the same command (with names and ports changed) can be used for the other ingesters too:
 
-	docker run -d --net gravnet -p 2055:2055/udp --name netflow -e GRAVWELL_CLEARTEXT_TARGETS=gravwell -e GRAVWELL_INGEST_SECRET=MyIngestSecret gravwell/netflow_capture
+```
+docker run -d \
+    --net gravnet \
+    -p 2055:2055/udp \
+    --name netflow \
+    -e GRAVWELL_CLEARTEXT_TARGETS=gravwell \
+    -e GRAVWELL_INGEST_SECRET=MyIngestSecret \
+    gravwell/netflow_capture
+```
 
 Note the use of the `-e` flag to set environment variables. This allows us to dynamically configure the ingester by directing it to connect to the container named 'gravwell' for ingest (GRAVWELL_CLEARTEXT_TARGETS=gravwell) and setting the shared ingest secret to 'IngestSecrets' (GRAVWELL_INGEST_SECRET=IngestSecrets).
 
@@ -125,7 +151,7 @@ The official Gravwell docker container contains a service management system that
 
 The official gravwell Docker image contains the full Gravwell stack (indexer and webserver) as well as the Simple Relay ingester.  The default manager configuration is:
 
-```
+```ini
 [Global]
 	Log-File=/opt/gravwell/log/manager.log
 	Log-Level=INFO
@@ -171,7 +197,12 @@ For example, to launch the gravwell docker container without error reporting, la
 If you would like to disable the integrated SimpleRelay ingester, add "-e DISABLE_SIMPLE_RELAY=TRUE" and if you wanted to launch with ONLY the indexer started chain them all up like so:
 
 ```
-docker run --name gravwell -e GRAVWELL_INGEST_SECRET=MyIngestSecret -e DISABLE_SIMPLE_RELAY=TRUE -e DISABLE_WEBSERVER=TRUE -e DISABLE_SEARCHAGENT=TRUE gravwell/gravwell:latest
+docker run --name gravwell \
+    -e GRAVWELL_INGEST_SECRET=MyIngestSecret \
+    -e DISABLE_SIMPLE_RELAY=TRUE \
+    -e DISABLE_WEBSERVER=TRUE \
+    -e DISABLE_SEARCHAGENT=TRUE \
+    gravwell/gravwell:latest
 ```
 
 For more information about the service manager visit the [GitHub page](https://github.com/gravwell/gravwell/tree/master/manager).
@@ -182,17 +213,21 @@ Once you've launched an ingester container, you may want to modify the default c
 
 To make changes to the Netflow ingester container we launched above, we can launch a shell in the container:
 
-	docker exec -it netflow sh
+```
+docker exec -it netflow sh
+```
 
 Then we can use vi to edit `/opt/gravwell/etc/netflow_capture.conf` as described in [the ingesters documentation](/ingesters/ingesters). Once our modifications are made, we simply restart the whole container:
 
-	docker restart netflow
+```
+docker restart netflow
+```
 
 ## Using Docker Compose
 
 If you prefer to deploy complicated docker setups automatically as a complete system, the Docker compose tool can provide an easy way to deploy and configure many services en masse.  Docker compose also provides a convenient way to create volumes that are automatically initialized and persistent across multiple runs and upgrades.  Below is a simple Docker Compose file (`docker-compose.yml`) which starts a Gravwell system and two ingesters. The ingesters are automatically configured with appropriate secrets and connection targets.  Two volumes are created so that data and settings are persisted across restarts, upgrades, and tear downs.
 
-```
+```YAML
 version: "3.5"
 
 networks:

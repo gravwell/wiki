@@ -6,7 +6,6 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, • [Okta Hosted Ingester](/ingesters/okta) <br /> • [Simple Relay](/ingesters/simple_relay)
-         Kit, [Okta Kit](https://github.com/gravwell/kits/tree/main/okta)
 :::
 
 ## Okta Configuration
@@ -97,7 +96,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/okta-well.conf`
 ### Gravwell Ingester Configuration
 
 #### Sample Okta config: Okta Hosted Ingester
-Create or edit: `/opt/gravwell/etc/hosted_runner.d/okta.conf`
+Follow the Hosted Runner [configuration guide for Okta](https://docs.gravwell.io/ingesters/okta.html) if Hosted Runner is not installed. 
+Edit: `/opt/gravwell/etc/hosted_runner.conf`
 
 ```ini
 [Okta "myorg"]
@@ -126,8 +126,8 @@ Remember to restart the service to apply the new config:
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/okta-well.conf`
 ```ini
 [Listener "okta"]
-    Location=/opt/gravwell/storage/okta
-    Tags-Name=okta
+    Bind-String="tcp://0.0.0.0:6668"
+    Tag-Name=okta
     Preprocessor=syslog_okta_preprocessor
  
 [Preprocessor "syslog_okta_preprocessor"]

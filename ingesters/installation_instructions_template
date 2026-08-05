@@ -24,4 +24,4 @@ bash {{standalone}}_installer_X.X.X.sh
 
 You may be prompted for additional configuration during the installation.
 
-{{ 'The Docker image is available on [Dockerhub](https://hub.docker.com/r/gravwell/{}).'.format(dockername) if dockername else "There is currently no Docker image for this ingester" }}
+{{ 'The Docker image is available on [Dockerhub](https://hub.docker.com/r/gravwell/{}).'.format(dockername) if dockername else "There is currently no Docker image for this ingester." }}

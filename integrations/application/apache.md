@@ -6,31 +6,30 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [File Follower](/ingesters/file_follow)
-         Kit, [Apache Kit](https://github.com/gravwell/kits/tree/main/apache)
 :::
 
 ## Apache Configuration
-Apache features a highly configurable logging framework. Logging can be applied globally (on Debian/Ubuntu hosts, this is typically stored in `/etc/apache2.conf`) or for each virtual host (typically stored in `/etc/apache2/sites-available/{VHOST_NAME}.conf`). 
+Apache features a highly configurable logging framework. Logging can be applied globally (on Debian/Ubuntu hosts, this is typically stored in `/etc/apache2/apache2.conf`) or for each virtual host (typically stored in `/etc/apache2/sites-available/{VHOST_NAME}.conf`). 
 
 Follow the steps below to configure Apache to output clean data for Gravwell ingestion.
 
 ### Define LogFormat
 Apache uses the Common Log Format by default, so we will define a custom structure called: `json_combined`. This will write the logs cleanly as JSON before ingestion into Gravwell.
 
-You can define this globally in `/etc/apache2.conf` or inside a specific Virtual Host in `/etc/apache2/sites-available/{VHOST_NAME}.conf`.
+You can define this globally in `/etc/apache2/apache2.conf` or inside a specific Virtual Host in `/etc/apache2/sites-available/{VHOST_NAME}.conf`.
 
 ```apache
 LogFormat \
   "{\"time\":\"%{%Y-%m-%dT%H:%M:%S}t\",\
-\"remote_addr\":\"%a\",\
-\"method\":\"%m\",\
-\"uri\":\"%U\",\
-\"query\":\"%q\",\
-\"status\":%>s,\
-\"bytes\":%B,\
-\"duration\":%D,\
-\"user_agent\":\"%{User-Agent}i\",\
-\"referer\":\"%{Referer}i\"}" json_combined
+  \"remote_addr\":\"%a\",\
+  \"method\":\"%m\",\
+  \"uri\":\"%U\",\
+  \"query\":\"%q\",\
+  \"status\":%>s,\
+  \"bytes\":%B,\
+  \"duration\":%D,\
+  \"user_agent\":\"%{User-Agent}i\",\
+  \"referer\":\"%{Referer}i\"}" json_combined
 ```
 
 #### Key Field Mechanics:

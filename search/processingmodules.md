@@ -72,6 +72,7 @@ printf <printf/printf>
 regex <regex/regex>
 reingest <reingest/reingest>
 require <require/require>
+semantic <semantic/semantic>
 slice <slice/slice>
 sort <sort/sort>
 split <split/split>
@@ -137,6 +138,7 @@ words <words/words>
 * [regex](regex/regex) - match and extract data using regular expressions.
 * [reingest](reingest/reingest) - reingest data into another tag.
 * [require](require/require) - drop any entries which lack a given enumerated value.
+* [semantic](semantic/semantic) - search by meaning using vector embeddings.
 * [slice](slice/slice) - low-level binary parsing & extraction.
 * [sort](sort/sort) - sort entries by a given key.
 * [split](split/split) - split a single entry into multiple entries.

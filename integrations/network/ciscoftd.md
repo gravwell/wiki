@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Simple Relay](/ingesters/simple_relay.md)
+    Ingester, [Simple Relay](/ingesters/simple_relay)
          Kit, [Cisco FTD Kit](https://github.com/gravwell/kits/tree/main/ciscoftd)
 :::
 
@@ -36,7 +36,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/cisco-ftd-well.conf`
 ```
 ### Gravwell Ingester Configuration: Simple Relay
 **Sample Cisco FTD config:**  
-Create or edit: `/opt/gravwell/etc/simple_relay/cisco-ftd.conf`
+Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/cisco-ftd.conf`
 ```ini
 [Listener "syslogtcp_cisco_ftd"]
     Bind-String="tcp://0.0.0.0:6901"
