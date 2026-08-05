@@ -48,37 +48,37 @@ The following example would forward all groups from Okta and grant admin access 
 
 Hover over an expression and click the copy button to copy it to your clipboard.
 
-:::{list-table}
-:header-rows: 1
-:widths: 20 80
-:class: copy-table
+:::{container} copy-pairs
 
-* - Name
-  - Expression
-* - `givenName`
-  - ```text
-    user.profile.firstName
-    ```
-* - `groups`
-  - ```text
-    user.getGroups({'group.type': {'OKTA_GROUP', 'APP_GROUP', 'BUILT_IN'}}).![profile.name]
-    ```
-* - `gw-admin`
-  - ```text
-    user.isMemberOf({'group.profile.name': 'foo-admin-group', 'operator': 'EXACT'})
-    ```
-* - `mail`
-  - ```text
-    user.profile.email
-    ```
-* - `surName`
-  - ```text
-    user.profile.lastName
-    ```
-* - `uid`
-  - ```text
-    user.profile.login
-    ```
+`givenName`
+```text
+user.profile.firstName
+```
+
+`groups`
+```text
+user.getGroups({'group.type': {'OKTA_GROUP', 'APP_GROUP', 'BUILT_IN'}}).![profile.name]
+```
+
+`gw-admin`
+```text
+user.isMemberOf({'group.profile.name': 'foo-admin-group', 'operator': 'EXACT'})
+```
+
+`mail`
+```text
+user.profile.email
+```
+
+`surName`
+```text
+user.profile.lastName
+```
+
+`uid`
+```text
+user.profile.login
+```
 :::
 
 ```{note}
@@ -97,44 +97,39 @@ If you do not want to use EL for SAML attributes, you can still use Okta's legac
 
 Hover over a value and click the copy button to copy it to your clipboard. Leave `Name format` set to `Unspecified` for every attribute.
 
-:::{list-table} Profile attribute statements
-:header-rows: 1
-:widths: 20 80
-:class: copy-table
+Profile attribute statements:
 
-* - Name
-  - Value
-* - `uid`
-  - ```text
-    user.login
-    ```
-* - `givenName`
-  - ```text
-    user.firstName
-    ```
-* - `surName`
-  - ```text
-    user.lastName
-    ```
-* - `mail`
-  - ```text
-    user.email
-    ```
+:::{container} copy-pairs
+
+`uid`
+```text
+user.login
+```
+
+`givenName`
+```text
+user.firstName
+```
+
+`surName`
+```text
+user.lastName
+```
+
+`mail`
+```text
+user.email
+```
 :::
 
-The group attribute statement uses a filter rather than a value; set the filter to `Matches regex` and use the following expression to forward all groups.
+Group attribute statements, using a `Matches regex` filter:
 
-:::{list-table} Group attribute statements
-:header-rows: 1
-:widths: 20 80
-:class: copy-table
+:::{container} copy-pairs
 
-* - Name
-  - Filter (Matches regex)
-* - `groups`
-  - ```text
-    .*
-    ```
+`groups`
+```text
+.*
+```
 :::
 ::::
 

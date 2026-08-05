@@ -180,20 +180,45 @@ div.docutils button.copybtn:active {
 }
 
 /*
-Tables of copyable values (`:class: copy-table` on a list-table).
+Name/value pairs where the value is copyable (`:::{container} copy-pairs`).
 
-Each value cell holds a code block so that sphinx-copybutton attaches a copy
-button to it. Tighten the code block up so it reads as a table cell, and wrap
-long values instead of giving every cell a horizontal scrollbar.
+The container alternates a name paragraph and a code block; the grid lays each
+pair out as one row. Values are code blocks so that sphinx-copybutton attaches
+a copy button to them.
 */
-table.copy-table div.highlight {
+.copy-pairs {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.25rem 1.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.copy-pairs > p {
   margin: 0;
 }
 
-table.copy-table div.highlight pre {
-  padding: 0.25rem 0.5rem;
+.copy-pairs div.highlight {
+  margin: 0;
+}
+
+/* Wrap long values instead of giving every value its own scrollbar. */
+.copy-pairs div.highlight pre {
+  padding: 0.3rem 0.6rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+/* Stack the pairs on narrow screens, where two columns don't fit. */
+@media (width < 720px) {
+  .copy-pairs {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+  }
+
+  .copy-pairs > p:not(:first-child) {
+    margin-top: 0.5rem;
+  }
 }
 
 /*
