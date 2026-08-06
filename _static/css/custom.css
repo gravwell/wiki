@@ -221,6 +221,15 @@ a copy button to them.
   }
 }
 
+/**
+ * Always show copy button within table containing code blocks.
+ * EG avoid show/hide on ALL `copybtn`s on mouse enter/leave (visually annoying).
+ */
+div.copy-pairs.docutils button.copybtn {
+  opacity: 1;
+  top: .1em;
+}
+
 /*
 
 BEGIN DYNAMIC NAVBAR LINKS
