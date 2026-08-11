@@ -703,11 +703,13 @@ Description:	Sets the default time of day (in 24-hour UTC format) at which time-
  
 ## AI
 
-The `[AI]` configuration section controls [Logbot AI](/search/ai/ai). 
+The `[AI]` configuration section controls [Logbot AI](/search/ai/ai) and the embedding model used by the [semantic](/search/semantic/semantic) search module.
 
 ```
 [AI]
 Enable=true
+Embedding-URL="https://ai.example.com/v1/embeddings"
+Embedding-Model="qwen3-embedding:8b"
 ```
 
 ### **Enable**
@@ -751,6 +753,22 @@ Description: Additional HTTP headers to include in requests to the AI server. Th
 Default Value: (none)  
 Example: `System-Prompt-File="/opt/gravwell/etc/ai-system-prompt.txt"`  
 Description: Path to a file containing a custom system prompt. When set, the contents of this file are used as the system prompt for all Logbot conversations.  
+
+(embedding-url)=
+### **Embedding-URL**
+Default Value: (none)  
+Example: `Embedding-URL="https://ai.example.com/v1/embeddings"`  
+Description: The URL of an OpenAI-compatible `/v1/embeddings` endpoint used to generate vector embeddings for search phrases. Setting this directive is what enables the [semantic](/search/semantic/semantic) search module; when it is empty, any query using `semantic` will fail to parse. `Embedding-Model` must also be set. This directive is independent of `Enable`, which controls only Logbot chat features.  
+
+### **Embedding-Model**
+Default Value: (none)  
+Example: `Embedding-Model="qwen3-embedding:8b"`  
+Description: The name of the embedding model to request from the endpoint given by `Embedding-URL`. Required whenever `Embedding-URL` is set; the webserver will refuse to start otherwise. This must be the same model used to generate the embeddings attached to entries at ingest time by the [vector preprocessor](/ingesters/preprocessors/vector), as embeddings produced by different models are not comparable.  
+
+### **Embedding-Token**
+Default Value: (none)  
+Example: `Embedding-Token="sk-abc123"`  
+Description: A bearer token sent in the `Authorization` header of requests to the embedding endpoint. Omit this directive for endpoints which do not require authentication.  
 
 ## MCP Client
 

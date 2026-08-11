@@ -33,6 +33,7 @@ IPMI <ipmi>
 Kafka <kafka>
 Kafka Federator <federators/kafkafederator>
 Kinesis <kinesis>
+LLM <llm>
 Microsoft Graph API <msg>
 Netflow <netflow>
 Network Capture <pcap>
@@ -58,6 +59,7 @@ Windows File Follower <win_file_follow>
 | [IPMI](ipmi) | Periodically collect SDR and SEL records from IPMI devices. |
 | [Kafka](kafka) | Create a Kafka Consumer that ingests into Gravwell. Can be paired with the Gravwell Kafka Federator. |
 | [Kinesis](kinesis) | Ingest from Amazon's [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) service. |
+| [LLM](llm) | Proxy OpenAI-compatible LLM traffic, ingesting prompts, responses, tool calls, and token usage. |
 | [Microsoft Graph API](msg) | Ingest from Microsoft's Graph API. |
 | [Netflow](netflow) | Collect Netflow and IPFIX records. |
 | [Network Capture](pcap) | Ingest PCAP on the wire. |
@@ -82,12 +84,16 @@ maxdepth: 1
 caption: Hosted Ingesters
 hidden: true
 ---
+Jamf <jamf>
+Microsoft Graph API <msg>
 Mimecast <mimecast>
 Okta <okta>
 ```
 
 | Ingester | Description |
 |----------|-------------|
+| [Jamf](jamf) | Ingest from the computer-inventory endpoint of Jamf Pro's v3 API |
+| [Microsoft Graph API](msg) | Ingest from Microsoft's Graph API.  |
 | [Mimecast](mimecast) | Ingest Mimecast MTA SIEM and audit events. |
 | [Okta](okta) | Ingest Okta system logs and user records. |
 
