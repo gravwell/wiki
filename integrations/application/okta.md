@@ -121,21 +121,3 @@ Edit: `/opt/gravwell/etc/hosted_runner.conf`
 Remember to restart the service to apply the new config:
 `sudo systemctl restart gravwell_hosted_runner.service`
 ```
-
-#### Sample Ingester config: Simple Relay Ingester
-Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/okta-well.conf`
-```ini
-[Listener "okta"]
-    Bind-String="tcp://0.0.0.0:6668"
-    Tag-Name=okta
-    Preprocessor=syslog_okta_preprocessor
- 
-[Preprocessor "syslog_okta_preprocessor"]
-    Type=syslogrouter
-    Template=`okta_${Appname}`
-```
-
-```{note}
-Remember to restart the service to apply the new config:
-`sudo systemctl restart gravwell_simple_relay.service`
-```
