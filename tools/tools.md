@@ -29,7 +29,7 @@ The `-type` flag supports the following choices:
 * `binary`: entries which can be parsed using the slice module as follows: `slice int16([0:2]) as LE16 int16be([2:4]) as BE16 int32([4:8]) as LE32 int32be([8:12]) as BE32 int64([12:20]) as LE64 int64be([20:28]) as BE64 float32([28:32]) as F32 float64be([32:40]) as BEF64 ipv4([40:44]) as IP string([44:]) as STR`
 * `regex`: entries which can be parsed using the regex module as follows: `regex "(?P<ts>\S+)\s\[(?P<app>\S+)\]\s<(?P<uuid>\S+)>\s(?P<src>\S+)\s(?P<srcport>\d+)\s(?P<dst>\S+)\s(?P<dstport>\d+)\s(?P<path>\S+)\s(?P<useragent>.+)\s\{(?P<email>\S+)\}$"`
 * `cef`: entries in the Common Event Format, decodable with the [CEF search module](/search/cef/cef).
-* `ipfix`: entries that mimic data collected by the netflow ingester. Each entry is repacked with its templates so it stands alone (see the [IPFIX search module](/search/ipfix/ipfix)), matching the base IPFIX/Netflow V9 format; extended types are not included.
+* `ipfix`: entries that mimic data collected by the netflow ingester. Each entry is repacked with its templates so it stands alone (see the [IPFIX search module](/search/ipfix/ipfix)), matching the base IPFIX format; extended types are not included and all records are proper V10 datagrams..
 * `netflowv5`: entries that mimic wire-collected Netflow V5 datagrams, decodable with the [netflow search module](/search/netflow/netflow).
 
 For example, to generate random 1000 JSON entries (an excellent choice for testing) spread over the last day:
