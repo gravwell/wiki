@@ -73,7 +73,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/azure-well.conf`
 Raw Event Hub JSON records come with multiple records arrays per message which makes EV extraction cumbersome. With a preprocessor, you can split the JSON records into separate events with important fields available as top-level EVs. 
 
 **Sample Azure config:**  
-Create or edit: `/opt/gravwell/etc/INGESTER_Azure/azure.conf`
+Create or edit: `/opt/gravwell/etc/azure_event_hubs.conf.d/azure.conf`
 ```ini
 [Preprocessor "azure-records"]
     Type=jsonarraysplit
