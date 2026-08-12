@@ -12,7 +12,7 @@ Ingester, • [S3 Ingester](amazon_cloudtrail_log_handling) <br /> • [SQS Inge
 ## CloudTrail Configuration
 
 There are two primary methods to get CloudTrail data into Gravwell - **S3 Bucket Ingest**, and **SQS-backed ingest**. 
-* **S3 Bucket Ingester (Simplest:)** This workflow uses the [S3 Ingester](amazon_cloudtrail_log_handling) to pull logs directly from the CloudTrail S3 bucket. It requires an identity with read access to the S3 bucket. The polling interval may introduce a **5-15 minute delay** before logs appear in Gravwell.
+* **S3 Bucket Ingester (Simplest):** This workflow uses the [S3 Ingester](amazon_cloudtrail_log_handling) to pull logs directly from the CloudTrail S3 bucket. It requires an identity with read access to the S3 bucket. The polling interval may introduce a **5-15 minute delay** before logs appear in Gravwell.
 * **SQS-S3-Listener Ingester (Near Real-Time):** For faster delivery [SQS can be configured](s3_sqs_references) to notify the ingester as events are generated. 
 
 ```{note}
@@ -40,7 +40,7 @@ Otherwise the ingester requires no other configuration. For additional configura
 
 **_Sample JSON policy for a user that can query CloudTrail utilizing SQS_**
 ```{note}
-  Replace *ACCOUNT_ID:key/YOUR_KMS_KEY_ID* with your KMS Resource
+  Replace `ACCOUNT_ID:key/YOUR_KMS_KEY_ID` with your KMS Resource
 ```
 
 ```{code-block} json
@@ -103,7 +103,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/cloudtrail-well.conf`
 The simplest workflow is to ingest logs from CloudTrail's S3 bucket using the [S3 Ingester](https://docs.gravwell.io/ingesters/s3.html#amazon-cloudtrail-log-handling). The polling required may introduce a 5-15 minute delay on new logs landing in Gravwell once they hit CloudTrail, but only requires an identity that can query the CloudTrail S3 bucket.
 
 **Sample S3 ingester config:**  
-Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/cloudtrail.conf`
+Create or edit: `/opt/gravwell/etc/s3.conf.d/cloudtrail.conf`
 ```
 [Bucket "default"]
     Region="us-east-1"
@@ -120,7 +120,7 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/cloudtrail.conf`
 Configure S3 ingester to utilize SQS. A new configuration snippet is required that replaces the [Bucket] declaration.
 
 **Sample SQS config snippet**  
-Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/cloudtrail.conf`
+Create or edit: `/opt/gravwell/etc/s3.conf.d/cloudtrail.conf`
 ```ini
 [SQS-S3-Listener "CloudTrail_Queue-Placeholder"] ## REPLACE PLACEHOLDER WITH YOUR ACTUAL SQS QUEUE NAME
     Tag-Name="aws-cloudtrail"

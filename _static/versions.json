@@ -1,9 +1,13 @@
 [
   {
-    "name": "v5.9.2 (latest)",
-    "version": "v5.9.2",
+    "name": "v5.10.0 (latest)",
+    "version": "v5.10.0",
     "url": "/",
     "preferred": true
+  },
+  {
+    "version": "v5.9.2",
+    "url": "/v5.9.2/"
   },
   {
     "version": "v5.9.1",

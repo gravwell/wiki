@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Ingester](integrations_coredns)
+    Ingester, [CoreDNS+Gravwell Plugin](integrations_coredns)
     Kit, [CoreDNS Kit](https://github.com/gravwell/kits/tree/main/coredns)
 :::
 

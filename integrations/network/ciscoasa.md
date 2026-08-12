@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Simple Relay](/ingesters/simple_relay.md)
+    Ingester, [Simple Relay](/ingesters/simple_relay)
          Kit, [Cisco ASA Kit](https://github.com/gravwell/kits/tree/main/ciscoasa)
 :::
 
@@ -40,7 +40,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/cisco-asa-well.conf`
 
 ### Gravwell Ingester Configuration: Simple Relay
 **Sample Cisco ASA config:**  
-Create or edit: `/opt/gravwell/etc/simple_relay/cisco-asa.conf`
+Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/cisco-asa.conf`
 ```ini
 [Listener "syslogtcp_cisco_asa"]
     Bind-String="tcp://0.0.0.0:6801"

@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [NetFlow Ingester](/ingesters/netflow.md)
+    Ingester, [NetFlow Ingester](/ingesters/netflow)
          Kit, [IPFIX Kit](https://github.com/gravwell/kits/tree/main/ipfix)
 :::
 
@@ -40,9 +40,9 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/ipfix.well`
 Create or edit: `/opt/gravwell/etc/netflow_capture.conf.d/ipfix.conf`
 ```ini
 [Collector "ipfix"]
-	Tag-Name=ipfix
-	Bind-String="0.0.0.0:4739"
-	Flow-Type=ipfix
+    Tag-Name=ipfix
+    Bind-String="0.0.0.0:4739"
+    Flow-Type=ipfix
 ```
 
 ```{note}

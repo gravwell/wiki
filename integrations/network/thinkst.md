@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Gravwell Fetcher](https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/README.md)
+    Ingester, [Fetcher](https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/README.md)
          Kit, [Thinkst Kit](https://github.com/gravwell/kits/tree/main/thinkst-canary)
 :::
 
@@ -73,5 +73,5 @@ Create or edit: `/opt/gravwell/etc/gravwell_fetcher.conf.d/thinkst.conf`
     Token=""
     Domain="XXXXXXXX.canary.tools"
     StartTime="2025-01-01T00:00:01.000Z"
-    Tag-Name="thinks-incident"
+    Tag-Name="thinkst-incident"
 ```

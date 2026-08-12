@@ -1,11 +1,11 @@
-# Corelight Logs
+# Corelight
 
 :::{csv-table}
 :align: left
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Simple Relay](/ingesters/simple_relay.md)
+    Ingester, [Simple Relay](/ingesters/simple_relay)
 Preprocessor, [Corelight JSON to TSV](/ingesters/preprocessors/corelight.md)
          Kit, [Corelight Kit](https://github.com/gravwell/kits/tree/main/corelight)
 :::
@@ -50,7 +50,7 @@ Restart Service with:
 Corelight generates highly orthogonal data (UUIDs, floating-point timestamps, IPv6). To optimize indexing performance and memory usage, we recommend a dedicated well with specific indexing flags.
 
 **Recommend Engine:** Bloom or Index
-**Crucial Flags:** `ignroeFloat` and `ignoreUUID` to reduce index bloat.
+**Crucial Flags:** `ignoreFloat` and `ignoreUUID` to reduce index bloat.
 
 **Sample well config:**  
 Create or edit: `/opt/gravwell/etc/gravwell.conf.d/corelight.well`

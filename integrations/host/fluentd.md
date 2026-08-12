@@ -6,7 +6,6 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [HTTP Ingester](/ingesters/http)
-         Kit, [Fluentd Kit](https://github.com/gravwell/kits/tree/main/fluentd)
 :::
 
 ## Fluentd Configuration
@@ -20,7 +19,7 @@ Create or edit `/etc/fluent/fluentd.conf`
 ```
 <match **>
     @type http
-    endpoint http://172.20.0.1:8080/fluentd
+    endpoint http://path.to.gravwell:port/fluentd
     open_timeout 2
 
     <format>
