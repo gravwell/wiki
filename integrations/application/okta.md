@@ -75,7 +75,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/okta-well.conf`
 ### Gravwell Ingester Configuration
 
 #### Sample Okta config: Okta Hosted Ingester
-Follow the Hosted Runner [configuration guide for Okta](https://docs.gravwell.io/ingesters/okta.html) if Hosted Runner is not installed. 
+If the Hosted Runner is not installed, follow the [configuration guide for Okta](https://docs.gravwell.io/ingesters/okta.html) to create your own configuration.
+
 Edit: `/opt/gravwell/etc/hosted_runner.conf`
 
 ```ini
