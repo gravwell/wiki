@@ -30,6 +30,7 @@ File Follower <file_follow>
 GCP PubSub <pubsub>
 HTTP <http>
 IPMI <ipmi>
+Jamf <jamf>
 Kafka <kafka>
 Kafka Federator <federators/kafkafederator>
 Kinesis <kinesis>
@@ -57,6 +58,7 @@ Windows File Follower <win_file_follow>
 | [GCP PubSub](pubsub) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
 | [HTTP](http) | Create HTTP listeners on multiple URL paths. |
 | [IPMI](ipmi) | Periodically collect SDR and SEL records from IPMI devices. |
+| [Jamf](jamf) | Ingest from Jamf Pro's v3 computer-inventory API endpoint. |
 | [Kafka](kafka) | Create a Kafka Consumer that ingests into Gravwell. Can be paired with the Gravwell Kafka Federator. |
 | [Kinesis](kinesis) | Ingest from Amazon's [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) service. |
 | [LLM](llm) | Proxy OpenAI-compatible LLM traffic, ingesting prompts, responses, tool calls, and token usage. |
