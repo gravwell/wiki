@@ -10,6 +10,7 @@ Several of the tools described here can ingest entries to Gravwell indexers. The
 * `-ingest-secret`: specifies the authentication token used to ingest entries (the `Ingest-Auth` parameter defined in the indexer's gravwell.conf file)
 * `-tag-name`: specifies the tag to use for the entries.
 
+(entry-generator)=
 ## Entry Generator
 
 The generator program (`/usr/local/sbin/gravwell_generator`) is capable of creating & ingesting artificial entries in a variety of formats. This can be very useful for testing if you don't have any appropriate "real" data on hand. There are many command-line options which can be used to adjust the parameters of the entries created or the way they are ingested; use the `-h` flag to see a complete list. The most important options are:
