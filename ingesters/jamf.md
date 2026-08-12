@@ -29,7 +29,7 @@ The Jamf ingester is configured via `[Jamf "name"]` stanzas in the Hosted Runner
 
 ### Jamf Stanza Parameters
 
-Each `[Jamf "name"]` stanza configures an independent polling connection to the Jamf Pro API. Currently, only a single stanza is needed per Jamf Pro API instance and ingests to a single tag.
+Each `[Jamf "name"]` stanza configures an independent polling connection to the Jamf Pro API. Currently, only one stanza per Jamf Pro API is needed and ingests to a single tag.
 
 | Config Parameter | Type | Required | Default Value | Description |
 | --- | --- | --- | --- | --- |
@@ -38,10 +38,10 @@ Each `[Jamf "name"]` stanza configures an independent polling connection to the 
 | Client-Secret | string | yes |     | OAuth 2.0 client secret from your Jamf Pro API 2.0 integration. |
 | Host | URL | yes |     | The Jamf Pro API base URL. |
 | Lookback | integer | no  | 1 (hours) | How far back in time to fetch events on first run in hours. |
-| Tag-Name | string | no  | jamf | Tag to assign ingested entries. Only valid when a single `Api` is configured. Cannot be used with `Tag-Prefix`. |
+| Tag-Name | string | no  | jamf | Tag to assign ingested entries. Only valid when a single `API` is configured. |
 | Page-Size | integer | no | 100 | Maximum number of objects per page. |
 | Requests-Per-Minute | integer | no  | 5   | Maximum number of API requests per minute. |
-| Request-Interval | integer (seconds) | no  | 300 (seconds) | How often to poll the API for new events in seconds |
+| Request-Interval | integer (seconds) | no  | 300 (seconds) | How often to poll the API for new events in seconds. |
 
 ### Available Sections
 
