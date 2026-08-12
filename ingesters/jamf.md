@@ -101,4 +101,3 @@ Sections=SERVICES
 * [Jamf Pro API Reference](https://developer.jamf.com/jamf-pro/reference/jamf-pro-api)
 * [Jamf Pro computer-inventory Reference](https://learn.jamf.com/r/en-US/jamf-pro-documentation-current/Computer_Inventory_and_Criteria_Reference)
 * [Jamf Pro API computer-inventory Reference](https://developer.jamf.com/jamf-pro/reference/get_v3-computers-inventory)
-*
