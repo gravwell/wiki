@@ -22,7 +22,7 @@ During the install you will be prompted with an initial configuration, you can u
 
 ![](winfilefollow.png)
 
-(win_file_follow_file_locations)=
+
 ## File Locations
 
 The File Follower installs its configuration file and its service executable in separate directories.  The configuration lives under `%PROGRAMDATA%` so that it is preserved across reinstalls and upgrades and so that Windows does not treat it as a protected program file.  The service binary lives under `%PROGRAMFILES%` alongside other installed applications.
@@ -51,7 +51,7 @@ At startup, file follower will ingest any existing data in the tracked paths bef
 
 ## Basic Configuration
 
-See [File Locations](win_file_follow_file_locations) for the default path to the configuration file.
+See File Locations section for the default path to the configuration file.
 
 The File Follower ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, File Follower supports multiple upstream indexers, TLS, cleartext, and named pipe connections, and local logging.
 
