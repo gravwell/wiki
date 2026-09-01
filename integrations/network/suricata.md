@@ -11,9 +11,8 @@
 :::
 
 ## Suricata Configuration
-Suricata by default stores its log files in `/var/log/suricata/`. The log file used by the Gravwell kit is `eve.json`. Additional log files can be monitored by adding additional stanzas to the File Follower config.
 
-Install File Follower on your Suricata host by following the instructions in [File Follower](/ingesters/file_follow), then configure it to point to your Gravwell environment.
+Suricata defines its log location in `suricata.yaml` via the `default-log-dir` parameter (for example, `default-log-dir: /var/log/suricata/`). The log file used by the Gravwell kit is `eve.json`; additional log files can be monitored by adding additional stanzas to the File Follower configuration. Install File Follower on your Suricata host by following the instructions in [File Follower](/ingesters/file_follow). Then add the configuration from the File Follower section below.
 
 ## Gravwell Configuration
 
