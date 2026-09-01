@@ -15,6 +15,7 @@ If you successfully integrate a custom log source, please reach out to us. We wo
 hidden: true
 ---
 Apache <application/apache>
+Apt-Cacher NG <host/aptcacher_ng>
 Auditd <host/auditd>
 Auth0 <application/auth0>
 AWS - CloudTrail <cloud/aws/cloudtrail>
@@ -191,6 +192,12 @@ Zeek <network/zeek>
 ## Host
 ::::{grid} 4
 :::{grid-item-card}
+:link: host/aptcacher_ng
+:link-type: doc
+**APT-Cacher NG**
+:::
+
+:::{grid-item-card}
 :link: host/auditd
 :link-type: doc
 **Auditd**
@@ -207,7 +214,9 @@ Zeek <network/zeek>
 :link-type: doc
 **Sysmon**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: host/windowsevent
 :link-type: doc
