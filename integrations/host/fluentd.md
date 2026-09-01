@@ -40,7 +40,7 @@ For additional fluentd options, e.g. using authentication see: [fluentd.org](htt
 Setup the well configuration in your Gravwell indexers.
 
 **Sample well config:**  
-Create or edit: `/opt/gravwell/etc/gravwell.conf.d/fluentd.conf`
+Create or edit: `/opt/gravwell/etc/gravwell.conf.d/fluentd-well.conf`
 ```ini
 # Fortinet 
 [Storage-Well "fortinet"]
