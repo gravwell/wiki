@@ -82,7 +82,7 @@ Instead of using the Gravwell-hosted AI service, you can configure Gravwell to u
 | Parameter | Description |
 |-----------|-------------|
 | `AI-Server-URL` | The URL of the OpenAI-compatible API endpoint. |
-| `Third-Party-Provider` | Must be set to `true` to enable third-party mode. This disables license-based authentication and the Gravwell health check. |
+| `Third-Party-Provider` | Must be set to `true` to enable third-party mode. This disables license-based authentication and performs an alternate health check. |
 | `Model` | The model name to use for chat completions (e.g. `gpt-4o`). Required when `Third-Party-Provider` is true. |
 | `Include-Header` | Additional HTTP headers for requests to the AI server, typically used for authentication. Can be specified multiple times for multiple headers. |
 | `System-Prompt-File` | Optional path to a file containing a custom system prompt for all Logbot conversations. |
@@ -92,27 +92,34 @@ Below is an example configuration that connects to OpenAI's API:
 ```
 [AI]
 	Enable=true
-	AI-Server-URL="https://api.openai.com/v1/"
+	AI-Server-URL="https://api.openai.com"
 	Third-Party-Provider=true
 	Model="gpt-4o"
-	Include-Header="Authorization: Bearer sk-your-api-key"
+	Include-Header="Authorization: Bearer <your-api-key>"
 ```
 
 ```{note}
 When using a third-party provider, Gravwell does not enforce conversation or word limits via the license — those limits are governed by the third-party service. Be aware that all messages and attached search entries will be sent to the configured third-party endpoint.
 ```
 
+```{note}
+When using a third-party provider, Gravwell will attempt to perform a model existence request as a health check to ensure the specified endpoint is responding and can service requests for the configured mode.  The health check performs a `GET` request against the specified AI-Server-URL + `/v1/models/` + Model.
+
+For example, the above configuration would perform a health check as a `GET` request against `https://api.openai.com/v1/models/gpt-4o`.
+
+Many model providers support a small fragment of the OpenAI spec and may not be compatible with Gravwell, if Logbot is reporting failures at startup validate OpenAI API compatibility.
+```
+
 #### Gotchas With Third-Party LLM Services
 
-The Microsoft Azure OpenAI endpoints have slightly different URL paths and usage of the `model` parameter.  If you are using Azure OpenAI, you will need to set the `AI-Server-URL` to the base URL of your Azure OpenAI resource and remove the `/v1` that is included in the URL (e.g. `https://<your-resource-name>.openai.azure.com/openai`).  When setting a model in the Gravwell `[AI]` configuration block the `Model` paramete is the deployment name NOT the model name.
+The Microsoft Azure OpenAI endpoints have slightly different URL paths and usage of the `model` parameter.  If you are using Azure OpenAI, you will need to set the `AI-Server-URL` to the base URL of your Azure OpenAI resource and remove the `/v1` that is included in the URL (e.g. `https://<your-resource-name>.openai.azure.com/openai`).  When setting a model in the Gravwell `[AI]` configuration block the `Model` parameter is the deployment name NOT the model name.
 
 ![Azure Foundry Endpoint Parameters](azure_foundry_params.png)
 
 ```
 [AI]
 	Enable=true
-	AI-Server-URL="AI-Server-URL="https://gravwell-slop-testing-resource.openai.azure.com/openai"
-"
+	AI-Server-URL="https://gravwell-slop-testing-resource.openai.azure.com/openai"
 	Third-Party-Provider=true
 	Model="Kimi-K2-Test-Deployment"
 	Include-Header="Authorization: Bearer <your-azure-openai-api-key>"
