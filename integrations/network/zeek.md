@@ -46,7 +46,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/zeek.conf`
 
 ### Gravwell Ingester Configuration: File Follower
 
-You will need to change `Base-Directory` to the location set in your zeek config directory (e.g. `/opt/zeek/logs/current`). Also verify that the `gravwell` user is able to read the files.
+You will need to change `Base-Directory` to the location set in your Zeek config (e.g. `/opt/zeek/logs/current`). Also verify that the `gravwell` user is able to read the files.
 
 **Sample File Follower config:**  
 Create or edit: `/opt/gravwell/etc/file_follow.conf.d/zeek.conf`

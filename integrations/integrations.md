@@ -175,7 +175,6 @@ Zeek <network/zeek>
 **Suricata**
 :::
 
-
 :::{grid-item-card}
 :link: network/thinkst
 :link-type: doc
@@ -289,7 +288,6 @@ Zeek <network/zeek>
 :link-type: doc
 **Teleport**
 :::
-
 ::::
 
 (generic_integrations)=
