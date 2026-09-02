@@ -48,9 +48,9 @@ CustomLog /var/log/apache2/access.log json_combined
 ErrorLog  /var/log/apache2/error.log
 ```
 
-### Common Gotchas & Advance Tweaks
+### Common Gotchas & Advanced Tweaks
 
-#### RewriteRule placement (Extesionless URLS)
+#### RewriteRule placement (Extensionless URLS)
 If you're using `mod_rewrite` to handle extensionless URLs (e.g. routing `/status` to `/status.php`), your rules must must be placed inside a  `<Directory>` block rather than directly at the global VirtualHost level.
 
 At the global VirtualHost level, `%{REQUEST_FILENAME}` treats the target as a plain URI string instead of a filesystem path. This causes `-f` (file) and `-d` (directory) checks to always evaluate false:

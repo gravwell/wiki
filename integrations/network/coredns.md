@@ -12,7 +12,7 @@
 ## CoreDNS Configuration
 [CoreDNS: Gravwell Integration Guide](https://coredns.io/explugins/gravwell/)
 
-CoreDNS can be built with the Gravwell Plugin using the following shell code. (Note this assumes that Go is already installed.):
+CoreDNS can be built with the Gravwell Plugin using the following shell code. (Note this assumes that Go is already installed):
 
 ```shell
 git clone https://github.com/coredns/coredns.git
@@ -24,16 +24,16 @@ CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /tmp/coredns
 popd
 ```
 
-The CoreDNS binary will be located at `/tmp/coredns` move this to a new folder for extended use: `mkdir -p /opt/coredns && cp /tmp/coredns /opt/coredns/`. If you are running CoreDNS as a non-root user, you will need to give the binary the service bind capability.
+The CoreDNS binary will be located at `/tmp/coredns`. Move this to a new folder for extended use: `mkdir -p /opt/coredns && cp /tmp/coredns /opt/coredns/`. If you are running CoreDNS as a non-root user, you will need to give the binary the service bind capability.
 
 ```shell
-setcap 'cap_net_bind_service=+ep' /opt/coredns/coredns
+sudo setcap 'cap_net_bind_service=+ep' /opt/coredns/coredns
 ```
 
-CoreDNS can then be started by providing a valid Corefile as the first argument.
+CoreDNS can then be started by providing a valid Corefile.
 
 ```shell
-/opt/coredns/coredns --config /opt/coredns/coredns.config
+/opt/coredns/coredns -conf /opt/coredns/Corefile
 ```
 
 Configuration is performed via the CoreDNS Corefile, which has the basic syntax of directive value. Comments are preceded by the "#" character. A basic Gravwell definition looks like so:
