@@ -107,7 +107,7 @@ When using a third-party provider, Gravwell will attempt to perform a model exis
 
 For example, the above configuration would perform a health check as a `GET` request against `https://api.openai.com/v1/models/gpt-4o`.
 
-Many model providers support a small fragment of the OpenAI spec and may not be compatible with Gravwell, if Logbot is reporting failures at startup validate OpenAI API compatibility.
+Many model providers support a small fragment of the OpenAI spec and may not be compatible with Gravwell. If Logbot is reporting failures at startup, validate OpenAI API compatibility.
 ```
 
 #### Gotchas With Third-Party LLM Services
