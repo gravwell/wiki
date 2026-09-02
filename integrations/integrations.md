@@ -44,8 +44,10 @@ Palo Alto <network/paloalto>
 pfSense <network/pfsense>
 PiHole <network/pihole>
 Proxmox <network/proxmox>
+Suricata <network/suricata>
 Syslog <generic/syslog>
 Sysmon <host/sysmon>
+Teleport <application/teleport>
 Thinkst <network/thinkst>
 Windows Event <host/windowsevent>
 Zeek <network/zeek>
@@ -167,6 +169,13 @@ Zeek <network/zeek>
 
 ::::{grid} 4
 :::{grid-item-card}
+:link: network/suricata
+:link-type: doc
+**Suricata**
+:::
+
+
+:::{grid-item-card}
 :link: network/thinkst
 :link-type: doc
 **Thinkst**
@@ -255,7 +264,7 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: application/okta
 :link-type: doc
-**Okta** 
+**Okta**
 :::
 ::::
 
@@ -263,8 +272,15 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: application/openweathermap
 :link-type: doc
-**Open Weather Map** 
+**Open Weather Map**
 :::
+
+:::{grid-item-card}
+:link: application/teleport
+:link-type: doc
+**Teleport**
+:::
+
 ::::
 
 (generic_integrations)=
