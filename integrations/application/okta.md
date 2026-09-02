@@ -10,6 +10,7 @@
 
 ## Okta Configuration
 
+### Okta System Log API
 To configure Okta for ingestion with the API you will need the following:
 
 * **Domain:** Your Okta account domain (e.g. myorg.okta.com).
@@ -75,6 +76,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/okta-well.conf`
 
 #### Sample Okta config: Okta Hosted Ingester
 If the Hosted Runner is not installed, follow the [configuration guide for Okta](https://docs.gravwell.io/ingesters/okta.html) to create your own configuration.  
+
 Edit: `/opt/gravwell/etc/hosted_runner.conf`
 
 ```ini
