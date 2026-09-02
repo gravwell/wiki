@@ -790,6 +790,11 @@ Default Value: (none)
 Example: `Header="Authorization: Bearer my-token"`  
 Description: Additional HTTP headers to include in requests to the MCP server, in "Key: Value" form. Multiple headers can be specified by repeating the directive.  
 
+### **Insecure-Skip-TLS-Verify**
+Default Value: false  
+Example: `Insecure-Skip-TLS-Verify=true`  
+Description: Do not validate the TLS certificate presented by the MCP server. This allows connecting to an MCP server using a self-signed certificate. 
+
 ## Password Control
 
 The `[Password-Control]` configuration section can be used to enforce password complexity rules when users are created or passwords are changed. Options set in this block apply only to webservers. These complexity configuration rules do not apply when using Single Sign On.
