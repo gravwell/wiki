@@ -1,6 +1,6 @@
 # Logbot Node
 
-The Logbot node uses Gravwell's AI-powered Logbot service to analyze, explain, or summarize log data and text. It sends input text to the Logbot API and returns the AI-generated response in a configurable output variable.
+The Logbot node uses Gravwell's AI-powered Logbot service to analyze, explain, or summarize log data and text. It sends input text to an [AI agent](ai-agents) and returns the AI-generated response in a configurable output variable.
 
 ![](logbot_example.png)
 
@@ -10,13 +10,14 @@ This node requires the Logbot/AI API service to be enabled on your Gravwell inst
 
 ## Configuration
 
-* `Input`, required: The text or log data to send to Logbot. This can be a static string or a variable from the payload (such as search results, formatted text, or raw log entries).
+* `Agent`: The AI agent to run (default: `logbot`, the built-in assistant). Any other value must name an agent the user running the flow can access; the node validates the name before sending the request. 
+* `Input`, required: The text or log data to send to the agent. This can be a static string or a variable from the payload (such as search results, formatted text, or raw log entries). When the agent's own prompt already says what to do, the default input (`execute using the instructions in the agent system prompt`) is enough.
 * `Action`, required: The type of analysis to perform. Must be one of:
   * `explain` - Analyzes and explains the individual components of log entries and provides context about what each part represents
   * `summarize` - Extracts and summarizes the most important information from log entries into a condensed form
   * `custom` - Allows you to provide your own custom prompt without predefined instructions
 * `Additional Prompts`: Optional extra instructions to include with your request. This allows you to refine or customize the analysis (e.g., "Focus on security-related events" or "Identify anomalies").
-* `Output Name`: The name of the variable where the Logbot response will be stored in the payload (default: `logbot_output`).
+* `Output Name`: The name of the variable where the response will be stored in the payload (default: `logbot_output`).
 * `Max Payload Size`: Maximum input size in bytes (default: 65536). If the input exceeds this size, it will be truncated and a warning will be logged.
 
 ![](logbot_config.png)

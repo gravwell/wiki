@@ -40,12 +40,12 @@ For additional fluentd options, e.g. using authentication see: [fluentd.org](htt
 Setup the well configuration in your Gravwell indexers.
 
 **Sample well config:**  
-Create or edit: `/opt/gravwell/etc/gravwell.conf.d/fluentd.conf`
+Create or edit: `/opt/gravwell/etc/gravwell.conf.d/fluentd-well.conf`
 ```ini
 # Fortinet 
-[Storage-Well "fortinet"]
-    Location=/opt/gravwell/storage/fortinet
-    Tags=fortinet*
+[Storage-Well "fluentd"]
+    Location=/opt/gravwell/storage/fluentd
+    Tags=fluentd*
     Accelerator-Name=fulltext #fulltext is the most resilent to varying data types
     Accelerator-Args="-ignoreFloat" #tell the fulltext accelerator to not index timestamps, syslog entries are easy to ID
     Accelerator-Engine-Override=bloom #The bloom engine is effective and fast with minimal disk overhead

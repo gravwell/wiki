@@ -11,8 +11,10 @@
 ## MongoDB Configuration
 
 ### [Option 1] Logging to File Follower
-Verify `systemLog` stanza in `/etc/mongod.conf` matches the following:
-```
+
+MongoDB defines its log location in `/etc/mongod.conf` via the `systemLog` stanza. Verify it matches the following:
+
+```yaml
 systemLog:
   destination: file
   logAppend: true
@@ -20,8 +22,10 @@ systemLog:
 ```
 
 ```{note}
-By default mongdb.log only has user `rw` permissions. For file follower to read the file these will need to be modified.
+By default, `mongod.log` only has user `rw` permissions. For File Follower to read the file, these permissions will need to be modified.
 ```
+
+Install File Follower on your MongoDB host by following the instructions in [File Follower](/ingesters/file_follow). Then add the configuration from the File Follower section below.
 
 ### [Option 2] Logging with Rsyslog to Simple Relay
 
