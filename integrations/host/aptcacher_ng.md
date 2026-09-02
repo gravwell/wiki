@@ -25,7 +25,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/aptcacher.conf`
     Location=/opt/gravwell/storage/aptcacher
     Tags=aptcacher*
 ```
-### Gravwell Ingester Configuration
+
+### Gravwell Ingester Configuration: File Follower
 **Sample APT-Cacher NG config:**  
 Create or edit: `/opt/gravwell/etc/file_follow.conf.d/aptcacher.conf`
 ```ini
