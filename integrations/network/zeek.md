@@ -12,9 +12,8 @@
 
 ## Zeek Configuration
 
-The standard method to collect Zeek logs is using the gravwell-file-follower.
+Zeek defines its log location in `zeekctl.cfg` via the `LogDir` parameter (for example, `LogDir = /opt/zeek/logs`). Install File Follower on your Zeek host by following the instructions in [File Follower](/ingesters/file_follow). Then add the configuration from the File Follower section below.
 
-File Follower can be installed following instructions in the [file follower](/ingesters/file_follow.md). File follower will need to be configured to point to your current Gravwell environment.
 
 ## Gravwell Configuration
 
@@ -46,6 +45,9 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/zeek.conf`
 ```
 
 ### Gravwell Ingester Configuration: File Follower
+
+You will need to change `Base-Directory` to the location set in your Zeek config (e.g. `/opt/zeek/logs/current`). Also verify that the `gravwell` user is able to read the files.
+
 **Sample File Follower config:**  
 Create or edit: `/opt/gravwell/etc/file_follow.conf.d/zeek.conf`
 ```ini
