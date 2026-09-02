@@ -10,7 +10,7 @@
 
 ## Nginx Configuration
 
-Nginx's default `combined` format is space-delimited. To better setup for Gravwell ingestion we recommend replacing it with a `log_format` directive that produces one JSON object per request, then apply that format to each vhost.
+Nginx's default `combined` log format is space-delimited. To better prepare logs for Gravwell ingestion, we recommend replacing it with a `log_format` directive that produces one JSON object per request. Apply that format to each virtual host.
 
 In `/etc/nginx/nginx.conf` (inside the `http {}` block):
 
@@ -30,7 +30,7 @@ log_format json_access escape=json
     '}';
 ```
 
-Then in each vhost (or the default server block):
+Then, in each virtual host (or the default server block):
 
 ```nginx
 access_log /var/log/nginx/access.log json_access;
@@ -49,6 +49,8 @@ If nginx is acting as a reverse proxy, add these to the proxy location block so 
 proxy_set_header X-Real-IP       $remote_addr;
 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 ```
+
+Nginx writes logs to `access.log` and `error.log` in `/var/log/nginx/` by default. Install File Follower on your Nginx host by following the instructions in [File Follower](/ingesters/file_follow). Then add the configuration from the File Follower section below.
 
 ## Gravwell Configuration
 

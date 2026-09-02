@@ -9,9 +9,8 @@
 :::
 
 ## Apache Configuration
-Apache features a highly configurable logging framework. Logging can be applied globally (on Debian/Ubuntu hosts, this is typically stored in `/etc/apache2/apache2.conf`) or for each virtual host (typically stored in `/etc/apache2/sites-available/{VHOST_NAME}.conf`). 
 
-Follow the steps below to configure Apache to output clean data for Gravwell ingestion.
+Apache defines its log locations via the `ErrorLog` and `CustomLog` directives, which can be configured globally (typically `/etc/apache2/apache2.conf`) or per virtual host (typically `/etc/apache2/sites-available/{VHOST_NAME}.conf`). By default, these write to `error.log` and `access.log` in `/var/log/apache2/`. Follow the steps below to configure Apache to output clean data for Gravwell ingestion, then install File Follower on your Apache host by following the instructions in [File Follower](/ingesters/file_follow). Then add the configuration from the File Follower section below.
 
 ### Define LogFormat
 Apache uses the Common Log Format by default, so we will define a custom structure called: `json_combined`. This will write the logs cleanly as JSON before ingestion into Gravwell.
@@ -49,9 +48,9 @@ CustomLog /var/log/apache2/access.log json_combined
 ErrorLog  /var/log/apache2/error.log
 ```
 
-### Common Gotchas & Advance Tweaks
+### Common Gotchas & Advanced Tweaks
 
-#### RewriteRule placement (Extesionless URLS)
+#### RewriteRule placement (Extensionless URLS)
 If you're using `mod_rewrite` to handle extensionless URLs (e.g. routing `/status` to `/status.php`), your rules must must be placed inside a  `<Directory>` block rather than directly at the global VirtualHost level.
 
 At the global VirtualHost level, `%{REQUEST_FILENAME}` treats the target as a plain URI string instead of a filesystem path. This causes `-f` (file) and `-d` (directory) checks to always evaluate false:
