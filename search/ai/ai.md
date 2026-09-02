@@ -84,7 +84,7 @@ Instead of using the Gravwell-hosted AI service, you can configure Gravwell to u
 | Parameter | Description |
 |-----------|-------------|
 | `AI-Server-URL` | The URL of the OpenAI-compatible API endpoint. |
-| `Third-Party-Provider` | Must be set to `true` to enable third-party mode. This disables license-based authentication and the Gravwell health check. |
+| `Third-Party-Provider` | Must be set to `true` to enable third-party mode. This disables license-based authentication and performs an alternate health check. |
 | `Model` | The model name to use for chat completions (e.g. `gpt-4o`). Required when `Third-Party-Provider` is true. |
 | `Include-Header` | Additional HTTP headers for requests to the AI server, typically used for authentication. Can be specified multiple times for multiple headers. |
 | `System-Prompt-File` | Optional path to a file containing a custom system prompt for all Logbot conversations. |
@@ -94,14 +94,22 @@ Below is an example configuration that connects to OpenAI's API:
 ```
 [AI]
 	Enable=true
-	AI-Server-URL="https://api.openai.com/v1/"
+	AI-Server-URL="https://api.openai.com"
 	Third-Party-Provider=true
 	Model="gpt-4o"
-	Include-Header="Authorization: Bearer sk-your-api-key"
+	Include-Header="Authorization: Bearer <your-api-key>"
 ```
 
 ```{note}
 When using a third-party provider, Gravwell does not enforce conversation or word limits via the license — those limits are governed by the third-party service. Be aware that all messages and attached search entries will be sent to the configured third-party endpoint.
+```
+
+```{note}
+When using a third-party provider, Gravwell will attempt to perform a model existence request as a health check to ensure the specified endpoint is responding and can service requests for the configured mode.  The health check performs a `GET` request against the specified AI-Server-URL + `/v1/models/` + Model.
+
+For example, the above configuration would perform a health check as a `GET` request against `https://api.openai.com/v1/models/gpt-4o`.
+
+Many model providers support a small fragment of the OpenAI spec and may not be compatible with Gravwell. If Logbot is reporting failures at startup, validate OpenAI API compatibility.
 ```
 
 #### Gotchas With Third-Party LLM Services
