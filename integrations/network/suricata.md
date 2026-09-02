@@ -4,10 +4,8 @@
 :align: left
 :width: 45%
 :widths: 15, 25
-
 **Integration Details**
     Ingester, [File Follower](/ingesters/file_follow)
-    Kit, [Suricata Kit](https://github.com/gravwell/kits/tree/main/suricata)
 :::
 
 ## Suricata Configuration
@@ -28,7 +26,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/suricata-well.conf`
     Tags=suricata*
 ```
 
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: File Follower
 
 **Sample File Follower config:**  
 Create or edit: `/opt/gravwell/etc/file_follow.conf.d/suricata.conf`
