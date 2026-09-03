@@ -214,7 +214,7 @@ Description:	The Datastore-Log-Location parameter controls where datastore logs 
 
 ### **Log-Level**
 Applies to:        Indexer, Datastore, and Webserver  
-Default Value:        `INFO`  
+Default Value:        `WARN`  
 Example:        `Log-Level=ERROR`  
 Description:        The Log-Level parameter controls the verbosity of logs from gravwell infrastructure.  There are three available arguments to the Log-Level: INFO, WARN, and ERROR.  INFO is the most verbose, and ERROR is the least.  The logging system will generate a file for each level of logging and rotate them in a similar manner to the syslog daemon.
 
@@ -280,7 +280,7 @@ Description:        The Web-Files-Path specifies the path containing the fronten
 
 ### **Tag-DB-Path**
 Applies to:		Indexer  
-Default Value:	`/opt/gravwell/etc/tags.db`  
+Default Value:	`/opt/gravwell/etc/tags.dat`  
 Example:		`Tag-DB-Path=/tmp/path/to/tags.db`  
 Description:	The Tag-DB-Path parameter specifies the location of the tag database. This file maps the indexer's numeric tag IDs to tag name strings.
 
@@ -316,20 +316,20 @@ Description:        The Web-Listen-Address parameter specifies the address the w
 
 #### **Login-Fail-Lock-Count**
 Applies to:        Webserver
-Default Value:        `5`
+Default Value:        `0` (disabled; the `gravwell.conf` shipped with the installers and Docker images sets `5`)
 Example:        `Login-Fail-Lock-Count=10`
 Description:        The Login-Fail-Lock-Count parameter specifies the number of sequential failed logins that can occur against a user account before brute-force protection is enabled on the account.  For example, if the value is set to 4 and a user provides a bad password 4 times in a row, additional login attempts will take longer to complete, slowing down an attacker. Note: Gravwell previously locked an account after a specific number of failures; it now engages a less aggressive brute-force protection, but for legacy reasons the configuration parameter retains the 'Lock' name.
 
 #### **Login-Fail-Lock-Duration**
 Applies to:        Webserver
-Default Value:        `5`
+Default Value:        `0` (disabled; the `gravwell.conf` shipped with the installers and Docker images sets `5`)
 Example:        `Login-Fail-Lock-Duration=10`
 Description:        The Login-Fail-Lock-Duration parameter specifies the window (in minutes) used when calculating if the Login-Fail-Lock-Count has been exceeded. Note: Gravwell previously locked an account after a specific number of failures; it now engages a less aggressive brute-force protection, but for legacy reasons the configuration parameter retains the 'Lock' name.
 
 (remote-indexers-config)=
 ### **Remote-Indexers**
 Applies to:        Webserver  
-Default Value:        `net:10.0.0.1:9404`  
+Default Value:        `net:localhost:9404`  
 Example:        `Remote-Indexers=net:10.0.0.1:9404`  
 Description:        The Remote-Indexers parameter specifies the address and port of remote indexers that the webserver should connect to and control.  Remote-Indexers is a list parameter, meaning that it can be specified many times to provide multiple remote indexers. Gravwell Cluster editions will need to specify each indexer in the cluster.  The “net:” prefix indicates that the remote indexer is accessible via a network transport; special editions of Gravwell can use alternate transports, but most commercial customers should expect to use “net:”.
 
@@ -450,7 +450,7 @@ Description:        The Prebuff-Sort-On-Consume parameter tells the prebuffer to
 
 ### **Max-Block-Size**
 Applies to:        Indexer  
-Default Value:        `4`  
+Default Value:        `1`  
 Example:        `Max-Block-Size=8`  
 Description:        The Max-Block-Size specifies a value in megabytes and is used as a hint to tell indexers the maximum block size they can generate when pushing entries into the pipeline.  Larger blocks reduce pressure on the pipeline, but increase memory pressure.  Large memory and high throughput systems can increase this value to increase throughput, smaller memory systems can decrease this size to reduce memory pressure.  The Prebuff-Block-Hint and Max-Block-Size parameters intersect to provide two knobs that tune ingest and search throughput.  At Gravwell, on the 128GB nodes, the following is achieved: a clean 1GB/s of search throughput; a 1.25 million entry per second ingest with a Max-Block-Size of 16; and a Prebuff-Block-Hint of 8 is achieved
 
@@ -536,7 +536,7 @@ Description:	The Temp-Dir parameter specifies a directory which can be used for 
 
 ### **Ingest-Throttle-Threshold**
 Applies to:		Indexer  
-Default Value:	`90`  
+Default Value:	`95`  
 Example: `Ingest-Throttle-Threshold=75`  
 Description:	The Ingest-Throttle-Threshold parameter specifies at what percentage used disk space the indexer should begin throttling data ingest. If data ageout parameters are set, the indexer forces a check to see if any data can be deleted according to the ageout rules. Regardless of ageout parameters, until free disk space drops below the threshold, data ingest is stopped.
 
@@ -578,7 +578,7 @@ Description:	This parameter allows the administrator to defined a Content-Securi
 
 ### **Default-Language**
 Applies to:		Webserver  
-Default Value:		`en-US`  
+Default Value:		`en_US`  
 Example:		`Default-Language=en-US`  
 Description:		Setting the Default-Language parameter controls what is provided on the unauthenticated API at /api/language and is used by the GUI to determine which language should be default in deployments with multiple languages. This is the fallback if the user has not chosen a language and their browser is not providing a preferred language via `window.navigator.language`.
 
@@ -735,12 +735,12 @@ Description: The model name to use for chat completions. Required when `Third-Pa
 
 (max-ai-tokens)=
 ### **Max-AI-Tokens**
-Default Value: 16384
+Default Value: 131072
 Example: `Max-AI-Tokens=8192`
 Description: The Max-AI-Tokens defines the maximum number of completion tokens for a given model. This essentially controls the context window and ensures continued interactions do not exceed the context size of the configured model.
 
 ### **Max-AI-Tool-Iterations**
-Default Value: 32  
+Default Value: 128  
 Example: `Max-AI-Tool-Iterations=16`  
 Description: The maximum number of tool-call iterations the Logbot agent can perform per chat request. 
 
