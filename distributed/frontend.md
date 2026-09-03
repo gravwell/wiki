@@ -33,7 +33,7 @@ Datastore-Port=9555					# listen on port 9555 instead of 9405
 
 ## Configuring webservers for distributed operation
 
-To tell a webserver to start communicating with a datastore, set the `Datastore` and `External-Addr` fields in the "global" section of the webserver's `/opt/gravwell/etc/gravwell.conf`. For example, if the datastore server was was running on the machine with IP 10.0.0.5 and the default datastore port, and the webserver being configured was running on 10.0.0.1, the entry would look like this:
+To tell a webserver to start communicating with a datastore, set the `Datastore` and `External-Addr` fields in the "global" section of the webserver's `/opt/gravwell/etc/gravwell.conf`. For example, if the datastore server was running on the machine with IP 10.0.0.5 and the default datastore port, and the webserver being configured was running on 10.0.0.1, the entry would look like this:
 
 ```
 Datastore=10.0.0.5:9405
