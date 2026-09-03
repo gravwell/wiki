@@ -1,4 +1,4 @@
-# APT-Cacher NG
+# Apt-Cacher NG
 
 :::{csv-table}
 :align: left
@@ -8,9 +8,9 @@
     Ingester, [File Follower](/ingesters/file_follow)
 :::
 
-## APT-Cacher NG Configuration
+## Apt-Cacher NG Configuration
 
-APT-Cacher NG defines its log location in `acng.conf` via the `LogDir` parameter (for example, `LogDir: /var/log/apt-cacher-ng`). Install File Follower on your APT-Cacher NG host by following the instructions in [File Follower](/ingesters/file_follow). Then add the configuration from the File Follower section below.
+Apt-Cacher NG defines its log location typically in `/etc/apt-cacher-ng/acng.conf` via the `LogDir` parameter (for example, `LogDir: /var/log/apt-cacher-ng`). Install File Follower on your Apt-Cacher NG host by following the instructions in [File Follower](/ingesters/file_follow). Then add the configuration from the File Follower section below.
 
 ## Gravwell Configuration
 
@@ -19,7 +19,7 @@ APT-Cacher NG defines its log location in `acng.conf` via the `LogDir` parameter
 Setup the well configuration in your Gravwell indexers.
 
 **Sample well config:**  
-Create or edit: `/opt/gravwell/etc/gravwell.conf.d/aptcacher.conf`
+Create or edit: `/opt/gravwell/etc/gravwell.conf.d/aptcacher-well.conf`
 ```ini
 [Storage-Well "aptcacher"]
     Location=/opt/gravwell/storage/aptcacher
@@ -27,7 +27,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/aptcacher.conf`
 ```
 
 ### Gravwell Ingester Configuration: File Follower
-**Sample APT-Cacher NG config:**  
+**Sample Apt-Cacher NG config:**  
 Create or edit: `/opt/gravwell/etc/file_follow.conf.d/aptcacher.conf`
 ```ini
 [Follower "aptcacher"]

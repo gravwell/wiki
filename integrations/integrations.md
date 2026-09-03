@@ -193,7 +193,7 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: host/aptcacher_ng
 :link-type: doc
-**APT-Cacher NG**
+**Apt-Cacher NG**
 :::
 
 :::{grid-item-card}
