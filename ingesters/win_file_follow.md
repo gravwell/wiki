@@ -23,6 +23,7 @@ During the install you will be prompted with an initial configuration, you can u
 ![](winfilefollow.png)
 
 
+(win_file_follow_file_locations)=
 ## File Locations
 
 The File Follower installs its configuration file and its service executable in separate directories.  The configuration lives under `%PROGRAMDATA%` so that it is preserved across reinstalls and upgrades and so that Windows does not treat it as a protected program file.  The service binary lives under `%PROGRAMFILES%` alongside other installed applications.

@@ -6,14 +6,13 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [File Follower](/ingesters/file_follow)
-    Kit, [Teleport Kit](https://github.com/gravwell/kits/tree/main/teleport)
 :::
 
 ## Teleport Configuration
 
 For self-hosted clusters, Teleport defines its audit log location in `teleport.yaml` via the `audit_events_uri` parameter (for example, `audit_events_uri: ['file:///var/lib/teleport/log']`). Install File Follower on your Teleport host by following the instructions in [File Follower](/ingesters/file_follow). Then add the configuration from the File Follower section below.
 
-Logs can also be exported using Fluentd. Follow the Teleport guide here: [Export Audit Events: Fluentd](https://goteleport.com/docs/zero-trust-access/export-audit-events/fluentd/), then follow the Gravwell [Fluentd integration guide](/integrations/host/fluentd). With the following modifications:
+Logs can also be exported using Fluentd. Follow the Teleport guide here: [Export Audit Events: Fluentd](https://goteleport.com/docs/zero-trust-access/export-audit-events/fluentd/), then follow the Gravwell [Fluentd integration guide](/integrations/host/fluentd), with the following modifications:
 
 Changes necessary to: `/etc/fluent/fluentd.conf`
 * `<match **>`: Change to match the pattern of your Teleport input
@@ -40,7 +39,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/teleport-well.conf`
     Tags=teleport*
 ```
 
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: File Follower
 
 **Sample File Follower config:**  
 Create or edit: `/opt/gravwell/etc/file_follow.conf.d/teleport.conf`
