@@ -15,6 +15,7 @@ If you successfully integrate a custom log source, please reach out to us. We wo
 hidden: true
 ---
 Apache <application/apache>
+Apt-Cacher NG <host/aptcacher_ng>
 Auditd <host/auditd>
 Auth0 <application/auth0>
 AWS - CloudTrail <cloud/aws/cloudtrail>
@@ -44,8 +45,10 @@ Palo Alto <network/paloalto>
 pfSense <network/pfsense>
 PiHole <network/pihole>
 Proxmox <network/proxmox>
+Suricata <network/suricata>
 Syslog <generic/syslog>
 Sysmon <host/sysmon>
+Teleport <application/teleport>
 Thinkst <network/thinkst>
 Windows Event <host/windowsevent>
 Zeek <network/zeek>
@@ -167,6 +170,12 @@ Zeek <network/zeek>
 
 ::::{grid} 4
 :::{grid-item-card}
+:link: network/suricata
+:link-type: doc
+**Suricata**
+:::
+
+:::{grid-item-card}
 :link: network/thinkst
 :link-type: doc
 **Thinkst**
@@ -181,6 +190,12 @@ Zeek <network/zeek>
 
 ## Host
 ::::{grid} 4
+:::{grid-item-card}
+:link: host/aptcacher_ng
+:link-type: doc
+**Apt-Cacher NG**
+:::
+
 :::{grid-item-card}
 :link: host/auditd
 :link-type: doc
@@ -198,7 +213,9 @@ Zeek <network/zeek>
 :link-type: doc
 **Sysmon**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: host/windowsevent
 :link-type: doc
@@ -255,7 +272,7 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: application/okta
 :link-type: doc
-**Okta** 
+**Okta**
 :::
 ::::
 
@@ -263,7 +280,13 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: application/openweathermap
 :link-type: doc
-**Open Weather Map** 
+**Open Weather Map**
+:::
+
+:::{grid-item-card}
+:link: application/teleport
+:link-type: doc
+**Teleport**
 :::
 ::::
 

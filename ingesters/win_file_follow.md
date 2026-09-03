@@ -14,13 +14,37 @@ Download the Gravwell Windows File Follower installer:
 
 | Ingester Name | Installer    | More Info |
 | :------------ | :----------- | :-------- |
-| Windows File Follower | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.10.0/installers/gravwell_file_follow_5.10.1.1.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">28384749e3a9dd32686f754bc38a2dcf1cdd7889dfa44918c61b2d2d444edbef</span></code>'>(SHA256)</a> | [Documentation](/ingesters/win_file_follow) |
+| Windows File Follower | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.10.1/installers/gravwell_file_follow_5.10.1.1.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">28384749e3a9dd32686f754bc38a2dcf1cdd7889dfa44918c61b2d2d444edbef</span></code>'>(SHA256)</a> | [Documentation](/ingesters/win_file_follow) |
 
 The Gravwell Windows file follower is installed using a signed MSI package.  Gravwell signs both the Windows executable and MSI installer with our private key pairs, but depending on download volumes, you may see a warning about the MSI being untrusted.  This is due to the way Microsoft "weighs" files.   Basically, as they see more people download and install a given package, it becomes more trustworthy.  Don't worry though, we have a well audited build pipeline and we sign every package.
 
-During the install you will be prompted with an initial configuration, you can use this prompt to input your initial indexer endpoint, ingest secret, log level, and an initial directory to watch.  If you wish to configure additional followers, you will need to configure them in the `C:\Program Files\gravwell\filefollow\file_follow.cfg` configuration file as an administrator and restart the Gravwell File Follow service.
+During the install you will be prompted with an initial configuration, you can use this prompt to input your initial indexer endpoint, ingest secret, log level, and an initial directory to watch.  If you wish to configure additional followers, you will need to edit the configuration file (see [File Locations](win_file_follow_file_locations)) as an administrator and restart the Gravwell File Follow service.
 
 ![](winfilefollow.png)
+
+
+(win_file_follow_file_locations)=
+## File Locations
+
+The File Follower installs its configuration file and its service executable in separate directories.  The configuration lives under `%PROGRAMDATA%` so that it is preserved across reinstalls and upgrades and so that Windows does not treat it as a protected program file.  The service binary lives under `%PROGRAMFILES%` alongside other installed applications.
+
+| File | Location |
+| :--- | :------- |
+| Configuration file | `%PROGRAMDATA%\gravwell\filefollow\file_follow.cfg` |
+| Service executable | `%PROGRAMFILES%\gravwell\filefollow\` |
+
+On the vast majority of Windows installations these environment variables resolve to:
+
+| Variable | Typical resolved path |
+| :------- | :-------------------- |
+| `%PROGRAMDATA%` | `C:\ProgramData` |
+| `%PROGRAMFILES%` | `C:\Program Files` |
+
+So in practice the configuration file usually lives at `C:\ProgramData\gravwell\filefollow\file_follow.cfg` and the service executable at `C:\Program Files\gravwell\filefollow\`.  If you have relocated these directories (for example onto a non-default system drive), substitute the resolved values from your system.  You can check them from an administrator command prompt with `echo %PROGRAMDATA%` and `echo %PROGRAMFILES%`.
+
+```{note}
+Older installations placed the configuration file under `%PROGRAMFILES%\gravwell\filefollow\file_follow.cfg`.  New installations use the `%PROGRAMDATA%` location above.
+```
 
 ## Startup considerations
 
@@ -28,7 +52,7 @@ At startup, file follower will ingest any existing data in the tracked paths bef
 
 ## Basic Configuration
 
-The File Follower configuration file is by default located in `C:\Program Files\gravwell\filefollow\file_follow.cfg`.
+See File Locations section for the default path to the configuration file.
 
 The File Follower ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters).  Like most other Gravwell ingesters, File Follower supports multiple upstream indexers, TLS, cleartext, and named pipe connections, and local logging.
 
@@ -45,7 +69,7 @@ Connection-Timeout = 0
 Insecure-Skip-TLS-Verify = false
 Cleartext-Backend-Target=172.20.0.1:4023 #example of adding a cleartext connection
 Cleartext-Backend-Target=172.20.0.2:4023 #example of adding another cleartext connection
-#State-Store-Location="C:\\Program Files\\gravwell\\filefollow\\file_follow.cache"
+#State-Store-Location="C:\\ProgramData\\gravwell\\filefollow\\file_follow.cache"
 Log-Level=ERROR #options are OFF INFO WARN ERROR
 Max-Files-Watched=64
 

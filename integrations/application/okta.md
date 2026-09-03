@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, • [Okta Hosted Ingester](/ingesters/okta) <br /> • [Simple Relay](/ingesters/simple_relay)
+    Ingester, • [Okta Hosted Ingester](/ingesters/okta) <br />
 :::
 
 ## Okta Configuration
