@@ -539,28 +539,6 @@ The resulting entries will have the following tags:
 | bar     | `valid sourcetype foo` |
 | baz     | `no sourcetype, use default` |
 
-
-(debug-posts)=
-#### Debug-Posts
-
-The `Debug-Posts` configuration option enables additional logging on each HTTP POST request to the HTTP ingester endpoint.  Only successful transactions will be logged when using the `Debug-Posts` configuration option.  Authentication failures, structure failures, or just bad requests are logged using the existing systems.  The debug logs are sent to the `gravwell` tag.
-
-Here is a raw log entry emitted from a HEC debug post:
-```
-<14>1 2023-11-03T18:01:54.201875Z example.gravwell.io httpingester - HttpIngester/hec.go:234 [gw@1 host="172.19.0.1" method="POST" url="/services/collector" bytes="255" entries="3" code="200"] HEC request
-```
-
-Generating a table of the relevant data might use the following query:
-
-```
-tag=gravwell syslog Appname==httpingester Message == "HEC request" Hostname 
-  Structured[gw@1].host Structured[gw@1].url Structured[gw@1].bytes Structured[gw@1].entries
-| table Hostname host url bytes entries TIMESTAMP
-```
-
-![](hec_debug1.png)
-
-
 #### Token-Name
 
 Many third party services which are designed to send data to a HEC compatible listener have been observed sending authentication tokens with various random names; the default expected authentication header structure is `Authorization: Splunk <token>`, but we have seen everything from "User" to "user_name".  The `Token-Name` configuration parameter can override the Authorization header token name so that the HEC compatible listener can still authenticate and support third party services that do not adhere to the HEC guidance.
