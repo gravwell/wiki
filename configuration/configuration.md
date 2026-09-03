@@ -187,6 +187,8 @@ The `[State]` block configures how the Hosted Runner plugins persist their state
 
 Plugin-specific stanzas are added below this common configuration. See the [Hosted Ingesters](hosted_ingesters_list) documentation for available plugins and their configuration options.
 
+Plugin stanzas can be added, removed, or changed without restarting the Hosted Runner by sending the process a `SIGHUP` signal; see [Dynamic Configuration Reload](hosted_runner_reload) for details.
+
 (password_complexity)=
 ## Password Complexity
 
