@@ -285,7 +285,7 @@ An upgrade cycle using Docker compose might look like this:
 
 ```
 docker compose down
-docker dompose rm
+docker compose rm
 docker pull gravwell/gravwell:latest
 docker pull gravwell/simple_relay:latest
 docker pull gravwell/netflow_capture:latest
