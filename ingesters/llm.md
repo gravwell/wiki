@@ -21,7 +21,7 @@ The LLM ingester pairs naturally with the [vector preprocessor](/ingesters/prepr
 
 ```{include} installation_instructions_template 
 ```
-
+(basic-configuration)=
 ## Basic Configuration
 
 The LLM ingester uses the unified global configuration block described in the [ingester section](ingesters_global_configuration_parameters). Like most other Gravwell ingesters, the LLM ingester supports multiple upstream indexers, TLS, cleartext, and named pipe connections, a local cache, and local logging.
