@@ -86,7 +86,7 @@ Gravwell installers come in two forms: repository installation packages (either 
 
 ## Installation Configuration Files
 
-Gravwell configuration files are stored in `/opt/gravwell/etc` and are used to control how webservers, search agents, indexers, and ingesters behave.  The Gravwell configuration files usually contain shared secret tokens that are used for authentication.  The shared secrets allow allow varying levels of control over Gravwell components.  For instance, if the `Ingest-Secret` is compromised attackers could send superfluous entries into the index, consuming storage but not leaking any sensitive information, while compromising the `Control-Secret` would allow an attacker to search across the data in the indexers. Take care to avoid leaking secrets; aside from the ingest secret, most will never need to leave the indexer & webserver nodes.
+Gravwell configuration files are stored in `/opt/gravwell/etc` and are used to control how webservers, search agents, indexers, and ingesters behave.  The Gravwell configuration files usually contain shared secret tokens that are used for authentication.  The shared secrets allow varying levels of control over Gravwell components.  For instance, if the `Ingest-Secret` is compromised attackers could send superfluous entries into the index, consuming storage but not leaking any sensitive information, while compromising the `Control-Auth` token would allow an attacker to search across the data in the indexers. Take care to avoid leaking secrets; aside from the ingest secret, most will never need to leave the indexer & webserver nodes.
 
 ## systemd Unit Files
 

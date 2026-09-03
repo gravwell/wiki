@@ -64,7 +64,7 @@ An example well configuration using only a hot pool of data and deleting data wi
 ```
 [Storage-Well "syslog"]
 	Location=/mnt/xpoint/gravwell/syslog
-	Tags=pcap
+	Tags=syslog
 	Hot-Duration=30D
 	Delete-Cold-Data=true
 ```
@@ -75,7 +75,7 @@ An example configuration in which data is moved from the hot pool to the cold po
 [Storage-Well "syslog"]
 	Location=/mnt/xpoint/gravwell/syslog
 	Cold-Location=/mnt/storage/gravwell_cold/syslog
-	Tags=pcap
+	Tags=syslog
 	Hot-Duration=7D
 	Cold-Duration=90D
 	Delete-Frozen-Data=true
@@ -112,7 +112,7 @@ Data age is calculated as the time difference between now and the timestamp on t
 
 ## Total Storage-Based Ageout Rules
 
-Total storage constraints allots a specific amount of storage in a volume regardless of time spans.  Storage constraints allow a Gravwell indexer to make aggressive and full use of high speed storage pools which may be of limited size (such as NVME flash).  The indexer will keep entries in the storage pool, as long as the well isn't consuming more than allowed.  Storage constraints allow for unexpected bursts of ingest without disrupting data storage.  For example, if an indexer has 1TB of high speed flash storage which typically handles 7 days of hot storage but an unexpected data event causes 600GB of ingest in a single day, the indexer can age out the older data to the cold pool without disrupting the hot pool's ability to take in new data.  Shards are prioritized by time; the oldest shards are aged out first for both hot and cold pools.
+Total storage constraints allot a specific amount of storage in a volume regardless of time spans.  Storage constraints allow a Gravwell indexer to make aggressive and full use of high speed storage pools which may be of limited size (such as NVME flash).  The indexer will keep entries in the storage pool, as long as the well isn't consuming more than allowed.  Storage constraints allow for unexpected bursts of ingest without disrupting data storage.  For example, if an indexer has 1TB of high speed flash storage which typically handles 7 days of hot storage but an unexpected data event causes 600GB of ingest in a single day, the indexer can age out the older data to the cold pool without disrupting the hot pool's ability to take in new data.  Shards are prioritized by time; the oldest shards are aged out first for both hot and cold pools.
 
 An example well configuration that keeps up to 500GB of data in a hot pool, deleting old data when the 500GB limit is exceeded:
 
@@ -167,14 +167,14 @@ An example well configuration which will use the hot location as long as there i
 ```
 
 ```{attention}
-The Gravwell ageout system which operates on storage reserves is operating entirely orthogonal to outside influences, if a well is configured to respect a 50% storage ceiling and an outside application fills the volume to 60%, Gravwell will delete all entries outside the active shard.  Wells configured with storage reserved should be treated as expendable.
+The Gravwell ageout system which operates on storage reserves is operating entirely orthogonal to outside influences, if a well is configured to respect a 50% storage ceiling and an outside application fills the volume to 60%, Gravwell will delete all entries outside the active shard.  Wells configured with storage reserves should be treated as expendable.
 ```
 
 ## Forcing a Required Retention Period
 
 Controlling ageout using storage constraints allows Gravwell to manage storage by moving and/or deleting data only when needed.  However, it may be desirable to enforce a line in the sand in addition to standard storage-based controls.  The `Required-Retention` stanza can specify a period that directs the configured well to refuse to delete data, across hot or cold storage, if the specific retention period is not maintained.
 
-For example, the following configuration defines that the well should keep up to 100G in hot storage and maintain at least 10% of spare storage in cold.  The `Required-Retention=30d` also informs the well that it is not allowed to delete shards within the 30 days, regardless of storage availability.
+For example, the following configuration defines that the well should keep up to 100GB in hot storage and maintain at least 10% of spare storage in cold.  The `Required-Retention=30d` also informs the well that it is not allowed to delete shards within the 30 days, regardless of storage availability.
 
 ```
 [Storage-Well "doorlogs"]
@@ -233,7 +233,7 @@ Example well configuration which uses up to 100GB of hot storage and retains dat
 	Tags=apache
 	Tags=nginx
 	Tags=iis
-	Max-Hot-Data-GB=100
+	Max-Hot-Storage-GB=100
 	Cold-Duration=90D
 	Delete-Frozen-Data=true
 ```
@@ -261,7 +261,7 @@ Example well configuration which keeps 7 days or 100GB in the hot pool and keeps
 	Tags=apache
 	Tags=nginx
 	Tags=iis
-	Hot-Storage-Reserve=100
+	Max-Hot-Storage-GB=100
 	Hot-Duration=7D
 	Cold-Storage-Reserve=20
 	Delete-Frozen-Data=true
