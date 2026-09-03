@@ -27,7 +27,7 @@ The core configuration file is designed to be shared by both the webserver and i
 
 For a detailed listing of configuration options see [this page](parameters).
 
-The most important items in the configuration file are the `Ingest-Auth`, `Control-Auth`, and `Search-Agent-Auth` configuration parameters.  The `Control-Auth` parameter is the shared secret that the webserver and indexers use to authenticate each other. If an attacker can communicate with your indexers and has the `Control-Auth` token, he has total access to the data they store.  The `Ingest-Auth` token is used to validate ingesters, and restricts the ability to create tags and push data into Gravwell.  Gravwell prides itself on speed, which means an attacker with access to your `Ingest-Auth` token can push a tremendous amount of data into Gravwell in a very short amount of time.  The `Search-Agent-Auth` token allows Gravwell's Search Agent utility to automatically connect to the webserver and issue searches on the behalf of users. These tokens are important and you should protect them carefully.
+The most important items in the configuration file are the `Ingest-Auth`, `Control-Auth`, and `Search-Agent-Auth` configuration parameters.  The `Control-Auth` parameter is the shared secret that the webserver and indexers use to authenticate each other. If an attacker can communicate with your indexers and has the `Control-Auth` token, they have total access to the data they store.  The `Ingest-Auth` token is used to validate ingesters, and restricts the ability to create tags and push data into Gravwell.  Gravwell prides itself on speed, which means an attacker with access to your `Ingest-Auth` token can push a tremendous amount of data into Gravwell in a very short amount of time.  The `Search-Agent-Auth` token allows Gravwell's Search Agent utility to automatically connect to the webserver and issue searches on the behalf of users. These tokens are important and you should protect them carefully.
 
 ```{attention}
 In clustered Gravwell installations, it is essential that all nodes are configured with the same `Ingest-Auth` and `Control-Auth` values to enable proper intercommunication.
@@ -71,7 +71,7 @@ By default, Gravwell does not generate TLS certificates. For instructions on set
 
 Indexers are the storage centers of Gravwell and are responsible for storing, retrieving, and processing data.  Indexers perform the first heavy lifting when executing a query, first finding the data then pushing it into the search pipeline.  The search pipeline will perform as much work as possible in parallel on the indexers for efficiency.  Indexers benefit from high-speed low-latency storage and as much RAM as possible.  Gravwell can take advantage of filesystem caches, which means that as you are running multiple queries over the same data it won’t even have to go to the disks.  We have seen Gravwell operate at over 5GB/s per node on well-cached data.  The more memory, the more data can be cached.  When searching over large pools that exceed the memory capacity of even the largest machines, high speed RAID arrays can help increase throughput.
 
-We recommend indexers have at least 32GB of memory with 8 CPU cores.  If possible, Gravwell also recommends a very high speed NVME solid state disk that can act as a hot well, holding just a few days of of the most recent data and aging out to the slower spinning disk pools.  The hot well enables very fast access to the most recent data, while enabling Gravwell to organize and consolidate older data so that he can be searched as efficiently as possible.
+We recommend indexers have at least 32GB of memory with 8 CPU cores.  If possible, Gravwell also recommends a very high speed NVME solid state disk that can act as a hot well, holding just a few days of the most recent data and aging out to the slower spinning disk pools.  The hot well enables very fast access to the most recent data, while enabling Gravwell to organize and consolidate older data so that it can be searched as efficiently as possible.
 
 There are a few key configuration options in an indexer's gravwell.conf which affect its general behavior:
 
@@ -89,16 +89,16 @@ Indexers store their data in _wells_. Each well stores some number of tags. If a
 
 Tags can be assigned to wells so that data streams can be routed to faster or larger storage pools. For example, a raw pcap stream from a high bandwidth link may need to be assigned to a faster storage pool while relatively low-volume log entries from syslog or a webserver do not require fast storage. A tag-to-well mapping is a one-to-one mapping; a single tag cannot be assigned to multiple wells, although a well can contain multiple tags.  Logically and physically separating data streams allows different rules to be applied to different data.  For example, it may be desirable to expire or compress high bandwidth streams, like network traffic, every 15 days while keeping low bandwidth streams for much longer.  The logical separation also greatly increases search performance as the system intelligently queries the appropriate well based on tag (e.g. when searching syslog entries located in the well named default, Gravwell will not engage any other wells).
 
-Tag-to-well mappings are defined in the `/opt/gravwell/etc/gravwell.conf` configuration file. By default, only a `Default-Well` will be configured, which accepts all tags. An example configuration snippet for an indexer with multiple wells associated tags might look like this:
+Tag-to-well mappings are defined in the `/opt/gravwell/etc/gravwell.conf` configuration file. By default, only a `Default-Well` will be configured, which accepts all tags. An example configuration snippet for an indexer with multiple wells and associated tags might look like this:
 
 ```
 [Default-Well]
 	Location=/opt/gravwell/storage/default/
 
-[storage-well "raw"]
+[Storage-Well "raw"]
 	Location=/opt/gravwell/storage/raw/
-	tags=pcap
-	tags=video
+	Tags=pcap
+	Tags=video
 ```
 
 The well named "raw" is thus used to store data tagged "pcap" and "video", which we could reasonably assume will consume a significant amount of storage.
@@ -121,7 +121,7 @@ When reassigning tags between wells, the system will NOT move the data.  If you 
 
 ### Data Ageout
 
-Gravwell supports an ageout system whereby data management policies can be applied to individual wells.  The ageout policies control data retention, storage well utilization, and compression.  For more information about configuration data ageout see the [Data Ageout](ageout). section
+Gravwell supports an ageout system whereby data management policies can be applied to individual wells.  The ageout policies control data retention, storage well utilization, and compression.  For more information about configuration data ageout see the [Data Ageout](ageout) section.
 
 ### Well Replication
 
@@ -196,7 +196,7 @@ Gravwell supports the option to enforce password complexity on users when not in
 
 
 ```
-[Password-Controls]
+[Password-Control]
 	Min-Length=<integer>
 	Require-Uppercase=<bool>
 	Require-Lowercase=<bool>
@@ -209,7 +209,7 @@ The default Gravwell deployment does not enforce any rules on password complexit
 Here is an example configuration block that requires complex passwords that are at least 10 characters in length:
 
 ```
-[Password-Controls]
+[Password-Control]
 	Min-Length=10
 	Require-Uppercase=true
 	Require-Lowercase=true
@@ -253,7 +253,7 @@ The Gravwell shell installer supports several flags to make automated installati
 
 If you are deploying Gravwell to a cluster with multiple indexers, you would not want to install the webserver component on your indexer nodes.
 
-If you are using an automated deployment tool you don’t want the installer stopping and asking a questions.
+If you are using an automated deployment tool you don’t want the installer stopping and asking questions.
 
 If you already have your list of indexers with ingest and control shared secrets, specifying a configuration file at install time can greatly speed up the process.
 

@@ -189,7 +189,7 @@ An auto-extraction configuration to accomplish the same thing is:
 
 ```
 [[extraction]]
-	tags=["tagfields"]
+	tags=["tabfields"]
 	name="tabfields"
 	desc="Tab delimited fields"
 	module="fields"
@@ -200,7 +200,7 @@ An auto-extraction configuration to accomplish the same thing is:
 Using the ax module and the configuration above, the query becomes:
 
 ```gravwell
-tag=tagfields ax | table
+tag=tabfields ax | table
 ```
 
 Lets look at some data with a slightly stranger delimiter "|":
@@ -221,7 +221,7 @@ But with an appropriate auto-extraction configuration (shown below) the query ca
 
 ```
 [[extraction]]
-	tags="[barfields"]
+	tags=["barfields"]
 	name="barfields"
 	desc="bar | delimited fields with quotes and cleaning"
 	module="fields"
