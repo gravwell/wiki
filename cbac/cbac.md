@@ -57,6 +57,7 @@ In practice, it is less common to grant capabilities to individual users; instea
 | ListGroupMembers | View the members of a group. |
 | ListGroups | View the list of groups. |
 | ListUsers | View the list of users. |
+| LogbotAI | Interact with remotely hosted Logbot AI. |
 | MacroRead | View a macro and use it in a query. |
 | MacroWrite | Create and edit a macro. |
 | NotificationRead | View notifications. |
@@ -65,7 +66,6 @@ In practice, it is less common to grant capabilities to individual users; instea
 | PivotWrite | Create and edit an actionable. |
 | PlaybookRead | View a playbook. |
 | PlaybookWrite | Create and edit a playbook. |
-| RemoteAIService | Interact with remotely hosted Logbot AI. |
 | ResourceRead | View a resource and use it in a query. |
 | ResourceWrite | Create and edit a resource. |
 | SOAREmail | Send an email in a script or a flow. |

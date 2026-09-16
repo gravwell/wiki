@@ -100,7 +100,7 @@ Push-pop mode is most useful when you want to compare a particular EV on the cur
 alias myEV myPreviousEV | fuse -pushpop keyEV myPreviousEV
 ```
 
-This makes a copy of the current enumerated value usng alias, then tells `fuse` to save that value & overwrite the EV with the previously-saved value.
+This makes a copy of the current enumerated value using alias, then tells `fuse` to save that value & overwrite the EV with the previously-saved value.
 
 We can make use of this pattern to ask: how "fast" are our users traveling? Did a user log in from California at 9 a.m., then from Germany at 9:30? The query below answers that question for SSH logs.
 

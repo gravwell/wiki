@@ -36,7 +36,7 @@ The following parameters configure the connection to the Kafka cluster:
 | Topic     | string | The Kafka topic this consumer will read from | YES |
 | Consumer-Group | string | The Kafka consumer group this ingester is a member of; default is `gravwell`. |
 | Rebalance-Strategy | slice of string | The re-balancing strategy to use when reading from Kafka. Options are `roundrobin`, `sticky`, and `range`. |
-| Auth-Type | string | Enable SASL authentiation and specify mechanism. |
+| Auth-Type | string | Enable SASL authentication and specify mechanism. |
 | Username | string | Specify username for SASL authentication. |
 | Password | string | Specify password for SASL authentication. |
 | Use-TLS | boolean | If set, the ingester will connect to the Kafka cluster using TLS. |

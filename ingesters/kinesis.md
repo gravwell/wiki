@@ -43,7 +43,7 @@ The configuration file is at `/opt/gravwell/etc/kinesis_ingest.conf`. The ingest
 	Stream-Name=MyKinesisStreamName	# should be the stream name as created in AWS
 	Iterator-Type=TRIM_HORIZON
 	Metrics-Interval=60
-	JSON-Metric=true
+	JSON-Metrics=true
 ```
 
 ## Installation and configuration
@@ -80,7 +80,7 @@ AWS-Secret-Access-Key=REPLACEMEWITHYOURKEY
 	Stream-Name=MyKinesisStreamName	# should be the stream name as AWS knows it
 	Iterator-Type=TRIM_HORIZON
 	Parse-Time=false
-	Assume-Localtime=true
+	Assume-Local-Timezone=true
 ```
 
 Note the `State-Store-Location` option. This sets the location of a state file which will track the ingester's position in the streams, to prevent re-ingesting entries which have already been seen.

@@ -110,7 +110,7 @@ Here is a list of available configuration variables that can be set using enviro
 |---------------------------|-------------------------|-------|
 | GRAVWELL_SEARCHAGENT_UUID | Searchagent-UUID        | |
 | GRAVWELL_SEARCHAGENT_AUTH | Search-Agent-Auth       | |
-| GRAVWELL_WEBSERVER_ADDRESS | Webserver_Address      | Multiple addresses may be provided as a comma seperated list |
+| GRAVWELL_WEBSERVER_ADDRESS | Webserver_Address      | Multiple addresses may be provided as a comma separated list |
 | GRAVWELL_SEARCHAGENT_DISABLE_NETWORK_SCRIPTS | Disable-Network-Script-Functions | boolean value |
 | GRAVWELL_SEARCHAGENT_HTTP_PROXY | HTTP-Proxy | |
 | GRAVWELL_SEARCHAGENT_INSECURE_SKIP_TLS_VERIFY | Insecure-Skip-TLS-Verify | boolean value |
