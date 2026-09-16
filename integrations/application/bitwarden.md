@@ -103,7 +103,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/bitwarden-well.conf`
     Cold-Location=/opt/gravwell/cold_storage/bitwarden
     Tags=bitwarden*
     Accelerator-Name=fulltext
-    Accelerator-Engine=bloom
+    Accelerator-Engine-Override=bloom
     Accelerator-Args="-ignoreFloat -ignoreUUID"
     Hot-Storage-Reserve=10 #keep 10% of the hot disk free
     Cold-Duration=90d #keep at least 90 days in cold storage

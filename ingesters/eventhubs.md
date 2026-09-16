@@ -84,4 +84,4 @@ The following optional parameters modify how the Timestamp field is set for entr
 * `Timezone-Override`, string: if set to a string such as "America/Chicago", the ingester will use the specified timezone when attempting to extract timestamps from event bodies, rather than assuming UTC. This is useful when parsing timestamps which do not specify a UTC offset explicitly. Note that this parameter has no effect if `Parse-Time` is false!
 * `Assume-Local-Timezone`, boolean: if set to true, the ingester will use the system timezone when extracting timestamps from event bodies, rather than assuming UTC. Note that this parameter has no effect if `Parse-Time` is false!
 
-Each EventHub configuration block may also specify one or more `Preprocessor` parameters to invoke [Gravwell ingest proprocessors](/ingesters/preprocessors/preprocessors) as needed.
+Each EventHub configuration block may also specify one or more `Preprocessor` parameters to invoke [Gravwell ingest preprocessors](/ingesters/preprocessors/preprocessors) as needed.

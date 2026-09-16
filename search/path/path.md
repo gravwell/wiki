@@ -14,7 +14,7 @@ The path module supports the following four extractions:
 |------------|-------------|
 | `base` | The last element of the path. For example, the base of `/opt/gravwell/etc/gravwell.conf` is `gravwell.conf`. |
 | `dir` | All but the last element of the path. For example, the dir of `C:\Users\gravwell\foo.txt` is `C:\Users\gravwell`. |
-| `ext` | The extention of the basename, if any. The ext of `foo.txt` is `.txt`. |
+| `ext` | The extension of the basename, if any. The ext of `foo.txt` is `.txt`. |
 | `volume` | (Windows only): The volume drive letter or UNC volume of a Windows path. For example, the volume of `\\Network\foo\bar` is `\\Network\foo`, and `C:\Windows` is `C:`. |
 
 Each extraction can be filtered and renamed using the `as` keyword. For example:

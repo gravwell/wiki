@@ -74,9 +74,9 @@ docs/
 
 ### versions.json
 
-`https://docs.gravwell.io/_static/verions.json` dictates how the version selector will behave in all docs versions, past and current.
+`https://docs.gravwell.io/_static/versions.json` dictates how the version selector will behave in all docs versions, past and current.
 
-As implied by the path, only the `versions.json` that's included in the latest docs version needs to be up-to-date. It doesn't matter if any `.../vN.N.N/_static/versions.json` is out of date. Only the file at `/_static/verions.json` is used.
+As implied by the path, only the `versions.json` that's included in the latest docs version needs to be up-to-date. It doesn't matter if any `.../vN.N.N/_static/versions.json` is out of date. Only the file at `/_static/versions.json` is used.
 
 The [PyData Sphinx Theme docs](https://pydata-sphinx-theme.readthedocs.io/en/stable/user_guide/version-dropdown.html#add-a-json-file-to-define-your-switcher-s-versions) explain the options in more detail, but here's a quick summary / example:
 
@@ -123,7 +123,7 @@ When updating version.json...
 
 ### Removing old releases
 
-As verions accumulate, we may decide to stop hosting old versions. This requires:
+As versions accumulate, we may decide to stop hosting old versions. This requires:
 
 1. Updating `_static/versions.json` hosted at `https://docs.gravwell.io/_static/versions.json`, so that it contains only those versions we want to continue hosting
 2. Removing old versions from the web server
@@ -135,7 +135,7 @@ Adding a Sphinx extension requires two steps:
 - Add relevant Python package(s) to the nix shell
 - Add the extension to `conf.py`
 
-Once the pacakges are installed and listed in `conf.py`, the extension will ready for use.
+Once the packages are installed and listed in `conf.py`, the extension will ready for use.
 
 ### Example adding `sphinx-copybutton`
 

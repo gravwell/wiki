@@ -929,7 +929,7 @@ Returns a random 64-bit float in the interval [0.0,1.0)
 
 	function rand_int() int
 
-Returns a randomm, non-negative, 64-bit integer.
+Returns a random, non-negative, 64-bit integer.
 
 #### rand_intn
 
@@ -1102,7 +1102,7 @@ Returns the greatest integer value less than or equal to x.
 
 	function math_abs(x float) float
 
-Returns the absolut value of x.
+Returns the absolute value of x.
 
 #### math_ceil
 
