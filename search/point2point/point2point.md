@@ -13,7 +13,7 @@ Or it can be a separate latitude and longitude enumerated value for each of the 
 * `-srclat <enumerated value>` gives an enumerated value name containing the latitude of the source.
 * `-dstlat <enumerated value>` gives an enumerated value name containing the latitude of the destination.
 * `-srclong <enumerated value>` gives an enumerated value name containing the longitude of the source.
-* `-dstlat <enumerated value>` gives an enumerated value name containing the longitude of the destination.
+* `-dstlong <enumerated value>` gives an enumerated value name containing the longitude of the destination.
 
 By default, the renderer counts the number of entries with a given source and destination and uses that as the magnitude of the line. You can instead specify an alternative magnitude using the -mag option:
 

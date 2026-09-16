@@ -1,6 +1,6 @@
 # Gravwell Single Sign-On
 
-Gravwell's GUI supports single sign-on using SAML. In theory, any SAML-compliant Identity Provider can be used to log in. This page describes Gravwell's SSO configuration options, then show an example of how Gravwell can be configured to authenticate with a Windows AD FS server and other SSO providers.
+Gravwell's GUI supports single sign-on using SAML. In theory, any SAML-compliant Identity Provider can be used to log in. This page describes Gravwell's SSO configuration options, then shows an example of how Gravwell can be configured to authenticate with a Windows AD FS server and other SSO providers.
 
 ```{note}
 Although regular users log in via SSO, the default 'admin' user does not. Be sure you change the admin user's password when you set up a new system, even if you configure SSO immediately. Be aware also that the Gravwell admin user can still create new non-SSO user accounts from within the GUI if needed.

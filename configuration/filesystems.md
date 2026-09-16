@@ -1,6 +1,6 @@
 # Gravwell Indexer Supported Filesystems
 
-Gravwell Indexers require robust, seekable, and POSIX complaint filesystems in order to function properly.  The Gravwell system makes extensive use of memory mapping, madvise calls, and filesystem specific optimizations to maximize compression ratios and query throughput.  Picking a good filesystem for your deployment is critical to ensuring a manageable and fast Gravwell system.
+Gravwell Indexers require robust, seekable, and POSIX compliant filesystems in order to function properly.  The Gravwell system makes extensive use of memory mapping, madvise calls, and filesystem specific optimizations to maximize compression ratios and query throughput.  Picking a good filesystem for your deployment is critical to ensuring a manageable and fast Gravwell system.
 
 ## Supported Filesystems
 
@@ -52,4 +52,4 @@ Gravwell requires full, robust POSIX compatibility. The following filesystems ar
 * SMB/CIFS
 * FUSE mounts
 
-Other POSIX compliant filesystems like EXT2, EXT3, and ReiserFS are not tested.  Cluster filesystems such as GlusterFS, LusterFS, and CephFS are fully POSIX compliant and customers have reported good results, however Gravwell has not done extensive testing and does not officially support them.
+Other POSIX compliant filesystems like EXT2, EXT3, and ReiserFS are not tested.  Cluster filesystems such as GlusterFS, Lustre, and CephFS are fully POSIX compliant and customers have reported good results, however Gravwell has not done extensive testing and does not officially support them.
