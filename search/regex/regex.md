@@ -1,6 +1,6 @@
 # Regex
 
-Regex is a pipeline module that uses regular expressions to match text data. It is an extremely powerful way of matching complex patterns and extracting enumerable fields from text. For those unfamiliar with regular expressions, a decent starting point is [the Wikipedia article](https://en.wikipedia.org/wiki/Regular_expression); you can also use [a regular expression playground](https://regex101.labs.gravwell.io/) to experiment.
+Regex is a pipeline module that uses regular expressions to match text data. It is an extremely powerful way of matching complex patterns and extracting enumerable fields from text. For those unfamiliar with regular expressions, a decent starting point is [the Wikipedia article](https://en.wikipedia.org/wiki/Regular_expression); you can also use [a regular expression playground](https://regex101.com/) to experiment.
 
 Think of the `regex` module in similar terms to the grep command in Linux: any entries which do not match the regular expression will be dropped (unless the `-p` flag is set). Building regular expressions is well outside the scope of this document, but one extremely important feature is the `(?P<foo>\S+)` style syntax, which will assign any matched group into an enumerated value; in this case, it will capture and extract a sequence of non-space characters into an enumerated value named "foo".
 
@@ -40,7 +40,7 @@ To facilitate using escape sequences in regular expressions, you can use backtic
 tag=syslog grep sshd | regex `shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)`
 ```
 
-If you used double quotes instead of backticks, `\S` would have to be double-escaped as `\\S.` This feature is convenient in that it allows you to copy regular expressions directly from [regular expression playgrounds](https://regex101.labs.gravwell.io/) and other sources.
+If you used double quotes instead of backticks, `\S` would have to be double-escaped as `\\S.` This feature is convenient in that it allows you to copy regular expressions directly from [regular expression playgrounds](https://regex101.com/) and other sources.
 
 ### Inline Filtering
 
