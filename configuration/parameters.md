@@ -735,9 +735,9 @@ Description: The model name to use for chat completions. Required when `Third-Pa
 
 (max-ai-tokens)=
 ### **Max-AI-Tokens**
-Default Value: 131072
-Example: `Max-AI-Tokens=8192`
-Description: The Max-AI-Tokens defines the maximum number of completion tokens for a given model. This essentially controls the context window and ensures continued interactions do not exceed the context size of the configured model.
+Default Value: 131072  
+Example: `Max-AI-Tokens=8192`  
+Description: The Max-AI-Tokens defines the maximum number of completion tokens for a given model. This essentially controls the context window and ensures continued interactions do not exceed the context size of the configured model. This value must not exceed the maximum output tokens the configured model accepts, or the provider will reject requests; see [Setting Max-AI-Tokens](setting-max-ai-tokens).  
 
 ### **Max-AI-Tool-Iterations**
 Default Value: 128  
