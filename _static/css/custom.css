@@ -180,6 +180,57 @@ div.docutils button.copybtn:active {
 }
 
 /*
+Name/value pairs where the value is copyable (`:::{container} copy-pairs`).
+
+The container alternates a name paragraph and a code block; the grid lays each
+pair out as one row. Values are code blocks so that sphinx-copybutton attaches
+a copy button to them.
+*/
+.copy-pairs {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.25rem 1.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.copy-pairs > p {
+  margin: 0;
+}
+
+.copy-pairs div.highlight {
+  margin: 0;
+}
+
+/* Wrap long values instead of giving every value its own scrollbar. */
+.copy-pairs div.highlight pre {
+  padding: 0.3rem 0.6rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Stack the pairs on narrow screens, where two columns don't fit. */
+@media (width < 720px) {
+  .copy-pairs {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+  }
+
+  .copy-pairs > p:not(:first-child) {
+    margin-top: 0.5rem;
+  }
+}
+
+/**
+ * Always show copy button within table containing code blocks.
+ * EG avoid show/hide on ALL `copybtn`s on mouse enter/leave (visually annoying).
+ */
+div.copy-pairs.docutils button.copybtn {
+  opacity: 1;
+  top: .1em;
+}
+
+/*
 
 BEGIN DYNAMIC NAVBAR LINKS
 
