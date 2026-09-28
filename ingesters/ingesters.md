@@ -30,6 +30,7 @@ File Follower <file_follow>
 GCP PubSub <pubsub>
 HTTP <http>
 IPMI <ipmi>
+Jamf <jamf>
 Kafka <kafka>
 Kafka Federator <federators/kafkafederator>
 Kinesis <kinesis>
@@ -57,6 +58,7 @@ Windows File Follower <win_file_follow>
 | [GCP PubSub](pubsub) | Fetch and ingest entries from Google Compute Platform PubSub Streams. |
 | [HTTP](http) | Create HTTP listeners on multiple URL paths. |
 | [IPMI](ipmi) | Periodically collect SDR and SEL records from IPMI devices. |
+| [Jamf](jamf) | Ingest from Jamf Pro's v3 computer-inventory API endpoint. |
 | [Kafka](kafka) | Create a Kafka Consumer that ingests into Gravwell. Can be paired with the Gravwell Kafka Federator. |
 | [Kinesis](kinesis) | Ingest from Amazon's [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) service. |
 | [LLM](llm) | Proxy OpenAI-compatible LLM traffic, ingesting prompts, responses, tool calls, and token usage. |
@@ -96,6 +98,46 @@ Okta <okta>
 | [Microsoft Graph API](msg) | Ingest from Microsoft's Graph API.  |
 | [Mimecast](mimecast) | Ingest Mimecast MTA SIEM and audit events. |
 | [Okta](okta) | Ingest Okta system logs and user records. |
+
+(hosted_runner_reload)=
+### Dynamic Configuration Reload
+
+The Hosted Runner supports dynamic configuration reloading of its plugin stanzas; ingesters can be added, removed, or reconfigured without restarting the Hosted Runner process.  The Hosted Runner uses the `SIGHUP` system signal as a notification mechanism to reload its configuration.  Both the main configuration file (typically `/opt/gravwell/etc/hosted_runner.conf`) and the overlay directory (`/opt/gravwell/etc/hosted_runner.conf.d/`) are re-read on reload.
+
+On receiving `SIGHUP`, the Hosted Runner loads and verifies the new configuration, then compares each plugin stanza against the running set using the `Ingester-UUID` of each stanza:
+
+* Stanzas with a new `Ingester-UUID` are started, and the Hosted Runner logs `created new ingester on reload`.
+* Stanzas whose `Ingester-UUID` is no longer present are shut down, and the Hosted Runner logs `shutdown ingester on reload`.
+* Stanzas whose name, plugin type, or configuration parameters have changed are stopped and started again with the new configuration, and the Hosted Runner logs `restarted ingester on reload`.
+* Stanzas that have not changed are left running untouched.
+
+Upon successful reload of a configuration, the Hosted Runner will emit a log to the `gravwell` tag with `configuration reload complete` in the `Message` portion.
+
+```
+<14>1 2026-09-03T18:11:42.104512Z 3f1c0a9d7b2e hosted_runner - runner/main.go:130 - configuration reload complete
+```
+
+If the Hosted Runner cannot load the configuration set due to errors in the config, it will emit an error to the `gravwell` tag with `failed to reload config` in the message body and continue using the same config. Attempting to hot reload a broken config will NOT break the running Hosted Runner or any of its ingesters.
+
+```
+<11>1 2026-09-03T18:14:07.552731Z 3f1c0a9d7b2e hosted_runner - runner/main.go:125 [gw@1 error="failed to load configuration Config file \"/opt/gravwell/etc/hosted_runner.conf\" returned error failed to load \"/opt/gravwell/etc/hosted_runner.conf.d/okta.conf\" 1:1: expected section header
+"] failed to reload config
+```
+
+A common way to signal the Hosted Runner is to use the `kill` or `killall` system command:
+
+```
+killall -SIGHUP gravwell_hosted_runner #use killall to resolve the process name
+kill -SIGHUP `pidof gravwell_hosted_runner` # use kill and the pidof command to resolve the process name
+```
+
+```{note}
+The Hosted Runner cannot dynamically reload changes to the `[Global]` or `[State]` configuration blocks, such as ingester connections, TLS configuration, ingest cache controls, or the state file path.  Changes to those blocks require a restart of the Hosted Runner.
+```
+
+```{warning}
+Keep the `Ingester-UUID` of a stanza stable when editing its configuration.  The Hosted Runner identifies running ingesters by UUID, so changing the UUID is treated as removing one ingester and adding a brand new one, and the new ingester will not resume from the persisted state of the old one.
+```
 
 ## Tags
 

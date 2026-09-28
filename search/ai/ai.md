@@ -12,6 +12,8 @@ Logbot AI is a Large Language Model (LLM) powered chat assistant that can be pro
 
 Logbot AI is available through the Query Studio interface. When Logbot AI is enabled, the chat interface can be accessed from within the right side pane in Query Studio. After a query has been executed, Logbot AI can be sent log entries.
 
+Logbot is the default *agent*. Other agents — each with its own specialization — can be selected in chat or run unattended from a flow; see [AI Agents](ai-agents).
+
 ## Logbot AI Overview
 
 ```{note}
@@ -82,8 +84,9 @@ Instead of using the Gravwell-hosted AI service, you can configure Gravwell to u
 | Parameter | Description |
 |-----------|-------------|
 | `AI-Server-URL` | The URL of the OpenAI-compatible API endpoint. |
-| `Third-Party-Provider` | Must be set to `true` to enable third-party mode. This disables license-based authentication and the Gravwell health check. |
+| `Third-Party-Provider` | Must be set to `true` to enable third-party mode. This disables license-based authentication and performs an alternate health check. |
 | `Model` | The model name to use for chat completions (e.g. `gpt-4o`). Required when `Third-Party-Provider` is true. |
+| `Max-AI-Tokens` | The maximum number of completion tokens Gravwell will request per response. Defaults to `131072`. Must not exceed the configured model's output token limit — see [Setting Max-AI-Tokens](#setting-max-ai-tokens). |
 | `Include-Header` | Additional HTTP headers for requests to the AI server, typically used for authentication. Can be specified multiple times for multiple headers. |
 | `System-Prompt-File` | Optional path to a file containing a custom system prompt for all Logbot conversations. |
 
@@ -92,39 +95,93 @@ Below is an example configuration that connects to OpenAI's API:
 ```
 [AI]
 	Enable=true
-	AI-Server-URL="https://api.openai.com/v1/"
+	AI-Server-URL="https://api.openai.com"
 	Third-Party-Provider=true
 	Model="gpt-4o"
-	Include-Header="Authorization: Bearer sk-your-api-key"
+	Max-AI-Tokens=16384
+	Include-Header="Authorization: Bearer <your-api-key>"
 ```
 
 ```{note}
 When using a third-party provider, Gravwell does not enforce conversation or word limits via the license — those limits are governed by the third-party service. Be aware that all messages and attached search entries will be sent to the configured third-party endpoint.
 ```
 
+```{note}
+When using a third-party provider, Gravwell will attempt to perform a model existence request as a health check to ensure the specified endpoint is responding and can service requests for the configured mode.  The health check performs a `GET` request against the specified AI-Server-URL + `/v1/models/` + Model.
+
+For example, the above configuration would perform a health check as a `GET` request against `https://api.openai.com/v1/models/gpt-4o`.
+
+Many model providers support a small fragment of the OpenAI spec and may not be compatible with Gravwell. If Logbot is reporting failures at startup, validate OpenAI API compatibility.
+```
+
+(setting-max-ai-tokens)=
+#### Setting Max-AI-Tokens
+
+[`Max-AI-Tokens`](max-ai-tokens) sets the maximum number of completion tokens Gravwell requests from the model, and defaults to `131072`. Models differ in how many output tokens they accept, and if `Max-AI-Tokens` is higher than the configured model's limit the provider rejects the request and Logbot reports an error like:
+
+```
+503 error: LLM returned status 400: {"error":{"code":"invalid_request_error","message":"max_tokens: 131072 > 128000, which is the maximum allowed number of output tokens for claude-sonnet-5","type":"invalid_request_error","param":null}}
+```
+
+When configuring a third-party provider, set `Max-AI-Tokens` to a value at or below the maximum output tokens documented for your model. Consult your provider's documentation for the current limit, as these values change with each model release. For example, to use Anthropic's Claude Sonnet 5, which at the time of writing allows at most 128000 output tokens:
+
+```
+[AI]
+	Enable=true
+	AI-Server-URL="https://api.anthropic.com"
+	Third-Party-Provider=true
+	Model="claude-sonnet-5"
+	Max-AI-Tokens=64000
+	Include-Header="Authorization: Bearer <your-api-key>"
+```
+
+```{note}
+`Max-AI-Tokens` is an upper bound on a single response, not a target: it does not cause the model to generate longer responses, but a value set too low can truncate long answers.
+```
+
 #### Gotchas With Third-Party LLM Services
 
-The Microsoft Azure OpenAI endpoints have slightly different URL paths and usage of the `model` parameter.  If you are using Azure OpenAI, you will need to set the `AI-Server-URL` to the base URL of your Azure OpenAI resource and remove the `/v1` that is included in the URL (e.g. `https://<your-resource-name>.openai.azure.com/openai`).  When setting a model in the Gravwell `[AI]` configuration block the `Model` paramete is the deployment name NOT the model name.
+The Microsoft Azure OpenAI endpoints have slightly different URL paths and usage of the `model` parameter.  If you are using Azure OpenAI, you will need to set the `AI-Server-URL` to the base URL of your Azure OpenAI resource and remove the `/v1` that is included in the URL (e.g. `https://<your-resource-name>.openai.azure.com/openai`).  When setting a model in the Gravwell `[AI]` configuration block the `Model` parameter is the deployment name NOT the model name.
 
 ![Azure Foundry Endpoint Parameters](azure_foundry_params.png)
 
 ```
 [AI]
 	Enable=true
-	AI-Server-URL="AI-Server-URL="https://gravwell-slop-testing-resource.openai.azure.com/openai"
-"
+	AI-Server-URL="https://gravwell-slop-testing-resource.openai.azure.com/openai"
 	Third-Party-Provider=true
 	Model="Kimi-K2-Test-Deployment"
 	Include-Header="Authorization: Bearer <your-azure-openai-api-key>"
 ```
 
-## Logbot Agent
+(ai-agents)=
+## AI Agents
 
-Logbot includes an agentic capability that allows it to autonomously use tools to answer questions and write queries. When you ask Logbot to write a query, it uses an internal tool-calling loop to inspect your available tags, sample data, validate query syntax, and iteratively build a correct Gravwell query.
+An agent is a purpose-built AI configuration: a system prompt, the set of Gravwell tools it is allowed to use, and — for multi-stage agents — a graph of steps to run. Gravwell supplies the LLM and the tools; the agent supplies the specialization.
 
-The agent has access to a set of MCP (Model Context Protocol) tools that allow it to interact with your Gravwell instance. The agent will automatically call tools as needed — for example, listing your tags to understand what data is available, sampling entries to understand data formats, and parsing queries to validate correctness before returning a result.
+Every instance with AI enabled has the built-in `logbot` agent, the general purpose assistant described above. Gravwell AI services are currently in beta. The **AI Agent Preview** [kit](/kits/kits) installs six ready-to-use agents: three conversational ones for investigation, administration, and troubleshooting, and three automated ones for alert triage, deployment audit, and a daily activity summary.
 
-The maximum number of tool-call iterations per request is controlled by the `Max-AI-Tool-Iterations` configuration parameter.
+### Choosing an agent
+
+Chat sessions include an agent selector. Simply pick the agent best suited for your prompt. 
+
+![Agent Selector](agent-select.png)
+
+Only conversational agents can be selected in chat. Multi-stage agents fan work out across several steps and cannot pause to interact with you, so they run unattended and are invoked from a flow instead — see the [Logbot flow node](/flows/nodes/logbot).
+
+### Tools and approval
+
+An agent works by calling tools against your Gravwell instance — listing tags, sampling entries, validating and running queries, reading alerts, and using playbooks. It decides which tools to call on its own and can chain many calls together to work through a single request. These are the same tools exposed by the [MCP server](mcp-tools).
+
+Read-only tools run without interruption. Any tool that would change something — saving a query, creating a macro, updating an alert — pauses the conversation and asks for your approval first. You can approve the individual call, or accept every call to that tool for the rest of the conversation.
+
+![Tool Approval](tool-approval.png)
+
+Tool access is bounded by [CBAC](/cbac/cbac): an agent can only use tools the user driving it is permitted to use, and an agent definition can narrow that further. 
+
+```{warning}
+An agent run from a flow is an automation and cannot ask for approval, so **every** tool it calls executes without prompting. Only give write tools to an agent you intend to make changes unattended.
+```
 
 ## MCP Server
 
@@ -137,17 +194,25 @@ MCP tools are gated by [CBAC](/cbac/cbac) and any applied token permissions — 
 
 The following tools are available via the MCP server:
 
+A `list_` tool returns the name, description, and ID of every object the user can see; the matching `get_` tool takes that ID and returns the whole object.
+
 | Tool | Description |
 |------|-------------|
 | `whoami` | Get information about the authenticated user |
+| `list_users` | List users |
+| `get_user` | Get a user by ID |
+| `list_groups` | List groups |
+| `get_group` | Get a group by ID |
+| `mail_config` | Get the system mail configuration |
 | `parse_query` | Parse and validate a Gravwell query string |
+| `execute_query` | Execute a Gravwell query and return results |
 | `save_query` | Save a query to the query library |
 | `update_query` | Update an existing saved query |
 | `list_queries` | List saved queries from the query library |
+| `get_query` | Get a saved query including its query text |
 | `search_history` | Get the user's search history |
 | `list_tags` | List all tags available to the user |
 | `sample_tag_entries` | Retrieve the last 10 entries from a tag |
-| `execute_query` | Execute a Gravwell query and return results |
 | `ping_indexers` | Ping all indexers to check connectivity |
 | `system_description` | Get hardware/OS descriptions for webserver and indexers |
 | `system_stats` | Get live system statistics |
@@ -162,18 +227,23 @@ The following tools are available via the MCP server:
 | `knowledge_base_search` | Search a knowledge base using BM25 keyword search |
 | `knowledge_base_get_data` | Retrieve data at a specific key in a knowledge base |
 | `list_extractors` | List auto-extraction definitions |
+| `get_extractor` | Get an auto-extraction definition including its full parameters |
 | `create_extractor` | Create a new auto-extraction definition |
 | `update_extractor` | Update an existing auto-extraction definition |
 | `list_macros` | List search macros |
+| `get_macro` | Get a search macro including its expansion |
 | `create_macro` | Create a new search macro |
 | `update_macro` | Update an existing search macro |
 | `list_alerts` | List alert definitions |
+| `get_alert` | Get an alert definition including its dispatchers and consumers |
 | `create_alert` | Create a new alert definition |
 | `update_alert` | Update an existing alert definition |
 | `list_scheduled_searches` | List scheduled search automations |
+| `get_scheduled_search` | Get a scheduled search including its query, schedule, and run state |
 | `create_scheduled_search` | Create a new scheduled search automation |
 | `update_scheduled_search` | Update an existing scheduled search |
 | `list_flows` | List flow automations |
+| `get_flow` | Get a flow including its definition and last run results |
 | `list_playbooks` | List playbooks |
 | `get_playbook` | Get a playbook by UUID including its body |
 | `create_playbook` | Create a new playbook |

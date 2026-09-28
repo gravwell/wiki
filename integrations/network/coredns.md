@@ -12,7 +12,8 @@
 ## CoreDNS Configuration
 [CoreDNS: Gravwell Integration Guide](https://coredns.io/explugins/gravwell/)
 
-CoreDNS can be built with the Gravwell Plugin using the following shell code:
+CoreDNS can be built with the Gravwell Plugin using the following shell code. (Note this assumes that Go is already installed):
+
 ```shell
 git clone https://github.com/coredns/coredns.git
 pushd coredns
@@ -23,12 +24,19 @@ CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /tmp/coredns
 popd
 ```
 
-The CoreDNS binary will be located at `/tmp/coredns`. CoreDNS can then be started by providing a valid Corefile as the first argument. If you are running CoreDNS as a non-root user, you will need to give the binary the service bind capability.
+The CoreDNS binary will be located at `/tmp/coredns`. Move this to a new folder for extended use: `mkdir -p /opt/coredns && cp /tmp/coredns /opt/coredns/`. If you are running CoreDNS as a non-root user, you will need to give the binary the service bind capability.
+
 ```shell
-setcap 'cap_net_bind_service=+ep' /tmp/coredns
+sudo setcap 'cap_net_bind_service=+ep' /opt/coredns/coredns
 ```
 
-Configuration is performed via the CoreDNS Corefile which has the basic syntax of directive value. Comments are preceded by the “#” character.  A basic Gravwell definition looks like so:
+CoreDNS can then be started by providing a valid Corefile.
+
+```shell
+/opt/coredns/coredns -conf /opt/coredns/Corefile
+```
+
+Configuration is performed via the CoreDNS Corefile, which has the basic syntax of directive value. Comments are preceded by the "#" character. A basic Gravwell definition looks like so:
 
 
 **Sample Configuration file**
@@ -42,7 +50,7 @@ gravwell {
     #Cleartext-Target 192.168.1.2:4023 #second indexer
     #Ciphertext-Target 192.168.1.1:4024
     #Insecure-Novalidate-TLS true #disable TLS certificate validation
-    #Ingest-Cache-Path /tmp/coredns_ingest.cache #enable the local ingest cache
+    #Ingest-Cache-Path /opt/coredns/coredns_ingest.cache #enable the local ingest cache
     #Max-Cache-Size-MB 1024
 }
 ```
@@ -64,7 +72,7 @@ A unique Gravwell plugin section can be applied to each DNS listener. An example
 }
 
 .:53 {
-  forward	. tls://1.1.1.1
+  forward . tls://1.1.1.1
   errors stdout
   bind 192.168.1.1
   hosts
@@ -84,7 +92,7 @@ A unique Gravwell plugin section can be applied to each DNS listener. An example
 
 ### Gravwell Storage Well Configuration
 **Sample well config:**  
-Create or edit: `/opt/gravwell/etc/gravwell.conf.d/coredns.well`
+Create or edit: `/opt/gravwell/etc/gravwell.conf.d/coredns-well.conf`
 ```ini
 [Storage-Well "coredns"]
     Location=/opt/gravwell/storage/coredns

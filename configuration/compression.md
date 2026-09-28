@@ -1,6 +1,6 @@
 # Compression
 
-Storage is compressed by default, which helps shift some load from storage to CPU.  Gravwell is a highly asynchronous system built for modern hardware in a scale wide paradigm.  Modern systems are typically over-provisioned on CPU with mass storage lagging behind.  Compressing data allows Gravwell can reduce stress on storage links while employing excess CPU cycles to asynchronously compress and decompress data.  The result is that searches can be faster when employing compression on slower mass storage devices.  Compression can be configured independently for each well with different compression settings for hot and cold data.
+Storage is compressed by default, which helps shift some load from storage to CPU.  Gravwell is a highly asynchronous system built for modern hardware in a scale wide paradigm.  Modern systems are typically over-provisioned on CPU with mass storage lagging behind.  Compressing data allows Gravwell to reduce stress on storage links while employing excess CPU cycles to asynchronously compress and decompress data.  The result is that searches can be faster when employing compression on slower mass storage devices.  Compression can be configured independently for each well with different compression settings for hot and cold data.
 
 A notable exception is data that will not compress much (if at all). In this situation, attempting to compress the data burns CPU time with no actual improvement in storage space or speed. Raw network traffic is a good example where encryption and high entropy prevent effective compression.  To disable compression for a well, add the "Disable-Compression=true" directive.
 
@@ -8,7 +8,7 @@ A notable exception is data that will not compress much (if at all). In this sit
 
 Gravwell supports two types of compression: default and transparent compression.  Default compression uses the [snappy](https://en.wikipedia.org/wiki/Snappy_%28compression%29) compression system to perform compression and decompression in userspace.  The default compression system is compatible with all filesystems.  The transparent compression system uses the underlying filesystem to provide transparent block level compression.
 
-Transparent compression offloads compression/decompression work to the host kernel while maintaining an uncompressed page cache.  Transparent compression can provide very fast and efficient compression/decompression but requires that the underlying filesystem support transparent compression.  Currently the [BTRFS](https://btrfs.wiki.kernel.org/index.php/Main_Page) and [ZFS](https://wiki.archlinux.org/index.php/ZFS) filesystem are supported.
+Transparent compression offloads compression/decompression work to the host kernel while maintaining an uncompressed page cache.  Transparent compression can provide very fast and efficient compression/decompression but requires that the underlying filesystem support transparent compression.  Currently the [BTRFS](https://btrfs.wiki.kernel.org/index.php/Main_Page) and [ZFS](https://wiki.archlinux.org/index.php/ZFS) filesystems are supported.
 
 ```{attention}
 Transparent compression has important implications for ageout rules involving total storage. Please refer to the [ageout documentation](ageout) for more information.
@@ -67,8 +67,8 @@ An example storage well with compression disabled for an entire well:
 	Location=/opt/gravwell/storage/network
 	Cold-Location=/mnt/storage/gravwell_cold/network
 	Tags=pcap
-	Max-Hot-Data-GB=100
-	Max-Cold-Data-GB=1000
+	Max-Hot-Storage-GB=100
+	Max-Cold-Storage-GB=1000
 	Delete-Frozen-Data=true
 	Disable-Compression=true
 ```
@@ -80,8 +80,8 @@ An example storage well with compression disabled for the hot storage location a
 	Location=/opt/gravwell/storage/syslog
 	Cold-Location=/mnt/storage/gravwell_cold/syslog
 	Tags=syslog
-	Max-Hot-Data-GB=100
-	Max-Cold-Data-GB=1000
+	Max-Hot-Storage-GB=100
+	Max-Cold-Storage-GB=1000
 	Delete-Frozen-Data=true
 	Disable-Hot-Compression=true
 	Enable-Cold-Transparent-Compression=true
@@ -94,8 +94,8 @@ An example storage well with transparent compression enabled on the hot storage 
 	Location=/opt/gravwell/storage/windows
 	Cold-Location=/mnt/storage/gravwell_cold/windows
 	Tags=windows
-	Max-Hot-Data-GB=100
-	Max-Cold-Data-GB=1000
+	Max-Hot-Storage-GB=100
+	Max-Cold-Storage-GB=1000
 	Delete-Frozen-Data=true
 	Enable-Hot-Transparent-Compression=true
 	Disable-Cold-Compression=true

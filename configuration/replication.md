@@ -56,7 +56,7 @@ The Replication system can be configured to fine tune which peers an indexer is 
 
 ### Example Configuration
 
-An example, an 8 node cluster may be divided into two availability zones (1 and 2).  If availability zone 1 had a subnet of 172.16.2.0/24 and availability zone 2 had a subnet of 172.20.1.0/24.
+For example, an 8 node cluster may be divided into two availability zones (1 and 2).  If availability zone 1 had a subnet of 172.16.2.0/24 and availability zone 2 had a subnet of 172.20.1.0/24.
 
 Nodes in Region 1 are configured to replicate to Region 2:
 
@@ -121,14 +121,14 @@ Replication is controlled by the "Replication" configuration group in the gravwe
 | Connect-Wait-Timeout | Connect-Wait-Timeout=30 | Specifies the number of seconds an Indexer should wait when attempting to connect to replication peers during startup. |
 | Disable-Server | Disable-Server=true | Disable the indexer replication server, it will only act as a client.  This is important when using offline replication. | 
 | Disable-Compression | Disable-Compression=true | Disable compression on the storage for the replicated data. |
-| Enable-Transparent-Compression | Enable-Transparent-Compression=true | Enable transparent compression on using the host filesystem for replicated data. |
-| Enable-Transport-Compression | Enable-Transparent-Compression=true | Enable transport compression when transmitting data to replication peer.  Defaults to `false`. |
+| Enable-Transparent-Compression | Enable-Transparent-Compression=true | Enable transparent compression using the host filesystem for replicated data. |
+| Enable-Transport-Compression | Enable-Transport-Compression=true | Enable transport compression when transmitting data to replication peer.  Defaults to `false`. |
 | Delete-Delay | Delete-Delay=7d | Set the time required to delete a shard, regardless of storage constraints. Default is "forever". |
 | Storage-Reserve | Storage-Reserve=10 | Set the percentage of free disk space to keep. Default is 0. |
 
 ## Disabling Replication Per Well
 
-The replication engine will replicate all data across all wells by default, however it may be desired to control which datasets are replicated due to costs, priorities, or just when testing Gravwell.  Some users find it useful to have a "test" well where data can be ingested and aged out quickly and replicating that test data may not make much sense.  Replication can be disabled on a per-well basis by adding the configuration stanza `Disable-Replication=true` inside the well configuration block.  When replication is disabled, the engine will not communicate the wells existence or push any data to replication peers; tags however are always replicated, even if they are assigned to a well with replication disabled.
+The replication engine will replicate all data across all wells by default, however it may be desired to control which datasets are replicated due to costs, priorities, or just when testing Gravwell.  Some users find it useful to have a "test" well where data can be ingested and aged out quickly and replicating that test data may not make much sense.  Replication can be disabled on a per-well basis by adding the configuration stanza `Disable-Replication=true` inside the well configuration block.  When replication is disabled, the engine will not communicate the well's existence or push any data to replication peers; tags however are always replicated, even if they are assigned to a well with replication disabled.
 
 An example configuration snippet where replication is enabled on an indexer but a specific well is excluded is as follows:
 
@@ -145,7 +145,7 @@ An example configuration snippet where replication is enabled on an indexer but 
 	Delete-Cold-Data=true
 
 [Storage-Well "testing"]
-	Location=/opt/gravwell/storage/default/
+	Location=/opt/gravwell/storage/testing/
 	Tags="testing-*"
 	Hot-Duration=2d
 	Delete-Cold-Data=true
@@ -169,7 +169,7 @@ Replication is designed to coordinate with data ageout, migration, and well isol
 The replication engine takes great care to try and distribute storage load evenly across all available peers; this means that as an indexer is distributing data to replication peers it will often pause for a few seconds to query remote systems about storage usage and shard distribution.  These pauses allow all the replication peers to accept shard assignments from other peers as well as generate an accurate picture of replication behavior across a cluster.  From a practical standpoint, if replication is engaged for the first time after ingesting significant historical data, the replication system may appear to burst data to peers with high traffic volumes followed by relative calm.  This bursty behavior is due to the periods where the system is sampling multiple remote peers.  However, if an indexer has a single replication peer, it does not need to perform sampling of remote loads or worry about distributing shards across multiple peers; this simplified replication topology means that the engine can attempt to bring replicated data up to speed as fast as it can, which means the indexers may fully saturate network links transferring very large volumes of data.
 
 ```{attention}
-The replication engines first priority is getting data to as safe a state as possible.  If an indexer has access to a 40GbE connection and the disks to back it up, it will use that 40GbE of bandwidth.
+The replication engine's first priority is getting data to as safe a state as possible.  If an indexer has access to a 40GbE connection and the disks to back it up, it will use that 40GbE of bandwidth.
 ```
 
 ### Replication Storage Management
@@ -204,7 +204,7 @@ Designing and deploying a high availability Gravwell cluster can be simple as lo
 3. If an indexer fails, it is critically important that it be allowed to establish connections with replication peers and perform a first-level tag synchronization prior to ingesting new data.  It can be a good idea to set the `Connect-Wait-Timeout` config parameter to zero, ensuring the failed indexer will not start until it has established replication connections and performed a tag restoration.
 4. Replication storage locations should be reserved exclusively for a single replication system.  For example, using the same network attached storage location for multiple indexers' `Storage-Location` will cause replication failures and data corruption.
 5. Match the compression scheme for replicated and primary data.  If you are using host based transparent compression on the indexers, it is best to mimic that behavior on the replication stores.  If compression schemes match between indexers and replication peers, the restoration process is dramatically faster.
-6. Set `Enable-Transport-Compression=false` when replication peers are on a local collision domain.  The transport compression is enabled by default but only consumes CPU when operating over local connections where bandwidth is not a concern.
+6. Only set `Enable-Transport-Compression=true` when replication peers communicate over bandwidth-constrained links.  Transport compression is disabled by default; enabling it on a local collision domain consumes CPU without any bandwidth benefit.
 
 ## Delayed deletion with Data Ageout
 
@@ -215,7 +215,7 @@ This behavior can be changed by setting the `Delete-Delay` parameter in the repl
 ```
 [Replication]
 	Disable-Server=true
-	Peer=10.0.01
+	Peer=10.0.0.1
 	Storage-Location=/opt/gravwell/replication_storage
 	Delete-Delay=7d
 ```
@@ -248,4 +248,4 @@ Replication peers may not have been able to keep up with an indexer due to poor 
 
 Also ensure that there was adequate storage on replication peers.  If a storage node is configured to keep 10TB of cold data and 1TB of hot data, replication peers should be capable of storing at least 11TB of data.  If a replication node was overloaded or misconfigured it may have been removing old data.
 
-Ensure that the system times on replication nodes and indexers are consistent.  Both systems use the wall-clock time to determine eligibility of data for removal.  If an indexer has an incorrect system time, its data my be prioritized for deletion in the event a replication peer runs out of storage.
+Ensure that the system times on replication nodes and indexers are consistent.  Both systems use the wall-clock time to determine eligibility of data for removal.  If an indexer has an incorrect system time, its data may be prioritized for deletion in the event a replication peer runs out of storage.

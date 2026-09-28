@@ -85,7 +85,7 @@ systemctl restart gravwell_searchagent.service
 ```
 
 ```{note}
-If using the datastore and multiple webservers, you must set the `Search-Forwarding-Insecure-Skip-TLS-Verify parameter` to `true` to enable webservers to communicate with each other using self-signed certs. If the datastore also uses self-signed certificates, set `Datastore-Insecure-Skip-TLS-Verify` on the webservers to enable them to communicate with the datastore.
+If using the datastore and multiple webservers, you must set the `Search-Forwarding-Insecure-Skip-TLS-Verify` parameter to `true` to enable webservers to communicate with each other using self-signed certs. If the datastore also uses self-signed certificates, set `Datastore-Insecure-Skip-TLS-Verify` on the webservers to enable them to communicate with the datastore.
 ```
 
 ## Install a self-signed certificate
@@ -99,7 +99,7 @@ cd /opt/gravwell/etc
 sudo -u gravwell ../bin/gencert -host HOSTNAME
 ```
 
-Make sure to replace HOSTNAME with either the hostname or the IP address of your Gravwell system. You can specify multiple hostnames or IPs by separating them with commas, e.g. `gencert -h gravwell.floren.lan,10.0.0.1,192.168.0.3`
+Make sure to replace HOSTNAME with either the hostname or the IP address of your Gravwell system. You can specify multiple hostnames or IPs by separating them with commas, e.g. `gencert -host gravwell.floren.lan,10.0.0.1,192.168.0.3`
 
 Now, open `gravwell.conf` and uncomment the `Certificate-File` and `Key-File` directives. The defaults should point correctly to the two files we just created.
 
