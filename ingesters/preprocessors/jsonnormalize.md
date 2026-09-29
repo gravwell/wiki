@@ -1,6 +1,6 @@
 # JSON Normalize Preprocessor
 
-The JSON normalize preprocessor repairs heavily escaped JSON entries and re-emits a single, clean JSON document. It handles two distinct flavors of "heavily escaped" JSON:
+The JSON normalize preprocessor repairs heavily escaped JSON entries and re-emits a single, clean JSON document. It handles two distinct flavors of heavily escaped JSON:
 
 1. **Whole-record escaping**, where an entire JSON document has been serialized as a string one or more times, e.g. an entry whose data is literally `"{\"a\":1}"` instead of `{"a":1}`, or, in the case where an upstream system stripped the enclosing quotes, the invalid fragment `{\"a\":1}`.
 2. **Field-level escaping**, where an otherwise well-formed JSON document contains a field whose value is itself a JSON-encoded string, e.g. `{"user":"alice","payload":"{\"a\":1}"}`. This is common when a logging pipeline serializes a sub-object independently before embedding it in a parent document.
@@ -9,7 +9,7 @@ The JSON Normalize preprocessor Type is `jsonnormalize`.
 
 ## Supported Options
 
-- `Max-Depth` (integer, optional): Bounds how many layers of string-escaping the processor will unwind, both when repairing a malformed, over-escaped document and when recursively inlining JSON-encoded strings found as field values. Defaults to `8` if unset or set to `0`. This budgets escaping *layers*, not structural nesting -- walking down through an already-valid document's plain objects/arrays costs nothing against it, so a document nested many objects deep with a single escaped field at the bottom is handled the same as a shallow one, as long as that field is only escaped once.
+- `Max-Depth` (integer, optional): Bounds how many layers of string-escaping the processor will unwind, both when repairing a malformed, heavily escaped document and when recursively inlining JSON-encoded strings found as field values. Defaults to `8` if unset or set to `0`. This budgets escaping *layers*, not structural nesting -- walking down through an already-valid document's plain objects/arrays costs nothing against it, so a document nested many objects deep with a single escaped field at the bottom is handled the same as a shallow one, as long as that field is only escaped once.
 - `Passthrough-Non-JSON` (boolean, optional): By default, entries which are not valid JSON and cannot be repaired into valid JSON by unescaping are dropped. Setting `Passthrough-Non-JSON` to true will instead pass such entries through unmodified. This also governs entries that decode as structurally valid JSON but contain invalid UTF-8 in a string value.
 - `Pretty` (boolean, optional): By default, the normalized output is compact, single-line JSON. Setting `Pretty` to true indents the output for readability.
 
@@ -17,7 +17,7 @@ The JSON Normalize preprocessor Type is `jsonnormalize`.
 Max-Depth counts escaping layers, not object/array nesting depth. CloudTrail, Kubernetes audit logs, and Windows event JSON routinely nest many objects deep; the default of 8 is almost always enough because it only needs to cover how many times a value was re-encoded as a string, not how deep the document's structure goes.
 ```
 
-## Example: Repairing a Whole-Record Escaped Document
+## Example: Repairing a Fully Escaped Document
 
 To illustrate the use of this preprocessor, consider a situation where an upstream system serializes an entire JSON document as a string before handing it off, and in doing so strips the outer quotes that would normally make it valid JSON. Incoming logs look like this:
 
@@ -35,7 +35,7 @@ We can apply a JSON normalize preprocessor to repair these entries:
         Preprocessor=normalizer
 
 [preprocessor "normalizer"]
-        Type = jsonnormalize
+        Type=jsonnormalize
 ```
 
 With the above configuration, each entry is repaired back into valid JSON:
@@ -63,7 +63,7 @@ Applying the preprocessor:
         Preprocessor=normalizer
 
 [preprocessor "normalizer"]
-        Type = jsonnormalize
+        Type=jsonnormalize
 ```
 
 produces entries with `payload` inlined as a real nested object instead of an escaped string:
@@ -81,9 +81,16 @@ Because `Max-Depth` only budgets escaping layers and not structural nesting, doc
 {"eventSource":"s3.amazonaws.com","requestParameters":{"bucketName":"example","object":{"key":"file.txt","metadata":{"tags":{"custom":"{\"team\":\"platform\",\"owner\":\"alice\"}"}}}}}
 ```
 
+We can apply a JSON normalize preprocessor to repair this entry:
+
 ```
+[Listener "json"]
+        Bind-String="0.0.0.0:7777"
+        Tag-Name=jsonlogs
+        Preprocessor=normalizer
+
 [preprocessor "normalizer"]
-        Type = jsonnormalize
+        Type=jsonnormalize
 ```
 
 The `custom` field is still found and inlined, and the surrounding structure is left untouched:
@@ -102,6 +109,8 @@ connection reset by peer
 {"action":"logout","user":"bob"}
 ```
 
+Preprocessor to keep non-JSON records:
+
 ```
 [Listener "json"]
         Bind-String="0.0.0.0:7777"
@@ -109,7 +118,7 @@ connection reset by peer
         Preprocessor=normalizer
 
 [preprocessor "normalizer"]
-        Type = jsonnormalize
+        Type=jsonnormalize
         Passthrough-Non-JSON=true
 ```
 
@@ -120,8 +129,13 @@ With the above configuration, the two JSON entries are normalized as usual and t
 By default, output is compact. Setting `Pretty=true` indents the result, which can be useful when chaining `jsonnormalize` before a preprocessor or downstream tool that expects human-readable JSON:
 
 ```
+[Listener "json"]
+        Bind-String="0.0.0.0:7777"
+        Tag-Name=jsonlogs
+        Preprocessor=normalizer
+
 [preprocessor "normalizer"]
-        Type = jsonnormalize
+        Type=jsonnormalize
         Pretty=true
 ```
 

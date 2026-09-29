@@ -149,7 +149,7 @@ plugin <plugin>
 | [jsonextract](jsonextract) | Parse and extract elements in JSON data |
 | [jsonarraysplit](jsonarraysplit) | Parse JSON array data and split the array into individual entries |
 | [jsonfilter](jsonfilter) | Parse JSON data and filter based on field values |
-| [jsonnormalize]|(jsonnormalize)| stuff |
+| [jsonnormalize]|(jsonnormalize)| Repairs heavily escaped JSON entries |
 | [jsonrouter](jsonrouter) | Route entries to specific tags based on JSON field values |
 | [jsontimeextract](jsontimeextract) | Parse JSON data and extract timestamps from specific field values |
 | [syslogrouter](syslogrouter) | Parse Syslog (RFC5424/RFC3164) data and route to specific tags based on field values |
