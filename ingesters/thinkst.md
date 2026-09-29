@@ -12,7 +12,7 @@ The [Thinkst Canary](https://canary.tools/) ingester polls the Canary Console AP
 * **Incidents** (`Api=incident`) incidents raised by Canary birds and Canarytokens: connections, HTTP requests, file access, and other bait interactions. Events are ingested in order with timestamps preserved from the original records.
 * **Audit Trail** (`Api=audit`) console-level activity: logins, configuration changes, and bird/token operations performed through the Console.
 
-Each stanza polls exactly one Api, so a deployment that wants both feeds needs two stanzas, each writing to its own tag.
+Each stanza polls exactly one API, so a deployment that wants both feeds needs two stanzas, each writing to its own tag.
 
 This ingester runs as a plugin inside the [Gravwell Hosted Runner](hosted_runner_configuration). Multiple Thinkst stanzas can coexist alongside other Hosted Runner plugins in a single configuration file.
 
@@ -60,9 +60,9 @@ The Thinkst ingester is configured via `[Thinkst "name"]` stanzas in the Hosted 
 | Domain               | string  | yes      |         | Your Canary Console hostname, e.g. `example.canary.tools`. No scheme or trailing slash.                                            |
 | Token                | string  | yes      |         | Canary Console API auth_token.                                                                                                     |
 | Api                  | string  | yes      |         | Which feed this stanza polls: `incident` or `audit`.                                                                               |
-| Tag-Name             | string  | no       | thinkst | Tag to write events to. If unset, defaults to Tag-Prefix (or `thinkst` if that's unset too) plus the Api, e.g. `thinkst-incident`. |
+| Tag-Name             | string  | no       | thinkst | Tag to write events to. If unset, defaults to Tag-Prefix (or `thinkst` if that's unset too) plus the API, e.g. `thinkst-incident`. |
 | Tag-Prefix           | string  | no       | thinkst | Prefix used to build the default tag when Tag-Name isn't set. Cannot be set together with Tag-Name.                                |
-| Lookback             | integer | no       | 24      | Hours of history to consider when an instance first starts with no prior state. Only affects the `audit` Api.                      |
+| Lookback             | integer | no       | 24      | Hours of history to consider when an instance first starts with no prior state. Only affects the `audit` API.                      |
 | Requests-Per-Minute  | integer | no       | 60      | Maximum number of Console API requests per minute.                                                                                 |
 | Request-Interval     | integer | no       | 60      | Seconds to wait between polls once a feed has caught up (no further pages pending).                                                |
 
