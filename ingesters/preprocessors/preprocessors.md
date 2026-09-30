@@ -165,4 +165,4 @@ plugin <plugin>
 | [ciscoise](ciscoise) | Cisco ISE multi-message reconstruction preprocessor |
 | [corelight](corelight) | Preprocessor to adapt Corelight JSON logs to Zeek TSV data |
 | [vector](vector) | Generate vector embeddings for entry data and attach them as an enumerated value |
-| [plugin](plugin) | Preprocessor that loads interpretted code to perform custom preprocessing actions |
+| [plugin](plugin) | Preprocessor that loads interpreted code to perform custom preprocessing actions |

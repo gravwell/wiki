@@ -108,7 +108,7 @@ Consider the query:
 tag=default json UUID foo | lookup -r data foo bar baz | eval UUID=="cd656e75-d54d-4e80-ac13-bc77abdde0ad" | table
 ```
 
-The above query extracts json data, performs some processing on every instace of "foo", and then filters the data down to just those entries with a specific UUID that was extracted in the first module. This query is potentially very costly, as the indexer must retrieve every record in the "default" tag for the given timeframe, and the lookup module must perform additional data lookups. If we moved the filter to the json module instead, we could reduce the overhead considerably, especially if acceleration is enabled on the default tag. By moving the filter to the beginning of the query, we allow the indexer to perform retrieval optimizations on disk, and we minimize the number of entries sent down the pipeline.
+The above query extracts json data, performs some processing on every instance of "foo", and then filters the data down to just those entries with a specific UUID that was extracted in the first module. This query is potentially very costly, as the indexer must retrieve every record in the "default" tag for the given timeframe, and the lookup module must perform additional data lookups. If we moved the filter to the json module instead, we could reduce the overhead considerably, especially if acceleration is enabled on the default tag. By moving the filter to the beginning of the query, we allow the indexer to perform retrieval optimizations on disk, and we minimize the number of entries sent down the pipeline.
 
 ```gravwell
 tag=default json UUID=="cd656e75-d54d-4e80-ac13-bc77abdde0ad" foo | lookup -r data foo bar baz | table`
@@ -304,7 +304,7 @@ These flags map to the equivalent tuning parameters in most packet capture progr
 
 ## Throttling considerations
 
-So far this document has focused on increasing performance (ingest rate, search speed, etc.). By default, Gravwell will use any available resources when needed in order to run as quickly as possible. It is easy to exaust the disk, CPU, and memory resources on indexer and ingester nodes, as well as saturate network links with busy ingesters. The rest of this document focuses on *throttling* Gravwell resource utilization in order to reduce contention.
+So far this document has focused on increasing performance (ingest rate, search speed, etc.). By default, Gravwell will use any available resources when needed in order to run as quickly as possible. It is easy to exhaust the disk, CPU, and memory resources on indexer and ingester nodes, as well as saturate network links with busy ingesters. The rest of this document focuses on *throttling* Gravwell resource utilization in order to reduce contention.
 
 ### Indexer throttling
 
@@ -333,7 +333,7 @@ The argument should be a number followed by an optional rate suffix, e.g. 104857
 
 Linux Control Groups (cgroups) are a Linux kernel feature designed to restrict the memory, CPU, I/O, and other subsystems for groups of processes. It is possible to place Gravwell components (including indexers) in cgroups to control overall resource utilization. There are several ways to setup cgroups, and you should refer to the distribution specific guidelines for your Linux distribution. 
 
-Most Linux systems today use `systemd`, which indepentently controls cgroups. If your system uses `systemd`, you can use the `systemctl set-property` command to set cgroup properties for running processes. See the [systemctl](https://www.freedesktop.org/software/systemd/man/systemctl.html) and [resource control](https://www.freedesktop.org/software/systemd/man/systemd.resource-control.html) documentation for systemd.
+Most Linux systems today use `systemd`, which independently controls cgroups. If your system uses `systemd`, you can use the `systemctl set-property` command to set cgroup properties for running processes. See the [systemctl](https://www.freedesktop.org/software/systemd/man/systemctl.html) and [resource control](https://www.freedesktop.org/software/systemd/man/systemd.resource-control.html) documentation for systemd.
 
 Additionally, if you are using docker to deploy Gravwell services, you can specify [resource restrictions](https://docs.docker.com/config/containers/resource_constraints/) directly in docker.
 ]s

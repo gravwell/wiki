@@ -69,7 +69,7 @@ Google-Credentials-Path=/opt/gravwell/etc/google-compute-credentials.json
 	Topic-Name=mytopic	# the pubsub topic you want to ingest
 	Tag-Name=gcp
 	Parse-Time=false
-	Assume-Localtime=true
+	Assume-Local-Timezone=true
 ```
 
 Note the following essential fields:
