@@ -86,6 +86,7 @@ Instead of using the Gravwell-hosted AI service, you can configure Gravwell to u
 | `AI-Server-URL` | The URL of the OpenAI-compatible API endpoint. |
 | `Third-Party-Provider` | Must be set to `true` to enable third-party mode. This disables license-based authentication and performs an alternate health check. |
 | `Model` | The model name to use for chat completions (e.g. `gpt-4o`). Required when `Third-Party-Provider` is true. |
+| `Max-AI-Tokens` | The maximum number of completion tokens Gravwell will request per response. Defaults to `131072`. Must not exceed the configured model's output token limit — see [Setting Max-AI-Tokens](#setting-max-ai-tokens). |
 | `Include-Header` | Additional HTTP headers for requests to the AI server, typically used for authentication. Can be specified multiple times for multiple headers. |
 | `System-Prompt-File` | Optional path to a file containing a custom system prompt for all Logbot conversations. |
 
@@ -97,6 +98,7 @@ Below is an example configuration that connects to OpenAI's API:
 	AI-Server-URL="https://api.openai.com"
 	Third-Party-Provider=true
 	Model="gpt-4o"
+	Max-AI-Tokens=16384
 	Include-Header="Authorization: Bearer <your-api-key>"
 ```
 
@@ -110,6 +112,31 @@ When using a third-party provider, Gravwell will attempt to perform a model exis
 For example, the above configuration would perform a health check as a `GET` request against `https://api.openai.com/v1/models/gpt-4o`.
 
 Many model providers support a small fragment of the OpenAI spec and may not be compatible with Gravwell. If Logbot is reporting failures at startup, validate OpenAI API compatibility.
+```
+
+(setting-max-ai-tokens)=
+#### Setting Max-AI-Tokens
+
+[`Max-AI-Tokens`](max-ai-tokens) sets the maximum number of completion tokens Gravwell requests from the model, and defaults to `131072`. Models differ in how many output tokens they accept, and if `Max-AI-Tokens` is higher than the configured model's limit the provider rejects the request and Logbot reports an error like:
+
+```
+503 error: LLM returned status 400: {"error":{"code":"invalid_request_error","message":"max_tokens: 131072 > 128000, which is the maximum allowed number of output tokens for claude-sonnet-5","type":"invalid_request_error","param":null}}
+```
+
+When configuring a third-party provider, set `Max-AI-Tokens` to a value at or below the maximum output tokens documented for your model. Consult your provider's documentation for the current limit, as these values change with each model release. For example, to use Anthropic's Claude Sonnet 5, which at the time of writing allows at most 128000 output tokens:
+
+```
+[AI]
+	Enable=true
+	AI-Server-URL="https://api.anthropic.com"
+	Third-Party-Provider=true
+	Model="claude-sonnet-5"
+	Max-AI-Tokens=64000
+	Include-Header="Authorization: Bearer <your-api-key>"
+```
+
+```{note}
+`Max-AI-Tokens` is an upper bound on a single response, not a target: it does not cause the model to generate longer responses, but a value set too low can truncate long answers.
 ```
 
 #### Gotchas With Third-Party LLM Services

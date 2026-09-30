@@ -70,7 +70,7 @@ if payload.Get(`flow.Name`) == "foo" {
 |----------|---------------------|----------------------------------------------------------------|
 | `START`    | [time.Time](https://pkg.go.dev/time#Time) | The scheduled start time for the flow. This time may be far in the past if the flow is backfilling missed runs. |
 | `LAST_RUN` | [time.Time](https://pkg.go.dev/time#Time) | The timestamp of the last run of this flow. |
-| `DURATION` | [time.Duration](https://pkg.go.dev/time#Duration) | The scheduled time duration of a flow run. This repesents the time window the flow should cover for any queries. |
+| `DURATION` | [time.Duration](https://pkg.go.dev/time#Duration) | The scheduled time duration of a flow run. This represents the time window the flow should cover for any queries. |
 | `ThisScriptID` | `string` | The current flow ID. |
 | `GetClient` | `func() *client.Client` | Returns an active logged in client for use, [client.Client](https://pkg.go.dev/github.com/gravwell/gravwell/v3/client#Client) docs available. |
 | `SetPersistentMap` | `SetPersistentMap(mapName string, key string, value interface{})` | Set a natively typed value into a persistent map that can be retrieved across runs. |

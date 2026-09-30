@@ -17,7 +17,7 @@ This page provides assistance if you have a system that is not currently listed 
     * Configure Gravwell to the same protocol. Syslog Default is UDP
 * Hostname/Remote IP
     * Set to the IP address of your Gravwell ingester
-* Remote Port Port: 514
+* Remote Port: 514
     * Configure Gravwell to the same port. The default port for Syslog is 514 and for Secure Transport(TLS) 6514
 
 ## Gravwell Configuration
