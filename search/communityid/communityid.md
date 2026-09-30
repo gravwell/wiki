@@ -14,7 +14,7 @@ tag=netflow netflow Src SrcPort Dst DstPort Protocol
 
 The ordering of source and destination ip port pairs is computed inside the algorithm, so you do not need to resolve the source or destination beforehand.  However, it is **critical** that the order of ports match the source and destination IP addresses.
 
-Community id parameters are orderd as `<IP A> <IP B> <Port A> <Port B> <Protocol Number>` where the two port specifications are optional.
+Community id parameters are ordered as `<IP A> <IP B> <Port A> <Port B> <Protocol Number>` where the two port specifications are optional.
 
 It is valid to exclude both port numbers: `<IP A> <IP B> <Protocol Number>`. Note that including one port but not the other is invalid.
 
