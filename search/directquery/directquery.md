@@ -183,7 +183,7 @@ Optional query parameters `StartTS` and `EndTS` may be specified as query parame
 
 The download API endpoint supports authorization using JWT Bearer tokens, cookies, and [API Tokens](/tokens/tokens).
 
-### Format Compatability
+### Format Compatibility
 
 | Renderer    | Text    | JSON    | CSV      | PCAP    | Archive |
 | ----------- | ------- | ------- | -------- | ------- | ------- |
