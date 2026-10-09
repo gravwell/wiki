@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vulnerability disclosure policy | Gravwell Inc.</title>
+<meta name="description" content="Gravwell Inc.'s policy for good-faith security research and coordinated vulnerability disclosure.">
+<link rel="stylesheet" href="security.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="site">
+  <nav class="site-nav" aria-label="Security pages">
+    <a href="./">Report a vulnerability</a>
+    <a href="disclosure-policy.html" aria-current="page">Disclosure policy</a>
+    <a href="hall-of-fame.html">Acknowledgments</a>
+  </nav>
+
+  <main id="main">
+    <h1>Vulnerability disclosure policy</h1>
+    <p class="meta">Effective October 1, 2026</p>
+    <p class="lede">This policy explains which systems you may test, how to test them safely, how to report what you find, and what you can expect from us in return.</p>
+
+    <section class="commitments" aria-labelledby="commitments-heading">
+      <h2 id="commitments-heading">Our commitments at a glance</h2>
+      <dl>
+        <dt>Acknowledgment</dt>
+        <dd>Within 5 business days of your report</dd>
+        <dt>Initial assessment</dt>
+        <dd>Within 14 business days, including whether we can reproduce it</dd>
+        <dt>Status updates</dt>
+        <dd>At least every 14 days until the issue is resolved</dd>
+        <dt>Public disclosure</dt>
+        <dd>Coordinated with you, by default no later than 90 days after your report</dd>
+        <dt>Legal action</dt>
+        <dd>None, for good-faith research that follows this policy</dd>
+        <dt>Automated reports</dt>
+        <dd>We discard automated notifications that we assess as not pertinent or applicable to our infrastructure, product, or business</dd>
+      </dl>
+    </section>
+
+    <nav class="toc" aria-label="On this page">
+      <strong>On this page</strong>
+      <ol>
+        <li><a href="#authorization">Authorization and safe harbor</a></li>
+        <li><a href="#scope">Scope</a></li>
+        <li><a href="#guidelines">Guidelines for testing</a></li>
+        <li><a href="#prohibited">Methods that are not allowed</a></li>
+        <li><a href="#reporting">How to report</a></li>
+        <li><a href="#process">What to expect from us</a></li>
+        <li><a href="#disclosure">Public disclosure</a></li>
+        <li><a href="#recognition">Recognition and rewards</a></li>
+        <li><a href="#questions">Questions and changes</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="authorization">1. Authorization and safe harbor</h2>
+    <p>If you make a good-faith effort to follow this policy during your research, we consider your research authorized. Specifically:</p>
+    <ul>
+      <li>We will not pursue or support legal action against you for research that complies with this policy, including claims under anti-hacking laws such as the Computer Fraud and Abuse Act or anti-circumvention laws such as the DMCA.</li>
+      <li>We will treat your research as exempt from any terms of service that would otherwise prohibit it, to the extent needed to carry it out under this policy.</li>
+      <li>If a third party brings legal action against you over activity that followed this policy, we will make it known that your actions were authorized by us.</li>
+    </ul>
+    <p>This authorization covers only systems in scope and only conduct that follows the guidelines below. If you're unsure whether something is allowed, ask us at <a href="mailto:security@gravwell.io">security@gravwell.io</a> before you proceed. We can't authorize testing of systems owned by others, including vendors and service providers we use.</p>
+
+    <h2 id="scope">2. Scope</h2>
+    <h3>In scope</h3>
+    <ul>
+      <li><code>gravwell.io</code></li>
+      <li><code>update.gravwell.io</code></li>
+      <li>The Gravwell core product. Assess it against an installation on local infrastructure that you own and control, not against any hosted or third-party instance.</li>
+    </ul>
+    <p>If you find an issue in a system you believe belongs to us but aren't sure, you may still report it. We'll tell you whether it's ours.</p>
+    <h3>Out of scope</h3>
+    <ul>
+      <li>Systems and services operated by third parties, even if they're used by or linked from our sites. Report those to the vendor directly.</li>
+      <li>Customer deployments of our product, and any infrastructure owned by, operated by, or linked to our customers. Don't test these. If you find a vulnerability in the product itself, reproduce it on your own installation and report it to us.</li>
+      <li>Physical security of our offices, data centers, or staff.</li>
+      <li>Any finding that relies on a denial-of-service attack, social engineering, or physical access to a device.</li>
+    </ul>
+    <h3>Usually not accepted without a demonstrated impact</h3>
+    <p>These are commonly reported but rarely exploitable on their own. Include a realistic attack scenario if you report one:</p>
+    <ul>
+      <li>Missing security headers, cookie flags, or best-practice configurations with no shown exploit.</li>
+      <li>Clickjacking on pages with no sensitive actions.</li>
+      <li>Cross-site request forgery on logout or other actions with no security impact.</li>
+      <li>Self-XSS, or issues that only affect the reporter's own account.</li>
+      <li>Version disclosure, banner grabbing, or verbose error messages without sensitive data.</li>
+      <li>Email configuration (SPF, DKIM, DMARC) findings.</li>
+      <li>Results from automated scanners submitted without verification.</li>
+      <li>Rate-limiting or brute-force issues on non-authentication endpoints.</li>
+      <li>Findings that depend on proxying or intercepting connections, such as placing an attacker-controlled proxy or man-in-the-middle position between a client and our systems. We don't consider this a realistic attack scenario.</li>
+    </ul>
+
+    <h2 id="guidelines">3. Guidelines for testing</h2>
+    <p>Under this policy, you agree to:</p>
+    <ul>
+      <li>Notify us as soon as possible after you discover a real or potential security issue.</li>
+      <li>Make every effort to avoid privacy violations, degradation of user experience, disruption to production systems, and destruction or manipulation of data.</li>
+      <li>Use exploits only to the extent needed to confirm a vulnerability. Don't use an exploit to compromise or exfiltrate data, establish persistent access, or pivot to other systems.</li>
+      <li>Test only against accounts you own or have explicit permission from the account holder to use.</li>
+      <li>Stop testing and report immediately if you encounter personal data, financial information, credentials, or proprietary information. Don't save, copy, share, or otherwise use it.</li>
+      <li>Delete any data you obtained during research once your report is resolved, and confirm that to us if asked.</li>
+      <li>Keep the details of the vulnerability confidential until it's resolved or until we've agreed on a disclosure date (see <a href="#disclosure">Public disclosure</a>).</li>
+      <li>Give us a reasonable amount of time to fix the issue before discussing it publicly.</li>
+    </ul>
+
+    <h2 id="prohibited">4. Methods that are not allowed</h2>
+    <ul>
+      <li>Denial of service, load testing, or any test that degrades availability.</li>
+      <li>Phishing, pretexting, or any other social engineering of our staff, contractors, or users.</li>
+      <li>Physical testing of our premises or equipment.</li>
+      <li>Accessing, modifying, or deleting data belonging to anyone other than yourself.</li>
+      <li>Spamming forms, sending mass messages, or creating large numbers of accounts.</li>
+      <li>Installing malware, backdoors, or persistent tooling on our systems.</li>
+      <li>Attempting extortion, or making any demand in exchange for not disclosing a vulnerability.</li>
+    </ul>
+
+    <h2 id="reporting">5. How to report</h2>
+    <p>Send reports to <a href="mailto:security@gravwell.io">security@gravwell.io</a>. You may report anonymously. If you do, we can't contact you about the fix or credit you.</p>
+    <p>Please include:</p>
+    <ul>
+      <li>Where the vulnerability is: URL, hostname, application, or component.</li>
+      <li>A description of the issue and its potential impact.</li>
+      <li>Detailed steps to reproduce it, with proof-of-concept code, requests, or screenshots where helpful. Benign payloads are preferred.</li>
+      <li>Any data you accessed or changed in the course of testing.</li>
+    </ul>
+    <p>We prefer reports in English. Encrypt sensitive reports with our <a href="/.well-known/pgp-key.txt">PGP key</a> (fingerprint <code>3D6E B802 8BC5 73DE 47A5  9410 8F93 5E93 0667 8D59</code>), also available from <a href="https://keys.openpgp.org/vks/v1/by-fingerprint/3D6EB8028BC573DE47A594108F935E9306678D59">keys.openpgp.org</a>.</p>
+
+    <h2 id="process">6. What to expect from us</h2>
+    <p>When you report a vulnerability under this policy, we will:</p>
+    <ol>
+      <li>Acknowledge receipt of your report within 5 business days.</li>
+      <li>Within 14 business days, tell you whether we could confirm the issue and how we've assessed its severity. We use the Common Vulnerability Scoring System (CVSS) as a guide.</li>
+      <li>Keep you informed at least every 14 days while we work on a fix, including any delays.</li>
+      <li>Tell you when the issue is fixed, and give you the chance to verify the fix if you'd like.</li>
+      <li>Credit you publicly for the finding if you want us to.</li>
+    </ol>
+    <p>We aim to fix confirmed vulnerabilities as quickly as their severity warrants. Critical and high-severity issues take priority. Some fixes, particularly those involving third-party components, may take longer, and we'll explain why when that happens.</p>
+
+    <h2 id="disclosure">7. Public disclosure</h2>
+    <p>We practice coordinated disclosure. We ask that you not share details of a vulnerability publicly until either it has been fixed or 90 days have passed since your report, whichever comes first. If we need more time, we'll explain why and agree on a new date with you. If a vulnerability is being actively exploited, we may agree to an earlier disclosure.</p>
+    <p>Where appropriate, we'll publish an advisory describing the issue and its fix, and we may request a CVE identifier. We'll coordinate the timing of any advisory with you.</p>
+
+    <h2 id="recognition">8. Recognition and rewards</h2>
+    <p>With your permission, we'll list you on our <a href="hall-of-fame.html">acknowledgments page</a> once the issue is resolved. This is a vulnerability disclosure program, not a bug bounty: we don't currently offer monetary rewards, and submitting a report doesn't create any obligation to pay one.</p>
+
+    <h2 id="questions">9. Questions and changes</h2>
+    <p>Questions about this policy can be sent to <a href="mailto:security@gravwell.io">security@gravwell.io</a>. We also welcome suggestions for improving it.</p>
+    <p>We may update this policy from time to time. The effective date at the top of this page shows when it last changed. Research carried out under an earlier version remains covered by the terms in effect when it was performed.</p>
+  </main>
+
+  <footer class="site-footer">
+    <p>This policy follows the structure of ISO/IEC 29147 and the CISA vulnerability disclosure policy template. Machine-readable contact details: <a href="/.well-known/security.txt">/.well-known/security.txt</a></p>
+  </footer>
+</div>
+</body>
+</html>
