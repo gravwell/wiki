@@ -16,7 +16,7 @@ tag=pcap packet ipv4.SrcIP ipv4.DstIP ipv4.Length | sum Length by SrcIP DstIP | 
 
 ![](fdg1.png)
 
-When you hover over a node, the graph shows its name. Some visualizers also have a focus mode, which highlights the node and its connections:
+When you hover over a node, the graph shows its label. Some visualizers also have a focus mode, which highlights the node and its connections:
 
 ![](fdg2.png)
 
