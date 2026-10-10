@@ -1,6 +1,6 @@
 # Corelight JSON to TSV Preprocessor
 
-Corelight is the commercial version of the highly popular network monitoring tool Zeek. Gravwell provides a robust Zeek kit which is designed to provide fast and flexible access to the TSV formated Zeek data.  Rather than replicate the entire Zeek kit for Corelight JSON data, which would require additional storage and perform worse than the standard TSV formatted data which comes from Zeek, we prefer to convert the JSON data to TSV. This preprocessor is designed to recieve entries from Corelight via their JSON-over-TCP export option and translate them into Zeek standard TSV data.  As a result you can use the Gravwell Zeek kit and integrations with a commercial Corelight deployment.
+Corelight is the commercial version of the highly popular network monitoring tool Zeek. Gravwell provides a robust Zeek kit which is designed to provide fast and flexible access to the TSV formatted Zeek data.  Rather than replicate the entire Zeek kit for Corelight JSON data, which would require additional storage and perform worse than the standard TSV formatted data which comes from Zeek, we prefer to convert the JSON data to TSV. This preprocessor is designed to receive entries from Corelight via their JSON-over-TCP export option and translate them into Zeek standard TSV data.  As a result you can use the Gravwell Zeek kit and integrations with a commercial Corelight deployment.
 
 The Corelight JSON to TSV preprocessor type is "corelight".
 

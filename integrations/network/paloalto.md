@@ -23,7 +23,7 @@ Configure Syslog forwarding as described in the Palo Alto documentation:
 
 ![image](images/palo_syslog_setup.png)
 
-### [Option 2] HTTP Log Fowarding to HTTP Ingester
+### [Option 2] HTTP Log Forwarding to HTTP Ingester
 [Configure HTTP Log Forwarding](https://docs.paloaltonetworks.com/ngfw/administration/monitoring/forward-logs-to-an-https-destination)
 
 Configure HTTP log forwarding as described in the Palo Alto documentation:

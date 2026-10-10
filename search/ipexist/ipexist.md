@@ -87,7 +87,7 @@ tag=pcap packet ipv4.SrcIP ipv4.DstIP | ipexist -or -r ips SrcIP DstIP | table S
 
 ### Multiple resources
 
-Multiple unique IP sets may be specified by repeating the `-r` flag. The ipexists module will essentially treat them as one large set.
+Multiple unique IP sets may be specified by repeating the `-r` flag. The ipexist module will essentially treat them as one large set.
 
 ```gravwell
 tag=pcap packet ipv4.SrcIP | ipexist -r ips -r externalips SrcIP | table SrcIP

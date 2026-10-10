@@ -1,7 +1,7 @@
 # **Gravwell Data Ingestion Limits and Overages Policy**  
 Last Updated: June, 2025
 
-This Data Ingestion Limits and Overages Policy (the “**Overages Policy**”) supplements and is incorporated by reference into the Gravwell Software and Services Agreement available at [https://docs.gravwell.io/software-license-agreement.html](https://docs.gravwell.io/software-license-agreement.html) (the “**Agreement**”) entered into between Gravwell and the organization and/or or entity specified on the applicable Order Form.  Capitalized terms not otherwise defined herein have the meanings set forth in the Agreement.
+This Data Ingestion Limits and Overages Policy (the “**Overages Policy**”) supplements and is incorporated by reference into the Gravwell Software and Services Agreement available at [https://docs.gravwell.io/software-license-agreement.html](https://docs.gravwell.io/software-license-agreement.html) (the “**Agreement**”) entered into between Gravwell and the organization and/or entity specified on the applicable Order Form.  Capitalized terms not otherwise defined herein have the meanings set forth in the Agreement.
 
 1. **Daily Data Ingestion Limits**:
 

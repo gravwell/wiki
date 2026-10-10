@@ -19,7 +19,7 @@ tag=syslog grep sshd | grep "Failed password for" | regex "Failed\spassword\sfor
 
 ## Charts with Keys
 
-The `chart` renderer can produce data sets based on keys.  In the above examples we are plotting the `count` of entries using the key `user` which produces a count for each user user.  Chart supports multiple keys, which would allow us to chart data using the intersection of multiple key values.  For example we can run a query that calculates the size of data for each IP and Port using PCAP.  The query and results would be:
+The `chart` renderer can produce data sets based on keys.  In the above examples we are plotting the `count` of entries using the key `user` which produces a count for each user.  Chart supports multiple keys, which would allow us to chart data using the intersection of multiple key values.  For example we can run a query that calculates the size of data for each IP and Port using PCAP.  The query and results would be:
 
 ```gravwell
 tag=pcap packet ipv4.IP ~ 192.168.0.0/16 tcp.Port | length | stats sum(length) by IP Port | chart sum by IP Port

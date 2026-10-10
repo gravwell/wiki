@@ -33,6 +33,7 @@ Fortinet <network/fortinet>
 GitHub <application/github>
 IPFIX <network/ipfix>
 IPMI <generic/ipmi>
+Jamf <host/jamf>
 Juniper <network/juniper>
 MongoDB <application/mongodb>
 Netflow <network/netflow>
@@ -206,6 +207,12 @@ Zeek <network/zeek>
 :link: host/fluentd
 :link-type: doc
 **Fluentd**
+:::
+
+:::{grid-item-card}
+:link: host/jamf
+:link-type: doc
+**Jamf**
 :::
 
 :::{grid-item-card}

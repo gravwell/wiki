@@ -61,4 +61,4 @@ AWS-Secret-Access-Key=REPLACEMEWITHYOURKEY
     Stream-Name=MyKinesisStreamName	# should be the stream name as created in AWS
     Iterator-Type=TRIM_HORIZON
     Metrics-Interval=60
-    JSON-Metric=true
+    JSON-Metrics=true

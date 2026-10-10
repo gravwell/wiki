@@ -28,7 +28,7 @@ The following `cisco_ise` preprocessor configuration is designed to re-assemble 
     Type=cisco_ise
     Drop-Misses=true #if its malformed just drop it
     Enable-Multipart-Reassembly=true
-    Attribute-Drop-Filters="Step*"
+    Attribute-Drop-Filter="Step*"
     Attribute-Strip-Header=true
     Output-Format=cef
 ```
@@ -46,7 +46,7 @@ The following `cisco_ise` preprocessor configuration achieves a similar result, 
     Type=cisco_ise
     Drop-Misses=true #if its malformed just drop it
     Enable-Multipart-Reassembly=true
-    Attribute-Drop-Filters="Step*"
+    Attribute-Drop-Filter="Step*"
     Attribute-Strip-Header=true
     Output-Format=json
 ```

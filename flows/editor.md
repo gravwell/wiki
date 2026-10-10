@@ -24,7 +24,7 @@ The toolbar contains buttons for quick access to editor functionality. From left
 * **Schedule Status**: indicates if this flow is configured to automatically run on a schedule.
 * **Alert Status**: indicates if this flow is configured as a [Consumer for an Alert](#define-a-consumer).
 * **Debug**: runs the flow.
-* **Deubg Context**: indicates which debug context (if any) will be used when debugging the flow. [Read more](#define-a-consumer)
+* **Debug Context**: indicates which debug context (if any) will be used when debugging the flow. [Read more](#define-a-consumer)
 * **Edit Debug Context**: opens a debug context editor.
 * **Delete**: delete the selected node.
 * **Delete all**: delete all nodes (requires confirmation).

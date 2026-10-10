@@ -92,7 +92,7 @@ The "Left menu default visibility" dropdown sets the default visibility of the n
 
 The "Interface theme" dropdown is of particular interest, as it selects a GUI-wide color scheme (including the ever-popular dark modes). 
 
-The "24-Hour format" toggle enables users to change the time format to 24-hour instead of the the 12-hour AM/PM format.
+The "24-Hour format" toggle enables users to change the time format to 24-hour instead of the 12-hour AM/PM format.
 
 The "Chart theme" dropdown selects different color palettes which will be used when drawing charts. 
 
