@@ -50,7 +50,10 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/auth0-well.conf`
     Location=/opt/gravwell/storage/auth0
     Tags=auth0*
 ```
-### Gravwell Ingester Configuration: HTTP
+### Gravwell Ingester Configuration: HTTP Ingester
+
+This guide assumes the HTTP Ingester is already installed and configured as described in [HTTP Ingester Setup](/integrations/generic/http_ingester). Add the following to a new overlay file; you do not need a separate HTTP Ingester for this integration.
+
 **Sample Auth0 HTTP config:**  
 Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/auth0.conf`
 ```ini
