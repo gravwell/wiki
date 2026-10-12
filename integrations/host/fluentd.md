@@ -52,8 +52,11 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/fluentd-well.conf`
     Delete-Cold-Data=true # adapt this for your environment's requirements
 ```
 
-### Gravwell Ingester Configuration: HTTP
-**Sample HTTP config:**  
+### Gravwell Ingester Configuration: HTTP Ingester
+
+This guide assumes the HTTP Ingester is already installed and configured as described in [HTTP Ingester Setup](/integrations/generic/http_ingester). Add the following to a new overlay file; you do not need a separate HTTP Ingester for this integration.
+
+**Sample Fluentd HTTP config:**  
 Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/fluentd.conf`
 ```ini
 [Listener "fluentd"]
