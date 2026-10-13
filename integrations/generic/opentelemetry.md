@@ -246,7 +246,10 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/opentelemetry-well.conf`
     Tags=otel-*
 ```
 
-### Gravwell Ingester Configuration: HTTP
+### Gravwell Ingester Configuration: HTTP Ingester
+
+This guide assumes the HTTP Ingester is already installed and configured as described in [HTTP Ingester Setup](/integrations/generic/http_ingester). Add the following to a new overlay file; you do not need a separate HTTP Ingester for this integration.
+
 **Sample OpenTelemetry config:**  
 Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/opentelemetry.conf`
 ```ini
@@ -258,6 +261,8 @@ Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/opentelemetry.c
     URL="/v1/metrics"
     Tag-Name=otel-k8s-metrics
 ```
+
+These listeners use the default OpenTelemetry paths. If other integrations also send OpenTelemetry data to the same HTTP Ingester, give each one its own path prefix, as described in [HTTP Ingester Setup](/integrations/generic/http_ingester).
 
 ```{note}
 Remember to restart the service to apply the new config:
