@@ -14,8 +14,7 @@ Anthropic provides a **Compliance API** for Claude Enterprise and Claude Console
 
 To configure the ingester you will need the following from Anthropic:
 
-* **API key**: Either a **Compliance Access Key** (created in claude.ai, reaches every endpoint) or an **Admin API key** (reaches the Activity Feed only). The ingester reads the key from a file.
-* **Scope label**: A non-secret label you choose to identify the key's scope boundary (for example, the organization the key belongs to). It is used for rate limiting and saved state.
+* **API key**: Either a **Compliance Access Key** (created in claude.ai, reaches every endpoint) or an **Admin API key** (reaches the Activity Feed only). Configure it inline with `Credential` or, preferably, in a protected file with `Credential-File`.
 
 What each key can read determines which datasets you can ingest:
 
@@ -50,11 +49,13 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/claude_compliance-well.conf`
 
 The ingester runs as a plugin inside the [Gravwell Hosted Runner](hosted_runner_configuration). If the Hosted Runner is not installed, install it first. The `[Global]` and `[State]` blocks common to all Hosted Runner plugins are described in [Hosted Runner Configuration](hosted_runner_configuration).
 
+Each stanza gets its checkpoint namespace from its quoted name and `Ingester-UUID`; each selected dataset keeps separate state within that namespace. No scope label is configured.
+
 ```{note}
 The Claude Compliance plugin is still in development (see [gravwell/gravwell#2783](https://github.com/gravwell/gravwell/pull/2783)) and is not yet available in a released Hosted Runner. The options below come from that development version and may change before release.
 ```
 
-Save the API key on a single line in its own file, readable only by the Hosted Runner user (mode `0600` is recommended). The file must be a regular file of 16 KB or less, and the key must not contain line breaks.
+Prefer a protected credential file containing the API key on one line, readable only by the Hosted Runner user (mode `0600` is recommended). The file must be a regular file of 16 KB or less, and the key must not contain line breaks. `Credential="REPLACE_WITH_COMPLIANCE_KEY"` is the supported inline alternative; configure only one credential form.
 
 Edit: `/opt/gravwell/etc/hosted_runner.conf`
 
@@ -65,7 +66,6 @@ Edit: `/opt/gravwell/etc/hosted_runner.conf`
     Ingester-UUID="99f00000-0000-0000-0000-000000000000"
     Dataset="activities"
     Credential-File="/opt/gravwell/secrets/claude-compliance-key"
-    Scope-Identity="example-org"
 ```
 
 #### Sample Claude Compliance Config: Parameterized Dataset
@@ -77,26 +77,31 @@ Datasets that address a specific resource need a `Parameter` for each placeholde
     Dataset="organization-users"
     Parameter="organization_id:your-organization-id"
     Credential-File="/opt/gravwell/secrets/claude-compliance-key"
-    Scope-Identity="example-org"
 ```
 
-#### Datasets
+#### Datasets and tags
 
-Set `Dataset` to one of the values below. By default the plugin stores each family under its own tag, with the prefix `claude-compliance-` (for example, `claude-compliance-activities`). Set `Tag-Name` to override it.
+Repeat `Dataset` in a stanza to select one or more of the 26 operations below. Each operation keeps its own checkpoint and routes to its family's default tag. `Tag-Prefix` defaults to `claude-compliance`; `Tag-Name` instead pins every selected operation in that stanza to one explicit tag.
 
-| Family | Datasets that need no `Parameter` | Datasets that need a `Parameter` (placeholder) |
-| --- | --- | --- |
-| Activity Feed | `activities` | |
-| Directory | `organizations`, `groups` | `organization-users`, `organization-roles`, `organization-settings` (`organization_id`); `organization-role` (`organization_id`, `role_id`); `role-permissions` (`organization_id`, `role_id`); `group` (`group_id`); `group-members` (`group_id`) |
-| Conversations | `chats` | `chat-messages` (`chat_id`); `file-metadata` (`file_id`); `generated-file-metadata` (`file_id`) |
-| Projects | `projects` | `project` (`project_id`); `project-attachments` (`project_id`); `project-collaborators` (`project_id`); `project-document` (`document_id`); `project-document-metadata` (`document_id`) |
-| Artifacts | | `artifact-metadata` (`artifact_version_id`) |
-| Sessions | `local-sessions`, `remote-sessions` | `local-session` (`session_id`); `local-session-messages` (`session_id`); `remote-session-messages` (`session_id`) |
+| Family and default tag | Configure without `Parameter` | Collected automatically when `Follow-Children="enabled"` | Configure explicitly with `Parameter` |
+| --- | --- | --- | --- |
+| Activity Feed — `claude-compliance-activities` | `activities` | None | None |
+| Directory — `claude-compliance-directory` | `organizations`, `groups` | `organization-users`, `organization-roles`, `role-permissions`, `group-members` | `organization-role` (`organization_id`, `role_id`); `organization-settings` (`organization_id`); `group` (`group_id`) |
+| Conversations — `claude-compliance-conversations` | `chats` | `chat-messages` | `file-metadata` (`file_id`); `generated-file-metadata` (`file_id`) |
+| Projects — `claude-compliance-projects` | `projects` | `project-attachments`, `project-collaborators` | `project` (`project_id`); `project-document` (`document_id`); `project-document-metadata` (`document_id`) |
+| Artifacts — `claude-compliance-artifacts` | None | None | `artifact-metadata` (`artifact_version_id`) |
+| Sessions — `claude-compliance-sessions` | `local-sessions`, `remote-sessions` | `local-session-messages`, `remote-session-messages` | `local-session` (`session_id`) |
 
-With `Follow-Children` at its default of `enabled`, the plugin discovers the child records of `organizations`, `groups`, `chats`, `projects` and the session roots on its own, so you usually only need stanzas for the roots. Only configure datasets that your key is authorized to read.
+The seven operations in the second column are roots. With `Follow-Children` at its default of `enabled`, five root families discover the nine child operations in the third column. The ten operations in the last column are not discovered because the API does not provide a safe global inventory for their IDs; configure them only when you have the required ID and key scope.
+
+Every native JSON record remains unwrapped. The ingester adds only these intrinsic fields:
+
+* `_source`: the exact dataset operation, which distinguishes operations sharing a family tag.
+* `_parent`: the bound parent parameters for parameterized and discovered child requests.
+* `_session`: the compact session envelope on session message entries when the API provides it.
 
 ```{note}
-Give every `[ClaudeCompliance]` stanza its own `Ingester-UUID`, and keep it unchanged once data has been collected. Each stanza sets one `Dataset`, so use one stanza for each dataset you want.
+Give every `[ClaudeCompliance]` stanza its own `Ingester-UUID`, and keep it unchanged after collection begins. One stanza may repeat `Dataset`; all selected operations share that stanza's polling settings and request-rate budget.
 ```
 
 ```{note}
@@ -106,6 +111,10 @@ Remember to restart the service to apply the new config:
 
 ## Additional Resources
 * [Compliance API](https://platform.claude.com/docs/en/manage-claude/compliance-api)
+* [Compliance API access and key scopes](https://platform.claude.com/docs/en/manage-claude/compliance-api-access)
+* [Activity Feed](https://platform.claude.com/docs/en/manage-claude/compliance-activity-feed)
+* [Content data](https://platform.claude.com/docs/en/manage-claude/compliance-content-data)
+* [Sessions](https://platform.claude.com/docs/en/manage-claude/compliance-sessions)
 * [Admin API](https://platform.claude.com/docs/en/manage-claude/admin-api)
 * [Usage & Cost API](https://platform.claude.com/docs/en/manage-claude/usage-cost-api)
 * [Access audit logs (manual export)](https://support.claude.com/en/articles/9970975-access-audit-logs)
