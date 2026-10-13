@@ -31,6 +31,7 @@ Duo <application/duo>
 Fluentd <host/fluentd>
 Fortinet <network/fortinet>
 GitHub <application/github>
+HTTP Ingester <generic/http_ingester>
 IPFIX <network/ipfix>
 IPMI <generic/ipmi>
 Jamf <host/jamf>
@@ -300,6 +301,12 @@ Zeek <network/zeek>
 (generic_integrations)=
 ## Generic Integrations
 ::::{grid} 4
+:::{grid-item-card}
+:link: generic/http_ingester
+:link-type: doc
+**HTTP Ingester**
+:::
+
 :::{grid-item-card}
 :link: generic/ipmi
 :link-type: doc
