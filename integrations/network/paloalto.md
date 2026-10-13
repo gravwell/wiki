@@ -31,7 +31,7 @@ Configure HTTP log forwarding as described in the Palo Alto documentation:
 #### HTTP Server Profile
 
 * **Address**: Set to the address of your HTTP Ingester.
-* **Port**: Set to the port in the `Bind` parameter in the global section of your HTTP Ingester.
+* **Port**: Set to the port your HTTP Ingester listens on (its `Bind` setting, see [HTTP Ingester Setup](/integrations/generic/http_ingester)).
 * **HTTP Method**: Set to `POST`.
 * **Username**: Set to the username in your HTTP Ingester listener.
 * **Password**: Set to the password in your HTTP Ingester listener.
@@ -67,7 +67,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/pan-well.conf`
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/paloalto.conf`
 ```ini
 [Listener "syslogtcp_paloalto"]
-        Bind-String="tcp://0.0.0.0:6601"
+        Bind-String="tcp://0.0.0.0:15080"
         Reader-Type=line
         Tag-Name=pan_events
         Assume-Local-Timezone=true
@@ -125,19 +125,9 @@ Remember to restart the service to apply the new config:
 `sudo systemctl restart gravwell_simple_relay.service`
 ```
 
-### [Option 2] Gravwell Ingester Configuration: HTTP
-Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf`
-```ini
-[Global]
-Connection-Timeout = 0
-Log-Level=INFO #options are OFF INFO WARN ERROR
-Ingest-Cache-Path=/opt/gravwell/cache/http_ingester.cache
-#Max-Ingest-Cache=1024 #Number of MB to store, localcache will only store 1GB before stopping.  This is a safety net
-Bind=":8080"
-Max-Body=4096000 #about 4MB
-Log-File=/opt/gravwell/log/http_ingester.log #optional log file
-Health-Check-URL="/health/check"
-```
+### [Option 2] Gravwell Ingester Configuration: HTTP Ingester
+
+This guide assumes the HTTP Ingester is already installed and configured as described in [HTTP Ingester Setup](/integrations/generic/http_ingester). Add the following to a new overlay file; you do not need a separate HTTP Ingester for this integration.
 
 Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/paloalto.conf`
 ```
