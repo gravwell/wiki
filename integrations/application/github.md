@@ -64,18 +64,17 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/github-well.conf`
     Location=/opt/gravwell/storage/github
     Tags=github*
 ```
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: HTTP Ingester
 
-Set up the HTTP Ingester configuration file.
+This guide assumes the HTTP Ingester is already installed and configured as described in [HTTP Ingester Setup](/integrations/generic/http_ingester). Add the following to a new overlay file; you do not need a separate HTTP Ingester for this integration.
 
 #### [Option 1] Using Gravwell HTTP HEC Ingester
+GitHub's **Check endpoint** button validates the HEC endpoint, so enable a health check at `/services/collector` by setting `Health-Check-URL="/services/collector"` in the `[Global]` block of the HTTP Ingester's base configuration file. See [HTTP Ingester Setup](/integrations/generic/http_ingester).
+
 Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/github.conf`
 
 **Sample Ingester config:**  
 ```ini
-[Global]
-    Health-Check-URL="/services/collector" # GitHub validates the HEC endpoint
-
 [HEC-Compatible-Listener "github"]
     URL="/services/collector"
     #TokenValue="AuthenticationToken"
