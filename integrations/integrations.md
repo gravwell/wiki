@@ -234,7 +234,6 @@ Zeek <network/zeek>
 **Synology**
 :::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: host/sysmon
 :link-type: doc
