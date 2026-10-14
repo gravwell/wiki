@@ -54,6 +54,7 @@ Syslog <generic/syslog>
 Sysmon <host/sysmon>
 Teleport <application/teleport>
 Thinkst <network/thinkst>
+TrueNAS <host/truenas>
 Windows Event <host/windowsevent>
 Zeek <network/zeek>
 ```
@@ -223,15 +224,21 @@ Zeek <network/zeek>
 :link-type: doc
 **Jamf**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: host/sysmon
 :link-type: doc
 **Sysmon**
 :::
-::::
 
-::::{grid} 4
+:::{grid-item-card}
+:link: host/truenas
+:link-type: doc
+**TrueNAS**
+:::
+
 :::{grid-item-card}
 :link: host/windowsevent
 :link-type: doc
