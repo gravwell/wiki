@@ -36,6 +36,7 @@ IPFIX <network/ipfix>
 IPMI <generic/ipmi>
 Jamf <host/jamf>
 Juniper <network/juniper>
+Microsoft Entra ID <cloud/msentra>
 MongoDB <application/mongodb>
 Netflow <network/netflow>
 Nginx <application/nginx>
@@ -47,11 +48,13 @@ Palo Alto <network/paloalto>
 pfSense <network/pfsense>
 PiHole <network/pihole>
 Proxmox <network/proxmox>
+SentinelOne <application/sentinelone>
 Suricata <network/suricata>
 Syslog <generic/syslog>
 Sysmon <host/sysmon>
 Teleport <application/teleport>
 Thinkst <network/thinkst>
+TrueNAS <host/truenas>
 Windows Event <host/windowsevent>
 Zeek <network/zeek>
 ```
@@ -84,6 +87,12 @@ Zeek <network/zeek>
 ::::
 
 ::::{grid} 4
+:::{grid-item-card}
+:link: cloud/msentra
+:link-type: doc
+**Microsoft Entra ID**
+:::
+
 :::{grid-item-card}
 :link: cloud/office365
 :link-type: doc
@@ -215,15 +224,21 @@ Zeek <network/zeek>
 :link-type: doc
 **Jamf**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: host/sysmon
 :link-type: doc
 **Sysmon**
 :::
-::::
 
-::::{grid} 4
+:::{grid-item-card}
+:link: host/truenas
+:link-type: doc
+**TrueNAS**
+:::
+
 :::{grid-item-card}
 :link: host/windowsevent
 :link-type: doc
@@ -289,6 +304,12 @@ Zeek <network/zeek>
 :link: application/openweathermap
 :link-type: doc
 **Open Weather Map**
+:::
+
+:::{grid-item-card}
+:link: application/sentinelone
+:link-type: doc
+**SentinelOne**
 :::
 
 :::{grid-item-card}

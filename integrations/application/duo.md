@@ -6,7 +6,7 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [Fetcher](https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/README.md)
-         Kit, [Duo Kit](https://github.com/gravwell/kits/tree/main/duo)
+    Kit, [Duo Kit](https://github.com/gravwell/kits/tree/main/duo)
 :::
 
 ## Duo Configuration
@@ -18,26 +18,26 @@ You will need to collect a Domain, API Key, and secret from Duo. These can be ga
 The Gravwell Fetcher provides a lightweight Go-based fetcher that polls external APIs and ingests events into Gravwell. 
 The Fetcher includes an [example configuration file](https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/gravwell_fetcher.conf.example) which you need to copy and adapt for your environment prior to running the fetcher. See the [README](https://github.com/gravwell/gravwell/blob/main/experiments/gravwell_fetcher/README.md) for further information. 
 
-### Basic installation steps (example)
+### Basic Installation Steps (Example)
 
 1. Clone the Gravwell repo (or just the experiment):  
     `git clone https://github.com/gravwell/gravwell.git`
 
 2. Change directory to the fetcher experiment:  
-    `cd gravwell/experiments/gravwell\_fetcher`
+    `cd gravwell/experiments/gravwell_fetcher`
 
 3. Build the fetcher binary (standard Go build):  
-    `go build -o gravwell\_fetcher`
+    `go build -o gravwell_fetcher`
 
 4. Copy the example config to a location you will edit  
-    e.g. /etc/gravwell/gravwell\_fetcher.conf or /opt/gravwell/etc/gravwell\_fetcher.conf:  
-    `cp gravwell\_fetcher.conf.example /etc/gravwell/gravwell\_fetcher.conf`
+    e.g. /opt/gravwell/etc/gravwell_fetcher.conf:  
+    `cp gravwell_fetcher.conf.example /opt/gravwell/etc/gravwell_fetcher.conf`
 
-5. Edit `_/etc/gravwell/gravwell\_fetcher.conf_` and replace the duo stanzas (see example below).  
+5. Edit `/opt/gravwell/etc/gravwell_fetcher.conf` and replace the duo stanzas (see example below).  
 
 6. Run the fetcher (from the built binary).  
     Typical invocation (binary + config file):  
-    `./gravwell\_fetcher -config /etc/gravwell/gravwell\_fetcher.conf`
+    `./gravwell_fetcher -config /opt/gravwell/etc/gravwell_fetcher.conf`
 
 ```{attention}
 The canonical example config shipped with the experiment is gravwell_fetcher.conf.example — copy it and update the values for Duo.
@@ -57,17 +57,17 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/duo-well.conf`
 
 ### Gravwell Ingester Configuration: Fetcher
 
-Setup the fetcher configuration file.
+Set up the Fetcher configuration file. Add the following stanzas to the same configuration file you edited above, since the Fetcher reads a single config file.
 
 **Sample Duo config:**  
-Create or edit: `/opt/gravwell/etc/gravwell_fetcher.conf.d/duo.conf`
+Edit: `/opt/gravwell/etc/gravwell_fetcher.conf`
 ```ini
 [DuoConf "duo-admin"]
     StartTime="2025-01-01T00:00:01.000Z"  # Initial fetch time
     Domain=""                             # Duo domain
     Key=""                                # Duo API key
     Secret=""                             # Duo API secret
-    DuoAPI="admin"                        # API type: admin, authentication, activity
+    DuoAPI="admin"                        # API type: admin, authentication, activity, account
     Tag-Name="duo-admin"                  # Tag for Gravwell
 
 [DuoConf "duo-auth"]
@@ -91,6 +91,10 @@ Create or edit: `/opt/gravwell/etc/gravwell_fetcher.conf.d/duo.conf`
     Domain=""
     Key=""
     Secret=""
-    DuoAPI="activity"
+    DuoAPI="account"
     Tag-Name="duo-account"
+```
+
+```{note}
+The Fetcher is run manually (see the steps above), so there is no service to restart. Stop the running Fetcher and start it again to apply the new config.
 ```

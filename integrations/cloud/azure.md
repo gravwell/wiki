@@ -6,12 +6,13 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [Azure Event Hubs Ingester](/ingesters/eventhubs)
-         Kit, [Azure Kit](https://github.com/gravwell/kits/tree/main/azure)
+    Preprocessor, [JSON Array Split](/ingesters/preprocessors/jsonarraysplit.md)
+    Kit, [Azure Kit](https://github.com/gravwell/kits/tree/main/azure)
 :::
 
 ## Azure Configuration
 
-Microsoft provides documentation on how to setup logging to an external partner:
+Microsoft provides documentation on how to set up logging to an external partner:
 * [Stream Azure data to an event hub and external partner](https://learn.microsoft.com/en-us/azure/azure-monitor/platform/stream-monitoring-data-event-hubs)
 * [Create an Event Hub](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-create)
 * [Using Diagnostic settings to stream logs](https://learn.microsoft.com/en-us/azure/azure-monitor/platform/diagnostic-settings?tabs=portal#create-a-diagnostic-setting)
@@ -115,5 +116,5 @@ Create or edit: `/opt/gravwell/etc/azure_event_hubs.conf.d/azure.conf`
 
 ```{note}
 Remember to restart the service to apply the new config:
-`sudo systemctl restart gravwell_azure_event_hubs.service`
+`sudo systemctl restart gravwell_azure_event_hubs_ingest.service`
 ```
