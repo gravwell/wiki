@@ -6,8 +6,8 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [Simple Relay](/ingesters/simple_relay)
-Preprocessor, [Corelight JSON to TSV](/ingesters/preprocessors/corelight.md)
-         Kit, [Corelight Kit](https://github.com/gravwell/kits/tree/main/corelight)
+    Preprocessor, [Corelight JSON to TSV](/ingesters/preprocessors/corelight.md)
+    Kit, [Corelight Kit](https://github.com/gravwell/kits/tree/main/corelight)
 :::
 
 ## Corelight Configuration
@@ -16,7 +16,7 @@ Follow these steps to export logs from your Corelight sensor to the Gravwell Ing
 
 ### [Option 1] Web GUI
 * Navigate to the **Sensor > Export** tab.
-* Enable the **EXPORT JSON OVER TCP** Slider
+* Enable the **EXPORT JSON OVER TCP** slider.
 * Enter the **IP address** and **Port**
 
 ![image](images/corelight-sensor-log-ingestion.png)
@@ -31,17 +31,19 @@ corelight-client configuration update --export.json_tcp.enable true --export.jso
 ### [Option 3] Setting up Corelight@Home to export logs to Gravwell
 Edit the configuration file at: `/etc/corelight-softsensor.conf`
 ```bash
-# Definen the capture interface
+# Define the capture interface
 Corelight::sniff    eth0
 
-# EnableJSON over TCP export
+# Enable JSON over TCP export
 Corelight::json_enable  T
 # Target IP and Port of your Gravwell ingester
 Corelight::json_server  192.168.0.10:7890
 ```
 
-Restart Service with:  
-```systemctl restart corelight-softsensor```
+Restart the service with:
+```bash
+systemctl restart corelight-softsensor
+```
 
 ## Gravwell Configuration
 
@@ -49,11 +51,11 @@ Restart Service with:
 
 Corelight generates highly orthogonal data (UUIDs, floating-point timestamps, IPv6). To optimize indexing performance and memory usage, we recommend a dedicated well with specific indexing flags.
 
-**Recommend Engine:** Bloom or Index
+**Recommended Engine:** Bloom or Index
 **Crucial Flags:** `ignoreFloat` and `ignoreUUID` to reduce index bloat.
 
 **Sample well config:**  
-Create or edit: `/opt/gravwell/etc/gravwell.conf.d/corelight.well`
+Create or edit: `/opt/gravwell/etc/gravwell.conf.d/corelight-well.conf`
 ```ini
 [Storage-Well "corelight"]
     Location=/opt/gravwell/storage/corelight
@@ -62,15 +64,15 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/corelight.well`
     Accelerator-Args="-ignoreFloat -ignoreUUID"
 ```
 
-### Gravwell Simple Relay Ingester Configuration
-We recommend using the **Simple Relay** ingester. The following configuration listens on port `7890`, extracts the `_path` field from the JSON payload, and dynamically routes data to descriptive tags.
+### Gravwell Ingester Configuration: Simple Relay
+Use the **Simple Relay** ingester. The following configuration listens on port `7890`, extracts the `_path` field from the JSON payload, and dynamically routes data to descriptive tags.
 
 ```{note}
-Ensure your firewalls allows traffic on port `7890` between the Corelight sensor and the Gravwell ingester.
+Ensure your firewall allows traffic on port `7890` between the Corelight sensor and the Gravwell ingester.
 ```
 
-### Gravwell Ingester Configuration: Simple Relay
-File: `/opt/gravwell/etc/simple_relay.conf.d/corelight.conf`
+**Sample Corelight config:**  
+Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/corelight.conf`
 ```ini
 [JSONListener "corelight"]
     Bind-String="0.0.0.0:7890"
