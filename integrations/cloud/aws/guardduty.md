@@ -6,13 +6,13 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [S3 Ingester](amazon_cloudtrail_log_handling)
-         Kit, [GuardDuty Kit](https://github.com/gravwell/kits/tree/main/)
+    Kit, [GuardDuty Kit](https://github.com/gravwell/kits/tree/main/aws_guardduty)
 :::
 
 ## GuardDuty Configuration
-It is recommend to export GuardDuty findings to an S3 bucket for ingestion.
+Export GuardDuty findings to an S3 bucket for ingestion.
 
-**Sample KMC Policy**
+**Sample KMS Policy**
 ```{note}
   Replace *ACCOUNT_ID:key/YOUR_KMS_KEY_ID* with your KMS Resource
 ```
@@ -69,5 +69,5 @@ Create or edit: `/opt/gravwell/etc/s3.conf.d/guardduty.conf`
 
 ```{note}
 Remember to restart the service to apply the new config:
-`sudo systemctl restart gravwell_simple_relay.service`
+`sudo systemctl restart gravwell_s3_ingest.service`
 ```
