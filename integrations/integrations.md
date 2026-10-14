@@ -36,6 +36,7 @@ IPFIX <network/ipfix>
 IPMI <generic/ipmi>
 Jamf <host/jamf>
 Juniper <network/juniper>
+Microsoft Entra ID <cloud/msentra>
 MongoDB <application/mongodb>
 Netflow <network/netflow>
 Nginx <application/nginx>
@@ -85,6 +86,12 @@ Zeek <network/zeek>
 ::::
 
 ::::{grid} 4
+:::{grid-item-card}
+:link: cloud/msentra
+:link-type: doc
+**Microsoft Entra ID**
+:::
+
 :::{grid-item-card}
 :link: cloud/office365
 :link-type: doc
