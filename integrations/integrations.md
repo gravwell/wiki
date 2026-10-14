@@ -31,6 +31,7 @@ Duo <application/duo>
 Fluentd <host/fluentd>
 Fortinet <network/fortinet>
 GitHub <application/github>
+HTTP Ingester <generic/http_ingester>
 IPFIX <network/ipfix>
 IPMI <generic/ipmi>
 Jamf <host/jamf>
@@ -47,6 +48,7 @@ Palo Alto <network/paloalto>
 pfSense <network/pfsense>
 PiHole <network/pihole>
 Proxmox <network/proxmox>
+SentinelOne <application/sentinelone>
 Suricata <network/suricata>
 Syslog <generic/syslog>
 Sysmon <host/sysmon>
@@ -298,6 +300,12 @@ Zeek <network/zeek>
 :::
 
 :::{grid-item-card}
+:link: application/sentinelone
+:link-type: doc
+**SentinelOne**
+:::
+
+:::{grid-item-card}
 :link: application/teleport
 :link-type: doc
 **Teleport**
@@ -307,6 +315,12 @@ Zeek <network/zeek>
 (generic_integrations)=
 ## Generic Integrations
 ::::{grid} 4
+:::{grid-item-card}
+:link: generic/http_ingester
+:link-type: doc
+**HTTP Ingester**
+:::
+
 :::{grid-item-card}
 :link: generic/ipmi
 :link-type: doc
