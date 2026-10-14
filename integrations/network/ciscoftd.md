@@ -6,7 +6,8 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [Simple Relay](/ingesters/simple_relay)
-         Kit, [Cisco FTD Kit](https://github.com/gravwell/kits/tree/main/ciscoftd)
+    Preprocessor, [Regex Router](/ingesters/preprocessors/regexrouter.md)
+    Kit, [Cisco FTD Kit](https://github.com/gravwell/kits/tree/main/cisco_ftd)
 :::
 
 ## Cisco FTD Configuration
@@ -18,7 +19,7 @@ Things to note as you follow the logging setup:
 * Set IP address and port
 
 ```{warning}
-If using TCP for syslog, you probably want to check the `Allow user traffic to pass when TCP syslog server is down` check box. Otherwise, if the FTD is unable to connect to the Gravwell ingester, it will block _all_ new connections.
+If using TCP for syslog, select the **Allow user traffic to pass when TCP syslog server is down** check box. Otherwise, if the FTD is unable to connect to the Gravwell ingester, it will block _all_ new connections.
 ```
 
 ## Gravwell Configuration
