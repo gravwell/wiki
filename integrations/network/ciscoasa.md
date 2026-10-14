@@ -6,22 +6,23 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [Simple Relay](/ingesters/simple_relay)
-         Kit, [Cisco ASA Kit](https://github.com/gravwell/kits/tree/main/ciscoasa)
+    Preprocessor, [Regex Router](/ingesters/preprocessors/regexrouter.md)
+    Kit, [Cisco ASA Kit](https://github.com/gravwell/kits/tree/main/cisco_asa)
 :::
 
 ## Cisco ASA Configuration
 
-Configure log forwarding as described in [Cisco ASA documentation](https://www.cisco.com/c/en/us/support/docs/security/pix-500-series-security-appliances/63884-config-asa-00.html#toc-hId-68106104).
+Configure log forwarding as described in the [Cisco ASA documentation](https://www.cisco.com/c/en/us/support/docs/security/pix-500-series-security-appliances/63884-config-asa-00.html#toc-hId-68106104).
 
 Example Cisco ASA config:
 ```
-logging host interface_name simple_relay_ip udp/514 format emblem
+logging host interface_name simple_relay_ip tcp/6801 format emblem
 logging trap severity_level
 logging facility number
 ```
 
 ```{warning}
-If using TCP for syslog, you probably want to set `logging permit-hostdown`. Otherwise, if the ASA is unable to connect to the Gravwell ingester, it will block _all_ new connections.
+If using TCP for syslog, set `logging permit-hostdown`. Otherwise, if the ASA is unable to connect to the Gravwell ingester, it will block _all_ new connections.
 ```
 
 ## Gravwell Configuration
