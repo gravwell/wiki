@@ -15,9 +15,9 @@ Synology DSM has remote syslog forwarding via Log Center. See [Log Sending | Log
 1. Open **Log Center > Log Sending** and check **Send logs to a syslog server**.
 2. Set **Server** to your Gravwell Simple Relay address.
 3. Set **Transfer protocol** to UDP or TCP.
-4. Set **Port** to match the Gravwell listener for that protocol: `601` for TCP or `514` for UDP in the sample below. DSM's own default is `514`, so change it when you use TCP.
+4. Set **Port** to match the Gravwell listener for that protocol: `15110` for TCP or `15112` for UDP in the sample below. DSM's own default is `514`, so change it.
 5. Set **Log format** to IETF (RFC 5424).
-6. If using TCP, optionally enable **secure connection (TLS/SSL)** and import a certificate. This requires the TLS listener shown in the sample below, and the port you set in step 4 must be that listener's port (`6514`).
+6. If using TCP, optionally enable **secure connection (TLS/SSL)** and import a certificate. This requires the TLS listener shown in the sample below, and the port you set in step 4 must be that listener's port (`15111`).
 7. Use the **Filter** tab to restrict which log categories/severities are forwarded, and **Send test log** to verify connectivity.
 
 ## Gravwell Configuration
@@ -36,27 +36,27 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/synology-well.conf`
 
 ### Gravwell Ingester Configuration: Simple Relay
 
-Match the `Reader-Type` below to the log format chosen in DSM (BSD = RFC 3164, IETF = RFC 5424).
+The `rfc5424` reader below parses both log formats you can choose in DSM, BSD (RFC 3164) and IETF (RFC 5424).
 
 **Sample Synology config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/synology.conf`
 ```ini
 [Listener "synologytcp"]
-    Bind-String="tcp://0.0.0.0:601" #plain TCP, DSM transfer protocol TCP
+    Bind-String="tcp://0.0.0.0:15110" #plain TCP, DSM transfer protocol TCP
     Reader-Type=rfc5424
     Tag-Name=synology
     Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
     Keep-Priority=true # leave the <nnn> priority tag at the start of each syslog entry
 
 [Listener "synologyudp"]
-    Bind-String="udp://0.0.0.0:514" #UDP, DSM transfer protocol UDP
+    Bind-String="udp://0.0.0.0:15112" #UDP, DSM transfer protocol UDP
     Reader-Type=rfc5424
     Tag-Name=synology
     Keep-Priority=true
 
 # Only needed if you enable TLS in DSM. Replace the certificate and key paths with your own.
 [Listener "synologytls"]
-    Bind-String="tls://0.0.0.0:6514"
+    Bind-String="tls://0.0.0.0:15111"
     Cert-File=/opt/gravwell/etc/cert.pem
     Key-File=/opt/gravwell/etc/key.pem
     Reader-Type=rfc5424
