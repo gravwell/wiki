@@ -36,6 +36,7 @@ IPFIX <network/ipfix>
 IPMI <generic/ipmi>
 Jamf <host/jamf>
 Juniper <network/juniper>
+Keycloak <application/keycloak>
 Microsoft Entra ID <cloud/msentra>
 MongoDB <application/mongodb>
 Netflow <network/netflow>
@@ -281,6 +282,12 @@ Zeek <network/zeek>
 :::
 
 :::{grid-item-card}
+:link: application/keycloak
+:link-type: doc
+**Keycloak**
+:::
+
+:::{grid-item-card}
 :link: application/mongodb
 :link-type: doc
 **MongoDB**
@@ -291,15 +298,15 @@ Zeek <network/zeek>
 :link-type: doc
 **Nginx**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/okta
 :link-type: doc
 **Okta**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: application/openweathermap
 :link-type: doc
