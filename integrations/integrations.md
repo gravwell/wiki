@@ -50,6 +50,7 @@ PiHole <network/pihole>
 Proxmox <network/proxmox>
 SentinelOne <application/sentinelone>
 Suricata <network/suricata>
+Synology <host/synology>
 Syslog <generic/syslog>
 Sysmon <host/sysmon>
 Teleport <application/teleport>
@@ -227,6 +228,12 @@ Zeek <network/zeek>
 ::::
 
 ::::{grid} 4
+:::{grid-item-card}
+:link: host/synology
+:link-type: doc
+**Synology**
+:::
+
 :::{grid-item-card}
 :link: host/sysmon
 :link-type: doc
