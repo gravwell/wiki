@@ -25,6 +25,7 @@ Azure <cloud/azure>
 Bitwarden <application/bitwarden>
 Cisco ASA <network/ciscoasa>
 Cisco FTD <network/ciscoftd>
+Claude Compliance <application/claude_compliance>
 CoreDNS <network/coredns>
 Corelight <network/corelight>
 Duo <application/duo>
@@ -267,13 +268,19 @@ Zeek <network/zeek>
 :::
 
 :::{grid-item-card}
-:link: application/duo
+:link: application/claude_compliance
 :link-type: doc
-**Duo**
+**Claude Compliance**
 :::
 ::::
 
 ::::{grid} 4
+:::{grid-item-card}
+:link: application/duo
+:link-type: doc
+**Duo**
+:::
+
 :::{grid-item-card}
 :link: application/github
 :link-type: doc
@@ -291,15 +298,15 @@ Zeek <network/zeek>
 :link-type: doc
 **Nginx**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/okta
 :link-type: doc
 **Okta**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: application/openweathermap
 :link-type: doc
