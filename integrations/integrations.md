@@ -49,6 +49,7 @@ pfSense <network/pfsense>
 PiHole <network/pihole>
 Proxmox <network/proxmox>
 SentinelOne <application/sentinelone>
+Slack <application/slack>
 Suricata <network/suricata>
 Syslog <generic/syslog>
 Sysmon <host/sysmon>
@@ -310,6 +311,12 @@ Zeek <network/zeek>
 :link: application/sentinelone
 :link-type: doc
 **SentinelOne**
+:::
+
+:::{grid-item-card}
+:link: application/slack
+:link-type: doc
+**Slack**
 :::
 
 :::{grid-item-card}
