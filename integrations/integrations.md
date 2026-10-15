@@ -28,6 +28,7 @@ Cisco FTD <network/ciscoftd>
 CoreDNS <network/coredns>
 Corelight <network/corelight>
 Duo <application/duo>
+FleetDM <application/fleetdm>
 Fluentd <host/fluentd>
 Fortinet <network/fortinet>
 GitHub <application/github>
@@ -275,6 +276,12 @@ Zeek <network/zeek>
 
 ::::{grid} 4
 :::{grid-item-card}
+:link: application/fleetdm
+:link-type: doc
+**FleetDM**
+:::
+
+:::{grid-item-card}
 :link: application/github
 :link-type: doc
 **GitHub**
@@ -291,15 +298,15 @@ Zeek <network/zeek>
 :link-type: doc
 **Nginx**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/okta
 :link-type: doc
 **Okta**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: application/openweathermap
 :link-type: doc
