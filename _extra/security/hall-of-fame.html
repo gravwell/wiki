@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security acknowledgments | Gravwell Inc.</title>
+<meta name="description" content="Security researchers who have responsibly reported vulnerabilities to Gravwell Inc..">
+<link rel="stylesheet" href="security.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="site">
+  <nav class="site-nav" aria-label="Security pages">
+    <a href="./">Report a vulnerability</a>
+    <a href="disclosure-policy.html">Disclosure policy</a>
+    <a href="hall-of-fame.html" aria-current="page">Acknowledgments</a>
+  </nav>
+
+  <main id="main">
+    <h1>Security acknowledgments</h1>
+    <p class="lede">We thank the following people for reporting security issues to us responsibly under our <a href="disclosure-policy.html">disclosure policy</a>. Each one has made Gravwell Inc. safer for everyone who uses it.</p>
+
+    <!--
+      HOW TO ADD AN ENTRY
+      1. Delete the <p class="empty"> paragraph below.
+      2. Remove the "hidden" attribute from the <div class="table-wrap">.
+      3. Add one <tr> per resolved report, newest first. Only list people
+         who agreed to be credited, and use the name and link they chose.
+      Example row:
+        <tr>
+          <td>2026-10</td>
+          <td><a href="https://researcher.example">Jane Doe</a></td>
+          <td>Stored XSS in account settings</td>
+        </tr>
+    -->
+
+    <p class="empty">No reports have been acknowledged here yet. If you find a vulnerability, <a href="./">report it</a> and you could be the first.</p>
+
+    <div class="table-wrap" hidden>
+      <table>
+        <caption class="meta" style="text-align:left; padding-bottom:.5rem;">Resolved reports, newest first</caption>
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Researcher</th>
+            <th scope="col">Finding</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>Machine-readable contact details: <a href="/.well-known/security.txt">/.well-known/security.txt</a></p>
+  </footer>
+</div>
+</body>
+</html>

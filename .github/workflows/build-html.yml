@@ -97,12 +97,17 @@ jobs:
             nix-shell --run "dedup-links $BUILD_DEST/html"
           fi
 
+          # Hidden files are uploaded so .well-known/ is published; drop Sphinx's .buildinfo
+          find $BUILD_DEST/html -name .buildinfo -delete
+
           echo "BUILD_DEST=${BUILD_DEST}" >> "$GITHUB_ENV"
 
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: "${{ env.BUILD_DEST }}/html"
+          # Required so .well-known/ (security.txt, pgp-key.txt) is deployed
+          include-hidden-files: true
 
   deploy:
     name: Deploy Pages

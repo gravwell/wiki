@@ -53,6 +53,7 @@ myst_enable_extensions = [
 templates_path = ["_templates"]
 exclude_patterns = [
     ".github",
+    ".claude",
     "README.md",
     "CONTRIBUTING.md",
     "_build",
@@ -73,7 +74,8 @@ html_copy_source = False
 
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
-html_extra_path = ["open_source"]
+# Files in _extra (e.g. security/ and .well-known/) are copied as-is to the site root.
+html_extra_path = ["open_source", "_extra"]
 html_css_files = ["css/custom.css"]
 html_search_scorer = "search_scorer.js"
 html_theme_options = {
