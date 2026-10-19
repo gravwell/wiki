@@ -16,7 +16,7 @@ Configure log forwarding as described in the [Cisco ASA documentation](https://w
 
 Example Cisco ASA config:
 ```
-logging host interface_name simple_relay_ip tcp/6801 format emblem
+logging host interface_name simple_relay_ip tcp/15010 format emblem
 logging trap severity_level
 logging facility number
 ```
@@ -44,7 +44,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/cisco-asa-well.conf`
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/cisco-asa.conf`
 ```ini
 [Listener "syslogtcp_cisco_asa"]
-    Bind-String="tcp://0.0.0.0:6801"
+    Bind-String="tcp://0.0.0.0:15010"
     Reader-Type=rfc5424
     Keep-Priority=true
     Tag-Name=cisco-asa-events
