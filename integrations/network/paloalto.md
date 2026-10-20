@@ -5,9 +5,9 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, • [Simple Relay](/ingesters/simple_relay) <br /> • [HTTP Ingester](/ingesters/http)
-Preprocessor, [Corelight JSON to TSV](/ingesters/preprocessors/regexextract.md)
-         Kit, [Palo Alto Kit](https://github.com/gravwell/kits/tree/main/paloalto)
+    Ingester, [Simple Relay](/ingesters/simple_relay) <br /> [HTTP Ingester](/ingesters/http)
+    Preprocessor, [Regex Router](/ingesters/preprocessors/regexrouter.md)
+    Kit, [Palo Alto Kit](https://github.com/gravwell/kits/tree/main/paloalto)
 :::
 
 ## Palo Alto Configuration
@@ -17,9 +17,9 @@ Preprocessor, [Corelight JSON to TSV](/ingesters/preprocessors/regexextract.md)
 
 Configure Syslog forwarding as described in the Palo Alto documentation:
 
-* `Transport`: Use the same protocol selected here in the `Bind-String` in the simple relay config.
-* `Port`: Use the same port selected here in the `Bind-String` in the simple relay config.
-* `Format`: IETF
+* **Transport**: Set to the protocol in the `Bind-String` of your Simple Relay listener.
+* **Port**: Set to the port in the `Bind-String` of your Simple Relay listener.
+* **Format**: Set to `IETF`.
 
 ![image](images/palo_syslog_setup.png)
 
@@ -30,20 +30,20 @@ Configure HTTP log forwarding as described in the Palo Alto documentation:
 
 #### HTTP Server Profile
 
-* `Address`: Field corresponds to the HTTP Ingester's address.
-* `Port`: Use the same port selected here in the `Bind` in the global section of your HTTP Ingester.
-* `HTTP Method`: Set field to POST.
-* `Username`: Use the same username here as in the HTTP ingester config.
-* `Password`: Use the same password here as in the HTTP ingester config.
+* **Address**: Set to the address of your HTTP Ingester.
+* **Port**: Set to the port your HTTP Ingester listens on (its `Bind` setting, see [HTTP Ingester Setup](/integrations/generic/http_ingester)).
+* **HTTP Method**: Set to `POST`.
+* **Username**: Set to the username in your HTTP Ingester listener.
+* **Password**: Set to the password in your HTTP Ingester listener.
 
-#### Payload Format tab 
-Set each log type as shown below in the image:
-* `URI Format`: Use the same path as set in the `URL` in the HTTP ingester config.
+#### Payload Format Tab
+Set each log type as shown in the image below, and set:
+* **URI Format**: Set to the `URL` value in your HTTP Ingester listener.
 
 ![image](images/palo_payload_format.png)
 
-#### Log Forwarding Profile 
-Create a log forwarding profile which sends all desired log types to the HTTP Server Profile created above. Note that it is possible to use one Log Forwarding Profile to send logs to both syslog and HTTP ingesters at the same time, if desired, as seen below:
+#### Log Forwarding Profile
+Create a log forwarding profile which sends all desired log types to the HTTP Server Profile created above. You can use one Log Forwarding Profile to send logs to both Simple Relay and the HTTP Ingester at the same time, as shown below:
 
 ![image](images/palo_log_forwarding.png)
 
@@ -66,8 +66,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/pan-well.conf`
 **Sample Palo Alto config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/paloalto.conf`
 ```ini
-Listener "syslogtcp_paloalto"]
-        Bind-String="tcp://0.0.0.0:6601"
+[Listener "syslogtcp_paloalto"]
+        Bind-String="tcp://0.0.0.0:15080"
         Reader-Type=line
         Tag-Name=pan_events
         Assume-Local-Timezone=true
@@ -125,21 +125,11 @@ Remember to restart the service to apply the new config:
 `sudo systemctl restart gravwell_simple_relay.service`
 ```
 
-### [Option 2] Gravwell Ingester Configuration: HTTP
-Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf`
-```ini
-[Global]
-Connection-Timeout = 0
-Log-Level=INFO #options are OFF INFO WARN ERROR
-Ingest-Cache-Path=/opt/gravwell/cache/http_ingester.cache
-#Max-Ingest-Cache=1024 #Number of MB to store, localcache will only store 1GB before stopping.  This is a safety net
-Bind=":8080"
-Max-Body=4096000 #about 4MB
-Log-File=/opt/gravwell/log/http_ingester.log #optional log file
-Health-Check-URL="/health/check"
-```
+### [Option 2] Gravwell Ingester Configuration: HTTP Ingester
 
-Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.d/paloalto.conf`
+This guide assumes the HTTP Ingester is already installed and configured as described in [HTTP Ingester Setup](/integrations/generic/http_ingester). Add the following to a new overlay file; you do not need a separate HTTP Ingester for this integration.
+
+Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/paloalto.conf`
 ```
 [Listener "palo"]
         AuthType=basic
