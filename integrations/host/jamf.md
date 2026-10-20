@@ -60,7 +60,7 @@ Store the client secret securely; if it is lost, you must generate a new one fro
 
 Setup the well configuration in your Gravwell indexers.
 
-#### Sample well config
+#### Sample Well Config
 Create or edit: `/opt/gravwell/etc/gravwell.conf.d/jamf-well.conf`
 ```ini
 [Storage-Well "jamf"]
@@ -70,7 +70,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/jamf-well.conf`
 
 ### Gravwell Ingester Configuration
 
-#### Sample Jamf config: Jamf Hosted Ingester
+#### Sample Jamf Config: Jamf Hosted Ingester
 If the Hosted Runner is not installed, follow the [configuration guide for Jamf](/ingesters/jamf) to create your own configuration.  
 
 Edit: `/opt/gravwell/etc/hosted_runner.conf`
@@ -83,7 +83,7 @@ Edit: `/opt/gravwell/etc/hosted_runner.conf`
     Client-Secret="api-client-secret"
 ```
 
-#### Sample Jamf config: Additional inventory sections
+#### Sample Jamf Config: Additional Inventory Sections
 ```ini
 [Jamf "yourserver"]
     Ingester-UUID="99d00000-0000-0000-0000-000000000000"
