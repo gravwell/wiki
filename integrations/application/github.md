@@ -5,8 +5,8 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, • [HTTP - HEC](http_splunk_hec_compatibility) <br /> • [Simple Relay](/ingesters/simple_relay)
-         Kit, [GitHub Kit](https://github.com/gravwell/kits/tree/main/github)
+    Ingester, [HTTP - HEC](http_splunk_hec_compatibility)
+    Kit, [GitHub Kit](https://github.com/gravwell/kits/tree/main/github)
 :::
 
 ## GitHub Configuration
@@ -16,24 +16,24 @@
 
 Follow the instructions for setting up streaming to Splunk. For the configuration page point to your Gravwell HTTP ingester.
 
-1. Navigate to your github enterprise page.
+1. Navigate to your GitHub Enterprise page.
 2. Go to: Settings > Audit Log > Log Streaming > Configure Stream > Splunk.
-3. On the configuration page you will point th the public address and port of the Gravwell Ingester.
+3. On the configuration page you will point to the public address and port of the Gravwell Ingester.
 4. Ensure SSL verification check box is selected.
-5. Click `Check endpoint` to verify github can connect and write to the Gravwell Ingester.
+5. Click `Check endpoint` to verify GitHub can connect and write to the Gravwell Ingester.
 6. Save.
 
 If you would like to include API requests in your audit log streaming:
-1. Navigate to your github enterprise page.
+1. Navigate to your GitHub Enterprise page.
 2. Go to: Settings > Audit Log > Settings > API Requests.
 3. `Select Enable API Request Events`.
 4. Save.
 
 
-### [Option 2] Using WebHooks to export Logs
+### [Option 2] Using Webhooks to Export Logs
 * [Creating a repository webhook](https://docs.github.com/en/enterprise-cloud@latest/webhooks/using-webhooks/creating-webhooks)
 
-Github provides webhooks for exporting logs depending on what you want to export for example for monitoring single repository, app, enterprise, global, etc. Follow the instructions for setting up: 
+GitHub provides webhooks for exporting logs depending on what you want to export for example for monitoring single repository, app, enterprise, global, etc. Follow the instructions for setting up: 
 
 1. On the main page of the repository select: Settings > Webhooks > Add webhook
 
@@ -64,11 +64,13 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/github-well.conf`
     Location=/opt/gravwell/storage/github
     Tags=github*
 ```
-### Gravwell Ingester Configuration
+### Gravwell Ingester Configuration: HTTP Ingester
 
-Setup the HTTP HEC configuration file.
+This guide assumes the HTTP Ingester is already installed and configured as described in [HTTP Ingester Setup](/integrations/generic/http_ingester). Add the following to a new overlay file; you do not need a separate HTTP Ingester for this integration.
 
 #### [Option 1] Using Gravwell HTTP HEC Ingester
+GitHub's **Check endpoint** button validates the HEC endpoint, so enable a health check at `/services/collector` by setting `Health-Check-URL="/services/collector"` in the `[Global]` block of the HTTP Ingester's base configuration file. See [HTTP Ingester Setup](/integrations/generic/http_ingester).
+
 Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/github.conf`
 
 **Sample Ingester config:**  
@@ -76,12 +78,11 @@ Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/github.conf`
 [HEC-Compatible-Listener "github"]
     URL="/services/collector"
     #TokenValue="AuthenticationToken"
-    Health-Check-URL="/services/collector" # Github Validates the HEC endpoint
     Tag-Match=github:github
     Tag-Match=github-audit:github_audit
 ```
 
-#### [Option 2] Streaming Logs
+#### [Option 2] Using Webhooks
 Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/github.conf`
 **Sample Ingester config:**  
 ```ini
