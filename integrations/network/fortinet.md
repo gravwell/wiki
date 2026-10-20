@@ -6,12 +6,13 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [Simple Relay](/ingesters/simple_relay)
-         Kit, [Gravell Fortinet](https://github.com/gravwell/kits/tree/main/fortinet)
+    Preprocessor, [Regex Router](/ingesters/preprocessors/regexrouter.md)
+    Kit, [Fortinet Kit](https://github.com/gravwell/kits/tree/main/fortinet)
 :::
 
 ## Fortinet Configuration
 
-To get logs flowing from your Fortinet FortiGate/FortiOS device, configure remote syslog logging as described in the Fortinet documentation [Log setting and target](https://docs.fortinet.com/document/fortigate/7.6.6/administration-guide/250999/log-settings-and-targets#Remote_logging). Note that while this guide is specifically tailored for version 7.6.6, these steps may work for other versions. However, it is recommend to check the official documentation on remote logging for your specific version.
+To get logs flowing from your Fortinet FortiGate/FortiOS device, configure remote syslog logging as described in the Fortinet documentation [Log setting and target](https://docs.fortinet.com/document/fortigate/7.6.6/administration-guide/250999/log-settings-and-targets#Remote_logging). Note that while this guide is specifically tailored for version 7.6.6, these steps may work for other versions. However, it is recommended to check the official documentation on remote logging for your specific version.
 
 Recommended FortiGate syslog settings:
 
@@ -59,8 +60,8 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/fortinet.conf`
     [preprocessor "Fortinet Type Router"]
         Type=regexrouter
         Drop-Misses=false
-        Regex=`\btype="(?P<type>traffic|utm|event?)?\"`
-        #Regex=`^[^.]+\s[^.]+\s[^.]+\stype\=\"(?<type>.+?)?\"`
+        Regex=`\btype="(?P<type>traffic|utm|event)?"`
+        #Regex=`^[^.]+\s[^.]+\s[^.]+\stype\=\"(?P<type>.+?)?"`
         Route-Extraction=type
         Route=traffic:fortinet-traffic
         Route=utm:fortinet-utm
