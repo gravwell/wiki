@@ -36,6 +36,7 @@ IPFIX <network/ipfix>
 IPMI <generic/ipmi>
 Jamf <host/jamf>
 Juniper <network/juniper>
+Keycloak <application/keycloak>
 Microsoft Entra ID <cloud/msentra>
 Mimecast <application/mimecast>
 MongoDB <application/mongodb>
@@ -279,6 +280,12 @@ Zeek <network/zeek>
 :link: application/github
 :link-type: doc
 **GitHub**
+:::
+
+:::{grid-item-card}
+:link: application/keycloak
+:link-type: doc
+**Keycloak**
 :::
 
 :::{grid-item-card}
