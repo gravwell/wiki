@@ -37,6 +37,7 @@ IPMI <generic/ipmi>
 Jamf <host/jamf>
 Juniper <network/juniper>
 Microsoft Entra ID <cloud/msentra>
+Mimecast <application/mimecast>
 MongoDB <application/mongodb>
 Netflow <network/netflow>
 Nginx <application/nginx>
@@ -281,6 +282,12 @@ Zeek <network/zeek>
 :::
 
 :::{grid-item-card}
+:link: application/mimecast
+:link-type: doc
+**Mimecast**
+:::
+
+:::{grid-item-card}
 :link: application/mongodb
 :link-type: doc
 **MongoDB**
@@ -291,15 +298,15 @@ Zeek <network/zeek>
 :link-type: doc
 **Nginx**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/okta
 :link-type: doc
 **Okta**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: application/openweathermap
 :link-type: doc
