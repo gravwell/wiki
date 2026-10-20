@@ -16,7 +16,7 @@ Like the macOS [File Follower](file_follow), the macOS Unified Log ingester is d
 Unlike the Windows File Follower installer, the macOS package does not prompt for connection details during install. It lays down a default configuration with no indexer target configured; you must edit it by hand (see [File Locations](macos_unified_log_file_locations)) and restart the service before it will connect to anything.
 
 ```{note}
-The installer requires macOS 11.0 (Big Sur) or later. The unified logging system and `log stream --style json` have been available since macOS 10.12 (Sierra), but the Go toolchain this ingester is built with does not support running on anything older than 11.0.
+The installer requires macOS 12.0 (Monterey) or later. The unified logging system and `log stream --style json` have been available since macOS 10.12 (Sierra), but this ingester is built with `CGO_ENABLED=0`, and under that configuration Go's internal linker stamps the binary's minimum macOS version as 12.0, independent of any `MACOSX_DEPLOYMENT_TARGET` setting.
 ```
 
 (macos_unified_log_file_locations)=
