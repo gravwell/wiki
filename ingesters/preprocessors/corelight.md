@@ -8,6 +8,8 @@ The Corelight JSON to TSV preprocessor type is "corelight".
 
 * `Prefix` (string, optional): This parameter specifies the tag prefix attached to entries.  The default is "zeek".
 * `Custom-Format` (string, optional): This parameter specifies custom path and header values.  A Custom-Format can be a wholly new format or override an existing format.
+* `Timestamp-Max-Past-Delta` (string, optional): The maximum age of an extracted timestamp, as a duration such as `720h`. Timestamps older than this are ignored. Defaults to `8760h` (one year).
+* `Timestamp-Max-Future-Delta` (string, optional): How far into the future an extracted timestamp may be, as a duration such as `1h`. Timestamps further ahead than this are ignored. Defaults to `24h`.
 
 Multiple `Custom-Format` options can be specified in a single preprocessor block, for translating output from Corelight plugins or overriding an existing default handler.  Formats are specified as: `<tag suffix>:<TSV headers>`.
 
@@ -18,6 +20,14 @@ s7comm:ts,uid,id,pdu_type,rosctr,parameter,item_count,data_info
 ```
 
 This specification would output a TSV log on the `zeeks7comm` tag with 8 fields.
+
+## Timestamp Bounds
+
+The preprocessor only uses a record's `ts` field as the entry timestamp if it falls within a window around the current time, set by `Timestamp-Max-Past-Delta` and `Timestamp-Max-Future-Delta`. If `ts` falls outside the window, the record is still converted to TSV and routed to its tag, but the entry timestamp is left unchanged. Timestamps before 1970-01-01 are always ignored, whatever the window. Both durations must be non-zero; negative values are treated as positive.
+
+```{warning}
+The default window rejects timestamps more than a year old. If you replay archives or backfill older data through this preprocessor, set `Timestamp-Max-Past-Delta` large enough to cover it, or those entries will keep their original timestamp.
+```
 
 ## Example Data Translations
 Example input conn.log JSON data:
