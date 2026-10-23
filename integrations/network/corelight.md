@@ -37,7 +37,7 @@ Corelight::sniff    eth0
 # Enable JSON over TCP export
 Corelight::json_enable  T
 # Target IP and Port of your Gravwell ingester
-Corelight::json_server  192.168.0.10:7890
+Corelight::json_server  192.168.0.10:15030
 ```
 
 Restart the service with:
@@ -65,17 +65,13 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/corelight-well.conf`
 ```
 
 ### Gravwell Ingester Configuration: Simple Relay
-Use the **Simple Relay** ingester. The following configuration listens on port `7890`, extracts the `_path` field from the JSON payload, and dynamically routes data to descriptive tags.
-
-```{note}
-Ensure your firewall allows traffic on port `7890` between the Corelight sensor and the Gravwell ingester.
-```
+Use the **Simple Relay** ingester. The following configuration listens on port `15030`, extracts the `_path` field from the JSON payload, and dynamically routes data to descriptive tags.
 
 **Sample Corelight config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/corelight.conf`
 ```ini
 [JSONListener "corelight"]
-    Bind-String="0.0.0.0:7890"
+    Bind-String="0.0.0.0:15030"
     Default-Tag=corelight
     Extractor="_path"
     Tag-Match=bacnet:corelight_bacnet
