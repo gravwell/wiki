@@ -18,7 +18,7 @@ Recommended FortiGate syslog settings:
 
 * Use mode reliable (RFC6587 over TCP) for the config log syslogd setting.
 * Use format rfc5424 (best timestamp framing) or format default (simple key=value).
-* Point the syslog server to the Simple Relay host on port 6701.
+* Point the syslog server to the Simple Relay host on port 15040.
 
 **Example FortiGate CLI config:**
 ```
@@ -26,7 +26,7 @@ config log syslogd setting
     set status enable
     set server <SIMPLE_RELAY_IP>
     set mode reliable
-    set port 6701
+    set port 15040
     set format rfc5424
 end
 ```
@@ -50,7 +50,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/fortinet-well.conf`
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/fortinet.conf`
 ```ini
     [Listener "syslogtcp_fortinet"]
-        Bind-String="tcp://0.0.0.0:6701"
+        Bind-String="tcp://0.0.0.0:15040"
         Reader-Type=rfc5424
         Tag-Name=fortinet-events
         Assume-Local-Timezone=true
