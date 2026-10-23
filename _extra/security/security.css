@@ -1,0 +1,137 @@
+/* Shared styles for the security pages. No external fonts or scripts:
+   these pages make zero third-party requests. */
+:root {
+  --paper: #fafbfc;
+  --ink: #1f2933;
+  --muted: #52606d;
+  --rule: #d9e2ec;
+  --panel: #eef2f6;
+  --link: #1d4e89;
+  --focus: #f0b429;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14191f;
+    --ink: #e4e7eb;
+    --muted: #9aa5b1;
+    --rule: #323f4b;
+    --panel: #1f2933;
+    --link: #8fb8ed;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+.skip {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--focus); color: #1f2933; padding: .5rem 1rem;
+  font-family: var(--sans);
+}
+.skip:focus { left: 1rem; top: 1rem; }
+a { color: var(--link); text-underline-offset: .15em; }
+a:focus-visible, button:focus-visible {
+  outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 2px;
+}
+.site {
+  max-width: 68ch;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+.site-nav {
+  font-family: var(--sans);
+  font-size: .9375rem;
+  display: flex; flex-wrap: wrap; gap: .25rem 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 2.5rem;
+}
+.site-nav a { text-decoration: none; }
+.site-nav a:hover { text-decoration: underline; }
+.site-nav a[aria-current="page"] { color: var(--ink); font-weight: 600; }
+h1, h2, h3 {
+  font-family: var(--sans);
+  line-height: 1.25;
+  letter-spacing: -.01em;
+}
+h1 { font-size: 2.125rem; margin: 0 0 .75rem; font-weight: 700; }
+h2 {
+  font-size: 1.375rem; margin: 2.75rem 0 .75rem; font-weight: 650;
+  scroll-margin-top: 1rem;
+}
+h3 { font-size: 1.0625rem; margin: 1.75rem 0 .5rem; font-weight: 650; }
+.lede { font-size: 1.1875rem; color: var(--muted); margin-top: 0; }
+.meta { font-family: var(--sans); font-size: .875rem; color: var(--muted); }
+ul, ol { padding-left: 1.4rem; }
+li + li { margin-top: .35rem; }
+
+/* The one emphasized element: the commitments panel. */
+.commitments {
+  background: var(--panel);
+  border-left: 4px solid var(--link);
+  padding: 1.25rem 1.5rem;
+  margin: 2rem 0;
+}
+.commitments h2 { margin-top: 0; font-size: 1.125rem; }
+.commitments dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: .5rem 1.5rem;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: .9375rem;
+}
+.commitments dt { font-weight: 650; }
+.commitments dd { margin: 0; }
+@media (max-width: 34rem) {
+  .commitments dl { grid-template-columns: 1fr; gap: .1rem; }
+  .commitments dd { margin-bottom: .6rem; }
+}
+
+.contact {
+  font-family: var(--sans);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: .5rem 0 1.5rem;
+  word-break: break-word;
+}
+code {
+  font-size: .9em;
+  background: var(--panel);
+  padding: .1em .35em;
+  border-radius: 3px;
+}
+.toc {
+  font-family: var(--sans);
+  font-size: .9375rem;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: .75rem 0;
+  margin: 2rem 0;
+}
+.toc ol { margin: .25rem 0 0; columns: 2; column-gap: 2rem; }
+@media (max-width: 34rem) { .toc ol { columns: 1; } }
+.toc li + li { margin-top: .2rem; }
+
+table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: .9375rem; }
+.table-wrap { overflow-x: auto; margin: 1rem 0; }
+th, td { text-align: left; padding: .6rem .75rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-weight: 650; }
+.empty {
+  font-family: var(--sans);
+  color: var(--muted);
+  border: 1px dashed var(--rule);
+  padding: 1.25rem 1.5rem;
+}
+footer.site-footer {
+  margin-top: 3.5rem; padding-top: 1rem; border-top: 1px solid var(--rule);
+  font-family: var(--sans); font-size: .875rem; color: var(--muted);
+}

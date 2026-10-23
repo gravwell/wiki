@@ -1,0 +1,16 @@
+# Security contact information for Gravwell Inc.
+# Format: RFC 9116 (https://www.rfc-editor.org/rfc/rfc9116)
+# Serve at: https://docs.gravwell.io/.well-known/security.txt
+
+Contact: mailto:security@gravwell.io
+Contact: https://docs.gravwell.io/security/
+Expires: 2029-09-09T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://docs.gravwell.io/.well-known/security.txt
+Policy: https://docs.gravwell.io/security/disclosure-policy.html
+Acknowledgments: https://docs.gravwell.io/security/hall-of-fame.html
+
+# PGP key for encrypting reports. Fingerprint:
+# 3D6E B802 8BC5 73DE 47A5  9410 8F93 5E93 0667 8D59
+Encryption: https://docs.gravwell.io/.well-known/pgp-key.txt
+Encryption: https://keys.openpgp.org/vks/v1/by-fingerprint/3D6EB8028BC573DE47A594108F935E9306678D59

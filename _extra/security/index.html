@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Report a security vulnerability | Gravwell Inc.</title>
+<meta name="description" content="How to report a security vulnerability to Gravwell Inc..">
+<link rel="stylesheet" href="security.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="site">
+  <nav class="site-nav" aria-label="Security pages">
+    <a href="./" aria-current="page">Report a vulnerability</a>
+    <a href="disclosure-policy.html">Disclosure policy</a>
+    <a href="hall-of-fame.html">Acknowledgments</a>
+  </nav>
+
+  <main id="main">
+    <h1>Report a security vulnerability</h1>
+    <p class="lede">If you've found a security issue in a Gravwell Inc. system, we want to hear about it. Reports made in good faith under our policy are welcome, and we won't pursue legal action over them.</p>
+
+    <h2 id="contact">Where to send it</h2>
+    <p>Email the security team:</p>
+    <p class="contact"><a href="mailto:security@gravwell.io">security@gravwell.io</a></p>
+    <p>This mailbox is monitored by the people who fix security issues. Please don't use general support channels or social media for vulnerability reports, since they aren't private.</p>
+    <p>If your report contains sensitive details, encrypt it with our <a href="/.well-known/pgp-key.txt">PGP key</a> (also on <a href="https://keys.openpgp.org/vks/v1/by-fingerprint/3D6EB8028BC573DE47A594108F935E9306678D59">keys.openpgp.org</a>). Fingerprint: <code>3D6E B802 8BC5 73DE 47A5  9410 8F93 5E93 0667 8D59</code></p>
+
+    <h2 id="what-to-include">What to include</h2>
+    <p>A good report lets us reproduce the issue without coming back to you with questions. Please include:</p>
+    <ul>
+      <li>The affected URL, hostname, application, or component, and the version if you know it.</li>
+      <li>The type of vulnerability and what an attacker could do with it.</li>
+      <li>Step-by-step instructions to reproduce it, including any request payloads, scripts, or screenshots.</li>
+      <li>Whether you accessed, modified, or kept any data, and if so, what.</li>
+      <li>How you'd like to be credited, or that you'd prefer not to be named.</li>
+    </ul>
+    <p>Reports in English are preferred. Short, precise reports are just as valuable as long ones.</p>
+
+    <h2 id="what-happens-next">What happens next</h2>
+    <p>We'll confirm we received your report within 5 business days and keep you updated as we investigate and fix it. The full timeline, the rules for testing, and our safe-harbor commitment are in the <a href="disclosure-policy.html">vulnerability disclosure policy</a>. Please read it before you start testing.</p>
+  </main>
+
+  <footer class="site-footer">
+    <p>Machine-readable contact details: <a href="/.well-known/security.txt">/.well-known/security.txt</a></p>
+  </footer>
+</div>
+</body>
+</html>
