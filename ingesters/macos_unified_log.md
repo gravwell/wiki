@@ -1,4 +1,4 @@
-# macOS Unified Log
+# macOS Unified Log Ingester
 
 The macOS Unified Log ingester streams events from the macOS [unified logging system](https://developer.apple.com/documentation/os/logging) into Gravwell. It runs `/usr/bin/log stream --style json` and ingests each event it emits as a single-line JSON entry.
 
