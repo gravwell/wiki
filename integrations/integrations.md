@@ -37,7 +37,9 @@ IPFIX <network/ipfix>
 IPMI <generic/ipmi>
 Jamf <host/jamf>
 Juniper <network/juniper>
+Keycloak <application/keycloak>
 Microsoft Entra ID <cloud/msentra>
+Mimecast <application/mimecast>
 MongoDB <application/mongodb>
 Netflow <network/netflow>
 Nginx <application/nginx>
@@ -51,6 +53,7 @@ PiHole <network/pihole>
 Proxmox <network/proxmox>
 SentinelOne <application/sentinelone>
 Suricata <network/suricata>
+Synology <host/synology>
 Syslog <generic/syslog>
 Sysmon <host/sysmon>
 Teleport <application/teleport>
@@ -235,6 +238,12 @@ Zeek <network/zeek>
 :::
 
 :::{grid-item-card}
+:link: host/synology
+:link-type: doc
+**Synology**
+:::
+
+:::{grid-item-card}
 :link: host/sysmon
 :link-type: doc
 **Sysmon**
@@ -245,7 +254,9 @@ Zeek <network/zeek>
 :link-type: doc
 **TrueNAS**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: host/windowsevent
 :link-type: doc
@@ -288,11 +299,25 @@ Zeek <network/zeek>
 :::
 
 :::{grid-item-card}
+:link: application/keycloak
+:link-type: doc
+**Keycloak**
+:::
+
+:::{grid-item-card}
+:link: application/mimecast
+:link-type: doc
+**Mimecast**
+:::
+
+:::{grid-item-card}
 :link: application/mongodb
 :link-type: doc
 **MongoDB**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/nginx
 :link-type: doc
@@ -304,9 +329,7 @@ Zeek <network/zeek>
 :link-type: doc
 **Okta**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: application/openweathermap
 :link-type: doc
@@ -318,7 +341,9 @@ Zeek <network/zeek>
 :link-type: doc
 **SentinelOne**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/teleport
 :link-type: doc
