@@ -4,7 +4,7 @@ The macOS Unified Log ingester streams events from the macOS [unified logging sy
 
 The ingester only runs on macOS; there is no Linux or Windows build. Running as a non-root user works and still ingests events, but macOS redacts any field a format string marks `%{private}` down to the literal string `<private>` unless the reader is root, and refuses to emit `Level=debug` output to a non-root reader at all. The installer therefore runs the ingester as root via a `launchd` daemon rather than a per-user agent, so output is never silently redacted. See [macOS Configuration](macos_unified_log_macos_configuration) below.
 
-```{attention}
+```{warning}
 If a stream's `Type` parameter is left unset entirely, `log stream` streams **all three** event types: ordinary `log` messages, `activity` tracing spans, and `trace` signposts. The latter two are high-volume OS instrumentation events rather than human-readable log messages, and leaving `Type` unset is usually far noisier than intended. Set `Type=log` unless you specifically want the other two.
 ```
 
