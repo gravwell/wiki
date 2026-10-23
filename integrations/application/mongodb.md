@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, • [File Follower](/ingesters/file_follow) <br /> • [Simple Relay](/ingesters/simple_relay)
+    Ingester, [File Follower](/ingesters/file_follow) <br /> [Simple Relay](/ingesters/simple_relay)
 :::
 
 ## MongoDB Configuration
@@ -27,19 +27,19 @@ By default, `mongod.log` only has user `rw` permissions. For File Follower to re
 
 Install File Follower on your MongoDB host by following the instructions in [File Follower](/ingesters/file_follow). Then add the configuration from the File Follower section below.
 
-### [Option 2] Logging with Rsyslog to Simple Relay
+### [Option 2] Logging with rsyslog to Simple Relay
 
 Verify `systemLog` in `/etc/mongod.conf` matches the following:
-```
+```yaml
 systemLog:
   destination: syslog
   syslogFacility: daemon
   verbosity: 0
 ```
 
-Create or edit `/etc/rsyslog.d/50-mongodb.conf`
+Create or edit: `/etc/rsyslog.d/50-mongodb.conf`
 ```
-:programname, isequal, "mongod" @@192.168.0.10
+:programname, isequal, "mongod" @@192.168.0.10:519
 ```
 
 ## Gravwell Configuration
@@ -55,7 +55,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/mongodb-well.conf`
     Location=/opt/gravwell/storage/mongodb
     Tags=mongodb*
 ```
-### [Option 1] Gravwell File Follower Configuration
+### [Option 1] Gravwell Ingester Configuration: File Follower
 **Sample MongoDB config:**  
 Create or edit: `/opt/gravwell/etc/file_follow.conf.d/mongodb.conf`
 ```ini
@@ -71,7 +71,7 @@ Remember to restart the service to apply the new config:
 `sudo systemctl restart gravwell_file_follow.service`
 ```
 
-### [Option 2] Gravwell Simple Relay
+### [Option 2] Gravwell Ingester Configuration: Simple Relay
 **Sample MongoDB config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/mongodb.conf`
 ```ini
