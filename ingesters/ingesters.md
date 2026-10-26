@@ -35,6 +35,7 @@ Kafka <kafka>
 Kafka Federator <federators/kafkafederator>
 Kinesis <kinesis>
 LLM <llm>
+macOS Unified Log <macos_unified_log>
 Microsoft Graph API <msg>
 Netflow <netflow>
 Network Capture <pcap>
@@ -62,6 +63,7 @@ Windows File Follower <win_file_follow>
 | [Kafka](kafka) | Create a Kafka Consumer that ingests into Gravwell. Can be paired with the Gravwell Kafka Federator. |
 | [Kinesis](kinesis) | Ingest from Amazon's [Kinesis Data Streams](https://aws.amazon.com/kinesis/data-streams/) service. |
 | [LLM](llm) | Proxy OpenAI-compatible LLM traffic, ingesting prompts, responses, tool calls, and token usage. |
+| [macOS Unified Log](macos_unified_log) | Stream macOS's unified logging system into Gravwell. |
 | [Microsoft Graph API](msg) | Ingest from Microsoft's Graph API. |
 | [Netflow](netflow) | Collect Netflow and IPFIX records. |
 | [Network Capture](pcap) | Ingest PCAP on the wire. |
