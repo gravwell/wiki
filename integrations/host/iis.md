@@ -316,7 +316,7 @@ Edit: `%PROGRAMDATA%\gravwell\filefollow\file_follow.cfg`
 * The storage well above (`Tags=iis*`) covers both tags, and `iis-ftp` below.
 * No time zone setting is needed. IIS and HTTP.sys timestamps are UTC, which is what File Follower assumes for timestamps without a time zone.
 
-To collect the FTP logs as well, add a third follower for the directory they were moved to:
+Optionally, to collect FTP logs from the directory set in IIS FTP Service Logs, add the following:
 
 ```ini
 [Follower "iis-ftp"]
