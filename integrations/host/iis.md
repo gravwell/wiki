@@ -40,7 +40,7 @@ Whichever applies, add the following fields to the defaults. IIS doesn't log the
 Enable all six fields, or none of them. Gravwell reads IIS logs by position. Some partial selections shift values into the wrong fields without any error: Bytes Sent without Bytes Received, for example, makes response sizes appear as response times. Don't add other standard fields, such as Cookie, for the same reason.
 ```
 
-The `X-Forwarded-For` field in Behind a Reverse Proxy is a custom field. IIS writes custom fields after the standard ones, so it doesn't shift them. Don't add other custom fields.
+The `X-Forwarded-For` field in [Behind a Reverse Proxy](behind_a_reverse_proxy) is a custom field. IIS writes custom fields after the standard ones, so it doesn't shift them. Don't add other custom fields.
 
 #### Set the Recommended Fields
 
@@ -97,7 +97,7 @@ Run these PowerShell commands as an administrator on the IIS server. They set th
 * The server-wide list applies to every site that doesn't have its own list, including sites created later. Step 3 replaces the whole list, and it's safe to run again.
 * The change applies immediately, without restarting IIS.
 * In IIS Manager instead: select the server node, open **Logging**, choose **Select Fields**, and select the default fields plus the six above.
-* If the server is behind a reverse proxy or load balancer, also add `X-Forwarded-For` (see Behind a Reverse Proxy).
+* If the server is behind a reverse proxy or load balancer, also add `X-Forwarded-For` (see [Behind a Reverse Proxy](behind_a_reverse_proxy)).
 
 The resulting layout is:
 
@@ -105,8 +105,15 @@ The resulting layout is:
 #Fields: date time s-sitename s-computername s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs-version cs(User-Agent) cs(Referer) cs-host sc-status sc-substatus sc-win32-status sc-bytes cs-bytes time-taken
 ```
 
-To go back to only the previous field list, run step 3 with the list step 2 printed. On a server whose fields were never changed, this saves the default list as an explicit setting; the fields logged are the same. Or run `Restore-WebConfiguration -Name 'before-gravwell-logging'`, which restores the whole IIS configuration to the backup from step 1, including anything else changed since.
+To go back to the original field list, run step 3 with the list step 2 printed. On a server whose fields were never changed, this saves the default list as an explicit setting; the fields logged are the same. Or run:
 
+```powershell
+Restore-WebConfiguration -Name 'before-gravwell-logging'
+```
+
+This restores the whole IIS configuration to the backup from step 1, including anything else changed since.
+
+(behind_a_reverse_proxy)=
 ### Behind a Reverse Proxy
 
 Behind a reverse proxy or load balancer, `c-ip` holds the proxy's address for every request. To keep the client's address, log the `X-Forwarded-For` request header as a custom field (IIS 8.5 and later). Run these commands once, after setting the recommended fields:
@@ -148,7 +155,13 @@ Remove-WebConfigurationProperty -PSPath 'MACHINE/WEBROOT/APPHOST' `
   -AtElement @{ logFieldName = 'X-Forwarded-For' }
 ```
 
-Or run `Restore-WebConfiguration -Name 'before-gravwell-xff'`, which also rolls back every other IIS change made since the backup.
+Or run:
+
+```powershell
+Restore-WebConfiguration -Name 'before-gravwell-xff'
+```
+
+This also rolls back every other IIS change made since the backup.
 
 ```{note}
 Named backups stay in `%windir%\System32\inetsrv\backup\<name>\` until you delete the folder, for example `Remove-Item -Recurse "$env:windir\System32\inetsrv\backup\before-gravwell-logging"`. The backup list shows every creation time as midnight, so tell same-day backups apart by name.
@@ -225,7 +238,13 @@ Clear-WebConfiguration -PSPath 'MACHINE/WEBROOT/APPHOST' `
   -Filter 'system.applicationHost/sites/siteDefaults/ftpServer/logFile/@directory'
 ```
 
-Or run `Restore-WebConfiguration -Name 'before-gravwell-ftp'`, which also rolls back every other IIS change made since the backup.
+Or run:
+
+```powershell
+Restore-WebConfiguration -Name 'before-gravwell-ftp'
+```
+
+This also rolls back every other IIS change made since the backup.
 
 ### IIS Configuration Event Log
 
@@ -282,11 +301,13 @@ Edit: `%PROGRAMDATA%\gravwell\filefollow\file_follow.cfg`
     File-Filter=`u_ex*.log`
     Tag-Name=iis
     Recursive=true
+    Ignore-Line-Prefix="#"
 
 [Follower "iis-httperr"]
     Base-Directory=`C:\Windows\System32\LogFiles\HTTPERR`
     File-Filter=`httperr*.log`
     Tag-Name=iis-httperr
+    Ignore-Line-Prefix="#"
 ```
 
 * `Recursive=true` reads every site's folder under `LogFiles`. On a server that runs the IIS FTP service, move the FTP logs first (see IIS FTP Service Logs), or the `iis` follower reads them too.
@@ -295,7 +316,7 @@ Edit: `%PROGRAMDATA%\gravwell\filefollow\file_follow.cfg`
 * The storage well above (`Tags=iis*`) covers both tags, and `iis-ftp` below.
 * No time zone setting is needed. IIS and HTTP.sys timestamps are UTC, which is what File Follower assumes for timestamps without a time zone.
 
-To collect the FTP logs as well, add a third follower for the directory they were moved to. Keep its header lines, because the FTP `#Fields` line differs from the web layout:
+To collect the FTP logs as well, add a third follower for the directory they were moved to:
 
 ```ini
 [Follower "iis-ftp"]
@@ -303,10 +324,11 @@ To collect the FTP logs as well, add a third follower for the directory they wer
     File-Filter=`u_ex*.log`
     Tag-Name=iis-ftp
     Recursive=true
+    Ignore-Line-Prefix="#"
 ```
 
 ```{note}
-The followers keep the header lines. The `#Fields` lines are the only record in the data of which fields a server logs, which differs between servers (15, 17 or 21 or more fields, depending on their history) and changes whenever the logging settings do. To save ingest on the `iis` follower, add `Ignore-Line-Prefix="#"`: it drops the header lines, including those IIS writes mid-file after a restart or a logging change, and keeps every data line. Gravwell's IIS queries don't need the header lines. Keep them on `iis-httperr`: they are few.
+`Ignore-Line-Prefix="#"` drops the header lines (`#Software`, `#Version`, `#Date`, `#Fields`), including those IIS writes mid-file after a restart or a logging change, and keeps every data line. Gravwell's IIS queries don't need the header lines. To keep them, remove that line from a follower: the `#Fields` lines are the only record in the data of which fields a server logs, which differs between servers (15, 17 or 21 or more fields, depending on their history) and changes whenever the logging settings do.
 ```
 
 ```{note}
