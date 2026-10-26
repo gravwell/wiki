@@ -12,6 +12,7 @@
 | Ingester Name | Installer    | More Info |
 | :------------ | :----------- | :-------- |
 | File Follower | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.10.2/installers/GravwellFileFollower-5.10.2.pkg">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void\(0\)" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">a653960a9239e1e9752abee46f93bb6375142e72e4af0c94e49f255be7565df8</span></code>'>(SHA256)</a> | [Documentation](/ingesters/file_follow) |
+| Unified Log | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.10.2/installers/GravwellMacOSUnifiedLog-5.10.2.pkg">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void\(0\)" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">a653960a9239e1e9752abee46f93bb6375142e72e4af0c94e49f255be7565df8</span></code>'>(SHA256)</a> | [Documentation](/ingesters/macos_unified_log) |
 
 ## Other Installers
 
