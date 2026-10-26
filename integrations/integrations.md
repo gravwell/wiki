@@ -32,10 +32,14 @@ Duo <application/duo>
 Fluentd <host/fluentd>
 Fortinet <network/fortinet>
 GitHub <application/github>
+HTTP Ingester <generic/http_ingester>
 IPFIX <network/ipfix>
 IPMI <generic/ipmi>
 Jamf <host/jamf>
 Juniper <network/juniper>
+Keycloak <application/keycloak>
+Microsoft Entra ID <cloud/msentra>
+Mimecast <application/mimecast>
 MongoDB <application/mongodb>
 Netflow <network/netflow>
 Nginx <application/nginx>
@@ -47,11 +51,14 @@ Palo Alto <network/paloalto>
 pfSense <network/pfsense>
 PiHole <network/pihole>
 Proxmox <network/proxmox>
+SentinelOne <application/sentinelone>
 Suricata <network/suricata>
+Synology <host/synology>
 Syslog <generic/syslog>
 Sysmon <host/sysmon>
 Teleport <application/teleport>
 Thinkst <network/thinkst>
+TrueNAS <host/truenas>
 Windows Event <host/windowsevent>
 Zeek <network/zeek>
 ```
@@ -84,6 +91,12 @@ Zeek <network/zeek>
 ::::
 
 ::::{grid} 4
+:::{grid-item-card}
+:link: cloud/msentra
+:link-type: doc
+**Microsoft Entra ID**
+:::
+
 :::{grid-item-card}
 :link: cloud/office365
 :link-type: doc
@@ -215,15 +228,27 @@ Zeek <network/zeek>
 :link-type: doc
 **Jamf**
 :::
+::::
+
+::::{grid} 4
+:::{grid-item-card}
+:link: host/synology
+:link-type: doc
+**Synology**
+:::
 
 :::{grid-item-card}
 :link: host/sysmon
 :link-type: doc
 **Sysmon**
 :::
-::::
 
-::::{grid} 4
+:::{grid-item-card}
+:link: host/truenas
+:link-type: doc
+**TrueNAS**
+:::
+
 :::{grid-item-card}
 :link: host/windowsevent
 :link-type: doc
@@ -272,6 +297,18 @@ Zeek <network/zeek>
 :::
 
 :::{grid-item-card}
+:link: application/keycloak
+:link-type: doc
+**Keycloak**
+:::
+
+:::{grid-item-card}
+:link: application/mimecast
+:link-type: doc
+**Mimecast**
+:::
+
+:::{grid-item-card}
 :link: application/mongodb
 :link-type: doc
 **MongoDB**
@@ -298,6 +335,12 @@ Zeek <network/zeek>
 :::
 
 :::{grid-item-card}
+:link: application/sentinelone
+:link-type: doc
+**SentinelOne**
+:::
+
+:::{grid-item-card}
 :link: application/teleport
 :link-type: doc
 **Teleport**
@@ -307,6 +350,12 @@ Zeek <network/zeek>
 (generic_integrations)=
 ## Generic Integrations
 ::::{grid} 4
+:::{grid-item-card}
+:link: generic/http_ingester
+:link-type: doc
+**HTTP Ingester**
+:::
+
 :::{grid-item-card}
 :link: generic/ipmi
 :link-type: doc
