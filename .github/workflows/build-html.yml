@@ -83,6 +83,7 @@ jobs:
 
               cp -r ./result/html $BUILD_DEST/html/$v
               chmod --recursive +w $BUILD_DEST
+              rm -rf $BUILD_DEST/html/$v/security $BUILD_DEST/html/$v/.well-known
               echo "Disallow: /$v/" >> $BUILD_DEST/html/robots.txt
           done
 
