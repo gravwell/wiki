@@ -93,7 +93,6 @@ jobs:
                 -e '0,/<head>/s|<head>|<head>\n    <meta name="robots" content="noindex, follow" />|'
               rm -f $BUILD_DEST/html/$v/sitemap.xml $BUILD_DEST/html/$v/robots.txt
               rm -rf $BUILD_DEST/html/$v/security $BUILD_DEST/html/$v/.well-known
-              echo "Disallow: /$v/" >> $BUILD_DEST/html/robots.txt
           done
 
           # Go back to the triggering branch
