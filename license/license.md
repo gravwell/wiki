@@ -6,7 +6,7 @@ Gravwell installations are licensed using a license file that is located at the 
 
 ## Installing a License
 
-A license can be installed via the GUI, the CLI, or by simply copying the license file to the appropriate location.  Only administrative users can update the license via the GUI or CLI.  At startup, if no license is installed or the current license is invalid the system will wait for a valid license to be installed.  The GUI will prompt for a license upload and wait for a valid license before completing startup.  The license installation API validates the provided license and will not allow you to install an invalid license.
+A license can be installed via the GUI, the CLI, or by simply copying the license file to the appropriate location.  Only administrative users can update the license via the GUI or CLI.  At startup, if no license is installed or the current license is invalid and the system is eligible for the [Free License](#free-license), Gravwell will automatically start using the Free tier.  If the system is not eligible for the Free tier, it will wait for a valid license to be installed.  The GUI will prompt for a license upload and wait for a valid license before completing startup.  The license installation API validates the provided license and will not allow you to install an invalid license.
 
 ![Upload a License](upload.png)
 
@@ -24,9 +24,34 @@ Updating a Gravwell license can be performed using the CLI or GUI without restar
 
 ![License Upload](licupload.png)
 
+(free-license)=
+## Free License
+
+The Free license tier requires no sign-up and no license file.  When Gravwell starts without a license and the deployment is eligible for the Free tier, Gravwell automatically deploys the Free license and continues starting up; there is nothing to download or install.  This means a fresh install of Gravwell will "just work" so long as the deployment meets the Free tier criteria.
+
+A deployment must meet all of the following criteria for the Free license to deploy automatically:
+
+| Criteria | Requirement |
+|----------|-------------|
+| License state | No license is installed, or the installed Community Edition or paid license has expired |
+| Indexers | No more than one [remote indexer](remote-indexers-config) is configured in `gravwell.conf` |
+| Overwatch | The webserver is not an [Overwatch webserver](#gravwell-overwatch) |
+| CBAC | `Enable-CBAC` is not set in `gravwell.conf` ([CBAC docs](#enabling-cbac)) |
+| Datastore | No remote `Datastore` is set in `gravwell.conf` ([Datastore Server docs](#datastore_server)) |
+| Replication | No [replication section](#data-replication) is configured in `gravwell.conf` |
+
+If any of these criteria are not met, Gravwell will not deploy the Free license and will wait for a valid license to be installed.  See [Free Edition Feature Availability Warnings](#free-edition-feature-availability-warnings) for help resolving each condition.
+
+### Automatic Fallback on License Expiration
+
+If a deployment is eligible for the Free tier and its Community Edition or paid license expires, Gravwell will automatically switch to the Free tier when the license expires so that the system can continue operating.  Ingest is limited to the Free tier rate and Free tier feature restrictions apply, but the system keeps ingesting and searching data rather than shutting down.  No data is lost during the transition; installing a new license at any time restores the capabilities of that license.
+
+Deployments that are not eligible for the Free tier follow the standard [License Expiration](#license-expiration) process described below.
+
+(license-expiration)=
 ## License Expiration
 
-All Gravwell licenses except the Free edition have an expiration date and once a license has expired Gravwell will not start.  A license expires in four discrete steps:
+All Gravwell licenses except the Free edition have an expiration date.  If the deployment is eligible for the [Free License](#free-license), Gravwell will automatically switch to the Free tier when the license expires.  Otherwise, once a license has expired Gravwell will not start.  A license expires in four discrete steps:
 
 1. Warning about upcoming expiration
 2. Expiration grace period
@@ -67,6 +92,7 @@ Here is a handy table that explains the events leading up to and after license e
 
 <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/> - Gravwell managed
 
+(free-edition-feature-availability-warnings)=
 ## Free Edition Feature Availability Warnings
 
 As illustrated above, not all features are available when using the Free edition. Gravwell will display warning messages if it detects state that is incompatible with the Free version.
