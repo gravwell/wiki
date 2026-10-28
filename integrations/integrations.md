@@ -32,6 +32,7 @@ Fluentd <host/fluentd>
 Fortinet <network/fortinet>
 GitHub <application/github>
 HTTP Ingester <generic/http_ingester>
+IIS <host/iis>
 IPFIX <network/ipfix>
 IPMI <generic/ipmi>
 Jamf <host/jamf>
@@ -223,13 +224,19 @@ Zeek <network/zeek>
 :::
 
 :::{grid-item-card}
-:link: host/jamf
+:link: host/iis
 :link-type: doc
-**Jamf**
+**IIS**
 :::
 ::::
 
 ::::{grid} 4
+:::{grid-item-card}
+:link: host/jamf
+:link-type: doc
+**Jamf**
+:::
+
 :::{grid-item-card}
 :link: host/synology
 :link-type: doc
@@ -247,7 +254,9 @@ Zeek <network/zeek>
 :link-type: doc
 **TrueNAS**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: host/windowsevent
 :link-type: doc
@@ -306,15 +315,15 @@ Zeek <network/zeek>
 :link-type: doc
 **MongoDB**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/nginx
 :link-type: doc
 **Nginx**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: application/okta
 :link-type: doc
@@ -332,7 +341,9 @@ Zeek <network/zeek>
 :link-type: doc
 **SentinelOne**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/teleport
 :link-type: doc
