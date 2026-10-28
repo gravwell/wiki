@@ -98,7 +98,7 @@ To undo, remove the ACLs with `sudo setfacl -b /var/log/mongodb /var/log/mongodb
 MongoDB rotates its log files only when something tells it to, so most deployments set up rotation. How the logs are rotated affects File Follower.
 
 ```{note}
-MongoDB's default rotation mode (`systemLog.logRotate: rename`) renames the log to `mongod.log.<timestamp>` and starts a new file. File Follower doesn't follow those timestamped names reliably: if File Follower is stopped or behind when the rename happens, the last lines of the old file are never read; if `File-Filter` also matches the timestamped names, a restarting File Follower reads the renamed file again from the start and stores every line twice. Rotating with the Linux `logrotate` utility and MongoDB's `reopen` mode avoids both, and the `File-Filter` in this guide is written for it. The audit log follows the same setting.
+File Follower in this guide reads only the live log files (`mongod.log`, `auditLog.json`), as the [File Follower](/ingesters/file_follow) page advises, so rotated files are never read again. Lines MongoDB writes to the old file in the moment between the rename and the reopen, and any lines File Follower hasn't read yet when rotation runs, aren't collected. The steps below use the Linux `logrotate` utility with MongoDB's `reopen` mode, MongoDB's documented way to rotate with `logrotate`. The audit log follows the same setting.
 ```
 
 To rotate with `logrotate`:
@@ -137,7 +137,7 @@ To rotate with `logrotate`:
 
    `create 0640` matters: the group permission bits limit the read access granted to File Follower above, so `0600` cuts File Follower off at the first rotation. MongoDB's RHEL packages run as `mongod` instead of `mongodb`; on RHEL, use `mongod mongod` in the `su` and `create` lines.
 
-   Keep `nodateext`: it overrides a `dateext` set in `/etc/logrotate.conf`, which would rename rotated files to `mongod.log-<date>`, and `File-Filter` doesn't match those names. If you add `compress`, also add `delaycompress`, so `mongod.log.1` stays uncompressed until File Follower has finished reading it.
+   `nodateext` keeps rotated files numbered (`mongod.log.1`), as the check in the next step expects, even if `/etc/logrotate.conf` sets `dateext`.
 
    If you enabled the audit log, list both files in this one entry and add `sharedscripts`. One signal makes MongoDB reopen both files, so both must be renamed before it's sent:
 
@@ -164,10 +164,10 @@ To rotate with `logrotate`:
    sudo -u gravwell head -c 0 /var/log/mongodb/mongod.log && echo "File Follower can read the new log"
    ```
 
-   You should see `mongod.log` and `mongod.log.1` (and `auditLog.json` and `auditLog.json.1` if you enabled the audit log), followed by the "can read" message.
+   You should see `mongod.log` and `mongod.log.1` (and `auditLog.json` and `auditLog.json.1` if you enabled the audit log), followed by the "can read" message. Then run `tag=mongodb-diag count` in Gravwell over the last few minutes and confirm that entries are still arriving.
 
 ```{warning}
-* Keep File Follower running when rotation runs. If File Follower is stopped during a rotation, it reads the rotated file again from the start when it restarts, and those entries are stored twice.
+* Keep File Follower running when rotation runs. Lines it hasn't read from the old file when rotation runs aren't collected.
 * With `logRotate: reopen`, let `logrotate` trigger every rotation. A `SIGUSR1` or `db.adminCommand({logRotate: 1})` sent without `logrotate` renaming the file first makes MongoDB empty the current log file, despite `logAppend: true`. For the same reason, list each MongoDB log in only one `logrotate` entry, and keep the server and audit logs in the same entry.
 ```
 
@@ -200,18 +200,18 @@ Create or edit: `/opt/gravwell/etc/file_follow.conf.d/mongodb.conf`
 ```ini
 [Follower "mongodb"]
     Base-Directory="/var/log/mongodb"
-    File-Filter="mongod.log,mongod.log.[0-9]"
+    File-Filter="mongod.log"
     Tag-Name=mongodb-diag
     Assume-Local-Timezone=true #Default for assume localtime is false
 
 [Follower "mongodb-audit"]
     Base-Directory="/var/log/mongodb"
-    File-Filter="auditLog.json,auditLog.json.[0-9]"
+    File-Filter="auditLog.json"
     Tag-Name=mongodb-audit
     Assume-Local-Timezone=true #Default for assume localtime is false
 ```
 
-Leave out the `mongodb-audit` follower if you don't collect the audit log. The `.[0-9]` names let File Follower finish the most recent rotated file after `logrotate` renames it. Follow only these names: MongoDB's own timestamped rotation names aren't supported (see Log Rotation).
+Leave out the `mongodb-audit` follower if you don't collect the audit log. Follow only the live file names; don't add the rotated names (`mongod.log.1` and so on). Renamed files can be ingested again, as the [File Follower](/ingesters/file_follow) page notes.
 
 ```{note}
 Remember to restart the service to apply the new config:
