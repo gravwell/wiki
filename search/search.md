@@ -238,7 +238,7 @@ Compound queries create ephemeral resources that exist only during the query, ho
 
 It is possible to specify the timeframe in the query, using both relative and concrete time, instead of using the GUI time range picker. This is useful for creating portable queries that contain the exact timeframe needed using only the query itself.
 
-Specifying the search timeframe in the query is done by providing one or both of `start=` and `end=` constraints. These are provided at the beginning of the query, similar to the tag specification. The order of constraints (including the tag specification) does not matter. The `start/end` constraints take a string consisting of an offset or a concrete timestamp. 
+Specifying the search timeframe in the query is done by providing one or both of `start=` and `end=` constraints. These are provided at the beginning of the query, similar to the tag specification. The order of constraints (including the tag specification) does not matter. Each constraint takes exactly one value, which can be a relative offset, a concrete timestamp, or one of the time verbs `START`, `END`, and `NOW` combined with a relative offset.
 
 For example, to search over the last 10 hours, except the last hour, you can specify the time constraints as offset durations:
 
@@ -246,28 +246,7 @@ For example, to search over the last 10 hours, except the last hour, you can spe
 tag=default start=-10h end=-1h json foo | table
 ```
 
-In the example above, we provide a start range of `-10h`, meaning "10 hours in the past from now". Additionally, the end range is `-1h`. Durations consist of a signed offset, and use the following letters as units of time:
-
-| Unit | Description |
-|--------|-------|
-| us | microseconds | 
-| ms | milliseconds | 
-| s | seconds|
-| m | minutes |
-| h | hours |
-| d | days |
-| w | weeks |
-| y | years |
-
-It is also possible to use concrete timestamps. Any timestamp supported by [timegrinder](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#pkg-constants) can be interpreted as a concrete timestamp.
-
-For example:
-
-```gravwell
-start="2006-01-02T15:04:05Z" end="2006-01-02T23:04:05Z" tag=default json foo table
-```
-
-The example above uses RFC3339 timestamps to specify a concrete time range.
+In the example above, we provide a start range of `-10h`, meaning "10 hours in the past from now". Additionally, the end range is `-1h`.
 
 If `start=` or `end=` is used individually, the omitted constraint will be interpreted as `NOW`. For example, to simply search over the last hour:
 
@@ -277,29 +256,97 @@ start=-1h tag=default json foo | table
 
 In the example above, the `end=` constraint is omitted, which sets the end of the range to the time at which the query is executed.
 
-Additionally, relative and concrete timestamps can be combined. For example, to search from January 2nd, 2006, up to an hour ago:
-
-```gravwell
-start="2006-01-02T15:04:05Z" end=-1h tag=default json foo table
-```
-
 ```{note}
 If start/end time constraints are provided, the GUI time picker timeframe will be ignored.
 ```
 
-```{note}
-Timeframes are always aligned to one second boundaries. Sub-second timeframes will be automatically rounded down to the second.
+### Relative offsets
+
+A relative offset is a duration with an optional leading sign, where the duration is one or more number and unit pairs. The following letters are used as units of time:
+
+| Unit | Description |
+|--------|-------|
+| ns | nanoseconds |
+| us | microseconds |
+| ms | milliseconds |
+| s | seconds|
+| m | minutes |
+| h | hours |
+| d | days (24 hours) |
+| w | weeks (7 days) |
+| y | years (365 days) |
+
+A negative offset moves into the past and a positive offset moves into the future. The sign is optional, and an unsigned offset such as `1h` is treated as positive.
+
+Multiple number and unit pairs can be combined in a single offset with no separator between them, and the sign applies to the entire offset. For example, `start=-1h30m` means "one hour and thirty minutes ago", and `end=1d12h` means "a day and a half from now".
+
+Offsets are whole numbers; fractional offsets such as `1.5h` are not supported. Use `1h30m` instead.
+
+Gravwell searches at one second resolution, so an offset must resolve to at least one second. This also applies to each trailing component of a combined offset: `start=-500ms` and `start=-1h500ms` are both rejected, while `start=-1h1000ms` is accepted.
+
+### Concrete timestamps
+
+Concrete timestamps are parsed with timegrinder, the same timestamp extraction engine Gravwell uses at ingest, so most common timestamp layouts are understood. A timestamp that is formatted like one of the following examples will be recognized:
+
+| Example | Description |
+|---------|-------------|
+| `"2006-01-02T15:04:05Z"` | RFC3339 |
+| `"2006-01-02T15:04:05.123-07:00"` | RFC3339 with a numeric zone and optional sub-second precision |
+| `"2006-01-02T15:04:05"` | RFC3339 with no zone |
+| `"2006-01-02 15:04:05"` | Date and time |
+| `"2006-1-2 15:04:05"` | Date and time, unpadded |
+| `"01/02/2006 3:04:05 PM"` | The format used by the GUI time picker |
+| `"1-2-2006 15:04:05"` | Gravwell format |
+| `"02-Jan-2006 15:04:05"` | Bind format |
+| `"2006/01/02 15:04:05"` | NGINX format |
+| `1136473445` | Unix seconds |
+
+This is not an exhaustive list; the full set of recognized formats is enumerated in the [timegrinder package documentation](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#pkg-constants).
+
+Because the GUI time picker format is supported, a timestamp can be copied directly out of the time picker and pasted into a `start=` or `end=` constraint.
+
+Concrete timestamps should always be enclosed in double quotes. Characters that are common in timestamps -- such as `:`, `/`, `.`, `,`, and spaces -- terminate an unquoted constraint value, which will cause the query to fail to parse. For example:
+
+```gravwell
+start="2006-01-02T15:04:05Z" end="2006-01-02T23:04:05Z" tag=default json foo | table
+```
+
+The example above uses RFC3339 timestamps to specify a concrete time range.
+
+```{attention}
+A timestamp that does not carry a timezone is interpreted as UTC, not as the timezone of the browser or the Gravwell node. The GUI time picker displays timestamps in the timezone selected in the picker, so a timestamp copied from the picker may need to be adjusted, or given an explicit zone, to describe the same moment in time.
 ```
 
 ```{note}
-A negative end time cannot be used without defining an earlier start time.
+Timeframes are always aligned to one second boundaries. A timestamp with sub-second precision is accepted, but the sub-second portion is discarded.
 ```
+
+### Combining relative and concrete time
+
+Relative offsets and concrete timestamps can be combined. For example, to search from January 2nd, 2006, up to an hour ago:
+
+```gravwell
+start="2006-01-02T15:04:05Z" end=-1h tag=default json foo | table
+```
+
+### Rules and edge cases
+
+The following rules apply to all time constraints:
+
+* The resolved start time must be earlier than the resolved end time, and the resulting timeframe must be at least one second long. For example, `start=-1h end=-1h` is rejected because the timeframe is empty, and `start=-2h end=-10h` is rejected because the start is after the end.
+* A negative end time cannot be used without defining an earlier start time. `end=-1h` on its own resolves the start to the query execution time, which places the start after the end.
+* Each time constraint accepts exactly one value. A comma in an unquoted value splits it into multiple values, which is invalid -- another reason to quote concrete timestamps.
+* A constraint value must be consumed in its entirety. Trailing characters, such as `end=START+1hfoo`, are an error.
+* Constraint expressions do not contain spaces. Write `start=START-2h`, not `start="START - 2h"`.
+* A time verb must be combined with an offset. `start=NOW` is not a valid constraint, but `start=NOW-0h` is.
+
+A constraint that cannot be parsed fails the query with the error "invalid time specification".
 
 ### Using time constraints in compound queries
 
 The `start` and `end` constraints can also be used in compound queries. When using absolute times in an inner query, the inner query will search over the specified time. 
 
-Otherwise, `start` and `end` constraints in inner queries are always relative to the time range of the main query. For example:
+Otherwise, `start` and `end` constraints in inner queries are always relative to the time range of the main query: an inner `start` offset is relative to the main query's start time, and an inner `end` offset is relative to the main query's end time. For example:
 
 ```gravwell
 @foo{
@@ -335,6 +382,8 @@ tag=default dump -r @foo | table
 
 In the above example, the main query has an absolute end time, and a start time that is relative to the end time. Additionally, the inner query uses relative offsets from the main query's start and end times.
 
+A constraint in the main query cannot reference itself, because its value is what is being defined. Using `START` in the main query's `start=` constraint, or `END` in the main query's `end=` constraint, is an error. Constraints in the main query also cannot reference each other circularly: `start=END-1h end=START+1h` is rejected. Inner queries have no such restriction, as `START` and `END` refer to the main query's times, which are already known.
+
 (time-constraint-summary)=
 ### Time constraint summary
 
@@ -342,10 +391,11 @@ Below is a summary of how time constraints work across all forms of use.
 
 | Time constraints | Main query | Inner query |
 |---|---|---|
-| Not set | Use GUI time picker | Use GUI time picker |
+| Not set | Use GUI time picker | Use the main query timeframe |
 | Absolute time | Use absolute time | Use absolute time |
-| Relative | Relative to now | Relative to main query |
-| Arithmetic | Use rules above ±duration | Use rules above ±duration |
+| Relative | `start` and `end` are both relative to the query execution time | `start` is relative to the main query start, `end` is relative to the main query end |
+| NOW±duration | Query execution time ±duration | Query execution time ±duration |
+| START/END±duration | References the other constraint in the main query, self reference is an error | References the main query start/end times |
 
 ## Comments
 
