@@ -40,7 +40,7 @@ Juniper <network/juniper>
 Keycloak <application/keycloak>
 Microsoft Entra ID <cloud/msentra>
 Mimecast <application/mimecast>
-MongoDB <application/mongodb>
+MongoDB Server <application/mongodb>
 Netflow <network/netflow>
 Nginx <application/nginx>
 Office 365 <cloud/office365>
@@ -313,7 +313,7 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: application/mongodb
 :link-type: doc
-**MongoDB**
+**MongoDB Server**
 :::
 ::::
 
