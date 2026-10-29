@@ -36,22 +36,29 @@ A deployment must meet all of the following criteria for the Free license to dep
 | License state | No license is installed, or the installed Community Edition or paid license has expired |
 | Indexers | No more than one [remote indexer](remote-indexers-config) is configured in `gravwell.conf` |
 | Overwatch | The webserver is not an [Overwatch webserver](#gravwell-overwatch) |
-| CBAC | `Enable-CBAC` is not set in `gravwell.conf` ([CBAC docs](#enabling-cbac)) |
 | Datastore | No remote `Datastore` is set in `gravwell.conf` ([Datastore Server docs](#datastore_server)) |
 | Replication | No [replication section](#data-replication) is configured in `gravwell.conf` |
 
 If any of these criteria are not met, Gravwell will not deploy the Free license and will wait for a valid license to be installed.  See [Free Edition Feature Availability Warnings](#free-edition-feature-availability-warnings) for help resolving each condition.
 
+```{warning}
+[CBAC](#enabling-cbac) is not available on CE or Free tier licenses.  If a deployment transitions from a paid license to a CE or Free license, CBAC will be automatically disabled.  This includes a paid license expiring and the Free license deploying automatically.
+```
+
 ### Automatic Fallback on License Expiration
 
-If a deployment is eligible for the Free tier and its Community Edition or paid license expires, Gravwell will automatically switch to the Free tier when the license expires so that the system can continue operating.  Ingest is limited to the Free tier rate and Free tier feature restrictions apply, but the system keeps ingesting and searching data rather than shutting down.  No data is lost during the transition; installing a new license at any time restores the capabilities of that license.
+If a deployment is eligible for the Free tier and its Community Edition or paid license expires, Gravwell will automatically switch to the Free tier when the license expires so that the system can continue operating.  Ingest is limited to the Free tier rate and Free tier feature restrictions apply, but the system keeps ingesting and searching data rather than shutting down.  No existing data is lost during the transition, but incoming data over the ingest limit will be dropped.  Installing a new license at any time restores the capabilities of that license.
 
-Deployments that are not eligible for the Free tier follow the standard [License Expiration](#license-expiration) process described below.
+```{note}
+The automatic fallback exists only to keep a system from stopping completely when a valid license expires.  Commercial operations should not run on the Free tier long term; install a valid Community Edition or paid license as soon as possible.
+```
+
+Deployments that are not eligible for the Free tier follow the [Standard License Expiration](#license-expiration) process described below.
 
 (license-expiration)=
-## License Expiration
+## Standard License Expiration
 
-All Gravwell licenses except the Free edition have an expiration date.  If the deployment is eligible for the [Free License](#free-license), Gravwell will automatically switch to the Free tier when the license expires.  Otherwise, once a license has expired Gravwell will not start.  A license expires in four discrete steps:
+If a deployment is **not** eligible for the Free tier and its Community Edition or paid license expires, Gravwell will not restart.  The grace periods described below only apply to a system that is already running; if an ineligible system with an expired license is restarted, it will stop and wait for a valid license.  A license expires in four discrete steps:
 
 1. Warning about upcoming expiration
 2. Expiration grace period
@@ -76,7 +83,7 @@ Here is a handy table that explains the events leading up to and after license e
 
 | Type                | Identifier  | Basic Features | Unlimited Ingest | Cluster | Replication | CBAC | HA Webservers | SSO | AI |Notes                                               |
 |---------------------|-------------|:--------------:|:----------------:|:-------:|:-----------:|:----:|:-------------:|:---:|:--:|----------------------------------------------------|
-| Free                | free        | ✅             |                  |         |             |      |               | ✅  | ✅ |Free with 2GB/day ingest, no sign-up required, non-commercial use only, never expires. |
+| Free                | free        | ✅             |                  |         |             |      |               | ✅  | †  |Free with 2GB/day ingest, no sign-up required, non-commercial use only, never expires. |
 | Community Edition   | community   | ✅             |                  |         |             |      |               | ✅  | ✅ |Free signup with 13.9 GB/day ingest, authorized for commercial use, [free licenses with instant delivery](https://www.gravwell.io/community-edition). |
 | CE Advanced         | community   | ✅             |                  |         |             |      |               | ✅  | ✅ |Free signup with 50 GB/day ingest, authorized for commercial use, [free license](https://www.gravwell.io/community-edition-advanced) after validation.  Business email required. |
 | Pro                 | single      | ✅             |   ✅             |         |             |      |               | ✅  | ✅ |Single indexer, unlimited ingest, limited features. |
@@ -92,12 +99,12 @@ Here is a handy table that explains the events leading up to and after license e
 
 <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/> - Gravwell managed
 
+† - third-party AI providers only (`Third-Party-Provider=true`); Gravwell hosted AI services are not available
+
 (free-edition-feature-availability-warnings)=
 ## Free Edition Feature Availability Warnings
 
 As illustrated above, not all features are available when using the Free edition. Gravwell will display warning messages if it detects state that is incompatible with the Free version.
-
-![CBAC is not compatible with Free Tier](free-tier-error.png)
 
 Please consult the following table for advice on resolving Free edition availability warnings, should you encounter them.
 
@@ -105,6 +112,5 @@ Please consult the following table for advice on resolving Free edition availabi
 | -------------------------------- | --------------------------------------------------------------------------------------------------- |
 | `Overwatch enabled`              | Ensure you're not running an [Overwatch webserver](#gravwell-overwatch)                             |
 | `<N> Remote-Indexers configured` | Ensure your `gravwell.conf` has no more than one [remote indexer configured](remote-indexers-config) |
-| `CBAC enabled`                   | Ensure `Enable-CBAC` is not set in your `gravwell.conf` ([CBAC docs](#enabling-cbac))               |
 | `Remote Datastore enabled`       | Ensure `Datastore` is not set in your `gravwell.conf` ([Datastore Server docs](#datastore_server))  |
 | `Replication configured`         | Ensure your `gravwell.conf` does not have a [replication section](#data-replication)                |
