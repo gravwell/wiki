@@ -238,7 +238,7 @@ Compound queries create ephemeral resources that exist only during the query, ho
 
 It is possible to specify the timeframe in the query, using both relative and concrete time, instead of using the GUI time range picker. This is useful for creating portable queries that contain the exact timeframe needed using only the query itself.
 
-Specifying the search timeframe in the query is done by providing one or both of `start=` and `end=` constraints. These are provided at the beginning of the query, similar to the tag specification. The order of constraints (including the tag specification) does not matter. Each constraint takes exactly one value, which can be a relative offset, a concrete timestamp, or one of the time verbs `START`, `END`, and `NOW` combined with a relative offset.
+Specifying the search timeframe in the query is done by providing one or both of `start=` and `end=` constraints. These are provided at the beginning of the query, similar to the tag specification. The order of constraints (including the tag specification) does not matter. Each constraint takes exactly one value, which can be a relative offset, a concrete timestamp, or a base time followed by a signed offset. The base time can be a concrete timestamp or one of the time verbs `START`, `END`, and `NOW`.
 
 For example, to search over the last 10 hours, except the last hour, you can specify the time constraints as offset durations:
 
@@ -262,12 +262,12 @@ If start/end time constraints are provided, the GUI time picker timeframe will b
 
 ### Relative offsets
 
-A relative offset is a duration with an optional leading sign, where the duration is one or more number and unit pairs. The following letters are used as units of time:
+A relative offset is one or more duration terms, where a term is a number and a unit. The following letters are used as units of time:
 
 | Unit | Description |
 |--------|-------|
 | ns | nanoseconds |
-| us | microseconds |
+| us, µs | microseconds |
 | ms | milliseconds |
 | s | seconds|
 | m | minutes |
@@ -276,13 +276,25 @@ A relative offset is a duration with an optional leading sign, where the duratio
 | w | weeks (7 days) |
 | y | years (365 days) |
 
-A negative offset moves into the past and a positive offset moves into the future. The sign is optional, and an unsigned offset such as `1h` is treated as positive.
+Units are case insensitive, so `-1h30m` and `-1H30M` are the same offset.
 
-Multiple number and unit pairs can be combined in a single offset with no separator between them, and the sign applies to the entire offset. For example, `start=-1h30m` means "one hour and thirty minutes ago", and `end=1d12h` means "a day and a half from now".
+Terms can be combined with no separator between them, and each sign applies only to the term that follows it. Offsets are evaluated left to right, so a sign in the middle of an offset changes direction from that point on:
 
-Offsets are whole numbers; fractional offsets such as `1.5h` are not supported. Use `1h30m` instead.
+| Offset | Meaning |
+|---|---|
+| `start=-1h30m` | 90 minutes before the base time |
+| `start=-1h-30m` | 90 minutes before the base time |
+| `start=-1h+30m` | 30 minutes before the base time |
+| `start=-1h30m-10m` | 100 minutes before the base time |
+| `end=END--1h30m` | 90 minutes _after_ the main query end |
 
-Gravwell searches at one second resolution, so an offset must resolve to at least one second. This also applies to each trailing component of a combined offset: `start=-500ms` and `start=-1h500ms` are both rejected, while `start=-1h1000ms` is accepted.
+A negative offset moves into the past, and a positive offset moves into the future. For an offset that stands on its own, such as `start=-1h`, the sign is optional and an unsigned offset like `start=1h` is positive. An offset that follows `START`, `END`, `NOW`, or a concrete timestamp must carry an explicit sign: `end=END+1h` is valid, `end=END1h` is an error.
+
+Terms may use decimal fractions, in the same form Go's duration parser accepts, so `-1.5h` and `-90m` describe the same offset. Note that `.` terminates an unquoted constraint value, so a fractional offset has to be quoted: `start="-1.5h"` works, while `start=-1.5h` fails to parse.
+
+Numbers are always read as decimal; a leading zero does not make a number octal, so `-010h` is ten hours.
+
+Gravwell searches at one second resolution, so an offset must work out to a whole number of seconds. `-1500ms` and `-1s500ms` are rejected, while `-2000ms` is accepted. An offset large enough to overflow, such as `-200y-200y`, is also rejected rather than silently wrapping around.
 
 ### Concrete timestamps
 
@@ -300,6 +312,7 @@ Concrete timestamps are parsed with timegrinder, the same timestamp extraction e
 | `"02-Jan-2006 15:04:05"` | Bind format |
 | `"2006/01/02 15:04:05"` | NGINX format |
 | `1136473445` | Unix seconds |
+| `"2006-01-02T15:04:05-07:00-1h"` | Any of the above, followed by a signed offset |
 
 This is not an exhaustive list; the full set of recognized formats is enumerated in the [timegrinder package documentation](https://pkg.go.dev/github.com/gravwell/gravwell/v3/timegrinder#pkg-constants).
 
@@ -321,6 +334,7 @@ A timestamp that does not carry a timezone is interpreted as UTC, not as the tim
 Timeframes are always aligned to one second boundaries. A timestamp with sub-second precision is accepted, but the sub-second portion is discarded.
 ```
 
+(combining-relative-and-concrete-time)=
 ### Combining relative and concrete time
 
 Relative offsets and concrete timestamps can be combined. For example, to search from January 2nd, 2006, up to an hour ago:
@@ -329,18 +343,24 @@ Relative offsets and concrete timestamps can be combined. For example, to search
 start="2006-01-02T15:04:05Z" end=-1h tag=default json foo | table
 ```
 
+A concrete timestamp can also be used as the base of an offset, just like the `START`, `END`, and `NOW` verbs described in [Time constraint arithmetic](time-constraint-arithmetic). To search the hour leading up to a specific time:
+
+```gravwell
+start="2006-01-02T15:04:05-07:00-1h" end="2006-01-02T15:04:05-07:00" tag=default json foo | table
+```
+
 ### Rules and edge cases
 
 The following rules apply to all time constraints:
 
 * The resolved start time must be earlier than the resolved end time, and the resulting timeframe must be at least one second long. For example, `start=-1h end=-1h` is rejected because the timeframe is empty, and `start=-2h end=-10h` is rejected because the start is after the end.
 * A negative end time cannot be used without defining an earlier start time. `end=-1h` on its own resolves the start to the query execution time, which places the start after the end.
-* Each time constraint accepts exactly one value. A comma in an unquoted value splits it into multiple values, which is invalid -- another reason to quote concrete timestamps.
-* A constraint value must be consumed in its entirety. Trailing characters, such as `end=START+1hfoo`, are an error.
-* Constraint expressions do not contain spaces. Write `start=START-2h`, not `start="START - 2h"`.
-* A time verb must be combined with an offset. `start=NOW` is not a valid constraint, but `start=NOW-0h` is.
+* A time constraint accepts exactly one value. A comma in an unquoted value splits it into multiple values, and a constraint with more than one value is reported as an error in the GUI and ignored elsewhere, which means the query runs over a timeframe you did not ask for. This is another reason to quote concrete timestamps.
+* The entire value must be consumed. Trailing characters, such as `end=START+1hfoo` or `start="2006-01-02T15:04:05Z garbage"`, fail with `invalid time specification: unexpected "..."`.
+* A verb must be followed by a signed offset. `start=NOW` on its own is not a valid constraint, but `start=NOW-0h` is. A concrete timestamp can stand on its own.
+* Write offsets without spaces. A space between a sign and its number, as in `start="START - 2h"`, is an error; `start=START-2h` is the form to use.
 
-A constraint that cannot be parsed fails the query with the error "invalid time specification".
+A constraint that cannot be parsed at all fails the query with the error `invalid time specification`.
 
 ### Using time constraints in compound queries
 
@@ -360,13 +380,14 @@ tag=gravwell limit 1
 
 In the above example, the main query executes over the last hour. The inner query also has a relative offset, and it is relative to the start time of the main query -- meaning it searches over the last 11 hours (10 hours offset from the main query, which is 1 hour offset from the current time).
 
+(time-constraint-arithmetic)=
 ### Time constraint arithmetic
 
 ```{note}
 START and END always reference the start and end times of the main query regardless of whether they are used in the main query or the inner part of a compound query.
 ```
 
-Time constraints support three verbs: `START`, `END`, and `NOW`, which can be combined with relative offsets to perform simple arithmetic offsets. For example:
+Time constraints support three verbs: `START`, `END`, and `NOW`, which can be combined with relative offsets to perform simple arithmetic offsets. A concrete timestamp can be used in the same position, as described in [Combining relative and concrete time](combining-relative-and-concrete-time). The offset that follows a verb or a timestamp must carry an explicit sign. For example:
 
 ```gravwell
 @foo{
@@ -396,6 +417,7 @@ Below is a summary of how time constraints work across all forms of use.
 | Relative | `start` and `end` are both relative to the query execution time | `start` is relative to the main query start, `end` is relative to the main query end |
 | NOW±duration | Query execution time ±duration | Query execution time ±duration |
 | START/END±duration | References the other constraint in the main query, self reference is an error | References the main query start/end times |
+| Timestamp±duration | Use absolute time ±duration | Use absolute time ±duration |
 
 ## Comments
 
