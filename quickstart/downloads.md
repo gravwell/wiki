@@ -4,14 +4,15 @@
 
 | Ingester Name | Installer    | More Info |
 | :------------ | :----------- | :-------- |
-| Windows Events | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.10.3/installers/gravwell_win_events_5.10.2.1.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">a981ed43c882f13625c4644680a1ef895ad1115ed3c61017f406727722285168</span></code>'>(SHA256)</a> | [Documentation](/ingesters/winevent) |
-| Windows File Follower | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.10.3/installers/gravwell_file_follow_5.10.2.1.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">b730c891caba2212cf3a77cb5510f261bf1091d662990564d0a2895d01ded7e5</span></code>'>(SHA256)</a> | [Documentation](/ingesters/win_file_follow) |
+| Windows Events | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.10.2/installers/gravwell_win_events_5.10.2.1.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">a981ed43c882f13625c4644680a1ef895ad1115ed3c61017f406727722285168</span></code>'>(SHA256)</a> | [Documentation](/ingesters/winevent) |
+| Windows File Follower | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.10.2/installers/gravwell_file_follow_5.10.2.1.msi">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void(0);" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">b730c891caba2212cf3a77cb5510f261bf1091d662990564d0a2895d01ded7e5</span></code>'>(SHA256)</a> | [Documentation](/ingesters/win_file_follow) |
 
 ## macOS Ingesters
 
 | Ingester Name | Installer    | More Info |
 | :------------ | :----------- | :-------- |
 | File Follower | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.10.3/installers/GravwellFileFollower-5.10.3.pkg">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void\(0\)" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">d93768048d6973608253c63499ad3851d218ff294bdfdbac7aeac4dccb59cf3b</span></code>'>(SHA256)</a> | [Documentation](/ingesters/file_follow) |
+| Unified Log | <a data-bs-custom-class="hash-popover" href="https://update.gravwell.io/archive/5.10.2/installers/GravwellMacOSUnifiedLog-5.10.2.pkg">Download <i class="fa-solid fa-download"></i></a>&nbsp;&nbsp;&nbsp;<a data-bs-custom-class="hash-popover" href="javascript:void\(0\)" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-html="true" data-bs-content='<code class="docutils literal notranslate"><span class="pre">a653960a9239e1e9752abee46f93bb6375142e72e4af0c94e49f255be7565df8</span></code>'>(SHA256)</a> | [Documentation](/ingesters/macos_unified_log) |
 
 ## Other Installers
 
@@ -21,7 +22,7 @@ The Debian and RHEL repositories are more easily maintained than these standalon
 
 ### Gravwell Core
 
-The Gravwell core installer contains the indexer and webserver frontend. You'll need a license; either get a Community Edition free license, or contact <a href="mailto:info@gravwell.io">info@gravwell.io</a> for commercial options.
+The Gravwell core installer contains the indexer and webserver frontend. Eligible single-node installations start on the [Free License](#free-license) automatically, with no license file required. For more ingest or commercial use, either get a Community Edition free license, or contact <a href="mailto:info@gravwell.io">info@gravwell.io</a> for commercial options.
 
 | x86_64 (Intel and AMD) | ARM64 |
 | :--------------------- | :---- |
