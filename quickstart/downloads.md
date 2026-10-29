@@ -22,7 +22,7 @@ The Debian and RHEL repositories are more easily maintained than these standalon
 
 ### Gravwell Core
 
-The Gravwell core installer contains the indexer and webserver frontend. Eligible single-node installations start on the [Free License](#free-license) automatically, with no license file required.  For more ingest or commercial use, either get a Community Edition free license, or contact <a href="mailto:info@gravwell.io">info@gravwell.io</a> for commercial options.
+The Gravwell core installer contains the indexer and webserver frontend. Eligible single-node installations start on the [Free License](#free-license) automatically, with no license file required. For more ingest or commercial use, either get a Community Edition free license, or contact <a href="mailto:info@gravwell.io">info@gravwell.io</a> for commercial options.
 
 | x86_64 (Intel and AMD) | ARM64 |
 | :--------------------- | :---- |
