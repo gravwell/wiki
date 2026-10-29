@@ -241,7 +241,9 @@ If your distribution does not use systemd, you will have to start the Gravwell p
 
 ## Configuring the License
 
-Once Gravwell is installed, open a web browser and navigate to the server (e.g. [http://localhost/](http://localhost/)). It should ask if you have a license file already (if you've already signed up for CE) or if you need to get one:
+A default single-node installation is eligible for the [Free License](#free-license), so Gravwell will automatically start on the Free tier with no license file required.  Open a web browser, navigate to the server (e.g. [http://localhost/](http://localhost/)), and log in as "admin" with the password "changeme".  To use a Community Edition or paid license instead, upload it from the License page as described in [Updating a License](#updating-a-license).
+
+If the system is not eligible for the Free tier (see the [Free License criteria](#free-license)), Gravwell will ask if you have a license file already (if you've already signed up for CE) or if you need to get one:
 
 ![Upload or Get license](license1.png)
 

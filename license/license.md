@@ -1,12 +1,12 @@
 # Gravwell License System
 
-Gravwell provides several license tiers that enable additional features and capabilities.  The most basic license tier is the Community Edition and the most advanced tier is the Unlimited license.  The Community Edition license allows limited ingest on a single indexer; it is the only license tier that does *not* have unlimited ingest.
+Gravwell provides several license tiers that enable additional features and capabilities.  The most basic license tier is the Free license and the most advanced tier is the Unlimited license.
 
 Gravwell installations are licensed using a license file that is located at the path /opt/gravwell/etc/license by default.  The license location can be controlled in the gravwell.conf file by setting the License-Location variable in the [Global] configuration block.  Gravwell will validate the license at each startup and periodically check it.
 
 ## Installing a License
 
-A license can be installed via the GUI, the CLI, or by simply copying the license file to the appropriate location.  Only administrative users can update the license via the GUI or CLI.  At startup, if no license is installed or the current license is invalid and the system is eligible for the [Free License](#free-license), Gravwell will automatically start using the Free tier.  If the system is not eligible for the Free tier, it will wait for a valid license to be installed.  The GUI will prompt for a license upload and wait for a valid license before completing startup.  The license installation API validates the provided license and will not allow you to install an invalid license.
+A license can be installed via the GUI, the CLI, or by simply copying the license file to the appropriate location.  Only administrative users can update the license via the GUI or CLI.  At startup, if no license is installed or the installed license has expired and the system is eligible for the [Free License](#free-license), Gravwell will automatically start using the Free tier.  If the system is not eligible for the Free tier, or the license file is present but invalid (for example, corrupt or empty), it will wait for a valid license to be installed.  The GUI will prompt for a license upload and wait for a valid license before completing startup.  The license installation API validates the provided license and will not allow you to install an invalid license.
 
 ![Upload a License](upload.png)
 
@@ -14,6 +14,7 @@ A license can be installed via the GUI, the CLI, or by simply copying the licens
 
 If you use the CLI or GUI to install a license Gravwell will distribute the license to all connected indexers automatically.  Gravwell will also validate the installed license for each indexer and update if necessary at each connection.  That means that if you bring a new indexer online it will automatically receive the appropriate license when the webserver connects.
 
+(updating-a-license)=
 ## Updating a License
 
 Updating a Gravwell license can be performed using the CLI or GUI without restarting Gravwell, but if you just copy the license file to the appropriate directory you must restart Gravwell in order for the license to be reloaded.  Only administrators can update the license file through the GUI or CLI.  To update the license, log into Gravwell as an administrator and navigate to the license section under the administrator panel.  The License page will provide details about your license and its expiration date, select the new license file and upload it to update the webserver and all connected Gravwell indexers.
@@ -42,7 +43,7 @@ A deployment must meet all of the following criteria for the Free license to dep
 If any of these criteria are not met, Gravwell will not deploy the Free license and will wait for a valid license to be installed.  See [Free Edition Feature Availability Warnings](#free-edition-feature-availability-warnings) for help resolving each condition.
 
 ```{warning}
-[CBAC](#enabling-cbac) is not available on CE or Free tier licenses.  If a deployment transitions from a paid license to a CE or Free license, CBAC will be automatically disabled.  This includes a paid license expiring and the Free license deploying automatically.
+[CBAC](#enabling-cbac) is not available on CE or Free tier licenses.  If a deployment transitions from a paid license to a CE or Free license, CBAC will be automatically disabled.  This includes a paid license expiring and the Free license deploying automatically.  After installing a license that supports CBAC, you must restart the Gravwell webserver to re-enable CBAC.
 ```
 
 ### Automatic Fallback on License Expiration
@@ -50,7 +51,7 @@ If any of these criteria are not met, Gravwell will not deploy the Free license 
 If a deployment is eligible for the Free tier and its Community Edition or paid license expires, Gravwell will automatically switch to the Free tier when the license expires so that the system can continue operating.  Ingest is limited to the Free tier rate and Free tier feature restrictions apply, but the system keeps ingesting and searching data rather than shutting down.  No existing data is lost during the transition, but incoming data over the ingest limit will be dropped.  Installing a new license at any time restores the capabilities of that license.
 
 ```{note}
-The automatic fallback exists only to keep a system from stopping completely when a valid license expires.  Commercial operations should not run on the Free tier long term; install a valid Community Edition or paid license as soon as possible.
+The automatic fallback exists only to keep a system from stopping completely when a valid license expires, but the free tier is for non-commercial use only and is not a long term solution.
 ```
 
 Deployments that are not eligible for the Free tier follow the [Standard License Expiration](#license-expiration) process described below.
