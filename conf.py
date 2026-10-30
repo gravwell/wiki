@@ -1,3 +1,4 @@
+import html
 import os
 import pathlib
 import subprocess
@@ -5,6 +6,7 @@ import sys
 import json
 from datetime import date
 
+from docutils import nodes
 from sphinx.highlighting import lexers
 
 sys.path.insert(0, os.path.abspath("."))
@@ -22,7 +24,7 @@ from gravy_lexer import GravwellLexer
 project = "Gravwell"
 copyright = f"Gravwell, Inc. {date.today().year}"
 author = "Gravwell, Inc."
-release = "v5.10.2"
+release = "v5.10.3"
 
 # Default to localhost:8000, so the version switcher looks OK on livehtml
 version_list_url = os.environ.get(
@@ -67,6 +69,15 @@ language = "en"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+
+# Title suffix for every page's <title> tag. Overrides the default
+# "Gravwell vX.Y.Z documentation" so titles don't change with each release.
+html_title = "Gravwell Documentation"
+
+# Production URL of the latest docs. Sphinx uses this to emit a
+# <link rel="canonical"> on every page; it's also used for the sitemap and
+# Open Graph URLs below.
+html_baseurl = "https://docs.gravwell.io/"
 
 html_show_sourcelink = False
 html_copy_source = False
@@ -218,5 +229,99 @@ def build_inited_handler(_app):
         )
 
 
+# -- SEO: meta description, Open Graph tags, sitemap, robots.txt ---------------
+
+# Pages that shouldn't appear in the sitemap
+sitemap_exclude = {"404", "search", "genindex"}
+
+# Paragraphs inside these nodes are poor page summaries, so skip them when
+# looking for a description
+description_skip_ancestors = (
+    nodes.Admonition,
+    nodes.table,
+    nodes.list_item,
+    nodes.field_list,
+    nodes.sidebar,
+    nodes.topic,
+)
+
+
+def page_description(doctree, max_len=160):
+    """Return the text of the page's first body paragraph, truncated for use in a meta description."""
+    for paragraph in doctree.findall(nodes.paragraph):
+        parent = paragraph.parent
+        skip = False
+        while parent is not None:
+            if isinstance(parent, description_skip_ancestors):
+                skip = True
+                break
+            parent = parent.parent
+        if skip:
+            continue
+
+        text = " ".join(paragraph.astext().split())
+        if len(text) < 40:
+            continue
+        if len(text) > max_len:
+            text = text[: max_len - 1].rsplit(" ", 1)[0].rstrip(",.;:") + "…"
+        return text
+    return None
+
+
+def html_page_context_handler(app, pagename, _templatename, context, doctree):
+    if doctree is None:
+        return
+
+    metatags = context.get("metatags", "")
+    tags = []
+
+    title = app.env.titles[pagename].astext() if pagename in app.env.titles else ""
+    url = app.config.html_baseurl + app.builder.get_target_uri(pagename)
+
+    # Pages can set their own description with myst front matter (myst.html_meta.description).
+    # Only generate one when the page doesn't.
+    description = None
+    if 'name="description"' not in metatags:
+        description = page_description(doctree)
+        if description:
+            tags.append(f'<meta name="description" content="{html.escape(description)}" />')
+
+    tags.append('<meta property="og:type" content="website" />')
+    tags.append('<meta property="og:site_name" content="Gravwell Documentation" />')
+    tags.append(f'<meta property="og:url" content="{html.escape(url)}" />')
+    if title:
+        tags.append(f'<meta property="og:title" content="{html.escape(title)}" />')
+    if description:
+        tags.append(f'<meta property="og:description" content="{html.escape(description)}" />')
+
+    context["metatags"] = metatags + "\n".join(tags) + "\n"
+
+
+def build_finished_handler(app, exception):
+    if exception is not None or app.builder.format != "html":
+        return
+
+    outdir = pathlib.Path(app.outdir)
+
+    urls = [
+        app.config.html_baseurl + app.builder.get_target_uri(docname)
+        for docname in sorted(app.env.found_docs)
+        if docname not in sitemap_exclude
+    ]
+    sitemap = ['<?xml version="1.0" encoding="UTF-8"?>']
+    sitemap.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+    sitemap.extend(f"  <url><loc>{html.escape(u)}</loc></url>" for u in urls)
+    sitemap.append("</urlset>")
+    (outdir / "sitemap.xml").write_text("\n".join(sitemap) + "\n")
+
+    # Old versions are excluded from search results with a noindex tag added at deploy
+    # time (see .github/workflows/build-html.yml), so crawlers must be allowed to fetch them.
+    (outdir / "robots.txt").write_text(
+        f"User-agent: *\nAllow: /\n\nSitemap: {app.config.html_baseurl}sitemap.xml\n"
+    )
+
+
 def setup(app):
     app.connect("builder-inited", build_inited_handler)
+    app.connect("html-page-context", html_page_context_handler)
+    app.connect("build-finished", build_finished_handler)
