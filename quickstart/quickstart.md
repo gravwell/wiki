@@ -49,13 +49,13 @@ accelRatio = 1.0
 
 # Quick Start
 
-This section contains basic “quick start” instructions for getting Gravwell up and running on a single server.  These instructions support the most common use case and act as an introduction to Gravwell.  Please note, the “Quick Start” instructions do not take advantage of the more advanced Gravwell features regarding distributed search and storage that are available in the Cluster Edition. If you require a more advanced setup, please review the Advanced Topics section of this guide.
+This section contains basic “quick start” instructions for getting Gravwell up and running on a single server. These instructions support the most common use case and act as an introduction to Gravwell. Please note, the “Quick Start” instructions do not take advantage of the more advanced Gravwell features regarding distributed search and storage that are available in the Cluster Edition. If you require a more advanced setup, please review the Advanced Topics section of this guide.
 
 This guide is suitable for Community Edition users as well as users with a paid single-node Gravwell subscription.
 
 You may find the [installation checklist](checklist) and the [glossary](/glossary/glossary) useful companions to this document.
 
-If you are interested in a complete training package, please see the [complete training PDF](https://github.com/gravwell/training/releases/download/v5.10.2/gravwell_training_v5.10.2.pdf). The Gravwell training PDF is the complete training manual which is paired with labs and exercises. The exercises are built from the open source [Gravwell Training](https://github.com/gravwell/training) repository.
+If you are interested in a complete training package, please see the [complete training PDF](https://github.com/gravwell/training/releases/download/v5.10.3/gravwell_training_v5.10.3.pdf). The Gravwell training PDF is the complete training manual which is paired with labs and exercises. The exercises are built from the open source [Gravwell Training](https://github.com/gravwell/training) repository.
 
 ```{note}
 Community Edition users will need to obtain their own license from [https://www.gravwell.io/download](https://www.gravwell.io/download) before beginning installation. Paid users should already have received a license file via email.
@@ -241,7 +241,9 @@ If your distribution does not use systemd, you will have to start the Gravwell p
 
 ## Configuring the License
 
-Once Gravwell is installed, open a web browser and navigate to the server (e.g. [http://localhost/](http://localhost/)). It should ask if you have a license file already (if you've already signed up for CE) or if you need to get one:
+A default single-node installation is eligible for the [Free License](#free-license), so Gravwell will automatically start on the Free tier with no license file required. Open a web browser, navigate to the server (e.g. [http://localhost/](http://localhost/)), and log in as "admin" with the password "changeme". To use a Community Edition or paid license instead, upload it from the License page as described in [Updating a License](#updating-a-license).
+
+If the system is not eligible for the Free tier (see the [Free License criteria](#free-license)), Gravwell will ask if you have a license file already (if you've already signed up for CE) or if you need to get one:
 
 ![Upload or Get license](license1.png)
 
