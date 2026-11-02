@@ -5,35 +5,19 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [HTTP Ingester](/ingesters/http) <br /> [Simple Relay](/ingesters/simple_relay)
+    Ingester, [Simple Relay](/ingesters/simple_relay) <br /> [HTTP Ingester](/ingesters/http)
 :::
 
-This guide sends metrics and system logs from Proxmox Virtual Environment (Proxmox VE) nodes to Gravwell. The two options collect different data, so you can use either one or both:
+This guide collects system logs and metrics from Proxmox Virtual Environment (Proxmox VE) nodes. They record different things, and each can be set up on its own:
 
-* **[Option 1] OpenTelemetry metrics (Proxmox VE 9.0 and later):** Proxmox VE sends metrics about each node, virtual machine, container and storage to the HTTP Ingester. This method requires no additional installation and is useful for monitoring system, storage and network usage. Gravwell stores them under the `proxmox-metrics` tag.
-* **[Option 2] System logs:** each node's system log, which includes Proxmox VE actions such as VM power-on and restart, forwarded to Simple Relay. This method requires installing `rsyslog` on each node. Gravwell stores them under the `proxmox-syslog` tag.
+* **System logs**: what happened on each node and who did it. They record who logged in to the web interface, API or SSH, including failed attempts. They record tasks such as starting, stopping or backing up a guest, opening a console and changing a guest's configuration, with the user who ran each one. They also record commands run with `sudo` and node health events such as disk (SMART) and ZFS warnings. `rsyslog`, installed on each node, forwards them to Simple Relay. Gravwell stores them under the `proxmox-syslog` tag.
+* **Metrics** (Proxmox VE 9.0 and later): how each node, virtual machine, container and storage is performing, such as CPU, memory, disk, network and storage use. They add performance and capacity data alongside the system logs. Proxmox VE sends them to the HTTP Ingester over OpenTelemetry, with no additional installation. Gravwell stores them under the `proxmox-metrics` tag.
 
-The steps in this guide were tested on Proxmox VE 9.2.24. Option 2 was also tested on Proxmox VE 8.4.
+The steps in this guide were tested on Proxmox VE 9.2.24. The system log steps were also tested on Proxmox VE 8.4.
 
 ## Proxmox Configuration
 
-### [Option 1] Exporting Proxmox Metrics via OpenTelemetry
-
-The OpenTelemetry metric server is available in Proxmox VE 9.0 and later. Add the HTTP Ingester listener first (see "Gravwell Ingester Configuration: HTTP Ingester" below): Proxmox VE tests the connection when you save the metric server, and the save fails until the listener exists.
-
-In the Proxmox web interface, go to **Datacenter** > **Metric Server** > **Add** > **OpenTelemetry** to send metrics to the HTTP Ingester, and set:
-
-* **Name**: Use an identifiable name.
-* **Server**: Set to the address of your HTTP Ingester.
-* **Port**: Set to the port your HTTP Ingester listens on (its `Bind` setting, see [HTTP Ingester Setup](/integrations/generic/http_ingester)).
-* **Protocol**: Set to the protocol used by your HTTP Ingester. Proxmox VE defaults to `https`; choose `http` if your HTTP Ingester does not use TLS.
-* **Path**: Set to the `URL` value in your HTTP Ingester listener (`/proxmox/v1/metrics` in the sample below).
-
-![image](images/proxmox_opentelemetry.png)
-
-Proxmox VE sends every metric every 10 seconds, and Gravwell stores each data point as one entry, so the volume grows with the number of virtual machines, containers and storages. For example, a node with 45 VMs, 22 containers and 4 storages sends about 3,300 data points every 10 seconds. That is about 29 million entries and about 1.3 GB on disk per day. Set the well's retention with this in mind.
-
-### [Option 2] Forwarding Proxmox System Logs to Simple Relay
+### System Logs
 
 Proxmox VE writes its logs to the systemd journal. `rsyslog` forwards them to Gravwell Simple Relay, one entry per log message. Fresh installs of Proxmox VE 8.0 and later do not include `rsyslog`; nodes upgraded from earlier releases usually still have it. Run the following as `root` on each Proxmox VE node; every node sends its own logs.
 
@@ -123,6 +107,22 @@ systemctl restart rsyslog
 
 If you removed a forward in step 2, restore it from your backup before the restart.
 
+### Metrics
+
+The OpenTelemetry metric server is available in Proxmox VE 9.0 and later. Add the HTTP Ingester listener first (see "Gravwell Ingester Configuration: HTTP Ingester" below): Proxmox VE tests the connection when you save the metric server, and the save fails until the listener exists.
+
+In the Proxmox web interface, go to **Datacenter** > **Metric Server** > **Add** > **OpenTelemetry** to send metrics to the HTTP Ingester, and set:
+
+* **Name**: Use an identifiable name.
+* **Server**: Set to the address of your HTTP Ingester.
+* **Port**: Set to the port your HTTP Ingester listens on (its `Bind` setting, see [HTTP Ingester Setup](/integrations/generic/http_ingester)).
+* **Protocol**: Set to the protocol used by your HTTP Ingester. Proxmox VE defaults to `https`; choose `http` if your HTTP Ingester does not use TLS.
+* **Path**: Set to the `URL` value in your HTTP Ingester listener (`/proxmox/v1/metrics` in the sample below).
+
+![image](images/proxmox_opentelemetry.png)
+
+Proxmox VE sends every metric every 10 seconds, and Gravwell stores each data point as one entry, so the volume grows with the number of virtual machines, containers and storages. For example, a node with 45 VMs, 22 containers and 4 storages sends about 3,300 data points every 10 seconds. That is about 29 million entries and about 1.3 GB on disk per day. Set the well's retention with this in mind.
+
 ## Gravwell Configuration
 
 ### Gravwell Storage Well Configuration
@@ -140,29 +140,9 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/proxmox-well.conf`
 
 If either tag already has data in another well, leave that tag in its current well and remove its line from this sample. Gravwell does not move stored entries when a tag is assigned to a different well, and entries already stored under the tag stop being searchable. See "Tag Restrictions and Gotchas" in [Advanced Gravwell Configuration](/configuration/configuration). To check before adding the sample, run `tag=proxmox-syslog count` and `tag=proxmox-metrics count` over a timeframe that covers all your stored data (for example a custom duration of several years). A non-zero count means the tag already has data; an error that the tag does not match any known tags means it has none.
 
-### Gravwell Ingester Configuration: HTTP Ingester
-
-Used by Option 1. This guide assumes the HTTP Ingester is already installed and configured as described in [HTTP Ingester Setup](/integrations/generic/http_ingester). Add the following to a new overlay file; you do not need a separate HTTP Ingester for this integration.
-
-**Sample Proxmox HTTP config:**  
-Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/proxmox.conf`
-```ini
-[OpenTelemetry-Metrics-Listener "proxmox"]
-    URL="/proxmox/v1/metrics"        # OTLP metrics endpoint with a Proxmox-specific prefix
-    Tag-Name="proxmox-metrics"       # Tag for ingested metrics
-    Ignore-Timestamps=false          # Use timestamps from OTLP data
-    Encode-As-JSON=true              # Encode metrics as JSON and include in the entry DATA, (doubles storage requirements)
-#    Preprocessor="otel-processor"   # Optional preprocessor
-```
-
-```{note}
-Remember to restart the service to apply the new config:
-`sudo systemctl restart gravwell_http_ingester.service`
-```
-
 ### Gravwell Ingester Configuration: Simple Relay
 
-Used by Option 2. This guide assumes Simple Relay is already installed and configured as described in [Simple Relay](/ingesters/simple_relay). Add the following to a new overlay file.
+Used for system logs. This guide assumes Simple Relay is already installed and configured as described in [Simple Relay](/ingesters/simple_relay). Add the following to a new overlay file.
 
 **Sample Proxmox Simple Relay config:**  
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/proxmox.conf`
@@ -180,10 +160,30 @@ Remember to restart the service to apply the new config:
 `sudo systemctl restart gravwell_simple_relay.service`
 ```
 
-To confirm data is arriving, run `tag=proxmox-syslog count` (Option 2) or `tag=proxmox-metrics count` (Option 1). Gravwell reports an unknown tag until the first entry arrives.
+### Gravwell Ingester Configuration: HTTP Ingester
+
+Used for metrics. This guide assumes the HTTP Ingester is already installed and configured as described in [HTTP Ingester Setup](/integrations/generic/http_ingester). Add the following to a new overlay file; you do not need a separate HTTP Ingester for this integration.
+
+**Sample Proxmox HTTP config:**  
+Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/proxmox.conf`
+```ini
+[OpenTelemetry-Metrics-Listener "proxmox"]
+    URL="/proxmox/v1/metrics"        # OTLP metrics endpoint with a Proxmox-specific prefix
+    Tag-Name="proxmox-metrics"       # Tag for ingested metrics
+    Ignore-Timestamps=false          # Use timestamps from OTLP data
+    Encode-As-JSON=true              # Encode metrics as JSON and include in the entry DATA, (doubles storage requirements)
+#    Preprocessor="otel-processor"   # Optional preprocessor
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_http_ingester.service`
+```
+
+To confirm data is arriving, run `tag=proxmox-syslog count` for system logs or `tag=proxmox-metrics count` for metrics. Gravwell reports an unknown tag until the first entry arrives.
 
 ## Additional Resources
-* [Proxmox VE: External Metric Server](https://pve.proxmox.com/pve-docs/pve-admin-guide.html#external_metric_server)
 * [rsyslog: omfwd (Forwarding Output Module)](https://www.rsyslog.com/doc/configuration/modules/omfwd.html)
-* [HTTP Ingester](/ingesters/http)
+* [Proxmox VE: External Metric Server](https://pve.proxmox.com/pve-docs/pve-admin-guide.html#external_metric_server)
 * [Simple Relay](/ingesters/simple_relay)
+* [HTTP Ingester](/ingesters/http)
