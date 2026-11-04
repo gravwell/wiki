@@ -62,7 +62,7 @@ Proxmox VE writes its logs to the systemd journal. `rsyslog` forwards them to Gr
     )
     ```
 
-    `RSYSLOG_SyslogProtocol23Format` sends an RFC 5424 timestamp that includes the node's UTC offset, so the listener needs no timezone setting, whatever timezone the node or Simple Relay host uses. Keep this template: rsyslog's default forwarding format has no offset, and Simple Relay would read it in its own host's timezone.
+    Keep the `RSYSLOG_SyslogProtocol23Format` template: it sends timestamps with the node's UTC offset, so no timezone setting is needed.
 
     Keep the `40-` prefix. `rsyslog` reads the files in `/etc/rsyslog.d` in name order, and some packages add files that stop their messages after writing them locally. For example, the `frr` package (the routing suite used by Proxmox VE SDN) adds `45-frr.conf`. A file read after it would not forward FRR messages.
 
@@ -86,11 +86,7 @@ Proxmox VE writes its logs to the systemd journal. `rsyslog` forwards them to Gr
 
     Search for it in Gravwell with `tag=proxmox-syslog grep gravwell-test | table TIMESTAMP DATA`. TIMESTAMP is shown in UTC (or your Gravwell display timezone) and must match the time in the message header, which carries the node's offset.
 
-`rsyslog` forwards new messages only; it does not send the journal history from before it started. While Simple Relay is unreachable, messages queue on disk under `/var/spool/rsyslog` and are sent when it is back, including across an `rsyslog` restart. `rsyslog` also writes the usual local log files, such as `/var/log/syslog`, on the node.
-
-```{note}
-A message being sent at the moment Simple Relay stops can be lost. This is a limit of syslog over TCP.
-```
+`rsyslog` forwards new messages only; it does not send the journal history from before it started. While Simple Relay is unreachable, messages queue on disk under `/var/spool/rsyslog` and are sent when it is back, including across an `rsyslog` restart.
 
 If you previously followed an earlier version of this guide that used `systemd-journal-upload`, stop it so the node does not send its logs twice:
 
@@ -138,7 +134,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/proxmox-well.conf`
     Tags=proxmox-metrics
 ```
 
-If either tag already has data in another well, leave that tag in its current well and remove its line from this sample. Gravwell does not move stored entries when a tag is assigned to a different well, and entries already stored under the tag stop being searchable. See "Tag Restrictions and Gotchas" in [Advanced Gravwell Configuration](/configuration/configuration). To check before adding the sample, run `tag=proxmox-syslog count` and `tag=proxmox-metrics count` over a timeframe that covers all your stored data (for example a custom duration of several years). A non-zero count means the tag already has data; an error that the tag does not match any known tags means it has none.
+If either tag already has data in another well, see "Tag Restrictions and Gotchas" in [Advanced Gravwell Configuration](/configuration/configuration) before adding it here.
 
 ### Gravwell Ingester Configuration: Simple Relay
 
@@ -171,8 +167,7 @@ Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/proxmox.conf`
     URL="/proxmox/v1/metrics"        # OTLP metrics endpoint with a Proxmox-specific prefix
     Tag-Name="proxmox-metrics"       # Tag for ingested metrics
     Ignore-Timestamps=false          # Use timestamps from OTLP data
-    Encode-As-JSON=true              # Encode metrics as JSON and include in the entry DATA, (doubles storage requirements)
-#    Preprocessor="otel-processor"   # Optional preprocessor
+    Encode-As-JSON=true              # Encode metrics as JSON and include in the entry DATA
 ```
 
 ```{note}
