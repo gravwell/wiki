@@ -28,6 +28,7 @@ Cisco FTD <network/ciscoftd>
 CoreDNS <network/coredns>
 Corelight <network/corelight>
 Duo <application/duo>
+Fail2ban <host/fail2ban>
 Fluentd <host/fluentd>
 Fortinet <network/fortinet>
 GitHub <application/github>
@@ -218,19 +219,25 @@ Zeek <network/zeek>
 :::
 
 :::{grid-item-card}
+:link: host/fail2ban
+:link-type: doc
+**Fail2ban**
+:::
+
+:::{grid-item-card}
 :link: host/fluentd
 :link-type: doc
 **Fluentd**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: host/iis
 :link-type: doc
 **IIS**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: host/jamf
 :link-type: doc
@@ -248,15 +255,15 @@ Zeek <network/zeek>
 :link-type: doc
 **Sysmon**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: host/truenas
 :link-type: doc
 **TrueNAS**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: host/windowsevent
 :link-type: doc
