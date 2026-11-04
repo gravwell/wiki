@@ -10,7 +10,7 @@
 
 This guide collects system logs and metrics from Proxmox Virtual Environment (Proxmox VE) nodes. They record different things, and each can be set up on its own:
 
-* **System logs**: what happened on each node and who did it. They record who logged in to the web interface, API or SSH, including failed attempts. They record tasks such as starting, stopping or backing up a guest, opening a console and changing a guest's configuration, with the user who ran each one. They also record commands run with `sudo` and node health events such as disk (SMART) and ZFS warnings. `rsyslog`, installed on each node, forwards them to Simple Relay. Gravwell stores them under the `proxmox-syslog` tag.
+* **System logs**: what happened on each node and who did it. They record who logged in to the web interface, API or SSH, including failed attempts. They record tasks such as starting, stopping or backing up a guest, opening a console and changing a guest's configuration, with the user who ran each one. They also record commands run with `sudo` and node health events such as disk (SMART) and ZFS warnings. `rsyslog`, installed on each node, forwards them to Simple Relay. Gravwell stores them under the `proxmox-system` tag.
 * **Metrics** (Proxmox VE 9.0 and later): how each node, virtual machine, container and storage is performing, such as CPU, memory, disk, network and storage use. They add performance and capacity data alongside the system logs. Proxmox VE sends them to the HTTP Ingester over OpenTelemetry, with no additional installation. Gravwell stores them under the `proxmox-metrics` tag.
 
 The steps in this guide were tested on Proxmox VE 9.2.24. The system log steps were also tested on Proxmox VE 8.4.
@@ -84,7 +84,7 @@ Proxmox VE writes its logs to the systemd journal. `rsyslog` forwards them to Gr
     logger -t gravwell-test "Gravwell forwarding test"
     ```
 
-    Search for it in Gravwell with `tag=proxmox-syslog grep gravwell-test | table TIMESTAMP DATA`. TIMESTAMP is shown in UTC (or your Gravwell display timezone) and must match the time in the message header, which carries the node's offset.
+    Search for it in Gravwell with `tag=proxmox-system grep gravwell-test | table TIMESTAMP DATA`. TIMESTAMP is shown in UTC (or your Gravwell display timezone) and must match the time in the message header, which carries the node's offset.
 
 `rsyslog` forwards new messages only; it does not send the journal history from before it started. While Simple Relay is unreachable, messages queue on disk under `/var/spool/rsyslog` and are sent when it is back, including across an `rsyslog` restart.
 
@@ -130,7 +130,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/proxmox-well.conf`
 ```ini
 [Storage-Well "proxmox"]
     Location=/opt/gravwell/storage/proxmox
-    Tags=proxmox-syslog
+    Tags=proxmox-system
     Tags=proxmox-metrics
 ```
 
@@ -146,7 +146,7 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/proxmox.conf`
 [Listener "proxmox"]
     Bind-String="tcp://0.0.0.0:15160"
     Reader-Type=rfc5424
-    Tag-Name=proxmox-syslog
+    Tag-Name=proxmox-system
 ```
 
 This listener accepts unencrypted TCP. Simple Relay also supports TLS listeners (see "Bind-String" in [Simple Relay](/ingesters/simple_relay)), and `rsyslog` can forward over TLS, but this guide does not cover that setup.
@@ -175,7 +175,7 @@ Remember to restart the service to apply the new config:
 `sudo systemctl restart gravwell_http_ingester.service`
 ```
 
-To confirm data is arriving, run `tag=proxmox-syslog count` for system logs or `tag=proxmox-metrics count` for metrics. Gravwell reports an unknown tag until the first entry arrives.
+To confirm data is arriving, run `tag=proxmox-system count` for system logs or `tag=proxmox-metrics count` for metrics. Gravwell reports an unknown tag until the first entry arrives.
 
 ## Additional Resources
 * [rsyslog: omfwd (Forwarding Output Module)](https://www.rsyslog.com/doc/configuration/modules/omfwd.html)
