@@ -17,7 +17,7 @@ The steps in this guide were tested on Ubuntu 24.04 LTS with Fail2ban 1.0.2 and 
 Fail2ban needs these two settings, which are the defaults in the `fail2ban.conf` it ships:
 
 * `logtarget = /var/log/fail2ban.log`. Fail2ban can log to `SYSLOG`, `STDOUT` or `STDERR` instead, and from version 1.0.1 to `SYSTEMD-JOURNAL`. With any of these, the file this guide reads doesn't exist. If Fail2ban runs in a container, set its log target to a file on a mounted volume and point File Follower at that file instead of `/var/log`.
-* `loglevel = INFO`. This is required. Bans and unbans are logged at `NOTICE`, but each failure a jail counts towards a ban, and each address a jail ignores, is logged at `INFO`. At `NOTICE` or above, Gravwell sees bans but not the activity that led to them, sources that stayed under the ban threshold, or ignored addresses.
+* `loglevel = INFO`. This is required. Bans and unbans are logged at `NOTICE`, but each failure a jail counts towards a ban, and each address a jail ignores, is logged at `INFO`. At `NOTICE` or above, Gravwell sees bans but not the activity that led to them, sources that stayed under the ban threshold, ignored addresses, or when jails start, stop or change settings.
 
 To check and set them:
 
