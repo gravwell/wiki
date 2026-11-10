@@ -316,23 +316,21 @@ Zeek <network/zeek>
 :link-type: doc
 **Mimecast**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/mongodb
 :link-type: doc
 **MongoDB**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: application/nginx
 :link-type: doc
 **Nginx**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: application/okta
 :link-type: doc
@@ -344,15 +342,15 @@ Zeek <network/zeek>
 :link-type: doc
 **Open Weather Map**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/sentinelone
 :link-type: doc
 **SentinelOne**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: application/teleport
 :link-type: doc
