@@ -6,11 +6,11 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [IPMI Ingester](/ingesters/ipmi)
-         Kit, [IPMI Kit](https://github.com/gravwell/kits/tree/main/)
+    Kit, [IPMI Kit](https://github.com/gravwell/kits/tree/main/ipmi)
 :::
 
 ## IPMI Configuration
-No setup required. The IPMI ingester requires username and password.
+No IPMI-side setup is required beyond a user account for the ingester to authenticate with.
 
 ```{note} 
 We recommend referring to your device's configuration for best practices on setting up a read-only or restricted user account.
@@ -18,7 +18,7 @@ We recommend referring to your device's configuration for best practices on sett
 
 ## Gravwell Configuration
 
-Install the gravwell IPMI Ingester which collects Sensor Data Record (SDR) and System Event Log (SEL) records from any number of IPMI devices. The configuration file provides a simple host/port, username, and password field for connecting to each IPMI device. 
+Install the Gravwell [IPMI Ingester](/ingesters/ipmi), which collects Sensor Data Record (SDR) and System Event Log (SEL) records from any number of IPMI devices. The configuration file provides simple host/port, username, and password fields for connecting to each IPMI device. 
 
 SEL and SDR records are ingested in a JSON-encoded schema. For example:
 ```json
@@ -67,7 +67,7 @@ Setup the well configuration in your Gravwell indexers.
 **Sample well config:**  
 Create or edit: `/opt/gravwell/etc/gravwell.conf.d/ipmi-well.conf`
 ```ini
-[Storage-Well "IPMI"]
+[Storage-Well "ipmi"]
     Location=/opt/gravwell/storage/ipmi
     Tags=ipmi*
 ```

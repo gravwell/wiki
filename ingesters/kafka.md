@@ -5,7 +5,7 @@ myst:
     standalone: "gravwell_kafka"
     dockername: "kafka_consumer"
 ---
-# Kafka
+# Kafka Ingester
 
 The Kafka ingester is designed to act as a consumer for [Apache Kafka](https://kafka.apache.org/) so that Gravwell can attach to a Kafka cluster and consume data.  Kafka can act as a high-availability [data broker](https://kafka.apache.org/uses#uses_logs) to Gravwell.  Kafka can take on some of the roles provided by the Gravwell Federator, or ease the burden of integrating Gravwell into an existing data flow.  If your data is already flowing to Kafka, integrating Gravwell is just an `apt-get` away.
 

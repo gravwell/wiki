@@ -17,7 +17,18 @@ The Cisco ISE logging system is designed to split a single message across multip
 * `Output-Format` (string, optional): Specifies the output format for sending ISE messages. The default format is `raw`, other options are `json` and `cef`.
 * `Attribute-Drop-Filter` (string array, optional): Specifies globbing patterns that can be used to match against attributes within a message which will be removed from the output.  The arguments must be [Unix Glob patterns](https://en.wikipedia.org/wiki/Glob_(programming)); many patterns can be specified.  Attribute drop filters are not compatible with the `raw` output format.
 * `Attribute-Strip-Header` (boolean, optional): Specifies that attributes with nested names and/or type information should have the header values stripped.  This is extremely useful for cleaning up poorly-formed attribute values.
+* `Timestamp-Max-Past-Delta` (string, optional): The maximum age of a message header timestamp, as a duration such as `720h`. Timestamps older than this are ignored. Defaults to `8760h` (one year).
+* `Timestamp-Max-Future-Delta` (string, optional): How far into the future a message header timestamp may be, as a duration such as `1h`. Timestamps further ahead than this are ignored. Defaults to `24h`.
 
+## Timestamp Bounds
+
+When the output format is `json` or `cef`, the preprocessor sets the entry timestamp from the ISE message header. It only applies that timestamp if it falls within a window around the current time, set by `Timestamp-Max-Past-Delta` and `Timestamp-Max-Future-Delta`. If the header timestamp falls outside the window, the message is still reformatted but the entry timestamp is left unchanged. Timestamps before 1970-01-01 are always ignored, whatever the window. Both durations must be non-zero; negative values are treated as positive.
+
+The `raw` output format does not change the entry timestamp, so these options have no effect with it.
+
+```{warning}
+The default window rejects timestamps more than a year old. If you replay archives or backfill older ISE logs through this preprocessor, set `Timestamp-Max-Past-Delta` large enough to cover them, or those entries will keep their original timestamp.
+```
 
 ## Example Configuration
 

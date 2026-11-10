@@ -5,19 +5,19 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Office 365](/ingesters/o365)
-         Kit, [Office 365](https://github.com/gravwell/kits/tree/main/o365)
+    Ingester, [Office 365 Ingester](/ingesters/o365)
+    Kit, [Office 365 Kit](https://github.com/gravwell/kits/tree/main/o365)
 :::
 
 ## Office 365 Configuration
 
 Gravwell provides an ingester for Microsoft Office 365 logs. The ingester can process all supported log types. In order to configure the ingester, you will need to register a new **application** within the Azure Active Directory management portal; this will generate a set of keys which can be used to access the logs. You will need the following information:
 
-* Client ID: A UUID generated for your application via the Azure management console
-* Client secret: A secret token generated for your application via the Azure console
-* Azure Directory ID: A UUID representing your Active Directory instance, found in the Azure Active Directory dashboard.  This is sometimes called a Tenant ID.
-* Tenant Domain: The domain of your Office 365 domain, e.g. "mycorp.onmicrosoft.com"
-* Plan: The type of Office 365 subscription
+* **Client ID:** A UUID generated for your application via the Azure management console
+* **Client Secret:** A secret token generated for your application via the Azure console
+* **Azure Directory ID:** A UUID representing your Active Directory instance, found in the Azure Active Directory dashboard.  This is sometimes called a Tenant ID.
+* **Tenant Domain:** The domain of your Office 365 tenant, e.g. "mycorp.onmicrosoft.com"
+* **Plan:** The type of Office 365 subscription
   * Options are `Enterprise`, `GCC Government`, `GCC High Government`, `DOD Government`
 
 ### Office 365 API
@@ -32,7 +32,7 @@ Your subscription tier heavily influences the depth and quantity of data availab
 
 ### Creating an Azure Application
 
-To create a new Azure Application for our ingester you will need to visit the [Azure Portal](https://portal.azure.com) and log in with administrative O365 credentials.  Then you will need to go to the **App registrations** section.
+To create a new Azure Application for the Gravwell ingester you will need to visit the [Azure Portal](https://portal.azure.com) and log in with administrative O365 credentials.  Then you will need to go to the **App registrations** section.
 
 ![](images/azure_portal.png)
 
@@ -40,7 +40,7 @@ Within the App registrations portal create a "New registration".
 
 ![](images/register.png)
 
-Provide a human friendly name so that you remember why you created this application.  Select an appropriate account type and specify a valid Redirect URI (the ingester will not use this redirect URI but it should be valid and owned by your organization).
+Provide a human-friendly name so that you remember why you created this application.  Select an appropriate account type and specify a valid Redirect URI (the ingester will not use this redirect URI but it should be valid and owned by your organization).
 
 ![](images/application.png)
 
@@ -65,18 +65,18 @@ Finally you will need to go to "Certificates & secrets" and request a new applic
 
 ## Gravwell Configuration
 
-For instructions on installing the Office 365 Ingester see: [Office 365 Log Ingester](https://docs.gravwell.io/ingesters/o365.html)
+For instructions on installing the Office 365 Ingester see: [Office 365 Log Ingester](/ingesters/o365)
 
 ### Gravwell Storage Well Configuration
 
 **Sample well config:**  
-Create or edit: `/opt/gravwell/etc/gravwell.conf.d/o365.well`
+Create or edit: `/opt/gravwell/etc/gravwell.conf.d/o365-well.conf`
 ```ini
 [Storage-Well "o365"]
     Location=/opt/gravwell/storage/o365
     Tags=365*
     Accelerator-Name=fulltext
-	Accelerator-Args="-ignoreFloat -ignoreUUID"
+    Accelerator-Args="-ignoreFloat -ignoreUUID"
 ```
 
 ### Gravwell Ingester Configuration: Office 365
@@ -96,6 +96,7 @@ Client-ID=REPLACEME     # UUID generated for your application via Azure mgmt con
 Client-Secret=REPLACEME # secret generated for your app
 Directory-ID=REPLACEME  # UUID
 Tenant-Domain=REPLACEME # e.g. mycorp.onmicrosoft.com
+Plan-Name=Enterprise    # Options are Enterprise, GCC Government, GCC High Government, DOD Government
 
 [ContentType "azureAD"]
     Content-Type="Audit.AzureActiveDirectory"

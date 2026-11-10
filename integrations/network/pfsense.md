@@ -5,8 +5,8 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Simple Relay](https://docs.gravwell.io/ingesters/simple_relay.html)
-         Kit, [pfSense Kit](https://github.com/gravwell/kits/tree/main/pfSense)
+    Ingester, [Simple Relay](/ingesters/simple_relay)
+    Kit, [pfSense Kit](https://github.com/gravwell/kits/tree/main/pfSense)
 :::
 
 ## pfSense Configuration
@@ -26,7 +26,7 @@
 4. Add the IP address of your Simple Relay ingester in the list of remote logging servers
    * Be sure to match the port chosen for your Simple Relay listener!
 5. Enable the remote syslog contents as you see fit.
-   * If you want to use the firewall components in this kit, be sure to check the box for Firewall Events
+   * If you want to use the firewall components in the pfSense Kit, be sure to check the box for **Firewall Events**
 6. Click Save
 
 You can read more about remote logging in pfSense® [here](https://docs.netgate.com/pfsense/en/latest/monitoring/logs/remote.html).
@@ -53,7 +53,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/pfsense-well.conf`
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/pfsense.conf`
 ```ini
 [Listener "pfsensesyslogudp"]
-    Bind-String="udp://0.0.0.0:515" #standard UDP based RFC5424 syslog
+    Bind-String="udp://0.0.0.0:15092" #standard UDP based RFC5424 syslog
     Reader-Type=rfc5424
     Tag-Name=pfsensesyslog
     Assume-Local-Timezone=true

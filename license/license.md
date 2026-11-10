@@ -1,22 +1,23 @@
 # Gravwell License System
 
-Gravwell provides several license tiers that enable additional features and capabilities.  The most basic license tier is the Community Edition and the most advanced tier is the Unlimited license.  The Community Edition license allows limited ingest on a single indexer; it is the only license tier that does *not* have unlimited ingest.
+Gravwell provides several license tiers that enable additional features and capabilities. The most basic license tier is the Free license and the most advanced tier is the Unlimited license.
 
-Gravwell installations are licensed using a license file that is located at the path /opt/gravwell/etc/license by default.  The license location can be controlled in the gravwell.conf file by setting the License-Location variable in the [Global] configuration block.  Gravwell will validate the license at each startup and periodically check it.
+Gravwell installations are licensed using a license file that is located at the path /opt/gravwell/etc/license by default. The license location can be controlled in the gravwell.conf file by setting the License-Location variable in the [Global] configuration block. Gravwell will validate the license at each startup and periodically check it.
 
 ## Installing a License
 
-A license can be installed via the GUI, the CLI, or by simply copying the license file to the appropriate location.  Only administrative users can update the license via the GUI or CLI.  At startup, if no license is installed or the current license is invalid the system will wait for a valid license to be installed.  The GUI will prompt for a license upload and wait for a valid license before completing startup.  The license installation API validates the provided license and will not allow you to install an invalid license.
+A license can be installed via the GUI, the CLI, or by simply copying the license file to the appropriate location. Only administrative users can update the license via the GUI or CLI. At startup, if no license is installed or the installed license has expired and the system is eligible for the [Free License](#free-license), Gravwell will automatically start using the Free tier.  If the system is not eligible for the Free tier, or the license file is present but invalid (for example, corrupt or empty), it will wait for a valid license to be installed. The GUI will prompt for a license upload and wait for a valid license before completing startup. The license installation API validates the provided license and will not allow you to install an invalid license.
 
 ![Upload a License](upload.png)
 
 ![License Install](install.png)
 
-If you use the CLI or GUI to install a license Gravwell will distribute the license to all connected indexers automatically.  Gravwell will also validate the installed license for each indexer and update if necessary at each connection.  That means that if you bring a new indexer online it will automatically receive the appropriate license when the webserver connects.
+If you use the CLI or GUI to install a license Gravwell will distribute the license to all connected indexers automatically. Gravwell will also validate the installed license for each indexer and update if necessary at each connection. That means that if you bring a new indexer online it will automatically receive the appropriate license when the webserver connects.
 
+(updating-a-license)=
 ## Updating a License
 
-Updating a Gravwell license can be performed using the CLI or GUI without restarting Gravwell, but if you just copy the license file to the appropriate directory you must restart Gravwell in order for the license to be reloaded.  Only administrators can update the license file through the GUI or CLI.  To update the license, log into Gravwell as an administrator and navigate to the license section under the administrator panel.  The License page will provide details about your license and its expiration date, select the new license file and upload it to update the webserver and all connected Gravwell indexers.
+Updating a Gravwell license can be performed using the CLI or GUI without restarting Gravwell, but if you just copy the license file to the appropriate directory you must restart Gravwell in order for the license to be reloaded. Only administrators can update the license file through the GUI or CLI. To update the license, log into Gravwell as an administrator and navigate to the license section under the administrator panel. The License page will provide details about your license and its expiration date, select the new license file and upload it to update the webserver and all connected Gravwell indexers.
 
 ![License Page](navpanel.png)
 
@@ -24,18 +25,50 @@ Updating a Gravwell license can be performed using the CLI or GUI without restar
 
 ![License Upload](licupload.png)
 
-## License Expiration
+(free-license)=
+## Free License
 
-All Gravwell licenses except the Free edition have an expiration date and once a license has expired Gravwell will not start.  A license expires in four discrete steps:
+The Free license tier requires no sign-up and no license file. When Gravwell starts without a license and the deployment is eligible for the Free tier, Gravwell automatically deploys the Free license and continues starting up; there is nothing to download or install. This means a fresh install of Gravwell will "just work" so long as the deployment meets the Free tier criteria.
+
+A deployment must meet all of the following criteria for the Free license to deploy automatically:
+
+| Criteria | Requirement |
+|----------|-------------|
+| License state | No license is installed, or the installed Community Edition or paid license has expired |
+| Indexers | No more than one [remote indexer](remote-indexers-config) is configured in `gravwell.conf` |
+| Overwatch | The webserver is not an [Overwatch webserver](#gravwell-overwatch) |
+| Datastore | No remote `Datastore` is set in `gravwell.conf` ([Datastore Server docs](#datastore_server)) |
+| Replication | No [replication section](#data-replication) is configured in `gravwell.conf` |
+
+If any of these criteria are not met, Gravwell will not deploy the Free license and will wait for a valid license to be installed. See [Free Edition Feature Availability Warnings](#free-edition-feature-availability-warnings) for help resolving each condition.
+
+```{warning}
+[CBAC](#enabling-cbac) is not available on CE or Free tier licenses. If a deployment transitions from a paid license to a CE or Free license, CBAC will be automatically disabled. This includes a paid license expiring and the Free license deploying automatically. After installing a license that supports CBAC, you must restart the Gravwell webserver to re-enable CBAC.
+```
+
+### Automatic Fallback on License Expiration
+
+If a deployment is eligible for the Free tier and its Community Edition or paid license expires, Gravwell will automatically switch to the Free tier when the license expires so that the system can continue operating. Ingest is limited to the Free tier rate and Free tier feature restrictions apply, but the system keeps ingesting and searching data rather than shutting down. No existing data is lost during the transition, but incoming data over the ingest limit will be dropped. Installing a new license at any time restores the capabilities of that license.
+
+```{note}
+The automatic fallback exists only to keep a system from stopping completely when a valid license expires, but the free tier is for non-commercial use only and is not a long term solution.
+```
+
+Deployments that are not eligible for the Free tier follow the [Standard License Expiration](#license-expiration) process described below.
+
+(license-expiration)=
+## Standard License Expiration
+
+If a deployment is **not** eligible for the Free tier and its Community Edition or paid license expires, Gravwell will not restart. The grace periods described below only apply to a system that is already running; if an ineligible system with an expired license is restarted, it will stop and wait for a valid license. A license expires in four discrete steps:
 
 1. Warning about upcoming expiration
 2. Expiration grace period
 3. Ingest is disabled
 4. Search is disabled
 
-Prior to expiring Gravwell will post a notification in the GUI warning that the license is about to expire, once the expiration date is reached there is a 14 day grace period where Gravwell is fully functional.  The grace period allows you to continue using Gravwell, but if you restart the Gravwell indexer or webserver it will stop and wait for a valid license.  Once the Grace period has expired Gravwell will disable ingest, in this state you can still query your data but Gravwell will not ingest any new data.  After the query grace period expires Gravwell will disable search functionality.
+Prior to expiring Gravwell will post a notification in the GUI warning that the license is about to expire, once the expiration date is reached there is a 14 day grace period where Gravwell is fully functional. The grace period allows you to continue using Gravwell, but if you restart the Gravwell indexer or webserver it will stop and wait for a valid license. Once the Grace period has expired Gravwell will disable ingest, in this state you can still query your data but Gravwell will not ingest any new data. After the query grace period expires Gravwell will disable search functionality.
 
-Gravwell will never delete data due to license expiration, all stored data, resources, dashboards, and query history is preserved.  If a new license is installed everything will be right where you left it.
+Gravwell will never delete data due to license expiration, all stored data, resources, dashboards, and query history is preserved. If a new license is installed everything will be right where you left it.
 
 Here is a handy table that explains the events leading up to and after license expiration.
 
@@ -51,9 +84,9 @@ Here is a handy table that explains the events leading up to and after license e
 
 | Type                | Identifier  | Basic Features | Unlimited Ingest | Cluster | Replication | CBAC | HA Webservers | SSO | AI |Notes                                               |
 |---------------------|-------------|:--------------:|:----------------:|:-------:|:-----------:|:----:|:-------------:|:---:|:--:|----------------------------------------------------|
-| Free                | free        | ✅             |                  |         |             |      |               | ✅  | ✅ |Free with 2GB/day ingest, no sign-up required, non-commercial use only, never expires. |
+| Free                | free        | ✅             |                  |         |             |      |               | ✅  | †  |Free with 2GB/day ingest, no sign-up required, non-commercial use only, never expires. |
 | Community Edition   | community   | ✅             |                  |         |             |      |               | ✅  | ✅ |Free signup with 13.9 GB/day ingest, authorized for commercial use, [free licenses with instant delivery](https://www.gravwell.io/community-edition). |
-| CE Advanced         | community   | ✅             |                  |         |             |      |               | ✅  | ✅ |Free signup with 50 GB/day ingest, authorized for commercial use, [free license](https://www.gravwell.io/community-edition-advanced) after validation.  Business email required. |
+| CE Advanced         | community   | ✅             |                  |         |             |      |               | ✅  | ✅ |Free signup with 50 GB/day ingest, authorized for commercial use, [free license](https://www.gravwell.io/community-edition-advanced) after validation. Business email required. |
 | Pro                 | single      | ✅             |   ✅             |         |             |      |               | ✅  | ✅ |Single indexer, unlimited ingest, limited features. |
 | Enterprise          | single      | ✅             |   ✅             |         |  ✅         | ✅   |               | ✅  | ✅ |Single indexer, full feature set, offline replication supported. |
 | Cluster             | cluster     | ✅             |   ✅             |  ✅     |  ✅         | ✅   |    ✅         | ✅  | ✅ |Cluster deployment with online replication, distributed webservers, and full feature set. | 
@@ -67,11 +100,12 @@ Here is a handy table that explains the events leading up to and after license e
 
 <img src="/_static/favicon.ico" alt="gravwell managed" width="20"/> - Gravwell managed
 
+† - third-party AI providers only (`Third-Party-Provider=true`); Gravwell hosted AI services are not available
+
+(free-edition-feature-availability-warnings)=
 ## Free Edition Feature Availability Warnings
 
 As illustrated above, not all features are available when using the Free edition. Gravwell will display warning messages if it detects state that is incompatible with the Free version.
-
-![CBAC is not compatible with Free Tier](free-tier-error.png)
 
 Please consult the following table for advice on resolving Free edition availability warnings, should you encounter them.
 
@@ -79,6 +113,5 @@ Please consult the following table for advice on resolving Free edition availabi
 | -------------------------------- | --------------------------------------------------------------------------------------------------- |
 | `Overwatch enabled`              | Ensure you're not running an [Overwatch webserver](#gravwell-overwatch)                             |
 | `<N> Remote-Indexers configured` | Ensure your `gravwell.conf` has no more than one [remote indexer configured](remote-indexers-config) |
-| `CBAC enabled`                   | Ensure `Enable-CBAC` is not set in your `gravwell.conf` ([CBAC docs](#enabling-cbac))               |
 | `Remote Datastore enabled`       | Ensure `Datastore` is not set in your `gravwell.conf` ([Datastore Server docs](#datastore_server))  |
 | `Replication configured`         | Ensure your `gravwell.conf` does not have a [replication section](#data-replication)                |

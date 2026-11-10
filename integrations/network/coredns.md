@@ -39,7 +39,7 @@ CoreDNS can then be started by providing a valid Corefile.
 Configuration is performed via the CoreDNS Corefile, which has the basic syntax of directive value. Comments are preceded by the "#" character. A basic Gravwell definition looks like so:
 
 
-**Sample Configuration file**
+**Sample CoreDNS config:**  
 ```
 gravwell {
     Ingest-Secret IngestSecretToken

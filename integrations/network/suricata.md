@@ -6,6 +6,7 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [File Follower](/ingesters/file_follow)
+    Kit, [Suricata Kit](https://github.com/gravwell/kits/tree/main/suricata)
 :::
 
 ## Suricata Configuration

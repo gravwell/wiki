@@ -5,8 +5,8 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [File Follower ingester](/ingesters/file_follow)
-         Kit, [Zeek Kit](https://github.com/gravwell/kits/tree/main/zeek)
+    Ingester, [File Follower Ingester](/ingesters/file_follow)
+    Kit, [Zeek Kit](https://github.com/gravwell/kits/tree/main/zeek)
 :::
 
 
@@ -19,14 +19,13 @@ Zeek defines its log location in `zeekctl.cfg` via the `LogDir` parameter (for e
 
 ### Gravwell Storage Well Configuration
 
-The Zeek data set contains many highly orthogonal data sources, including unique identifiers, GUIDs, floating point timestamps, and IPv6 addresses. To ensure that Gravwell performs well and minimizes memory usage when indexing Zeek data we highly recommend a separate well for the Zeek data with specific indexing options.
+The Zeek data set contains many highly orthogonal data sources, including unique identifiers, GUIDs, floating point timestamps, and IPv6 addresses. To ensure that Gravwell performs well and minimizes memory usage when indexing Zeek data, Gravwell recommends a separate well for the Zeek data with specific indexing options.
 
-Gravwell supports two indexing engines designed to provide different capabilities and tradeoffs. Both engines can perform very well with the Zeek datasets. The bloom engine can provide a balance of good performance and minimal disk usage while the index engine provides precise indexing performance in exchange for greater disk and memory usage. Regardless of the chosen engine, Gravwell recommends that Zeek data be fulltext indexed with the "ignoreFloat" and "ignoreUUID" options. The following well configurations work well with Zeek data:
+Gravwell supports two indexing engines designed to provide different capabilities and tradeoffs. Both engines can perform very well with the Zeek datasets. The bloom engine provides a balance of good performance and minimal disk usage. The index engine provides precise indexing performance in exchange for greater disk and memory usage. Regardless of the chosen engine, Gravwell recommends that Zeek data be fulltext indexed with the "ignoreFloat" and "ignoreUUID" options. The following well configurations work well with Zeek data. Use one of them:
 
-Create or edit: `/opt/gravwell/etc/gravwell.conf.d/zeek.conf`
-
-**Sample Bloom Engine well config:**
-```
+**Sample Bloom Engine well config:**  
+Create or edit: `/opt/gravwell/etc/gravwell.conf.d/zeek-well.conf`
+```ini
 [Storage-Well "zeek"]
     Location=/opt/gravwell/storage/zeek
     Tags=zeek*
@@ -34,8 +33,10 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/zeek.conf`
     Accelerator-Args="-ignoreFloat -ignoreUUID"
     Accelerator-Engine-Override=bloom
 ```
-**Sample Index Engine well config:**
-```
+
+**Sample Index Engine well config:**  
+Create or edit: `/opt/gravwell/etc/gravwell.conf.d/zeek-well.conf`
+```ini
 [Storage-Well "zeek"]
     Location=/opt/gravwell/storage/zeek
     Tags=zeek*
@@ -331,7 +332,7 @@ Create or edit: `/opt/gravwell/etc/file_follow.conf.d/zeek.conf`
     File-Filter="ssl.log"
     Tag-Name="zeekssl"
 
-[Follower "sy"]
+[Follower "syslog"]
     Ignore-Line-Prefix="#"
     Timestamp-Format-Override="UnixMilli"
     Base-Directory="/logs/"

@@ -5,12 +5,12 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, [Kinesis Ingester](https://docs.gravwell.io/ingesters/kinesis.html)
+    Ingester, [Kinesis Ingester](/ingesters/kinesis)
 :::
 
 ## Kinesis Configuration
 
-In order to configure the Kinesis ingester for an existing stream you will need:
+To configure the Kinesis ingester for an existing stream, you need:
 * An AWS access key (ID number & secret key)
 * The region in which your stream resides
 * The name of the stream itself
@@ -21,7 +21,7 @@ Once the stream is configured, each record in the Kinesis stream will be stored 
 
 ### Gravwell Storage Well Configuration
 **Sample well config:**  
-Create or edit: `/opt/gravwell/etc/gravwell.conf.d/kinesis.well`
+Create or edit: `/opt/gravwell/etc/gravwell.conf.d/kinesis-well.conf`
 ```ini
 [Storage-Well "kinesis"]
     Location=/opt/gravwell/storage/kinesis
@@ -43,8 +43,7 @@ State-Store-Location=/opt/gravwell/etc/kinesis_ingest.state
 # This is the access key *ID* to access the AWS account
 AWS-Access-Key-ID=REPLACEMEWITHYOURKEYID
 # This is the secret key which is only displayed once, when the key is created
-#   Note: This option is not required if running in an AWS instance (the AWS
-#         the AWS SDK handles that)
+#   Note: This option is not required if running in an AWS instance (the AWS SDK handles that)
 AWS-Secret-Access-Key=REPLACEMEWITHYOURKEY
 
 [KinesisStream "stream1"]
@@ -62,3 +61,9 @@ AWS-Secret-Access-Key=REPLACEMEWITHYOURKEY
     Iterator-Type=TRIM_HORIZON
     Metrics-Interval=60
     JSON-Metrics=true
+```
+
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_kinesis_ingest.service`
+```
