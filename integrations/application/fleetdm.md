@@ -26,6 +26,8 @@ Fleet can deliver activities in two ways. Use **one** of them per tag:
 
 Use Option 1 if your Fleet qualifies, because it does not lose activities. Use Option 2 otherwise.
 
+The steps in this guide were tested with self-hosted Fleet 4.93.2 (both options) and 4.94.1 (Option 2).
+
 ## FleetDM Configuration
 
 ```{important}
