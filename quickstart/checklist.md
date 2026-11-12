@@ -8,7 +8,7 @@ This checklist gives a general order of operation for configuring a single-node,
 
 □ Verify firewall rules allow incoming traffic on [ports used by Gravwell](/configuration/networking).
 
-□ Use a web browser to access the new Gravwell instance, e.g. `http://gravwell.example.org/`, and upload your license file when prompted.
+□ Use a web browser to access the new Gravwell instance, e.g. `http://gravwell.example.org/`. Eligible single-node systems start on the [Free License](#free-license) automatically; otherwise, upload your license file when prompted.
 
 □ Login as "admin", password "changeme". Change the default admin password by clicking user icon in upper right.
 
