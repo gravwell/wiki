@@ -57,7 +57,7 @@ The `splunk` settings are shared with Fleet's osquery log plugins. If you also s
 
 ### [Option 2] Activities Webhook (Fleet Free and Premium)
 
-Fleet's activities webhook posts each activity to a URL as it happens. It cannot send a header, so the Gravwell listener takes its token from the URL. Set it as a global admin, with **All fleets** selected:
+Fleet's activities webhook posts each activity to a URL as it happens. It cannot send a header, so the Gravwell listener takes its token from the URL. Set it as a global admin. On Fleet Premium, select **All fleets** in the fleet selector first; Fleet Free has no selector.
 
 1. Open the **Dashboard**.
 2. On the **Activity** card, select **Manage automations**.
