@@ -134,6 +134,12 @@ Remote-Indexers=net:10.0.1.5:9404
 You can use hostnames instead of IP addresses if you wish.
 ```
 
+If users reach the webserver through a reverse proxy or load balancer, also add the proxy address with the [Trusted-Proxies](trusted-proxies-config) parameter. For example, with a proxy at 10.0.0.5:
+
+```
+Trusted-Proxies=10.0.0.5
+```
+
 Once the webserver's gravwell.conf is updated, restart the webserver process:
 
 ```console

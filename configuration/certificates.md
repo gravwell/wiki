@@ -6,7 +6,7 @@ We strongly recommend that you acquire fully validated certificates from a trust
 
 The Gravwell administrator has three options for certificates:
 
-* Continue to use unencrypted HTTP only. This is suitable for installations that will only be accessed on a trusted private network, or where Gravwell will be fronted by an HTTP proxy such as nginx.
+* Continue to use unencrypted HTTP only. This is suitable for installations that will only be accessed on a trusted private network, or where Gravwell will be fronted by an HTTP proxy such as nginx. If you use a proxy, list its address in [Trusted-Proxies](trusted-proxies-config).
 * Install a properly-signed TLS certificate. This is the ideal configuration, but typically requires the Gravwell instance to have a publicly-accessible hostname.
 * Install a self-signed certificate. This makes sense when you want to encrypt traffic to Gravwell but for one reason or another cannot get a properly signed certificate.
 
@@ -46,6 +46,10 @@ A number of TLS ciphers are considered cryptographically insecure, so Gravwell o
 ## Using HTTP only
 
 This is the default configuration for Gravwell, and no changes are needed to use it. It is suitable for someone experimenting with Gravwell on a home network, or evaluating it on an experimental network for work. It is also an acceptable configuration when the Gravwell webserver will be accessed through a load balancer/reverse proxy such as nginx; this allows the proxy to perform HTTPS encryption/decryption, taking load off the Gravwell system.
+
+```{note}
+When a reverse proxy sits in front of the webserver, set [Trusted-Proxies](trusted-proxies-config) in `gravwell.conf` to the proxy address. Then the webserver logs and throttles each user by the client address and not by the proxy address. See [Reverse Proxies and Client Addresses](hardening_reverse_proxies).
+```
 
 Please note that without a certificate, ingesters will be unable to encrypt their traffic to the indexer. If you wish to encrypt ingester traffic but leave the webserver in HTTP-only mode, you may install a certificate as described in either of the other sections, but only uncomment the `Certificate-File`, `Key-File`, and `TLS-Ingest-Port` options in gravwell.conf. This will enable TLS for the indexer but not the webserver.
 

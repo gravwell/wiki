@@ -21,6 +21,7 @@ If you are in a hurry and just want to hit the high points, do this:
 5. Enable [password complexity controls](password_complexity) or [Single Sign On](/configuration/sso)
 6. Enable HTTPS communication in the Search Agent [More Info](certificates)
 7. Ensure communications between webservers and indexers are over a trusted network.
+8. If Gravwell sits behind a reverse proxy or load balancer, list the proxy addresses in [Trusted-Proxies](trusted-proxies-config) [More Info](hardening_reverse_proxies)
 
 Installing a valid TLS certificate and enabling HTTPS is only slightly less important than changing the default password for the admin user.  When logging in, if Gravwell detects that you are not using HTTPS the login prompt will show a warning:
 
@@ -46,7 +47,7 @@ User and group management is the sole responsibility of admin users. Non-admins 
 
 Default Gravwell installations have a single user named `admin` with the password `changeme`.  This default account uses the coveted UID of 1.  Gravwell treats UID 1 in the same way that Unix treats UID 0.  It is special and cannot be deleted, locked, or otherwise disabled.  You should protect this account carefully!
 
-While you cannot delete the `admin` user with the special UID of 1, you can change the username; which we **HIGHLY** recommend you do.  This makes it much harder for an unauthorized user to guess credentials.  To try and further drive home the point that this default account requires your attention, we set the accounts 'real name' to "Sir changeme of change my password the third".  Seriously, the first thing you should do is lock down this account.
+While you cannot delete the `admin` user with the special UID of 1, you can change the username; which we **HIGHLY** recommend you do.  This makes it much harder for an unauthorized user to guess credentials.  To try and further drive home the point that this default account requires your attention, we set the accounts 'real name' to "changeme of change my password the third".  Seriously, the first thing you should do is lock down this account.
 
 A default installation also contains a basic `users` group.  This group is just a starting point and does not have any special privileges.
 
@@ -56,25 +57,67 @@ Gravwell uses the [bcrypt](https://en.wikipedia.org/wiki/Bcrypt) hashing system 
 
 We start with a pretty aggressive bcrypt hash cost of 12 and routinely re-evaluate whether we need to increase that cost. 
 
+(hardening_brute_force)=
 ### Account Brute Force Protections
 
-Gravwell employs a login throttling system to protect accounts.  If a user repeatedly fails authentication, Gravwell will introduce a delay in the authentication process that grows with each failed login attempt, eventually locking the account.  The login throttling controls can be tweaked using the following parameters in the `gravwell.conf` file:
+Gravwell has two protections against password guessing: login throttling and account locking.
 
-`Login-Fail-Lock-Count` - Controls how many times a user can fail authentication before we start slowing down the login attempts.  The default value is 0.
+#### Login Throttling
 
-`Login-Fail-Lock-Duration` - Duration in minutes used for calculating the failure count.  The default is 0.
+Login throttling is always on. You cannot turn it off, and the `Login-Fail-Lock` parameters do not change it. The webserver counts failed logins over the last minute for each account and for each client address. When there are failed logins in that minute, the webserver waits before it answers a login request. The wait doubles with each failure: 1 second after one failure, 2 seconds after two, 4 seconds after three, and 8 seconds after four. The wait never goes above 10 seconds. If the account and the client address have different counts, the webserver uses the longer wait. A successful login clears the count for the account and for the client address.
 
-The account lockout feature is disabled by default, however the `gravwell.conf` configuration shipped in the Docker containers and installers sets a value of 5 and 5, this means that a user can fail logging in up to 5 times in 5 minutes without locking their account.
+The client address comes from the connection, or from a trusted proxy. If Gravwell sits behind a reverse proxy or load balancer, set [Trusted-Proxies](trusted-proxies-config). If you do not, every user shares the address of the proxy, and one user's failed logins slow down logins for all users. See [Reverse Proxies and Client Addresses](hardening_reverse_proxies).
 
-The special UID 1 admin account **IS** subject to login throttling and exponential delays, but is **NOT** subject to account locking.  That account cannot be locked out.  Accounts that are locked due to brute force attempts do not eject all active sessions, while a user cannot login after having their account locked, they CAN maintain any active sessions.  This is so an attacker cannot DOS the Gravwell system and boot active users.
+#### Account Locking
 
-Setting either the `Login-Fail-Lock-Count` or `Login-Fail-Lock-Duration` to zero disables the locking of accounts.  Locked accounts can be unlocked in the user control panel.
+Account locking is off by default. To turn it on, set both of these parameters in the `gravwell.conf` file:
+
+`Login-Fail-Lock-Count` - The number of failed logins that locks an account. The default value is 0.
+
+`Login-Fail-Lock-Duration` - The window, in minutes, in which the webserver counts failed logins. The default value is 0.
+
+If either parameter is zero, the webserver does not lock accounts. The `gravwell.conf` file shipped in the Docker images and installers sets `Login-Fail-Lock-Count=4` and `Login-Fail-Lock-Duration=5`. With these values, the fourth failed login for an account within 5 minutes locks that account.
+
+Account locking counts the failed logins for each account, from all client addresses. The count for a client address only slows logins down. It never locks an account.
+
+The special UID 1 admin account **IS** subject to login throttling, but is **NOT** subject to account locking. That account cannot be locked out. A locked account keeps its active sessions. The user cannot log in again, but the sessions that are already open continue to work. This stops an attacker from using account locking to remove active users from the Gravwell system.
+
+Locked accounts can be unlocked in the user control panel. Unlocking an account also clears its failed login count.
 
 ![](locked_account.png)
 
 ## Enforcing MFA
 
 [Requiring MFA](/configuration/mfa/mfa) will force all Gravwell users (except [SSO](/configuration/sso) users, who authenticate separately) to configure a second authentication method for login, e.g. an authenticator app. This makes brute-forcing logins essentially impossible and is highly recommended if the Gravwell server is exposed to the Internet.
+
+(hardening_reverse_proxies)=
+## Reverse Proxies and Client Addresses
+
+Gravwell webservers, the [Gravwell load balancer](/distributed/loadbalancer), the [HTTP ingester](/ingesters/http), and the [LLM ingester](/ingesters/llm) find the address of each client. A reverse proxy or load balancer puts the client address in the `X-Forwarded-For` header. When the connection comes from a proxy that you list as trusted, Gravwell uses that header. Otherwise Gravwell ignores it.
+
+The webserver uses the client address in these places:
+
+* The `host` field of webserver logs.
+* The origin of each user session.
+* The per-address count for [login throttling](hardening_brute_force).
+* The address allow-list of the debug API.
+
+By default the trusted proxy list is empty. Gravwell then ignores `X-Forwarded-For` and uses the connecting address. To trust a proxy, list its address with the `Trusted-Proxies` parameter:
+
+* Webservers: [Trusted-Proxies](trusted-proxies-config) in the `[Global]` section of `gravwell.conf`, or the `GRAVWELL_TRUSTED_PROXIES` environment variable.
+* Load balancer: `Trusted-Proxies` in `loadbalancer.conf`. See [Client Addresses](loadbalancer_client_addresses).
+* HTTP ingester and LLM ingester: `Trusted-Proxies` in the `[Global]` section of the ingester configuration.
+
+When the connecting address is a trusted proxy, Gravwell reads `X-Forwarded-For` from right to left. It skips each trusted address. The first address that is not trusted is the client address.
+
+When a request carries `X-Forwarded-For`, webserver logs also show a `peer` field with the connecting address and an `xff` field with the header value. Use these fields to find proxies that you did not list.
+
+When you set `Trusted-Proxies`, follow these rules:
+
+* List only the addresses of your own proxies and load balancers. Use a single address or a small range.
+* Gravwell does not accept a range with a prefix length of 0, such as `0.0.0.0/0` or `::/0`.
+* If you use the Gravwell load balancer, list the load balancer address on every webserver behind it.
+* In Docker, do not list the Docker bridge subnet or the bridge gateway. Give the proxy or load balancer container a static IP address and list that address. See [Docker](docker_reverse_proxies).
 
 ## Installation Components
 

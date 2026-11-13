@@ -31,6 +31,7 @@ The table below shows which `gravwell.conf` parameters can be set via environmen
 | Remote-Indexers | GRAVWELL_REMOTE_INDEXERS | GRAVWELL_REMOTE_INDEXERS=172.20.0.1:9404,172.20.0.2:9404|
 | Peer (in the `[Replication]` section) | GRAVWELL_REPLICATION_PEERS | GRAVWELL_REPLICATION_PEERS=172.20.0.1:9406,172.20.0.2:9406 |
 | Datastore | GRAVWELL_DATASTORE | GRAVWELL_DATASTORE=172.20.0.10:9405 |
+| [Trusted-Proxies](trusted-proxies-config) | GRAVWELL_TRUSTED_PROXIES | GRAVWELL_TRUSTED_PROXIES=10.0.0.5,10.0.1.0/24 |
 
 ## Ingesters
 
