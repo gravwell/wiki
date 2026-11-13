@@ -135,6 +135,10 @@ Description:	Sets the severity level for logs. By default, only errors are logge
 Default Value:	`false`
 Description:	If this parameter is set to true, the load balancer will log every URL requested by clients and the response code from the webserver.
 
+**Trusted-Proxies**
+Default Value:	(empty)
+Description:	Lists the reverse proxies in front of the load balancer. Each value is an IP address or a CIDR range, for example `Trusted-Proxies=10.0.0.5`. Specify the parameter once for each address or range. If a range has a prefix length of 0, such as `0.0.0.0/0`, the load balancer does not start. If clients connect to the load balancer directly, leave this empty. See [Client Addresses](loadbalancer_client_addresses).
+
 ### Override Stanzas
 
 Most systems will use the datastore to automatically get a list of Gravwell webservers. However, sometimes the load balancer cannot communicate directly with the datastore--frequently this is a result of corporate network security rules. In this case, you may add `[Override]` configuration blocks at the end of the configuration file to manually list webservers:
@@ -170,6 +174,21 @@ Description:	If set to true, the load balancer will communicate with the webserv
 Default Value:	`false`
 Description:	If set to true, the load balancer will not validate the webserver's TLS certificates.
 
+(loadbalancer_client_addresses)=
+## Client Addresses
+
+The load balancer passes the client address to the webservers in the `X-Forwarded-For` header. It builds that header itself from the address of the connection. When the connection comes from an address in the load balancer `Trusted-Proxies` parameter, the load balancer keeps the incoming `X-Forwarded-For` chain. It then adds the connecting address to the end of the chain.
+
+The webservers also check where a request comes from. Each webserver behind the load balancer must list the load balancer address in its own [Trusted-Proxies](trusted-proxies-config) parameter. If a webserver does not list the load balancer, it ignores `X-Forwarded-For`. Its logs then show the load balancer address for every user, and all users share one count for login throttling.
+
+For example, with the load balancer at `10.0.0.5`, add this line to the `[Global]` section of `gravwell.conf` on each webserver:
+
+```
+Trusted-Proxies=10.0.0.5
+```
+
+If another reverse proxy sits in front of the load balancer, list that proxy in the load balancer `Trusted-Proxies` parameter. List it on the webservers too. See [Reverse Proxies and Client Addresses](hardening_reverse_proxies) for more information.
+
 ## Docker Environment Variables
 
 When deploying in Docker, it is frequently easier to configure components via Docker environment variables instead of modifying a config file. All basic parameters of the load balancer can be configured through environment variables:
@@ -187,6 +206,7 @@ When deploying in Docker, it is frequently easier to configure components via Do
 * `GRAVWELL_LOG_LEVEL` - Equivalent to the `Log-Level` config parameter
 * `GRAVWELL_LOG_DIR` - Equivalent to the `Log-Dir` config parameter
 * `GRAVWELL_LOG_ENABLED_ACCESS_LOG` - Equivalent to the `Enable-Access-Log` config parameter
+* `GRAVWELL_TRUSTED_PROXIES` - Equivalent to the `Trusted-Proxies` config parameter, as a comma-separated list
 
 Thus for example you might invoke:
 

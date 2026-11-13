@@ -309,6 +309,36 @@ If you intend to expose the forwarded container ports to the Internet, it is **c
 * The 'admin' password must be changed from default 'changeme'.
 * The GRAVWELL_INGEST_SECRET, GRAVWELL_INGEST_AUTH, GRAVWELL_CONTROL_AUTH, and GRAVWELL_SEARCHAGENT_AUTH environment variables set when launching the indexer & webserver (see above) must be set to complex strings.
 
+(docker_reverse_proxies)=
+### Reverse proxies and load balancers in Docker
+
+If a reverse proxy or the [Gravwell load balancer](/distributed/loadbalancer) runs in front of the webserver, the webserver must trust the proxy. Set the `GRAVWELL_TRUSTED_PROXIES` environment variable on the webserver container to the address of the proxy container. See [Trusted-Proxies](trusted-proxies-config).
+
+Do not trust the Docker bridge subnet or the bridge gateway address. Docker sometimes sends traffic for published ports through the bridge gateway. Then traffic from any client arrives from the gateway address, and other containers on the bridge also connect from that subnet. Instead, give the proxy container a static IP address and trust only that address.
+
+The `--ip` option of `docker run` works only on a network with a defined subnet. Create the network with a subnet:
+
+```
+docker network create --subnet 172.19.0.0/24 gravnet
+```
+
+Then start the proxy with a static address, and start the Gravwell container with that address in `GRAVWELL_TRUSTED_PROXIES`. Publish the web port on the proxy container only:
+
+```
+docker run --net gravnet --ip 172.19.0.5 -p 443:443 -d --name proxy <proxy image>
+docker run --net gravnet \
+    -p 4023:4023 \
+    -p 4024:4024 \
+    -d \
+    -e GRAVWELL_TRUSTED_PROXIES=172.19.0.5 \
+    -e GRAVWELL_INGEST_SECRET=MyIngestSecret \
+    -e GRAVWELL_INGEST_AUTH=MyIngestSecret \
+    -e GRAVWELL_CONTROL_AUTH=MyControlSecret \
+    -e GRAVWELL_SEARCHAGENT_AUTH=MySearchAgentAuth \
+    --name gravwell \
+    gravwell/gravwell:latest
+```
+
 ## Crash Reporting and Metrics
 
 The Gravwell software has automated crash reporting & metrics reporting built in. For more information about what gets sent back to us at Gravwell, and how to opt out, see the [crash reporting and metrics page](/metrics).

@@ -28,6 +28,7 @@ The configuration file is at `/opt/gravwell/etc/gravwell_http_ingester.conf`. Th
 |---------------------------|--------------|----------|-----------------|-------------------------------------|
 | Bind                      | string       | yes      |                 | Host:Port pair specifying HTTP server bind. |
 | Health-Check-URL          | string       | no       |                 | An optional URL that provides unauthenticated ingester health check status. |
+| Trusted-Proxies           | string array | no       |                 | IP addresses or CIDR ranges of the reverse proxies and load balancers in front of the ingester. See [Client Addresses](http_client_addresses). |
 
 ### Resource Controls Configuration
 
@@ -846,6 +847,26 @@ Multiple OpenTelemetry listeners can be defined to route data to different tags,
 [OpenTelemetry-Logs-Listener "dev"]
 	URL="/dev/v1/logs"
 	Tag-Name=otel-logs-dev
+```
+
+(http_client_addresses)=
+## Client Addresses
+
+The HTTP ingester sets the SRC field of each entry to the address of the client that sent the request. The ingester logs use the same address.
+
+By default, the ingester uses the address of the connection. If the ingester sits behind a reverse proxy or load balancer, list the proxy addresses with `Trusted-Proxies` in the `[Global]` section. Each value is an IP address or a CIDR range. Specify the parameter once for each address or range. The `GRAVWELL_HTTP_TRUSTED_PROXIES` environment variable takes a comma-separated list.
+<!-- TODO confirm env var name -->
+
+```
+[Global]
+	Trusted-Proxies=10.0.0.5
+	Trusted-Proxies=10.0.1.0/24
+```
+
+When the connection comes from a trusted proxy, the ingester reads the `X-Forwarded-For` header from right to left and skips each trusted address. The first address that is not trusted becomes SRC. When the connection does not come from a trusted proxy, the ingester ignores `X-Forwarded-For`. If a range has a prefix length of 0, such as `0.0.0.0/0` or `::/0`, the ingester does not start.
+
+```{note}
+Starting with version 5.10.4, the ingester ignores `X-Forwarded-For` unless `Trusted-Proxies` lists the connecting address. If the ingester sits behind a proxy, set `Trusted-Proxies` before you upgrade. Otherwise SRC holds the proxy address after the upgrade.
 ```
 
 ## Health Checks
