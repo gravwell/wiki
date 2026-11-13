@@ -112,6 +112,10 @@ Most operations, like running a search or creating a new dashboard, can happen e
 
 Gravwell now offers a custom load balancing component specifically designed to distribute users across multiple webservers with minimal configuration. See [the load balancing configuration page](loadbalancer) for information on setting it up.
 
+```{important}
+Each webserver behind a load balancer or reverse proxy must list the proxy address in its [Trusted-Proxies](trusted-proxies-config) parameter. If it does not, the webserver logs the proxy address for every user and all users share one count for login throttling. See [Client Addresses](loadbalancer_client_addresses).
+```
+
 ## Search Agent Configuration
 
 From Gravwell 5.4.0, you can run multiple search agents in your cluster to provide fault tolerance: one agent will be selected to as the active search agent, with others waiting idle unless the active agent goes offline. Refer to the [search agent](/scripting/searchagent) documentation for more information.

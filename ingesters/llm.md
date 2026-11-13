@@ -77,6 +77,7 @@ See [Anthropic Messages](llm_anthropic) for what each of those parameters does a
 |----------------------|---------|----------|---------------|-------------|
 | State-Store-Location | string  | NO       |               | Path to a persistent state file for the session tracker. When set, session state survives an ingester restart. Only message hashes are written, never prompt content. Leaving this unset keeps session state in memory only. |
 | Session-Match-Window | integer | NO       | 10            | How many of a request's most recent messages the session tracker compares when deciding whether a request continues an existing conversation. Larger values are more precise but do more work per request. |
+| Trusted-Proxies      | string array | NO  |               | IP addresses or CIDR ranges of the reverse proxies and load balancers in front of the ingester. Specify the parameter once for each address or range. The ingester uses the `X-Forwarded-For` header only from these addresses. See [Session Tracking](llm_session_tracking). |
 
 ## Listener Configuration
 
@@ -283,7 +284,8 @@ Setting `State-Store-Location` in the `[Global]` block persists session state ac
 Only message hashes are stored, in memory and on disk — never prompt or response content. The state file cannot be used to recover conversation text.
 ```
 
-The client IP is taken from the leading entry of the `X-Forwarded-For` header when that value parses as an IP address, and from the connecting peer otherwise. This keeps sessions attributed to the real client when the ingester sits behind a load balancer, without letting a malformed header collapse every client onto one address. The ingester appends its own peer to the `X-Forwarded-For` chain on the upstream request.
+The client IP sets the SRC field and partitions session state. By default, the ingester uses the address of the connection and ignores `X-Forwarded-For`. If the ingester sits behind a reverse proxy or load balancer, list the proxy addresses with `Trusted-Proxies` in the `[Global]` block. When the connection comes from a trusted proxy, the ingester reads `X-Forwarded-For` from right to left and skips each trusted address. The first address that is not trusted is the client IP. If a range has a prefix length of 0, such as `0.0.0.0/0`, the ingester does not start. The ingester appends its own peer to the `X-Forwarded-For` chain on the upstream request.
+<!-- TODO confirm Trusted-Proxies placement and env var for the LLM ingester -->
 
 (llm_authorization)=
 ## Authorization

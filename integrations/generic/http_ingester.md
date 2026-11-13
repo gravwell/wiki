@@ -16,7 +16,8 @@ Many integration guides send data to the Gravwell HTTP Ingester. Set the ingeste
 2. Choose the address and port the ingester listens on (`Bind`). Every integration can use this one port, and the integration guides refer to it as `<PORT>`.
 3. If the sending systems can reach the ingester over an untrusted network, enable HTTPS by providing a certificate and key in the `[Global]` block, or put the ingester behind an HTTPS reverse proxy. By default the ingester serves cleartext HTTP.
 4. Optionally, enable a health check URL for load balancers and monitoring.
-5. Raise `Max-Body` if an integration sends bodies larger than the 4 MB default.
+5. If the ingester sits behind a reverse proxy or load balancer, list the proxy addresses in `Trusted-Proxies`. Otherwise SRC holds the proxy address for every entry. See [Client Addresses](http_client_addresses).
+6. If an integration sends bodies larger than the 4 MB default, raise `Max-Body`.
 
 These settings apply to the whole ingester, so they belong in the base configuration file and not in an integration's overlay file. The ingester cannot reload `[Global]` changes while it is running, so restart it after you change them.
 
@@ -33,6 +34,7 @@ Edit: `/opt/gravwell/etc/gravwell_http_ingester.conf`
     #TLS-Key-File=/opt/gravwell/etc/key.pem
     Max-Body=4194304 #the default, in bytes (4 MB)
     #Health-Check-URL="/health/check"
+    #Trusted-Proxies=10.0.0.5
 ```
 
 The base file also holds the connection settings for your Gravwell backend, which the [HTTP Ingester](/ingesters/http) page describes. The settings above are the ones integration guides depend on:
@@ -44,6 +46,7 @@ The base file also holds the connection settings for your Gravwell backend, whic
 | `Max-Body` | Largest request body the ingester accepts, in bytes. Default 4 MB |
 | `Max-Connections`, `Max-Concurrent-Requests` | Limits on connections and in-flight requests. Defaults 10240 and 16384; `-1` removes a limit |
 | `Health-Check-URL` | Unauthenticated URL that always returns `200 OK`, for load balancers and monitoring |
+| `Trusted-Proxies` | Addresses or CIDR ranges of reverse proxies in front of the ingester. The ingester uses `X-Forwarded-For` only from these addresses. Repeat the setting for each address |
 
 ### Adding a Listener for an Integration
 
