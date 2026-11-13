@@ -364,6 +364,12 @@ Default Value:	`4`
 Example:		`Search-Relay-Buffer-Size=8`  
 Description:	The Search-Relay-Buffer-Size parameter controls how many entry blocks the webserver will accept from each indexer while still waiting for outstanding blocks from another indexer. As search entries flow in temporally, it is possible that one indexer may still be processing older entries while another has moved ahead to more recent entries. Because the webserver must process entries in temporal order, it will buffer entries from the indexer which is "ahead" while waiting for the slower indexer to catch up. In general, the default value will help prevent memory problems while still providing acceptable performance. On systems with large amounts of memory, it may be useful to increase this value.
 
+### **Search-Default-Expiry-Seconds**
+Applies to:		Webserver  
+Default Value:	`14400`  
+Example:		`Search-Default-Expiry-Seconds=7200`  
+Description:	The Search-Default-Expiry-Seconds parameter specifies how long, in seconds, a foreground search exists before it expires.  If a search is launched in the foreground and the launch request does not set an expiration, the webserver sets the expiration to the launch time plus this value.  The default value is 14400 seconds (4 hours).  If the launch request sets an expiration, the webserver keeps that expiration.  This parameter does not apply to background searches, which have a default expiration of 7 days.  This parameter also does not apply to a search that a flow, a script, or a scheduled search starts.  Such a search has no default expiration, and the webserver deletes it when the last client disconnects, unless the search is saved or sent to the background.  If a foreground search is sent to the background and its expiration is less than 7 days away, the webserver sets the expiration to 7 days from that moment.  If the value is zero, the webserver uses the default value.
+
 ### **Max-Log-Files**
 Applies to:		Webserver and Indexer  
 Default Value:	10  
