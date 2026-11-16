@@ -297,7 +297,7 @@ The client IP sets the SRC field and partitions session state. Two parameters in
 | not set       | true                           | The connecting address |
 
 ```{warning}
-By default, the ingester trusts `X-Forwarded-For` from any sender. Any client can then set its own SRC and share sessions with another client address. If the ingester sits behind a reverse proxy or load balancer, set `Trusted-Proxy`. If clients connect to the ingester directly, set `Ignore-Untrusted-Forwarded-For = true`. The default will change in the next major release. Until then, the ingester logs a warning at most once a minute when `X-Forwarded-For` sets the client IP.
+By default, the ingester trusts `X-Forwarded-For` from any sender. Any client can then choose its SRC and its session partition by sending its own leftmost `X-Forwarded-For` entry. If the ingester sits behind a reverse proxy or load balancer, set `Trusted-Proxy`. If clients connect to the ingester directly, set `Ignore-Untrusted-Forwarded-For = true`. The default will change in the next major release. Until then, the ingester logs a warning at most once a minute when `X-Forwarded-For` sets the client IP.
 ```
 
 List each proxy with `Trusted-Proxy`, one address or CIDR range per line:
@@ -308,11 +308,18 @@ List each proxy with `Trusted-Proxy`, one address or CIDR range per line:
 	Trusted-Proxy = 192.168.100.0/24
 ```
 
-When the connection comes from a trusted proxy, the ingester reads `X-Forwarded-For` from right to left and skips each trusted address. The first address that is not trusted is the client IP. If a range has a prefix length of 0, such as `0.0.0.0/0` or `::/0`, the ingester does not start.
+When the connection comes from a trusted proxy, the ingester reads `X-Forwarded-For` from right to left and skips each trusted address. The first address that is not trusted is the client IP.
 
 The `GRAVWELL_LLM_TRUSTED_PROXY` environment variable takes a comma-separated list of addresses. The `GRAVWELL_LLM_IGNORE_UNTRUSTED_FORWARDED_FOR` environment variable sets `Ignore-Untrusted-Forwarded-For`.
 
-When a request carries `X-Forwarded-For`, the ingester logs add a `peer` field with the connecting address and an `xff` field with the raw header. The `xff` field is for troubleshooting only. It is never the client IP.
+The ingester does not start if a `Trusted-Proxy` value is not valid. It also rejects these values:
+
+* A range with a prefix length of 0, such as `0.0.0.0/0` or `::/0`.
+* Ranges that together cover every IPv4 address, such as `0.0.0.0/1` and `128.0.0.0/1`. These trust every address, the same as a prefix length of 0. The ingester checks IPv4 and IPv6 ranges separately. Ranges that together cover every IPv6 address are rejected too. For this check, the ingester counts the IPv4-mapped range `::ffff:0:0/96` as covered. The error tells you to list only the addresses of your proxies.
+* An IPv6 range that overlaps `::ffff:0:0/96`, the IPv4-mapped range. List IPv4 ranges in IPv4 form. A range written in IPv4-mapped form with a prefix length longer than 96, such as `::ffff:10.0.0.0/120`, is accepted and read as the IPv4 range.
+* A `Trusted-Proxy` value or a `GRAVWELL_LLM_TRUSTED_PROXY` value that holds only blanks or commas, such as `,`. The ingester does not treat it as unset.
+
+Warnings about a request, such as a body that cannot be parsed or a failed upstream call, carry the client IP in a `src` field. This is the same address as the entry SRC. When the request carries `X-Forwarded-For`, these warnings also add a `peer` field with the connecting address and an `xff` field with the raw header. The `xff` field is for logging only. It is never the SRC or the session key. If an entry in the header is not a valid address, the warning also adds `xff-malformed`.
 
 The ingester appends its own peer to the `X-Forwarded-For` chain on the upstream request.
 
