@@ -388,12 +388,12 @@ Default Value:	(empty)
 Example:		`Webserver-Access-Control-Allow-Origin=google.com`  
 Description:	This setting can be used to manually specify `Allow-Origin` HTTP headers on web requests.  This can be useful if you are storing the Gravwell web application on a CDN and want to allow some files to be served by a different domain.
 
-(trusted-proxies-config)=
-### **Trusted-Proxies**
+(trusted-proxy-config)=
+### **Trusted-Proxy**
 Applies to:		Webserver  
 Default Value:	(empty)  
-Example:		`Trusted-Proxies=10.0.0.5`  
-Description:	The Trusted-Proxies parameter lists the reverse proxies and load balancers in front of the webserver. Each value is an IP address or a CIDR range, for example `10.0.0.5` or `10.0.0.0/24`. Trusted-Proxies is a list parameter. Specify it once for each address or range. The `GRAVWELL_TRUSTED_PROXIES` environment variable takes a comma-separated list.
+Example:		`Trusted-Proxy=10.0.0.5`  
+Description:	The Trusted-Proxy parameter lists the reverse proxies and load balancers in front of the webserver. Each value is an IP address or a CIDR range, for example `10.0.0.5` or `10.0.0.0/24`. Trusted-Proxy is a list parameter. Specify it once for each address or range. The `GRAVWELL_TRUSTED_PROXY` environment variable takes a comma-separated list.
 
 When the connecting address is in this list, the webserver uses the `X-Forwarded-For` header. It reads the header from right to left and skips each trusted address. The first address that is not trusted is the client address. If every address in the header is trusted, the webserver uses the leftmost address. If an entry is not a valid address, the webserver stops and uses the nearest trusted address to the right of that entry. When the list is empty, the webserver ignores `X-Forwarded-For` and uses the connecting address.
 

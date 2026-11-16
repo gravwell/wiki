@@ -113,7 +113,7 @@ Most operations, like running a search or creating a new dashboard, can happen e
 Gravwell now offers a custom load balancing component specifically designed to distribute users across multiple webservers with minimal configuration. See [the load balancing configuration page](loadbalancer) for information on setting it up.
 
 ```{important}
-Each webserver behind a load balancer or reverse proxy must list the proxy address in its [Trusted-Proxies](trusted-proxies-config) parameter. If it does not, the webserver logs the proxy address for every user and all users share one count for login throttling. See [Client Addresses](loadbalancer_client_addresses).
+Each webserver behind a load balancer or reverse proxy must list the proxy address in its [Trusted-Proxy](trusted-proxy-config) parameter. If it does not, the webserver logs the proxy address for every user and all users share one count for login throttling. See [Client Addresses](loadbalancer_client_addresses).
 ```
 
 ## Search Agent Configuration

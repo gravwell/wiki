@@ -21,7 +21,7 @@ If you are in a hurry and just want to hit the high points, do this:
 5. Enable [password complexity controls](password_complexity) or [Single Sign On](/configuration/sso)
 6. Enable HTTPS communication in the Search Agent [More Info](certificates)
 7. Ensure communications between webservers and indexers are over a trusted network.
-8. If Gravwell sits behind a reverse proxy or load balancer, list the proxy addresses in [Trusted-Proxies](trusted-proxies-config) [More Info](hardening_reverse_proxies)
+8. If Gravwell sits behind a reverse proxy or load balancer, list the proxy addresses in [Trusted-Proxy](trusted-proxy-config) [More Info](hardening_reverse_proxies)
 
 Installing a valid TLS certificate and enabling HTTPS is only slightly less important than changing the default password for the admin user.  When logging in, if Gravwell detects that you are not using HTTPS the login prompt will show a warning:
 
@@ -66,7 +66,7 @@ Gravwell has two protections against password guessing: login throttling and acc
 
 Login throttling is always on. You cannot turn it off, and the `Login-Fail-Lock` parameters do not change it. The webserver counts failed logins over the last minute for each account and for each client address. When there are failed logins in that minute, the webserver waits before it answers a login request. The wait doubles with each failure: 1 second after one failure, 2 seconds after two, 4 seconds after three, and 8 seconds after four. The wait never goes above 10 seconds. If the account and the client address have different counts, the webserver uses the longer wait. A successful login clears the count for the account and for the client address.
 
-The client address comes from the connection, or from a trusted proxy. If Gravwell sits behind a reverse proxy or load balancer, set [Trusted-Proxies](trusted-proxies-config). If you do not, every user shares the address of the proxy, and one user's failed logins slow down logins for all users. See [Reverse Proxies and Client Addresses](hardening_reverse_proxies).
+The client address comes from the connection, or from a trusted proxy. If Gravwell sits behind a reverse proxy or load balancer, set [Trusted-Proxy](trusted-proxy-config). If you do not, every user shares the address of the proxy, and one user's failed logins slow down logins for all users. See [Reverse Proxies and Client Addresses](hardening_reverse_proxies).
 
 #### Account Locking
 
@@ -93,7 +93,7 @@ Locked accounts can be unlocked in the user control panel. Unlocking an account 
 (hardening_reverse_proxies)=
 ## Reverse Proxies and Client Addresses
 
-Gravwell webservers, the [Gravwell load balancer](/distributed/loadbalancer), the [HTTP ingester](/ingesters/http), and the [LLM ingester](/ingesters/llm) find the address of each client. A reverse proxy or load balancer puts the client address in the `X-Forwarded-For` header. When the connection comes from a proxy that you list as trusted, Gravwell uses that header. Otherwise Gravwell ignores it.
+Gravwell webservers, the [Gravwell load balancer](/distributed/loadbalancer), the [HTTP ingester](/ingesters/http), and the [LLM ingester](/ingesters/llm) find the address of each client. A reverse proxy or load balancer puts the client address in the `X-Forwarded-For` header. When the connection comes from a proxy that you list as trusted, Gravwell uses that header. Otherwise the webserver and the load balancer ignore it. The HTTP ingester and the LLM ingester behave differently by default. See below.
 
 The webserver uses the client address in these places:
 
@@ -102,17 +102,21 @@ The webserver uses the client address in these places:
 * The per-address count for [login throttling](hardening_brute_force).
 * The address allow-list of the debug API.
 
-By default the trusted proxy list is empty. Gravwell then ignores `X-Forwarded-For` and uses the connecting address. To trust a proxy, list its address with the `Trusted-Proxies` parameter:
+By default the trusted proxy list is empty. The webserver and the load balancer then ignore `X-Forwarded-For` and use the connecting address. To trust a proxy, list its address with the `Trusted-Proxy` parameter. Repeat the parameter once for each address or range:
 
-* Webservers: [Trusted-Proxies](trusted-proxies-config) in the `[Global]` section of `gravwell.conf`, or the `GRAVWELL_TRUSTED_PROXIES` environment variable.
-* Load balancer: `Trusted-Proxies` in `loadbalancer.conf`. See [Client Addresses](loadbalancer_client_addresses).
-* HTTP ingester and LLM ingester: `Trusted-Proxies` in the `[Global]` section of the ingester configuration.
+* Webservers: [Trusted-Proxy](trusted-proxy-config) in the `[Global]` section of `gravwell.conf`, or the `GRAVWELL_TRUSTED_PROXY` environment variable.
+* Load balancer: `Trusted-Proxy` in `loadbalancer.conf`. See [Client Addresses](loadbalancer_client_addresses).
+* HTTP ingester and LLM ingester: `Trusted-Proxy` in the `[Global]` section of the ingester configuration.
+
+```{warning}
+The HTTP ingester and the LLM ingester keep an older default. When their trusted proxy list is empty, they trust `X-Forwarded-For` from any sender. Any client can then set the SRC of its entries. Set `Trusted-Proxy`, or set `Ignore-Untrusted-Forwarded-For` to use the connecting address. This default changes in the next major release. See [HTTP ingester Client Addresses](http_client_addresses) and [LLM ingester Client Addresses](llm_client_addresses).
+```
 
 When the connecting address is a trusted proxy, Gravwell reads `X-Forwarded-For` from right to left. It skips each trusted address. The first address that is not trusted is the client address.
 
-When a request carries `X-Forwarded-For`, webserver logs also show a `peer` field with the connecting address and an `xff` field with the header value. Use these fields to find proxies that you did not list.
+When a request carries `X-Forwarded-For`, webserver and ingester logs also show a `peer` field with the connecting address and an `xff` field with the header value. Use these fields to find proxies that you did not list.
 
-When you set `Trusted-Proxies`, follow these rules:
+When you set `Trusted-Proxy`, follow these rules:
 
 * List only the addresses of your own proxies and load balancers. Use a single address or a small range.
 * Gravwell does not accept a range with a prefix length of 0, such as `0.0.0.0/0` or `::/0`.

@@ -28,7 +28,8 @@ The configuration file is at `/opt/gravwell/etc/gravwell_http_ingester.conf`. Th
 |---------------------------|--------------|----------|-----------------|-------------------------------------|
 | Bind                      | string       | yes      |                 | Host:Port pair specifying HTTP server bind. |
 | Health-Check-URL          | string       | no       |                 | An optional URL that provides unauthenticated ingester health check status. |
-| Trusted-Proxies           | string array | no       |                 | IP addresses or CIDR ranges of the reverse proxies and load balancers in front of the ingester. See [Client Addresses](http_client_addresses). |
+| Trusted-Proxy             | string array | no       |                 | An IP address or CIDR range of a reverse proxy or load balancer in front of the ingester. Repeat the parameter once for each address or range. See [Client Addresses](http_client_addresses). |
+| Ignore-Untrusted-Forwarded-For | boolean | no       | false           | When no Trusted-Proxy is set, ignore `X-Forwarded-For` and set SRC to the connecting address. See [Client Addresses](http_client_addresses). |
 
 ### Resource Controls Configuration
 
@@ -854,20 +855,49 @@ Multiple OpenTelemetry listeners can be defined to route data to different tags,
 
 The HTTP ingester sets the SRC field of each entry to the address of the client that sent the request. The ingester logs use the same address.
 
-By default, the ingester uses the address of the connection. If the ingester sits behind a reverse proxy or load balancer, list the proxy addresses with `Trusted-Proxies` in the `[Global]` section. Each value is an IP address or a CIDR range. Specify the parameter once for each address or range. The `GRAVWELL_HTTP_TRUSTED_PROXIES` environment variable takes a comma-separated list.
-<!-- TODO confirm env var name -->
+Two parameters in the `[Global]` section decide where the client address comes from:
+
+| Trusted-Proxy | Ignore-Untrusted-Forwarded-For | Client address |
+|---------------|--------------------------------|----------------|
+| set           | any value                      | `X-Forwarded-For` from a listed proxy, otherwise the connecting address |
+| not set       | false (default)                | The leftmost valid address in `X-Forwarded-For` from any sender, otherwise the connecting address |
+| not set       | true                           | The connecting address |
+
+```{warning}
+By default, the ingester trusts `X-Forwarded-For` from any sender. Any client can then set the SRC of its entries. If the ingester sits behind a reverse proxy or load balancer, set `Trusted-Proxy`. If clients connect to the ingester directly, set `Ignore-Untrusted-Forwarded-For=true`. The default will change in the next major release. Until then, the ingester logs a warning at most once a minute when `X-Forwarded-For` sets SRC.
+```
+
+### Trusted-Proxy
+
+List each reverse proxy or load balancer in front of the ingester with `Trusted-Proxy`. Each value is one IP address or one CIDR range. Repeat the parameter once for each address or range:
 
 ```
 [Global]
-	Trusted-Proxies=10.0.0.5
-	Trusted-Proxies=10.0.1.0/24
+	Trusted-Proxy=10.0.0.5
+	Trusted-Proxy=10.0.1.0/24
 ```
 
-When the connection comes from a trusted proxy, the ingester reads the `X-Forwarded-For` header from right to left and skips each trusted address. The first address that is not trusted becomes SRC. When the connection does not come from a trusted proxy, the ingester ignores `X-Forwarded-For`. If a range has a prefix length of 0, such as `0.0.0.0/0` or `::/0`, the ingester does not start.
+The `GRAVWELL_HTTP_TRUSTED_PROXY` environment variable takes a comma-separated list, for example `GRAVWELL_HTTP_TRUSTED_PROXY=10.0.0.5,10.0.1.0/24`.
 
-```{note}
-Starting with version 5.10.4, the ingester ignores `X-Forwarded-For` unless `Trusted-Proxies` lists the connecting address. If the ingester sits behind a proxy, set `Trusted-Proxies` before you upgrade. Otherwise SRC holds the proxy address after the upgrade.
-```
+When `Trusted-Proxy` is set, the ingester uses `X-Forwarded-For` only when the connecting address is listed. It reads the header from right to left and skips each trusted address. The first address that is not trusted becomes SRC. The ingester reads at most 32 entries. If a request has more than one `X-Forwarded-For` header line, the ingester reads them as one list. When the connecting address is not listed, the ingester ignores `X-Forwarded-For` and SRC is the connecting address.
+
+The ingester does not start if a `Trusted-Proxy` value is not valid. It also rejects these values:
+
+* A range with a prefix length of 0, such as `0.0.0.0/0` or `::/0`.
+* An IPv6 range that overlaps `::ffff:0:0/96`, the IPv4-mapped range. List IPv4 ranges in IPv4 form. A range written in IPv4-mapped form with a prefix length longer than 96, such as `::ffff:10.0.0.0/120`, is accepted and read as the IPv4 range.
+
+### Ignore-Untrusted-Forwarded-For
+
+Set `Ignore-Untrusted-Forwarded-For=true` when clients connect to the ingester directly. When no `Trusted-Proxy` is set, SRC is then always the connecting address. When `Trusted-Proxy` is set, this parameter has no effect. The `GRAVWELL_HTTP_IGNORE_UNTRUSTED_FORWARDED_FOR` environment variable sets the same option.
+
+### Client Addresses in Logs
+
+The ingester logs the client address, the same address as SRC. Most log messages use the `src` key. The OpenTelemetry listeners use `remoteaddress`, and the debug request log uses `ip`. When a request carries `X-Forwarded-For`, the log adds two fields:
+
+* `peer` holds the connecting address.
+* `xff` holds the raw `X-Forwarded-For` header. Use it only for troubleshooting. It is never the SRC.
+
+If an entry in the header is not a valid address, the log also adds `xff-malformed`.
 
 ## Health Checks
 
