@@ -103,4 +103,8 @@ The "Open in a modal" option opens the URL in a window *within* the current Grav
 
 This action runs a query from the Query Library.
 
+## Sharing Actionables
+
+An action that runs a saved query, executes a template, or launches a dashboard only works for users who can access that saved query, template, or dashboard. When you share an actionable, make sure the assets its actions use are shared with the same groups. The [Reference Table](/gui/reference-table/reference-table), opened from the "Referenced Assets" section of the actionable's Information panel, shows any groups that are missing access.
+
 
