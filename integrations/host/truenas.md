@@ -15,7 +15,7 @@ TrueNAS SCALE has native remote syslog forwarding. See [Managing System Logging]
 ![TrueNAS syslog settings](images/truenas_syslog_1.png)
 
 1. Go to **System Settings > Advanced > Syslog** and click **Configure**.
-2. Set **Host** to your Gravwell Simple Relay address, followed by the port of the matching listener from the sample below: `:514` for UDP, `:601` for TCP, or `:6514` for TLS.
+2. Set **Host** to your Gravwell Simple Relay address, followed by the port of the matching listener from the sample below: `:15122` for UDP, `:15120` for TCP, or `:15121` for TLS.
 3. Set **Transport** to UDP, TCP, or TLS.
 4. If using TLS, import a certificate under **Credentials > Certificates** first, then select it here. TLS requires the TLS listener in the sample below.
 5. Set the **Syslog Level** (minimum severity to forward). Up to two independent remote syslog servers can be configured.
@@ -40,14 +40,14 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/truenas-well.conf`
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/truenas.conf`
 ```ini
 [Listener "truenasudp"]
-    Bind-String="udp://0.0.0.0:514"
+    Bind-String="udp://0.0.0.0:15122"
     Reader-Type=rfc5424
     Tag-Name=truenas
     Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
     Keep-Priority=true # leave the <nnn> priority tag at the start of each syslog entry
 
 [Listener "truenastcp"]
-    Bind-String="tcp://0.0.0.0:601"
+    Bind-String="tcp://0.0.0.0:15120"
     Reader-Type=rfc5424
     Tag-Name=truenas
     Assume-Local-Timezone=true #if a time format does not have a timezone, assume local time
@@ -55,7 +55,7 @@ Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/truenas.conf`
 
 # Only needed if you select TLS in TrueNAS. Replace the certificate and key paths with your own.
 [Listener "truenastls"]
-    Bind-String="tls://0.0.0.0:6514"
+    Bind-String="tls://0.0.0.0:15121"
     Cert-File=/opt/gravwell/etc/cert.pem
     Key-File=/opt/gravwell/etc/key.pem
     Reader-Type=rfc5424

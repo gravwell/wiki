@@ -53,7 +53,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/pfsense-well.conf`
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/pfsense.conf`
 ```ini
 [Listener "pfsensesyslogudp"]
-    Bind-String="udp://0.0.0.0:515" #standard UDP based RFC5424 syslog
+    Bind-String="udp://0.0.0.0:15092" #standard UDP based RFC5424 syslog
     Reader-Type=rfc5424
     Tag-Name=pfsensesyslog
     Assume-Local-Timezone=true

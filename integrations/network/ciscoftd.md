@@ -40,7 +40,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/cisco-ftd-well.conf`
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/cisco-ftd.conf`
 ```ini
 [Listener "syslogtcp_cisco_ftd"]
-    Bind-String="tcp://0.0.0.0:6901"
+    Bind-String="tcp://0.0.0.0:15020"
     Reader-Type=rfc5424
     Tag-Name=cisco-ftd-events
     Assume-Local-Timezone=true

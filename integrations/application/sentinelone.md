@@ -13,7 +13,7 @@
 SentinelOne supports native syslog/CEF forwarding of threat and alert events:
 
 1. Go to **Settings > Integrations > Syslog**.
-2. Enter the destination IP address of your Gravwell Simple Relay ingester and the port of its listener (`601` in the sample below).
+2. Enter the destination IP address of your Gravwell Simple Relay ingester and the port of its listener (`15100` for TCP or `15101` for TLS in the sample below).
 3. Choose **CEF2** as the format.
 4. Optionally enable TLS. If you do, use the `tls://` Bind-String shown in the sample below.
 5. Under **Notifications**, enable the event types you want forwarded.
@@ -38,9 +38,9 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/sentinelone-well.conf`
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/sentinelone.conf`
 ```ini
 [Listener "sentinelone"]
-    Bind-String="tcp://0.0.0.0:601"
+    Bind-String="tcp://0.0.0.0:15100"
     # Add the following for TLS
-    #Bind-String="tls://0.0.0.0:601"
+    #Bind-String="tls://0.0.0.0:15101"
     #Cert-File=/opt/gravwell/etc/cert.pem
     #Key-File=/opt/gravwell/etc/key.pem
     Tag-Name=sentinelone

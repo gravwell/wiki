@@ -5,7 +5,7 @@ myst:
     standalone: "gravwell_http_ingester"
     dockername: "http_ingester"
 ---
-# HTTP
+# HTTP Ingester
 
 The HTTP ingester sets up HTTP listeners on one or more paths. If an HTTP request is sent to one of those paths, the request's Body will be ingested as a single entry.
 

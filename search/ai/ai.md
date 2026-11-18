@@ -79,7 +79,7 @@ When engaging with Logbot or other Gravwell AI services, you should be cognizant
 
 ### Configuring a third party LLM service
 
-Instead of using the Gravwell-hosted AI service, you can configure Gravwell to use any OpenAI-compatible API endpoint (such as OpenAI, Anthropic, or a self-hosted model). This is done by setting the following parameters in the `[AI]` section of your `gravwell.conf`:
+Instead of using the Gravwell-hosted AI service, you can configure Gravwell to use any OpenAI-compatible API endpoint (such as OpenAI, [Anthropic](#anthropic-setup), or a self-hosted model). This is done by setting the following parameters in the `[AI]` section of your `gravwell.conf`:
 
 | Parameter | Description |
 |-----------|-------------|
@@ -138,6 +138,108 @@ When configuring a third-party provider, set `Max-AI-Tokens` to a value at or be
 ```{note}
 `Max-AI-Tokens` is an upper bound on a single response, not a target: it does not cause the model to generate longer responses, but a value set too low can truncate long answers.
 ```
+
+(anthropic-setup)=
+#### Configuring Anthropic Claude
+
+Gravwell connects to Anthropic's Claude API through its [OpenAI-compatible endpoint](https://platform.claude.com/docs/en/api/openai-sdk).
+Anthropic API keys are created in the [Claude Console](https://platform.claude.com) and act within a *workspace*. Requests made with a key
+that is not scoped to a single workspace **must** include an `anthropic-workspace-id` header, otherwise Logbot requests will fail. The
+steps below create a workspace-scoped key so no extra header is needed.
+
+Before you begin, you need:
+
+- A Claude Console organization with billing set up. The API rejects requests from organizations without available credit.
+- The organization admin role to create workspaces and service accounts. Creating API keys requires the Workspace Developer role or higher in the target workspace.
+
+##### Step 1: Choose a workspace
+
+Every Console organization has a **Default Workspace**, which works for Logbot. A dedicated workspace is recommended: it separates Logbot
+usage in Console usage reports and lets you set [spend and rate limits](https://platform.claude.com/docs/en/manage-claude/workspaces#workspace-limits)
+for Logbot traffic. Spend limits cannot be set on the Default Workspace.
+
+To create a workspace, open the Console [Workspaces](https://platform.claude.com/settings/workspaces) page, click **Create workspace**, enter a name
+such as `gravwell-logbot`, and click **Create workspace**.
+
+##### Step 2: Choose the account that owns the key
+
+Each new Anthropic API key is linked to a user or a service account and stops working when that account is removed:
+
+- A **personal key** acts as you, and stops working if you leave the organization.
+- A **service account key** acts as a non-human service account and is unaffected by staff changes. This is the recommended choice for a Gravwell deployment.
+
+To create a service account, an organization admin opens the Console [Service accounts](https://platform.claude.com/settings/service-accounts) page
+and creates one. Service accounts are members of the Default Workspace automatically; to use another workspace, select **Add to workspace** in the
+service account's menu and choose the workspace from step 1.
+
+##### Step 3: Create the API key
+
+1. Open the Console [API keys](https://platform.claude.com/settings/keys) page and click **Create key**.
+2. Enter a name for the key, such as `gravwell-logbot`.
+3. Set **Linked account** to the service account from step 2, or to yourself for a personal key.
+4. Scope the key to the workspace from step 1. A key scoped to a single workspace needs no additional Gravwell configuration.
+5. Select an expiration. When the key expires, Logbot requests fail until a new key is configured, so choose **Never** if you
+rotate keys on your own schedule, or plan the rotation ahead of the expiration date.
+6. Create the key, then copy it and store it securely. Anthropic API keys begin with `sk-ant-api`.
+
+##### Step 4: Configure Gravwell
+
+Add the key to the `[AI]` section of `gravwell.conf` on each webserver:
+
+```
+[AI]
+	Enable=true
+	AI-Server-URL="https://api.anthropic.com"
+	Third-Party-Provider=true
+	Model="claude-sonnet-5-5"
+	Max-AI-Tokens=64000
+	Include-Header="Authorization: Bearer <your-anthropic-api-key>"
+```
+
+- `AI-Server-URL` is the base URL without `/v1`. Gravwell appends `/v1/chat/completions` and `/v1/models/<Model>` to it.
+- `Model` must be a Claude API model ID such as `claude-sonnet-5-5` or `claude-opus-5-5`. See Anthropic's [models overview](https://platform.claude.com/docs/en/about-claude/models/overview) for current IDs.
+- `Max-AI-Tokens` must not exceed the model's maximum output tokens. See [Setting Max-AI-Tokens](#setting-max-ai-tokens).
+
+If the key is **not** scoped to a single workspace, add a second `Include-Header` with the workspace ID. Workspace IDs begin with `wrkspc_`
+and are listed in the **ID** column of the Console [Workspaces](https://platform.claude.com/settings/workspaces) page.
+
+```
+	Include-Header="anthropic-workspace-id: wrkspc_<your-workspace-id>"
+```
+
+Restart the webserver (`systemctl restart gravwell_webserver.service`) to apply the change.
+
+##### Verifying the key
+
+If Logbot's health check fails, you can run the following commands on the webserver to debug your API token.
+Use the `Model` and `Max-AI-Tokens` values from your configuration, and add `-H "anthropic-workspace-id: wrkspc_<your-workspace-id>"`
+to both commands if you configured that header.
+
+```bash
+# Health check: look up the configured model
+curl -sS https://api.anthropic.com/v1/models/claude-sonnet-5-5 \
+  -H "Authorization: Bearer <your-anthropic-api-key>"
+
+# Chat completion
+curl -sS https://api.anthropic.com/v1/chat/completions \
+  -H "Authorization: Bearer <your-anthropic-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "claude-sonnet-5-5",
+    "max_tokens": 64000,
+    "messages": [{"role": "user", "content": "Hello"}]
+  }'
+```
+
+The first command returns a description of the model and the second returns a short reply. An error response identifies the problem:
+
+| Error | Cause and fix |
+|-------|---------------|
+| `This API key is not scoped to a workspace...` | The key can act in more than one workspace. Create a key scoped to a single workspace, or add `Include-Header="anthropic-workspace-id: wrkspc_<your-workspace-id>"`. |
+| `anthropic-workspace-id header must be a valid workspace ID.` | The workspace ID is malformed. Copy it, including the `wrkspc_` prefix, from the Workspaces page. |
+| ``Workspace `<id>` not found.`` | The workspace does not exist, or the key's linked account is not a member of it. Add the service account to the workspace on the Service accounts page. |
+| `authentication_error` | The key is incorrect, expired, disabled, or deleted, or its linked account was removed from the organization. Check the key's status on the API keys page and create a new key if needed. |
+| `max_tokens: ... which is the maximum allowed number of output tokens` | `Max-AI-Tokens` exceeds the model's output limit. See [Setting Max-AI-Tokens](#setting-max-ai-tokens). |
 
 #### Gotchas With Third-Party LLM Services
 

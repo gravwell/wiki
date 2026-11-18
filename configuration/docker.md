@@ -71,7 +71,9 @@ Gravwell ingesters are designed to relay data and typically don't need persisten
 
 ## Upload license and log in
 
-Now that Gravwell is running, point a web browser at port http://localhost:8080 on the host. It should prompt for a license upload:
+Now that Gravwell is running, point a web browser at port http://localhost:8080 on the host. A single-container deployment is eligible for the [Free License](#free-license), so Gravwell will start on the Free tier automatically and present a login prompt; skip ahead to logging in below. To use a Community Edition or paid license instead, upload it from the License page as described in [Updating a License](#updating-a-license).
+
+If the deployment is not eligible for the Free tier, Gravwell will prompt for a license upload:
 
 ![](license-upload-docker.png)
 

@@ -20,6 +20,7 @@ User Files <files/files>
 Playbooks <playbooks/playbooks>
 Actionables <actionables/actionables>
 Secrets <secrets/secrets>
+Reference Table <reference-table/reference-table>
 Email Configuration</configuration/email>
 Systems & Health<systems-health>
 Advanced GUI User Preferences </configuration/gui>

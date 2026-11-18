@@ -26,7 +26,7 @@ To configure the device, follow these steps adapted from [Configure Syslog over 
 2. Specify the port number of the syslog server.
 
     ```
-    user@host# set system syslog host 10.102.70.233 port 10514
+    user@host# set system syslog host 10.102.70.233 port 15051
     ```
 
 3. Specify the syslog transport protocol for the device. In this example, use TLS as the transport protocol.
@@ -78,7 +78,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/juniper-well.conf`
 Create or edit: `/opt/gravwell/etc/simple_relay.conf.d/juniper.conf`
 ```ini
 [Listener "junipertcp"]
-    Bind-String="tls://0.0.0.0:10514"
+    Bind-String="tls://0.0.0.0:15051"
     Cert-File=/opt/gravwell/etc/cert.pem
     Key-File=/opt/gravwell/etc/key.pem
     Reader-Type=rfc5424
