@@ -310,7 +310,9 @@ List each proxy with `Trusted-Proxy`, one address or CIDR range per line:
 
 When the connection comes from a trusted proxy, the ingester reads `X-Forwarded-For` from right to left and skips each trusted address. The first address that is not trusted is the client IP.
 
-The `GRAVWELL_LLM_TRUSTED_PROXY` environment variable takes a comma-separated list of addresses. The `GRAVWELL_LLM_IGNORE_UNTRUSTED_FORWARDED_FOR` environment variable sets `Ignore-Untrusted-Forwarded-For`.
+The `GRAVWELL_LLM_TRUSTED_PROXY` environment variable takes a comma-separated list of addresses. It applies only when the configuration file has no `Trusted-Proxy` entries. The `GRAVWELL_LLM_IGNORE_UNTRUSTED_FORWARDED_FOR` environment variable sets `Ignore-Untrusted-Forwarded-For`. It can only turn the option on. If it is `true`, a value of `false` in the configuration file does not turn the option off.
+
+The ingester reads these settings only when it starts. Restart the ingester after you change them.
 
 The ingester does not start if a `Trusted-Proxy` value is not valid. It also rejects these values:
 

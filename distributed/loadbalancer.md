@@ -137,7 +137,7 @@ Description:	If this parameter is set to true, the load balancer will log every 
 
 **Trusted-Proxy**
 Default Value:	(empty)
-Description:	Lists the reverse proxies in front of the load balancer. Each value is an IP address or a CIDR range, for example `Trusted-Proxy=10.0.0.5`. Specify the parameter once for each address or range. If a range has a prefix length of 0, such as `0.0.0.0/0`, the load balancer does not start. If clients connect to the load balancer directly, leave this empty. See [Client Addresses](loadbalancer_client_addresses).
+Description:	Lists the reverse proxies in front of the load balancer. Each value is an IP address or a CIDR range, for example `Trusted-Proxy=10.0.0.5`. Specify the parameter once for each address or range. If the list is not valid, for example if it trusts every address, the load balancer does not start. See the rules in [Reverse Proxies and Client Addresses](hardening_reverse_proxies). If clients connect to the load balancer directly, leave this empty. See [Client Addresses](loadbalancer_client_addresses).
 
 ### Override Stanzas
 

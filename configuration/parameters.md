@@ -399,7 +399,7 @@ When the connecting address is in this list, the webserver uses the `X-Forwarded
 
 The client address goes into the `host` field of webserver logs. The webserver also uses it as the session origin, as the key for per-address login throttling, and for the address allow-list of the debug API. When a request carries `X-Forwarded-For`, webserver logs add two fields: `peer` holds the connecting address and `xff` holds the header value.
 
-If a range has a prefix length of 0, for example `0.0.0.0/0` or `::/0`, the webserver does not start. List only the addresses of your proxies. If you use the [Gravwell load balancer](/distributed/loadbalancer), list the load balancer address on every webserver. See [Reverse Proxies and Client Addresses](hardening_reverse_proxies) for more information.
+If the list is not valid, the webserver does not start. For example, the webserver rejects `0.0.0.0/0`, `::/0`, and ranges that together cover every IPv4 or IPv6 address. List only the addresses of your proxies. If you use the [Gravwell load balancer](/distributed/loadbalancer), list the load balancer address on every webserver. See [Reverse Proxies and Client Addresses](hardening_reverse_proxies) for more information.
 
 ### **Enable-CBAC**
 Applies to:		Webserver  

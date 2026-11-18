@@ -877,7 +877,7 @@ List each reverse proxy or load balancer in front of the ingester with `Trusted-
 	Trusted-Proxy=10.0.1.0/24
 ```
 
-The `GRAVWELL_HTTP_TRUSTED_PROXY` environment variable takes a comma-separated list, for example `GRAVWELL_HTTP_TRUSTED_PROXY=10.0.0.5,10.0.1.0/24`.
+The `GRAVWELL_HTTP_TRUSTED_PROXY` environment variable takes a comma-separated list, for example `GRAVWELL_HTTP_TRUSTED_PROXY=10.0.0.5,10.0.1.0/24`. The environment variable applies only when the configuration file has no `Trusted-Proxy` entries.
 
 When `Trusted-Proxy` is set, the ingester uses `X-Forwarded-For` only when the connecting address is listed. It reads the header from right to left and skips each trusted address. The first address that is not trusted becomes SRC. The ingester reads at most 32 entries. If a request has more than one `X-Forwarded-For` header line, the ingester reads them as one list. When the connecting address is not listed, the ingester ignores `X-Forwarded-For` and SRC is the connecting address.
 
@@ -890,7 +890,9 @@ The ingester does not start if a `Trusted-Proxy` value is not valid. It also rej
 
 ### Ignore-Untrusted-Forwarded-For
 
-Set `Ignore-Untrusted-Forwarded-For=true` when clients connect to the ingester directly. When no `Trusted-Proxy` is set, SRC is then always the connecting address. When `Trusted-Proxy` is set, this parameter has no effect. The `GRAVWELL_HTTP_IGNORE_UNTRUSTED_FORWARDED_FOR` environment variable sets the same option.
+Set `Ignore-Untrusted-Forwarded-For=true` when clients connect to the ingester directly. When no `Trusted-Proxy` is set, SRC is then always the connecting address. When `Trusted-Proxy` is set, this parameter has no effect. The `GRAVWELL_HTTP_IGNORE_UNTRUSTED_FORWARDED_FOR` environment variable sets the same option. The environment variable can only turn the option on. If it is `true`, a value of `false` in the configuration file does not turn the option off.
+
+Changes to `Trusted-Proxy` and `Ignore-Untrusted-Forwarded-For` take effect when the ingester reloads its configuration on `SIGHUP`. You do not need to restart the ingester. See [Dynamic Configuration Reload](http_dynamic_reload).
 
 ### Client Addresses in Logs
 
@@ -926,6 +928,7 @@ The HEC data format expects the timestamps to be Unix timestamps in seconds form
 
 The HEC compatible endpoint contains special processing logic for timestamps where any Unix timestamps that are approximately the zero time will be treated as "NOW" and given the timestamp of ingest.  For example, a HEC event with the timestamp of `"time": 42` will be assigned the current UTC time.
 
+(http_dynamic_reload)=
 ## Dynamic Configuration Reload
 
 The HTTP ingesters support dynamic configuration reloading for many configuration items; the ingester can dynamically reload Listener, HEC, and Amazon Firehose listener configuration blocks without restarting.  The Ingester uses the `SIGHUP` system signal as a notification mechanism to reload its configuration.
@@ -951,7 +954,7 @@ kill -SIGHUP `pidof gravwell_http_ingester` # use kill and the pidof command to 
 ```
 
 ```{note}
-The ingester cannot dynamically reload changes to `[global]` configuration block items like ingester connections, TLS configuration, bound ports, request limiting controls, or ingest cache controls.
+The ingester cannot dynamically reload changes to `[global]` configuration block items like ingester connections, TLS configuration, bound ports, request limiting controls, or ingest cache controls. The exceptions are `Trusted-Proxy`, `Ignore-Untrusted-Forwarded-For`, and `Health-Check-URL`. The ingester reloads these three parameters on `SIGHUP`.
 ```
 
 ## Troubleshooting

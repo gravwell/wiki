@@ -19,7 +19,7 @@ Many integration guides send data to the Gravwell HTTP Ingester. Set the ingeste
 5. If the ingester sits behind a reverse proxy or load balancer, list each proxy address with `Trusted-Proxy`. If clients connect to the ingester directly, set `Ignore-Untrusted-Forwarded-For=true`. By default the ingester trusts `X-Forwarded-For` from any sender, so any client can set SRC. See [Client Addresses](http_client_addresses).
 6. If an integration sends bodies larger than the 4 MB default, raise `Max-Body`.
 
-These settings apply to the whole ingester, so they belong in the base configuration file and not in an integration's overlay file. The ingester cannot reload `[Global]` changes while it is running, so restart it after you change them.
+These settings apply to the whole ingester, so they belong in the base configuration file and not in an integration's overlay file. The ingester reloads `Trusted-Proxy`, `Ignore-Untrusted-Forwarded-For`, and `Health-Check-URL` when it receives the `SIGHUP` signal. Restart the ingester after you change other `[Global]` settings.
 
 ## Gravwell Configuration
 
@@ -93,7 +93,7 @@ The HTTP Ingester reloads `Listener`, HEC and Amazon Firehose blocks without res
 sudo killall -SIGHUP gravwell_http_ingester
 ```
 
-Integration guides use the restart command, which always works, and a restart is required for `[Global]` changes.
+Integration guides use the restart command, which always works, and a restart is required for most `[Global]` changes.
 
 ```{note}
 Remember to restart the service to apply the new config:
