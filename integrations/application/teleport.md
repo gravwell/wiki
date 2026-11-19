@@ -6,6 +6,7 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [File Follower](/ingesters/file_follow)
+    Kit, [Teleport Kit](https://github.com/gravwell/kits/tree/main/teleport)
 :::
 
 ## Teleport Configuration
@@ -25,11 +26,16 @@ Changes necessary to: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/fluentd.c
     Tag-Name="teleport-audit"
 ```
 
+```{note}
+Remember to restart the service to apply the new config:
+`sudo systemctl restart gravwell_http_ingester.service`
+```
+
 ## Gravwell Configuration
 
 ### Gravwell Storage Well Configuration
 
-Set up the well configuration in your Gravwell indexers.
+Set up the well configuration on your Gravwell indexers.
 
 **Sample well config:**  
 Create or edit: `/opt/gravwell/etc/gravwell.conf.d/teleport-well.conf`

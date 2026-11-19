@@ -46,7 +46,17 @@ The Regex Timestamp Extraction preprocessor Type is `regextimestamp`.
 
 * `Timezone-Override` (string, optional): If the extracted timestamp doesn't contain a timezone, the timezone specified here will be applied. Example: `US/Pacific`, `Europe/Rome`, `Cuba`.
 * `Assume-Local-Timezone` (boolean, optional): This option tells the preprocessor to assume the timestamp is in the local timezone if no timezone is included. This is mutually exclusive with the `Timezone-Override` parameter.
+* `Timestamp-Max-Past-Delta` (string, optional): The maximum age of an extracted timestamp, as a duration such as `720h`. Timestamps older than this are ignored. Defaults to `8760h` (one year).
+* `Timestamp-Max-Future-Delta` (string, optional): How far into the future an extracted timestamp may be, as a duration such as `1h`. Timestamps further ahead than this are ignored. Defaults to `24h`.
 
+
+## Timestamp Bounds
+
+The preprocessor only applies an extracted timestamp that falls within a window around the current time, set by `Timestamp-Max-Past-Delta` and `Timestamp-Max-Future-Delta`. If the extracted timestamp falls outside the window, the entry timestamp is left unchanged. Timestamps before 1970-01-01 are always ignored, whatever the window. Both durations must be non-zero; negative values are treated as positive.
+
+```{warning}
+The default window rejects timestamps more than a year old. If you replay archives or backfill older data through this preprocessor, set `Timestamp-Max-Past-Delta` large enough to cover it, or those entries will keep their original timestamp.
+```
 
 ## Common Use Cases
 

@@ -20,6 +20,8 @@ There are a few important things to keep in mind regarding ownership & permissio
 * An alert can use flows owned by other users as consumers, provided the alert owner has permission to view the flow. This has a variety of potential complications detailed below.
   * If the flow uses resources, macros, secrets, or other items owned by the flow owner but not shared with the alert owner, the flow may not execute properly when triggered by the alert.
   * The flow owner has the ability to modify the flow without notifying the alert owner; this means the alert may stop behaving properly, or in the case of a malicious flow owner, the flow could be used to e.g. leak the contents of the alert events.
+
+To check whether the alert's dispatchers and consumers are shared with the same groups as the alert, open the [Reference Table](/gui/reference-table/reference-table) from the "Referenced Assets" section of the alert's Information panel.
 ```
 
 ## Creating an Alert

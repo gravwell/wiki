@@ -6,25 +6,22 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [Windows Event Ingester](winevent_optional-sysmon-integration)
-         Kit, [Windows Sysmon Kit](https://github.com/gravwell/kits/tree/main/sysmon)
+    Kit, [Windows Sysmon Kit](https://github.com/gravwell/kits/tree/main/sysmon)
 :::
 
 ## Sysmon Configuration
 
-The Sysmon utility, part of the sysinternals suite, is an effective and popular tool for monitoring Windows systems. There are plenty of resources with examples of good sysmon configuration files. At Gravwell, we like to use the modular sysmon config on github from [olafhartong](https://github.com/olafhartong/sysmon-modular).
+The Sysmon utility, part of the Sysinternals suite, is an effective and popular tool for monitoring Windows systems. There are plenty of resources with examples of good Sysmon configuration files. Gravwell typically uses the modular Sysmon config on GitHub from [olafhartong](https://github.com/olafhartong/sysmon-modular).
 
 [Download the default sysmon configuration file](https://raw.githubusercontent.com/olafhartong/sysmon-modular/master/sysmonconfig.xml)
 
-[Download sysmon](https://technet.microsoft.com/en-us/sysinternals/sysmon)
+[Download Sysmon](https://technet.microsoft.com/en-us/sysinternals/sysmon)
 
-Install sysmon with your configuration using an administrator shell (Powershell works too) by running the following command:
+Install Sysmon with your configuration using an administrator shell (PowerShell works too) by running the following command:
 
 ```powershell
-sysmon.exe -accepteula -i sysmonconfig-export.xml
+sysmon.exe -accepteula -i sysmonconfig.xml
 ```
-Restart the Gravwell service via standard windows service management.
-
-
 ## Gravwell Configuration
 
 ### Gravwell Storage Well Configuration
@@ -50,5 +47,5 @@ Create or edit: `%PROGRAMDATA%\gravwell\eventlog\config.cfg`
 ```
 
 ```{note}
-Remember to restart the gravwell service via standard windows service management to apply the new config.
+Remember to restart the Gravwell service via standard Windows service management to apply the new config.
 ```

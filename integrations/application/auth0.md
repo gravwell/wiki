@@ -6,11 +6,12 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [HTTP Ingester](/ingesters/http)
+    Kit, [Auth0 Kit](https://github.com/gravwell/kits/tree/main/auth0)
 :::
 
 ## Auth0 Configuration
 
-Follow the auth0 docs for setting up a [Custom Log Stream using Webhooks](https://auth0.com/docs/customize/log-streams/custom-log-streams).
+Follow the Auth0 docs for setting up a [Custom Log Stream using Webhooks](https://auth0.com/docs/customize/log-streams/custom-log-streams).
 
 ```{note}
 Auth0 does not support using self-signed HTTP certificates.
@@ -18,19 +19,19 @@ Auth0 does not support using self-signed HTTP certificates.
 
 1. Go to `Dashboard > Monitoring > Streams > Create Stream > Custom Webhook`
 2. Configure the settings:
-   * **Name:** Enter a unique name for your new stream.
-      * Example: `Gravwell Webhook`
-   * **Payload URL:** Sets where the event payloads are sent as HTTP Post Requests.
-      * Example: `https://path.to.gravwell:port/auth0`
-   * **Authorization Token:** (Optional) The value in the Authorization header of the request.
-      * Example: `AuthenticationToken`
-   * **Content Type:** The media type of the payload that will be delivered to the webhook. 
-      * Example: `application/json`
-   * **Content Format:** Receive data in JSON lines, arrays, or objects.
-      * Example: `JSON Lines`
-   * **Filter by Event Category:** List of log stream filters.
-      * Example: `Filter: All`
-   * **Starting Cursor:** (Optional) Specific day and time to start the stream from.
+    * **Name:** Enter a unique name for your new stream.
+        * Example: `Gravwell Webhook`
+    * **Payload URL:** Sets where the event payloads are sent as HTTP Post Requests.
+        * Example: `https://path.to.gravwell:port/auth0`
+    * **Authorization Token:** (Optional) The value in the Authorization header of the request.
+        * Example: `AuthenticationToken`
+    * **Content Type:** The media type of the payload that will be delivered to the webhook. 
+        * Example: `application/json`
+    * **Content Format:** Receive data in JSON lines, arrays, or objects.
+        * Example: `JSON Lines`
+    * **Filter by Event Category:** List of log stream filters.
+        * Example: `Filter: All`
+    * **Starting Cursor:** (Optional) Specific day and time to start the stream from.
 3. Click `Save`.
 
 Verify the `Stream Status` is active in the `Health` view.
@@ -49,7 +50,10 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/auth0-well.conf`
     Location=/opt/gravwell/storage/auth0
     Tags=auth0*
 ```
-### Gravwell Ingester Configuration: HTTP
+### Gravwell Ingester Configuration: HTTP Ingester
+
+This guide assumes the HTTP Ingester is already installed and configured as described in [HTTP Ingester Setup](/integrations/generic/http_ingester). Add the following to a new overlay file; you do not need a separate HTTP Ingester for this integration.
+
 **Sample Auth0 HTTP config:**  
 Create or edit: `/opt/gravwell/etc/gravwell_http_ingester.conf.d/auth0.conf`
 ```ini

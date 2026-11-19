@@ -6,7 +6,7 @@
 :widths: 15, 25
 **Integration Details**
     Ingester, [File Follower](/ingesters/file_follow)
-         Kit, [Auditd Kit](https://github.com/gravwell/kits/tree/main/auditd)
+    Kit, [Auditd Kit](https://github.com/gravwell/kits/tree/main/auditd)
 :::
 
 ## Auditd Configuration
@@ -32,9 +32,9 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/auditd-well.conf`
 ```
 
 ### Gravwell Ingester Configuration: File Follower
-Setup the file follower configuration file.
+Set up the File Follower configuration file.
 
-**Sample File Follower configuration:**  
+**Sample Auditd config:**  
 Create or edit: `/opt/gravwell/etc/file_follow.conf.d/auditd.conf`
 ```ini
 [Follower "auditd"]

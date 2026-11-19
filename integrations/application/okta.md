@@ -5,7 +5,8 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-    Ingester, • [Okta Hosted Ingester](/ingesters/okta) <br />
+    Ingester, [Okta Hosted Ingester](/ingesters/okta)
+    Kit, [Okta Kit](https://github.com/gravwell/kits/tree/main/okta)
 :::
 
 ## Okta Configuration
@@ -20,13 +21,13 @@ See the [Okta documentation](https://developer.okta.com/docs/guides/create-an-ap
 
 #### Creating an Okta Token
 
-Start by creating a dedicated Okta Service Account for logging purposes (something like “Okta Log User”). This user should be assigned to the “Read Only Admin” role.
+Start by creating a dedicated Okta Service Account for logging purposes (something like "Okta Log User"). This user should be assigned to the "Read Only Admin" role.
 
 ```{attention}
 Do not use a token with write permissions to your Okta instance to the ingester. This gives significantly more access than is needed for monitoring.
 ```
 
-1. Create an API token in the Okta Admin Console > Security > Api section.
+1. Create an API token in the Okta Admin Console under **Security** > **API**.
 
 ```{image} images/okta-sidebar.png
 :align: center
@@ -44,7 +45,7 @@ Do not use a token with write permissions to your Okta instance to the ingester.
 :align: center
 ```
 
-4. Double-check the role is “Read Only Admin” and that it is attached to a dedicated service account.
+4. Double-check the role is "Read Only Admin" and that it is attached to a dedicated service account.
 
 ```{image} images/okta-token-check.png
 :align: center
@@ -52,7 +53,7 @@ Do not use a token with write permissions to your Okta instance to the ingester.
 
 #### Token Rate Limits
 
-Okta is extremely sensitive to rate limits so double-check your token rate limits align to the `Request-Per-Minute` Config Parameter. The Ingester primarily hits the `/api/v1/logs` endpoint.
+Okta is extremely sensitive to rate limits so double-check that your token rate limits align with the `Request-Per-Minute` config parameter. The ingester primarily hits the `/api/v1/logs` endpoint.
 
 ```{image} images/okta-token-rate-limits.png
 :align: center
@@ -64,7 +65,7 @@ Okta is extremely sensitive to rate limits so double-check your token rate limit
 
 Setup the well configuration in your Gravwell indexers.
 
-#### Sample well config
+#### Sample Well Config
 Create or edit: `/opt/gravwell/etc/gravwell.conf.d/okta-well.conf`
 ```ini
 [Storage-Well "okta"]
@@ -74,8 +75,8 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/okta-well.conf`
 
 ### Gravwell Ingester Configuration
 
-#### Sample Okta config: Okta Hosted Ingester
-If the Hosted Runner is not installed, follow the [configuration guide for Okta](https://docs.gravwell.io/ingesters/okta.html) to create your own configuration.  
+#### Sample Okta Config: Okta Hosted Ingester
+If the Hosted Runner is not installed, follow the [configuration guide for Okta](/ingesters/okta) to create your own configuration.  
 
 Edit: `/opt/gravwell/etc/hosted_runner.conf`
 
@@ -86,7 +87,7 @@ Edit: `/opt/gravwell/etc/hosted_runner.conf`
     Token="your-okta-api-token"
 ```
 
-#### Sample Okta config: Rate limiting lowered for lower-tier Okta plans
+#### Sample Okta Config: Rate Limiting Lowered for Lower-Tier Okta Plans
 ```ini
 [Okta "myorg"]
     Ingester-UUID="99c00000-0000-0000-0000-000000000000"

@@ -83,7 +83,15 @@ jobs:
 
               cp -r ./result/html $BUILD_DEST/html/$v
               chmod --recursive +w $BUILD_DEST
-              echo "Disallow: /$v/" >> $BUILD_DEST/html/robots.txt
+
+              # Keep old versions out of search results so they don't compete with the latest docs.
+              # Crawlers must be able to fetch these pages to see the noindex tag, so robots.txt
+              # does not disallow them. Canonical links in older builds point at the latest docs,
+              # which conflicts with noindex, so strip them. Only the root sitemap/robots.txt apply.
+              find $BUILD_DEST/html/$v -name '*.html' -print0 | xargs -0 sed -i \
+                -e 's|<link rel="canonical"[^>]*>||' \
+                -e '0,/<head>/s|<head>|<head>\n    <meta name="robots" content="noindex, follow" />|'
+              rm -f $BUILD_DEST/html/$v/sitemap.xml $BUILD_DEST/html/$v/robots.txt
           done
 
           # Go back to the triggering branch

@@ -5,7 +5,7 @@
 :width: 45%
 :widths: 15, 25
 **Integration Details**
-         Kit, [Weather Kit](https://github.com/gravwell/kits/tree/main/weather)
+    Kit, [Weather Kit](https://github.com/gravwell/kits/tree/main/weather)
 :::
 
 ## OpenWeather Configuration
