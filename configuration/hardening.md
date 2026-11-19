@@ -104,9 +104,11 @@ The webserver uses the client address in these places:
 
 By default the trusted proxy list is empty. The webserver and the load balancer then ignore `X-Forwarded-For` and use the connecting address. To trust a proxy, list its address with the `Trusted-Proxy` parameter. Repeat the parameter once for each address or range:
 
-* Webservers: [Trusted-Proxy](trusted-proxy-config) in the `[Global]` section of `gravwell.conf`, or the `GRAVWELL_TRUSTED_PROXY` environment variable.
-* Load balancer: `Trusted-Proxy` in `loadbalancer.conf`. See [Client Addresses](loadbalancer_client_addresses).
-* HTTP ingester and LLM ingester: `Trusted-Proxy` in the `[Global]` section of the ingester configuration.
+* Webservers: [Trusted-Proxy](trusted-proxy-config) in the `[Global]` section of `gravwell.conf`, or the `GRAVWELL_TRUSTED_PROXY` environment variable. The webserver combines the entries from both.
+* Load balancer: `Trusted-Proxy` in `loadbalancer.conf`, or the `GRAVWELL_TRUSTED_PROXY` environment variable. The variable applies only when the file has no entries. See [Client Addresses](loadbalancer_client_addresses).
+* HTTP ingester and LLM ingester: `Trusted-Proxy` in the `[Global]` section of the ingester configuration, or the `GRAVWELL_HTTP_TRUSTED_PROXY` or `GRAVWELL_LLM_TRUSTED_PROXY` environment variable. The variable applies only when the configuration has no entries.
+
+The webserver, the load balancer, and the LLM ingester read `Trusted-Proxy` only when they start. Restart them after you change the list. The HTTP ingester also reads it again on a `SIGHUP` reload.
 
 ```{warning}
 The HTTP ingester and the LLM ingester keep an older default. When their trusted proxy list is empty, they trust `X-Forwarded-For` from any sender. Any client can then set the SRC of its entries. Set `Trusted-Proxy`, or set `Ignore-Untrusted-Forwarded-For` to use the connecting address. This default changes in the next major release. See [HTTP ingester Client Addresses](http_client_addresses) and [LLM ingester Client Addresses](llm_client_addresses).
@@ -121,7 +123,7 @@ When you set `Trusted-Proxy`, follow these rules:
 * List only the addresses of your own proxies and load balancers. Use a single address or a small range.
 * Gravwell rejects a list that trusts every address. This includes a range with a prefix length of 0, such as `0.0.0.0/0` or `::/0`. It also includes ranges that together cover every IPv4 address or every IPv6 address, such as `0.0.0.0/1` and `128.0.0.0/1`.
 * Write IPv4 ranges in IPv4 form. Gravwell rejects an IPv6 range that overlaps the IPv4-mapped range `::ffff:0:0/96`, such as `::/64`.
-* Gravwell rejects a `Trusted-Proxy` that holds only blank values. It does not treat it as an empty list.
+* If every `Trusted-Proxy` entry is blank, Gravwell rejects the list. It does not treat it as an empty list. The HTTP and LLM ingesters also reject an environment variable or `_FILE` file of only blanks or commas. The webserver and the load balancer read such a value as an empty list.
 * If the list is not valid, the webserver, load balancer, or ingester does not start. If the HTTP ingester reads a list that is not valid on a `SIGHUP` reload, it logs an error and keeps its old settings.
 * If you use the Gravwell load balancer, list the load balancer address on every webserver behind it.
 * In Docker, do not list the Docker bridge subnet or the bridge gateway. Give the proxy or load balancer container a static IP address and list that address. See [Docker](docker_reverse_proxies).
