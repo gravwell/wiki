@@ -137,7 +137,7 @@ Description:	If this parameter is set to true, the load balancer will log every 
 
 **Trusted-Proxy**
 Default Value:	(empty)
-Description:	Lists the reverse proxies in front of the load balancer. Each value is an IP address or a CIDR range, for example `Trusted-Proxy=10.0.0.5`. Specify the parameter once for each address or range. If the list is not valid, for example if it trusts every address, the load balancer does not start. See the rules in [Reverse Proxies and Client Addresses](hardening_reverse_proxies). If clients connect to the load balancer directly, leave this empty. See [Client Addresses](loadbalancer_client_addresses).
+Description:	Lists the reverse proxies in front of the load balancer. Each value is an IP address or a CIDR range, for example `Trusted-Proxy=10.0.0.5`. Specify the parameter once for each address or range. If the list is not valid, for example if it trusts every address, the load balancer does not start. See the rules in [Reverse Proxies and Client Addresses](hardening_reverse_proxies). If clients connect to the load balancer directly, leave this empty. See [Client Addresses](loadbalancer_client_addresses). The load balancer reads this parameter only when it starts. Restart the load balancer after you change it. The load balancer does not reload its configuration on `SIGHUP`. A `SIGHUP` stops the load balancer.
 
 ### Override Stanzas
 
@@ -207,6 +207,7 @@ When deploying in Docker, it is frequently easier to configure components via Do
 * `GRAVWELL_LOG_DIR` - Equivalent to the `Log-Dir` config parameter
 * `GRAVWELL_LOG_ENABLED_ACCESS_LOG` - Equivalent to the `Enable-Access-Log` config parameter
 * `GRAVWELL_TRUSTED_PROXY` - Equivalent to the `Trusted-Proxy` config parameter, as a comma-separated list
+* `GRAVWELL_TRUSTED_PROXY_FILE` - The path to a file that holds the `GRAVWELL_TRUSTED_PROXY` value, for example a Docker secret
 
 Thus for example you might invoke:
 
@@ -221,3 +222,5 @@ docker create --name loadbalancer \
 	-e GRAVWELL_DATASTORE_INSECURE_DISABLE_TLS=TRUE \
 	gravwell/loadbalancer
 ```
+
+`GRAVWELL_TRUSTED_PROXY` and `GRAVWELL_TRUSTED_PROXY_FILE` apply only when `loadbalancer.conf` has no `Trusted-Proxy` entries. If both variables are set, the load balancer uses `GRAVWELL_TRUSTED_PROXY`. The load balancer reads only the first line of the file. Write the list on that line, separated by commas. The load balancer does not start if the file is missing, cannot be read, or has an empty first line. A value of only commas or blanks gives an empty list. The load balancer then trusts no proxies and ignores `X-Forwarded-For`.

@@ -393,13 +393,17 @@ Description:	This setting can be used to manually specify `Allow-Origin` HTTP he
 Applies to:		Webserver  
 Default Value:	(empty)  
 Example:		`Trusted-Proxy=10.0.0.5`  
-Description:	The Trusted-Proxy parameter lists the reverse proxies and load balancers in front of the webserver. Each value is an IP address or a CIDR range, for example `10.0.0.5` or `10.0.0.0/24`. Trusted-Proxy is a list parameter. Specify it once for each address or range. The `GRAVWELL_TRUSTED_PROXY` environment variable takes a comma-separated list.
+Description:	The Trusted-Proxy parameter lists the reverse proxies and load balancers in front of the webserver. Each value is an IP address or a CIDR range, for example `10.0.0.5` or `10.0.0.0/24`. Trusted-Proxy is a list parameter. Specify it once for each address or range.
+
+The `GRAVWELL_TRUSTED_PROXY` environment variable takes a comma-separated list. The webserver adds these entries to the entries in `gravwell.conf` and in any configuration overlays. Most other environment variables apply only when the parameter is not set. The `GRAVWELL_TRUSTED_PROXY_FILE` variable holds the path to a file with the list. See [Loading Values From Files](env_vars_from_files). The webserver reads only the first line of the file. Write the list on that line, separated by commas. The webserver does not start if the file is missing, cannot be read, or has an empty first line. A value of only commas or blanks gives an empty list, so the webserver trusts no proxies.
 
 When the connecting address is in this list, the webserver uses the `X-Forwarded-For` header. It reads the header from right to left and skips each trusted address. The first address that is not trusted is the client address. If every address in the header is trusted, the webserver uses the leftmost address. If an entry is not a valid address, the webserver stops and uses the nearest trusted address to the right of that entry. When the list is empty, the webserver ignores `X-Forwarded-For` and uses the connecting address.
 
 The client address goes into the `host` field of webserver logs. The webserver also uses it as the session origin, as the key for per-address login throttling, and for the address allow-list of the debug API. When a request carries `X-Forwarded-For`, webserver logs add two fields: `peer` holds the connecting address and `xff` holds the header value.
 
 If the list is not valid, the webserver does not start. For example, the webserver rejects `0.0.0.0/0`, `::/0`, and ranges that together cover every IPv4 or IPv6 address. List only the addresses of your proxies. If you use the [Gravwell load balancer](/distributed/loadbalancer), list the load balancer address on every webserver. See [Reverse Proxies and Client Addresses](hardening_reverse_proxies) for more information.
+
+The webserver reads Trusted-Proxy only when it starts. Restart the webserver after you change the list.
 
 ### **Enable-CBAC**
 Applies to:		Webserver  
