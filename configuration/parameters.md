@@ -314,17 +314,17 @@ Default Value:
 Example:        `Web-Listen-Address=10.0.0.1`  
 Description:        The Web-Listen-Address parameter specifies the address the webserver should bind to and serve from.  By default the parameter is empty, meaning the webserver binds to all interfaces and addresses.
 
-#### **Login-Fail-Lock-Count**
-Applies to:        Webserver
-Default Value:        `0` (disabled; the `gravwell.conf` shipped with the installers and Docker images sets `5`)
-Example:        `Login-Fail-Lock-Count=10`
-Description:        The Login-Fail-Lock-Count parameter specifies the number of sequential failed logins that can occur against a user account before brute-force protection is enabled on the account.  For example, if the value is set to 4 and a user provides a bad password 4 times in a row, additional login attempts will take longer to complete, slowing down an attacker. Note: Gravwell previously locked an account after a specific number of failures; it now engages a less aggressive brute-force protection, but for legacy reasons the configuration parameter retains the 'Lock' name.
+### **Login-Fail-Lock-Count**
+Applies to:        Webserver  
+Default Value:        `0` (disabled, but the `gravwell.conf` shipped with the installers and Docker images sets `4`)  
+Example:        `Login-Fail-Lock-Count=10`  
+Description:        The Login-Fail-Lock-Count parameter sets the number of failed logins that lock a user account. The webserver counts the failed logins for each account inside the window that Login-Fail-Lock-Duration sets. When the count reaches this value, the webserver locks the account. An administrator unlocks the account in the user control panel. The webserver never locks the admin account with UID 1. If this parameter or Login-Fail-Lock-Duration is `0`, the webserver does not lock accounts. This parameter does not change the login throttling delay. Throttling is always on. See [Account Brute Force Protections](hardening_brute_force) for details.
 
-#### **Login-Fail-Lock-Duration**
-Applies to:        Webserver
-Default Value:        `0` (disabled; the `gravwell.conf` shipped with the installers and Docker images sets `5`)
-Example:        `Login-Fail-Lock-Duration=10`
-Description:        The Login-Fail-Lock-Duration parameter specifies the window (in minutes) used when calculating if the Login-Fail-Lock-Count has been exceeded. Note: Gravwell previously locked an account after a specific number of failures; it now engages a less aggressive brute-force protection, but for legacy reasons the configuration parameter retains the 'Lock' name.
+### **Login-Fail-Lock-Duration**
+Applies to:        Webserver  
+Default Value:        `0` (disabled, but the `gravwell.conf` shipped with the installers and Docker images sets `5`)  
+Example:        `Login-Fail-Lock-Duration=10`  
+Description:        The Login-Fail-Lock-Duration parameter sets the window, in minutes, in which the webserver counts failed logins against Login-Fail-Lock-Count. If this parameter or Login-Fail-Lock-Count is `0`, the webserver does not lock accounts.
 
 (remote-indexers-config)=
 ### **Remote-Indexers**
@@ -387,6 +387,23 @@ Applies to:		Webserver
 Default Value:	(empty)  
 Example:		`Webserver-Access-Control-Allow-Origin=google.com`  
 Description:	This setting can be used to manually specify `Allow-Origin` HTTP headers on web requests.  This can be useful if you are storing the Gravwell web application on a CDN and want to allow some files to be served by a different domain.
+
+(trusted-proxy-config)=
+### **Trusted-Proxy**
+Applies to:		Webserver  
+Default Value:	(empty)  
+Example:		`Trusted-Proxy=10.0.0.5`  
+Description:	The Trusted-Proxy parameter lists the reverse proxies and load balancers in front of the webserver. Each value is an IP address or a CIDR range, for example `10.0.0.5` or `10.0.0.0/24`. Trusted-Proxy is a list parameter. Specify it once for each address or range.
+
+The `GRAVWELL_TRUSTED_PROXY` environment variable takes a comma-separated list. The webserver adds these entries to the entries in `gravwell.conf` and in any configuration overlays. Most other environment variables apply only when the parameter is not set. The `GRAVWELL_TRUSTED_PROXY_FILE` variable holds the path to a file with the list. See [Loading Values From Files](env_vars_from_files). The webserver reads only the first line of the file. Write the list on that line, separated by commas. The webserver does not start if the file is missing, cannot be read, has a blank first line, or has an entry on a later line. A value of only commas or blanks gives an empty list, so the webserver trusts no proxies.
+
+When the connecting address is in this list, the webserver uses the `X-Forwarded-For` header. It reads the header from right to left and skips each trusted address. The first address that is not trusted is the client address. If every address in the header is trusted, the webserver uses the leftmost address. If an entry is not a valid address, the webserver stops and uses the nearest trusted address to the right of that entry. When the list is empty, the webserver ignores `X-Forwarded-For` and uses the connecting address.
+
+The client address goes into the `host` field of webserver logs. The webserver also uses it as the session origin, as the key for per-address login throttling, and for the address allow-list of the debug API. When a request carries `X-Forwarded-For`, webserver logs add two fields: `peer` holds the connecting address and `xff` holds the header value.
+
+If the list is not valid, the webserver does not start. For example, the webserver rejects `0.0.0.0/0`, `::/0`, and ranges that together cover every IPv4 or IPv6 address. List only the addresses of your proxies. If you use the [Gravwell load balancer](/distributed/loadbalancer), list the load balancer address on every webserver. See [Reverse Proxies and Client Addresses](hardening_reverse_proxies) for more information.
+
+The webserver reads Trusted-Proxy only when it starts. Restart the webserver after you change the list.
 
 ### **Enable-CBAC**
 Applies to:		Webserver  

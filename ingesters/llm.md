@@ -77,6 +77,8 @@ See [Anthropic Messages](llm_anthropic) for what each of those parameters does a
 |----------------------|---------|----------|---------------|-------------|
 | State-Store-Location | string  | NO       |               | Path to a persistent state file for the session tracker. When set, session state survives an ingester restart. Only message hashes are written, never prompt content. Leaving this unset keeps session state in memory only. |
 | Session-Match-Window | integer | NO       | 10            | How many of a request's most recent messages the session tracker compares when deciding whether a request continues an existing conversation. Larger values are more precise but do more work per request. |
+| Trusted-Proxy        | string array | NO |              | An IP address or CIDR range of a reverse proxy or load balancer in front of the ingester. Repeat the parameter once for each address or range. When set, the ingester uses the `X-Forwarded-For` header only from these addresses. See [Client Addresses](llm_client_addresses). |
+| Ignore-Untrusted-Forwarded-For | boolean | NO | false      | When no Trusted-Proxy is set, ignore `X-Forwarded-For` and use the connecting address as the client IP. See [Client Addresses](llm_client_addresses). |
 
 ## Listener Configuration
 
@@ -283,7 +285,47 @@ Setting `State-Store-Location` in the `[Global]` block persists session state ac
 Only message hashes are stored, in memory and on disk — never prompt or response content. The state file cannot be used to recover conversation text.
 ```
 
-The client IP is taken from the leading entry of the `X-Forwarded-For` header when that value parses as an IP address, and from the connecting peer otherwise. This keeps sessions attributed to the real client when the ingester sits behind a load balancer, without letting a malformed header collapse every client onto one address. The ingester appends its own peer to the `X-Forwarded-For` chain on the upstream request.
+(llm_client_addresses)=
+### Client Addresses
+
+The client IP sets the SRC field and partitions session state. Two parameters in the `[Global]` block decide where the client IP comes from:
+
+| Trusted-Proxy | Ignore-Untrusted-Forwarded-For | Client IP |
+|---------------|--------------------------------|-----------|
+| set           | any value                      | `X-Forwarded-For` from a listed proxy, otherwise the connecting address |
+| not set       | false (default)                | The leftmost valid address in `X-Forwarded-For` from any sender, otherwise the connecting address |
+| not set       | true                           | The connecting address |
+
+```{warning}
+By default, the ingester trusts `X-Forwarded-For` from any sender. Any client can then choose its SRC and its session partition by sending its own leftmost `X-Forwarded-For` entry. If the ingester sits behind a reverse proxy or load balancer, set `Trusted-Proxy`. If clients connect to the ingester directly, set `Ignore-Untrusted-Forwarded-For = true`. The default will change in the next major release. Until then, the ingester logs a warning at most once a minute when `X-Forwarded-For` sets the client IP.
+```
+
+List each proxy with `Trusted-Proxy`, one address or CIDR range per line:
+
+```
+[Global]
+	Trusted-Proxy = 10.0.0.5
+	Trusted-Proxy = 192.168.100.0/24
+```
+
+When the connection comes from a trusted proxy, the ingester reads `X-Forwarded-For` from right to left and skips each trusted address. The first address that is not trusted is the client IP.
+
+The `GRAVWELL_LLM_TRUSTED_PROXY` environment variable takes a comma-separated list of addresses. It applies only when the configuration file has no `Trusted-Proxy` entries. The `GRAVWELL_LLM_TRUSTED_PROXY_FILE` environment variable holds the path to a file with the list, for example a Docker or Kubernetes secret. It follows the same rule. If both variables are set, the ingester uses `GRAVWELL_LLM_TRUSTED_PROXY`. The file can list one entry per line, entries separated by commas, or both. A line that starts with `#` is an entry, not a comment. The ingester does not start if the file is missing, cannot be read, or is empty.
+
+The `GRAVWELL_LLM_IGNORE_UNTRUSTED_FORWARDED_FOR` environment variable sets `Ignore-Untrusted-Forwarded-For`. It can only turn the option on. If it is `true`, a value of `false` in the configuration file does not turn the option off.
+
+The ingester reads these settings only when it starts. Restart the ingester after you change them.
+
+The ingester does not start if a `Trusted-Proxy` value is not valid. It also rejects these values:
+
+* A range with a prefix length of 0, such as `0.0.0.0/0` or `::/0`.
+* Ranges that together cover every IPv4 address, such as `0.0.0.0/1` and `128.0.0.0/1`. These trust every address, the same as a prefix length of 0. The ingester checks IPv4 and IPv6 ranges separately. Ranges that together cover every IPv6 address are rejected too. For this check, the ingester counts the IPv4-mapped range `::ffff:0:0/96` as covered. The error tells you to list only the addresses of your proxies.
+* An IPv6 range that overlaps `::ffff:0:0/96`, the IPv4-mapped range. List IPv4 ranges in IPv4 form. A range written in IPv4-mapped form with a prefix length longer than 96, such as `::ffff:10.0.0.0/120`, is accepted and read as the IPv4 range.
+* A `Trusted-Proxy` value, a `GRAVWELL_LLM_TRUSTED_PROXY` value, or a `GRAVWELL_LLM_TRUSTED_PROXY_FILE` file that holds only blanks or commas, such as `,`. The ingester does not treat it as unset.
+
+Warnings about a request, such as a body that cannot be parsed or a failed upstream call, carry the client IP in a `src` field. This is the same address as the entry SRC. When the request carries `X-Forwarded-For`, these warnings also add a `peer` field with the connecting address and an `xff` field with the raw header. The `xff` field is for logging only. It is never the SRC or the session key. If an entry in the header is not a valid address, the warning also adds `xff-malformed`.
+
+The ingester appends its own peer to the `X-Forwarded-For` chain on the upstream request.
 
 (llm_authorization)=
 ## Authorization
