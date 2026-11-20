@@ -223,4 +223,4 @@ docker create --name loadbalancer \
 	gravwell/loadbalancer
 ```
 
-`GRAVWELL_TRUSTED_PROXY` and `GRAVWELL_TRUSTED_PROXY_FILE` apply only when `loadbalancer.conf` has no `Trusted-Proxy` entries. If both variables are set, the load balancer uses `GRAVWELL_TRUSTED_PROXY`. The load balancer reads only the first line of the file. Write the list on that line, separated by commas. The load balancer does not start if the file is missing, cannot be read, or has an empty first line. A value of only commas or blanks gives an empty list. The load balancer then trusts no proxies and ignores `X-Forwarded-For`.
+`GRAVWELL_TRUSTED_PROXY` and `GRAVWELL_TRUSTED_PROXY_FILE` apply only when `loadbalancer.conf` has no `Trusted-Proxy` entries. If both variables are set, the load balancer uses `GRAVWELL_TRUSTED_PROXY`. The load balancer reads only the first line of the file. Write the list on that line, separated by commas. The load balancer does not start if the file is missing, cannot be read, has a blank first line, or has an entry on a later line. A value of only commas or blanks gives an empty list. The load balancer then trusts no proxies and ignores `X-Forwarded-For`.
