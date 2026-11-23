@@ -118,6 +118,8 @@ You may also choose to link a flow to an alert. As an alert consumer, the flow c
 
 Flows may be made visible to other users via the Access setting at the bottom of the page. Sharing your flows with other users allows them to make duplicate flows for themselves. Only administrators can modify another user's flow.
 
+If the flow uses saved queries or secrets, the [Reference Table](/gui/reference-table/reference-table), opened from the "Referenced Assets" section of the settings page, shows whether they are shared with the same groups as the flow.
+
 ## In-Flow "Sticky" Notes
 
 The "Note" node is a special node used to annotate flows. Unlike other nodes, it plays no role in the execution of the flow; notes exist purely for the convenience of users.
