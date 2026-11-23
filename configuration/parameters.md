@@ -778,6 +778,7 @@ The `[MCP-Client]` configuration section defines external MCP servers that Gravw
 [MCP-Client "my-tools"]
 	URL="https://my-mcp-server.example.com/mcp"
 	Header="Authorization: Bearer my-token"
+    Tool-Call-Timeout="90s"
 ```
 
 ### **URL**
@@ -794,6 +795,16 @@ Description: Additional HTTP headers to include in requests to the MCP server, i
 Default Value: false  
 Example: `Insecure-Skip-TLS-Verify=true`  
 Description: Do not validate the TLS certificate presented by the MCP server. This allows connecting to an MCP server using a self-signed certificate. 
+
+### **Enable-Standalone-SSE**
+Default Value: false  
+Example: `Enable-Standalone-SSE=true`  
+Description: Open the standalone SSE stream that an MCP server uses to send server-initiated messages. Logbot does not need this stream for most servers, so it is off by default. Enable it only for a server that delivers tool results on the standalone stream instead of in the response to the call; without it, calls to such a server never complete. When enabled, a server that is slow to open the stream can delay the start of each Logbot request.  
+
+### **Tool-Call-Timeout**
+Default Value: 2m  
+Example: `Tool-Call-Timeout="5m"`  
+Description: The maximum time a single tool call to this MCP server may take. A call that runs longer is abandoned and reported to Logbot as an error, so an unresponsive server cannot stall a conversation. Increase the value for servers whose tools legitimately run longer. The value must be a positive duration such as `45s` or `10m`; the webserver will refuse to start otherwise. Tools built into Gravwell are not affected by this setting.  
 
 ## Password Control
 
