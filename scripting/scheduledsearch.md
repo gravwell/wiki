@@ -32,6 +32,8 @@ In order to reference a query library item for the scheduled search, click the "
 
 ![](reference.png)
 
+If you share a scheduled search that references a query library item, make sure the saved query is shared with the same groups. The [Reference Table](/gui/reference-table/reference-table), opened from the "Referenced Assets" section of the Information panel, shows any groups that are missing access.
+
 Below, we have defined a simple scheduled search which runs every minute and counts how many entries came in over the last minute:
 
 ![](countsearch.png)
