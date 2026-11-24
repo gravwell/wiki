@@ -15,7 +15,7 @@ This guide does not cover osquery result logs, osquery status logs or Fleet's ot
 
 Fleet can deliver activities in two ways. Use **one** of them per tag:
 
-| | Option 1: Audit log streaming | Option 2: Activities webhook |
+| | [Option 1: Audit log streaming](fleetdm_option1) | [Option 2: Activities webhook](fleetdm_option2) |
 |---|---|---|
 | Fleet edition | Premium | Free and Premium |
 | Fleet hosting | Self-hosted (needs Fleet server settings) | Self-hosted and Fleet-managed cloud |
@@ -24,18 +24,18 @@ Fleet can deliver activities in two ways. Use **one** of them per tag:
 | If Gravwell is unreachable | Fleet resends on the next run | The activity is lost |
 | Gravwell listener | `HEC-Compatible-Listener` | `Listener` |
 
-Use Option 1 if your Fleet qualifies, because it does not lose activities. Use Option 2 otherwise.
-
 The steps in this guide were tested with self-hosted Fleet 4.93.2 (both options) and 4.94.1 (Option 2).
 
+(fleetdm_configuration)=
 ## FleetDM Configuration
 
 ```{important}
 Fleet 4.89.0 and later refuse to send to private network addresses (for example `10.0.0.0/8`, `172.16.0.0/12` and `192.168.0.0/16`). If the HTTP Ingester has a private address, set `FLEET_SERVER_ALLOW_PRIVATE_NETWORK_INTEGRATIONS=true` on the Fleet server and restart Fleet. Fleet always refuses loopback addresses (`127.0.0.1`), even with this setting, so use the ingester host's network address even when Fleet runs on the same host. Fleet-managed cloud customers cannot change this setting and need an ingester address that is reachable from the internet.
 ```
 
-Fleet does not test the destination when you save the settings. A wrong address, token or certificate shows up only as missing data and an error in the Fleet server log (see Troubleshooting).
+Fleet does not test the destination when you save the settings. A wrong address, token or certificate shows up only as missing data and an error in the Fleet server log (see [Troubleshooting](fleetdm_troubleshooting)).
 
+(fleetdm_option1)=
 ### [Option 1] Audit Log Streaming (Fleet Premium, Self-Hosted)
 
 Fleet Premium can stream activities with its `splunk` audit log plugin, which speaks the Splunk HTTP Event Collector protocol. Set the following environment variables on the Fleet server and restart Fleet:
@@ -57,6 +57,7 @@ FLEET_SPLUNK_TOKEN=<TOKEN>
 The `splunk` settings are shared with Fleet's osquery log plugins. If you also set `FLEET_OSQUERY_RESULT_LOG_PLUGIN` or `FLEET_OSQUERY_STATUS_LOG_PLUGIN` to `splunk`, osquery results go to the same listener and land on the activity tag. Use another plugin for osquery logs.
 ```
 
+(fleetdm_option2)=
 ### [Option 2] Activities Webhook (Fleet Free and Premium)
 
 Fleet's activities webhook posts each activity to a URL as it happens. It cannot send a header, so the Gravwell listener takes its token from the URL. Set it as a global admin. On Fleet Premium, select **All fleets** in the fleet selector first; Fleet Free has no selector.
@@ -103,7 +104,7 @@ Create or edit: `/opt/gravwell/etc/gravwell.conf.d/fleetdm-well.conf`
 
 This guide assumes the HTTP Ingester is already installed and configured as described in [HTTP Ingester Setup](/integrations/generic/http_ingester). Add the following to a new overlay file; you do not need a separate HTTP Ingester for this integration.
 
-Serve the HTTP Ingester over HTTPS (see HTTP Ingester Setup). Both options send the token with every request. The certificate must be one the Fleet server trusts. Fleet rejects a self-signed certificate, and with Option 2 the activities are lost. For a certificate from a private CA, add the CA to the trust store of the Fleet server; for the Fleet container, mount the CA file and set `SSL_CERT_FILE` to its path.
+Serve the HTTP Ingester over HTTPS (see [HTTP Ingester Setup](/integrations/generic/http_ingester)). Both options send the token with every request. The certificate must be one the Fleet server trusts. Fleet rejects a self-signed certificate, and with Option 2 the activities are lost. For a certificate from a private CA, add the CA to the trust store of the Fleet server; for the Fleet container, mount the CA file and set `SSL_CERT_FILE` to its path.
 
 Create a token for the listener:
 
@@ -172,18 +173,27 @@ Remember to restart the service to apply the new config:
    tag=fleetdm json type as atype | stats count by atype
    ```
 
+(fleetdm_troubleshooting)=
 ## Troubleshooting
 
-**Nothing arrives.** Look in the Fleet server log. Option 2 errors start with `fire activity webhook to`; Option 1 errors are on the `activities_streaming` job and mention `splunk`.
-* `connections to private network addresses are blocked`: set `FLEET_SERVER_ALLOW_PRIVATE_NETWORK_INTEGRATIONS=true` (see FleetDM Configuration). For a loopback address, use the host's network address.
+### Nothing Arrives
+
+Look in the Fleet server log. Option 2 errors start with `fire activity webhook to`; Option 1 errors are on the `activities_streaming` job and mention `splunk`.
+* `connections to private network addresses are blocked`: set `FLEET_SERVER_ALLOW_PRIVATE_NETWORK_INTEGRATIONS=true` (see [FleetDM Configuration](fleetdm_configuration)). For a loopback address, use the host's network address.
 * `x509: certificate signed by unknown authority`: the Fleet server does not trust the ingester's certificate.
 * A `401` status: the token does not match. The HTTP Ingester also logs `access denied` to the `gravwell` tag, with `Bad token value`, `Missing token parameter` or `Unauthorized`.
 
-**Activities are missing (Option 2).** Activities recorded while a delivery failed are lost (see the warning in Option 2). They remain in Fleet's activity feed. Switch to Option 1 if your Fleet qualifies.
+### Missing Activities (Option 2)
 
-**Duplicate activities.** Both options send to the same tag. Disable one.
+Activities recorded while a delivery failed are lost (see the warning in [Option 2](fleetdm_option2)). They remain in Fleet's activity feed. Option 1 (Fleet Premium, self-hosted) resends them after an outage.
 
-**Entries that are not activities.** Activities always have a top-level `type`. Entries without one are osquery logs or other webhook payloads sent to the activity listener:
+### Duplicate Activities
+
+Both options send to the same tag. Disable one.
+
+### Non-Activity Entries
+
+Activities always have a top-level `type`. Entries without one are osquery logs or other webhook payloads sent to the activity listener:
 ```text
 tag=fleetdm json type as atype | eval len(atype) == 0 | count
 ```
