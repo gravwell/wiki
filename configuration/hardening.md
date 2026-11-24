@@ -102,7 +102,7 @@ The webserver uses the client address in these places:
 * The per-address count for [login throttling](hardening_brute_force).
 * The address allow-list of the debug API.
 
-By default the trusted proxy list is empty. The webserver and the load balancer then ignore `X-Forwarded-For` and use the connecting address. To trust a proxy, list its address with the `Trusted-Proxy` parameter. Repeat the parameter once for each address or range:
+By default the trusted proxy list is empty. The webserver, the load balancer, and the ingesters then ignore `X-Forwarded-For` and use the connecting address. To trust a proxy, list its address with the `Trusted-Proxy` parameter. Repeat the parameter once for each address or range:
 
 * Webservers: [Trusted-Proxy](trusted-proxy-config) in the `[Global]` section of `gravwell.conf`, or the `GRAVWELL_TRUSTED_PROXY` environment variable. The webserver combines the entries from both.
 * Load balancer: `Trusted-Proxy` in `loadbalancer.conf`, or the `GRAVWELL_TRUSTED_PROXY` environment variable. The variable applies only when the file has no entries. See [Client Addresses](loadbalancer_client_addresses).
@@ -110,9 +110,7 @@ By default the trusted proxy list is empty. The webserver and the load balancer 
 
 The webserver, the load balancer, and the LLM ingester read `Trusted-Proxy` only when they start. Restart them after you change the list. The HTTP ingester also reads it again on a `SIGHUP` reload.
 
-```{warning}
-The HTTP ingester and the LLM ingester keep an older default. When their trusted proxy list is empty, they trust `X-Forwarded-For` from any sender. Any client can then set the SRC of its entries. Set `Trusted-Proxy`, or set `Ignore-Untrusted-Forwarded-For` to use the connecting address. This default changes in the next major release. See [HTTP ingester Client Addresses](http_client_addresses) and [LLM ingester Client Addresses](llm_client_addresses).
-```
+The HTTP ingester and the LLM ingester follow the same default. Earlier releases of these ingesters trusted `X-Forwarded-For` from any sender when their trusted proxy list was empty. Setting `Ignore-Untrusted-Forwarded-For` to false keeps that behavior, and any client can then set the SRC of its entries. If an ingester sits behind a proxy, list the proxy with `Trusted-Proxy`. Otherwise SRC is the proxy address. See [HTTP ingester Client Addresses](http_client_addresses) and [LLM ingester Client Addresses](llm_client_addresses).
 
 When the connecting address is a trusted proxy, Gravwell reads `X-Forwarded-For` from right to left. It skips each trusted address. The first address that is not trusted is the client address.
 

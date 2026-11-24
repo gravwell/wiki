@@ -78,7 +78,7 @@ See [Anthropic Messages](llm_anthropic) for what each of those parameters does a
 | State-Store-Location | string  | NO       |               | Path to a persistent state file for the session tracker. When set, session state survives an ingester restart. Only message hashes are written, never prompt content. Leaving this unset keeps session state in memory only. |
 | Session-Match-Window | integer | NO       | 10            | How many of a request's most recent messages the session tracker compares when deciding whether a request continues an existing conversation. Larger values are more precise but do more work per request. |
 | Trusted-Proxy        | string array | NO |              | An IP address or CIDR range of a reverse proxy or load balancer in front of the ingester. Repeat the parameter once for each address or range. When set, the ingester uses the `X-Forwarded-For` header only from these addresses. See [Client Addresses](llm_client_addresses). |
-| Ignore-Untrusted-Forwarded-For | boolean | NO | false      | When no Trusted-Proxy is set, ignore `X-Forwarded-For` and use the connecting address as the client IP. See [Client Addresses](llm_client_addresses). |
+| Ignore-Untrusted-Forwarded-For | boolean | NO | true       | When no Trusted-Proxy is set, ignore `X-Forwarded-For` and use the connecting address as the client IP. See [Client Addresses](llm_client_addresses). |
 
 ## Listener Configuration
 
@@ -293,12 +293,14 @@ The client IP sets the SRC field and partitions session state. Two parameters in
 | Trusted-Proxy | Ignore-Untrusted-Forwarded-For | Client IP |
 |---------------|--------------------------------|-----------|
 | set           | any value                      | `X-Forwarded-For` from a listed proxy, otherwise the connecting address |
-| not set       | false (default)                | The leftmost valid address in `X-Forwarded-For` from any sender, otherwise the connecting address |
-| not set       | true                           | The connecting address |
+| not set       | true (default)                 | The connecting address |
+| not set       | false                          | The leftmost valid address in `X-Forwarded-For` from any sender, otherwise the connecting address |
 
 ```{warning}
-By default, the ingester trusts `X-Forwarded-For` from any sender. Any client can then choose its SRC and its session partition by sending its own leftmost `X-Forwarded-For` entry. If the ingester sits behind a reverse proxy or load balancer, set `Trusted-Proxy`. If clients connect to the ingester directly, set `Ignore-Untrusted-Forwarded-For = true`. The default will change in the next major release. Until then, the ingester logs a warning at most once a minute when `X-Forwarded-For` sets the client IP.
+Earlier releases defaulted `Ignore-Untrusted-Forwarded-For` to false. If the ingester sits behind a reverse proxy or load balancer, set `Trusted-Proxy`. Otherwise every client behind the proxy gets the proxy address as its SRC and shares one session partition.
 ```
+
+Set `Ignore-Untrusted-Forwarded-For = false` only to keep the behavior of earlier releases. Any client can then choose its SRC and its session partition by sending its own leftmost `X-Forwarded-For` entry. The ingester logs a warning at most once a minute when `X-Forwarded-For` sets the client IP this way.
 
 List each proxy with `Trusted-Proxy`, one address or CIDR range per line:
 
@@ -312,7 +314,7 @@ When the connection comes from a trusted proxy, the ingester reads `X-Forwarded-
 
 The `GRAVWELL_LLM_TRUSTED_PROXY` environment variable takes a comma-separated list of addresses. It applies only when the configuration file has no `Trusted-Proxy` entries. The `GRAVWELL_LLM_TRUSTED_PROXY_FILE` environment variable holds the path to a file with the list, for example a Docker or Kubernetes secret. It follows the same rule. If both variables are set, the ingester uses `GRAVWELL_LLM_TRUSTED_PROXY`. The file can list one entry per line, entries separated by commas, or both. A line that starts with `#` is an entry, not a comment. The ingester does not start if the file is missing, cannot be read, or is empty.
 
-The `GRAVWELL_LLM_IGNORE_UNTRUSTED_FORWARDED_FOR` environment variable sets `Ignore-Untrusted-Forwarded-For`. It can only turn the option on. If it is `true`, a value of `false` in the configuration file does not turn the option off.
+The `GRAVWELL_LLM_IGNORE_UNTRUSTED_FORWARDED_FOR` environment variable sets `Ignore-Untrusted-Forwarded-For` to `true` or `false`. It applies only when the configuration file does not set the parameter.
 
 The ingester reads these settings only when it starts. Restart the ingester after you change them.
 

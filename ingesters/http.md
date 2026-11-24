@@ -29,7 +29,7 @@ The configuration file is at `/opt/gravwell/etc/gravwell_http_ingester.conf`. Th
 | Bind                      | string       | yes      |                 | Host:Port pair specifying HTTP server bind. |
 | Health-Check-URL          | string       | no       |                 | An optional URL that provides unauthenticated ingester health check status. |
 | Trusted-Proxy             | string array | no       |                 | An IP address or CIDR range of a reverse proxy or load balancer in front of the ingester. Repeat the parameter once for each address or range. See [Client Addresses](http_client_addresses). |
-| Ignore-Untrusted-Forwarded-For | boolean | no       | false           | When no Trusted-Proxy is set, ignore `X-Forwarded-For` and set SRC to the connecting address. See [Client Addresses](http_client_addresses). |
+| Ignore-Untrusted-Forwarded-For | boolean | no       | true            | When no Trusted-Proxy is set, ignore `X-Forwarded-For` and set SRC to the connecting address. See [Client Addresses](http_client_addresses). |
 
 ### Resource Controls Configuration
 
@@ -860,11 +860,11 @@ Two parameters in the `[Global]` section decide where the client address comes f
 | Trusted-Proxy | Ignore-Untrusted-Forwarded-For | Client address |
 |---------------|--------------------------------|----------------|
 | set           | any value                      | `X-Forwarded-For` from a listed proxy, otherwise the connecting address |
-| not set       | false (default)                | The leftmost valid address in `X-Forwarded-For` from any sender, otherwise the connecting address |
-| not set       | true                           | The connecting address |
+| not set       | true (default)                 | The connecting address |
+| not set       | false                          | The leftmost valid address in `X-Forwarded-For` from any sender, otherwise the connecting address |
 
 ```{warning}
-By default, the ingester trusts `X-Forwarded-For` from any sender. Any client can then set the SRC of its entries. If the ingester sits behind a reverse proxy or load balancer, set `Trusted-Proxy`. If clients connect to the ingester directly, set `Ignore-Untrusted-Forwarded-For=true`. The default will change in the next major release. Until then, the ingester logs a warning at most once a minute when `X-Forwarded-For` sets SRC.
+Earlier releases defaulted `Ignore-Untrusted-Forwarded-For` to false. If the ingester sits behind a reverse proxy or load balancer, set `Trusted-Proxy`. Otherwise SRC is the address of the proxy.
 ```
 
 ### Trusted-Proxy
@@ -892,7 +892,11 @@ The ingester does not start if a `Trusted-Proxy` value is not valid. It also rej
 
 ### Ignore-Untrusted-Forwarded-For
 
-Set `Ignore-Untrusted-Forwarded-For=true` when clients connect to the ingester directly. When no `Trusted-Proxy` is set, SRC is then always the connecting address. When `Trusted-Proxy` is set, this parameter has no effect. The `GRAVWELL_HTTP_IGNORE_UNTRUSTED_FORWARDED_FOR` environment variable sets the same option. The environment variable can only turn the option on. If it is `true`, a value of `false` in the configuration file does not turn the option off.
+`Ignore-Untrusted-Forwarded-For` is true by default. When no `Trusted-Proxy` is set, SRC is then always the connecting address. When `Trusted-Proxy` is set, this parameter has no effect.
+
+Set `Ignore-Untrusted-Forwarded-For=false` only to keep the behavior of earlier releases. The ingester then trusts `X-Forwarded-For` from any sender, so any client can set the SRC of its entries. The ingester logs a warning at most once a minute when `X-Forwarded-For` sets SRC this way.
+
+The `GRAVWELL_HTTP_IGNORE_UNTRUSTED_FORWARDED_FOR` environment variable sets the same option to `true` or `false`. It applies only when the configuration file does not set the parameter.
 
 Changes to `Trusted-Proxy` and `Ignore-Untrusted-Forwarded-For` take effect when the ingester reloads its configuration on `SIGHUP`. You do not need to restart the ingester. See [Dynamic Configuration Reload](http_dynamic_reload).
 
