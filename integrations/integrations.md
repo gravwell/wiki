@@ -48,6 +48,7 @@ Office 365 <cloud/office365>
 Okta <application/okta>
 OpenTelemetry <generic/opentelemetry>
 OpenWeatherMap <application/openweathermap>
+OPNsense <network/opnsense>
 Palo Alto <network/paloalto>
 pfSense <network/pfsense>
 PiHole <network/pihole>
@@ -128,7 +129,7 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: network/corelight
 :link-type: doc
-**Corelight** 
+**Corelight**
 :::
 ::::
 
@@ -136,7 +137,7 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: network/fortinet
 :link-type: doc
-**Fortinet** 
+**Fortinet**
 :::
 
 :::{grid-item-card}
@@ -148,17 +149,23 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: network/juniper
 :link-type: doc
-**Juniper** 
+**Juniper**
 :::
 
 :::{grid-item-card}
 :link: network/netflow
 :link-type: doc
-**Netflow** 
+**Netflow**
 :::
 ::::
 
 ::::{grid} 4
+:::{grid-item-card}
+:link: network/opnsense
+:link-type: doc
+**OPNsense**
+:::
+
 :::{grid-item-card}
 :link: network/paloalto
 :link-type: doc
@@ -176,15 +183,15 @@ Zeek <network/zeek>
 :link-type: doc
 **PiHole**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: network/proxmox
 :link-type: doc
 **Proxmox**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: network/suricata
 :link-type: doc
