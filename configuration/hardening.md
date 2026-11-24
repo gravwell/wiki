@@ -121,7 +121,7 @@ When you set `Trusted-Proxy`, follow these rules:
 * List only the addresses of your own proxies and load balancers. Use a single address or a small range.
 * Gravwell rejects a list that trusts every address. This includes a range with a prefix length of 0, such as `0.0.0.0/0` or `::/0`. It also includes ranges that together cover every IPv4 address or every IPv6 address, such as `0.0.0.0/1` and `128.0.0.0/1`.
 * Write IPv4 ranges in IPv4 form. Gravwell rejects an IPv6 range that overlaps the IPv4-mapped range `::ffff:0:0/96`, such as `::/64`.
-* If every `Trusted-Proxy` entry is blank, Gravwell rejects the list. It does not treat it as an empty list. The HTTP and LLM ingesters also reject an environment variable or `_FILE` file of only blanks or commas. The webserver and the load balancer read such a value as an empty list.
+* If every `Trusted-Proxy` entry is blank, Gravwell rejects the list. It does not treat it as an empty list. Gravwell also rejects an environment variable or `_FILE` file of only blanks or commas.
 * If the list is not valid, the webserver, load balancer, or ingester does not start. If the HTTP ingester reads a list that is not valid on a `SIGHUP` reload, it logs an error and keeps its old settings.
 * If you use the Gravwell load balancer, list the load balancer address on every webserver behind it.
 * In Docker, do not list the Docker bridge subnet or the bridge gateway. Give the proxy or load balancer container a static IP address and list that address. See [Docker](docker_reverse_proxies).
