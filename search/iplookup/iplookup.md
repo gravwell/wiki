@@ -27,7 +27,7 @@ iplookup -r <resource> -e IP network as "Business Unit"
 
 ## Setting up an iplookup resource
 
-The iplookup resources are simply CSVs.  A valid resource is any CSV where at least one column contains a standard [CIDR notation](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation).  Iplookup assumes the column containing the CIDR definition is named "CIDR" but you can set it to whatever you want, just make sure to specify the column with the `-cidr` flag.  We recommend that you stay in the habit of using the defaults as it makes queries shorter.
+An iplookup resource is either a CSV or a table saved with the [table](/search/table/table) module's `-save` flag; named resources from [compound queries](compound_queries) work too.  A valid resource is any table where at least one column contains a standard [CIDR notation](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation).  Iplookup assumes the column containing the CIDR definition is named "CIDR" but you can set it to whatever you want, just make sure to specify the column with the `-cidr` flag.  We recommend that you stay in the habit of using the defaults as it makes queries shorter.
 
 Here is an example resource containing both IPv4 and IPv6 definitions:
 
