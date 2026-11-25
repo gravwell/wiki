@@ -30,6 +30,8 @@ Note particularly the "Cover & Banner Images" section, which lets you upload ima
 
 ![](playbook-images.png)
 
+Cover images, banner images, and files embedded in the playbook body are separate assets with their own sharing settings. To check that they are shared with the same groups as the playbook, open the [Reference Table](/gui/reference-table/reference-table) from the "Referenced Assets" section of the Information pane.
+
 The final icon lets you set editor options such as the font size and the theme:
 
 ![](playbook-theme.png)
