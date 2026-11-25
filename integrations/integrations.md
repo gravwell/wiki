@@ -28,6 +28,8 @@ Cisco FTD <network/ciscoftd>
 CoreDNS <network/coredns>
 Corelight <network/corelight>
 Duo <application/duo>
+FleetDM <application/fleetdm>
+Fail2ban <host/fail2ban>
 Fluentd <host/fluentd>
 Fortinet <network/fortinet>
 GitHub <application/github>
@@ -47,6 +49,7 @@ Office 365 <cloud/office365>
 Okta <application/okta>
 OpenTelemetry <generic/opentelemetry>
 OpenWeatherMap <application/openweathermap>
+OPNsense <network/opnsense>
 Palo Alto <network/paloalto>
 pfSense <network/pfsense>
 PiHole <network/pihole>
@@ -127,7 +130,7 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: network/corelight
 :link-type: doc
-**Corelight** 
+**Corelight**
 :::
 ::::
 
@@ -135,7 +138,7 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: network/fortinet
 :link-type: doc
-**Fortinet** 
+**Fortinet**
 :::
 
 :::{grid-item-card}
@@ -147,17 +150,23 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: network/juniper
 :link-type: doc
-**Juniper** 
+**Juniper**
 :::
 
 :::{grid-item-card}
 :link: network/netflow
 :link-type: doc
-**Netflow** 
+**Netflow**
 :::
 ::::
 
 ::::{grid} 4
+:::{grid-item-card}
+:link: network/opnsense
+:link-type: doc
+**OPNsense**
+:::
+
 :::{grid-item-card}
 :link: network/paloalto
 :link-type: doc
@@ -175,15 +184,15 @@ Zeek <network/zeek>
 :link-type: doc
 **PiHole**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: network/proxmox
 :link-type: doc
 **Proxmox**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: network/suricata
 :link-type: doc
@@ -218,19 +227,25 @@ Zeek <network/zeek>
 :::
 
 :::{grid-item-card}
+:link: host/fail2ban
+:link-type: doc
+**Fail2ban**
+:::
+
+:::{grid-item-card}
 :link: host/fluentd
 :link-type: doc
 **Fluentd**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: host/iis
 :link-type: doc
 **IIS**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: host/jamf
 :link-type: doc
@@ -248,15 +263,15 @@ Zeek <network/zeek>
 :link-type: doc
 **Sysmon**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: host/truenas
 :link-type: doc
 **TrueNAS**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: host/windowsevent
 :link-type: doc
@@ -293,6 +308,12 @@ Zeek <network/zeek>
 
 ::::{grid} 4
 :::{grid-item-card}
+:link: application/fleetdm
+:link-type: doc
+**FleetDM**
+:::
+
+:::{grid-item-card}
 :link: application/github
 :link-type: doc
 **GitHub**
@@ -309,15 +330,15 @@ Zeek <network/zeek>
 :link-type: doc
 **Mimecast**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/mongodb
 :link-type: doc
 **MongoDB Server**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: application/nginx
 :link-type: doc
@@ -335,15 +356,15 @@ Zeek <network/zeek>
 :link-type: doc
 **Open Weather Map**
 :::
+::::
 
+::::{grid} 4
 :::{grid-item-card}
 :link: application/sentinelone
 :link-type: doc
 **SentinelOne**
 :::
-::::
 
-::::{grid} 4
 :::{grid-item-card}
 :link: application/teleport
 :link-type: doc
