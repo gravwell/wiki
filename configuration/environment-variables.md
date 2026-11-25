@@ -6,6 +6,7 @@ The indexer, webserver, and ingester components support configuring some paramet
 GRAVWELL_INGEST_SECRET=MyIngestSecret /opt/gravwell/bin/gravwell_federator
 ```
 
+(env_vars_from_files)=
 ## Loading Values From Files
 
 If "_FILE" is added to the end of the environment variable name, Gravwell assumes the variable contains the path to a file which in turn contains the desired data. This is particularly useful in combination with [Docker's "secrets" feature](https://docs.docker.com/engine/swarm/secrets/).
@@ -14,8 +15,11 @@ If "_FILE" is added to the end of the environment variable name, Gravwell assume
 GRAVWELL_INGEST_AUTH_FILE=/run/secrets/ingest_secret /opt/gravwell/bin/gravwell_indexer
 ```
 
+For a parameter that takes a list, Gravwell reads the whole file. The file can list one entry per line, entries separated by commas, or both. A line that starts with `#` is an entry, not a comment. An environment variable that is set to an empty string counts as unset.
+
 ```{note}
 Environment variable values are **only** used when the corresponding field is not explicitly set in the appropriate config file (gravwell.conf or an ingester's config file).
+The webserver `Trusted-Proxy` parameter is an exception. See below.
 ```
 
 ## Indexer and Webserver
@@ -31,6 +35,9 @@ The table below shows which `gravwell.conf` parameters can be set via environmen
 | Remote-Indexers | GRAVWELL_REMOTE_INDEXERS | GRAVWELL_REMOTE_INDEXERS=172.20.0.1:9404,172.20.0.2:9404|
 | Peer (in the `[Replication]` section) | GRAVWELL_REPLICATION_PEERS | GRAVWELL_REPLICATION_PEERS=172.20.0.1:9406,172.20.0.2:9406 |
 | Datastore | GRAVWELL_DATASTORE | GRAVWELL_DATASTORE=172.20.0.10:9405 |
+| [Trusted-Proxy](trusted-proxy-config) | GRAVWELL_TRUSTED_PROXY | GRAVWELL_TRUSTED_PROXY=10.0.0.5,10.0.1.0/24 |
+
+`GRAVWELL_TRUSTED_PROXY` is an exception to this rule. The webserver adds its entries to the `Trusted-Proxy` entries in `gravwell.conf`. See [Trusted-Proxy](trusted-proxy-config).
 
 ## Ingesters
 

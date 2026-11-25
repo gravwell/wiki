@@ -28,6 +28,8 @@ The configuration file is at `/opt/gravwell/etc/gravwell_http_ingester.conf`. Th
 |---------------------------|--------------|----------|-----------------|-------------------------------------|
 | Bind                      | string       | yes      |                 | Host:Port pair specifying HTTP server bind. |
 | Health-Check-URL          | string       | no       |                 | An optional URL that provides unauthenticated ingester health check status. |
+| Trusted-Proxy             | string array | no       |                 | An IP address or CIDR range of a reverse proxy or load balancer in front of the ingester. Repeat the parameter once for each address or range. See [Client Addresses](http_client_addresses). |
+| Ignore-Untrusted-Forwarded-For | boolean | no       | true            | When no Trusted-Proxy is set, ignore `X-Forwarded-For` and set SRC to the connecting address. See [Client Addresses](http_client_addresses). |
 
 ### Resource Controls Configuration
 
@@ -849,6 +851,65 @@ Multiple OpenTelemetry listeners can be defined to route data to different tags,
 	Tag-Name=otel-logs-dev
 ```
 
+(http_client_addresses)=
+## Client Addresses
+
+The HTTP ingester sets the SRC field of each entry to the address of the client that sent the request. The ingester logs use the same address.
+
+Two parameters in the `[Global]` section decide where the client address comes from:
+
+| Trusted-Proxy | Ignore-Untrusted-Forwarded-For | Client address |
+|---------------|--------------------------------|----------------|
+| set           | any value                      | `X-Forwarded-For` from a listed proxy, otherwise the connecting address |
+| not set       | true (default)                 | The connecting address |
+| not set       | false                          | The leftmost valid address in `X-Forwarded-For` from any sender, otherwise the connecting address |
+
+```{warning}
+Earlier releases defaulted `Ignore-Untrusted-Forwarded-For` to false. If the ingester sits behind a reverse proxy or load balancer, set `Trusted-Proxy`. Otherwise SRC is the address of the proxy.
+```
+
+### Trusted-Proxy
+
+List each reverse proxy or load balancer in front of the ingester with `Trusted-Proxy`. Each value is one IP address or one CIDR range. Repeat the parameter once for each address or range:
+
+```
+[Global]
+	Trusted-Proxy=10.0.0.5
+	Trusted-Proxy=10.0.1.0/24
+```
+
+The `GRAVWELL_HTTP_TRUSTED_PROXY` environment variable takes a comma-separated list, for example `GRAVWELL_HTTP_TRUSTED_PROXY=10.0.0.5,10.0.1.0/24`. The environment variable applies only when the configuration file has no `Trusted-Proxy` entries.
+
+The `GRAVWELL_HTTP_TRUSTED_PROXY_FILE` environment variable holds the path to a file with the list, for example a Docker or Kubernetes secret. It follows the same rule. If both variables are set, the ingester uses `GRAVWELL_HTTP_TRUSTED_PROXY`. The file can list one entry per line, entries separated by commas, or both. A line that starts with `#` is an entry, not a comment. The ingester does not start if the file is missing, cannot be read, or is empty. A `SIGHUP` reload reads the file again. If the file is not valid, the reload fails and the ingester keeps its old settings.
+
+When `Trusted-Proxy` is set, the ingester uses `X-Forwarded-For` only when the connecting address is listed. It reads the header from right to left and skips each trusted address. The first address that is not trusted becomes SRC. The ingester reads at most 32 entries. If a request has more than one `X-Forwarded-For` header line, the ingester reads them as one list. When the connecting address is not listed, the ingester ignores `X-Forwarded-For` and SRC is the connecting address.
+
+The ingester does not start if a `Trusted-Proxy` value is not valid. It also rejects these values:
+
+* A range with a prefix length of 0, such as `0.0.0.0/0` or `::/0`.
+* Ranges that together cover every IPv4 address, such as `0.0.0.0/1` and `128.0.0.0/1`. These trust every address, the same as a prefix length of 0. The ingester checks IPv4 and IPv6 ranges separately. Ranges that together cover every IPv6 address are rejected too. For this check, the ingester counts the IPv4-mapped range `::ffff:0:0/96` as covered. The error tells you to list only the addresses of your proxies.
+* An IPv6 range that overlaps `::ffff:0:0/96`, the IPv4-mapped range. List IPv4 ranges in IPv4 form. A range written in IPv4-mapped form with a prefix length longer than 96, such as `::ffff:10.0.0.0/120`, is accepted and read as the IPv4 range.
+* A `Trusted-Proxy` value, a `GRAVWELL_HTTP_TRUSTED_PROXY` value, or a `GRAVWELL_HTTP_TRUSTED_PROXY_FILE` file that holds only blanks or commas, such as `,`. The ingester does not treat it as unset.
+
+### Ignore-Untrusted-Forwarded-For
+
+`Ignore-Untrusted-Forwarded-For` is true by default. When no `Trusted-Proxy` is set, SRC is then always the connecting address. When `Trusted-Proxy` is set, this parameter has no effect.
+
+Set `Ignore-Untrusted-Forwarded-For=false` only to keep the behavior of earlier releases. The ingester then trusts `X-Forwarded-For` from any sender, so any client can set the SRC of its entries. The ingester logs a warning at most once a minute when `X-Forwarded-For` sets SRC this way.
+
+The `GRAVWELL_HTTP_IGNORE_UNTRUSTED_FORWARDED_FOR` environment variable sets the same option to `true` or `false`. It applies only when the configuration file does not set the parameter.
+
+Changes to `Trusted-Proxy` and `Ignore-Untrusted-Forwarded-For` take effect when the ingester reloads its configuration on `SIGHUP`. You do not need to restart the ingester. See [Dynamic Configuration Reload](http_dynamic_reload).
+
+### Client Addresses in Logs
+
+The ingester logs the client address, the same address as SRC. Most log messages use the `src` key. The OpenTelemetry listeners use `remoteaddress`, and the debug request log uses `ip`. When a request carries `X-Forwarded-For`, the log adds two fields:
+
+* `peer` holds the connecting address.
+* `xff` holds the raw `X-Forwarded-For` header. Use it only for troubleshooting. It is never the SRC.
+
+If an entry in the header is not a valid address, the log also adds `xff-malformed`.
+
 ## Health Checks
 
 Some systems (such as AWS load-balancers) require an unauthenticated URL that can be probed and interpreted as "proof of life".  The HTTP ingester can be configured to provide a URL which will always return a 200 OK when accessed with any method, body, and/or query parameters.  To enable this health check endpoint, add the `Health-Check-URL` stanza to the Global configuration block.
@@ -874,6 +935,7 @@ The HEC data format expects the timestamps to be Unix timestamps in seconds form
 
 The HEC compatible endpoint contains special processing logic for timestamps where any Unix timestamps that are approximately the zero time will be treated as "NOW" and given the timestamp of ingest.  For example, a HEC event with the timestamp of `"time": 42` will be assigned the current UTC time.
 
+(http_dynamic_reload)=
 ## Dynamic Configuration Reload
 
 The HTTP ingesters support dynamic configuration reloading for many configuration items; the ingester can dynamically reload Listener, HEC, and Amazon Firehose listener configuration blocks without restarting.  The Ingester uses the `SIGHUP` system signal as a notification mechanism to reload its configuration.
@@ -899,7 +961,7 @@ kill -SIGHUP `pidof gravwell_http_ingester` # use kill and the pidof command to 
 ```
 
 ```{note}
-The ingester cannot dynamically reload changes to `[global]` configuration block items like ingester connections, TLS configuration, bound ports, request limiting controls, or ingest cache controls.
+The ingester cannot dynamically reload changes to `[global]` configuration block items like ingester connections, TLS configuration, bound ports, request limiting controls, or ingest cache controls. The exceptions are `Trusted-Proxy`, `Ignore-Untrusted-Forwarded-For`, and `Health-Check-URL`. The ingester reloads these three parameters on `SIGHUP`.
 ```
 
 ## Troubleshooting

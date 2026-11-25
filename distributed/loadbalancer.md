@@ -135,6 +135,10 @@ Description:	Sets the severity level for logs. By default, only errors are logge
 Default Value:	`false`
 Description:	If this parameter is set to true, the load balancer will log every URL requested by clients and the response code from the webserver.
 
+**Trusted-Proxy**
+Default Value:	(empty)
+Description:	Lists the reverse proxies in front of the load balancer. Each value is an IP address or a CIDR range, for example `Trusted-Proxy=10.0.0.5`. Specify the parameter once for each address or range. If the list is not valid, for example if it trusts every address, the load balancer does not start. See the rules in [Reverse Proxies and Client Addresses](hardening_reverse_proxies). If clients connect to the load balancer directly, leave this empty. See [Client Addresses](loadbalancer_client_addresses). The load balancer reads this parameter only when it starts. Restart the load balancer after you change it. The load balancer does not reload its configuration on `SIGHUP`. A `SIGHUP` stops the load balancer.
+
 ### Override Stanzas
 
 Most systems will use the datastore to automatically get a list of Gravwell webservers. However, sometimes the load balancer cannot communicate directly with the datastore--frequently this is a result of corporate network security rules. In this case, you may add `[Override]` configuration blocks at the end of the configuration file to manually list webservers:
@@ -170,6 +174,21 @@ Description:	If set to true, the load balancer will communicate with the webserv
 Default Value:	`false`
 Description:	If set to true, the load balancer will not validate the webserver's TLS certificates.
 
+(loadbalancer_client_addresses)=
+## Client Addresses
+
+The load balancer passes the client address to the webservers in the `X-Forwarded-For` header. It builds that header itself from the address of the connection. When the connection comes from an address in the load balancer `Trusted-Proxy` parameter, the load balancer keeps the incoming `X-Forwarded-For` chain. It then adds the connecting address to the end of the chain.
+
+The webservers also check where a request comes from. Each webserver behind the load balancer must list the load balancer address in its own [Trusted-Proxy](trusted-proxy-config) parameter. If a webserver does not list the load balancer, it ignores `X-Forwarded-For`. Its logs then show the load balancer address for every user, and all users share one count for login throttling.
+
+For example, with the load balancer at `10.0.0.5`, add this line to the `[Global]` section of `gravwell.conf` on each webserver:
+
+```
+Trusted-Proxy=10.0.0.5
+```
+
+If another reverse proxy sits in front of the load balancer, list that proxy in the load balancer `Trusted-Proxy` parameter. List it on the webservers too. See [Reverse Proxies and Client Addresses](hardening_reverse_proxies) for more information.
+
 ## Docker Environment Variables
 
 When deploying in Docker, it is frequently easier to configure components via Docker environment variables instead of modifying a config file. All basic parameters of the load balancer can be configured through environment variables:
@@ -187,6 +206,8 @@ When deploying in Docker, it is frequently easier to configure components via Do
 * `GRAVWELL_LOG_LEVEL` - Equivalent to the `Log-Level` config parameter
 * `GRAVWELL_LOG_DIR` - Equivalent to the `Log-Dir` config parameter
 * `GRAVWELL_LOG_ENABLED_ACCESS_LOG` - Equivalent to the `Enable-Access-Log` config parameter
+* `GRAVWELL_TRUSTED_PROXY` - Equivalent to the `Trusted-Proxy` config parameter, as a comma-separated list
+* `GRAVWELL_TRUSTED_PROXY_FILE` - The path to a file that holds the `GRAVWELL_TRUSTED_PROXY` value, for example a Docker secret
 
 Thus for example you might invoke:
 
@@ -201,3 +222,5 @@ docker create --name loadbalancer \
 	-e GRAVWELL_DATASTORE_INSECURE_DISABLE_TLS=TRUE \
 	gravwell/loadbalancer
 ```
+
+`GRAVWELL_TRUSTED_PROXY` and `GRAVWELL_TRUSTED_PROXY_FILE` apply only when `loadbalancer.conf` has no `Trusted-Proxy` entries. If both variables are set, the load balancer uses `GRAVWELL_TRUSTED_PROXY`. The file can list one entry per line, entries separated by commas, or both. A line that starts with `#` is an entry, not a comment. The load balancer does not start if the file is missing, cannot be read, or is empty. It also does not start if the variable or the file holds only blanks or commas.

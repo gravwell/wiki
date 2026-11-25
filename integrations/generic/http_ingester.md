@@ -16,9 +16,10 @@ Many integration guides send data to the Gravwell HTTP Ingester. Set the ingeste
 2. Choose the address and port the ingester listens on (`Bind`). Every integration can use this one port, and the integration guides refer to it as `<PORT>`.
 3. If the sending systems can reach the ingester over an untrusted network, enable HTTPS by providing a certificate and key in the `[Global]` block, or put the ingester behind an HTTPS reverse proxy. By default the ingester serves cleartext HTTP.
 4. Optionally, enable a health check URL for load balancers and monitoring.
-5. Raise `Max-Body` if an integration sends bodies larger than the 4 MB default.
+5. If the ingester sits behind a reverse proxy or load balancer, list each proxy address with `Trusted-Proxy`. Otherwise SRC is the proxy address. Do not set `Ignore-Untrusted-Forwarded-For=false`, because any client can then set SRC. See [Client Addresses](http_client_addresses).
+6. If an integration sends bodies larger than the 4 MB default, raise `Max-Body`.
 
-These settings apply to the whole ingester, so they belong in the base configuration file and not in an integration's overlay file. The ingester cannot reload `[Global]` changes while it is running, so restart it after you change them.
+These settings apply to the whole ingester, so they belong in the base configuration file and not in an integration's overlay file. The ingester reloads `Trusted-Proxy`, `Ignore-Untrusted-Forwarded-For`, and `Health-Check-URL` when it receives the `SIGHUP` signal. Restart the ingester after you change other `[Global]` settings.
 
 ## Gravwell Configuration
 
@@ -33,6 +34,7 @@ Edit: `/opt/gravwell/etc/gravwell_http_ingester.conf`
     #TLS-Key-File=/opt/gravwell/etc/key.pem
     Max-Body=4194304 #the default, in bytes (4 MB)
     #Health-Check-URL="/health/check"
+    #Trusted-Proxy=10.0.0.5
 ```
 
 The base file also holds the connection settings for your Gravwell backend, which the [HTTP Ingester](/ingesters/http) page describes. The settings above are the ones integration guides depend on:
@@ -44,6 +46,8 @@ The base file also holds the connection settings for your Gravwell backend, whic
 | `Max-Body` | Largest request body the ingester accepts, in bytes. Default 4 MB |
 | `Max-Connections`, `Max-Concurrent-Requests` | Limits on connections and in-flight requests. Defaults 10240 and 16384; `-1` removes a limit |
 | `Health-Check-URL` | Unauthenticated URL that always returns `200 OK`, for load balancers and monitoring |
+| `Trusted-Proxy` | Address or CIDR range of a reverse proxy in front of the ingester. When set, the ingester uses `X-Forwarded-For` only from these addresses. Repeat the setting for each address |
+| `Ignore-Untrusted-Forwarded-For` | When no `Trusted-Proxy` is set, ignore `X-Forwarded-For` and use the connecting address as SRC. Default true |
 
 ### Adding a Listener for an Integration
 
@@ -88,7 +92,7 @@ The HTTP Ingester reloads `Listener`, HEC and Amazon Firehose blocks without res
 sudo killall -SIGHUP gravwell_http_ingester
 ```
 
-Integration guides use the restart command, which always works, and a restart is required for `[Global]` changes.
+Integration guides use the restart command, which always works, and a restart is required for most `[Global]` changes.
 
 ```{note}
 Remember to restart the service to apply the new config:
