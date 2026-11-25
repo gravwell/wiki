@@ -24,6 +24,10 @@ After we click "Save", we are taken back to the Dashboards overview page, now sh
 6. Deletes the dashboard
 7. Adds the dashboard to the user's favorites
 
+```{note}
+Tiles backed by saved queries, scheduled searches, or templates only work for users who can access those assets. To check that they are shared with the same groups as the dashboard, open the [Reference Table](/gui/reference-table/reference-table) from the "Referenced Assets" section of the dashboard's settings.
+```
+
 ## Populating Searches
 
 Once a dashboard has been created, we need to add tiles to it. There are two ways to add a tile: from a completed Gravwell search, or from the dashboard itself. We'll show how to add a tile from a completed search first, being simpler, then describe all the options available when adding a tile through the dashboard interface
