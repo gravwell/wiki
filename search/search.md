@@ -181,7 +181,7 @@ Inner queries generate named resources in the form of `@<identifier>`. These res
 | [dump](/search/dump/dump) | | 
 | [enrich](/search/enrich/enrich) | | 
 | [ipexist](/search/ipexist/ipexist) | Inner queries must use the table module with the `-format ipexist` flag |
-| [iplookup](/search/iplookup/iplookup) | Inner queries must use the table module with the `-format csv` flag |
+| [iplookup](/search/iplookup/iplookup) | |
 | [lookup](/search/lookup/lookup) | |
 | [anko](/search/anko/anko) | Anko scripts can read from named resources |
 
