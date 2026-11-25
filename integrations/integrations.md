@@ -53,7 +53,7 @@ OPNsense <network/opnsense>
 Palo Alto <network/paloalto>
 pfSense <network/pfsense>
 PiHole <network/pihole>
-Proxmox <network/proxmox>
+Proxmox VE <network/proxmox>
 SentinelOne <application/sentinelone>
 Suricata <network/suricata>
 Synology <host/synology>
@@ -190,7 +190,7 @@ Zeek <network/zeek>
 :::{grid-item-card}
 :link: network/proxmox
 :link-type: doc
-**Proxmox**
+**Proxmox VE**
 :::
 
 :::{grid-item-card}
