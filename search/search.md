@@ -1,11 +1,11 @@
 # Search
 
-Gravwell is a structure-on-read data lake and the search pipeline is the core of that functionality. This is where the power and flexibility of the platform can be seen: we don't need to know much about the data at collection time. Instead, we can ingest the raw data and assemble a search processing pipeline to turn that raw data into actionable results! This all but eliminates normalizing or massaging data to try and fit specific molds, a common issue with SIEMs. Further, it lets us perform analysis retroactively against older data when new information, techniques, or search modules become available.
+Gravwell is a structure-on-read data lake, and the search pipeline is the core of that design. You don't need to know much about your data when you collect it: ingest it raw, then build a search pipeline that turns it into results. There's little need to normalize data to fit a fixed schema, and you can analyze older data again as new techniques or search modules become available.
 
-The search pipeline is the core of Gravwell's functionality and operates in a similar fashion to the Linux/Unix command line. The Gravwell search query syntax assembles a processing pipeline to search and transform raw data into results. The pipeline modules often consist of at least one extraction module, one or more filtering or processing modules, and a rendering module. For example, the following query fetches data tagged "weather", uses the json module to extract a temperature and location name, then uses the eval module to filter out any entries with temperatures below 50 degrees, then finally uses the table renderer to display the contents of the name and temp fields:
+A query builds a processing pipeline, much like a Linux/Unix shell pipeline. A pipeline usually has at least one extraction module, one or more filtering or processing modules, and a render module. For example, this query fetches entries tagged `weather`, uses the json module to extract a temperature and location name, uses the eval module to keep only entries with temperatures above 50 degrees, and uses the table renderer to display the name and temp fields:
 
 ```gravwell
-tag=weather json main.temp name | eval temp > 20 | table name temp
+tag=weather json main.temp name | eval temp > 50 | table name temp
 ```
 
 ![](weather-extract.png)
@@ -73,26 +73,26 @@ These are all valid queries; if you run a query that is just a tag specification
 
 ### Extraction Modules
 
-Extraction modules are used to pull out fields/values/properties from the raw underlying data. Given entries containing the weather data shown earlier, we can use the following query to pull out the location name and temperature, then show only the entries with a temperature over 50 degrees:
+Extraction modules pull fields out of the raw data. Given the weather entries shown earlier, this query extracts the location name and temperature, then shows only entries with a temperature over 50 degrees:
 
 ```gravwell
 tag=weather json main.temp name | eval temp > 50 | table name temp
 ```
 
-In the example above, the `JSON` module is extracting the values from the raw JSON text and providing them as "Enumerated Values" for any modules further down the pipeline. In other words, this module parses the JSON to extract particular components the user needs. We extract the fields "name" and "temp", the latter being found *within* the "main" field.
+The `json` module parses the raw JSON and provides the requested values as enumerated values to modules further down the pipeline. Here it extracts `name` and `temp`; `temp` is found *within* the `main` field.
 
 The full documentation for these modules can be found at [Extraction Modules](extractionmodules)
 
 #### Filtering
 
-Gravwell extraction modules will typically allow *extracted* items to be *filtered* at extraction time. Filtering lets you drop or pass entries based on whether or not they match particular criteria; see [this page](filtering) for full documentation.
+Most extraction modules can *filter* items as they *extract* them, dropping or passing entries based on whether they match given criteria. See [Inline Filtering](filtering) for details.
 
 
 ### Processing Modules
 
-Processing modules are used to analyze data entries, filter out undesired data, and perform statistical analyses. A search pipeline may include many processing modules, one after another, each operating on the results of the previous module.
+Processing modules analyze entries, filter out unwanted data, and compute statistics. A pipeline may include many processing modules, each operating on the output of the one before it.
 
-In the example shown in the previous section, `eval` is a processing module performing some filtering. Note that many processing modules can be made to operate on a subset of the overall query tags by putting an *additional* tag specification before the module invocation -- something we call Data Fusion. This can be very useful if you need to perform some initial extractions differently:
+In the previous example, `eval` is a processing module doing some filtering. Most modules can be limited to a subset of the query's tags by putting an *additional* tag specification before the module; we call this Data Fusion. It is useful when different tags need different extractions:
 
 ```gravwell
 tag=reddit,hackernews tag=reddit json Body | tag=hackernews json body as Body | eval len(Body) < 20 | table Body
@@ -103,28 +103,28 @@ tag=reddit,hackernews tag=reddit json Body | tag=hackernews json body as Body | 
 
 ### Render Modules
 
-Render modules take the results generated by the search modules and present them to the user graphically. A search pipeline will only include one render module, at the very end of the pipeline.
+Render modules present the results of the search modules. A pipeline has one render module, at the very end.
 
 ```gravwell
 tag=weather json main.temp name | eval temp > 50 | table name temp
 ```
 
-In the example above, "table" is the render module; it has been told to display the contents of the "name" and "temp" Enumerated Values in their own columns.
+Here `table` is the render module; it displays the `name` and `temp` enumerated values in their own columns.
 
 [Click here for complete documentation of render modules](rendermodules)
 
 (enumerated_values)=
 ## Enumerated Values
 
-Enumerated values are special data elements which are created and used within the search pipeline. In the pipeline below, several enumerated values are created.
+Enumerated values are data elements created and used within the search pipeline. The pipeline below creates several:
 
 ```gravwell
 tag=reddit json Body | langfind -e Body | count by lang | sort by count desc | table lang count
 ```
 
-First, the json module parses the JSON in the raw entries and pulls out the "Body" element, storing it in an enumerated value named `Body`. Then the langfind module accesses the `Body` enumerated values and attempts to analyze the language used; it puts the result in a new enumerated value called `lang`. Next, the count module reads the `lang` enumerated values and counts how many times each value appears, storing the results in enumerated values named `count`. The rest of the pipeline sorts the results based on the counts and creates a table from the `lang` and `count` enumerated values.
+The json module pulls the `Body` element out of the raw JSON and stores it in an enumerated value named `Body`. The langfind module reads `Body`, detects its language, and stores the result in a new enumerated value named `lang`. The count module counts how many times each `lang` value appears and stores the results in enumerated values named `count`. The rest of the pipeline sorts by count and builds a table from `lang` and `count`.
 
-You can think of enumerated values as additional fields which are attached to an entry over the course of a query; if we use the netflow module to extract Src and Dst values from the raw DATA field, we add Src and Dst fields to the entry:
+Think of enumerated values as extra fields attached to an entry during a query. Using the netflow module to extract Src and Dst from the raw DATA field adds Src and Dst fields to the entry:
 
 ```gravwell
 tag=netflow netflow Src Dst
@@ -137,30 +137,34 @@ Further examples throughout the documentation should help clarify the use of enu
 (intrinsic_enumerated_values)=
 ## Intrinsic Enumerated Values
 
-Intrinsic Enumerated Values are Enumerated Values which are created at the time of ingest. Intrinsic enumerated values are optionally [created by ingesters](#attach-target) and often contain metadata or pre-processed extractions. Use the [intrinsic](intrinsic/intrinsic) module to work with intrinsic enumerated values.
-
-After extracting an intrinsic enumerated value, they are treated the same as regular enumerated values.
+Intrinsic enumerated values are created at ingest time. Ingesters can optionally [attach them](#attach-target), and they often hold metadata or pre-processed extractions. Use the [intrinsic](intrinsic/intrinsic) module to extract them; after that they behave like any other enumerated value.
 
 Intrinsic EVs are [automatically accelerated](#intrinsic-acceleration-target) when using acceleration.
 
 ## Quoting and tokenizing
 
-When specifying arguments to Gravwell modules, be mindful of special characters. Most modules treat spaces, tabs, newlines, and the following characters as separators: !#$%&'()*+,-./:;<=>?@
+Be careful with special characters in module arguments. Most modules split arguments on whitespace and on these characters: `|` `{` `}` `(` `)` `[` `]` `;` `=` `<` `>` `!` `~` `%` `^` `&` `+` `"` `.` `:` `,` `/`. See the [query specification](spec) for exceptions.
 
-When specifying an argument to a module which contains one of these characters, wrap the argument in double-quotes:
-
-```
-json "search-id"
-```
+If an argument contains whitespace or one of these characters, wrap it in double quotes:
 
 ```
 grep "dank memes"
 ```
 
-You can escape double quote characters if you need to use them, for instance to identify mis-used dialog tags in text you could search for the sequence `",`:
+```
+grep "user=root"
+```
+
+Escape a double quote with a backslash. For instance, to find mis-used dialog tags in text, search for the sequence `",`:
 
 ```
 grep "\","
+```
+
+Text inside backticks is used literally, with no escape processing:
+
+```
+grep `say "hi"`
 ```
 
 ## Macros
@@ -212,7 +216,7 @@ tag=conns json SrcIP DstIP SrcIPBytes DstIPBytes | lookup -s -v -r @dns SrcIP an
 | table SrcIP DstIP SrcIPBytes DstIPBytes 
 ```
 
-This query uses the `lookup` module drop (via the `-s` and `-v` flags) any entry in our conns data that has a SrcIP that matches a DNS answer. From there we simply create a table of our data. 
+The `-s` and `-v` flags make `lookup` drop any conns entry whose SrcIP matches a DNS answer. The table renderer shows the rest.
 
 We wrap this into a compound query simply by joining the queries together and separating them with a `;`:
 

@@ -4,31 +4,31 @@
 The `transaction` module can consume a large amount of memory. Use caution when using this module on memory constrained systems.
 ```
 
-The `transaction` module transforms and groups entries in the pipeline into single-entry "transactions" - groupings of entries - based on any number of keys. It is a powerful tool for capturing the activity of a given user, IP, etc., across multiple entries in a datastream. 
+The `transaction` module groups entries that share the same key values into a single entry, called a transaction. Use it to collect the activity of a given user, IP, and so on across many entries.
 
 (transaction-options)=
 ## Supported Options
 
-* `-e`: The `-e` option operates on an enumerated value instead of on the entire record. Multiple EVs are supported by providing additional `-e` flags.
-* `-rsep`: The `-rsep` option sets the string to insert between transaction records. The default is "\n".
-* `-fsep`: The `-fsep` option sets the string to insert between enumerated values within a given record. The default is " ".
-* `-o`: The `-o` option sets the output EV to produce. The default is "transaction".
-* `-c`: The `-c` option enables a count of the number of entries that make up a given transaction in the provided name. The default is "count".
-* `-maxsize`: The `-maxsize` flag sets the maximum size, in kilobytes, of a given transaction before it is evicted from the tracking table (see "Memory considerations" below). The default is 500kb.
-* `-maxstate`: The `-maxstate` flag sets the maximum number of transactions to track. Once exceeded, the oldest transaction will be evicted (see "Memory considerations" below). The default is 200.
-* `-maxcount`: The `-maxcount` flag sets the maximum number of entries allowed per transaction. By default this value is unlimited. If set, once an individual transaction reaches this value, the transaction will be evicted.
+* `-e <ev>`: an enumerated value to include in the transaction. Repeat the flag to include several, e.g. `-e action -e message`. By default, all enumerated values except the keys are included.
+* `-rsep <string>`: the string inserted between records (one record per grouped entry). Defaults to `\n`.
+* `-fsep <string>`: the string inserted between enumerated values within a record. Defaults to a single space.
+* `-o <name>`: the name of the output enumerated value. Defaults to `transaction`.
+* `-c <name>`: adds an enumerated value with this name holding the number of entries in each transaction. No count is added unless this flag is set.
+* `-maxsize <n>`: the maximum size of a transaction, in kilobytes, before it is evicted from the tracking table (see "Memory considerations" below). Defaults to 500.
+* `-maxstate <n>`: the maximum number of transactions to track. When exceeded, the least recently updated transaction is evicted (see "Memory considerations" below). Defaults to 200.
+* `-maxcount <n>`: the maximum number of entries per transaction. When a transaction reaches this count, it is evicted. Unlimited by default.
 
 All flags are optional.
 
 ## Overview
 
-The `transaction` module groups entries into single entries based on a provided set of keys. For example, given a dataset with enumerated values "host", "message", and "action", the query:
+Entries are grouped by the keys given as arguments. For example, given a dataset with enumerated values `host`, `message`, and `action`, the query:
 
 ```gravwell
 tag=data kv host action message | transaction -fsep " -- " host | table
 ```
 
-Will collapse all entries with the same value for the EV "host" into a single entry. By default, `transaction` will group all EVs that are *not* part of the key into the output. In the example above, the EVs "host" and "message" will be grouped, using `-fsep` as a separator, and all entries that match this key will be further grouped by `-rsep`. To illustrate the example above, given the following entries:
+collapses all entries with the same `host` into a single entry. By default, `transaction` includes every enumerated value that is *not* a key. Here, `action` and `message` from each entry are joined with `-fsep` to form a record, and the records for each `host` are joined with `-rsep`. Given the following entries:
 
 ```
 Entry 1: host="foo" message="Host foo login" action="login"
@@ -37,7 +37,7 @@ Entry 3: host="bar" message="Host bar login" action="login"
 Entry 4: host="foo" message="Host foo logout" action="logout"
 ```
 
-Will be collapsed into two entries, one for "foo", and another for "bar":
+the output is two entries, one for `foo` and one for `bar`:
 
 ```
 Entry 1: transaction="login -- Host foo login
@@ -46,36 +46,37 @@ Entry 1: transaction="login -- Host foo login
 Entry 2: transaction="login -- Host bar login"
 ```
 
-To specify exactly which EVs to group, you can use one or more `-e` flags in the query. EVs will be grouped in the order provided. For example:
+To choose which enumerated values to include, use one or more `-e` flags. They are included in the order given. For example:
 
 ```gravwell
 tag=data kv host action message user group | transaction -e action -e message host | table
 ```
 
-Will only group EVs "action" and "message", ignoring "user" and "group". 
+includes only `action` and `message`, ignoring `user` and `group`.
 
-Multiple keys can be provided, and records will be created based on the grouping of all provided keys. For example:
+With multiple keys, entries are grouped by the combination of all keys. For example:
 
 ```gravwell
 tag=data kv host action message user group | transaction host action user | table
 ```
 
-Will group records with the same host, action, and user. 
+groups entries with the same `host`, `action`, and `user`. An entry that is missing a key is grouped using the keys it does have.
 
 ## Memory considerations
 
-The `transaction` module must buffer all entries in the datastream in order to create transactions. For queries that produce large amounts of data, this can quickly exhaust the available memory on a system. In order to prevent this, the `transaction` module provides two flags, `-maxsize`, and `-maxstate`, to control how much and how long to retain data before passing it downstream in the pipeline. 
+The `transaction` module must buffer entries to build transactions. Queries over large amounts of data can quickly exhaust available memory. The `-maxsize`, `-maxstate`, and `-maxcount` flags control how much data is held before it is passed down the pipeline.
 
-When running, the `transaction` module keeps a table of records, with one record for every unique set of provided keys. When an entry matches the provided keys, it is added to other entries with the same match in the table (or creates a new record if it's the first one encountered). Two checks are asserted every time an entry is added to the table:
+The module keeps a table with one transaction for each unique set of key values. Each entry is added to the transaction for its keys, or starts a new one. Every time an entry is added, these checks run:
 
-* If the size of a given record exceeds the `-maxsize` argument, the record is immediately "evicted" - meaning it is sent down the query pipeline and is removed from the table. 
-* If the number of records exceeds the `-maxstate` argument, the _least recently updated_ record is evicted. 
+* If the transaction is larger than `-maxsize`, it is evicted immediately: it is sent down the pipeline and removed from the table.
+* If the transaction has reached `-maxcount` entries, it is evicted.
+* If the table holds more than `-maxstate` transactions, the _least recently updated_ transaction is evicted.
 
-If a record is evicted, and later an entry with a key matching that of the evicted record is encountered, a new record is created. If you notice "fragmentation" in your output, check the `-maxsize` and `-maxstate` flags. 
+If a later entry has the same keys as an evicted transaction, a new transaction is started. If your output looks fragmented, check the `-maxsize`, `-maxstate`, and `-maxcount` flags.
 
-Because the `transaction` module can easily exhaust all available memory on your Gravwell system, follow these general guidelines when writing queries with `transaction`:
+To limit memory use:
 
-* Put the `transaction` module as late in the query as possible. 
-* Work on the smallest time window possible for your query. 
-* Start with small `-maxsize` and `-maxstate` values, and increase only if needed.
-* Instead of grouping all enumerated values, only group those of concern for your query by explicitly naming them with `-e`.
+* Put the `transaction` module as late in the query as possible.
+* Search the smallest time window that works for your query.
+* Start with small `-maxsize` and `-maxstate` values, and increase them only if needed.
+* Name only the enumerated values you need with `-e` instead of including all of them.

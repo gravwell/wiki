@@ -1,48 +1,62 @@
 # Grep
 
-Grep is a very basic pipeline module that searches for a text string (not Unicode). Any record containing such text will match and be passed through the pipeline. Any record not containing the text is dropped from the pipeline. For example, `grep foo` will pass on any records containing the text “foo” and drop any records that do not have “foo” anywhere within. Grep is case sensitive so `grep foo` would match “foo” but drop “Foo”.  Grep also supports a standard set of escape codes similar to printf, allowing for binary filters as well.
+Grep filters entries by text. Entries containing the pattern pass down the pipeline; entries that don't are dropped. For example, `grep foo` passes any entry containing "foo" anywhere. Matching is case sensitive, so `grep foo` matches "foo" but not "Foo".
 
-Grep supports the standard GNU wildcards as well as fast string and binary matching.  To look for all entries that start that contain “foo” and “bar” separated by 0 or N bytes you can use `grep foo*bar`.  For more information on available wildcards see the TLDP miniguide[1].
+Patterns support Go-style escape sequences such as `\t`, `\n`, and `\x01`, so you can match binary data.
 
-Grep allows multiple patterns to be specified. If any pattern is matched, the entry is passed down the pipeline. If the `-v` flag is used to invert the search, the entry will be dropped if *any* pattern matches.
+Patterns can contain glob wildcards:
+
+* `*` matches any sequence of bytes, including none. `grep foo*bar` matches entries containing "foo" followed by "bar".
+* `?` matches any single character.
+* `[abc]` and `[a-z]` match one character from a set or range; `[!abc]` matches one character not in the set.
+* `{foo,bar}` matches any of the comma-separated alternatives.
+
+You can give multiple patterns. By default an entry passes if *any* pattern matches. With `-s`, all patterns must match. With `-v`, the entry is dropped if any pattern matches.
 
 ## Supported options
 
-* `-v`: “Inverse” grep. For instance, `grep -v bar` would drop any records containing the text “bar” and pass on any records that do not contain “bar”.
-* `-i`: Match case insensitive values. Thus, `grep -i foo` would match “Foo” and “foo”. Case insensitive search tends to be one of the slowest operations; put it later in your pipeline if possible to keep things fast.
-* `-e <arg>`: Operate on an enumerated value instead of on the entire record. For example, a pipeline that showed packets that contain HTTP text but aren’t destined for port 80 would be `tag=pcap packet ipv4.DstPort!=80 tcp.Payload | grep -e Payload "GET / HTTP/1.1"`
-* `-s`: Strict match.  All patterns must match, or in the case of a negated strict match, no pattern may match.`
-* `-simple`: Simple match. With this flag, `grep` will match exactly the characters you specify, with no wildcard matching. This allows you to find asterisks and other normally-reserved characters: `grep -s * `
-* `-w`: A word match.  The entire match pattern must a word as would be matched by the fulltext extractors.
+* `-v`: Invert the match. `grep -v bar` drops entries containing "bar" and passes everything else.
+* `-i`: Case-insensitive match. `grep -i foo` matches "Foo" and "foo".
+* `-e <arg>`: Match against an enumerated value instead of the entire entry. Entries that don't have the enumerated value are dropped, even with `-v`.
+* `-s`: Strict match. All patterns must match. Combined with `-v`, an entry is dropped if any pattern matches.
+* `-simple`: Match the pattern literally, with no wildcards. Use this to find asterisks and other wildcard characters: `grep -simple "*"`.
+* `-w`: Word match. The pattern must match a complete word, as split by the fulltext indexer. See "Working With Word Matches" below.
 
 ```{attention}
-Case-insensitive search is significantly slower. If you must do case-insensitive grep, try to put it later in your search pipeline to improve speed.
+Case-insensitive search is significantly slower. If you need `-i`, put grep later in the pipeline so it sees fewer entries.
 ```
 
 ```{attention}
-The `-w` word match implies a simple match, as using wildcards could cross word boundaries.
+A backslash in a double-quoted or unquoted pattern is consumed as an escape character, so `"foo\*bar"` is the same as `"foo*bar"` and `*` is still a wildcard. Use `-simple` to match wildcard characters literally.
 ```
 
 ## Parameter Structure
+
 ```
-grep <argument list> <search parameter>
+grep <argument list> <pattern> [<pattern> ...]
 ```
 
 ## Example Search
 
-To find any Apache logs containing the exact string "Mozilla\*Firefox" (no wildcards):
+To find Apache logs containing the literal string "Mozilla*Firefox" (no wildcards):
 
 ```gravwell
-tag=apache grep "Mozilla\*Firefox"
+tag=apache grep -simple "Mozilla*Firefox"
 ```
 
-To find packets over port 80 whose payloads begin with the bytes 0, 1, 2, 3:
+To find HTTP requests in packets not destined for port 80:
+
+```gravwell
+tag=pcap packet tcp.DstPort!=80 tcp.Payload | grep -e Payload "GET / HTTP/1.1"
+```
+
+To find port 80 packets whose payloads contain the bytes 0x01, 0x02, 0x03, 0x04:
 
 ```gravwell
 tag=pcap packet tcp.Port==80 tcp.Payload | grep -e Payload "\x01\x02\x03\x04"
 ```
 
-Match any Reddit post which contains words ending in "ing" or "ed":
+Match any Reddit post containing a word ending in "ing" or "ed":
 
 ```gravwell
 tag=reddit json Body | grep -e Body "*ing" "*ed"
@@ -54,7 +68,7 @@ Drop any Reddit posts on subreddits beginning with "Ask" or containing "foo":
 tag=reddit json Subreddit | grep -v -e Subreddit "Ask*" "foo"
 ```
 
-Grab only user agents that contain Mozilla and Windows
+Keep only entries that contain both "Mozilla" and "Windows":
 
 ```gravwell
 tag=apache grep -s Mozilla Windows
@@ -62,21 +76,21 @@ tag=apache grep -s Mozilla Windows
 
 ## Working With Word Matches
 
-The word match system is designed to match complete words.  Grep with the -w flag is one of the primary methods to interacting with the fulltext indexing system.
+The `-w` flag matches complete words, using the same word boundaries as the fulltext indexer. Word patterns can't contain word-separator characters (spaces, `/`, `*`, `?`, brackets, and similar) and can't begin or end with `.`, `:`, `;`, or `-`; grep returns an error if they do. Because of this, wildcards can't be used with `-w`.
 
-The -w flag is designed to create some additional specificity when selecting values, lets look at some example data to see what will and will not match.
+Grep can use the fulltext accelerator when it searches the entire entry (no `-e`) without `-v` or `-i`, and either has one pattern or uses `-s`. With `-w`, each whole pattern is looked up in the index. Without `-w`, only complete interior words of a pattern are used (for `"foo to the bar"`, "to" and "the"), so single-word and wildcard patterns aren't accelerated.
+
+Consider this entry:
 
 ```
 16.246.30.72 - - [08/May/2017:15:20:35 -0600] "DELETE /search/tag/list HTTP/1.0" 200 5032 "http://nguyen.biz/category/tags/tag/home.htm" "Opera/8.74.(Windows 98; Win 9x 4.90; it-IT) Presto/2.9.173 Version/11.00"
 ```
 
-Lets look at a few invocations of grep to see what would and would not match:
-
 | Grep Invocation | MATCHES | Explanation |
 |-----------------|---------|-------------|
-| grep Ver        |   YES   | A simple grep WILL match due to the `Version/11.00` byte pattern |
-| grep -w Ver     |   NO    | The word match will NOT match `Version/11.00` pattern because Ver is not a complete word |
-| grep -w Ver*    |   NO    | The word match will NOT match because `-w` implies a simple match and literal bytes `Ver*` are not in the log` |
-| grep -w Version |   YES   | The word match WILL match because Version is a full word, the `/` character is a split character |
-| grep -w "11.00" |   YES   | The word will match, the `.` character is only a separator if it is followed by a space, this allows matching IP addresses |
-| grep -w "Version/11.00" |  ERROR  | The grep module will throw an error, you cannot have word boundary characters in a match |
+| grep Ver        |   YES   | A plain grep matches the bytes `Ver` in `Version/11.00` |
+| grep -w Ver     |   NO    | `Ver` is not a complete word |
+| grep -w Ver*    |  ERROR  | `*` is a word separator, so it can't appear in a word match |
+| grep -w Version |   YES   | `Version` is a complete word; `/` is a separator |
+| grep -w "11.00" |   YES   | `.` is not a separator inside a word, only trimmed from its start or end, so IP addresses and version numbers stay whole |
+| grep -w "Version/11.00" |  ERROR  | `/` is a word separator, so it can't appear in a word match |

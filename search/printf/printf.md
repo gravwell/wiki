@@ -1,6 +1,10 @@
 # Printf
 
-The printf module implements a Go-style printf function, and supports a number of operator verbs. The module requires an formatting string, followed by the exact number of enumerated value arguments as required by the formatting string. 
+The printf module formats enumerated values into a string using Go-style printf verbs. It takes a format string followed by one enumerated value argument for each verb. The format string must contain at least one verb, and the number of arguments must match the number of verbs. The result is stored in an enumerated value named `printf`.
+
+```
+printf [-e <output>] "<format>" <ev> [<ev> ...]
+```
 
 The printf module implements the following verbs:
 
@@ -25,32 +29,32 @@ The printf module implements the following verbs:
 '%%': A literal %.
 ```
 
-In addition, the following modifiers are available to many verbs: 
+`%v` and `%s` print any enumerated value as a string. The integer verbs (`%b` through `%U`) and float verbs (`%e` through `%G`) convert the argument to a number, including numeric strings. If an argument can't be converted, the entry passes through without the output enumerated value. A missing argument prints as `<nil>` with `%v` and `%s`.
+
+A verb can take one of the following modifiers, plus an optional width and precision, such as `%08.2f` or `%-10s`:
 
 ```
 +	always print a sign for numeric values;
 	guarantee ASCII-only output for %q (%+q)
--	pad with spaces on the right rather than the left (left-justify the field)
 #	alternate format: add leading 0b for binary (%#b), 0 for octal (%#o),
-	0x or 0X for hex (%#x or %#X); suppress 0x for %p (%#p);
-	for %q, print a raw (backquoted) string if strconv.CanBackquote
-	returns true;
+	0x or 0X for hex (%#x or %#X);
 	always print a decimal point for %e, %E, %f, %F, %g and %G;
 	do not remove trailing zeros for %g and %G;
 	write e.g. U+0078 'x' if the character is printable for %U (%#U).
-' '	(space) leave a space for elided sign in numbers (% d);
-	put spaces between bytes printing strings or slices in hex (% x, % X)
+' '	(space) leave a space for elided sign in numbers (% d)
 0	pad with leading zeros rather than spaces;
 	for numbers, this moves the padding after the sign
 ```
 
+A negative width, such as `%-10s`, pads with spaces on the right instead of the left.
+
 ## Supported Options
 
-* `-e`: By default, printf creates an enumerated value "printf" to store the result in. Use `-e` to change the destination enumerated value.
+* `-e <output>`: Store the result in the named enumerated value instead of `printf`.
 
 ## Example Usage
 
-This example formats a simple string containing floating point numbers.
+This example builds a sentence from the source and destination ports of each netflow record:
 
 ```gravwell
 tag=netflow netflow SrcPort DstPort 

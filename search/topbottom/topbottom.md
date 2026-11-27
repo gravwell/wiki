@@ -1,15 +1,14 @@
 # Top / Bottom Modules
 
-The `top` and `bottom` modules show the top or bottom N values of a given enumerated value (or values) or entry. For example, to show the top 10 values of the enumerated value `foo`:
+The `top` and `bottom` modules return the N entries with the highest or lowest values of one or more enumerated values. For example, to get the 10 entries with the highest values of `foo`:
 
 ```gravwell
 tag=foo json foo | top -n 10 foo
 ```
 
-The output is sorted in descending order for the `top` module and in ascending order for the `bottom` module.
+`top` outputs entries in descending order and `bottom` in ascending order.
 
-The modules use the same syntax. Each optionally takes one or more enumerated values. The modules will emit the top/bottom values of the given value. If no enumerated value is provided, the `DATA` field is used.
-If multiple enumerated values are provided, the modules will sort by the top/bottom values of the enumerated values in the provided order. If two entries have the same value for a given enumerated value, the second enumerated value will be used.
+Both modules use the same syntax and take optional enumerated value names. If none are given, the `DATA` field is used. With several names, entries are ranked by the first, and ties are broken by the next one, in the order given.
 
 For example, given:
 
@@ -20,56 +19,56 @@ For example, given:
 | 10  | 200 |
 | 10  | 100 |
 
-and the query: 
+and the query:
 
 ```gravwell
-tag=foo json foo bar | top -n 2 foo bar
+tag=foo json foo bar | eval foo = int(foo); bar = int(bar); | top -n 2 foo bar
 ```
 
 The output will be:
 
 | foo | bar |
 |-----|-----|
-| 10  | 200 | 
+| 10  | 200 |
 | 10  | 100 |
 
-In the example above, three of the four original entries all have the same value 10 for `foo`. In order to find the top 2 as requested in the query, `top` then looks at the values of `bar`, and uses the top values 200 and 100 to determine which two entries to keep. 
+Three of the four entries have `foo` equal to 10, so `top` uses `bar` to break the tie and keeps the entries where `bar` is 200 and 100.
 
-Values must be numeric or able to be cast to a number. Non-numeric values are ignored.
+Values are compared according to their type: numbers numerically, strings lexically. Extraction modules such as `json` produce strings, and as strings `9` ranks above `200`. The `eval` in the query above casts the values to integers so they are ranked numerically.
 
-The top and bottom modules are functionally equivalent to sorting with a limit. For example:
+`top` and `bottom` are equivalent to sorting with a limit. For example:
 
 ```gravwell
 tag=foo json foo | top -n 10 foo
 ```
 
-will produce the same result as
+returns the same entries as
 
 ```gravwell
 tag=foo json foo | sort by foo desc | limit 10
 ```
 
-The `top` and `bottom` modules are however far more performant than using sort/limit.
+`top` and `bottom` are much faster, because they only hold N entries in memory instead of sorting everything.
 
 ## Flags
 
-- `-n <number>`: The "-n" flag specifies the number of entries to return. The default is 10. 
+- `-n <number>`: the number of entries to return. Must be greater than 0. Defaults to 10.
 
 ## Examples
 
-To get the top 10 values of the DATA field:
+To get the 10 entries with the highest `DATA` field:
 
 ```gravwell
 tag=gravwell top
 ```
 
-To get the top 10 values of foo:
+To get the 10 entries with the highest values of `foo`:
 
 ```gravwell
 tag=gravwell json foo | top foo
 ```
 
-To get the bottom 300 values of foo, and where foo is equal, bar:
+To get the 300 entries with the lowest values of `foo`, breaking ties with `bar`:
 
 ```gravwell
 tag=gravwell json foo bar | bottom -n 300 foo bar

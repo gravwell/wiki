@@ -1,22 +1,28 @@
 # Winlog
 
-The winlog processor is a special-purpose extractor for XML-formatted Windows log data. It provides "shortcuts" for extracting many common fields from Windows log entries rather than requiring the more general [xml module](/search/xml/xml).
+The winlog module extracts fields from XML-formatted Windows event logs. It provides short names for common fields, so you don't need full paths as with the more general [xml module](/search/xml/xml).
 
 ## Supported Options
 
-* `-e`: The “-e” option specifies that the winlog module should operate on an enumerated value.  Operating on enumerated values can be useful when you have extracted log entries using upstream modules.
-* `-s`: Strict mode. When using strict mode, winlog will drop entries that have any extractions fail. 
+* `-e <arg>`: Operate on an enumerated value instead of the entire entry, for example when an upstream module extracted the event XML. Entries without that enumerated value are dropped.
+* `-s`: Strict mode. Drop the entry if any extraction fails.
 
 ## Processing Operators
 
-Each winlog field supports a set of operators that can act as fast filters. In the case of the winlog module, all fields will be extracted as strings, so only string filters are available.
+Fields can be filtered inline. Which operators are available depends on the field's type: string fields support `==`, `!=`, `~`, and `!~`; numeric fields support `==`, `!=`, `<`, `<=`, `>`, and `>=`. The table under Data Fields lists each field's type.
 
 | Operator | Name | Description |
 |----------|------|-------------|
 | == | Equal | Field must be equal
 | != | Not equal | Field must not be equal
-| ~ | Subset | Field must be a member of
-| !~ | Not subset | Field must not be a member of
+| < | Less than | Field must be less than (numeric fields)
+| <= | Less than or equal | Field must be less than or equal to (numeric fields)
+| > | Greater than | Field must be greater than (numeric fields)
+| >= | Greater than or equal | Field must be greater than or equal to (numeric fields)
+| ~ | Subset | Field contains the value (string fields)
+| !~ | Not subset | Field does NOT contain the value (string fields)
+
+Entries that fail a filter are dropped. A filtered field that is missing also drops the entry, unless the operator is `!=` or `!~`.
 
 ## Data Fields
 
@@ -52,7 +58,7 @@ Given a log entry in this format:
 </Event>
 ```
 
-The following fields can be extracted
+The following fields can be extracted:
 
 | Field | XML spec | Type | Filter Options |
 |-------|----------|------|----------------|
@@ -62,12 +68,14 @@ The following fields can be extracted
 | Provider | Event.System.Provider[Name] | bytes | == != ~ !~ |
 | ProviderName | Event.System.Provider[Name] | bytes | == != ~ !~ |
 | ProviderGUID | Event.System.Provider[Guid] | bytes | == != ~ !~ |
+| ProviderGuid | Event.System.Provider[Guid] | bytes | == != ~ !~ |
 | GUID | Event.System.Provider[Guid] | bytes | == != ~ !~ |
+| EventSourceName | Event.System.Provider[EventSourceName] | bytes | == != ~ !~ |
 | EventID | Event.System.EventID | uint | == != < <= > >= |
 | Version | Event.System.Version | uint | == != < <= > >= |
 | Level | Event.System.Level | uint | == != < <= > >= |
 | Task | Event.System.Task | uint | == != < <= > >= |
-| Opcode | Event.System.Opcode | bytes | == != ~ !~ |
+| Opcode | Event.System.Opcode | uint | == != < <= > >= |
 | Keywords | Event.System.Keywords | bytes | == != ~ !~ |
 | TimeCreated | Event.System.TimeCreated[SystemTime] | bytes | == != ~ !~ |
 | EventRecordID | Event.System.EventRecordID | uint | == != < <= > >= |
@@ -77,27 +85,30 @@ The following fields can be extracted
 | Computer | Event.System.Computer | bytes | == != ~ !~ |
 | Correlation | Event.System.Correlation | bytes | == != ~ !~ |
 | ActivityID | Event.System.Correlation[ActivityID] | bytes | == != ~ !~ |
-| UserID | Event.System.Security[UserID] | uint | == != < <= > >= |
+| UserID | Event.System.Security[UserID] | bytes | == != ~ !~ |
 | Binary | Event.EventData.Binary | bytes | == != ~ !~ |
+| Data | First Event.EventData.Data element | bytes | == != ~ !~ |
 
-Specifying a field not listed above will cause the winlog module to attempt to extract `Event.EventData.Data[Name]==<field>`. For example, the SubjectLogonId in the example above (0x3e3) can be extracted by simply specifying `SubjectLogonId` to the winlog module.
+`ProviderGUID` and `ActivityID` are extracted without their surrounding braces; `GUID` and `ProviderGuid` keep them.
+
+Any other field name extracts the `Event.EventData.Data` element whose `Name` attribute matches it. For example, `winlog SubjectLogonId` extracts `0x3e3` from the sample above.
 
 ### Data Field Filtering
 
-Every extractable field in a windows log supports inline filtering with various comparison operations depending on the type of the field.  Some of the Event System fields are integers and can be compared as an integer, such as the `EventID`, `Version`, and `Level` fields.  The other System fields and all data fields are treated as byte arrays.  As with most Gravwell search modules it is almost always faster to perform filtering right when an enumerated value is created.
+Fields listed as `uint` above are compared as integers. A `uint` field whose value isn't a valid unsigned integer is treated as missing. All other fields, including every `EventData` field looked up by name, are compared as strings. Filtering in the winlog module is usually faster than filtering later in the pipeline.
 
 
 ## Examples
 
 The following examples refer to the sample log shown above.
 
-To extract the process ID (4) and the user name (GRAVUSER$):
+To extract the process ID (`4`) and the user name (`GRAVUSER$`):
 
 ```
 winlog ProcessID SubjectUserName
 ```
 
-To extract the process name from only those events on the Security channel with EventID == 4689:
+To extract the process name only from events on the `Security` channel with `EventID` 4689:
 
 ```
 winlog EventID==4689 Channel==Security ProcessName

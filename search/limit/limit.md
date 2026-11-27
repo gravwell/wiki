@@ -1,10 +1,10 @@
 # Limit
 
-The limit module allows a specified number of entries through and no more. This may be especially useful during the process of building a query, for example while testing regular expressions; by inserting a `limit 50` into the pipeline, the results displayed will be less overwhelming.
+The limit module passes a set number of entries and drops the rest. It is handy while building a query, for example when testing a regular expression: adding `limit 50` keeps the results manageable.
 
-The syntax is simple: `limit <n>`, where `n` is the maximum number of entries to allow through, or `limit <n> <m>`, which allows the Nth to the Mth entries through.
+The syntax is `limit <n>`, which passes the first `n` entries, or `limit <x> <y>`, which passes a range of entries.
 
-Specifically, `limit X Y` will pass entries `[X,Y)`. That is limit is inclusive of the first term, and exclusive of the second. Terms are also zero-indexed, meaning given a set `[a,b,c,d,e,f]`, `limit 2 5` will return `[c d e]`.
+`limit x y` passes entries `[x,y)`: the range includes `x` and excludes `y`. Entries are numbered from zero, so given `[a,b,c,d,e,f]`, `limit 2 5` returns `[c d e]`. `y` must be greater than `x`.
 
 For example, to look at the payload of 10 packets:
 
@@ -12,20 +12,22 @@ For example, to look at the payload of 10 packets:
 tag=pcap packet tcp.Payload | limit 10 | table Payload
 ```
 
-To look at packets 5 to 10:
+To skip the first 5 packets and look at the next 5:
 
 ```gravwell
 tag=pcap packet tcp.Payload | limit 5 10 | table Payload
 ```
 
-Limit can also key on enumerated values. If you want to allow 5 entries for each value of the enumerated value "foo", for example:
+Limit can also key on enumerated values. In that case, the limit or range applies separately to each value. To allow 5 entries for each value of the enumerated value `foo`:
 
 ```gravwell
 tag=default ax | limit 5 by foo
 ```
 
-You can specify any number of keyed fields. To allow 5 entries for each combination of enumerated values "foo", "bar", and "baz", for example:
+You can specify any number of keys. To allow 5 entries for each combination of `foo`, `bar`, and `baz`:
 
 ```gravwell
 tag=default ax | limit 5 by foo bar baz
 ```
+
+When keying, entries that have none of the named values are dropped.

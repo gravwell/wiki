@@ -1,14 +1,14 @@
 # Packet
 
-The Packet pipeline module extracts fields from Ethernet, IPv4, IPv6, TCP, and UDP packets.  Each field supports an operator which can selectively filter the packet, if no operator is provided the field is extracted if available.
+The packet module extracts fields from raw packets, such as Ethernet, IP, TCP, and UDP headers. The supported layers are listed below. Give a field an operator to filter on it. Without an operator, the field is extracted if present. Packets that don't contain a requested layer, or don't match a filter, are dropped.
 
-The packet module is useful both for filtering traffic down to specific protocols and for extracting specific fields from packets for analysis--see the examples for more.
+Use it to filter traffic down to specific protocols, or to extract fields from packets for analysis.
 
-Some field modules allow flexible selection where it is desirable to filter on a field that may have a source and destination.  To accommodate selection on IPs, Ports, MACs where there are both a source and destination, the special fields Port, IP, MAC are available.  If either source or destination matches an enumerated value with the field will be populated with the component that matched.  For example, tcp.Port==80 will match whenever either tcp.SrcPort or tcp.DstPort are equal to 80; tcp.Port != 80 will ensure that if either the source or destination ports are 80 the packet is filtered.
+The special fields `Port`, `IP`, and `MAC` match either the source or the destination value, and the extracted enumerated value holds whichever one matched. For example, `tcp.Port==80` matches when either `tcp.SrcPort` or `tcp.DstPort` is 80, while `tcp.Port != 80` drops the packet if either port is 80. Without a filter, `IP` and `MAC` extract the source value and `Port` extracts the lower of the two ports.
 
 ## Supported Options
 
-* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record. For example, the packet processing engine can operate on extracted values such as analyzing layer 2 tunnels.`
+* `-e <arg>`: Read the packet from an enumerated value instead of the entry data, for example to analyze a layer 2 tunnel extracted by an earlier module. Entries without the enumerated value are dropped.
 
 ## Packet Processing Operators
 
@@ -23,9 +23,11 @@ Some field modules allow flexible selection where it is desirable to filter on a
 | ~ | Subset | Field must be a member of
 | !~ | Not subset | Field must not be a member of
 
+The operators a field supports depend on its type. Numeric values can be decimal, hex (`0x1f`), or binary (`0b101`); a leading zero means octal. IP fields take a single address for `==` and `!=`, and a CIDR subnet or the keyword `PRIVATE` or `MULTICAST` for `~` and `!~`. For `Payload` fields, `~` and `!~` check whether the payload contains the given bytes.
+
 ## Packet Processing Submodules
 
-The packet processor supports submodules for breaking out specific fields in a packet. Each submodule and field supports a set of operators that allow the packet processor to also filter events based on the subfields.  The following sub modules are available:
+Each submodule breaks out the fields of one protocol layer. Specify a field as `<submodule>.<field>`, e.g. `ipv4.SrcIP`. The following submodules are available:
 
 | Submodule | Description                    |
 |-----------|--------------------------------|
@@ -40,11 +42,11 @@ The packet processor supports submodules for breaking out specific fields in a p
 | dot11     | 802.11 Wireless packets        |
 | dot11info | 802.11 information elements    |
 | modbus    | modbus/TCP packets             |
-| MPLS      | Multi-protocol Label Switching |
+| mpls      | Multi-protocol Label Switching |
 
 ## Renaming Extractions
 
-Enumerated value names are derived by the last name in a submodule specification. For example, the specification "ipv4.SrcIP" will generate the enumerated value "SrcIP". Enumerated value names can be overridden with an "as" argument. For example, to extract "ipv4.SrcIP" as "foo":
+An extracted field's enumerated value is named after the field, so `ipv4.SrcIP` produces an enumerated value named `SrcIP`. Use `as` to choose a different name. For example, to extract `ipv4.SrcIP` as `foo`:
 
 ```gravwell
 tag=pcap packet ipv4.SrcIP as foo | table foo
@@ -53,18 +55,18 @@ tag=pcap packet ipv4.SrcIP as foo | table foo
 Renamed enumerated values can also be used with filters:
 
 ```gravwell
-tag=pcap packet ipv4.SrcIP="8.8.8.8" as foo | table foo
+tag=pcap packet ipv4.SrcIP==8.8.8.8 as foo | table foo
 ```
 
 ## Examples
 
-The following command will find all DNS queries for Tumblr:
+The following search finds DNS queries for Tumblr:
 
 ```gravwell
 tag=pcap packet udp.DstPort==53 udp.Payload | grep -e Payload "tumblr" | text
 ```
 
-The `udp.DstPort==53` component specifies that we should only match on packets destined for UDP port 53, while the `udp.Payload` component specifies that the payload portion of each packet should be extracted into an enumerated value. We then use the `grep` module to search the payload for the word “tumblr” and send the results to the `text` renderer for display.
+`udp.DstPort==53` keeps only packets sent to UDP port 53, and `udp.Payload` extracts each packet's payload into an enumerated value. The `grep` module then searches the payload for "tumblr" and the `text` renderer displays the results.
 
 ## List of Packet Processing Submodules
 
@@ -77,7 +79,7 @@ The `udp.DstPort==53` component specifies that we should only match on packets d
 | eth | MAC | == != | eth.MAC == DE:AD:BE:EF:11:22 
 | eth | Len | > < <= >= == != | eth.Len > 0 
 | eth | Type | < > <= >= == != | eth.Type < 5 
-| eth | Payload | | eth.Payload
+| eth | Payload | == != ~ !~ | eth.Payload
 
 ### VLAN dot1q
 
@@ -88,14 +90,14 @@ The `udp.DstPort==53` component specifies that we should only match on packets d
 | dot1q | Type | > < <= >= == != | dot1q.Type == 2
 | dot1q | DropEligible |  == != | dot1q.DropEligible == true
 
-The dot1q packet submodule is designed to enable parsing of VLAN tagged packets.
+The dot1q submodule parses VLAN tagged frames.
 
 #### Example Search
 
-An example search that shows all mac addresses routing multiple IPv4 addresses with VLAN tagged packets:
+The following search shows MAC addresses that send VLAN tagged packets from more than one IPv4 address:
 
 ```gravwell
-tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | count by SrcMAC | eval count > 1 | table SrcMAC count
+tag=pcap packet dot1q.DropEligible==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | count by SrcMAC | eval count > 1 | table SrcMAC count
 ```
 
 ### 802.11 Wireless
@@ -106,23 +108,23 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | dot11 | Address2 | == != | dot11.Address2 != DE:AD:BE:EF:11:22 
 | dot11 | Address3 | == != | dot11.Address3 
 | dot11 | Address4 | == != | dot11.Address4 
-| dot11 | Type | < > <= >= == ! | dot11.Type == 1
-| dot11 | ToDS | == ! | dot11.ToDS == true
-| dot11 | FromDS | == ! | dot11.FromDS != false
-| dot11 | Payload | | dot11.Payload
+| dot11 | Type | < > <= >= == != | dot11.Type == 1
+| dot11 | ToDS | == != | dot11.ToDS == true
+| dot11 | FromDS | == != | dot11.FromDS != false
+| dot11 | Payload | == != ~ !~ | dot11.Payload
 
 ### 802.11 Information Elements
 
 | Packet Type | Field | Operators | Example
 |-----|-------|-----------|---------
-| dot11info | SSID | == != | dot11.SSID != xfinitywifi
+| dot11info | SSID | == != ~ !~ | dot11info.SSID != xfinitywifi
 
 ### IPv4
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
 | ipv4 | Version | == != < > <= >= | ipv4.Version != 0b11 
-| ipv4 | IHL | == != < > <= >= | ipv4.IHL == 08 
+| ipv4 | IHL | == != < > <= >= | ipv4.IHL > 5 
 | ipv4 | TOS | == != < > <= >= | ipv4.TOS < 10 
 | ipv4 | Length | == != < > <= >= | ipv4.Length > 0xff 
 | ipv4 | ID | == != < > <= >= | ipv4.ID == 0x5 
@@ -134,22 +136,22 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | ipv4 | SrcIP | == != ~ !~ | ipv4.SrcIP ~ 192.168.1.1/16 
 | ipv4 | DstIP | == != ~ !~ | ipv4.DstIP !~ 10.10.10.1/8 
 | ipv4 | IP | == != ~ !~ | ipv4.IP ~ 192.168.1.0/14
-| ipv4 | Payload | | ipv4.Payload
+| ipv4 | Payload | == != ~ !~ | ipv4.Payload
 
 ### IPv6
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
-| ipv6 | Version | == != < > <= >= | ipv6.Version == 0x08 
+| ipv6 | Version | == != < > <= >= | ipv6.Version == 6 
 | ipv6 | TrafficClass | == != < > <= >= | ipv6.TrafficClass != 20 
 | ipv6 | FlowLabel | == != < > <= >= | ipv6.FlowLabel == 0xDEADBEEF 
 | ipv6 | Length | == != < > <= >= | ipv6.Length >= 100 
-| ipv6 | NextHeader | == != < > <= >= | ipv6.NextHeader == 0x0800 
+| ipv6 | NextHeader | == != < > <= >= | ipv6.NextHeader == 6 
 | ipv6 | HopLimit | == != < > <= >= | ipv6.HopLimit < 10 
 | ipv6 | SrcIP | == != ~ !~ | ipv6.SrcIP != FF02::1 
 | ipv6 | DstIP | == != ~ !~ | ipv6.DstIP !~ FE80::1/64 
-| ipv6 | IP | == != ~ !~ | ipv6.IP == FE80::1/64 
-| ipv6 | Payload | | ipv6.Payload
+| ipv6 | IP | == != ~ !~ | ipv6.IP ~ FE80::/64 
+| ipv6 | Payload | == != ~ !~ | ipv6.Payload
 
 ### TCP
 
@@ -161,11 +163,11 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | tcp | SeqNum | == != < > <= >= | tcp.SeqNum > 0xffff 
 | tcp | AckNum | == != < > <= >= | tcp.AckNum < 112345 
 | tcp | Window | == != < > <= >= | tcp.Window < 1024 
-| tcp | [SYN/ACK/FIN/RST/PSH/URG/ECE/CWR/NS] | ==true, != true | tcp.SYN == true 
+| tcp | [SYN/ACK/FIN/RST/PSH/URG/ECE/CWR/NS] | == != | tcp.SYN == true 
 | tcp | Checksum | == != < > <= >= | tcp.Checksum != 0x1234 
 | tcp | Urgent | == != < > <= >= | tcp.Urgent==0b111010101010101 
-| tcp | DataOffset | == != < > <= >= | tcp.DataOffset > 96 
-| tcp | Payload | ~ !~ | tcp.Payload ~ "HTTP"
+| tcp | DataOffset | == != < > <= >= | tcp.DataOffset > 5 
+| tcp | Payload | == != ~ !~ | tcp.Payload ~ "HTTP"
 
 ### UDP
 
@@ -176,7 +178,7 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | udp | Port | == != < > <= >= | udp.Port == 53 
 | udp | Length | == != < > <= >= | udp.Length > 100 
 | udp | Checksum | == != < > <= >= | udp.Checksum != 0x1234 
-| udp | Payload | ~ !~ | udp.Payload
+| udp | Payload | == != ~ !~ | udp.Payload
 
 
 ### ICMP V4
@@ -188,7 +190,6 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | icmpv4 | Checksum | == != < > <= >= | icmpv4.Checksum == 1024 
 | icmpv4 | ID | == != < > <= >= | icmpv4.ID == 4 
 | icmpv4 | Seq | == != < > <= >= | icmpv4.Seq > 100
-| icmpv4 | Payload | == != ~ !~ | icmpv4.Payload
 
 ### ICMP V6
 
@@ -197,7 +198,6 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | icmpv6 | Type | == != < > <= >= | icmpv6.Type < 0x10 
 | icmpv6 | Code | == != < > <= >= | icmpv6.Code != 0x2
 | icmpv6 | Checksum | == != < > <= >= | icmpv6.Checksum == 1024 
-| icmpv6 | Payload | == != ~ !~ | icmpv6.Payload
 
 ### Modbus
 
@@ -209,16 +209,16 @@ tag=pcap packet dot1q.Drop==false eth.SrcMAC ipv4.SrcIP | unique SrcMAC SrcIP | 
 | modbus | Unit | == != < > <= >= | modbus.Unit == 2
 | modbus | Function | == != < > <= >= | modbus.Function == 0x05
 | modbus | Exception | == != | modbus.Exception == false
-| modbus | ReqResp | | modbus.ReqResp
-| modbus | Payload | | modbus.Payload
+| modbus | ReqResp | == != ~ !~ | modbus.ReqResp
+| modbus | Payload | == != ~ !~ | modbus.Payload
 
 ```{note}
-The Modbus layer is typically the last layer, which means that the Payload value is almost always empty.  When parsing Modbus packets the ReqResp value will contain read/write command addresses and values.
+The Modbus layer is typically the last layer, so its Payload value is almost always empty. The ReqResp value holds the read/write command addresses and values.
 ```
 
 ### MPLS
 
-The packet search module can decode MPLS headers and allows selective filtering.  The following MPLS fields are available.
+The following MPLS fields are available:
 
 | Packet type | Field | Operators | Example 
 |-----|-------|-----------|---------
@@ -228,14 +228,14 @@ The packet search module can decode MPLS headers and allows selective filtering.
 | mpls | TTL | == != < > <= >= | mpls.TTL>1
 | mpls | Payload | == != ~ !~ | mpls.Payload~foo
 
-For example, the following command will filter all traffic which contains MPLS headers and a traffic Label of 5
+The following search keeps traffic with an MPLS label of 5 whose payload contains "HTTP", and counts it by traffic class:
 
 ```gravwell
 tag=pcap packet mpls.Label==5 mpls.TrafficClass mpls.Payload | grep -e Payload "HTTP" | count by TrafficClass | table TrafficClass count
 ```
 
 ```{note}
-The MPLS package module will only look at the first MPLS layer, if there are multiple layers you will need to use the [packetlayer](/search/packetlayer/packetlayer) module to decode the additional layers by referencing the Payload enumerated value.
+The mpls submodule only decodes the first MPLS layer. To decode additional layers, pass the Payload enumerated value to the [packetlayer](/search/packetlayer/packetlayer) module.
 ```
 
 <!---

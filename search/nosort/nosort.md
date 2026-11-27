@@ -1,21 +1,25 @@
 # Nosort
 
-By default, everything in the Gravwell search pipeline is temporally sorted (when appropriate).  This means that if you execute the query `tag=gravwell` Gravwell will automatically insert a `sort by time desc` so that the data you see is strictly sorted.
+When the renderer needs ordered data and no module in the query sorts it, Gravwell automatically adds a `sort by time` (newest first) to the end of the pipeline. For example, `tag=gravwell` becomes `tag=gravwell sort by time`.
 
-However, there may be times where the extra overhead from the sort may not be required or explicitly not wanted; this is where `nosort` comes into play.  The `nosort` module does nothing but inform Gravwell that you explicitly do not want the data sorted at any stage, it basically turns off the `sort by time` injection.
+The `nosort` module turns off that automatic sort. It passes entries through unchanged; use it when you don't need strict time ordering and want to avoid the cost of the sort.
 
-The `nosort` module is purely for query optimization and is never required, don't use it unless you really know what you are doing.  The `nosort` module has a single optional flag `-asc` that tells Gravwell that you do not care about explicit time sorting but you would like the data read from oldest to newest (roughly).  The `-asc` flag is useful on big aggregate queries because it means that we will likely pull data in the order it was ingested which means the disks are probably moving in a more or less linear pattern.
+`nosort` is purely an optimization and is never required. Don't use it unless you know you need it. Its one optional flag, `-asc`, asks Gravwell to read data roughly from oldest to newest instead of newest to oldest. This can help large aggregate queries, since data is then read in roughly the order it was ingested and disk access is more sequential.
 
 ## Examples
 
-`tag=syslog nosort`
+Show syslog entries in rough time order, without strictly sorting them:
 
-Show syslog entries in a rough ordering, do not strictly sort them by time.
+```gravwell
+tag=syslog nosort
+```
 
-`tag=syslog nosort -asc`
+Show syslog entries roughly from oldest to newest, without strictly sorting them:
 
-Show syslog entries in a rough ordering from oldest to newest, do not strictly sort them by time.
+```gravwell
+tag=syslog nosort -asc
+```
 
 ```{note}
-The `nosort` module collapses the pipeline, this means that if you are running on a cluster environment it may actually reduce the query performance if you place it in the wrong location.
+The `nosort` module collapses the pipeline. In a clustered deployment, placing it in the wrong spot can reduce query performance.
 ```

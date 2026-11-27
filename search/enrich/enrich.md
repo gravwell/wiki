@@ -1,21 +1,21 @@
 # Enrich
 
-The `enrich` module can add enumerated values to each entry in a pipeline; these values can be specified in the module arguments or can come from a resource. `enrich` can be used to annotate data with constant enumerated values, such as "User=admin", in order to simplify visualization and reporting, pivoting within compound queries, and working with non-temporal data. 
+The `enrich` module adds enumerated values to every entry in the pipeline. The values come either from the module arguments or from a resource. Use it to annotate data with constant values, such as "User=admin", to simplify visualization and reporting, pivoting within compound queries, and working with non-temporal data.
 
 ## Supported Options
 
-* `-r`: Optional. The `-r` option requires an argument and specifies the name or UUID of a resource to extract data from.
-* `-o`: Optional. Overwrite any existing enumerated values that are specified. Usually combined with `-r`. 
+* `-r <arg>`: Optional. The name or UUID of a resource to extract data from. This can also be an inner query of a compound query, such as `@foo`.
+* `-o`: Optional. Overwrite existing enumerated values with the same name. Without `-o`, an entry that already has an enumerated value of that name keeps its existing value.
 
 ## Enriching with string constants
 
-The simplest use of `enrich` is to specify enumerated values and data within the query. For example, to add an enumerated value "foo" with the value "bar" to every entry, simply specify the name and content of the enumerated value, separated by whitespace:
+The simplest use of `enrich` is to give enumerated value names and contents in the query, as name/value pairs separated by whitespace. For example, to add an enumerated value "foo" with the value "bar" to every entry:
 
 ```gravwell
 tag=jsondata json val | enrich foo bar | table val foo
 ```
 
-You can specify multiple enumerated value pairs as well. For example, to create enumerated values "foo" and "bar", each with different content:
+You can specify multiple pairs. For example, to create enumerated values "foo" and "bar", each with different content:
 
 ```gravwell
 tag=jsondata json val | enrich foo "my data" bar "my other data" | table val foo bar
@@ -23,20 +23,20 @@ tag=jsondata json val | enrich foo "my data" bar "my other data" | table val foo
 
 ## Enriching with resources 
 
-The `enrich` module can extract columns from a CSV or lookup table resource. When using resources, only the first row will be used by `enrich` (excluding the column headers for CSV resources). Columns can be specified, and all columns will be used if none are specified. If a column conflicts with an existing enumerated value, it will only be overwritten if using the `-o` flag. 
+The `enrich` module can extract columns from a CSV or lookup table resource. List the columns to use; if none are listed, all columns are used. If the resource has no data rows, entries pass through unchanged. If a column conflicts with an existing enumerated value, it is only overwritten with the `-o` flag.
 
 For example, to use columns "foo" and "bar" from a resource "data":
 
 ```gravwell
-tag=jsondata val | enrich -r data foo bar | table val foo bar
+tag=jsondata json val | enrich -r data foo bar | table val foo bar
 ```
 
-Additionally, the name of the enumerated value can be different from the column name by using the `as` keyword. For example, to enrich with the column "foo", but name the resulting enumerated value "bar":
+Use `as` to give the enumerated value a different name from the column. For example, to enrich with the column "foo" but name the resulting enumerated value "bar":
 
 ```gravwell
-tag=jsondata val | enrich -r data foo as bar | table val bar
+tag=jsondata json val | enrich -r data foo as bar | table val bar
 ```
 
 ```{note}
-Only the first row of resources are used with the `enrich` module (excluding the column headers for CSV resources).
+Only the first row of a resource is used (excluding the column headers for CSV resources).
 ```

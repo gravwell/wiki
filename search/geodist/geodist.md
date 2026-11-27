@@ -1,6 +1,6 @@
 # Geodist module
 
-The geodist module calculates the distance between two locations. By default, it gives its result in kilometers, but different units can be selected via the `-u` flag.
+The geodist module calculates the great-circle (haversine) distance between two location enumerated values, such as those produced by [geoip](/search/geoip/geoip) or [location](/search/location/location). Results are in kilometers unless you choose another unit with `-u`.
 
 ## Syntax
 
@@ -8,9 +8,11 @@ The geodist module calculates the distance between two locations. By default, it
 geodist [-u <unit>] (loc1 loc2 [as output])...
 ```
 
+Each pair of locations produces one distance. The output is named `distance` unless renamed with `as`; give each pair a unique name when computing more than one distance. If either value in a pair is missing or is not a location, the entry passes through without that distance.
+
 ## Supported Options
 
-* `-u <unit>`: select a different unit. Defaults to "km", but "mi" (miles), "m" (meters), and "nmi" (nautical miles) are also valid.
+* `-u <unit>`: distance unit. Valid units are `km` (kilometers, the default), `mi` (miles), `m` (meters), and `nmi` (nautical miles).
 
 ## Examples
 

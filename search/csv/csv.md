@@ -1,29 +1,41 @@
 # CSV
 
-The csv module is designed to extract and filter data from comma separated values.  The csv module can be thought of as an enhanced fields module that is designed to accommodate some additional rules related to csv values such as the ability to quote columns that may contain commas, or escape commas, or surround columns with white space.
+The `csv` module extracts and filters columns from comma-separated values. It works like an enhanced [fields](/search/fields/fields) module that understands CSV rules: columns can be wrapped in double quotes to contain commas or newlines, and surrounding whitespace is ignored.
 
 ## Specifying Extraction Fields
 
-Fields are extracted by specifying an index into data from a base of zero.  An index is specified using a positive integer surrounded by square brackets.  Multiple columns can be extracted by providing multiple directives.  Column extraction indexes do not need to be specified in order.
+Columns are selected by zero-based index in square brackets. `[0]` is the first column, `[5]` the sixth. List as many columns as you need, in any order.
 
-Extracted columns can be renamed by appending the directive `as <name>` immediately after a field index value.  For example, to extract the 6th column from a piece of data into an enumerated value with the name "uri" the extraction directive would be `[5] as uri`.  If no rename directive is provided the extracted values are given the name that matches the index.  Extracted columns also support filters based on equality or contained values.  Filters must be specified before the renaming statement.  An example column directive which only allows entries to pass by where the 1st column is the value "stuff" would be `[0]=="stuff"`.  To only allow entries where the 1st column does not equal the value "stuff" and rename the 1st field to "things" the directive would be `[0] != "stuff" as things`.
+By default, an extracted column is named after its index, so `[5]` produces an enumerated value named `5`. To rename it, add `as <name>` after the index: `[5] as uri`.
+
+Each column can also take a filter (see Filtering Operators below), which must come before `as`. For example, `[0]=="stuff"` passes only entries whose first column is "stuff", and `[0] != "stuff" as things` drops entries whose first column is "stuff" and names the column `things`.
 
 ```{attention}
-Column extraction indexes can be specified as base 10, base 8, or base 16.  The default name applied is the original text value of the index.  An extraction directive of [0xA] will extract the 11th column with the name "0xA", while [010] will extract the 9th column and apply the name "010".
+Indexes are decimal. Leading zeros are allowed, and the default name keeps the original text: `[010]` extracts the 11th column into an enumerated value named `010`.
 ```
 
 ```{attention}
-To specify filter values and or extraction names which contain special characters like "-", ".", or spaces, surround the value in double quotes.
+To specify filter values or extraction names that contain spaces or other special characters, surround the value in double quotes.
 ```
+
+### Naming Columns by Position
+
+Instead of indexes, you can list names for the columns in order, separated by commas or spaces. Leave a position empty to skip that column. For example, the following extracts the first column as `ts`, skips the second and third, and extracts the fourth as `status`:
+
+```
+csv ts,,,status
+```
+
+This form does not support filters.
 
 ## Supported Options
 
-* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
-* `-s` : The “-s” option specifies that the csv module operate in a strict mode.  If any column specification cannot be met, the entry is dropped.  For example if you want the 0th, 1st, and 2nd field but an entry only has 2 columns the strict flag will cause the entry to be dropped.
+* `-e <arg>`: Operate on the enumerated value `<arg>` instead of the entry data.
+* `-s`: Strict mode. Drop the entry if any requested column is missing. For example, if you request `[0] [1] [2]` but an entry has only 2 columns, the entry is dropped. Without `-s`, missing columns are skipped and the entry passes.
 
 ## Filtering Operators
 
-The csv module can filter based on equality.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
+An entry that fails any filter is dropped. If a column is missing, its filter is not evaluated and the entry passes; use `-s` to drop such entries.
 
 | Operator | Name | Description |
 |----------|------|-------------|
@@ -40,20 +52,20 @@ csv [0] == "foo" [2] != "bar" [3] ~ baz as ID
 
 ## Data Extraction
 
-The CSV module will always clean out surrounding whitespace and double quotes from extracted column data.  For example, consider the following entry:
+The `csv` module always strips surrounding whitespace and double quotes from extracted columns. A backslash does not escape a comma; quote the column instead. For example, consider the following entry:
 
 ```
 2018-11-01T12:46:01.764386-06:00,daffodil, 15554,9870f7cd-b7d3-4bb6-8160-f5f146ebc764 , "OK, what sort of language would we have the world speak?
 Isabella", "CL", Lucien
 ```
 
-The 3rd, 4th, and 5th columns contain surrounding whitespace, and the 5th column contains double quotes that encapsulate commas and new lines.  If we executed the CSV module with the following arguments:
+The 3rd, 4th, and 5th columns have surrounding whitespace, and the 5th column is quoted because it contains a comma and a newline. The following query:
 
 ```
 csv [2] [3] [4] | table 2 3 4
 ```
 
-The output would look as follows (notice the lack of quotes or surrounding whitespace:
+produces the following output, without the quotes or surrounding whitespace:
 
 | 2 | 3 | 4 |
 |----------|------|-------------|
@@ -69,14 +81,14 @@ tag=brohttp csv [9] as url
 ```
 
 
-Extract the URL and requester field from a CSV bro http.log feed and filter for only entries where the URL contains a space and outputting the results in a table.
+Extract the URL and requester fields from a CSV bro http.log feed, keep only entries where the URL contains a space, and show the results in a table.
 
 ```gravwell
 tag=brohttp csv [9] ~ " " as url [2] as requester | table url requester
 ```
 
 
-Extract the 4th, 5th, and 6th columns where the 6th column must not be "stuff" and the 4th column must contain "things.
+Extract the 4th, 5th, and 6th columns where the 6th column must not be "stuff" and the 4th column must contain "things".
 
 ```gravwell
 tag=default csv [5]!=stuff [4] [3]~"things" | table 3 4 5
@@ -86,5 +98,5 @@ tag=default csv [5]!=stuff [4] [3]~"things" | table 3 4 5
 Extract a URI from an apache access log and then parse the "DATA" parameter as a CSV.
 
 ```gravwell
-tag=apache tag=apache regex "GET\s(?P<base>[^\s\?]+)\?(?P<params>\S+)\s" | regex -e params "DATA\=(?P<dataparam>[^\s&]+)" | csv -e dataparam [0] [1] [2] | table 0 1 2
+tag=apache regex "GET\s(?P<base>[^\s\?]+)\?(?P<params>\S+)\s" | regex -e params "DATA\=(?P<dataparam>[^\s&]+)" | csv -e dataparam [0] [1] [2] | table 0 1 2
 ```

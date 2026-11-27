@@ -1,21 +1,29 @@
-# Truncate 
+# Truncate
 
-The `truncate` module preserves only the first N characters (or bytes when using binary mode) of enumerated values. For example, to truncate all but the first 20 characters of the EV "Message":
+The `truncate` module keeps only the first N characters (or bytes, with `-binary`) of enumerated values. For example, to keep the first 20 characters of the EV `Message`:
 
 ```gravwell
 tag=data json IP Message | truncate Message 20 | table
 ```
 
-`truncate` only operates on string and byte slice enumerated values and by default assumes data is UTF-8 encoded. You can override this behavior by using the `-binary` flag.
+To truncate several enumerated values, list each name followed by its length:
+
+```gravwell
+tag=data json IP Message Path | truncate Message 20 Path 50 | table
+```
+
+Values at or under the limit, and entries missing the enumerated value, are unchanged.
+
+`truncate` only operates on string and byte slice enumerated values. By default it counts UTF-8 characters; use `-binary` to count bytes instead.
 
 ## Supported Options
 
-* `-ellipsis`: Optional. Add an ellipsis (three period characters, "...") to the string *after* truncating, meaning all truncated values will be three characters longer than specified.
-* `-binary`: Optional. Treat data as byte slices instead of UTF-8 strings.
+* `-ellipsis`: Optional. Append "..." to values that were truncated. The ellipsis is added *after* truncating, so truncated values are three characters longer than the given length.
+* `-binary`: Optional. Count and cut by bytes instead of UTF-8 characters.
 
 ## Example
 
-In this example, we extract requests from DNS:
+This query extracts the requested names from DNS records:
 
 ```gravwell
 tag=dns json Question.Hdr.Name | table
@@ -23,7 +31,7 @@ tag=dns json Question.Hdr.Name | table
 
 ![Example 1](example1.png)
 
-We can truncate, and add back an ellipsis, using the `truncate` module: 
+Truncate them to 10 characters and mark the cut with an ellipsis:
 
 ```gravwell
 tag=dns json Question.Hdr.Name 

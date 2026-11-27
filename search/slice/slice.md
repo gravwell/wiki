@@ -1,25 +1,37 @@
 # Slice
 
-The slice module is a powerful but very low-level tool for extracting bytes from entries or enumerated values by simply specifying offsets within the entry/enumerated value and optionally casting those bytes to specific type.  Slice can reference bytes via relative indexing, including negative numbers.
+Slice is a low-level tool that extracts bytes from the entry data or an enumerated value by offset, and optionally casts them to a type.
 
-The following search extracts the RPM from canbus messages on a Toyota vehicle by reading the first two bytes of the "data" enumerated value and parsing it as a 16-bit big-endian integer.
+This search extracts the RPM from canbus messages on a Toyota vehicle by reading the first two bytes of the "data" enumerated value as a 16-bit big-endian integer:
 
 ```gravwell
-tag=CAN canbus ID=0x2C4 | slice uint16be(data[0:2]) as RPM | mean RPM | chart mean
+tag=CAN canbus ID==0x2C4 data | slice uint16be(data[0:2]) as RPM | mean RPM | chart mean
 ```
 
-Slice can extract from raw entry contents, or it can operate on an enumerated value. The extracted bytes can optionally be parsed into a different type, such as an integer or a string. Some examples:
+Each extraction has the form `[start:end]`, `ev[start:end]`, `type([start:end])`, or `type(ev[start:end])`, optionally followed by a filter and `as <name>`. You can give several extractions in one slice invocation.
+
+Ranges work like Go slices:
+
+* `start` is inclusive and `end` is exclusive, so `[0:4]` extracts 4 bytes. Offsets can be decimal or hex (`0x10`).
+* An omitted `start` means 0; an omitted `end` (or an `end` of 0) means the end of the data.
+* Negative offsets count back from the end of the data, so `[-2:]` is the last two bytes.
+
+Without `as`, an extraction from an enumerated value replaces that enumerated value, and a typed extraction from the entry data is named after its type (for example, `uint16be`).
+
+An entry is dropped if any extraction fails or doesn't pass its filter. An extraction fails when the source enumerated value is missing, `start` is past the end of the data, or there aren't enough bytes for a fixed-size type. Byte array and string extractions that run past the end of the data are cut short instead.
+
+Some examples:
 
 | Command | Description |
 |---------|-------------|
-| `slice [0:4] as foo` | Extract the first 5 bytes directly from the entry's data and place them into an enumerated value "foo" |
-| `slice uint16le(Payload[9:10]) as value` | Pull two bytes from the enumerated value "Payload", parse them as an unsigned 16-bit little-endian integer, and store it as "value" |
+| `slice [0:4] as foo` | Extract the first 4 bytes of the entry data into an enumerated value "foo" |
+| `slice uint16le(Payload[9:11]) as value` | Pull bytes 9 and 10 from the enumerated value "Payload", parse them as an unsigned 16-bit little-endian integer, and store it as "value" |
 | `slice uint16be(Payload[-2:]) as value` | Pull the last two bytes from "Payload", parse them as an unsigned 16-bit big-endian integer, and store it as "value" |
 | `slice uint16be(Payload[-4:-2]) as value2` | Pull the two bytes preceding the last two bytes of "Payload", parse them as an unsigned 16-bit big-endian integer, and store as "value2"
 
 ## Supported Types
 
-An integral function of the slice module is casting the data to the appropriate type.  By default, data is extracted as a byte slice, but the option cast allows us to transform it into a type.  Types that have a suffix of "be" indicate a [Big Endian](https://en.wikipedia.org/wiki/Endianness) bit order, those without a "be" suffix use a Little Endian bit order.
+By default, slice extracts a byte array. A type cast converts the bytes to another type. Types with a "be" suffix use [big-endian](https://en.wikipedia.org/wiki/Endianness) byte order; all others are little-endian. The "le" and "be" suffixes can also be written in uppercase (`uint16BE`). For fixed-size types, the range must be exactly the size of the type when both offsets are known at parse time, for example `[0:2]` for `uint16`.
 
 * byte
 * int16
@@ -53,7 +65,7 @@ An integral function of the slice module is casting the data to the appropriate 
 
 ## Inline filtering
 
-The slice module supports inline filtering for very fast processing of binary data.  Every type does not support every filter operation.  For example attempting to find a subset in a floating point number does not make any sense, nor does applying "less than" to a byte slice.  Below is the complete list of filter operators and a table showing which operators can be applied to which types:
+Slice supports inline filtering for fast processing of binary data. Not every type supports every operator: a subset test on a float makes no sense, nor does "less than" on a byte array. For example, `slice byte(DATA[-1:]) == 0x0a` keeps entries whose last byte is a newline.
 
 ### Filter Operators
 
@@ -103,5 +115,5 @@ IPv4     | X | X | X | X |   |   |   |
 IPv6     | X | X | X | X |   |   |   |
 
 ```{note}
-The `IPv4` and `IPv6` operators expect 4 and 16 byte network encoded values, text encoding of IP addresses will not extract appropriately.
+The `IPv4` and `IPv6` types expect 4- and 16-byte network-encoded addresses. They can't parse IP addresses written as text.
 ```

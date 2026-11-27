@@ -1,27 +1,27 @@
 # Trim modules
 
-The trim modules are six modules that modify given string-based enumerated values in various ways. For example, you can use `trimleft` to remove a given list of characters from the beginning of a given enumerated value.
+The six trim modules remove characters from the start or end of an enumerated value. For example, `trimleft` removes a set of characters from the beginning of an enumerated value.
 
-The trim module can use either a string literal as the cutset/prefix/suffix, or an EV can be specified using the `-e` flag.
+- `trim`: Remove leading and trailing characters found in a cutset.
+- `trimleft`: Remove leading characters found in a cutset.
+- `trimprefix`: Remove a prefix string.
+- `trimright`: Remove trailing characters found in a cutset.
+- `trimspace`: Remove leading and trailing whitespace.
+- `trimsuffix`: Remove a suffix string.
 
-The trim modules consist of:
+A cutset is a set of individual Unicode characters, not a substring: `trim foo "abcd"` removes any run of `a`, `b`, `c`, or `d` from both ends of `foo`. Use `trimprefix` or `trimsuffix` to remove an exact string.
 
-- `trim`: Remove leading and trailing Unicode code points from an enumerated value.
-- `trimleft`: Remove leading Unicode code points from an enumerated value.
-- `trimprefix`: Remove a given prefix from an enumerated value.
-- `trimright`: Remove trailing Unicode code points from an enumerated value.
-- `trimspace`: Remove all leading and trailing whitespace from an enumerated value.
-- `trimsuffix`: Remove a given suffix from an enumerated value.
+Each module operates on one enumerated value. Entries without that enumerated value pass through unchanged. String and byte slice values keep their type; other types, such as numbers or IP addresses, are converted to strings before trimming and stored as strings.
 
 ## Supported Options
 
-* `-e`: Optional. Use the contents of an EV, specified with `-e`, as the cutset, prefix, or suffix. `trimspace` does not support this flag.
+* `-e <enumerated value>`: Optional. Read the cutset, prefix, or suffix from another enumerated value instead of a string literal. Give either `-e` or a literal, not both. Entries that lack the `-e` enumerated value pass through unchanged. `trimspace` does not support this flag.
 
 ## trim
 
 ### Syntax
 
-	trim <enumerated value> <code points>
+	trim <enumerated value> <cutset>
 
 ### Example
 
@@ -31,27 +31,27 @@ The trim modules consist of:
 
 	"amy has queried" -> "my has querie"
 	"cab fare"        -> " fare"
-	"bad dad"	  -> " "
+	"bad dad"         -> " "
 
-This example will remove any of the leading or trailing characters "abcd" from the EV. 
+This removes any of the characters `a`, `b`, `c`, and `d` from both ends of `foo`.
 
 ### Example using an EV instead of a string literal
 
-	trim -e bar foo 
+	trim -e bar foo
 
 ### Example output
 
-This assumes the EV "bar", has the contents "abcd"
+If the enumerated value `bar` contains "abcd", the output matches the previous example:
 
 	"amy has queried" -> "my has querie"
 	"cab fare"        -> " fare"
-	"bad dad"	  -> " "
+	"bad dad"         -> " "
 
 ## trimleft
 
 ### Syntax
 
-	trimleft <enumerated value> <code points>
+	trimleft <enumerated value> <cutset>
 
 ### Example
 
@@ -61,9 +61,9 @@ This assumes the EV "bar", has the contents "abcd"
 
 	"amy has queried" -> "my has queried"
 	"cab fare"        -> " fare"
-	"bad dad"	  -> " dad"
+	"bad dad"         -> " dad"
 
-This example will remove any of the leading characters "abcd" from the EV. 
+This removes any of the characters `a`, `b`, `c`, and `d` from the start of `foo`.
 
 ## trimprefix
 
@@ -80,13 +80,13 @@ This example will remove any of the leading characters "abcd" from the EV.
 	"Watch out! A rabid logbot!" -> " A rabid logbot!"
 	"Watch logbot dance!"        -> "Watch logbot dance!"
 
-This example will remove the prefix "Watch out!" from the EV. 
+This removes the prefix "Watch out!" from `foo`. Values that do not start with the prefix are unchanged.
 
 ## trimright
 
 ### Syntax
 
-	trimright <enumerated value> <code points>
+	trimright <enumerated value> <cutset>
 
 ### Example
 
@@ -96,9 +96,9 @@ This example will remove the prefix "Watch out!" from the EV.
 
 	"amy has queried" -> "amy has querie"
 	"cab fare"        -> "cab fare"
-	"bad dad"	  -> "bad "
+	"bad dad"         -> "bad "
 
-This example will remove any of the trailing characters "abcd" from the EV. 
+This removes any of the characters `a`, `b`, `c`, and `d` from the end of `foo`.
 
 ## trimspace
 
@@ -112,11 +112,9 @@ This example will remove any of the trailing characters "abcd" from the EV.
 
 ### Example output
 
-	"
-         
-         This EV has much whitespace    " -> "This EV has much whitesapce"
+	"\n\n   This EV has much whitespace    " -> "This EV has much whitespace"
 
-This example will remove all leading and trailing whitespace from the EV.
+This removes all leading and trailing whitespace, including spaces, tabs, and newlines, from `foo`.
 
 ## trimsuffix
 
@@ -126,12 +124,11 @@ This example will remove all leading and trailing whitespace from the EV.
 
 ### Example
 
-	trimpsuffix foo "logbot!"
+	trimsuffix foo "logbot!"
 
 ### Example output
 
-	"Watch out! A rabid logbot!" -> "Watch out! A rabid"
+	"Watch out! A rabid logbot!" -> "Watch out! A rabid "
 	"Watch logbot dance!"        -> "Watch logbot dance!"
 
-This example will remove the suffix "logbot!" from the EV. 
-
+This removes the suffix "logbot!" from `foo`. Values that do not end with the suffix are unchanged.

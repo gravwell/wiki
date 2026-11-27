@@ -1,6 +1,6 @@
 # JSON
 
-The json module is used to extract and filter data from search entries into enumerated values for later use. JSON is an excellent data format for dynamic exploration as the data is self-describing. The JSON module can extract items and rename them, or filter based on the extracted value. Filtering directly within the JSON module provides a very high speed and intuitive way to select data of a specific format.
+The json module extracts fields from JSON data into enumerated values. It can rename extractions and filter on their values. Filtering inside the json module is fast and lets you select entries by the contents of a specific field.
 
 ```{note}
 The `json` module does not unescape extracted fields that may have been escaped in order to adhere to the JSON specification. You can use the [unescape](/search/unescape/unescape) module to unescape extracted fields.
@@ -8,13 +8,13 @@ The `json` module does not unescape extracted fields that may have been escaped 
 
 ## Supported Options
 
-- `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
-- `-s`: The “-s” option informs the json module that we are in strict mode, meaning that if any field extraction fails, drop the entire entry. If you say `json -s foo`, any entry which doesn't contain a field named "foo" will be dropped; conversely, `json foo` simply extracts "foo" when possible and drops nothing. Specifying `json -s foo bar` means each entry must contain fields named "foo" and "bar".
-- `-x <arg>`: The “-x” option tells the module to expand the contents of a JSON array into multiple entries, one per array value. The rest of the entry remains the same. The argument can be the output name of one of the current extractions, or it can be an enumerated value. Thus, both `tag=foo json -x bar foo.bar` and `tag=foo json foo.bar | json -x bar` are valid invocations.
+- `-e <arg>`: Operate on an enumerated value instead of the entire entry. Entries without that enumerated value are dropped.
+- `-s`: Strict mode. If any extraction fails, drop the entry. `json -s foo` drops any entry without a field named `foo`, while `json foo` extracts `foo` when present and drops nothing. `json -s foo bar` requires both `foo` and `bar`.
+- `-x <arg>`: Expand a JSON array into multiple entries, one per array element. The argument is the output name of one of this module's extractions or an enumerated value produced earlier in the query, so both `tag=foo json -x bar foo.bar` and `tag=foo json foo.bar | json -x bar` are valid. Entries missing that enumerated value are dropped. If the value is not a JSON array, the entry passes through unchanged.
 
 ## Filtering Operators
 
-The JSON module can filter based on equality and substring matching. If a filter is enabled that specifies equality ("equal" or "not equal"), any entry that fails the filter specification will be dropped entirely.
+The json module can filter on equality and substring matching. Entries that fail a filter are dropped.
 
 | Operator | Name       | Description                      |
 | -------- | ---------- | -------------------------------- |
@@ -24,18 +24,18 @@ The JSON module can filter based on equality and substring matching. If a filter
 | !~       | Not Subset | Field does NOT contain the value |
 
 ```{note}
-If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped. If you wish to drop the entries which don't contain the field at all, use the `-s` flag.
+With `==` or `~`, entries that lack the field are dropped. With `!=` or `!~`, entries that lack the field are not dropped and nothing is extracted. To drop entries that don't contain the field at all, use the `-s` flag.
 ```
 
 ## Examples
 
-To find the most prolific Reddit posters, the following search extracts the "Author" field from each Reddit post into a new enumerated value, then counts the occurrence of each author and puts it into a table:
+To find the most prolific Reddit posters, extract the `Author` field from each post, then count each author and show the result in a table:
 
 ```gravwell
 tag=reddit json Author | count by Author | table Author count
 ```
 
-The module can also descend multiple layers into the JSON entry. For example, in the Shodan data we ingest for testing, we can extract the "region code" from entries to discover where the endpoint resides. If we want to learn which states have the most AT&T U-verse customers, we can issue the following search:
+Use dots to descend into nested objects. This search extracts `location.region_code` from Shodan data to find which states have the most AT&T U-verse customers:
 
 ```gravwell
 tag=shodan grep "AT&T U-verse" | json location.region_code | count by region_code | table region_code count
@@ -43,13 +43,13 @@ tag=shodan grep "AT&T U-verse" | json location.region_code | count by region_cod
 
 ### Using Enumerated Values
 
-We can also operate on enumerated values rather than the full entry data if desired; for instance, if an XML entry contains json within it:
+The `-e` flag parses an enumerated value instead of the entry data. For example, this XML entry contains JSON:
 
 ```
 <System><Data>{ "domain": "gravwell.io" }</Data></System>
 ```
 
-We can use the following command to extract the JSON from within the XML as an enumerated value named "Data", then apply the json module to parse out the domain value into another enumerated value named "domain":
+This query extracts the JSON into an enumerated value named `Data` with the xml module, then uses the json module to extract `domain` from it:
 
 ```
 xml System.Data | json -e Data domain
@@ -57,13 +57,13 @@ xml System.Data | json -e Data domain
 
 ### Renaming Extractions
 
-Enumerated value names are derived by the last name in a JSON specification, in the earlier example which extracted the region_code field the output is populated in the "region_code" enumerated value. Output enumerated value names can be overridden with an "as" argument. The following example extracts the domain member from the Data enumerated value and assigns it into a new enumerated value named "dd":
+An extraction is named after the last element of its path, so `location.region_code` produces an enumerated value named `region_code`. Use `as` to choose a different name. This example extracts `domain` from the `Data` enumerated value into an enumerated value named `dd`:
 
 ```
 json -e Data domain as dd
 ```
 
-Using the filter operator we can extract the Data field, but only when the domain is not the value "google.com." Filters can be combined with renaming.
+Filters can be combined with renaming. This extracts `domain` as `dd`, dropping entries where the domain is `google.com`:
 
 ```
 json -e Data domain != "google.com" as dd
@@ -71,13 +71,13 @@ json -e Data domain != "google.com" as dd
 
 ### Quoting Rules
 
-The JSON format is extremely liberal and allows names of all types, including characters Gravwell usually treats as separators such as '.' and "-". In cases where the JSON name contains such characters, wrap the individual field in double-quotes to parse it as a single token. For example, this JSON string contains a dot character in a field name:
+JSON keys can contain characters Gravwell treats as separators, such as `.` and `-`. Wrap such a key in double quotes so it is parsed as a single name. For example, these keys contain dots:
 
 ```
 { "subfield.op": "stuff", "subfield.type": "int", "subfield.value": 99}
 ```
 
-An example json module argument to extract the subfield.op member would be:
+To extract the `subfield.op` member:
 
 ```
 json "subfield.op" as sop
@@ -89,43 +89,43 @@ Similarly, consider the following nested structure:
 { "fields": { "search-id": 1234, "search-type": "background" } }
 ```
 
-Because search-id and search-type contain a dash character, they should be wrapped in quotes when used:
+Because `search-id` and `search-type` contain dashes, quote them:
 
 ```
-json fields."search-id" fields."search-type" as type | count by "search-id",type | table "search-id" type count
+json fields."search-id" fields."search-type" as type | count by "search-id" type | table "search-id" type count
 ```
 
 (search_json_arrays)=
 
 ### Arrays
 
-The json module can extract elements from arrays. Consider the following structure:
+The json module can extract elements from arrays. An array index is its own path element, written as `[N]` after a dot. Consider the following structure:
 
 ```
 { "uid": 1, "groups": [17,3] }
 ```
 
-To extract the first group from the array of groups, we can say:
+To extract the first element of `groups`:
 
 ```
 json groups.[0] as gid
 ```
 
-(If the extraction is not renamed, the enumerated value will be named "[0]" which is very clumsy)
+Without `as`, the enumerated value would be named `[0]`.
 
-To expand an array, we extract the array and pass the output name to the `-x` flag:
+To expand an array, extract it and pass its output name to the `-x` flag:
 
 ```
 json -x groups groups uid
 ```
 
-This will turn the single entry into two entries, one with enumerated values `uid=1` and `groups=17`, one with `uid=1` and `groups=3`.
+This turns the single entry into two entries, one with `uid=1` and `groups=17`, and one with `uid=1` and `groups=3`.
 
 ```{note}
 When expanding an array via the `-x` flag, the underlying Data field and all other enumerated values are duplicated intact; only the contents of the array enumerated value change.
 ```
 
-We can also extract components from within array elements:
+To extract members of objects inside an array, put the index in the path:
 
 ```
 { "Metadata": [ {"Value": "john"}, {"Value": "Albuquerque"} ] }
@@ -137,23 +137,23 @@ json Metadata.[0].Value as Username
 
 ## Empty array indices
 
-If the array index syntax is used without an index, the json module will find and return the first array element that satisfies the extraction. For example, given the input:
+An empty index, `[]`, searches the array and uses the first element that contains the rest of the path. For example, given the input:
 
 ```
 { "Metadata": [ {"Value": "john"}, {"Value": "Albuquerque", "State": "NM"} ] }
 ```
 
-The query
+This query walks the array until it finds an object with a `State` field and extracts that field:
 
 ```gravwell
 json Metadata.[].State
 ```
 
-Will iterate through the array until it finds the first object with a "State" field, and extract that.
+Empty indices can be nested, as in `json foo.[].[].bar`. A path can't end with `[]`.
 
 ## Empty Fields and the Strict Flag
 
-The module makes a distinction between fields which are not defined and fields which contain the empty string. Consider the following entries:
+The module distinguishes between a missing field and a field containing the empty string. Consider these entries:
 
 ```
 {"A": "B", "FOO": ""}
@@ -163,9 +163,9 @@ The module makes a distinction between fields which are not defined and fields w
 {"A": "Z"}
 ```
 
-The first entry contains a field named "FOO" which is an empty string. The second entry does not contain a "FOO" field at all.
+The first entry has a field `FOO` containing an empty string. The second has no `FOO` field.
 
-This query will drop the first entry but pass the second:
+This query drops the first entry but passes the second:
 
 ```
 json FOO!=""
@@ -173,7 +173,7 @@ json FOO!=""
 
 ![](foo1.png)
 
-The following query will drop the second entry but pass the first, extracting an empty string into an enumerated value named FOO:
+This query drops the second entry but passes the first, extracting an empty string into `FOO`:
 
 ```
 json -s FOO
@@ -181,7 +181,7 @@ json -s FOO
 
 ![](foo2.png)
 
-This query will pass both entries, extracting FOO from the first entry:
+This query passes both entries, extracting `FOO` from the first:
 
 ```
 json FOO
@@ -189,7 +189,7 @@ json FOO
 
 ![](foo3.png)
 
-This query will drop both entries, because the != filter excludes the first entry and the strict flag excludes the second (because it lacks a field named "FOO"):
+This query drops both entries: the `!=` filter excludes the first, and the strict flag excludes the second because it lacks `FOO`:
 
 ```
 json -s FOO!=""

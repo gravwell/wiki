@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is the reference specification the Gravwell query language syntax. A query is made up of indexer and webserver constraints, modules, a pipeline, and a renderer. This document provides documentation for how input text is interpreted and tokenized. Some lexical meaning of input is also defined here. Modules have context-specific semantics that differ between modules (such as numbers being implied to be strings). The user should read the search module documentation for more information on module-specific considerations.
+This is the reference specification for Gravwell query syntax. A query is made up of constraints, a pipeline of modules, and a renderer. This document describes how input text is interpreted and tokenized. Modules apply their own semantics to the tokens they receive (for example, some treat numbers as strings), so read each module's documentation for module-specific rules.
 
 ## Text Encoding 
 
@@ -34,13 +34,13 @@ Literal     = "\"" String "\"" .
 
 ### Quotes
 
-Many characters and keywords have special meaning in the Gravwell syntax. When using a special character or keyword as a literal string, you must use double quoted strings `"`. For example
+Many characters and keywords have special meaning in Gravwell syntax. To use one as a literal string, wrap it in double quotes `"`. For example,
 
 ```
 json foo bar | table
 ```
 
-extracts `foo` and `bar` from some JSON input, then passes the extractions to the `table` renderer. To use whitespace and the `|` character, both of which have special meaning, in the input to the `json` module, use a quoted string:
+extracts `foo` and `bar` from JSON input and passes them to the `table` renderer. Whitespace and `|` both have special meaning, so to use them in an argument to `json`, quote it:
 
 ```
 {
@@ -55,7 +55,9 @@ json "foo bar | table"
 
 This example will extract a field named `foo bar | table` from the above JSON. 
 
-All other lexical definitions below are implied to be interpreted outside of a quoted string, except for escaped productions, which are always interpreted.
+All other lexical definitions below apply outside of quoted strings, except escape sequences, which are interpreted inside them too.
+
+Text between backticks (`` ` ``) is a raw string: it is used exactly as written, with no escape processing, and cannot contain a backtick.
 
 A quoted string is defined as 
 
@@ -128,72 +130,68 @@ unicode_print = Characters from Unicode categories L, M, N, P, and S
 
 ### Module tokens
 
-Tokens are groups of characters separated by whitespace (as defined above) and reserved characters (such as `|`), unless grouped in a quoted string. The semantic meaning of a token depends on the position the token occurs in the input. For example,
+Tokens are groups of characters separated by whitespace (as defined above) and reserved characters (such as `|`), unless grouped in a quoted string. A token's meaning depends on where it appears. For example,
 
 ```gravwell
 tag=default json tag
 ```
 
-extracts the enumerated value `tag`, using the `json` module, all from the default Gravwell tag. While the token `tag` shows up twice, the meaning is different based on the position in the input. The first occurrence tells Gravwell to pull data from the default tag. The second occurrence tells the `json` module to extract a value named `tag`.
+uses the `json` module to extract an enumerated value named `tag` from entries in the default tag. The first `tag` tells Gravwell which tag to pull data from; the second tells `json` which value to extract.
 
 Tokens cannot contain the following reserved characters, unless quoted:
 
 | Character | Description |
 |-----------|-------------|
 | &#124; |  Pipe: separates modules in the module pipeline |
-| @ | Compound query reference |
 | {} | Compound query block |
 | ; | Compound query delimiter |
 | = | Assignment operator |
 | ==, <, >, <=, >=, ~, !=, !~ | Comparison operators |
-| ., !, #, $, %, ^, &, *, (, ), [, ], ? | Other reserved characters |
+| (, ), [, ], ., :, ,, /, !, %, ^, &, +, " | Other reserved characters |
+
+Other punctuation, including `-`, `@`, `#`, `$`, `*`, and `?`, does not split tokens. For example, `foo-bar` and `@dns` are single tokens.
+
+A few modules tokenize differently. `grep`, `words`, and `src` do not split on `.`, `:`, `,`, or `/`, so `grep 10.1.2.3` sees one token. `json` does not split on `[` or `]`, so `foo[0]` is one token.
 
 ### Tokenizing in the R-value of a filter
 
-When filtering, tokenizing in the R-value (the value of the filter) of the filter behaves differently. All reserved characters except `|[](){}` will be considered part of the token until the next whitespace character. This means that while `uint16(Data[2:5])` is split into 9 tokens (all reserved characters cause token splitting), the filter value in `foo == ::!!!.50` is a single token.
+The R-value of a filter (the value after the operator) is tokenized differently: `.`, `:`, `,`, and `/` do not split it. So while `uint16(Data[2:5])` is split into 9 tokens, the filter value in `foo == a:b.c/d,e` is a single token, as is the subnet in `ip ~ 10.0.0.0/8`. The other reserved characters still split an R-value; quote the value if it contains them.
 
 ### Tokenizing in `eval` and code fragments
 
-Gravwell syntax supports inline code fragments for filtering and other operations. This is accomplished with either the `eval` module, followed by the code fragment, or a module stage wrapped in parentheses. For example,
+The `eval` module takes an inline code fragment for filtering and other operations. For example,
 
 ```gravwell
 tag=default json foo-bar baz | eval baz > 10 | table
 ```
 
-has the code fragment `baz > 10`. This is easily parsed using the tokenizing rules described above. This same query can be written as
+has the code fragment `baz > 10`. Code fragments support C-style notation for arithmetic, bitwise, and logical operations, so Gravwell tokenizes them differently from regular module arguments. For example, in
 
 ```gravwell
-tag=default json foo-bar baz | (baz>10) | table
+tag=default json foo-bar foo bar | eval ( foo-bar > 10 ) | table
 ```
 
-However, the code fragment syntax supports C-style notation for bitwise and logic operations, so Gravwell parses these fragments differently than the regular token stream. For example,
+the `json` module treats `foo-bar` as a single name, but in the code fragment `foo-bar > 10` means "foo minus bar is greater than 10".
+
+Similarly,
 
 ```gravwell
-tag=default json foo-bar foo bar | ( foo-bar > 10 ) | table
+tag=default json foo bar | eval ( baz = foo | bar ) | table
 ```
 
-has a code fragment `foo-bar > 10`, but it is unclear if the user meant "foo minus bar is greater than 10" or "the enumerated value 'foo-bar' is greater than 10". This is because hyphens are allowed in the tokenizing in the `json` module preceding the code fragment. 
+has an interior `|` character. Because it is inside parentheses, it is a bitwise OR of `foo` and `bar` rather than a module separator.
 
-Another example,
-
-```gravwell
-tag=default json foo bar | ( baz = foo | bar ) | table
-```
-
-has an interior `|` character, which would otherwise cause a module split, but the intended use here is to perform a bitwise-or of the two enumerated values "foo" and "bar".
-
-To reconcile this behavior, `eval` and implied code fragments tokenize in a different way:
+Code fragments follow these rules:
 
 - Enumerated value names (identifiers in the grammar below) are limited to unquoted strings beginning with a non-number, and not containing any of the special characters in the grammar below.
 - String literals must be quoted.
-- Numeric literals are all forms of numbers, floating point numbers, hexadecimal syntax (eg 0xfa), and binary (eg 0b0010).
-- `|` and `||` are treated as bitwise and logical OR operations, respectively.
+- Numeric literals are decimal integers (`10`), decimal floating point numbers (`1.5`), and hexadecimal integers (`0xfa`).
+- `||` is logical OR. A single `|` is bitwise OR inside parentheses; outside parentheses it ends the `eval` module.
 
 ```{note}
 Enumerated values containing reserved characters or whitespace cannot be used in code fragments. These variables must be renamed or aliased.
 ```
 
-This form of tokenizing occurs until the outermost parenthetical group in the code fragment is closed.
 
 ### Operators and filters
 
@@ -238,7 +236,7 @@ All input before the first module in a query represents the query constraints. U
 
 Please see the list of modules in the [Search section](./search) for module specific documentation.
 
-Modules are pipelined functions that extract, transform, and render data. Conceptually, data flows left-to-right in the module pipeline, and modules can drop, pass, modify, or inject data into the pipeline. The last module in the pipeline is the render module (such as `table` or `chart`); note that if no render module is explicitly defined, Gravwell will add one automatically. The module pipeline is split by the `|` character. A module invocation is made up of the module name, optional flags, and optional arguments. 
+Modules are pipelined functions that extract, transform, and render data. Data flows left to right through the pipeline, and modules can drop, pass, modify, or inject entries. The last module is the render module (such as `table` or `chart`); if you don't specify one, Gravwell adds one. Modules are separated by `|`. A module invocation is the module name, optional flags, and optional arguments.
 
 #### Module name
 
@@ -270,19 +268,19 @@ Module arguments are module-specific lists of tokens containing identifiers, fil
 
 The last module in a query is always the renderer. Render modules take flags and arguments just like a search module, but must appear at the end of the pipeline.
 
-If no renderer is specified, the text renderer is implied.
+If no renderer is specified, the `text` renderer is implied. Inner queries of a compound query default to `table` instead.
 
 ### Compound queries
 
-Multiple modules can be grouped into a single _compound query_ using the [compound query notation](compound_queries). A compound query takes the form of
+Multiple queries can be grouped into a single _compound query_ using the [compound query notation](compound_queries). A compound query takes the form of
 
 ```gravwell
 @foo{tag=default ...}; @bar{tag=default ...}; tag=default lookup -r @foo | ...
 ```
 
-Where `@foo`, `@bar` represent the names of "inner" queries. The `@` is required. Any query can be specified in the inner query body, enclosed in `{}`, but the renderer must be the `table` renderer. Any number of inner queries can be specified. Inner queries and the main query (the final query in the list of queries, which is not wrapped in the `@{}` notation) are separated by semicolons. 
+where `@foo` and `@bar` name the "inner" queries; the `@` is required. An inner query's body, enclosed in `{}`, can be any query whose renderer is `table`. You can define any number of inner queries. Inner queries and the main query (the final query, which is not wrapped in `@{}`) are separated by semicolons.
 
-Queries are executed in order, and any later query (including other inner queries) can use the output of an earlier inner query anywhere that a tabular resource can be used (such as the `lookup` module), by referencing the query by name with the `@` symbol. 
+Queries run in order. Any later query, including another inner query, can use an earlier inner query's output anywhere a table resource is accepted (such as the `lookup` module) by referring to it by name with `@`.
 
 ## Query Grammar
 
@@ -296,14 +294,14 @@ QueryStructure    = { Constraint } [ [ "|" ] Module { "|" Module } ]
 CompoundQuery     = InnerQuery { InnerQuery } QueryStructure
 InnerQuery        = Whitespace AT QueryName "{" QueryStructure "}" SEMICOLON
 Constraint        = Whitespace CLvalue "=" CRvalue { "," CRvalue }
-ModuleConstraint  = Whitespace MCLvalue "=" CRvalue { "," CRvalue }
+ModuleConstraint  = Whitespace MCLvalue "=" MCRvalue { "," MCRvalue }
 Module            = { ModuleConstraint } Whitespace ( SpecialModule | JSONModule | Hoc | RegularModule ) Whitespace
 JSONModule        = JSONModuleName { JSONToken }
 SpecialModule     = SpecialModuleName { SpecialToken }
 RegularModule     = ModuleName { Token }
-JSONToken         = RawString | QuotedString | JSONString | ( Op ( QuotedString | RString ) ) | Special
-SpecialToken      = RawString | QuotedString | RString | ( Op ( QuotedString | RString ) ) | Special
-Token             = RawString | QuotedString | String | ( Op ( QuotedString | RString ) ) | Special
+JSONToken         = RawString | QuotedString | JSONString | ( Op ( RawString | QuotedString | RString ) ) | Special
+SpecialToken      = RawString | QuotedString | RString | ( Op ( RawString | QuotedString | RString ) ) | Special
+Token             = RawString | QuotedString | String | ( Op ( RawString | QuotedString | RString ) ) | Special
 
 # Eval grammar
 

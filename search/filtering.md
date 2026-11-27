@@ -1,24 +1,24 @@
 # Inline Filtering
 
-Very frequently you will want to filter entries in a query based on some criteria--perhaps you want to remove all HTTPS flows from Netflow data, or you only want to look at traffic originating in a certain subnet, or you need to match against a particular username in Windows logs. *Inline filtering* is an efficient way to filter down many different types of Gravwell data.
+You will often want to filter entries on some criteria: drop HTTPS flows from Netflow data, look only at traffic from a certain subnet, or match a particular username in Windows logs. *Inline filtering* does this efficiently for many types of data.
 
-Gravwell extraction modules will typically allow *extracted* items to be *filtered* at extraction time. Consider the query below, which extracts the IPv4 destination IP and the TCP destination port from packets:
+Most extraction modules can *filter* items as they *extract* them. This query extracts the IPv4 destination IP and the TCP destination port from packets:
 
 ```gravwell
 tag=pcap packet ipv4.DstIP tcp.DstPort
 ```
 
-We can add filters to, for example, only show packets destined for port 22 on IPs in the 10.0.0.0/8 subnet:
+Add filters to show only packets destined for port 22 on IPs in the 10.0.0.0/8 subnet:
 
 ```gravwell
 tag=pcap packet ipv4.DstIP ~ 10.0.0.0/8 tcp.DstPort == 22
 ```
 
-Any entry whose DstIP and DstPort do not match the specified filters will be **dropped**.
+Any entry whose DstIP and DstPort do not match the filters is **dropped**.
 
 ## Filtering Operations & Data Types
 
-Within the Gravwell search pipeline, enumerated values can be a variety of different *types*, for example strings, integers, or IP addresses. Some types cannot be filtered in certain ways--it is not particularly useful to ask if an IP address is "less than" another IP address! The filtering operations supported by Gravwell are below:
+Enumerated values have *types*, such as strings, integers, or IP addresses, and not every operator makes sense for every type: asking whether one IP address is "less than" another isn't useful. Gravwell supports these filter operators:
 
 | Operator | Name |
 |----------|------|
@@ -31,9 +31,11 @@ Within the Gravwell search pipeline, enumerated values can be a variety of diffe
 | ~ | Subset |
 | !~ | Not subset |
 
-Most of these operations are self-explanatory, but the subset operations deserve special mention. The subset operation (~) applies to strings and IP addresses; for strings, it means "the enumerated value contains the argument", while for IP addresses it means "the IP address is within the specified subnet. Thus, `json domainName ~ "gravwell.io"` would pass only those entries which have a JSON field named 'domainName' that contains the string "gravwell.io". Similarly, `packet ipv4.DstIP ~ 10.0.0.0/8` would pass only those entries whose IPv4 destination IP address is in the 10.0.0.0/8 subnet.
+The subset operators need some explanation. For strings and byte slices, `~` means "the value contains the argument" (a case-sensitive substring match). For IP addresses, it means "the address is within the given subnet". So `json domainName ~ "gravwell.io"` passes only entries with a JSON field `domainName` that contains `gravwell.io`, and `packet ipv4.DstIP ~ 10.0.0.0/8` passes only entries whose IPv4 destination address is in 10.0.0.0/8. `!~` is the inverse of each.
 
-Each enumerated value type is compatible with some filters but not others:
+A single `=` is not a filter operator; use `==`.
+
+Each enumerated value type supports these operators:
 
 | Enumerated Value Type | Compatible Operators |
 |-----------------------|----------------------|
@@ -46,17 +48,19 @@ Each enumerated value type is compatible with some filters but not others:
 | boolean | ==, !=
 | duration | ==, !=, <, >, <=, >=
 
+If an extraction module can't find the value in an entry at all, `==`, `~`, `<`, `>`, `<=`, and `>=` filters drop the entry, while `!=` and `!~` filters pass it. For example, `json user != "root"` passes entries that have no `user` field.
+
 ## Filtering & Acceleration
 
-If your data is in an [accelerated well](/configuration/accelerators), inline filters can be used to speed up your queries. Only the equal operator (==) will engage acceleration; filtering for equality allows the acceleration engine to look up entries which match the desired field.
+If your data is in an [accelerated well](/configuration/accelerators), inline filters can speed up queries. Only the equality operator (`==`) engages acceleration, because it lets the accelerator look up entries that match the field.
 
-For acceleration to be engaged, your data needs to be configured to accelerate on the specified field. For instance, if you are indexing pcap data on the tcp.DstPort and tcp.SrcPort fields, the query `tag=pcap packet tcp.DstPort==22` will use the index, but `tag=pcap packet ipv4.SrcIP==10.0.0.1` will not.
+The well must be configured to accelerate on the filtered field. For instance, if pcap data is indexed on `tcp.DstPort` and `tcp.SrcPort`, `tag=pcap packet tcp.DstPort==22` uses the index but `tag=pcap packet ipv4.SrcIP==10.0.0.1` does not.
 
 ## Built-in Keywords
 
-Gravwell implements some special shortcuts for filtering. When filtering IP addresses by subnet, you can specify the keywords PRIVATE and MULTICAST instead of giving a single subnet, e.g. `packet ipv4.DstIP ~ PRIVATE`. The keywords map to the following subnets:
+When filtering IP addresses by subnet, you can use the keywords `PRIVATE` and `MULTICAST` in place of a subnet, e.g. `packet ipv4.DstIP ~ PRIVATE`. They map to these subnets:
 
-* PRIVATE: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8, 224.0.0.0/24, 169.254.0.0/16, fd00::/8, fe80::/10
+* PRIVATE: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8, 224.0.0.0/24, 169.254.0.0/16, fd00::/8, fe80::/10, ::1/128
 * MULTICAST: 224.0.0.0/4, ff00::/8
 
 ## Filtering Examples
@@ -64,7 +68,7 @@ Gravwell implements some special shortcuts for filtering. When filtering IP addr
 Regex:
 
 ```gravwell
-tag=syslog regex *shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" user==root ip ~ "192.168"
+tag=syslog regex "sshd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)" user==root ip ~ "192.168"
 ```
 
 AX:

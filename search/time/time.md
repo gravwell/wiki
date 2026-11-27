@@ -1,22 +1,34 @@
 # Time
 
-The time module is used to convert Timestamp enumerated values into formatted strings, and vice versa. For example, the following will print each entry's built-in timestamp value using the specified format and save the result as a string in a new enumerated value named "formattedTS":
+The time module converts timestamps into formatted strings, and strings into timestamps. It takes one or more pairs of enumerated values: a source and a destination. For example, the following formats each entry's timestamp and stores the result as a string in `formattedTS`:
 
-```
+```gravwell
 time -oformat "Mon Jan _2 15:04:05 2006 MST" TIMESTAMP formattedTS
 ```
 
-If the first enumerated value argument is a string rather than a timestamp, the module will instead attempt to parse the string as a time and save the output into a Timestamp enumerated value. Note that if no specific format is given, the module will use the `timegrinder` library to try many possibilities. The following will look at a string enumerated value named "tsString" and attempt to convert it to a timestamp, placing the result in "extractedTS" if successful.
+If the source is not a timestamp, the module parses it as a time. With no `-iformat`, it uses the `timegrinder` library to try many common formats. The following parses the string in `tsString` and stores the resulting timestamp in `extractedTS`:
 
-```
+```gravwell
 time tsString extractedTS
 ```
 
+Several pairs can be converted in one invocation: `time a b c d` converts `a` into `b` and `c` into `d`. If a source is missing or cannot be parsed, the destination is not set; the entry is not dropped.
+
 ## Supported Options
 
-* `-iformat <format>`: Specifies the format to be used parsing strings. The format consists of a string representation of a specific time, "Mon Jan 2 15:04:05 MST 2006", as used by the [Go time library](https://golang.org/pkg/time/#pkg-constants). Refer to the linked documentation for more examples. Note: This flag is ignored if the EV type is a timestamp.
-* `-oformat <format>`: Specifies the format to be used when printing timestamps. The format consists of a string representation of a specific time, "Mon Jan 2 15:04:05 MST 2006", as used by the [Go time library](https://golang.org/pkg/time/#pkg-constants). For instance, one may say `-oformat "Mon 3:04PM"` to get a very brief timestamp format. Refer to the linked documentation for more examples. Note: When using this flag, the output EV will be a string. When omitted, the output EV will be a timestamp type.
-* `-tz <timezone>`: Specifies a time zone, in [tz database format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), e.g. "America/Denver", "UTC", or "Atlantic/Reykjavik". This time zone will be used when *printing* timestamps (which do not have a time zone associated with them) and when *parsing* strings which do not contain a time zone specification.
+* `-iformat <format>`: The format used to parse strings. The format is a representation of the reference time "Mon Jan 2 15:04:05 MST 2006", as used by the [Go time library](https://golang.org/pkg/time/#pkg-constants). Ignored when the source is a timestamp.
+* `-oformat <format>`: The format used to print timestamps, in the same Go reference-time style. For instance, `-oformat "Mon 3:04PM"` gives a very brief timestamp.
+* `-tz <timezone>`: A time zone in [tz database format](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones), e.g. "America/Denver", "UTC", or "Atlantic/Reykjavik". It is used when *printing* timestamps (which carry no time zone) and when *parsing* strings that contain no time zone. If omitted, the system's local time zone is used.
+* `-f <format>`: Deprecated; use `-iformat` instead.
+
+The output type depends on the source and on `-oformat`:
+
+| Source | `-oformat` set | Output |
+|--------|----------------|--------|
+| Timestamp | yes | String in the given format |
+| Timestamp | no | String in RFC 3339 format (`2006-01-02T15:04:05Z07:00`) |
+| Other | yes | String in the given format |
+| Other | no | Timestamp |
 
 ## Examples
 
@@ -28,7 +40,7 @@ tag=json time -oformat "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIME
 
 ![](time1.png)
 
-The output of the previous module invocation can be fed back in to the time module to convert back into timestamps:
+The output can be fed back into the time module to convert it back into timestamps:
 
 ```gravwell
 tag=json time -oformat "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIMESTAMP foo | time -iformat "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" foo bar | table TIMESTAMP foo bar
@@ -36,4 +48,4 @@ tag=json time -oformat "Mon Jan _2 15:04:05 2006 MST" -tz "America/Chicago" TIME
 
 ![](time2.png)
 
-Note that the fractional seconds are truncated in the final output, because the intermediate time format does not include them.
+The fractional seconds are lost in the final output, because the intermediate format does not include them.

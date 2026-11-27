@@ -1,12 +1,12 @@
 # Keep
 
-The keep module is a simple module that removes all unspecified enumerated values from entries. Keep does not drop entries.
+Keep removes every enumerated value from each entry except the ones you list. It never drops entries.
 
-The keep module is useful for scenarios where extracting certain enumerated values is needed for filtering or enrichment, but not wanted in the final dataset.
+Use it when you extract enumerated values for filtering or enrichment but don't want them in the final results.
 
 ## Arguments
 
-Keep requires one or more enumerated value names, such as:
+Keep takes one or more enumerated value names. Each name must be produced by an earlier module in the pipeline.
 
 ```gravwell
 keep foo bar
@@ -14,11 +14,11 @@ keep foo bar
 
 ## Supported Options
 
-The keep module has no flags.
+Keep has no flags.
 
 ## Example Usage
 
-The following example removes all enumerated values except "bananas" and "potatoes" from all entries:
+This search removes all enumerated values except "bananas" and "potatoes":
 
 ```gravwell
 tag=data json fruit vegetables

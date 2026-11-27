@@ -1,27 +1,29 @@
 # Maclookup 
 
-The maclookup module uses a custom MAC prefix database to extract Manufacturer, Address, and Country information about the owner of a block of MAC addresses. 
+The maclookup module looks up the owner of a MAC address's prefix (the first three bytes, or OUI) and extracts the manufacturer, address, and country.
 
 ## Setting Up Databases
 
-Before using the maclookup module, you must have a database of MAC prefixes in a resource on the system. By default, the maclookup module expects the macdb database to be in a resource named "mac_prefixes". This will allow you to do extractions without specifying the resource name explicitly. A `mac_prefixes` resource is included in the Gravwell Network Enrichment Kit, which you can find by browsing the available kits in the Kits section of the UI, or you can manually upload the database maintained by the IEEE at [http://standards-oui.ieee.org/oui.txt](http://standards-oui.ieee.org/oui.txt).
+The maclookup module needs a database of MAC prefixes stored as a resource. By default it uses the resource named `mac_prefixes`, which is included in the Gravwell Network Enrichment Kit (see the Kits section of the UI). You can also upload the IEEE's OUI list from [http://standards-oui.ieee.org/oui.txt](http://standards-oui.ieee.org/oui.txt) as a resource.
 
 ![](maclookup.png)
 
 ## Supported Options
 
-* `-r <arg>`: The “-r” option specifies the resource name or UUID which contains a macdb database.  If no "-r" is specified, the maclookup module uses the default "mac_prefixes" resource name.
+* `-r <resource>`: name or UUID of the resource containing the MAC prefix database. Defaults to `mac_prefixes`.
 
 ## Processing Operators
 
-The maclookup extractors support direct operators for very fast filtering in the module. These filters can enable fast filtering of entries based on manufacturer, address, or country. Extraction filters support equal to (==), not equal to (!=), and subset (~) operators. Multiple operators can be specified in a single invocation of the maclookup module, and the output enumerated value names can be modified using the "as" directive. 
+Each extraction can take a filter, so you can drop entries by manufacturer, address, or country without a separate filtering step. You can specify multiple extractions in one invocation. Each extraction is written to an enumerated value named after the extractor (for example, `Manufacturer`), or to the name given with `as`.
+
+If the MAC address is missing or its prefix is not in the database, the extraction is skipped; the entry is dropped only if its filter is `==` or `~`.
 
 | Operator | Name | Description
 |----------|------|-------------
 | == | Equal | Field must be equal
 | != | Not equal | Field must not be equal
-| ~ | Subset | Field must be a member of
-| !~ | Not subset | Field must not be a member of
+| ~ | Contains | Field must contain the value
+| !~ | Not contains | Field must not contain the value
 
 ## Data Item Extractors
 
@@ -30,12 +32,12 @@ The following extractions are possible with the maclookup database:
 | Extractor | Operators | Description | Example 
 |-----------|-----------|-------------|----------
 | Manufacturer | == != ~ !~ | Manufacturer name, such as "Apple Inc.", "IBM" | mac.Manufacturer~Apple
-| Address | == != ~ !~ | Address, such as "One Apple Park Way, Cupertino, CA" | mac.Address~Cupertino as addr
+| Address | == != ~ !~ | Address; multiple address lines are separated by tabs | mac.Address~Cupertino as addr
 | Country | == != ~ !~ | Country code | mac.Country == "US"
 
 ## Examples
 
-### Listing all manufacturers from PCAP with from the US.
+### Listing US manufacturers from PCAP
 
 ```gravwell
 tag=pcap packet eth.MAC | maclookup MAC.Manufacturer MAC.Country == US | table
@@ -46,7 +48,7 @@ tag=pcap packet eth.MAC | maclookup MAC.Manufacturer MAC.Country == US | table
 ### Pie chart of manufacturers from PCAP.
 
 ```gravwell
-tag=pcap packet eth.MAC | maclookup mac.Manufacturer | count by Manufacturer | chart count by Manufacturer
+tag=pcap packet eth.MAC | maclookup MAC.Manufacturer | count by Manufacturer | chart count by Manufacturer
 ```
 
 ![Pie chart by manufacturer](chartByManufacturer.png)

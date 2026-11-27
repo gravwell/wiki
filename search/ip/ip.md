@@ -1,12 +1,14 @@
 # IP
 
-The ip module can convert enumerated values to the IP type and optionally perform filtering. This allows the user to, for instance, extract a string containing an IP address from a JSON structure, then use the ip module to convert that string to an IP address and check if it is in a certain subnet.
+The ip module converts enumerated values to the IP type and can filter on them. For example, you can extract a string containing an IP address from a JSON structure, convert it to an IP, and check whether it is in a given subnet.
+
+By default, every filter must pass for an entry to continue. Entries where a listed enumerated value is missing or does not hold a valid IP address are dropped.
 
 (search_ip_supported_options)=
 ## Supported Options
 
-* `-or`: The "-or" flag specifies that the ip module should allow an entry to continue down the pipeline if ANY of the filters are successful.
-* `-categorize`: If the "-categorize" flag is set, the module will attempt to categorize each enumerated value as "PRIVATE", "PUBLIC", or "MULTICAST". Running `ip -categorize srcIP` will create an enumerated value named "srcIP_category" containing the category string.
+* `-or`: pass the entry if any filter succeeds, instead of requiring all of them.
+* `-categorize`: label each IP as `PRIVATE`, `PUBLIC`, or `MULTICAST`, using the `PRIVATE` and `MULTICAST` lists below. The label goes in an enumerated value named after the output with `_category` appended: `ip -categorize srcIP` creates `srcIP_category`. An address in both lists, such as `224.0.0.1`, is labeled `PRIVATE`.
 
 ## Processing Operators
 
@@ -19,13 +21,13 @@ Enumerated values passed to the ip module can be compared against IP addresses o
 | ~ | Subset | IP must be a member of the given subnet
 | !~ | Not subset | IP must not be a member of the given subnet
 
-It is possible to apply multiple filters to the same EV, even without the `-or` flag. For example, to filter entries that aren't in the `10.0.0.0/24` and the `192.168.0.0/24` subnets, simply add another filter for the same EV:
+You can apply multiple filters to the same EV, even without the `-or` flag. For example, to keep only entries whose `ipaddr` is in neither `10.0.0.0/24` nor `192.168.0.0/24`:
 
 ```gravwell
 tag=json json ipaddr | ip ipaddr !~ 10.0.0.0/24 ipaddr !~ 192.168.0.0/24
 ```
 
-The ip module defines the keyword PRIVATE to match any of the standard private networks:
+The `~` and `!~` operators accept two keywords in place of a subnet. `PRIVATE` matches the standard private, loopback, and link-local networks:
 
 * 10.0.0.0/8
 * 172.16.0.0/12
@@ -35,18 +37,24 @@ The ip module defines the keyword PRIVATE to match any of the standard private n
 * 169.254.0.0/16
 * fd00::/8
 * fe80::/10
+* ::1/128
+
+`MULTICAST` matches the multicast networks:
+
+* 224.0.0.0/4
+* ff00::/8
 
 ## Examples
 
 ### Convert a string to an IP
 
-Assuming JSON-formatted entries containing an 'ipaddr' field, extract that field and convert it to an IP address for later use:
+Assuming JSON-formatted entries containing an `ipaddr` field, extract that field and convert it to an IP address:
 
 ```gravwell
 tag=json json ipaddr | ip ipaddr
 ```
 
-The resulting IP enumerated value can also be assigned to a different enumerated value name rather than overwriting the original:
+To keep the original string and write the IP to a new enumerated value, use `as`:
 
 ```gravwell
 tag=json json ipaddr | ip ipaddr as IP
@@ -54,13 +62,13 @@ tag=json json ipaddr | ip ipaddr as IP
 
 ### Filter by address or subnet
 
-Assuming CSV-formatted data in which the 3rd field describes the source IP address of a connection, we can drop all connections not originating from 192.168.1.5:
+Assuming CSV data where the third field is the source IP of a connection, keep only connections from 192.168.1.5:
 
 ```gravwell
 tag=csv csv [2] as srcip | ip srcip==192.168.1.5
 ```
 
-We can also eliminate any connections which originated in the local subnet:
+Drop connections that originate in 192.168.0.0/16:
 
 ```gravwell
 tag=csv csv [2] as srcip | ip srcip !~ 192.168.0.0/16
@@ -68,7 +76,7 @@ tag=csv csv [2] as srcip | ip srcip !~ 192.168.0.0/16
 
 ### Use the PRIVATE keyword
 
-Assuming CSV-formatted data in which the 3rd field describes the source IP address of a connection, we can use the ip module to keep only those entries originating from private networks:
+Keep only connections that originate from private networks:
 
 ```gravwell
 tag=csv csv [2] as srcip | ip srcip ~ PRIVATE
@@ -76,10 +84,10 @@ tag=csv csv [2] as srcip | ip srcip ~ PRIVATE
 
 ### Categorize IP addresses
 
-Assuming CSV-formatted data in which the 3rd field describes the source IP address of a connection, we can use the ip module to assign a network category for each IP address:
+Label each source IP with its network category:
 
 ```gravwell
 tag=csv csv [2] as srcip | ip -categorize srcip | table srcip srcip_category
 ```
 
-The resulting table will contain two columns: `srcip`, and `srcip_category` which will contain one of "PRIVATE", "PUBLIC", or "MULTICAST".
+The table has two columns: `srcip` and `srcip_category`, which holds `PRIVATE`, `PUBLIC`, or `MULTICAST`.
