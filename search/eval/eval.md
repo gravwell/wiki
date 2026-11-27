@@ -2,31 +2,29 @@
 
 ## Introduction
 
-The `eval` module is a general purpose filtering and programming environment that runs a "program" against each entry in the query pipeline. It uses a C-style syntax and supports creating simple filters, as well as arbitrary operations on each entry. 
+The `eval` module runs a small C-style program against each entry in the pipeline. A program can be a simple filter or a sequence of statements that read and create enumerated values.
 
-For example, to filter entries to just those where the enumerated value `foo` is equal to `bar` or `baz`:
+For example, to keep only entries where the enumerated value `foo` is `bar` or `baz`:
 
 ```
 tag=gravwell json foo | eval ( foo == "bar" || foo == "baz" )
 ```
 
-Additionally, C-style statements can be used for more advanced operations. For example, to conditionally create an EV:
+Statements allow more involved work. For example, to create an EV only when a condition holds:
 
 ```
 tag=gravwell json foo | eval if (foo == "bar") { other_variable = "hey! foo is bar!"; }
 ```
 
-The rest of this document describes the syntax and semantics of the eval language. 
-
 ## Use cases
 
-Eval is used primarily for advanced filtering, especially multifiltering. For example, in order to filter a field extracted from the `json` module, you would normally use filtering in the `json` module directly:
+Eval is used mostly for filters that extraction modules can't express on their own. To filter a single field extracted by the `json` module, you would normally filter in the `json` module directly:
 
 ```
 tag=gravwell json foo=="my value"
 ```
 
-However, if you want to filter "foo" in the example above to "my value" or "my other value", you must use the `eval` module:
+To keep entries where `foo` is either "my value" or "my other value", use `eval`:
 
 ```
 tag=gravwell json foo | eval ( foo == "my value" || foo == "my other value" )
@@ -36,7 +34,7 @@ tag=gravwell json foo | eval ( foo == "my value" || foo == "my other value" )
 
 ### Example: Filtering with multiple possible values
 
-This example uses `eval` to act as a simple filter. It uses the `in()` function to filter down to entries that have "indexer" or "webserver" as the Appname in a syslog entry.
+This example uses the `in()` function to keep syslog entries whose Appname is "indexer" or "webserver".
 
 ```
 tag=gravwell
@@ -62,7 +60,7 @@ syslog Appname Hostname Message
 
 ### Example: Loops
 
-This example calculates the exponential function of 5 (e⁵) by implementing the Taylor series expansion of e. It has nothing to do with the source entry, but does illustrate loops and flow control syntax in eval.
+This example calculates e⁵ using the Taylor series for eᶻ. It ignores the entry's contents and exists only to show loops and flow control.
 
 ```
 tag=gravwell limit 1
@@ -75,7 +73,7 @@ z = 5.0; // exponent
 ez = 0.0; // starting value
 
 // An int64 cannot hold a value much larger than 20!, so we are forced 
-// to stop at 20 iterations. That still gives us and accurate result to 
+// to stop at 20 iterations. That still gives us an accurate result to 
 // about 5 decimal places. 
 for (i = 0; i < 20; i++) {
     // zⁿ
@@ -86,7 +84,7 @@ for (i = 0; i < 20; i++) {
     // so we implement it with a for loop here. There are 
     // much better ways to do this, but we want to 
     // illustrate flow control and nested loops.
-    if (n == 0 || n == 1) {
+    if (i == 0 || i == 1) {
         d = 1;
     } else {
         d = 1;
@@ -106,7 +104,7 @@ for (i = 0; i < 20; i++) {
 
 ### Example: Calculating leg currents of a 3-phase PDU
 
-This example calculates the individual leg currents of a 3-phase PDU, where the PDU logs entries, one phase at per entry, to Gravwell. It illustrates the use of a persistent map, comments, and math functions.
+This example calculates the leg currents of a 3-phase PDU that logs one phase per entry. It uses a persistent map, comments, and math functions.
 
 ```
 tag=pdus 
@@ -161,15 +159,7 @@ Ptotal = (l1l2 + l2l3 + l3l1)*Vnominal;
 
 ### Identifiers
 
-Identifiers name variables and types. For example, in `foo = "bar";`, "foo" is an identifier. Identifiers can contain any number of letters, digits, and the underscore "_" character, and must begin with either a letter or an underscore. No other characters are allowed.
-
-It is possible to create an enumerated value that doesn't follow the identifier syntax rules in eval. When using enumerated values like this, you can wrap the name of the enumerated value in `$( )`. For example: 
-
-```
-tag=gravwell json "55 crazy enumerated value!" | eval $(55 crazy enumerated value!) == "value"
-```
-
-For example, the following are all valid identifiers.
+Identifiers name variables. In `foo = "bar";`, `foo` is an identifier. Identifiers contain letters (including Unicode letters), digits, and underscores, and must begin with a letter or an underscore. The following are all valid identifiers:
 
 ```
 foo
@@ -178,25 +168,33 @@ foo314
 foo_bar
 ```
 
-The identifiers "true" and "false" are always predeclared, and are reserved words.
+The identifiers `true` and `false` are predeclared and reserved.
+
+To use an enumerated value whose name isn't a valid identifier, wrap the name in `$( )`:
+
+```
+tag=gravwell json "55 crazy enumerated value!" | eval $(55 crazy enumerated value!) == "value"
+```
 
 ### Variables
 
-Variables are enumerated values and when declared can be used by other modules in the query pipeline. For example:
+Variables are enumerated values. A variable assigned in eval is available to later modules in the pipeline:
 
 ```
 tag=gravwell eval foo = "bar"; | table foo
 ```
 
-Additionally, all previously produced enumerated values in the query pipeline are available as typed variables. For example:
+Enumerated values produced earlier in the pipeline are available as typed variables, as are the entry's `DATA`, `SRC`, `TAG`, `TIMESTAMP`, and `NOW` values:
 
 ```
 tag=gravwell json foo | eval foo == "bar"
 ```
 
+Reading a variable that no earlier module produces, and that the program hasn't assigned earlier in its text, is a parse error.
+
 ### Persistent Variables
 
-Normally, eval executes against every entry in the query, with no state carried between entries. Eval has support for "persistent" variables, that persist throughout the execution of a query. For example, to use eval to count the number of entries in a query:
+Normally no state carries over from one entry to the next. Persistent variables keep their value for the whole query. For example, to number the entries in a query:
 
 ```
 tag=gravwell
@@ -207,32 +205,37 @@ eval
 | table
 ```
 
-This program will initialize a variable "count" to 0, and the value will persist across entries.
+This program initializes `count` to 0 once, and the value carries over from entry to entry.
 
-To use a persistent variable, it must be declared with `var <variable name>;`. Optionally, you can initialize the variable to a value with the syntax `var <variable name> = <expression>;` 
+Declare a persistent variable with `var <name>;` or `var <name> = <expression>;`. Declarations must come at the start of the program, and one `var` can declare several variables separated by commas. A variable declared without a value starts as an empty string. The initializer runs once, when the query starts, so it can't refer to enumerated values or other persistent variables.
 
-Persistent variables are not attached to entries like other variables. In order to use a persistent variable's value outside of eval, it must be assigned to a regular variable. 
- 
+Persistent variables are not attached to entries. To use a persistent variable's value outside of eval, assign it to a regular variable.
+
+A program that declares persistent variables or maps collapses the query: eval and every module after it run on the webserver, so the state covers entries from all indexers.
+
 ### Persistent Maps
 
-Like persistent variables, eval can also create persistent maps, which behave like key/value objects. A map uses strings as keys, and can store any eval variable type except maps. Maps are declared with the `map` keyword, and accessed like other variables. To access a specific key in a map, the notation `map[key]` is used. 
+Persistent maps are key/value stores that also last for the whole query. Keys are strings, and values can be any type except a map. Declare a map with `map <name>;` at the start of the program, and read or write a key with `name[key]`.
 
-For example, to count each unique Appname in a list of syslog entries, a map can be used with the syslog Appname as the key:
+For example, to keep a running count of each Appname in syslog entries:
 
 ```
 tag=gravwell
   syslog Appname
 | eval
     map appnames;
-    if (Appname == "")                         
-        appnames[Appname] = 0;                  // The key doesn't exist. Create one.
-    else 
-        appnames[Appname]=appnames[Appname]+1;  // The key does exist. Increment.
+    if (has_key(appnames, Appname)) {
+        appnames[Appname] = appnames[Appname] + 1;  // The key exists. Increment.
+    } else {
+        appnames[Appname] = 1;                      // The key doesn't exist. Create it.
+    }
+    seen = appnames[Appname];
+| table Appname seen
 ```
 
-Like persistent variables, maps are not attached to entries. Values must be assigned to regular variables in order to use them outside of eval.
+Like persistent variables, maps are not attached to entries. Assign a value to a regular variable to use it outside of eval.
 
-Maps have a limit of 1000000 keys. Any new key assigned to a map after this limit is reached will be discarded.
+A map holds at most 1,000,000 keys. Once a map grows past that limit, any assignment into it stops the program and drops the entry.
 
 ### Arrays
 
@@ -240,21 +243,21 @@ Eval supports the `array` enumerated value type. Arrays currently can only be cr
 
 #### Declaring arrays
 
-Arrays can be declared using the `{}` characters when assigning into a variable. For example:
+Declare an array with `{ }` when assigning to a variable:
 
 ```
 foo = {1,2,3,4};
 ```
 
-The above example creates a four element array, containing the integers 1, 2, 3, and 4.
+This creates a four-element array containing the integers 1, 2, 3, and 4.
 
-Arrays can have mixed types. For example:
+Arrays can mix types:
 
 ```
 foo = {1, 2, "my string!"};
 ```
 
-Arrays can even contain other arrays:
+Arrays can contain other arrays:
 
 ```
 foo = {1, 2, {"foo", "bar"}};
@@ -262,58 +265,58 @@ foo = {1, 2, {"foo", "bar"}};
 
 #### Indexing arrays
 
-Arrays are indexed using the `[]` characters at the end of an array variable. For example:
+Index an array with `[ ]`. Indexes start at 0:
 
 ```
 foo = {"a","b","c","d"};
 bar = foo[1];
 ```
 
-In this example, `bar` will contain the string value "b".
+Here `bar` contains the string "b".
 
-You can assign into arrays in the same way:
+Assign into an array the same way:
 
 ```
 foo = {"a","b","c","d"};
 foo[0] = "bar";
 ```
 
-This example replaces the first element "a", with "bar".
+This replaces the first element, "a", with "bar".
 
 #### Ranged sub-arrays
 
-Sub-arrays can be indexed from an array using the `:` range operator. For example:
+Take a sub-array with the `:` range operator:
 
 ```
 foo = {"a","b","c","d"};
 bar = foo[1:3];
 ```
 
-In this example, `bar` is an array containing the 1st through 3rd elements of the array (non-inclusive of the end range): `[ "b" "c" ]`.
+Here `bar` contains the elements from index 1 up to, but not including, index 3: `[ "b" "c" ]`.
 
 #### Array operators on strings
 
-Array indexing works on strings as well. For example:
+Indexing also works on strings, byte by byte:
 
 ```
 foo = "I am a potato";
 foo[7] = "P";
 ```
 
-This example changes the 7th character "p" to "P". 
+This changes the "p" at index 7 to "P". Assigning into a string requires a single-character value.
 
-#### Example: Iterating over keys
+#### Example: Iterating over an array
 
 ```
 tag=data json foo
 | eval
     k = json_to_gravwell_array(foo);
     for (i=0; i<len(k); i++) {
-        foo[i] = strings_tolower(foo[i]);
+        k[i] = strings_tolower(k[i]);
     }
 ```
 
-In this example, we convert a JSON array to a native Gravwell array, and iterate over each element, setting each one to its lowercase equivalent.
+This converts the JSON array in `foo` to a Gravwell array, `k`, and replaces each element with its lowercase form.
 
 ### Keywords
 
@@ -323,53 +326,52 @@ The following keywords are reserved and may not be used as identifiers.
 if
 else
 for
-break		
+break
 continue
 return
 case
 default
 switch
+var
 ```
+
+`var` and `map` start persistent variable and map declarations.
 
 ### Operators
 
-Operators are used for filtering and boolean/arithmetic logic. Operators behave similarly to all C-style programming languages (C, C++, Go, ...) with one caveat -- the bitwise OR operator `|` can only appear inside parenthetical expressions in order to avoid a syntax conflict with the Gravwell query language.
-
-The following operators are supported.
+Operators behave as in other C-style languages, with one exception: the bitwise OR operator `|` can only appear inside parentheses or braces, so that it isn't mistaken for the query pipe.
 
 ```
-+ - * / 	Arithmetic operators
-%		Modulo
-& | 		Bitwise operators
-<< >>		Shift operators
-&& || !		Boolean operators
--- ++ 		Postfix operators
-< > <= >= == != Equality operators
-~ !~		String "contains" operators
++ - * /         Arithmetic operators (+ also concatenates two strings)
+%               Modulo
+& | ^           Bitwise AND, OR, and XOR
+<< >>           Shift operators
+&& || !         Boolean operators
+-- ++           Postfix increment and decrement
+< > <= >=       Relational operators
+== !=           Equality operators
+~ !~            Contains and does-not-contain: a ~ b is true if a contains b
+? :             Ternary conditional: cond ? a : b
 ```
 
 ### Punctuation
 
-Eval uses punctuation similar to the C programming language. For example, `( )` are used to enclose expressions in statements as in `if (foo == "bar")...`.
-
-The following character sequences are reserved punctuation.
+Eval uses C-style punctuation. The following character sequences are reserved:
 
 ```
-( )		Expression and function grouping
-{ }		Statement and block grouping
-,		Function parameter separator
-;		Statement separator
-$		Alternative enumerated value accessor
-[ ]		Array indexing
-:       Range operator for arrays
-. :		Scope (not currently supported)
+( )             Expression and function grouping
+{ }             Statement grouping and array literals
+,               Function argument separator
+;               Statement separator
+$               Alternative enumerated value accessor
+[ ]             Array, string, and map indexing
+:               Array range operator, ternary operator, and case label
+.               Scope (not currently supported)
 ```
 
 ### Numbers
 
-Numbers can be expressed as decimal and hexadecimal integers, as well as decimal floating-point. Hexadecimal values always begin with "0x". 
-
-The following examples are valid numbers.
+Numbers can be decimal or hexadecimal integers, or decimal floating-point values. Hexadecimal values begin with "0x". The following are valid numbers:
 
 ```
 5
@@ -380,20 +382,21 @@ The following examples are valid numbers.
 
 ### String literals
 
-Strings are any sequence of characters enclosed in double quotes `"`. 
+Strings are any sequence of characters enclosed in double quotes `"`.
 
 ## Variables and types
 
-All enumerated values created in the query pipeline are available in eval as variables. Additionally, all variables created in eval are available as enumerated values to any modules after eval in the query pipeline. 
+Enumerated values from earlier in the pipeline are variables in eval, and variables created in eval are enumerated values for later modules.
 
-Since enumerated values can have a different type from entry to entry, eval may behave differently based on the type of a variable at runtime. For example, the filter `foo < 5` will only work if "foo" can be interpreted at runtime as a number. It is not an error for "foo" to be a different type (in this example the boolean expression "foo < 5" would be false if foo is not a number). 
+An enumerated value can have a different type in each entry, so eval's behavior can depend on a variable's type at runtime. For example, `foo < 5` only works if `foo` can be read as a number. A different type isn't an error, but the result of the comparison is undefined. See [Failed Type Promotions](#eval-failed-type-promotions).
 
-The `type()` built-in function can be used at runtime to determine the type of a variable in a given entry.
+The `type()` cast returns the name of a value's type in the current entry: `bool`, `byte`, `int8`, `int16`, `uint16`, `int32`, `uint32`, `int64`, `uint64`, `float`, `mac`, `ip`, `ts`, `duration`, `location`, `array`, or `string`. If its argument fails, for example a cast that can't convert its input, `type()` returns `nil`.
 
-`eval` can attempt to cast a variable to another type using the following cast operators.
+Eval can attempt to convert a value to another type with the following casts:
 
 ```
 int (equivalent to int64)
+byte (equivalent to uint8)
 uint8
 int8
 uint16
@@ -410,31 +413,28 @@ duration
 time
 type
 bool
+location
 array
 ```
 
-Additionally, eval will attempt to "promote" types that can be automatically cast. For example, if "foo" contains the string "56", the expression `foo < 3.14` will cause eval to attempt to promote foo to a floating-point number before the expression is evaluated.
+Eval also "promotes" values to a common type before comparing or combining them. For example, if `foo` contains the string "56", `foo < 3.14` converts `foo` to a floating-point number before comparing.
 
 ## Scope
 
-Eval has no variable scoping. All variables are "global", regardless of if they are declared in a statement block or not.
+Eval has no variable scoping. All variables are global, whether or not they are assigned inside a block.
 
 ## Expressions
 
-Expressions are simply computations of values. The behavior of an expression depends on where in a program it is used. 
+Expressions compute values, as in C. In `if (foo == "bar") ...`, the boolean expression `foo == "bar"` decides whether the body runs. The right-hand side of an assignment is also an expression: in `foo = type(bar);` it is `type(bar)`.
 
-Expressions follow the C-style form of expressions. For example, `if (foo == "bar")...` contains the boolean expression `foo == "bar"` which is used to compute a true/false value for determining if the body of the if statement should be executed or not. 
-
-The right-hand-side of an assignment is also an expression. For example, `foo = type(bar);` contains the expression `type(bar)`, which is a built-in function that returns a value. 
-
-Expressions can be complex, and contain other expressions, just like in C-style programs. For example, `( a == b || b < 3.14 || ( type(b) == "string" && error == "none" ))` is an expression made up of several, smaller expressions.
+Expressions nest. For example, `( a == b || b < 3.14 || ( type(b) == "string" && error == "none" ))` combines several smaller expressions.
 
 ```{note}
-When a program consists of only an expression, the program as a whole is treated as a filter. If the expression returns false (or returns the "zero" value of the type returned), the entry will be dropped.
+When a program consists of only an expression, the program is a filter. If the expression returns false (or the "zero" value of its type), the entry is dropped.
 ```
 
 ```{note}
-Expressions that operate on enumerated values that don't exist have undefined behavior. If you aren't sure that an EV will exist in each entry being processed, be sure to use the has() built-in to ensure the behavior you intend. For example:
+Expressions that operate on enumerated values that don't exist have undefined behavior. If an EV might be missing from some entries, check for it with `has()` first:
 
 	if (has(myEV)) {
 		if (myEV == "foo") {
@@ -445,11 +445,11 @@ Expressions that operate on enumerated values that don't exist have undefined be
 
 ### Type Promotion in Expressions
 
-Type promotion is used to satisfy boolean and arithmetic expressions of two or more enumerated values of different types. For example, the expression `1 + 2.14` contains an integer and a floating-point value. In this example, the integer will be "promoted" (converted) to a floating-point value, and the addition will result in a floating-point value. 
+When an operator's two operands have different types, eval converts them to a common type first. In `1 + 2.14`, the integer is promoted to a floating-point value and the result is a float.
 
-Eval also supports implicit conversion of mixed types as a form of type polymorphism. This is also considered in the type promotion logic. For example, `5 + "10"` can be seen to mean "the integer 5 plus the numeric representation of the string 10". Eval will convert the string to the integer 10 in this example.
+Strings take part in promotion too. In `5 + "10"`, eval converts the string to the integer 10, and the result is 15. When both operands are strings, `+` concatenates them: `"5" + "10"` is `"510"`.
 
-Not all types are compatible. Eval will attempt to determine a common real type for two given EVs using the following logic, in order:
+Not all types are compatible. Eval picks a common type using the following rules, in order:
 
 * If either is a Location, try to convert the other to a Location.
 * If either is an IP, try to convert the other to an IP.
@@ -458,7 +458,7 @@ Not all types are compatible. Eval will attempt to determine a common real type 
 * If either is a float, try to convert the other to a float.
 * If either is an integer, try to convert the other to an integer.
 
-If none of these cases apply, the EVs remain their original types.
+If none of these cases apply, or if either value is a duration, the values keep their original types.
 
 Timestamps and durations have three special cases:
 
@@ -485,9 +485,10 @@ After integer promotion, the "usual arithmetic conversions" apply, in order:
 * If the type of the operand with signed integer type can represent all of the values of the type of the operand with unsigned integer type, the operand with unsigned integer type is converted to the type of the operand with signed integer type.
 * Otherwise, both operands are converted to the unsigned integer type corresponding to the type of the operand with signed integer type.
 
+(eval-failed-type-promotions)=
 #### Failed Type Promotions
 
-When type promotion fails, the expression is also considered to have "failed". The result of an operation on a failed type promotion is undefined. This is important for conditional expressions. To avoid scenarios like this, the user is encouraged to use `type()` checks and casting before conditional comparison. For example, given the following eval program:
+When type promotion fails, the result of the operation is undefined. This matters most in conditions. Check types with `type()` and casts before comparing. For example, given this program:
 
 ```
 x = "foo";
@@ -498,13 +499,13 @@ if ( x < y ) {
 }
 ```
 
-The comparison result is undefined and the `output =` statement may be executed. To guard against this, add `type/cast` checks first:
+The comparison result is undefined, and the `output =` statement may run. To guard against this, check the cast first:
 
 ```
 x = "foo";
 y = 5;
 
-if ( type(int(x)) == "int" ) { // The cast succeeded, we can do the comparison
+if ( type(int(x)) == "int64" ) { // The cast succeeded, we can do the comparison
     if ( x < y ) {
         output = "x is less than y";
     }
@@ -515,17 +516,11 @@ if ( type(int(x)) == "int" ) { // The cast succeeded, we can do the comparison
 
 ## Statements
 
-Statements control program execution. For example, `if (foo == "bar") { ... }` contains an "if" statement, which will determine how the program is to proceed.
-
-Statements are separated by the `{ }` punctuation in the case of "if" and "for", and semicolons ";" for assignments. Currently, only "if", "for", and assignment statements are supported in eval.
-
-Statements other than "if" and "for" must be ended with a semicolon `;`.
+Eval supports `if`, `switch`, `for`, `break`, `continue`, and `return` statements, assignments, function calls, and `{ }` blocks. Assignments, function calls, `return`, `break`, and `continue` end with a semicolon `;`.
 
 ### if statements
 
-"if" statements specify conditional execution of code, according to a boolean expression. If the expression evaluates to "true", the code will be executed. "if" statements can contain an "else" code path as well, for executing when the expression evaluates to "false". 
-
-The boolean expression is always contained in parentheses `( )`, and code blocks are contained in braces `{ }`. For example:
+An `if` statement runs its body when a boolean expression is true, and its optional `else` branch when it is false. The expression is always in parentheses `( )`. The body is a single statement or a block in braces `{ }`:
 
 ```
 if ( foo == "bar" ) {
@@ -535,7 +530,7 @@ if ( foo == "bar" ) {
 }
 ```
 
-Eval also supports `else if` statements of arbitrary length. For example:
+Chain conditions with `else if`:
 
 ```
 if ( foo == "bar" ) {
@@ -549,11 +544,7 @@ if ( foo == "bar" ) {
 
 ### switch statements
 
-`switch` statements provide multi-way execution. In a `switch` statement, an expression is compared to an arbitrary number of cases, which can also contain expressions, and execution is moved to the first case that resolves true. 
-
-Switch statements are composed of an expression enclosed in `()`, with any number of cases, and zero or one default case. Cases contain expressions followed by a `:`. After a case, any number of statements can be provided.
-
-For example:
+A `switch` statement compares an expression in `( )` against a list of `case` expressions, each followed by a `:` and any number of statements. An optional `default` case comes last. For example:
 
 ```
 switch (int(foo)) {
@@ -568,9 +559,9 @@ switch (int(foo)) {
 }
 ```
 
-Switch expressions are compared to the case expressions to determine which case to move execution to. Multiple cases can be true at the same time, and execution is moved to the first case that resolves true, from top to bottom. If no case resolves, an optional "default" case can be provided, otherwise execution moves to the end of the switch statement. If the default case is provided, it must be the last case in the switch statement.
+Execution jumps to the first case, from top to bottom, whose value equals the switch value. If no case matches, the `default` case runs; without one, execution continues after the switch.
 
-Switch statements follow C-family semantics, and fallthrough is implied. This means that execution will continue from the case that resolves true until the end of the switch statement is reached, or a `break` statement is reached. For example:
+As in C, cases fall through: execution continues from the matching case until a `break` or the end of the switch, including into `default`. For example:
 
 ```
 switch (int(foo)) {
@@ -581,11 +572,11 @@ switch (int(foo)) {
 }
 ```
 
-In this example, if `foo` equals 1, the output will become, "started at the first case and continued into the second case", because no break statement was provided to stop execution.
+If `foo` equals 1, `output` becomes "started at the first case and continued into the second case", because no `break` stops execution after the first case.
 
 ### for statements
 
-"for" statements specify the repeated execution of a block. "for" statements use the C-style syntax of an initializer, condition, and post statement, and are contained in parentheses `( )` and separated by semicolons `;`. Code blocks are contained in braces `{ }`. For example, to iterate 10 times over a code block:
+A `for` statement repeats a block. It uses the C-style initializer, condition, and post statement, in parentheses `( )` and separated by semicolons `;`. The body must be a block in braces `{ }`. For example, to run a block 10 times:
 
 ```
 for ( i = 0; i < 10; i++ ) {
@@ -593,9 +584,11 @@ for ( i = 0; i < 10; i++ ) {
 }
 ```
 
+A loop runs at most 1,000,000 iterations. After that, execution continues with the statement after the loop.
+
 ### break statements
 
-A "break" statement stops the execution of the innermost "for" statement it is contained in. "break" can only be used inside a "for" statement code block. Execution continues at the statement immediately after the "for" statement. For example:
+A `break` statement ends the innermost `for` loop or `switch` statement that contains it. Execution continues with the statement after that loop or switch. For example:
 
 ```
 /* for loop up to 10, but break after 5 iterations */
@@ -608,7 +601,7 @@ for ( i = 0; i < 10; i++ ) {
 
 ### continue statements
 
-A "continue" statement begins the next iteration of the innermost "for" statement it is contained in. "continue" can only be used inside a "for" statement code block. Execution continues at the beginning of the next iteration of the "for" statement. For example:
+A `continue` statement starts the next iteration of the innermost `for` loop that contains it. It can only be used inside a `for` loop. For example:
 
 ```
 /* for loop up to 10, but only count the last 8 */
@@ -622,7 +615,7 @@ for ( i = 0; i < 10; i++ ) {
 
 ### return statements
 
-The `return` keyword ends execution of the eval program and determines if the entry being executed on is dropped or passed in the query pipeline. `return` takes a single expression. Returning `true` will pass the entry, `false`, will drop it. For example:
+A `return` statement ends the program and decides whether the entry continues down the pipeline. It takes a single expression: `true` passes the entry, and `false` drops it. For example:
 
 ```
 if ( foo == "bar" && bar == "baz" ) {
@@ -637,9 +630,9 @@ return false;
 
 #### append
 
-    function append(x array, y ev)
+    function append(x array, y <expression>) array
 
-Append y as a new element to the array x.
+Returns a copy of array x with y added as a new last element. Assign the result to keep it, for example `x = append(x, y);`.
 
 #### delete
 
@@ -655,15 +648,15 @@ Returns true if the given EV exists.
 
 #### has_key
 
-	function has_key(map string, key string) bool
+	function has_key(m map, key string) bool
 
-Returns true if the given key exists in the given map.
+Returns true if the key exists in the persistent map m. Pass the map's name as an identifier, for example `has_key(appnames, Appname)`.
 
 #### in
 
-	function in(ev string, string...) bool
+	function in(x <expression>, <expression>...) bool
 
-Returns true if any of the given strings match the given EV.
+Returns true if x equals any of the following arguments. Values are promoted to a common type before comparison, as with `==`.
 
 Example
 
@@ -674,15 +667,15 @@ hasPotato = in(vegetable, "turnip", "potato", "cabbage");
 
 #### unix
 
-	function unix(ev) int
+	function unix(t time) int
 
-Returns a UNIX time of the given enumerated value.
+Returns the Unix time, in seconds, of the given timestamp. Strings are parsed as timestamps, and integers are treated as Unix seconds.
 
 #### len
 
 	function len(<expression>) int
 
-Return the length of the given expression or enumerated value. If the enumerated value is an array, it returns the length of the array.
+Returns the number of elements in an array, the number of keys in a persistent map, or the length in bytes of a string.
 
 #### log
 
@@ -707,7 +700,7 @@ Formats a string according to the given format and any number of expressions. pr
 
 	function set_data(data <expression>)
 
-Overwrites the entry's DATA field. This is different than creating an enumerated value named DATA.
+Overwrites the entry's DATA field. This is different from creating an enumerated value named DATA.
 
 #### evs
 
@@ -715,55 +708,61 @@ Overwrites the entry's DATA field. This is different than creating an enumerated
 
 Returns an array of all enumerated value names attached to the entry.
 
-### indirect
+#### indirect
 
     function indirect(<expression>)
 
-Returns an EV or string constant based on the given expression. For example, `indirect("f"+"oo")` will return the value of the EV named `foo`, if it exists. If it does not exist, the string constant "foo" will be returned.
+Returns the value of the EV whose name is the given expression. For example, `indirect("f"+"oo")` returns the value of the EV named `foo`. If no such EV exists, it returns the string "foo".
 
 #### keys
 
-    function keys(map) array
+    function keys(m map) array
 
-Returns an array of all keys in the given map.
+Returns an array of all keys in the persistent map m, in no particular order.
 
 #### ip_in_cidr
 
-    function ip_in_cidr(ip, cidr string) bool
+    function ip_in_cidr(ip ip, cidr string) bool
 
 Returns true if the given IP is in the given CIDR-formatted string. For example, `ip_in_cidr(src_ip, "10.2.254.0/24")`.
 
 ### String manipulation
 
+#### strings_contains
+
+	function strings_contains(input string, pattern string) bool
+
+Returns true if pattern appears anywhere in input.
+
 #### strings_count
 
 	function strings_count(input string, pattern string) int
 
-Counts the number of non-overlapping instances of pattern in the given input. If pattern is an empty string, strings_count returns 1 + the number of Unicode code points in the input.
+Returns the number of non-overlapping instances of pattern in input. If pattern is empty, it returns 1 plus the number of Unicode code points in input.
 
 #### strings_hasprefix
 
 	function strings_hasprefix(input string, prefix string) bool
 
-Returns true if the string input begins with prefix.
+Returns true if input begins with prefix.
 
 #### strings_hassuffix
 
 	function strings_hassuffix(input string, suffix string) bool
 
-Returns true if the string input ends with suffix.
+Returns true if input ends with suffix.
 
 #### strings_index
 
 	function strings_index(input string, pattern string) int
 
-Returns the index of the first instance of pattern in the input, or -1 if pattern is not in input.
+Returns the byte index of the first instance of pattern in input, or -1 if pattern is not in input.
 
 #### strings_replace
 
 	function strings_replace(input string, old string, new string, n int) string
 
-Replace returns a copy of the string s with the first n non-overlapping instances of old replaced by new. If n is -1, there is no limit on the number of replacements.
+Returns input with the first n non-overlapping instances of old replaced by new. If n is -1, all instances are replaced.
 
 #### strings_tolower
 
@@ -821,27 +820,27 @@ Returns the input with the trailing suffix removed.
 
 #### pretty_size
 
-    function pretty_size(input string) string
+    function pretty_size(n int) string
 
-Converts a number to an abbreviated pretty printed size, 1234567 becomes "1.18 MB".
+Formats a byte count as an abbreviated size. For example, 1234567 becomes "1.18 MB".
 
 #### pretty_count
 
-    function pretty_count(input string) string
+    function pretty_count(n int) string
 
-Converts a number to an abbreviated pretty printed magnitude, 1234567 becomes "1.24 M".
+Formats a number as an abbreviated magnitude. For example, 1234567 becomes "1.23 M".
 
 #### pretty_rate
 
-    function pretty_rate(number, duration) string
+    function pretty_rate(n int, d duration) string
 
-Converts a number to an abbreviated pretty printed rate in bytes, kilobytes, or megabytes per second given a magnitude and duration; "pretty_rate(1234567, "2s")" becomes "588.87 KB/s".
+Formats n bytes over duration d as a rate in bytes, kilobytes, or megabytes per second. For example, `pretty_rate(1234567, "2s")` becomes "602.82 KB/s".
 
 #### pretty_line_rate
 
-    function pretty_line_rate(number, duration) string
+    function pretty_line_rate(n int, d duration) string
 
-Converts a number to an abbreviated pretty printed line rate in bits, kilobits, and megabits per second given a magnitude and duration; "pretty_line_rate(1234567, "2s")" becomes "4.71 Mb/s".
+Formats n bytes over duration d as a line rate in bits, kilobits, or megabits per second. For example, `pretty_line_rate(1234567, "2s")` becomes "4.71 Mb/s".
 
 ### Hash
 
@@ -876,13 +875,13 @@ Returns the SHA512 sum of the given input.
 
 	function path_base(path string) string
 
-Returns the last elements of the given path. Trailing slashes are removed before extracting the last element.
+Returns the last element of the given path. Trailing slashes are removed before extracting the last element.
 
 #### path_clean
 
 	function path_clean(path string) string
 
-Returns the shortest path name equivalent to the given path. For example, "/../a/b/../././/c" would return as "/a/c".
+Returns the shortest path name equivalent to the given path. For example, "/../a/b/../././/c" becomes "/a/c".
 
 #### path_dir
 
@@ -912,9 +911,7 @@ Joins any number of path elements into a single path, adding slashes between ele
 
 	function path_match(pattern string, name string) bool
 
-Returns true if the name matches the given pattern. 
-
-The pattern syntax is identical to [Golang's path.Match()](https://pkg.go.dev/path#Match) function.
+Returns true if name matches the given pattern. The pattern syntax is identical to [Golang's path.Match()](https://pkg.go.dev/path#Match) function.
 
 
 ### Random
@@ -935,13 +932,13 @@ Returns a random, non-negative, 64-bit integer.
 
 	function rand_intn(n int) int
 
-Returns a random, non-negative, 64-bit integer in the range [0,n).
+Returns a random, non-negative, 64-bit integer in the range [0,n). n must be greater than 0.
 
 #### rand_normal
 
 	function rand_normal() float
 
-Returns a normally distributed 64-bit float with standard normal distribution (mean = 0, stddev = 1). To produce a different normal distribution, you can adjust the output using:
+Returns a 64-bit float from the standard normal distribution (mean = 0, stddev = 1). To produce a different normal distribution, adjust the output:
 
 ```
 sample = rand_normal() * desiredStdDev + desiredMean;
@@ -995,7 +992,7 @@ Returns true if the given input is valid JSON.
 
 	function json_append(array string, value <expression>) string
 
-Appends the value to the JSON array given in input.
+Appends the value to the given JSON array and returns the updated array. If array isn't valid JSON, it returns a new JSON array containing only the value.
 
 #### json_array
 
@@ -1007,25 +1004,25 @@ Returns a JSON array of the given value. The value's type is evaluated at runtim
 
 	function json_array_set(array string, index <expression>, value <expression>) string
 
-Sets the value of the given JSON array at the given index. The updated array is returned. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
+Sets the value of the given JSON array at the given index and returns the updated array. If the index is out of range, the array is returned unchanged. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
 
 #### json_get
 
-	function json_get(object string, key string) boo/float/string
+	function json_get(object string, key string) bool/float/string
 
-Returns a typed item from the given object with the given key.
+Returns the value of key in the given JSON object. JSON numbers are returned as floats, and nested objects and arrays as JSON strings. If the key doesn't exist, it returns the string "null".
 
 #### json_index
 
 	function json_index(array string, index int) bool/float/string
 
-Returns a typed item from the given array at the given index.
+Returns the item at the given index of a JSON array. JSON numbers are returned as floats, and nested objects and arrays as JSON strings.
 
 #### json_keys
 
     function json_keys(object string) array
 
-Returns an array of the keys of the given JSON object.
+Returns an array of the keys of the given JSON object, in no particular order.
 
 #### json_len
 
@@ -1049,20 +1046,20 @@ Pretty prints the given JSON input.
 
 	function json_set(object string, key string, value <expression>) string
 
-Sets a key/value pair in the given object. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
+Sets a key/value pair in the given JSON object and returns the updated object. If object isn't valid JSON, it returns a new object containing only this key. The value's type is evaluated at runtime and will map to the corresponding JSON type (object, array, bool, number, string), or a string if the type doesn't map to a JSON type.
 
 #### json_to_gravwell_array
 
     function json_to_gravwell_array(array string) array
 
-Returns a Gravwell array enumerated value based on the given JSON array. JSON types are evaluated at runtime and individual array items will be set to their equivalent Gravwell types, or a string if no mapping exists.
+Converts a JSON array to a Gravwell array. Numbers become floats, strings and booleans keep their types, and nested objects and arrays become JSON strings.
 
 (eval-evs-to-json)=
 #### evs_to_json
 
     function evs_to_json() string
 
-Returns a JSON object containing all enumerated values attached to the current entry. Each EV name becomes a key in the JSON object, and the EV value is serialized to its corresponding JSON type (number, string, boolean, array, or object). Durations, MAC addresses, and timestamps are serialized as strings.
+Returns a JSON object containing all enumerated values attached to the current entry. Each EV name becomes a key, and each value is serialized to its JSON type (number, string, boolean, array, or object). Durations, MAC addresses, and timestamps (in UTC) are serialized as strings.
 
 Example
 
@@ -1083,7 +1080,7 @@ This would produce output like:
 ### Math
 
 ```{note}
-Some math functions retain their legacy function names for backwards compatability.
+`ceil`, `floor`, and `round` are legacy names for `math_ceil`, `math_floor`, and `math_round`.
 ```
 
 #### ceil
@@ -1156,7 +1153,7 @@ Returns the floating-point remainder of x/y.
 
 	function math_pow(x float, y float) float
 
-Returns the base-x exponential of y.
+Returns x raised to the power y.
 
 #### math_remainder
 
@@ -1223,6 +1220,12 @@ Returns the inverse hyperbolic sine of x.
     function math_atan(x float) float
 
 Returns the arctangent, in radians, of x.
+
+#### math_atanh
+
+    function math_atanh(x float) float
+
+Returns the inverse hyperbolic tangent of x.
 
 #### math_atan2
 

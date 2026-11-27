@@ -1,51 +1,54 @@
 # Regex
 
-Regex is a pipeline module that uses regular expressions to match text data. It is an extremely powerful way of matching complex patterns and extracting enumerable fields from text. For those unfamiliar with regular expressions, a decent starting point is [the Wikipedia article](https://en.wikipedia.org/wiki/Regular_expression); you can also use [a regular expression playground](https://regex101.com/) to experiment.
+The `regex` module matches entries against a regular expression and extracts named capture groups as enumerated values. If you are new to regular expressions, start with [the Wikipedia article](https://en.wikipedia.org/wiki/Regular_expression) and experiment in [a regular expression playground](https://regex101.com/).
 
-Think of the `regex` module in similar terms to the grep command in Linux: any entries which do not match the regular expression will be dropped (unless the `-p` flag is set). Building regular expressions is well outside the scope of this document, but one extremely important feature is the `(?P<foo>\S+)` style syntax, which will assign any matched group into an enumerated value; in this case, it will capture and extract a sequence of non-space characters into an enumerated value named "foo".
+It works much like `grep` on Linux: entries that do not match are dropped (unless `-p` is set). Each named capture group, written `(?P<foo>\S+)` or `(?<foo>\S+)`, becomes an enumerated value with that name. In this case, `foo` holds the matched run of non-space characters. Unnamed groups are matched but not extracted.
 
-For example, the following search will enumerate the method, user, and ip from an sshd Accepted log entry.
+For example, the following search extracts the method, user, and IP address from sshd "Accepted" log entries:
 
+```gravwell
+tag=syslog regex "sshd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)"
 ```
-".*sshd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)"
-```
 
-Because regular expressions can get very long, the regex module takes the `-r` flag, which specifies a resource containing a regular expression. When populating the resource, do not include "wrapping quotes" around the whole expression as you would when typing directly into a search: e.g. `".*ssh.*Accepted"` becomes `.*ssh.*Accepted`. This is because the quotes are normally stripped out by the search parser prior to being handed to the regex module.
+Long regular expressions can be stored in a resource and loaded with the `-r` flag. Do not wrap the expression in quotes inside the resource: `".*ssh.*Accepted"` in a query becomes `.*ssh.*Accepted` in the resource. Trailing newlines in the resource are ignored.
 
 ## Syntax
 
-An invocation of the `regex` module consists of the module name, any arguments which are being used, the regular expression, and then optionally any filters to be applied.
+```
+regex [flags] <regular expression> [filters]
+```
+
+When `-r` is used, omit the regular expression from the query:
 
 ```
-regex <argument list> <regular expression> [filter arguments]
+regex [flags] -r <resource> [filters]
 ```
 
 ### Supported Options
 
-* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record. For example, a pipeline that showed packets not headed for port 80 but that have HTTP text would be `tag=pcap packet ipv4.DstPort!=80 tcp.Payload | regex -e Payload ".*GET \/ HTTP\/1.1.*"`
-* `-r <arg>`: The “-r” option specifies that the regular expression statement is located in a resource file. 
-* `-v`: The "-v" option tells regex to operate in inverse mode, dropping any entries which match the regex and passing entries which do not match.
-* `-p`: The "-p" option tells regex to allow entries through if the regular expression does not match at all.  The permissive flag does not change the operation of filters.
-* `-a`: The "-a" option enables array mode, which extracts all matches of each capture group into array enumerated values instead of just the first match. This is useful when an entry contains multiple occurrences of a pattern.
+* `-e <arg>`: Operate on the enumerated value `<arg>` instead of the entry data. Non-string values are converted to their string form before matching. Entries without the enumerated value are dropped unless `-v` or `-p` is set. For example, to find HTTP requests to ports other than 80: `tag=pcap packet tcp.DstPort!=80 tcp.Payload | regex -e Payload "GET / HTTP/1\.1"`
+* `-r <arg>`: Read the regular expression from a resource instead of the query.
+* `-v`: Inverse mode. Drop entries that match and pass entries that do not. Cannot be combined with `-p` or with filters.
+* `-p`: Permissive mode. Pass entries that do not match. Entries that match are still subject to filters.
+* `-a`: Array mode. Extract every match of each capture group into an array instead of only the first match.
 
-```{note}
-Storing especially large regular expressions in resource files can clean up queries, and allows for easy reuse.  If `-r` is specified, do not specify a regular expression in the query -- instead the contents of the resource will be used. Handy!
-```
+### Escaping and raw strings
 
-### Raw strings
+The regular expression is passed to the regex engine exactly as typed, so backslash escapes such as `\S` and `\d` work as-is inside double quotes. Do not double them: `"\\S"` matches a literal backslash followed by `S`.
 
-To facilitate using escape sequences in regular expressions, you can use backticks to prevent Gravwell from unescaping your input. For example:
+A double quote inside a double-quoted expression must be escaped as `\"`. To avoid that, wrap the expression in backticks instead, which also lets you paste expressions straight from [regular expression playgrounds](https://regex101.com/):
 
 ```gravwell
-tag=syslog grep sshd | regex `shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)`
+tag=apache regex `"GET (?P<path>\S+) HTTP/1\.1" (?P<status>\d+)`
 ```
-
-If you used double quotes instead of backticks, `\S` would have to be double-escaped as `\\S.` This feature is convenient in that it allows you to copy regular expressions directly from [regular expression playgrounds](https://regex101.com/) and other sources.
 
 ### Inline Filtering
 
-The regex module supports inline filtering for down-selecting data directly within the regex module.  The inline filtering also enables regex to engage accelerators to dramatically reduce the amount of data that needs to be processed.  Inline filtering is achieved in the same manner as other modules by using comparison operators.  If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification will be dropped entirely.  If a field is specified as not equal "!=" and the field does not exist, the field is not extracted but the entry won't be dropped entirely.
+Filters can be applied to any named capture group. Naming a field that is not a capture group in the expression is an error. All named groups are extracted whether or not they appear in the filter list.
 
+An entry that fails any filter is dropped. A capture group that does not take part in the match (for example, inside an optional `(...)?`) is extracted as an empty value, which passes `!=` and `!~` filters.
+
+`==` filters also let regex use accelerators, which can greatly reduce the amount of data that has to be read.
 
 | Operator | Name | Description |
 |----------|------|-------------|
@@ -56,36 +59,34 @@ The regex module supports inline filtering for down-selecting data directly with
 
 #### Filtering Examples
 
-The following query extracts auth methods, usernames, and IP addresses from SSH logs and filters down to only those entries where the username is "root" and the IP is in the 192.168.0.0/16 subnet.
+The following query extracts auth methods, usernames, and IP addresses from SSH logs and keeps only entries where the username is "root" and the IP starts with "192.168".
 
 ```gravwell
-tag=syslog regex `shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)` user==root ip ~ "192.168"
+tag=syslog regex `sshd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)` user==root ip ~ "192.168"
 ```
 
 ## Example Search
 
-The following query extracts the authentication method, username, and source IP address from SSH logs as enumerated values named `method`, `user`, and `ip`, which are then displayed in a table.
+The following query extracts the authentication method, username, and source IP address from SSH logs and displays them in a table.
 
 ```gravwell
-tag=syslog grep sshd | regex `shd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+.[0-9]+.[0-9]+.[0-9]+)` 
+tag=syslog grep sshd | regex `sshd.*Accepted (?P<method>\S*) for (?P<user>\S*) from (?P<ip>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)`
 | table method user ip
 ```
 
 ### Array Mode Example
 
-The `-a` flag extracts all matches of each capture group into array enumerated values. This is useful when a single entry contains multiple occurrences of a pattern.
-
-For example, to extract all numbers from each entry into an array:
+The `-a` flag collects every match of each capture group into an array. For example, to extract all numbers from each entry:
 
 ```gravwell
 tag=default regex -a `(?P<num>\d+)` | table num
 ```
 
-If an entry contains "foo 123 bar 456 baz 789", the `num` enumerated value will be an array containing `[123, 456, 789]`.
+If an entry contains "foo 123 bar 456 baz 789", `num` is an array containing `[123, 456, 789]`.
 
 ## Full regular expression syntax
 
-The following is copied from [the re2 documentation](https://github.com/google/re2/wiki/Syntax) (see [their license](https://raw.githubusercontent.com/google/re2/refs/heads/main/LICENSE))
+Gravwell uses Go's [regexp](https://pkg.go.dev/regexp/syntax) package, which accepts RE2 syntax except for `\C`. The following is copied from [the re2 documentation](https://github.com/google/re2/wiki/Syntax) (see [their license](https://raw.githubusercontent.com/google/re2/refs/heads/main/LICENSE)).
 
 Regular expressions are a notation for describing sets of character
 strings. When a particular string is in the set described by a regular
@@ -247,7 +248,7 @@ Flag syntax is `xyz` (set) or `-xyz` (clear) or `xy-z` (set `xy`, clear
 `\123`       |   octal character code (up to three digits)
 `\x7F`       |   hex character code (exactly two digits)
 `\x{10FFFF}` |   hex character code
-`\C`         |   match a single byte even in UTF-8 mode
+`\C`         |   match a single byte even in UTF-8 mode [(NOT SUPPORTED)]
 `\Q...\E`    |   literal text `...` even if `...` has punctuation
 `\1`         |   backreference [(NOT SUPPORTED)]
 `\b`         |   backspace [(NOT SUPPORTED)] (use `\010`)

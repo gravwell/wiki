@@ -1,38 +1,44 @@
 # First / Last Modules
 
-The `first` and `last` modules are a convenient way to see specific entries over a time period. For instance, given a collection of syslog messages from a number of sources, one might wish to see the earliest or most recent entry from each individual host, or from each daemon.
+The `first` and `last` modules return the earliest or most recent entry by timestamp. For instance, given syslog messages from many sources, you can get the earliest or most recent entry from each host, or from each daemon.
 
-The modules use the same syntax. Each optionally takes one or more enumerated value names; if specified, the modules will emit the first/last entry for each combination of values of the enumerated values, similar to the behavior of the unique module.
+Both modules use the same syntax. With no arguments they return a single entry. Given one or more enumerated value names, they return the first or last entry for each combination of those values, similar to the [unique](/search/unique/unique) module. Entries that have none of the named values are dropped.
 
 ```
-first [enumerated value]...
+first [enumerated value]... [over <duration>]
 ```
 
 ## Supported Options
 
-* `-maxtracked <arg>`: sets the maximum number of unique keys to track per operation, e.g. `first -maxtracked 5000 DstIP`. This is used to help avoid memory exhaustion if there are millions of IPv6 addresses in the data. If the maxtracked value is exceeded, the search will terminate with an error suggesting you should increase the max value. Defaults to 1000000. Refer to the [stats module documentation](/search/stats/stats) for more information about maxtracked.
-* `-maxsize <arg>`: sets the maximum amount of memory in megabytes to hold when tracking keys.
+* `-maxtracked <arg>`: sets the maximum number of unique keys to track, e.g. `first -maxtracked 5000 DstIP`. This guards against memory exhaustion, for example when keying on millions of IPv6 addresses. If the limit is exceeded, the search fails with an error. Defaults to 1000000. See the [stats module documentation](/search/stats/stats) for more about maxtracked.
+* `-maxsize <arg>`: sets the maximum amount of memory, in megabytes, to hold when tracking entries. If the limit is exceeded, the search fails with an error. Defaults to 1024, or 15% of system memory if that is larger.
 
 ## Examples
 
-To get just the first entry in a query by time, simply invoke the `first` module with no arguments:
+To get the earliest entry in the search, invoke `first` with no arguments:
 
 ```gravwell
 tag=gravwell first
 ```
 
-To get the first entry for each unique value of the enumerated value "foo", invoke `first` with the argument "foo":
+To get the earliest entry for each unique value of the enumerated value `foo`:
 
 ```gravwell
 tag=gravwell json foo | first foo
 ```
 
+Add `over <duration>` to get one result per key in each time window instead of one for the whole search. The duration must be a whole number of seconds, minimum one second. This returns the most recent entry for each value of `foo` in each 10-minute window:
+
+```gravwell
+tag=gravwell json foo | last foo over 10m
+```
+
 ## Caveats
 
-The first and last module operate on the timestamp of entries for most queries. However, if you write a query that isn't ordered temporally, first/last will operate simply on the first or last entry seen in the search pipeline. For example:
+`first` and `last` compare entry timestamps, not the order in which entries reach the module. This query still returns the entry with the earliest timestamp, even though the data was sorted by `foo`:
 
 ```gravwell
 tag=gravwell json foo | sort by foo | first
 ```
 
-This query will give you the first entry seen, after sorting by foo.
+If several entries share the earliest (or latest) timestamp, the one that reaches the module first is kept.

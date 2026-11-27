@@ -1,6 +1,6 @@
 # XML
 
-The xml module can extract components from XML data into enumerated values for later use. Since XML is untyped, all results are returned as strings.
+The xml module extracts elements and attributes from XML data into enumerated values. XML is untyped, so all results are strings.
 
 Consider the following XML snippet, consisting of three nested elements `A`, `B`, and `C`; the inner-most element `C` has an associated attribute named `MyAttr`.
 
@@ -8,37 +8,37 @@ Consider the following XML snippet, consisting of three nested elements `A`, `B`
 <A><B><C MyAttr="foo">bar</C></B></A>
 ```
 
-To extract the **value** of `C`, we would use the following query:
+Paths start at the root element. To extract the **value** of `C`:
 
 ```
 xml A.B.C
 ```
 
-The query places the result, "bar", in an enumerated value named "C".
+This places `bar` in an enumerated value named `C`.
 
-If, on the other hand, we wanted to extract the value of the MyAttr attribute, we would use the following syntax:
+To extract the value of the `MyAttr` attribute instead, put the attribute name in square brackets:
 
 ```
 xml A.B.C[MyAttr]
 ```
 
-This creates an enumerated value named "MyAttr" containing the value "foo".
+This creates an enumerated value named `MyAttr` containing `foo`.
 
-If the final element specified contains more XML elements, the module will return the inner XML as a string:
+If the final element contains other elements, the module returns its inner XML as a string:
 
 ```
 xml A.B
 ```
 
-returns ```<C MyAttr="foo">bar</C>```.
+returns `<C MyAttr="foo">bar</C>`.
 
-XML elements are not always named in a way suitable for use with other modules; for instance, an element named "My-Element" will confuse the eval module, which will think you wish to subtract a variable `Element` from another variable `My`. The xml module allows you to select a different name for the resulting enumerated value:
+Use `as` to give the enumerated value a different name. This helps when an element name doesn't work well in other modules; for instance, the eval module reads `My-Element` as `My` minus `Element`:
 
 ```
 xml A.B.My-Element as MyElement
 ```
 
-Similarly, if an element or attribute contains a ".", "[", or "]" character, you can simply enclose the element in quotes to let the module know that the special character is part of the element name:
+If an element or attribute name contains `.`, `[`, or `]`, wrap it in double quotes:
 
 ```
 xml A."My.Element" as MyElement
@@ -46,27 +46,27 @@ xml A."My.Element" as MyElement
 
 ## Filtering
 
-The xml module can do simple pre-filtering of data. Because of the way XML works, there are a few peculiarities in how the xml module handles filtering, so it is important to read this section carefully.
+The xml module supports one filter operator, `==`, and it behaves differently from filters in other modules: a failed match means nothing is extracted, but the entry is **not** dropped unless `-s` is set.
 
-The module can test if an element value is equal to a literal value. If so, the requested element is extracted and the search entry is passed along the pipeline. Consider this search:
+Consider this search:
 
 ```
 xml A.B=="foo"
 ```
 
-The following XML entry will pass the test and continue down the pipeline with a new enumerated element named "B":
+This entry matches, and the module extracts an enumerated value named `B`:
 
 ```
 <A><B>foo</B></A>
 ```
 
-This entry will not:
+This entry doesn't match, so `B` is not extracted. The entry still continues down the pipeline; use `xml -s A.B=="foo"` to drop it:
 
 ```
 <A><B>bar</B></A>
 ```
 
-This is all more or less intuitive. However, XML also allows multiple child elements at the same level, making it very difficult to extract the desired data. For example, one might see something like this:
+XML often has several sibling elements with the same name. For example:
 
 ```
 <System>
@@ -75,15 +75,16 @@ This is all more or less intuitive. However, XML also allows multiple child elem
 </System>
 ```
 
-Simply saying `xml System.Data` will only extract the first result, "Windows 10". In order to extract the username, you can compare against an **attribute**; when the xml module finds a match, however, it extract the current **element** data:
+`xml System.Data` only extracts the first one, `Windows 10`. To pick a specific element, compare against one of its **attributes**. When the attribute matches, the module extracts the **element's** contents, not the attribute value:
 
 ```
-xml System.Data[Name]=="Username"
+xml System.Data[Name]=="Username" as Username
 ```
 
-This query results in a new enumerated value named `Data` containing the string "gravwell".
+This creates an enumerated value named `Username` containing `gravwell`. Without `as`, the enumerated value is named after the attribute (`Name`), even though it holds the element's contents.
 
 
 ## Supported Options
 
-* `-e <arg>`: The “-e” option operates on an enumerated value instead of on the entire record.
+* `-e <arg>`: Operate on an enumerated value instead of the entire entry. Entries without that enumerated value are dropped.
+* `-s`: Strict mode. Drop the entry unless *all* extractions succeed, including any `==` filters.

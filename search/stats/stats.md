@@ -1,44 +1,46 @@
 # Stats 
 
-The stats module allows the user to perform multiple stats operations simultaneously, where the individual math modules only perform one operation. The canonical example for the stats module is computing the mean and standard deviation of values in order to display error bars on a graph.
+The stats module performs one or more statistical operations in a single pass, where the individual [math modules](/search/math/math) perform only one. A common use is computing the mean and standard deviation of a value to draw error bars on a chart.
 
 ## Syntax
 
 An invocation of the stats module consists of:
 
 * The module name (`stats`)
-* A list of operations, specifying which enumerated values should be operated on and optionally a name for the output (`mean(length)`, `count as foo`)
-* Optional "by" arguments, which specify that the operations should be performed separately for each combination of by arguments (as in `mean(Length) by SrcIP`)
-* An optional time window
+* Optional flags
+* A list of operations, each naming the enumerated value to operate on and optionally a name for the output (`mean(length)`, `count as foo`)
+* Optional "by" arguments, which perform the operations separately for each combination of by values (as in `mean(Length) by SrcIP`)
+* An optional time window (`over 5m`)
 
 These components are discussed below.
 
 ### Supported Flags
 
-* `-b`: This flag tells the stats module to always preserve the original body of the entry. For example, saying `tag=* length | stats max(length) | text` would normally cause the output entry's body to be overwritten with the maximum length seen, for convenient display with the text renderer. Adding the `-b` flag (`tag=* length | stats -b max(length) | text`) would preserve the original body, meaning the renderer will instead display the *contents* of the longest entry seen.
-* `-maxtracked <n>`: Sets the maximum number of unique keys to track per operation. This is used to help avoid memory exhaustion if you run `stats count by ipv6addr` and there are millions of IPv6 addresses in the data. If the maxtracked value is exceeded, the search will terminate with an error suggesting you should increase the max value. Defaults to 1000000.
+* `-b`: Always preserve the original body of the entry. Normally `tag=* length | stats max(length) | text` overwrites the output entry's body with the result (`max 1234`) for display with the text renderer. With `-b` (`tag=* length | stats -b max(length) | text`), the body is preserved, so the renderer shows the *contents* of the longest entry seen.
+* `-maxtracked <n>`: Sets the maximum number of items to track, summed across all operations (one per key per operation, plus each unique value for `unique_count`). This guards against memory exhaustion from queries like `stats count by ipv6addr` over millions of IPv6 addresses. If the limit is exceeded, the search terminates with an error suggesting you increase it. Defaults to 1000000. See "The `-maxtracked` flag" below.
+* `-maxsize <n>`: Sets the maximum amount of memory, in megabytes, that stats may use to track data. If exceeded, the search terminates with an error. Defaults to 1024 MB or 15% of system memory, whichever is larger. The value may not exceed 90% of system memory.
 
 (math_operations_specification)=
 ## Math Operations Specification
  
-An operation consists of the operation name, the "source" enumerated value contained in parentheses, and optionally a different name for the output enumerated value.
+An operation consists of the operation name, the "source" enumerated value in parentheses, and optionally a different name for the output enumerated value.
 
 The following operation names are supported:
 
-* count: count entries
-* sum: sum values and return the total
-* total: sum values over a period of time and keep a running total.
-* mean: calculate the average
-* stddev: calculate the standard deviation
-* variance: calculate the variance
-* min: return the minimum value seen
-* max: return the maximum value seen
-* unique_count: return the number of unique instances of the source were seen.
+* `count`: count entries. With a source (`count(Bytes)`), only entries that have that enumerated value are counted.
+* `sum`: sum the values
+* `total`: sum the values, keeping a running total across time windows (see "sum() vs total()" below)
+* `mean`: the average
+* `stddev`: the standard deviation
+* `variance`: the variance
+* `min`: the minimum value seen
+* `max`: the maximum value seen
+* `unique_count`: the number of unique values of the source seen
 
-The operation is performed on the source enumerated value. Thus, specifying `stats sum(Bytes)` would tell the stats module to sum up the Bytes enumerated values, outputting a single entry with an enumerated value named `sum` containing the total.
+For example, `stats sum(Bytes)` sums the `Bytes` enumerated values and outputs a single entry with an enumerated value named `sum` containing the result.
 
 ```{note}
-If no source is specified, the operation is instead performed on the body of the entry. Specifying `stats sum` is equivalent to specifying `stats sum(DATA)`
+If no source is specified, the operation is performed on the body of the entry: `stats sum` is equivalent to `stats sum(DATA)`. The exception is `count`, which counts entries.
 ```
 
 Multiple operations can be specified:
@@ -48,16 +50,16 @@ stats sum(Bytes) mean(Bytes)
 ```
 
 ```
-stats mean(Bytes) stddev(bytes) min(Length)
+stats mean(Bytes) stddev(Bytes) min(Length)
 ```
 
-The output of an operation is, by default, assigned to an enumerated value with the name of the operation. Thus `stats sum(Bytes)` will create an enumerated value named `sum` to hold the output. You can change this with the `as` option:
+By default, the output of an operation goes in an enumerated value named after the operation, so `stats sum(Bytes)` creates `sum`. Change this with `as`:
 
 ```
 stats mean(Bytes) as BytesAvg
 ```
 
-This is particularly useful when performing the same operation on multiple different enumerated values:
+This is needed when performing the same operation on several enumerated values:
 
 ```
 stats mean(Bytes) as BytesAvg mean(Length) as LengthAvg
@@ -65,21 +67,23 @@ stats mean(Bytes) as BytesAvg mean(Length) as LengthAvg
 
 ## "By" Arguments Specification
 
-When the user needs an operation performed separately for e.g. each different IP, it is necessary to specify "by arguments".
+To perform an operation separately for each value of a field, such as each IP, specify "by" arguments:
 
 ```
 stats mean(Bytes) stddev(Bytes) by SrcIP
 ```
 
-This tells the stats module to calculate separate mean and standard deviation for each unique SrcIP value. The result will be 1 entry for each SrcIP seen, each containing the appropriate SrcIP, mean, and stddev enumerated values.
+This calculates a separate mean and standard deviation for each unique SrcIP value. The result is one entry per SrcIP, each containing the SrcIP, mean, and stddev enumerated values.
 
-You can specify as many by arguments as you want:
+When combining `as` and `by` on an operation, `as` must come first: `stats mean(Bytes) as BytesAvg by SrcIP`.
+
+You can specify any number of by arguments:
 
 ```
 stats mean(Bytes) stddev(Bytes) by SrcIP DstIP DstPort
 ```
 
-The module will calculate a separate mean and standard deviation for *every combination of SrcIP, DstIP, and DstPort*.
+This calculates a separate mean and standard deviation for *every combination of SrcIP, DstIP, and DstPort*.
 
 ```{attention}
 When working with very large datasets on systems with limited memory, specifying too many by arguments can lead to memory exhaustion as the stats module attempts to keep millions of combinations in memory.
@@ -87,17 +91,15 @@ When working with very large datasets on systems with limited memory, specifying
 
 ### Using complex "By" arguments
 
-If only a single "by" argument is provided and it is applied to the last operation then stats will apply it to all the operations.  This is a shorthand method.  If you do NOT want it applied to all operations ensure that the last operation does not have the "by" argument.
+If only the last operation has a `by` clause, it applies to every operation. `stats mean(Bytes) stddev(Bytes) by SrcIP` keys both operations by SrcIP. If an earlier operation has a `by` clause that differs from the last operation's, each operation keeps its own keys, and operations without a `by` clause are computed across all entries.
 
-For example, the following will run a "mean" operation using `SrcIP DstIP DstPort` as the keys, but the stddev operation is applied without keys:
+For example, the following runs `mean` keyed by `SrcIP DstIP DstPort`, but computes `stddev` without keys:
 
 ```
 stats mean(Bytes) by SrcIP DstIP DstPort stddev(Bytes)
 ```
 
-The stats module can perform operations with complex keying, this means that you can provide a keyset (or lack thereof) for every operation.  This is useful if you want to see multiple operation with different keys in a single table or chart.
-
-For example, here is a query that performs a sum of packet sizes by IP but also provides a baseline sum across all packets:
+This per-operation keying is useful for showing operations with different keys in a single table or chart. For example, this query sums packet sizes by IP and also provides a baseline sum across all packets:
 
 ```gravwell
 tag=pcap packet ipv4.IP ~ 192.168.1.0/24 | length | stats sum(length) by IP sum(length) as total | chart total sum by IP 
@@ -107,29 +109,29 @@ tag=pcap packet ipv4.IP ~ 192.168.1.0/24 | length | stats sum(length) by IP sum(
 
 ## Time Window Specification
 
-The stats module can operate in two modes: temporal or condensed.
+The stats module operates in one of two modes: temporal or condensed.
 
-In condensed mode, it emits results only once. This occurs automatically when using the text renderer or when the `-nt` flag is passed to the table renderer.
+In condensed mode, it emits results only once. This happens automatically when using the text renderer or when the `-nt` flag is passed to the table renderer.
 
-In temporal mode, the stats module operates over time windows, defaulting to 1 second. For every 1 second of data, the module emits a set of result entries. This is used when sending data to the chart renderer.
+In temporal mode, it operates over time windows, by default 1 second, emitting a set of result entries for each window. This is used when sending data to the chart renderer.
 
-While the default window is 1 second, the window size can be modified with the "over" option:
+Change the window size with `over`:
 
 ```
 stats mean(Bytes) stddev(Bytes) by SrcIP over 5m
 ```
 
-When sent to the chart module, the results will be calculated over a 5 minute window rather than the standard 1 second.
+When sent to the chart renderer, the results are calculated over 5 minute windows rather than 1 second.
 
 ```{note}
-Only one time window can be specified, and the time window is applied to all operations.  The time window must also be the LAST argument to stats.
+Only one time window can be specified, and it applies to all operations. It must be the last argument to stats.
 ```
 
 ## sum() vs total()
 
-The `sum` and `total` operators behave exactly the same in every context except chart.  When using the chart renderer the total module will not "reset" values across time buckets.
+The `sum` and `total` operations behave the same in every context except the chart renderer, where `total` does not reset across time buckets.
 
-The behavior difference is best demonstrated in a screenshot generated using the following query:
+The difference is shown in this screenshot of the following query:
 
 ```gravwell
 tag=zeekconn fields -d "\t" [8] as dur
@@ -139,10 +141,10 @@ tag=zeekconn fields -d "\t" [8] as dur
 
 ![Sum vs. Total](SumVsTotal.png)
 
-This query generates two lines based on the sum and total sum of the duration values.  The chart generates a line for the `sum` values by bucketing the data where the line for `total` represents buckets that compound over time.  The underlying operations are the same, but total does not "reset" the bucket each time it transitions to a new time span, where "sum" does.
+The `sum` line shows the duration summed within each bucket. The `total` line shows a running total that accumulates across buckets.
 
 ## The `-maxtracked` flag
 
-The `-maxtracked` flag is intended as "safety rails" against bad queries. For instance, each Zeek entry includes a unique ID, and a query like `tag=zeekconn ax uid | stats count by uid` could lead to memory exhaustion; this is why we set a default maxtracked value. In most cases, you'll never need to change the default. If a query exceeds the max, the search will shut down with an error message, prompting you to either reformulate your query or increase the maxtracked option:
+The `-maxtracked` flag is a safety rail against runaway queries. For instance, each Zeek entry includes a unique ID, so a query like `tag=zeekconn ax uid | stats count by uid` could exhaust memory. Most queries never need to change the default. If a query exceeds the limit, the search stops with an error, and you can either reformulate the query or raise the limit:
 
 ![](maxtracked.png)

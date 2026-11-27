@@ -1,15 +1,15 @@
 # Diff
 
-The diff module finds the difference between enumerated values. It can operate in two modes:
+The diff module subtracts one enumerated value from another. It has two modes:
 
-1. Find the difference between two enumerated values on the current entry. ("Normal mode")
-2. Find the difference between an enumerated value on the current entry, and the same enumerated value on the *previous* entry. ("Temporal mode")
+1. Normal mode: subtract one enumerated value from another on the same entry.
+2. Temporal mode: subtract an enumerated value on the *previous* entry from the same enumerated value on the current entry.
 
-The module can find the difference between integers, floating point numbers, timestamps, and time durations. If an enumerated value is a string, diff will attempt to parse the string as a number first.
+The module works with integers, floating point numbers, timestamps, and durations. Strings are parsed as numbers first. If a value is missing or can't be converted, the entry passes through without a result. In temporal mode, the first entry has no previous value, so it gets no result either.
 
 ## Examples
 
-You can find the difference between two values by specifying the two enumerated value names as arguments; the second will be subtracted from the first. The following will generate enumerated values named "diff" containing DstPort - SrcPort:
+To subtract one value from another, give both enumerated value names; the second is subtracted from the first. This sets an enumerated value named `diff` to `DstPort - SrcPort`:
 
 ```gravwell
 tag=netflow netflow SrcPort DstPort | diff DstPort SrcPort | table
@@ -17,9 +17,9 @@ tag=netflow netflow SrcPort DstPort | diff DstPort SrcPort | table
 
 ![](diff1.png)
 
-(Not particularly useful, but it demonstrates how the tool works)
+(Not particularly useful, but it shows how the module works.)
 
-The following query uses the other mode; it compares the TIMESTAMP field of the current entry against that of the previous entry to see how frequently netflow packets are arriving:
+Give a single enumerated value name to use temporal mode. This query compares each entry's `TIMESTAMP` with the previous entry's to show how often netflow records arrive:
 
 ```gravwell
 tag=netflow sort by time asc | diff TIMESTAMP | table
@@ -29,7 +29,7 @@ tag=netflow sort by time asc | diff TIMESTAMP | table
 
 ## Output options
 
-By default, the module will create a new enumerated value named `diff` containing the calculated difference. You can change the name with the "as" keyword, e.g.:
+By default, the result is stored in an enumerated value named `diff`. Change the name with the `as` keyword:
 
 ```
 diff foo bar as foobarDiff
@@ -37,7 +37,7 @@ diff foo bar as foobarDiff
 
 ## Keying
 
-When in temporal mode (comparing an enumerated value against its value in the previous entry), diff can store multiple "previous entries" based on a specified key set. The following query extracts the source IP address from network packets and checks how long it's been since that IP has been seen:
+In temporal mode, `by` keeps a separate previous value for each combination of key values, so each entry is compared with the previous entry that has the same keys. This query extracts the source IP address from packets and shows how long it has been since each IP was last seen:
 
 ```gravwell
 tag=pcap sort by time asc | packet ipv4.SrcIP | diff TIMESTAMP by SrcIP | table

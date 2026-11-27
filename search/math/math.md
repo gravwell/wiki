@@ -1,39 +1,56 @@
 # Math Modules
 
-Math modules operate on the pipeline to perform statistical analysis. They are also important when information is condensed over a timeline. For example, if the temperature is measured 10 times per second but the user requests it to be displayed by the second, a math module is used to condense that data.
+The math modules compute statistics over enumerated values: `sum`, `mean`, `count`, `max`, `min`, `variance`, and `stddev`. They are often used to condense data over a timeline. For example, if a temperature is measured 10 times per second but charted per second, a math module condenses the readings into one value per second.
+
+Each math module is shorthand for the [stats module](/search/stats/stats) with a single operation. The first argument names the source enumerated value; everything after it is passed to `stats` unchanged. These pairs are equivalent:
+
+```
+sum Length by SrcMAC
+stats sum(Length) by SrcMAC
+```
+
+```
+count by command
+stats count by command
+```
+
+The output is an enumerated value named after the operation (`sum`, `count`, and so on). `by`, `as`, and `over` work as described in the [stats documentation](/search/stats/stats), with `as` placed after the source (`sum Bytes as total by SrcIP`). If no source is given, `count` counts entries and the other modules operate on the entry body (`DATA`).
+
+The `total` and `unique_count` operations have no shorthand form; use `stats` for those.
 
 ## Supported Options
 
-* `-maxtracked`: sets the maximum number of unique keys to track per operation, e.g. `count -maxtracked 5000 by DstIP`. This is used to help avoid memory exhaustion if there are millions of IPv6 addresses in the data. If the maxtracked value is exceeded, the search will terminate with an error suggesting you should increase the max value. Defaults to 1000000. Refer to the [stats module documentation](/search/stats/stats) for more information about maxtracked.
+The math modules do not accept flags. To set `-maxtracked`, `-maxsize`, or `-b`, use the `stats` form instead, e.g. `stats -maxtracked 5000 count by DstIP`. Refer to the [stats module documentation](/search/stats/stats) for details on these flags.
 
 (sum_module)=
 
 ## Sum
 
-The sum module adds the value of the records. This is the default behavior and likely would not be invoked directly.
+The sum module adds up the values.
 
-Example search summing the data that a MAC address has sent on the network:
+Example search summing the bytes each MAC address has sent on the network:
 
 ```gravwell
-tag=pcap eth.SrcMAC eth.Length | sum Length by SrcMAC | chart sum by SrcMAC
+tag=pcap packet eth.SrcMAC eth.Len | sum Len by SrcMAC | chart sum by SrcMAC
 ```
 
 (mean_module)=
 
 ## Mean
 
-The mean module returns the average value of the records.
+The mean module returns the average value.
+
 Example search charting vehicle RPM:
 
 ```gravwell
-tag=CAN canbus ID=0x2C4 | slice uint16BE(data[0:2]) as RPM | mean RPM | chart mean
+tag=CAN canbus ID==0x2C4 data | slice uint16BE(data[0:2]) as RPM | mean RPM | chart mean
 ```
 
 (count_module)=
 
 ## Count
 
-The count module counts instances of records. It does not conduct any arithmetic on the data within a record.
+The count module counts entries. It does not do any arithmetic on the data within an entry. If a source is given (`count Bytes`), only entries that have that enumerated value are counted.
 
 Example search counting sudo commands from a Linux machine:
 
@@ -41,10 +58,10 @@ Example search counting sudo commands from a Linux machine:
 grep sudo | regex "COMMAND=(?P<command>\S+)" | count by command | chart count by command
 ```
 
-This is an example search showing how many packets were sent by a MAC address over the network (which is different than the size of each packet as shown in the sum module example):
+Example search counting how many packets each MAC address sent (compare with the byte totals in the sum example):
 
 ```gravwell
-tag=pcap eth.SrcMAC eth.Length | sum Length by SrcMAC | chart sum by SrcMAC
+tag=pcap packet eth.SrcMAC | count by SrcMAC | chart count by SrcMAC
 ```
 
 (max_module)=
@@ -53,10 +70,10 @@ tag=pcap eth.SrcMAC eth.Length | sum Length by SrcMAC | chart sum by SrcMAC
 
 The max module returns the maximum value seen.
 
-Example search showing a table of the maximum RPM for each vehicle in an entire fleet:
+Example search showing a table of the maximum RPM for each vehicle in a fleet:
 
 ```gravwell
-tag=CAN canbus ID=0x2C4 | slice uint16BE(data[0:2]) as RPM | max RPM by SRC | table SRC max
+tag=CAN canbus ID==0x2C4 data | slice uint16BE(data[0:2]) as RPM | max RPM by SRC | table SRC max
 ```
 
 (min_module)=
@@ -65,35 +82,32 @@ tag=CAN canbus ID=0x2C4 | slice uint16BE(data[0:2]) as RPM | max RPM by SRC | ta
 
 The min module returns the minimum value seen.
 
-Example search showing a table of the minimum RPM for each vehicle in an entire fleet:
+Example search showing a table of the minimum RPM for each vehicle in a fleet:
 
 ```gravwell
-tag=CAN canbus ID=0x2C4 | slice uint16BE(data[0:2]) as RPM | min RPM by SRC | table SRC min
+tag=CAN canbus ID==0x2C4 data | slice uint16BE(data[0:2]) as RPM | min RPM by SRC | table SRC min
 ```
 
 (variance_module)=
 
 ## Variance
 
-The variance module returns the variance information of a record. This is useful for highlighting the rate of change.
+The variance module returns the variance of the values, a measure of how spread out they are.
 
-Example search charting the variance of throttle data on a Toyota vehicle.
+Example search charting the variance of throttle data on a Toyota vehicle:
 
 ```gravwell
-tag=CAN canbus ID=0x2C1 | slice byte(data[6:7]) as throttle | variance throttle | chart variance
+tag=CAN canbus ID==0x2C1 data | slice byte(data[6:7]) as throttle | variance throttle | chart variance
 ```
 
 (stddev_module)=
 
 ## Stddev
 
-Standard Deviation
+The stddev module returns the standard deviation of the values. This is useful for spotting anomalous events.
 
-The stddev module returns the standard deviation information of a record. This is useful for highlighting anomalous events.
-
-Example search charting RPM signals that are outliers:
+Example search charting the standard deviation of RPM signals:
 
 ```gravwell
-tag=CAN canbus ID=0x2C4 | slice uint16BE(data[0:2]) as RPM | stddev RPM | chart stddev
+tag=CAN canbus ID==0x2C4 data | slice uint16BE(data[0:2]) as RPM | stddev RPM | chart stddev
 ```
-

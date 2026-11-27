@@ -1,6 +1,6 @@
 # Alias
 
-The alias module can "clone" existing enumerated values. Modifying the new enumerated value does not change the original. This can be particularly useful when you wish to pre-populate the extracted enumerated value for the `lookup` module:
+The alias module copies existing enumerated values to new names. Changing the copy does not change the original. This is useful for pre-populating the output of the `lookup` module, so entries with no match keep the original value:
 
 ```gravwell
 tag=pcap packet ipv4.SrcIP
@@ -13,6 +13,6 @@ tag=pcap packet ipv4.SrcIP
 
 ![](alias.png)
 
-The alias module takes one or more *pairs* of arguments: source, and destination. Thus, in the example above, the existing enumerated 'SrcIP' is aliased to 'src_host'. When the lookup module writes its results out into the 'src_host' enumerated value, it does not change the original 'SrcIP' value.
+The alias module takes one or more *pairs* of arguments: a source and a destination. In the example above, `SrcIP` is copied to `src_host`. When `lookup` finds a hostname, it overwrites `src_host`; `SrcIP` is unchanged. When there is no match, `src_host` still holds the IP address.
 
-Multiple aliases can be made simultaneously; `alias foo bar X Y` will alias "foo" to "bar" and "X" to "Y".
+To make several aliases at once, list more pairs: `alias foo bar X Y` copies `foo` to `bar` and `X` to `Y`. If an entry doesn't have a source enumerated value, that pair is skipped and the entry passes through.

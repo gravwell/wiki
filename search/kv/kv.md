@@ -1,25 +1,25 @@
 # KV
 
-The kv module is used to extract and filter key-value formatted data from search entries into enumerated values for further analysis. Key-value data consists of one or more key-value pairs, such as `a = 1` or `Name: Fred`.
+The kv module extracts and filters key-value data into enumerated values. Key-value data consists of one or more pairs, such as `a = 1` or `Name: Fred`.
 
 ## Key-Value Terminology
 
-The kv module uses a few specific terms to describe key-value data formats. They are:
+* Separator: The string that separates a key from its value, such as `=`.
+* Delimiters: The characters that separate key-value pairs from each other.
 
-* Separator: The character(s) which separate the key from the value, such as '='.
-* Delimiters: The character(s) which separate key-value pairs from each other. May also exist between the key and the separator or the separator and the delimiter.
+Whitespace between a key and the separator, or between the separator and the value, is ignored unless `-noclean` is set.
 
-For example, the following entry contains 4 key-value pairs, using '=' as the separator and spaces as the delimiters:
+For example, the following entry contains 4 key-value pairs, using `=` as the separator and spaces as the delimiters:
 
 ```
 x=1 y=2 z=3 foo=bar
 ```
 
 ```{note}
-When using a space " " as the separator, you must also enable -noclean.  The kv module is designed to be as flexible as possible when dealing with potentially messy key-value data, so it will attempt to clean up whitespace around values by default.  When using a space as the separator, this cleanup will remove the separator itself and cause the module to fail to extract any values.  Enabling -noclean will disable this cleanup and allow the module to extract values with a space as the separator.
+When using a space as the separator, you must also set `-noclean`. By default the module strips whitespace around the separator, which removes a space separator and causes every extraction to fail.
 ```
 
-This entry contains the same key-value pairs but uses ':' as the separator and '|' as the delimiter:
+This entry contains the same key-value pairs but uses `:` as the separator and `|` as the delimiter:
 
 ```
 x:1|y:2|z:3|foo:bar
@@ -27,26 +27,28 @@ x:1|y:2|z:3|foo:bar
 
 ## Supported Options
 
-* `-e <arg>` (optional): The "-e" option operates on an enumerated value instead of on the entire record.
-* `-sep <separator>` (optional): The "-sep" flag allows the user to specify the separator (default "="). This can be one or more characters, for example `-sep EQUALS`.
-* `-d <delimiters>` (optional): The "-d" flag specifies the delimiters to use (defaults to the space and tab characters). You can specify multiple delimiters characters; for example, to use double-quote, tab, and space as delimiters, set `-d "\" \t"`.
-* `-dall <delimiter>` (optional): The "-dall" flag works like "-d", except that the entire given string is treated as the delimiter, instead of any of the characters.
-* `-s` (optional): The "-s" option puts the module into strict mode. In strict mode, an entry will be dropped unless *all* specified extractions succeed.
-* `-q` (optional): The "-q" option enables quoted values. This allows values to contain the delimiter characters, e.g. `key="this is the value"`
-* `-noclean` (optional): The "-noclean" option will disable trimming left whitespace on extracted tokens, even if the whitespace is contained in the delimiters field. For example `key=   value` would be extracted with the leading 3 spaces intact.
+* `-e <arg>`: Operate on an enumerated value instead of the entire entry. Entries without that enumerated value are dropped.
+* `-sep <separator>`: The separator between key and value (default `=`). It can be more than one character, for example `-sep EQUALS`.
+* `-d <delimiters>`: The delimiter characters between pairs (default space and tab). Any one of the characters acts as a delimiter; for example, to use double quote, tab, and space, set `-d "\" \t"`.
+* `-dall <delimiter>`: Like `-d`, but the whole string is a single delimiter, for example `-dall ", "`. Can't be combined with `-d`.
+* `-s`: Strict mode. Drop the entry unless *all* extractions succeed.
+* `-q`: Strip surrounding double quotes from values, so `key="this is the value"` extracts `this is the value`. Quoted values may contain delimiters whether or not `-q` is set; without `-q` the quotes are kept in the extracted value.
+* `-noclean`: Don't skip whitespace around the separator. By default, both of these lines extract the same values; with `-noclean`, `x` from the first line is extracted as ` 1` and `y` and `foo` are not found, because whitespace before the separator is no longer allowed.
 
 ```
 x= 1 y = 2 z=3 foo    =  bar
 x=1 y=2 z=3 foo=bar
 ```
 
+A key only matches at the start of the data or right after a delimiter. An unquoted value that contains the separator is extracted as an empty string.
+
 ## Key renaming
 
-Extracted keys can be renamed by appending the directive `as <name>` immediately after a key.  For example, to extract the key "foo" into an enumerated value with the name "bar" the extraction directive would be `foo as bar`.  If no rename directive is provided the extracted values are given the name that matches the key.
+By default, each enumerated value is named after its key. To rename one, put `as <name>` after the key: `kv foo as bar` extracts `foo` into an enumerated value named `bar`.
 
 ## Filtering
 
-The kv module can filter based on string equality. If a filter is enabled that specifies equality ("equal", "not equal", "contains", "not contains") any entry that fails the filter specification on one or more extracted values will be dropped entirely.  If a key is specified as not equal "!=" and the key does not exist, the field is not extracted but the entry won't be dropped entirely (unless `-s` is set).
+The kv module can filter on string equality and substring matching. Entries that fail any filter are dropped. With `==` or `~`, entries that lack the key are dropped. With `!=` or `!~`, entries that lack the key are kept (unless `-s` is set) and nothing is extracted.
 
 | Operator | Name | Description |
 |----------|------|-------------|
@@ -63,7 +65,7 @@ Here's a sample of a log entry from a Fortigate firewall:
 date=2022-09-26 time=10:57:08 devname="fortigate" devid="FGT60EABCDEF012" eventtime=1664215028981468505 tz="-0700" logid="0100041001" type="event" subtype="system" level="critical" vd="root" logdesc="FortiGate update failed" status="update" msg="Fortigate scheduled update failed"
 ```
 
-It's nicely formatted, using the equals sign as the separator and spaces as delimiters, which are the defaults for the kv module. The following query will extract the devname, level, logdesc, and msg fields and show them in a table:
+It uses `=` as the separator and spaces as delimiters, the module defaults. Some values are quoted, so `-q` strips the quotes. This query extracts `devname`, `level`, `logdesc`, and `msg` and shows them in a table:
 
 ```gravwell
 tag=syslog kv -q devname level logdesc msg | table
@@ -71,7 +73,7 @@ tag=syslog kv -q devname level logdesc msg | table
 
 ![](fortigate1.png)
 
-This query will show only "critical" entries:
+This query shows only `critical` entries:
 
 ```gravwell
 tag=syslog kv -q devname level=="critical" logdesc msg | table
@@ -81,13 +83,13 @@ tag=syslog kv -q devname level=="critical" logdesc msg | table
 
 ### Changing the separator
 
-The separator can be set to any string of characters; for example, key-value pairs might look like this:
+The separator can be any string. For example, key-value pairs might look like this:
 
 ```
 x EQUALS 1 y EQUALS 2
 ```
 
-You could extract the value of 'y' using the following:
+To extract `y`:
 
 ```
 kv -sep EQUALS y

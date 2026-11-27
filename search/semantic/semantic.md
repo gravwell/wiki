@@ -43,7 +43,7 @@ The search phrase is a single string. Phrases containing spaces must be quoted.
 |------------------|--------------|-------------|
 | Score | `score` | Float in the range -1.0 to 1.0 giving the cosine similarity between the search phrase and the entry. Higher is more similar. |
 
-Only entries that meet or exceed the threshold receive a score, so every entry leaving `semantic` has a score at or above `-t` -- with the exception of entries passed through by `-p`, which have no score at all.
+Only entries that meet or exceed the threshold receive a score, so every entry leaving `semantic` has a score at or above `-t`. The exception is entries passed through by `-p`, which have no score.
 
 ## Entry Handling
 
@@ -56,7 +56,7 @@ Without `-p`, the module handles problem entries as follows:
 | Vector is not a valid JSON array of numbers | The query fails with an error |
 | Vector cannot be compared to the search vector, e.g. because it has a different number of dimensions | The query fails with an error |
 
-With `-p`, all four cases pass the entry down the pipeline unscored instead. This makes `-p` useful when only some of the data in a query carries embeddings, or when embeddings were generated inconsistently.
+With `-p`, entries with a missing, invalid, or incomparable vector pass down the pipeline unscored instead. Entries scoring below the threshold are still dropped. This makes `-p` useful when only some of the data in a query carries embeddings, or when embeddings were generated inconsistently.
 
 ## Choosing a Threshold
 
@@ -95,7 +95,7 @@ Embedding vectors can be large. A model producing 1024 dimensions yields an enum
 See [the configuration parameters documentation](/configuration/parameters) for the full `[AI]` section reference. These directives are independent of the `Enable` directive, which controls only [Logbot AI](/search/ai/ai) chat features; semantic search can be used with Logbot disabled.
 
 ```{attention}
-The model configured here must be the same model that generated the entries' embeddings at ingest time. Embeddings from different models are not comparable, and vectors of differing dimensions cannot be scored at all -- a mismatch will cause the query to fail (or, with `-p`, to pass every entry through unscored).
+The model configured here must be the same model that generated the entries' embeddings at ingest time. Embeddings from different models are not comparable, and vectors of differing dimensions cannot be scored at all. A mismatch causes the query to fail (or, with `-p`, passes every entry through unscored).
 ```
 
 Requests to the embedding endpoint are subject to a 10 second timeout. A single request is made per query when the query starts.

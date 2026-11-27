@@ -1,23 +1,27 @@
 # Split
 
-The split module lets you split the contents of an entry or enumerated value into multiple entries.
+Split breaks the contents of an entry or enumerated value on a delimiter and emits one entry per piece. Each new entry keeps the original's timestamp, tag, and other enumerated values.
 
 ## Supported Options
 
-Specifying a name following any options informs the split module that it should split the named enumerated value rather than the contents of the entry itself. Omitting a name will cause it to operate on the entry.
+```
+split [-d <delim>] [-clean] [<ev> ...]
+```
 
-* `-d <delim>`: specify the delimiter. This can be a single character such as a semicolon, or a string--even a string with spaces, provided you wrap it in quotes.
-* `-clean`: tells the module that after splitting the data, it should clean up tabs, spaces, and quote characters from the left and right ends of each string. Thus the entry containing `foo   ,'bar', baz` would be split into three entries containing `foo`, `bar`, and `baz`.
+Without enumerated value names, split operates on the entry data. With one or more names, it splits those enumerated values and leaves the entry data alone. When you name several, the pieces are paired up by position: the first new entry gets the first piece of each, the second gets the second piece of each, and so on. If one value has fewer pieces than another, the extra entries don't have that enumerated value. Entries missing any of the named enumerated values are dropped.
+
+* `-d <delim>`: The delimiter. The default is a comma. It can be a single character or a longer string; quote it if it contains spaces.
+* `-clean`: After splitting, trim spaces, tabs, and single and double quotes from both ends of each piece. With this flag, `foo   ,'bar', baz` splits into `foo`, `bar`, and `baz`.
 
 ## Example Usage
 
-For these examples, we will consider the following example entries:
+These examples use the following entries:
 
 ![](data.png)
 
 ### Basic splitting
 
-Specifying the split module with no additional arguments will split the entries based on the default delimiter, the comma:
+With no arguments, split breaks entries on commas:
 
 ```gravwell
 tag=default split
@@ -27,7 +31,7 @@ tag=default split
 
 ### Using the clean flag
 
-If we add the `-clean` flag, we note that trailing/leading quote marks and whitespace are eliminated:
+With `-clean`, leading and trailing quotes and whitespace are removed:
 
 ```gravwell
 tag=default split -clean
@@ -37,7 +41,7 @@ tag=default split -clean
 
 ### Specifying a delimiter
 
-Some of the entries contain spaces. We can split on that using the `-d` flag:
+To split on spaces instead, use `-d`:
 
 ```gravwell
 tag=default split -d " "
@@ -45,9 +49,9 @@ tag=default split -d " "
 
 ![](s3.png)
 
-Note that one entry, `a	b	c` was cleanly split into 3 entries because it had a tab between every field, while another entry, `"a",  b, c	,d'` was split into two because it contained a single tab character between 'c' and ','.
+The `a b c` entry splits into three entries. Entries with no space pass through unchanged as a single entry.
 
-We can also specify arbitrary strings to use as delimiters:
+The delimiter can be any string:
 
 ```gravwell
 tag=default split -d custom
@@ -57,11 +61,11 @@ tag=default split -d custom
 
 ## Example Usage with Enumerated Values
 
-For this example, we will use Apache webserver log entries.
+These examples use Apache webserver log entries.
 
 ![](ev.png)
 
-We can extract the 'useragent' field from the apache structure, then split it on commas:
+Extract the `useragent` field, then split it on commas:
 
 ```gravwell
 tag=apache ax useragent | split useragent | table useragent
@@ -69,7 +73,7 @@ tag=apache ax useragent | split useragent | table useragent
 
 ![](evdata.png)
 
-Note that the raw *contents* of the entries are not modified:
+The entry data is not modified:
 
 ```gravwell
 tag=apache ax useragent | split useragent | table useragent DATA

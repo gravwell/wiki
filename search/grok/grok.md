@@ -1,27 +1,44 @@
 # Grok
 
-The grok module allows you to extract data from complicated text structures without specifying the whole regular expression every time. Instead, grok assigns names to regular expressions, allowing the user to specify the name instead. Grok patterns may contain additional patterns nested within them, making it easy to build up new definitions. It pre-defines a selection of useful patterns, but can also read your own customized set of patterns from a [resource](/resources/resources).
+The `grok` module extracts data from text using named, reusable regular expressions called patterns. Instead of writing a full regular expression, you reference patterns by name, such as `%{IPV4:clientip}`. Patterns can nest other patterns, so complex definitions are built from simple ones. Grok ships with a base set of patterns, listed below, and can load your own from a [resource](/resources/resources).
 
-By default, grok passes through any entry which matches the pattern and drops any which does not. This behavior can be inverted with the `-v` flag.
+Only patterns given a name with the `%{PATTERN:name}` form are extracted as enumerated values. In `%{IPV4} %{WORD:verb}`, the IPv4 address must match but only `verb` is extracted.
 
-Grok is a filtering module; after specifying the desired pattern, you may also specify a list of filters to apply to the extracted fields.
+Entries that match are passed and entries that do not are dropped. The `-v` flag inverts this.
 
 ```{note}
-Because some filters incorporate extremely strict and complex patterns, they can be relatively slow when processing large numbers of entries. Use modules such as [grep](/search/grep/grep), [regex](/search/regex/regex), and [words](/search/words/words) to pre-filter as much as possible.
+Some patterns are strict and complex, so they can be slow over large numbers of entries. Use modules such as [grep](/search/grep/grep), [regex](/search/regex/regex), and [words](/search/words/words) to pre-filter as much as possible.
 ```
+
+## Syntax
+
+```
+grok [flags] <pattern> [filters]
+```
+
+The pattern is unescaped like any other quoted string, so backslash escapes inside double quotes are consumed by the query parser: `"\s"` reaches grok as `s`. Wrap patterns that contain backslashes in backticks instead, as in the second example under Performance.
 
 ## Supported Options
 
-* `-e <arg>`: Operate on the specified enumerated value instead of the entire record.
-* `-r <resource>`: load custom grok patterns from the resource with the specified name, rather than the default `grok` resource.
-* `-v`: Operate in inverse mode; entries which do *not* match the pattern will be passed, and entries which *do* match will be dropped. You cannot specify any filters when using this flag.
-* `-p`: The "-p" option tells grok to allow entries through if the expression does not match at all.  The permissive flag does not change the operation of filters.
+* `-e <arg>`: Operate on the specified enumerated value instead of the entry data. Entries without the enumerated value are dropped.
+* `-r <resource>`: Load custom patterns from the named resource. Without `-r`, grok loads the resource named `grok` if it exists.
+* `-v`: Inverse mode. Pass entries that do *not* match the pattern and drop entries that do. Cannot be combined with `-p` or with filters.
+* `-p`: Permissive mode. Pass entries that do not match. Entries that match are still subject to filters.
+
+### Custom Patterns
+
+A pattern resource holds one definition per line: an upper-case name, whitespace, then the pattern. Blank lines and lines starting with `#` are ignored. Custom definitions are added to the built-in set and replace any built-in pattern with the same name.
+
+```
+APACHEVERB [A-Z]+
+APACHEREQ "%{APACHEVERB:verb} %{NOTSPACE:request}
+```
+
+Gravwell publishes a large pattern set on [GitHub](https://raw.githubusercontent.com/gravwell/resources/master/grok/all.grok). Upload it as a resource named `grok` to make its patterns available in every grok query.
 
 ### Parse Apache Logs
 
-The following query takes advantage of a resource to implement a complex pattern to strictly process Apache2.0 combined access logs.  The `COMBINEDAPACHELOG` pattern is part of the very large pattern set provided by Gravwell on [github](https://raw.githubusercontent.com/gravwell/resources/master/grok/all.grok).  Download the pattern set and upload it as a resource name `grok` to gain access to a massive suite of predefined grok patterns.
-
-The following query finds all Apache logs for "GET" requests and parses them out into their components:
+The `COMBINEDAPACHELOG` pattern from Gravwell's published pattern set strictly parses Apache 2.0 combined access logs. The following query finds Apache logs for "GET" requests and parses them into their components:
 
 ```gravwell
 tag=apache words GET | grok "%{COMBINEDAPACHELOG}" | table
@@ -30,12 +47,14 @@ tag=apache words GET | grok "%{COMBINEDAPACHELOG}" | table
 ![](apache.png)
 
 ```{note}
-This query may take some time if you have millions of entries since the COMBINEDAPACHELOG pattern is complex and very strict.
+This query may take some time over millions of entries, because `COMBINEDAPACHELOG` is complex and strict.
 ```
 
 ### Filtering
 
-We can build on the previous query to return only those entries whose "clientip" field matches a particular IP and uses the GET method:
+Filters can be applied to any named field in the pattern, using `==`, `!=`, `~` (contains), and `!~` (does not contain). An entry that fails any filter is dropped. Naming a field that is not in the pattern is an error.
+
+Building on the previous query, the following returns only GET requests from a particular client IP:
 
 ```gravwell
 tag=apache words GET | grok "%{COMBINEDAPACHELOG}" clientip=="10.200.4.40" verb==GET | table clientip
@@ -44,48 +63,48 @@ tag=apache words GET | grok "%{COMBINEDAPACHELOG}" clientip=="10.200.4.40" verb=
 ![](apache-filter.png)
 
 ```{note}
-We filter for PUT and the IP using the words module to engage indexing and reduce the number of entries that are processed by the expensive `COMBINEDAPACHELOG` grok pattern.
+`words GET` uses the index to reduce the number of entries the expensive `COMBINEDAPACHELOG` pattern has to process.
 ```
 
 ## Performance
 
-Grok can dramatically simplify complicated regular expressions and allow mere mortals to crack apart large log fragments.  However, a grok pattern designed to extract and validate every field in a log is going to be complex and slow.  If you don't need every field, consider using fragments and primitives.  A smaller grok pattern that only extracts a few items can be dramatically faster than a complete pattern that extracts everything.
+A grok pattern that extracts and validates every field in a log is complex and slow. If you only need a few fields, a small pattern built from primitives can be dramatically faster.
 
-For example, let's look at two queries that compile response code counts for each HTTP method and display them in a stackgraph. The first query uses grok with the `COMBINEDAPACHELOG` pattern for a very simple query:
+For example, both of the following queries count response codes for each HTTP method and display them in a stackgraph. The first uses `COMBINEDAPACHELOG`:
 
 ```gravwell
 tag=apache grok "%{COMBINEDAPACHELOG}" | stats count by verb response | stackgraph verb response count
 ```
 
-The second query uses grok primitives to extract only the fields that are explicitly needed:
+The second uses primitives to extract only the fields it needs:
 
 ```gravwell
-tag=apache grok "] \"%{WORD:verb}\s\S+\s\S+\s%{POSINT:response}" | stats count by verb response | stackgraph verb response count
+tag=apache grok `] "%{WORD:verb}\s\S+\s\S+\s%{POSINT:response}` | stats count by verb response | stackgraph verb response count
 ```
 
 Both queries produce identical results:
 
 ![](apachestackgraph.png)
 
-However, to process 10M Apache access logs the first query took `2m 39s`.  The second query took only `3.46s`, that is over a 45X speedup.  So while the simpler query looks great, it can be worth your time to work with primitive patterns when working on large data sets.
+Over 10M Apache access logs, the first query took `2m 39s` and the second took `3.46s`, a speedup of more than 45x.
 
 ## Pre-defined Patterns
 
-The Grok module provides a base set of predefined patterns that are ready for use.  These base patterns cover basic data types and are generally very strict about what they will and will not accept, for a large set of patterns designed to handle entire log sets see our the published resource on [github](https://raw.githubusercontent.com/gravwell/resources/master/grok/all.grok)
+Grok includes the following base patterns. They cover basic data types and are generally strict about what they accept. For patterns that handle entire log formats, see the [published pattern set](https://raw.githubusercontent.com/gravwell/resources/master/grok/all.grok).
 
 | Pattern Name | Substitution Pattern                                                                               |
 | ------------ | -------------------------------------------------------------------------------------------------- |
 | USERNAME | `[a-zA-Z0-9._-]+` |
 | USER | `%{USERNAME}` |
 | EMAILLOCALPART | `[a-zA-Z][a-zA-Z0-9_.+-=:]+` |
-| HOSTNAME | `\b[0-9A-Za-z][0-9A-Za-z-]{0,62}(?:\.[0-9A-Za-z][0-9A-Za-z-]{0,62})*(\.?&#124;\b)` |
+| HOSTNAME | `\b[0-9A-Za-z][0-9A-Za-z-]{0,62}(?:\.[0-9A-Za-z][0-9A-Za-z-]{0,62})*(\.?\|\b)` |
 | EMAILADDRESS | `%{EMAILLOCALPART}@%{HOSTNAME}` |
-| HTTPDUSER | `%{EMAILADDRESS}&#124;%{USER}` |
+| HTTPDUSER | `%{EMAILADDRESS}\|%{USER}` |
 | INT | `[+-]?(?:[0-9]+)` |
-| BASE10NUM | `[+-]?(?:(?:[0-9]+(?:\.[0-9]+)?)&#124;(?:\.[0-9]+))` |
+| BASE10NUM | `[+-]?(?:(?:[0-9]+(?:\.[0-9]+)?)\|(?:\.[0-9]+))` |
 | NUMBER | `%{BASE10NUM}` |
 | BASE16NUM | `[+-]?(?:0x)?(?:[0-9A-Fa-f]+)` |
-| BASE16FLOAT | `\b[+-]?(?:0x)?(?:(?:[0-9A-Fa-f]+(?:\.[0-9A-Fa-f]*)?)&#124;(?:\.[0-9A-Fa-f]+))\b` |
+| BASE16FLOAT | `\b[+-]?(?:0x)?(?:(?:[0-9A-Fa-f]+(?:\.[0-9A-Fa-f]*)?)\|(?:\.[0-9A-Fa-f]+))\b` |
 | POSINT | `\b[1-9][0-9]*\b` |
 | NONNEGINT | `\b[0-9]+\b` |
 | WORD | `\b\w+\b` |
@@ -93,35 +112,35 @@ The Grok module provides a base set of predefined patterns that are ready for us
 | SPACE | `\s*` |
 | DATA | `.*?` |
 | GREEDYDATA | `.*` |
-| QUOTEDSTRING | ``("(\\.&#124;[^\\"]+)+")&#124;""&#124;('(\\.&#124;[^\\']+)+')&#124;''&#124;(`(\\.|[^\\`]+)+`)|`` |
+| QUOTEDSTRING | ``` ("(\\.\|[^\\"]+)+")\|""\|('(\\.\|[^\\']+)+')\|''\|(`(\\.\|[^\\`]+)+`)\|`` ``` |
 | UUID | `[A-Fa-f0-9]{8}-(?:[A-Fa-f0-9]{4}-){3}[A-Fa-f0-9]{12}` |
-| UNIXPATH | `(/([\w_%!$@:.,~-]+&#124;\\.)*)+` |
-| TTY | `/dev/(pts&#124;tty([pq])?)(\w+)?/?(?:[0-9]+)` |
-| WINPATH | `(?:[A-Za-z]+:&#124;\\)(?:\\[^\\?*]*)+` |
-| PATH | `%{UNIXPATH}&#124;%{WINPATH}` |
+| UNIXPATH | `(/([\w_%!$@:.,~-]+\|\\.)*)+` |
+| TTY | `/dev/(pts\|tty([pq])?)(\w+)?/?(?:[0-9]+)` |
+| WINPATH | `(?:[A-Za-z]+:\|\\)(?:\\[^\\?*]*)+` |
+| PATH | `%{UNIXPATH}\|%{WINPATH}` |
 | URIPROTO | `[A-Za-z]+(\+[A-Za-z+]+)?` |
 | URIHOST | `%{IPORHOST}(?::%{POSINT:port})?` |
 | URIPATH | `(?:/[A-Za-z0-9$.+!*'(){},~:;=@#%_\-]*)+` |
-| URIPARAM | `\?[A-Za-z0-9$.+!*'&#124;(){},~@#%&/=:;_?\-\[\]<>]*` |
+| URIPARAM | `\?[A-Za-z0-9$.+!*'\|(){},~@#%&/=:;_?\-\[\]<>]*` |
 | URIPATHPARAM | `%{URIPATH}(?:%{URIPARAM})?` |
 | URI | `%{URIPROTO}://(?:%{USER}(?::[^@]*)?@)?(?:%{URIHOST})?(?:%{URIPATHPARAM})?` |
-| MONTH | `\bJan(?:uary&#124;uar)?&#124;Feb(?:ruary&#124;ruar)?&#124;M(?:a&#124;ä)?r(?:ch&#124;z)?&#124;Apr(?:il)?&#124;Ma(?:y&#124;i)?&#124;Jun(?:e&#124;i)?&#124;Jul(?:y)?&#124;Aug(?:ust)?&#124;Sep(?:tember)?&#124;O(?:c&#124;k)?t(?:ober)?&#124;Nov(?:ember)?&#124;De(?:c&#124;z)(?:ember)?\b` |
-| MONTHNUM | `0?[1-9]&#124;1[0-2]` |
-| MONTHNUM2 | `0[1-9]&#124;1[0-2]` |
-| MONTHDAY | `(?:0[1-9])&#124;(?:[12][0-9])&#124;(?:3[01])&#124;[1-9]` |
-| DAY | `Mon(?:day)?&#124;Tue(?:sday)?&#124;Wed(?:nesday)?&#124;Thu(?:rsday)?&#124;Fri(?:day)?&#124;Sat(?:urday)?&#124;Sun(?:day)?` |
+| MONTH | `\bJan(?:uary\|uar)?\|Feb(?:ruary\|ruar)?\|M(?:a\|ä)?r(?:ch\|z)?\|Apr(?:il)?\|Ma(?:y\|i)?\|Jun(?:e\|i)?\|Jul(?:y)?\|Aug(?:ust)?\|Sep(?:tember)?\|O(?:c\|k)?t(?:ober)?\|Nov(?:ember)?\|De(?:c\|z)(?:ember)?\b` |
+| MONTHNUM | `0?[1-9]\|1[0-2]` |
+| MONTHNUM2 | `0[1-9]\|1[0-2]` |
+| MONTHDAY | `(?:0[1-9])\|(?:[12][0-9])\|(?:3[01])\|[1-9]` |
+| DAY | `Mon(?:day)?\|Tue(?:sday)?\|Wed(?:nesday)?\|Thu(?:rsday)?\|Fri(?:day)?\|Sat(?:urday)?\|Sun(?:day)?` |
 | YEAR | `(?:\d\d){1,2}` |
-| HOUR | `2[0123]&#124;[01]?[0-9]` |
+| HOUR | `2[0123]\|[01]?[0-9]` |
 | MINUTE | `[0-5][0-9]` |
-| SECOND | `(?:[0-5]?[0-9]&#124;60)(?:[:.,][0-9]+)?` |
+| SECOND | `(?:[0-5]?[0-9]\|60)(?:[:.,][0-9]+)?` |
 | TIME | `%{HOUR}:%{MINUTE}:%{SECOND}` |
 | DATE_US | `%{MONTHNUM}[/-]%{MONTHDAY}[/-]%{YEAR}` |
 | DATE_EU | `%{MONTHDAY}[./-]%{MONTHNUM}[./-]%{YEAR}` |
 | DATE_X | `%{YEAR}/%{MONTHNUM2}/%{MONTHDAY}` |
-| ISO8601_TIMEZONE | `Z&#124;[+-]%{HOUR}(?::?%{MINUTE})` |
-| ISO8601_SECOND | `%{SECOND}&#124;60` |
+| ISO8601_TIMEZONE | `Z\|[+-]%{HOUR}(?::?%{MINUTE})` |
+| ISO8601_SECOND | `%{SECOND}\|60` |
 | TIMESTAMP_ISO8601 | `%{YEAR}-%{MONTHNUM}-%{MONTHDAY}[T ]%{HOUR}:?%{MINUTE}(?::?%{SECOND})?%{ISO8601_TIMEZONE}?` |
-| DATE | `%{DATE_US}&#124;%{DATE_EU}&#124;%{DATE_X}` |
+| DATE | `%{DATE_US}\|%{DATE_EU}\|%{DATE_X}` |
 | DATESTAMP | `%{DATE}[- ]%{TIME}` |
 | TZ | `[A-Z]{3}` |
 | NUMTZ | `[+-]\d{4}` |
@@ -139,19 +158,19 @@ The Grok module provides a base set of predefined patterns that are ready for us
 | RFC1123Z | `%{DAY}, [0-3]\d %{MONTH} %{YEAR} %{TIME} %{NUMTZ}` |
 | RFC3339 | `%{YEAR}-[01]\d-[0-3]\dT%{TIME}%{ISO8601_TIMEZONE}` |
 | RFC3339NANO | `%{YEAR}-[01]\d-[0-3]\dT%{TIME}\.\d{9}%{ISO8601_TIMEZONE}` |
-| KITCHEN | `\d{1,2}:\d{2}(AM&#124;PM&#124;am&#124;pm)` |
+| KITCHEN | `\d{1,2}:\d{2}(AM\|PM\|am\|pm)` |
 | SYSLOGTIMESTAMP | `%{MONTH} +%{MONTHDAY} %{TIME}` |
-| LOGLEVEL | `[Aa]lert&#124;ALERT&#124;[Tt]race&#124;TRACE&#124;[Dd]ebug&#124;DEBUG&#124;[Nn]otice&#124;NOTICE&#124;[Ii]nfo&#124;INFO&#124;[Ww]arn?(?:ing)?&#124;WARN?(?:ING)?&#124;[Ee]rr?(?:or)?&#124;ERR?(?:OR)?&#124;[Cc]rit?(?:ical)?&#124;CRIT?(?:ICAL)?&#124;[Ff]atal&#124;FATAL&#124;[Ss]evere&#124;SEVERE&#124;EMERG(?:ENCY)?&#124;[Ee]merg(?:ency)?` |
+| LOGLEVEL | `[Aa]lert\|ALERT\|[Tt]race\|TRACE\|[Dd]ebug\|DEBUG\|[Nn]otice\|NOTICE\|[Ii]nfo\|INFO\|[Ww]arn?(?:ing)?\|WARN?(?:ING)?\|[Ee]rr?(?:or)?\|ERR?(?:OR)?\|[Cc]rit?(?:ical)?\|CRIT?(?:ICAL)?\|[Ff]atal\|FATAL\|[Ss]evere\|SEVERE\|EMERG(?:ENCY)?\|[Ee]merg(?:ency)?` |
 | QS | `%{QUOTEDSTRING}` |
 | NQS | `[^"]*` |
 | PROG | `[\x21-\x5a\x5c\x5e-\x7e]+` |
 | CISCOMAC | `(?:[A-Fa-f0-9]{4}\.){2}[A-Fa-f0-9]{4}` |
 | WINDOWSMAC | `(?:[A-Fa-f0-9]{2}-){5}[A-Fa-f0-9]{2}` |
 | COMMONMAC | `(?:[A-Fa-f0-9]{2}:){5}[A-Fa-f0-9]{2}` |
-| MAC | `%{CISCOMAC}&#124;%{WINDOWSMAC}&#124;%{COMMONMAC}` |
-| IPV4 | `(?:(?:25[0-5]&#124;2[0-4][0-9]&#124;[01]?[0-9][0-9]?)\.){3}(?:25[0-5]&#124;2[0-4][0-9]&#124;[01]?[0-9][0-9]?)` |
-| IPV6 | `((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}&#124;:))&#124;(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}&#124;((25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)(\.(25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)){3})&#124;:))&#124;(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})&#124;:((25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)(\.(25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)){3})&#124;:))&#124;(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})&#124;((:[0-9A-Fa-f]{1,4})?:((25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)(\.(25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)){3}))&#124;:))&#124;(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})&#124;((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)(\.(25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)){3}))&#124;:))&#124;(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})&#124;((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)(\.(25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)){3}))&#124;:))&#124;(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})&#124;((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)(\.(25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)){3}))&#124;:))&#124;(:(((:[0-9A-Fa-f]{1,4}){1,7})&#124;((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)(\.(25[0-5]&#124;2[0-4]\d&#124;1\d\d&#124;[1-9]?\d)){3}))&#124;:)))(%.+)?` |
-| IP | `%{IPV6}&#124;%{IPV4}` |
-| IPORHOST | `%{IP}&#124;%{HOSTNAME}` |
+| MAC | `%{CISCOMAC}\|%{WINDOWSMAC}\|%{COMMONMAC}` |
+| IPV4 | `(?:(?:25[0-5]\|2[0-4][0-9]\|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]\|2[0-4][0-9]\|[01]?[0-9][0-9]?)` |
+| IPV6 | `((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}\|:))\|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}\|((25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)(\.(25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)){3})\|:))\|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})\|:((25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)(\.(25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)){3})\|:))\|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})\|((:[0-9A-Fa-f]{1,4})?:((25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)(\.(25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)){3}))\|:))\|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})\|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)(\.(25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)){3}))\|:))\|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})\|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)(\.(25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)){3}))\|:))\|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})\|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)(\.(25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)){3}))\|:))\|(:(((:[0-9A-Fa-f]{1,4}){1,7})\|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)(\.(25[0-5]\|2[0-4]\d\|1\d\d\|[1-9]?\d)){3}))\|:)))(%.+)?` |
+| IP | `%{IPV6}\|%{IPV4}` |
+| IPORHOST | `%{IP}\|%{HOSTNAME}` |
 | HOSTPORT | `%{IPORHOST}:%{POSINT}` |
 | HTTPDATE | `%{MONTHDAY}/%{MONTH}/%{YEAR}:%{TIME} %{INT}` |

@@ -1,20 +1,20 @@
 # Entropy
 
-The `entropy` module calculates the entropy of field values over time. Specifying `entropy` without any arguments will generate the entropy of all entries DATA fields across the search range. The `entropy` module supports temporal search mode allowing for charting of entropy over time. `entropy` can also operate on enumerated values and group by enumerated values. Output values are between 0 and 1.
+The `entropy` module calculates the byte entropy of data, normalized to a value between 0 and 1, and stores it in an enumerated value named `entropy`. With no arguments, it calculates the entropy of all entries' DATA fields across the search range. It can instead operate on an enumerated value, group by enumerated values, and supports temporal search mode, so entropy can be charted over time.
 
-Syntax: 
+Syntax:
 
 ```
-entropy [enumerated value] [by ...] [over <duration>]
+entropy [-p] [enumerated value] [by ...] [over <duration>]
 ```
 
-The `entropy` module syntax can take an enumerated value name to calculate entropy over. If none is specified, `entropy` will calculate entropy over the entire DATA field. The module also supports specifying one or more arguments to group by, using the `by` keyword. For example, to calculate entropy on the enumerated value `foo`, grouped by `bar` and `baz`:
+The optional enumerated value names the data to measure; without it, `entropy` uses the DATA field. Entries that lack the named enumerated value are ignored. To group results, list one or more enumerated values after the `by` keyword. For example, to calculate entropy on the enumerated value `foo`, grouped by `bar` and `baz`:
 
 ```gravwell
 tag=gravwell entropy foo by bar baz
 ```
 
-Queries can be temporally grouped over arbitrary time windows using the `over` keyword:
+The `over` keyword groups results into time windows of the given duration:
 
 ```gravwell
 tag=gravwell entropy over 10m
@@ -24,7 +24,7 @@ All arguments are optional.
 
 ## Supported Options
 
-`entropy` has no flags.
+* `-p`: Calculate entropy for each entry individually rather than across many entries. Each entry passes through with its own `entropy` value attached; entries that lack the named enumerated value are dropped. `by` is ignored in this mode.
 
 ## Examples
 
@@ -34,8 +34,14 @@ This query calculates and charts the entropy of TCP packet payloads based on por
 tag=pcap packet tcp.Port tcp.Payload | entropy Payload by Port | chart entropy by Port
 ```
 
-An example query which calculates the entropy of URLS by host and sorts the list based on highest entropy value:
+This query calculates the entropy of URLs by host and lists the results:
 
 ```gravwell
 tag=pcap packet tcp.Port==80 ipv4.IP !~ 10.0.0.0/8 tcp.Payload | grep -e Payload GET PUT HEAD POST | regex -e Payload "[A-Z]+\s(?P<url>\S+)\sHTTP\/" | entropy url by IP | table IP entropy
+```
+
+This query attaches the entropy of each entry's DATA field and keeps only high-entropy entries:
+
+```gravwell
+tag=gravwell entropy -p | eval entropy > 0.7
 ```

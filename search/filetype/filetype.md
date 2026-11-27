@@ -1,16 +1,17 @@
 # Filetype
 
-The `filetype` module is used to fingerprint a number of filetypes, and put that filetype into a named enumerated value. The underlying filetypes must be in their native format (such as an entry that is a raw JPEG). 
+The `filetype` module identifies the file type of binary data, such as an entry that contains a raw JPEG, and stores its MIME type in a named enumerated value. The data must be in its native format; the module matches on the leading "magic" bytes.
 
 ## Supported Options
 
-* `-e`: Use an enumerated value instead of the DATA field.
+* `-e <arg>`: Read the data from the named enumerated value instead of the DATA field. Entries without that enumerated value are dropped.
+* `-s`: Drop entries whose type cannot be identified.
 
 ## Usage
 
-The `filetype` module requires that a single argument be provided which specifies the output enumerated value name to be populated with the MIME type value.  If the `filetype` module cannot identify a suitable MIME type for the given value the enumerated value will not be produced.
+`filetype` takes one argument: the name of the enumerated value to populate with the MIME type. If the type cannot be identified, the enumerated value is not created and the entry is passed through unchanged, unless `-s` is set.
 
-`filetype` does inline filtering using the standard string filter types.  Filters can cause entries to be dropped if a the filter explicitly forbids a value or if the filter requires a value but the MIME type cannot be resolved.
+`filetype` supports inline filtering on the MIME type with the standard string filter operators. Entries whose identified type fails the filter are dropped. Entries whose type cannot be identified are not filtered; use `-s` to drop them as well.
 
 The supported filter operators are:
 
@@ -20,7 +21,6 @@ The supported filter operators are:
 | != | Not equal |
 | ~ | Subset |
 | !~ | Not subset |
-
 
 ## Supported Types
 
@@ -32,6 +32,7 @@ The supported filter operators are:
 * webp - image/webp
 * cr2 - image/x-canon-cr2
 * tif - image/tiff
+* jp2 - image/jp2
 * bmp - image/bmp
 * heif - image/heif
 * jxr - image/vnd.ms-photo
@@ -56,7 +57,7 @@ The supported filter operators are:
 
 * mid - audio/midi
 * mp3 - audio/mpeg
-* m4a - audio/mp4
+* m4a - audio/m4a
 * ogg - audio/ogg
 * flac - audio/x-flac
 * wav - audio/x-wav
@@ -74,7 +75,7 @@ The supported filter operators are:
 * bz2 - application/x-bzip2
 * 7z - application/x-7z-compressed
 * xz - application/x-xz
-* zstd - application/zstd
+* zst - application/zstd
 * pdf - application/pdf
 * exe - application/vnd.microsoft.portable-executable
 * swf - application/x-shockwave-flash
@@ -93,6 +94,7 @@ The supported filter operators are:
 * rpm - application/x-rpm
 * elf - application/x-executable
 * dcm - application/dicom
+* macho - application/x-mach-binary
 
 ### Documents
 
@@ -118,7 +120,7 @@ The supported filter operators are:
 
 ## Example
 
-This example uses the `filetype` module to list the image types in the "images" tag. It additionally filters to display just images.
+This example lists the MIME types of entries in the "images" tag and drops entries identified as anything other than an image:
 
 ```gravwell
 tag=images filetype type~image | table

@@ -1,20 +1,20 @@
 # Words
 
-Words is a simple text matching engine that searches for a text word that is delimited by split characters.  The words module is functionally equivalent to `grep -s -w` and is designed to interact with the fulltext accelerator.  Words supports UTF8 character encoding and will normally behave well with binary data, this means it is possible to look for the word "foo" in a pcap stream.  However, it is important to understand how the words module breaks on word boundaries.  If the word `foo` is adjacent to the byte 0x44 in a binary data stream the words module will identify the word as `Dfoo` and will not match the query term `foo`.  Words is a great first level filter when operating on unknown data.
+Words matches whole words, as delimited by split characters. By default it behaves like `grep -s -w`, and it is designed to use the fulltext accelerator. Words handles UTF-8 and usually behaves well with binary data, so you can look for the word "foo" in a pcap stream. Watch the word boundaries, though: if `foo` is next to the byte 0x44 (`D`) in binary data, the word is `Dfoo` and won't match `foo`. Words is a good first-level filter on unknown data.
 
-The words module does not support wildcards, if you need word matching with wildcard support check out the [grep](/search/grep/grep) module using the `-w` flag.
+Words does not support wildcards.
 
-The `words` module allows multiple patterns to be specified and defaults to as strict mode, this means that every pattern must match for the entry to be passed down the pipeline.  If you need an `any` matching behavior the `-or` flag specifies that if any word matches the entry will be passed down the pipeline.  The `words` module also supports an inverted logic so that you can search for entries that do not contain words.
+You can give multiple words. By default every word must match for the entry to pass. With `-or`, the entry passes if any word matches. With `-v`, the logic is inverted.
 
 ## Supported options
 
-* `-v`: “Inverse” match. For instance, `words -v bar` would drop any records containing the word “bar” and pass on any records that do not contain the word “bar”, if there are multiple words specified all words must not exist in the entry.
-* `-e <arg>`: Operate on an enumerated value instead of on the entire record. For example, a pipeline that showed packets that contain HTTP text but aren’t destined for port 80 would be `tag=pcap packet ipv4.DstPort!=80 tcp.Payload | words -e Payload GET HTTP 1.1"`
-* `-or`: Any match.  If any pattern matches pass the entry on, when combined with the negate flag drop any entry that has a missing word.
+* `-v`: Invert the match. `words -v bar` drops entries containing the word "bar" and passes the rest. With multiple words, `-v` drops only entries that contain *all* of them; combine it with `-or` to drop entries that contain *any* of them.
+* `-e <arg>`: Match against an enumerated value instead of the entire entry. Entries without that enumerated value are dropped, even with `-v`. For example, to find HTTP requests in packets not destined for port 80: `tag=pcap packet tcp.DstPort!=80 tcp.Payload | words -e Payload GET HTTP 1.1`
+* `-or`: Pass the entry if any word matches. With `-v`, drop the entry if any word matches.
 
 ## Parameter Structure
 ```
-words <argument list> <search parameter>
+words <argument list> <word> [<word> ...]
 ```
 
 ## Example Search
@@ -25,19 +25,19 @@ To find any Apache logs containing the words `Mozilla` and `Firefox`:
 tag=apache words Mozilla Firefox
 ```
 
-To find packets destined for port 80 whose payloads DO NOT contain the words HTTP or 1.1:
+To find port 80 packets whose payloads contain neither the word HTTP nor 1.1:
 
 ```gravwell
-tag=pcap packet tcp.Port==80 tcp.Payload | words -e Payload -v HTTP 1.1
+tag=pcap packet tcp.Port==80 tcp.Payload | words -e Payload -v -or HTTP 1.1
 ```
 
-Match any Reddit post which contains words `Gravwell` or `gravwell`:
+Match any Reddit post containing the word `Gravwell` or `gravwell`:
 
 ```gravwell
 tag=reddit json Body | words -e Body -or Gravwell gravwell
 ```
 
-Grab only user agents that contain Mozilla and Windows
+Keep only entries containing both Mozilla and Windows:
 
 ```gravwell
 tag=apache words Mozilla Windows
@@ -46,17 +46,15 @@ tag=apache words Mozilla Windows
 (working-with-word-matches-target)=
 ## Working With Word Matches
 
-The word match system is designed to match complete words, using the exact same word-breaking rules as the [fulltext accelerator](#fulltext-word-extraction-target). A query word matches only when it appears in the data bounded on both sides by a split character (or the start/end of the data). Most punctuation is a split character, but a handful of characters — `.` (period), `:` (colon), `-` (hyphen), `_` (underscore), and `@` (at sign) — are treated as part of a word. This is what allows IP addresses, decimals, hostnames, and email addresses to be matched as single words. Leading and trailing `.`, `:`, `;`, and `-` are trimmed from a word, so a sentence-ending period does not prevent a match.
+The word match system is designed to match complete words, using the exact same word-breaking rules as the [fulltext accelerator](#fulltext-word-extraction-target). A query word matches only when it appears in the data bounded on both sides by a split character (or the start/end of the data). Most punctuation is a split character, but `.` (period), `:` (colon), `-` (hyphen), `_` (underscore), and `@` (at sign) are treated as part of a word. This is what allows IP addresses, decimals, hostnames, and email addresses to be matched as single words. Leading and trailing `.`, `:`, `;`, and `-` are trimmed from a word, so a sentence-ending period does not prevent a match.
 
 The words module cannot match a *substring* of a word. Because `.` and `:` are not split characters, `192.168.1.100:8080` is a single word; a search for `192.168.1.100` will NOT match it. For substring matching, see the [grep module](/search/grep/grep). For a complete list of split and trim characters, see the [fulltext word extraction](#fulltext-word-extraction-target) documentation.
 
-Words is designed to create some additional specificity when selecting values, lets look at some example data to see what will and will not match.
+Consider this entry:
 
 ```
 16.246.30.72 - - [08/May/2017:15:20:35 -0600] "DELETE /search/tag/list HTTP/1.0" 200 5032 "http://nguyen.biz/category/tags/tag/home.htm" "Opera/8.74.(Windows 98; Win 9x 4.90; it-IT) Presto/2.9.173 Version/11.00"
 ```
-
-Lets look at a few invocations of `words` to see what would and would not match:
 
 | Words Invocation | MATCHES | Explanation |
 |-----------------|---------|-------------|

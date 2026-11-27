@@ -1,10 +1,14 @@
 # Hexlify
 
-The hexlify module is used to encode a data into ASCII hex representations.  The module can be useful when tackling unknown data types and learning how to process binary data.  For example, one might encode an unknown enumerated value extracted from canbus data.  Most manufacturers do not publish canbus specs, but by extracting from IDs and encoding it in hex it can assist in identifying values that are changing in predictable patterns, helping to identify parameters.  This is exactly how the Gravwell team derived the PDUs for gas level, speed, and throttle position of a RAM 1500 truck without having access to canbus IDs from Fiat Chrysler of America.
+The `hexlify` module encodes data as ASCII hex, or decodes ASCII hex with `-d`. Viewing unknown binary data as hex can help reveal its structure. For example, hex-encoding CAN bus payloads makes it easier to spot bytes that change in predictable patterns, such as speed or throttle position.
+
+With no arguments, `hexlify` converts the entry data in place. Given one or more enumerated value names, it converts each one in place, or writes the result to a new enumerated value when followed by `as <name>`. Enumerated values are encoded from their raw bytes, so non-string types such as integers produce the hex of their internal binary form. Results stored in enumerated values are strings.
+
+Entries missing any of the listed enumerated values are dropped.
 
 ## Supported Options
 
-* `-d`: Decode ASCII hex into an integer, rather than encoding an int as ASCII hex.
+* `-d`: Decode ASCII hex back into raw bytes rather than encoding. Entries whose value is not valid hex, including hex with an odd number of digits, are dropped.
 
 ## Examples
 
@@ -14,10 +18,10 @@ The hexlify module is used to encode a data into ASCII hex representations.  The
 tag=stuff hexlify
 ```
 
-### Search to hexlify a single enumerated value	
+### Search to hexlify a single enumerated value
 
 ```gravwell
-tag=CAN canbus ID Data | hexlify Data | table ID Data
+tag=CAN canbus ID data | hexlify data | table ID data
 ```
 
 ### Search to hexlify all data and assign to a new name
@@ -29,7 +33,7 @@ tag=stuff hexlify DATA as hexdata | table DATA hexdata
 ### Search to hexlify a few enumerated values with reassignment
 
 ```gravwell
-tag=CAN canbus ID Data | hexlify ID as hexid Data as hexdata | table ID hexid DATA hexdata
+tag=CAN canbus ID data | hexlify ID as hexid data as hexdata | table ID hexid data hexdata
 ```
 
 ### Decoding hex data

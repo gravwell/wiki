@@ -1,62 +1,63 @@
 # Search Extraction Modules
 
-Gravwell is a structure-on-read data lake, and these are the modules that add that structure. This is where the power and flexibility of the platform can be seen, as information about data doesn't need to be known before collection. Instead, we can ingest the raw data and perform the extractions at search time which gives tremendous flexibility to search operations.
+Gravwell is a structure-on-read data lake, and extraction modules add that structure. You don't need to know the shape of your data when you collect it: ingest it raw and extract fields at search time.
 
-Extraction modules are often the first module in a search. Netflow data, as an example, sits in it's native binary format on disk and any searches looking to operate on that data will be using the netflow extraction module as a first module in the analysis pipeline to do extraction and basic filtering. While you *could* do filtering before the `netflow` extraction module using modules like `grep`, that is unlikely to be effective.
+Extraction modules are often the first module in a search. Netflow data, for example, sits on disk in its native binary format, so searches over it typically start with the `netflow` module to extract fields and do basic filtering. You *could* filter with a module like `grep` before `netflow`, but that is unlikely to be effective.
 
-Search extraction modules extract fields from data which "ride along" with the raw data through the rest of the search pipeline. Any extracted data/fields/properties become Enumerated Values which exist alongside an entry for use by following modules in a pipeline. For example, a search using the module sequence `netflow Src | subnet Src /16 as srcsub | grep -e srcsub "10.1.0.0"` will extract the Src IP address from the raw netflow record, extract the /16 subnet from the Src IP address, and then filter based on the extracted subnet using grep. In this example, the raw data is available to the grep module as well as the "Src" and "srcsub" Enumerated Values.
+Extracted fields become enumerated values that "ride along" with the entry for later modules to use. For example, `netflow Src | subnet Src /16 as srcsub | grep -e srcsub "10.1.0.0"` extracts the source IP from the netflow record, extracts its /16 subnet as `srcsub`, and filters on that subnet with grep. The grep module has access to the raw data as well as the `Src` and `srcsub` enumerated values.
 
 ## Query Accelerators
 
-Extraction modules can make use of [query accelerators](/configuration/accelerators) (like full text indexing, JSON indexing, etc) when filtering is used with a given module. For example, using the module `netflow Src Dst Port==22` can use a properly configured accelerator to dramatically reduce search time because not all records need to be evaluated.  Some filtering modules (such as [words](words/words)) can also invoke query acceleration by passing hints to the underlying accelerator.
+Extraction modules can use [query accelerators](/configuration/accelerators) (full text indexing, JSON indexing, etc.) when you filter with them. For example, `netflow Src Dst Port==22` can use a properly configured accelerator to dramatically reduce search time, because not every record needs to be evaluated. Some filtering modules, such as [words](words/words), can also engage acceleration by passing hints to the accelerator.
 
-Not all query modules are compatible with all query accelerators.  For example, the `netflow` tag is configured to be accelerated using the netflow accelerator, but the [words](words/words) module will not be able to invoke netflow query acceleration. This is because the netflow accelerator is expecting to operate on binary data and apply a specific structure to data during indexing where the words module is designed to operate on a fulltext acceleration.
+Not every module works with every accelerator. If the `netflow` tag uses the netflow accelerator, the [words](words/words) module cannot engage it: the netflow accelerator indexes structure in binary data, while words is designed for fulltext acceleration.
 
-Gravwell will intelligently examine query parameters and invoke the acceleration system whenever possible, but there are some caveats to be aware of:
+Gravwell examines query parameters and engages acceleration whenever possible, with some caveats:
 
-1. Query acceleration that uses specific structure (such as netflow, ipfix, packet, fields, regex, etc) requires that the query parameters match exactly.
+1. Acceleration that uses specific structure (such as netflow, ipfix, packet, fields, regex, etc.) requires that the query parameters match exactly.
 
-For example, if you customize your accelerator for a given tag so that it uses regular expressions to apply structure, then you must use the exact regular expression in your query in order to benefit from the accelerator.  This means that if your accelerator regular expression is `(?P<ip>\S+)\s(?P<description>(\S+\s+)+` and your query is `regex "(?P<ip>\d+\.\d+\.\d+\.\d+)\s" ip=="1.2.3.4"` the system will not engage query acceleration because it cannot guarantee that the query regular expression is a direct subset of the accelerator regular expression.
+For example, if a tag's accelerator uses a regular expression to apply structure, your query must use the exact same regular expression to benefit. If the accelerator's expression is `(?P<ip>\S+)\s(?P<description>(\S+\s+)+)` and your query is `regex "(?P<ip>\d+\.\d+\.\d+\.\d+)\s" ip=="1.2.3.4"`, acceleration is not engaged because Gravwell cannot guarantee the query's expression is a subset of the accelerator's.
 
-2. Query acceleration may accelerate on subsets of your query.
+2. Acceleration may use subsets of your query.
 
-For example, let's assume the tag `test` is using fulltext acceleration and we are executing the query `tag=test grep "this that the other"`.  The query is using grep as a brute force sub-string match which means that the boundaries of the match string are not necessarily word boundaries.  However, the query system is smart enough to know that some internal parts of the matched string are words and it will use them to accelerate the query.  The query will accelerate the search as if you had run `tag=test words this the | grep "this that the other"`.
+Suppose the tag `test` uses fulltext acceleration and you run `tag=test grep "this that the other"`. grep is a brute-force substring match, so the first and last words of the pattern may not fall on word boundaries in the data. The interior words do, and Gravwell uses them to accelerate the query, as if you had run `tag=test words that the | grep "this that the other"`.
 
-3. Query acceleration is not order of operation dependent.
+3. Acceleration does not depend on module order.
 
-Modules which can accelerate queries will hint about their ability to accelerate no matter where they are in the query string.  Consider the following query: `tag=test grep foo* | regex "my name is (?P<name>\S+)" | words foobar`.  The `words` module is capable of invoking query acceleration on a fulltext accelerator and will hint to the acceleration system that it wants the word "foobar" and the accelerator will use that hint.  You may notice that very few entries actually enter the pipeline even though words came much later in the query.
+Modules that can accelerate a query send hints no matter where they appear. In `tag=test grep foo* | regex "my name is (?P<name>\S+)" | words foobar`, the `words` module hints that it wants the word "foobar", and a fulltext accelerator uses that hint. Very few entries may enter the pipeline even though words comes last.
 
-4. Query acceleration is on a shard-by-shard basis.
+4. Acceleration is decided shard by shard.
 
-Gravwell does not require tag accelerators to be consistent across all time. You can setup acceleration, ingest some data, and then change that acceleration configuration without re-indexing data.  When you issue a query, the acceleration hints are handed to each shard of data across time and the compatibility of acceleration is checked on each shard.  Gravwell will automatically invoke acceleration wherever possible; this means that as your query moves over historical data, it may be engaging acceleration in different ways transparently.  You may notice that a query is fast on some sections of data and slower on others.  That is just the system engaging acceleration where it can.
+Accelerator configuration doesn't have to be consistent across time. You can set up acceleration, ingest data, and later change the configuration without re-indexing. At query time, each shard checks the acceleration hints against its own configuration, so a query may be accelerated differently, or not at all, as it moves through historical data. A query may be fast over some time ranges and slower over others.
 
-A side affect of this per-shard acceleration calculation is that Gravwell can still query accurately in the event of catastrophic index corruption.  For example, if you suffer a filesystem corruption or hardware failure where an index is entirely corrupted but the underlying data is still intact, Gravwell will determine that it cannot use the index and ignore it.  Your queries will still complete albeit slower.
+This also means Gravwell still returns accurate results if an index is lost. If a filesystem corruption or hardware failure destroys an index but the underlying data is intact, Gravwell detects that it cannot use the index and ignores it. Queries still complete, just more slowly.
 
-5. Query acceleration operates on positive matches.
+5. Acceleration operates on positive matches.
 
-Gravwell is not a bit field index which means that it will only accelerate on direct matches.  For example `tag=syslog syslog Hostname=="foobar"` can invoke the accelerator, but `tag=syslog ProcID < 20` will not.  The accelerators also do not accelerate on the negative, meaning that `tag=syslog syslog Hostname != "foobar"` will not invoke the accelerator engine.
+Gravwell is not a bit field index, so it only accelerates direct matches. `tag=syslog syslog Hostname=="foobar"` can use the accelerator, but `tag=syslog syslog Severity < 4` cannot. Negative filters are not accelerated either: `tag=syslog syslog Hostname != "foobar"` does not use the accelerator.
 
 ## Universal Flags
 
-Some flags appear in several different search modules and have the same meaning throughout:
+Several modules share these flags. Most modules that accept them use them as described here, but a few reuse the same letter for something else (for example, `-e` sets the output name in `printf` and names the enumerated value holding the cutset in the trim modules, and `-s` sets the separator in `concat`). Check each module's page.
 
-* `-e <source name>` specifies that the module should attempt to read its input data from the given enumerated value rather than from the entry's data field. This is useful in for modules like [json](json/json), where the JSON-encoded data may have been extracted from a larger data record, for example the following search will attempt to read JSON fields from the payloads of HTTP packets: `tag=pcap packet tcp.Payload | json -e Payload user.email`
-* `-r <resource name>` specifies a resource in the [resources](/resources/resources) system. This is generally used to store additional data used by the module, such as a GeoIP mapping table used by the [geoip](geoip/geoip) module.
-* `-v` indicates that the normal pass/drop logic should be inverted. For example the [grep](grep/grep) module normally passes entries which match a given pattern and drop those which do not match; specifying the `-v` flag will cause it to drop entries which match and pass those which do not.
-* `-s` indicates a "strict" mode. If a module normally allows an entry to proceed down the pipeline if any one of several conditions are met, setting the strict flag means an entry will proceed only if *all* conditions are met. For example, the [require](require/require) module will normally pass an entry if it contains any one of the required enumerated values, but when the `-s` flag is used, it will only pass entries which contain *all* specified enumerated values.
-* `-p` indicates "permissive" mode.  If a module normally drops entries when patterns and filters do not match, the permissive flag tells the module to let the module go through.  The [regex](regex/regex) and [grok](grok/grok) modules are good examples where the permissive flag can be valuable.
+* `-e <source name>` reads input from the named enumerated value instead of the entry's DATA field. This is useful in modules like [json](json/json) when the JSON was extracted from a larger record. For example, this search reads JSON fields from the payloads of HTTP packets: `tag=pcap packet tcp.Payload | json -e Payload user.email`
+* `-r <resource name>` names a [resource](/resources/resources) that holds extra data for the module, such as the GeoIP database used by [geoip](geoip/geoip).
+* `-v` inverts the module's pass/drop logic. For example, [grep](grep/grep) normally passes entries that match a pattern and drops the rest; with `-v` it drops matching entries and passes the rest.
+* `-s` enables "strict" mode. Where a module normally passes an entry if any one of several conditions holds, `-s` passes it only if *all* hold. For example, [require](require/require) normally passes an entry that has any of the listed enumerated values; with `-s` the entry must have all of them. In extraction modules such as [json](json/json) or [kv](kv/kv), `-s` means every extraction must succeed.
+* `-p` enables "permissive" mode. Entries that don't match the module's pattern pass through instead of being dropped; filters still apply to entries that do match. [regex](regex/regex) and [grok](grok/grok) support it.
+* `-or` applies to modules that normally require every condition to match: with `-or`, the entry passes if *any* one matches. [ip](ip/ip), [ipexist](ipexist/ipexist), and [words](words/words) support it.
 
 ## Universal Enumerated Values
 
-The following enumerated values are available for every entry. They're actually convenient names for properties of the raw entries themselves, but can be treated as enumerated value names.
+These enumerated values are available on every entry. They are names for properties of the entry itself, so they never need to be extracted:
 
-* SRC -- the source of the entry data.
-* TAG -- the tag attached to the entry.
-* TIMESTAMP -- the timestamp of the entry.
-* DATA -- the actual entry data.
-* NOW -- the current time.
+* `SRC`: the source of the entry data.
+* `TAG`: the tag attached to the entry.
+* `TIMESTAMP`: the timestamp of the entry.
+* `DATA`: the entry's data.
+* `NOW`: the current time.
 
-These can be used just like user-defined enumerated values, thus `table foo bar DATA NOW` is valid. They do not need to be explicitly *extracted* anywhere; they are always available.
+Use them like any other enumerated value, e.g. `table foo bar DATA NOW`.
 
 ## Search module documentation
 
@@ -101,6 +102,7 @@ xml <xml/xml>
 * [csv](csv/csv) - extract fields from CSV data.
 * [dump](dump/dump) - dump entries from a resource into the pipeline.
 * [fields](fields/fields) - extract data from entries using arbitrary field separators.
+* [namedfields](#namedfields-module) - like fields, with field indexes looked up by name from a resource.
 * [grok](grok/grok) - extract data from complicated text structures using pre-defined regular expressions.
 * [intrinsic](intrinsic/intrinsic) - populate entries with enumerated values that were created at ingest time.
 * [ip](ip/ip) - convert & filter IP addresses.
